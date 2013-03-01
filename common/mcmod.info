@@ -1,0 +1,18 @@
+[
+{
+  "modid" : "enhancedportals",
+  "name" : "Enhanced Portals",
+  "version" : "2.1",
+  "url" : "http://www.minecraftforum.net/topic/1301217-/",
+  "credits" : "",
+  "authors": [
+    "Alz454"
+  ],
+  "description": "Create any size and shape portals you want!",
+  "logoFile" : "",
+  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
+  "parent" : "",
+  "screenshots": [
+  ]
+}
+]
