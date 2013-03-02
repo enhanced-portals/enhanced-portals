@@ -32,6 +32,7 @@ public class Reference
 	public static boolean allowModifiers = true;
 	public static boolean allowObsidianStairs = true;
 	public static boolean printPortalMessages = true;
+	
 	public static int pigmenSpawnChance = 100;
 	public static int soundLevel = 100;
 	public static int particleLevel = 100;
@@ -42,10 +43,10 @@ public class Reference
 	
 	public static final int IDPortalModifierGui = 0;
 	
+	// TODO Language files
 	public static String STR_NoUpgrade = "You do not have the required upgrade.";
 	public static String STR_ExitBlocked = "The exit portal is blocked or not valid.";
-	public static String STR_NoExit = "Couldn't find a valid exit.";
-	
+	public static String STR_NoExit = "Couldn't find a valid exit.";	
 	public static String STR_Frequency = "Frequency";
 	public static String STR_Upgrades = "Upgrades";
 	public static String STR_PortalModifierTitle = "Portal Modifier";

@@ -7,9 +7,4 @@ import cpw.mods.fml.server.FMLServerHandler;
 public class CommonProxy
 {
 	public void setupRenderers() {}
-	
-	public void setupServerCommands()
-	{
-		((ServerCommandManager)FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()).registerCommand(new ServerCommands());
-	}
 }

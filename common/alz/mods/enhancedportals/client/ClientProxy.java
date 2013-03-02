@@ -21,7 +21,4 @@ public class ClientProxy extends CommonProxy
 			FMLClientHandler.instance().getClient().renderEngine.registerTextureFX(new TextureNetherPortalFX(i));
 		}
 	}
-	
-	@Override
-	public void setupServerCommands() {}
 }
