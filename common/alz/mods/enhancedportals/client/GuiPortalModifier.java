@@ -45,7 +45,7 @@ public class GuiPortalModifier extends GuiContainer
 	{
 		if (button.id == 1 && button.enabled == true)
 		{
-			textBox.setText(String.format("%6s", textBox.getText()).replace(' ', '0'));
+			textBox.setText(String.format("%1s", textBox.getText()).replace(' ', '0'));
 			Modifier.Frequency = Integer.parseInt(textBox.getText());
 			button.enabled = false;
 			originalText = textBox.getText();
