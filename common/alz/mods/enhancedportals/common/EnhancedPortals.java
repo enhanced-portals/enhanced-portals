@@ -1,7 +1,5 @@
 package alz.mods.enhancedportals.common;
 
-import java.util.Locale.Category;
-
 import alz.mods.enhancedportals.block.BlockFire;
 import alz.mods.enhancedportals.block.BlockNetherPortal;
 import alz.mods.enhancedportals.block.BlockObsidian;
@@ -13,8 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -26,7 +22,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid=Reference.modID, name=Reference.modName, version=Reference.modVersion)
 @NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={Reference.modID}, packetHandler=PacketHandler.class)
@@ -134,6 +129,6 @@ public class EnhancedPortals
 		// Add stuff to the removable & border blocks.
 		Reference.removableBlocks.add(0);
 		Reference.removableBlocks.add(Block.fire.blockID);
-		Reference.borderBlocks.add(EnhancedPortals.instance.blockObsidian.blockID);
+		Reference.borderBlocks.add(blockObsidian.blockID);
 	}
 }

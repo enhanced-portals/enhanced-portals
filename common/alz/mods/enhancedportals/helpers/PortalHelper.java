@@ -2,7 +2,6 @@ package alz.mods.enhancedportals.helpers;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.logging.Level;
 
 import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.Reference;
@@ -133,8 +132,8 @@ public class PortalHelper
 		if (shape == PortalShape.INVALID || !WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
 			return false;
 		
-		Queue queue = new LinkedList();
-		Queue addedBlocks = new LinkedList();
+		Queue<int[]> queue = new LinkedList<int[]>();
+		Queue<int[]> addedBlocks = new LinkedList<int[]>();
 		int usedChances = 0, maxChances = 10;
 		
 		queue.add(new int[] { x, y, z });
@@ -186,7 +185,7 @@ public class PortalHelper
 		}
 	}
 	
-	private static Queue updateQueue(Queue queue, PortalShape shape, int x, int y, int z)
+	private static Queue<int[]> updateQueue(Queue<int[]> queue, PortalShape shape, int x, int y, int z)
 	{
 		if (shape == PortalShape.X)
 		{
@@ -269,8 +268,8 @@ public class PortalHelper
 	
 	private static boolean validatePortal(World world, int x, int y, int z, PortalShape shape)
 	{
-		Queue queue = new LinkedList();
-		Queue checkedQueue = new LinkedList();
+		Queue<int[]> queue = new LinkedList<int[]>();
+		Queue<String> checkedQueue = new LinkedList<String>();
 		queue.add(new int[] { x, y, z });
 		
 		while (!queue.isEmpty())
@@ -312,7 +311,7 @@ public class PortalHelper
 	
 	public static boolean removePortal(World world, int x, int y, int z, PortalShape shape)
 	{
-		Queue queue = new LinkedList();
+		Queue<int[]> queue = new LinkedList<int[]>();
 		queue.add(new int[] { x, y, z });
 		
 		while (!queue.isEmpty())
@@ -330,7 +329,7 @@ public class PortalHelper
 		return true;
 	}
 	
-	public static boolean removePortal(World world, Queue queue)
+	public static boolean removePortal(World world, Queue<int[]> queue)
 	{
 		while (!queue.isEmpty())
 		{

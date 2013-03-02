@@ -3,12 +3,9 @@ package alz.mods.enhancedportals.client;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
-
 import org.lwjgl.opengl.GL11;
 
-import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.Reference;
 
 import net.minecraft.client.renderer.RenderEngine;

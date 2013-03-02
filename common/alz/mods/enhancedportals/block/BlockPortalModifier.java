@@ -2,8 +2,6 @@ package alz.mods.enhancedportals.block;
 
 import java.util.Random;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import alz.mods.enhancedportals.client.ClientNetworking;

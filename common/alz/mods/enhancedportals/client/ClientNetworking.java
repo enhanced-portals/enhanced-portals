@@ -9,8 +9,6 @@ import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.World;
 

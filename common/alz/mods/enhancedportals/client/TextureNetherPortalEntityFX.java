@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.world.World;
 
@@ -24,7 +23,6 @@ public class TextureNetherPortalEntityFX extends EntityFX
         this.portalPosX = this.posX = par2;
         this.portalPosY = this.posY = par4;
         this.portalPosZ = this.posZ = par6;
-        float var14 = this.rand.nextFloat() * 0.6F + 0.4F;
         
         if (colour == 0)
         	colour = 5;

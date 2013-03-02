@@ -1,11 +1,7 @@
 package alz.mods.enhancedportals.block;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
 import alz.mods.enhancedportals.common.EnhancedPortals;
@@ -17,23 +13,18 @@ import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 
 public class BlockNetherPortal extends BlockPortal
 {
@@ -94,7 +85,7 @@ public class BlockNetherPortal extends BlockPortal
 					int[] selectedExit = validExits.get(world.rand.nextInt(validExits.size()));					
 					double exitX = selectedExit[0] + 0.5, exitY = selectedExit[1] + 1.0, exitZ = selectedExit[2] + 0.5;
 					int exitD = selectedExit[3];
-					boolean isValidPortal = false, canTeleport = true, isEnd = false;
+					boolean isValidPortal = false, canTeleport = true;
 					World testWorld = world;
 					
 					if (exitD == world.provider.dimensionId)

@@ -2,10 +2,7 @@ package alz.mods.enhancedportals.client;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import alz.mods.enhancedportals.common.CommonProxy;
-import alz.mods.enhancedportals.common.LinkData;
 import alz.mods.enhancedportals.common.Reference;
 
 public class ClientProxy extends CommonProxy

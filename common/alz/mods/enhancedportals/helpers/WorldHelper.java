@@ -6,9 +6,6 @@ import java.util.Queue;
 import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -77,7 +74,8 @@ public class WorldHelper
 	
 	public static int[] findFirstAttachedBlock(World world, int x, int y, int z, int blockSearchingThrough, int blockToFind)
 	{
-		Queue queue = new LinkedList(), checkedQueue = new LinkedList();
+		Queue<int[]> queue = new LinkedList<int[]>();
+		Queue<String>checkedQueue = new LinkedList<String>();
 	    queue.add(new int[] { x, y, z });
 		
 		while (!queue.isEmpty())
@@ -109,7 +107,8 @@ public class WorldHelper
 	
 	public static int[] findBestAttachedModifier(World world, int x, int y, int z, int blockSearchingThrough, int blockToFind, int colourToFind)
 	{
-		Queue queue = new LinkedList(), checkedQueue = new LinkedList();
+		Queue<int[]> queue = new LinkedList<int[]>();
+		Queue<String> checkedQueue = new LinkedList<String>();
 	    queue.add(new int[] { x, y, z });
 		
 		while (!queue.isEmpty())
@@ -151,7 +150,7 @@ public class WorldHelper
 	
 	public static void floodUpdateMetadata(World world, int x, int y, int z, int blockID, int newMeta)
 	{
-		Queue queue = new LinkedList();
+		Queue<int[]> queue = new LinkedList<int[]>();
 	    queue.add(new int[] { x, y, z });
 
 	    while (!queue.isEmpty())

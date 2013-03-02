@@ -9,28 +9,20 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.logging.Level;
 
-import alz.mods.enhancedportals.client.ClientNetworking;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 
 public class LinkData
 {
@@ -113,7 +105,6 @@ public class LinkData
 	
 	public void saveWorldData()
 	{
-		World world = serverInstance.worldServerForDimension(0);
 		BufferedWriter writer;
 		
 		try
@@ -285,6 +276,9 @@ public class LinkData
         	e.printStackTrace();
         	return;
         }
+        
+        if (type != 1)
+        	return;
         
         World world = Reference.LinkData.serverInstance.worldServerForDimension(dim);
         

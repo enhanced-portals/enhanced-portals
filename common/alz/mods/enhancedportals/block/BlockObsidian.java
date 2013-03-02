@@ -1,10 +1,7 @@
 package alz.mods.enhancedportals.block;
 
-import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class BlockObsidian extends net.minecraft.block.BlockObsidian

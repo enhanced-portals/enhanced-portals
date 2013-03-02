@@ -3,7 +3,6 @@ package alz.mods.enhancedportals.block;
 import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.helpers.PortalHelper;
-import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
 public class BlockFire extends net.minecraft.block.BlockFire
