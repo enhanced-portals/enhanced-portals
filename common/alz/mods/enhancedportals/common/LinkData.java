@@ -277,7 +277,7 @@ public class LinkData
         	return;
         }
         
-        if (type != 1)
+        if (type != 2)
         	return;
         
         World world = Reference.LinkData.serverInstance.worldServerForDimension(dim);

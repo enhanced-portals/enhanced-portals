@@ -281,7 +281,7 @@ public class PortalHelper
 			{
 				int sides = getSides(world, current[0], current[1], current[2], shape);
 				
-				if (sides < 4)
+				if (sides != 4)
 					return false;
 				
 				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
