@@ -7,11 +7,9 @@ import cpw.mods.fml.client.FMLClientHandler;
 import alz.mods.enhancedportals.common.ContainerPortalModifier;
 import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
 
@@ -29,16 +27,6 @@ public class GuiPortalModifier extends GuiContainer
 		Modifier = modifier;
 	}
 
-	public FontRenderer getFontRenderer()
-	{
-		return fontRenderer;
-	}
-	
-	public RenderEngine getRenderEngine()
-	{
-		return mc.renderEngine;
-	}
-	
 	@Override
 	public void initGui()
 	{
