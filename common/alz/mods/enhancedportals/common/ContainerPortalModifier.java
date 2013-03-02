@@ -1,5 +1,6 @@
 package alz.mods.enhancedportals.common;
 
+import alz.mods.enhancedportals.client.GuiModifierSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -14,9 +15,9 @@ public class ContainerPortalModifier extends Container
 	{
 		tileEntity = modifier;
 		
-		addSlotToContainer(new Slot(tileEntity, 0, 8, 46));
-		addSlotToContainer(new Slot(tileEntity, 1, 26, 46));
-		addSlotToContainer(new Slot(tileEntity, 2, 44, 46));
+		addSlotToContainer(new GuiModifierSlot(tileEntity, 0, 8, 46));
+		addSlotToContainer(new GuiModifierSlot(tileEntity, 1, 26, 46));
+		addSlotToContainer(new GuiModifierSlot(tileEntity, 2, 44, 46));
 		
 		bindPlayerInventory(inventoryPlayer);
 	}
@@ -55,7 +56,7 @@ public class ContainerPortalModifier extends Container
             }
             else if (slot < 3 && stackInSlot.itemID == EnhancedPortals.instance.itemUpgrade.itemID)
             {
-            	if (!this.mergeItemStack(stackInSlot, 1, 37, true))
+            	if (!this.mergeItemStack(stackInSlot, 3, 37, true))
             		return null;
             }
             else

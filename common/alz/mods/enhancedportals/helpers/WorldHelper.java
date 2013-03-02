@@ -11,22 +11,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
 public class WorldHelper
-{
-	public static enum portalDirection
-	{
-		X, Z, XZ
-	}
-	
-	public static boolean isWorldBlockID(World world, int x, int y, int z, int ID)
-	{
-		return world.getBlockId(x, y, z) == ID;		
-	}
-	
-	public static boolean isWorldDimensionID(World world, int ID)
-	{
-		return world.provider.dimensionId == ID;
-	}
-	
+{	
 	public static boolean isDimensionLoaded(int DimensionID)
 	{
 		for (int i : DimensionManager.getIDs())
@@ -65,11 +50,6 @@ public class WorldHelper
         }
         
         return ret;
-	}
-	
-	public static int[] getConnectedBlocks(World world, int x, int y, int z)
-	{
-		return new int[] { world.getBlockId(x - 1, y, z), world.getBlockId(x + 1, y, z), world.getBlockId(x, y - 1, z), world.getBlockId(x, y + 1, z), world.getBlockId(x, y, z - 1), world.getBlockId(x, y, z + 1) };		
 	}
 	
 	public static int[] findFirstAttachedBlock(World world, int x, int y, int z, int blockSearchingThrough, int blockToFind)

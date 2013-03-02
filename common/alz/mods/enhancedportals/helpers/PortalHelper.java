@@ -150,7 +150,7 @@ public class PortalHelper
 				if (sides == -1)
 				{
 					removePortal(world, addedBlocks);
-					//Reference.LogData(String.format("Failed to create a portal at %s, %s, %s, shape code: %s. (Not fully enclosed or unexpected block found)", x, y, z, shape), world.isRemote);
+					//Reference.LogData(String.format("Failed to create a portal at %s, %s, %s, shape code: %s. Unexpected block found.", x, y, z, shape), world.isRemote);
 					return false;
 				}
 				

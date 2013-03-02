@@ -71,16 +71,6 @@ public class BlockPortalModifier extends BlockContainer
 				
 				return true;
 			}
-			else if (currentItem != null && currentItem.itemID == EnhancedPortals.instance.itemUpgrade.itemID)
-			{
-				if (tileEntity.hasFreeSpace() && tileEntity.insertUpgrade(currentItem))
-				{
-					currentItem.stackSize = 0;
-					world.markBlockForRenderUpdate(x, y, z);
-				
-					return true;
-				}
-			}
 		}
 		else
 			return true;

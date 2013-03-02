@@ -55,9 +55,8 @@ public class BlockNetherPortal extends BlockPortal
 		if (!Reference.allowTeleporting)
 			return;
 		
-		// TODO Redo BEGIN
+		// TODO Possibly make this neater, more efficient
 		
-		//int[] firstModifier = WorldHelper.findFirstAttachedBlock(world, x, y, z, this.blockID, EnhancedPortals.instance.blockPortalModifier.blockID);
 		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, EnhancedPortals.instance.blockPortalModifier.blockID, world.getBlockMetadata(x, y, z));
 		TileEntityPortalModifier modifier = null;
 		
@@ -125,8 +124,6 @@ public class BlockNetherPortal extends BlockPortal
 			
 			EntityHelper.setCanEntityTravel(entity, false);
 		}
-		
-		// TODO Redo END
 	}
 	
 	@Override

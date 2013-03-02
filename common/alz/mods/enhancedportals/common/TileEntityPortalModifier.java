@@ -37,20 +37,6 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory
 		return true;
 	}
 	
-	public boolean insertUpgrade(ItemStack itemStack)
-	{
-		for (int i = 0; i < inv.length; i++)
-		{
-			if (inv[i] == null)
-			{
-				inv[i] = itemStack;
-				return true;
-			}
-		}	
-		
-		return false;
-	}
-	
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
