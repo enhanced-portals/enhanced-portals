@@ -143,17 +143,14 @@ public class WorldHelper
 	    		int X = current[0]; int Y = current[1]; int Z = current[2];
 
 	    		world.setBlockMetadata(X, Y, Z, newMeta);
-
+	    		world.markBlockForUpdate(X, Y, Z);
+	    		
 	    		queue.add(new int[] { X, Y - 1, Z });
 	    		queue.add(new int[] { X, Y + 1, Z });
 	    		queue.add(new int[] { X, Y, Z - 1 });
 	    		queue.add(new int[] { X, Y, Z + 1 });
 	        	queue.add(new int[] { X + 1, Y, Z });
 	        	queue.add(new int[] { X - 1, Y, Z });
-	    	}
-	    	else if (currentID == EnhancedPortals.instance.blockPortalModifier.blockID && ((TileEntityPortalModifier)world.getBlockTileEntity(current[0], current[1], current[2])).Colour != newMeta)
-	    	{
-	    		((TileEntityPortalModifier)world.getBlockTileEntity(current[0], current[1], current[2])).Colour = newMeta;
 	    	}
 	    }
 	}

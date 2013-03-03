@@ -65,10 +65,11 @@ public class ClientNetworking
 		
 		if (colour != -1)
 		{
+			int oldColour = modifier.Colour;
 			modifier.Colour = colour;
 			world.markBlockForRenderUpdate(x, y, z);
 			
-			if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID)
+			if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID && world.getBlockMetadata(x, y + 1, z) == oldColour)
 				WorldHelper.floodUpdateMetadata(world, x, y + 1, z, EnhancedPortals.instance.blockNetherPortal.blockID, colour);
 		}
 		
