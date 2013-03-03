@@ -62,13 +62,13 @@ public class BlockPortalModifier extends BlockContainer
 					currentItem.stackSize--;
 				
 				if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID)
-					WorldHelper.floodUpdateMetadata(world, x, y, z, EnhancedPortals.instance.blockNetherPortal.blockID, colour);
+					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, EnhancedPortals.instance.blockNetherPortal.blockID, colour);
 				else
 					world.markBlockForRenderUpdate(x, y, z);
 				
 				if (world.isRemote)
 					ClientNetworking.SendBlockUpdate(-1, colour, x, y, z, world.provider.dimensionId);
-				
+								
 				return true;
 			}
 		}

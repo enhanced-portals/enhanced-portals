@@ -18,7 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.BlockPortal;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
@@ -104,10 +103,7 @@ public class BlockNetherPortal extends BlockPortal
 					
 					if (isValidPortal && canTeleport)
 					{
-						if (entity instanceof EntityMinecart)
-							exitY += 0.5;
-						
-						EntityHelper.sendEntityToDimensionAndLocation(entity, exitD, exitX, exitY, exitZ);
+						EntityHelper.sendEntityToDimensionAndLocation(entity, exitD, exitX, exitY, exitZ, false);
 					}
 					else if (!canTeleport)
 					{
