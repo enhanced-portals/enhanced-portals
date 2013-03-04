@@ -10,7 +10,7 @@ public class Reference
 {
 	public static final String modName = "Enhanced Portals";
 	public static final String modID = "enhancedportals";
-	public static final String modVersion = "2.1";
+	public static final String modVersion = "2.0.2";
 	
 	public static final String textureLocation = "/alz/mods/enhancedportals/client/textures/terrain.png";
 	public static final String textureItemLocation = "/alz/mods/enhancedportals/client/textures/items.png";
