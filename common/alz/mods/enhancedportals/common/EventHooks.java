@@ -10,7 +10,7 @@ public class EventHooks
 	public void worldLoad(WorldEvent.Load event)
 	{
 		if (!event.world.isRemote)
-			Reference.LinkData = new LinkData(FMLCommonHandler.instance().getMinecraftServerInstance().getServer());
+			Reference.LinkData = new LinkData(FMLCommonHandler.instance().getMinecraftServerInstance());
 	}
 	
 	@ForgeSubscribe
