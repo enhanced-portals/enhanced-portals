@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.Reference;
+import alz.mods.enhancedportals.reference.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -172,13 +172,13 @@ public class PortalHelper
 		
 		if (validatePortal(world, x, y, z, shape))
 		{
-			Reference.LogData(String.format("Successfully created a portal of %s blocks at %s, %s, %s.", addedBlocks.size(), x, y, z), world.isRemote);
+			Logger.LogData(String.format("Successfully created a portal of %s blocks at %s, %s, %s.", addedBlocks.size(), x, y, z), world.isRemote);
 						
 			return true;
 		}
 		else
 		{
-			Reference.LogData(String.format("Failed to create a portal of %s blocks at %s, %s, %s. (Failed validation)", addedBlocks.size(), x, y, z), world.isRemote);
+			Logger.LogData(String.format("Failed to create a portal of %s blocks at %s, %s, %s. (Failed validation)", addedBlocks.size(), x, y, z), world.isRemote);
 
 			removePortal(world, addedBlocks);
 			return false;

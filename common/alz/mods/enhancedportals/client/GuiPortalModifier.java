@@ -5,8 +5,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 
 import alz.mods.enhancedportals.common.ContainerPortalModifier;
-import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
+import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.Language;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -97,10 +98,10 @@ public class GuiPortalModifier extends GuiContainer
 		else if (swappedColour == 5)
 			swappedColour = 0;
 		
-		fontRenderer.drawString(Reference.STR_PortalModifierTitle, 8, 6, 4210752);
+		fontRenderer.drawString(Language.PortalModifierTitle, 8, 6, 4210752);
 				
-		fontRenderer.drawString(Reference.STR_Frequency, 70, 25, 4210752);
-		fontRenderer.drawString(Reference.STR_Upgrades, 70, 50, 4210752);
+		fontRenderer.drawString(Language.Frequency, 70, 25, 4210752);
+		fontRenderer.drawString(Language.Upgrades, 70, 50, 4210752);
 		
 		//fontRenderer.drawString(ItemDye.dyeColorNames[swappedColour].substring(0, 1).toUpperCase() + ItemDye.dyeColorNames[swappedColour].substring(1), 125, 6, ItemDye.dyeColors[swappedColour]);
 		
@@ -117,7 +118,7 @@ public class GuiPortalModifier extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
 	{
-		int texture = mc.renderEngine.getTexture(Reference.textureGuiDirectory + "portalModifier.png");
+		int texture = mc.renderEngine.getTexture(IO.GuiTextureDirectory + "portalModifier.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(texture);
         int x = (width - xSize) / 2;

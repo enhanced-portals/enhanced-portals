@@ -1,8 +1,8 @@
 package alz.mods.enhancedportals.block;
 
 import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.helpers.PortalHelper;
+import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.world.World;
 
 public class BlockFire extends net.minecraft.block.BlockFire
@@ -20,7 +20,7 @@ public class BlockFire extends net.minecraft.block.BlockFire
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		if (world.getBlockId(x, y - 1, z) == EnhancedPortals.instance.blockObsidian.blockID || (Reference.allowModifiers && world.getBlockId(x, y - 1, z) == EnhancedPortals.instance.blockPortalModifier.blockID))
+		if (world.getBlockId(x, y - 1, z) == EnhancedPortals.instance.blockObsidian.blockID || (Settings.AllowModifiers && world.getBlockId(x, y - 1, z) == EnhancedPortals.instance.blockPortalModifier.blockID))
 		{
 			PortalHelper.createPortal(world, x, y, z, 0);
 			

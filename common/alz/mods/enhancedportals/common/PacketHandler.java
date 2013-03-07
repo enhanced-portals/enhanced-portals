@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
 import alz.mods.enhancedportals.client.ClientNetworking;
+import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.ModData;
 
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -15,7 +17,7 @@ public class PacketHandler implements IPacketHandler
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
 	{
-		if (!packet.channel.equals(Reference.modID))
+		if (!packet.channel.equals(ModData.ID))
 			return;
 		
 		DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(packet.data));
@@ -42,9 +44,9 @@ public class PacketHandler implements IPacketHandler
 		{
 			ClientNetworking.RecieveBlockUpdate(frequency, colour, x, y, z, dim);
 		}
-		else if (type == 2 && Reference.LinkData != null)
+		else if (type == 2 && IO.LinkData != null)
 		{
-			Reference.LinkData.HandlePacket(packet);
+			IO.LinkData.HandlePacket(packet);
 		}
 	}
 }

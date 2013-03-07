@@ -2,7 +2,8 @@ package alz.mods.enhancedportals.item;
 
 import java.util.List;
 
-import alz.mods.enhancedportals.common.Reference;
+import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.ItemID;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +19,7 @@ public class ItemUpgrade extends Item
 
 	public ItemUpgrade()
 	{
-		super(Reference.IDPortalModifierUpgrade);
+		super(ItemID.ModifierUpgrade);
 		hasSubtypes = true;
 		this.setMaxDamage(0);
         this.setCreativeTab(CreativeTabs.tabMisc);
@@ -63,6 +64,6 @@ public class ItemUpgrade extends Item
 	@Override
 	public String getTextureFile()
 	{
-		return Reference.textureItemLocation;
+		return IO.ItemsPath;
 	}
 }

@@ -5,12 +5,15 @@ import java.util.Random;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
 import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.Language;
+import alz.mods.enhancedportals.reference.Logger;
+import alz.mods.enhancedportals.reference.Settings;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -39,7 +42,7 @@ public class BlockNetherPortal extends BlockPortal
 	@SideOnly(Side.CLIENT)
 	public String getTextureFile()
 	{
-		return Reference.textureLocation;
+		return IO.TerrainPath;
 	}
 	
 	@Override
@@ -51,7 +54,7 @@ public class BlockNetherPortal extends BlockPortal
 			return; // There's nothing else we need to do on the client side here.
 		}
 		
-		if (!Reference.allowTeleporting)
+		if (!Settings.AllowTeleporting)
 			return;
 		
 		// TODO Possibly make this neater, more efficient
@@ -71,12 +74,12 @@ public class BlockNetherPortal extends BlockPortal
 		{
 			if (EntityHelper.canEntityTravel(entity))
 			{				
-				List<int[]> validExits = Reference.LinkData.getFrequencyExcluding(modifier.Frequency, new int[] { modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId });
+				List<int[]> validExits = IO.LinkData.getFrequencyExcluding(modifier.Frequency, new int[] { modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId });
 				
 				if (validExits == null || validExits.isEmpty())
 				{
-					Reference.LogData(String.format("Couldn't teleport entity (%s) - No valid exit found.", entity.getEntityName()));
-					EntityHelper.sendMessage(entity, Reference.STR_NoExit);
+					Logger.LogData(String.format("Couldn't teleport entity (%s) - No valid exit found.", entity.getEntityName()));
+					EntityHelper.sendMessage(entity, Language.NoExit);
 				}
 				else
 				{
@@ -107,13 +110,13 @@ public class BlockNetherPortal extends BlockPortal
 					}
 					else if (!canTeleport)
 					{
-						Reference.LogData(String.format("Couldn't teleport entity (%s) - Modifier does not have the required upgrade.", entity.getEntityName()));
-						EntityHelper.sendMessage(entity, Reference.STR_NoUpgrade);
+						Logger.LogData(String.format("Couldn't teleport entity (%s) - Modifier does not have the required upgrade.", entity.getEntityName()));
+						EntityHelper.sendMessage(entity, Language.NoUpgrade);
 					}
 					else
 					{
-						Reference.LogData(String.format("Couldn't teleport entity (%s) - Exit is blocked.", entity.getEntityName()));
-						EntityHelper.sendMessage(entity, Reference.STR_ExitBlocked);
+						Logger.LogData(String.format("Couldn't teleport entity (%s) - Exit is blocked.", entity.getEntityName()));
+						EntityHelper.sendMessage(entity, Language.ExitBlocked);
 					}
 				}
 			}
@@ -224,7 +227,7 @@ public class BlockNetherPortal extends BlockPortal
 	{
 		if (par5Random.nextInt(100) == 0)
         {
-			if (Reference.soundLevel > 0 && par5Random.nextInt(100) <= Reference.soundLevel)
+			if (Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Settings.SoundLevel)
 				par1World.playSound((double)par2 + 0.5D, (double)par3 + 0.5D, (double)par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
         }
 
@@ -252,9 +255,9 @@ public class BlockNetherPortal extends BlockPortal
                 var17 = (double)(par5Random.nextFloat() * 2.0F * (float)var19);
             }
 
-            if (Reference.particleLevel > 0 && par5Random.nextInt(100) <= Reference.particleLevel)
+            if (Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Settings.ParticleLevel)
             {
-            	if (Reference.canDyePortals)
+            	if (Settings.CanDyePortals)
             		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, par1World.getBlockMetadata(par2, par3, par4), var7, var9, var11, var13, var15, var17));
             	else
             		par1World.spawnParticle("portal", var7, var9, var11, var13, var15, var17);
@@ -267,7 +270,7 @@ public class BlockNetherPortal extends BlockPortal
 	{
 		super.updateTick(par1World, par2, par3, par4, par5Random);
 
-		if (Reference.pigmenSpawnChance > 0 && par5Random.nextInt(100) <= Reference.pigmenSpawnChance)
+		if (Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Settings.PigmenSpawnChance)
 	        if (par1World.provider.isSurfaceWorld() && par5Random.nextInt(2000) < par1World.difficultySetting)
 	        {
 	            int var6;
@@ -292,7 +295,7 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if (!Reference.canDyePortals)
+		if (!Settings.CanDyePortals)
 			return false;
 		
 		ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
@@ -308,7 +311,7 @@ public class BlockNetherPortal extends BlockPortal
 			
 			WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, colour);
 			
-			if (!player.capabilities.isCreativeMode && Reference.doesDyingCost)
+			if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
 				item.stackSize--;
 			
 			return true;

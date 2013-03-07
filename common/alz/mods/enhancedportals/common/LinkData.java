@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.reference.BlockID;
+import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.ModData;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -45,16 +48,16 @@ public class LinkData
 		List<int[]> items = new ArrayList<int[]>();
 		
 		if (FMLCommonHandler.instance().getSide() == Side.SERVER)		
-			Reference.DataFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + "EnhancedPortals.dat").getAbsolutePath();
+			IO.DataFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + "EnhancedPortals.dat").getAbsolutePath();
 		else
-			Reference.DataFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + "EnhancedPortals.dat").getAbsolutePath();
+			IO.DataFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + "EnhancedPortals.dat").getAbsolutePath();
 		
-		if (!new File(Reference.DataFile).exists())
+		if (!new File(IO.DataFile).exists())
 			return;
 		
 		try
 		{
-			reader = new BufferedReader(new FileReader(Reference.DataFile));
+			reader = new BufferedReader(new FileReader(IO.DataFile));
 			String line = null;			
 			
 			while ((line = reader.readLine()) != null)
@@ -109,7 +112,7 @@ public class LinkData
 		
 		try
 		{
-			writer = new BufferedWriter(new FileWriter(Reference.DataFile));
+			writer = new BufferedWriter(new FileWriter(IO.DataFile));
 			
 			for (int list : LinkData.keySet())
 			{
@@ -280,9 +283,9 @@ public class LinkData
         if (type != 2)
         	return;
         
-        World world = Reference.LinkData.serverInstance.worldServerForDimension(dim);
+        World world = serverInstance.worldServerForDimension(dim);
         
-        if (world.getBlockId(x, y, z) != Reference.IDPortalModifier)
+        if (world.getBlockId(x, y, z) != BlockID.PortalModifier)
         	return;
         	
         TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
@@ -301,12 +304,12 @@ public class LinkData
         {
         	modifier.Frequency = frequency;
         	
-	        long oldFreq = Reference.LinkData.IsInAFrequency(new int[] { x, y, z, dim });
+	        long oldFreq = IsInAFrequency(new int[] { x, y, z, dim });
 	        	
 	        if (oldFreq != Integer.MAX_VALUE + 1)
-	        	Reference.LinkData.RemoveFromFrequency((int)oldFreq, new int[] { x, y, z, dim });
+	        	RemoveFromFrequency((int)oldFreq, new int[] { x, y, z, dim });
 	        	
-	        Reference.LinkData.AddToFrequency(frequency, x, y, z, dim);
+	        AddToFrequency(frequency, x, y, z, dim);
         }
 	}
 	
@@ -340,7 +343,7 @@ public class LinkData
 		}
 		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Reference.modID;
+		packet.channel = ModData.ID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
 		
@@ -372,7 +375,7 @@ public class LinkData
 		}
 		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Reference.modID;
+		packet.channel = ModData.ID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
 		

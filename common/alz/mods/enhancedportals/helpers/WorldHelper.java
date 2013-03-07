@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
+import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -157,7 +157,7 @@ public class WorldHelper
 	
 	public static boolean isBlockPortalRemovable(int ID)
 	{
-		return Reference.removableBlocks.contains(ID);
+		return Settings.RemovableBlocks.contains(ID);
 	}
 	
 	public static boolean isBlockPortalFrame(int ID, boolean includeSelf)
@@ -165,6 +165,6 @@ public class WorldHelper
 		if (includeSelf && ID == EnhancedPortals.instance.blockNetherPortal.blockID)
 			return true;
 		
-		return Reference.borderBlocks.contains(ID);
+		return Settings.BorderBlocks.contains(ID);
 	}
 }

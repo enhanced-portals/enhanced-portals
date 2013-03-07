@@ -4,9 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
 import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.reference.BlockID;
+import alz.mods.enhancedportals.reference.ModData;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -44,7 +45,7 @@ public class ClientNetworking
 		}
 		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Reference.modID;
+		packet.channel = ModData.ID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
 		
@@ -55,7 +56,7 @@ public class ClientNetworking
 	{		
 		World world = FMLClientHandler.instance().getClient().theWorld;
 		
-		if (world.provider.dimensionId != dim || world.getBlockId(x, y, z) != Reference.IDPortalModifier)
+		if (world.provider.dimensionId != dim || world.getBlockId(x, y, z) != BlockID.PortalModifier)
 		{
 			System.out.println("Invalid dimension or not a valid block");
 			return;

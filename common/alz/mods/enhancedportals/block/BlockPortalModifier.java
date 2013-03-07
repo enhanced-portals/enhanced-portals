@@ -6,10 +6,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import alz.mods.enhancedportals.client.ClientNetworking;
 import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.Reference;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.reference.BlockID;
+import alz.mods.enhancedportals.reference.GuiID;
+import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -27,7 +30,7 @@ public class BlockPortalModifier extends BlockContainer
 {
 	public BlockPortalModifier()
 	{
-		super(Reference.IDPortalModifier, 0, Material.rock);
+		super(BlockID.PortalModifier, 0, Material.rock);
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
@@ -47,7 +50,7 @@ public class BlockPortalModifier extends BlockContainer
 		{
 			ItemStack currentItem = player.inventory.mainInventory[player.inventory.currentItem];
 						
-			if (currentItem != null && Reference.canDyePortals && currentItem.itemID == Item.dyePowder.itemID)
+			if (currentItem != null && Settings.CanDyePortals && currentItem.itemID == Item.dyePowder.itemID)
 			{
 				int colour = currentItem.getItemDamage();
 				
@@ -58,7 +61,7 @@ public class BlockPortalModifier extends BlockContainer
 				
 				tileEntity.Colour = colour;
 				
-				if (!player.capabilities.isCreativeMode && Reference.doesDyingCost)
+				if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
 					currentItem.stackSize--;
 				
 				if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID)
@@ -75,7 +78,7 @@ public class BlockPortalModifier extends BlockContainer
 		else
 			return true;
 						
-		player.openGui(EnhancedPortals.instance, Reference.IDPortalModifierGui, world, x, y, z);
+		player.openGui(EnhancedPortals.instance, GuiID.PortalModifier, world, x, y, z);
 		return true;
 	}
 	
@@ -110,7 +113,7 @@ public class BlockPortalModifier extends BlockContainer
 	@Override
 	public String getTextureFile()
 	{
-		return Reference.textureLocation;
+		return IO.TerrainPath;
 	}
 	
 	@Override
@@ -121,7 +124,7 @@ public class BlockPortalModifier extends BlockContainer
 			TileEntityPortalModifier tileEntity = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
 			
 			if (tileEntity != null && tileEntity.Frequency != 0)
-				Reference.LinkData.RemoveFromFrequency(tileEntity.Frequency, x, y, z, world.provider.dimensionId);
+				IO.LinkData.RemoveFromFrequency(tileEntity.Frequency, x, y, z, world.provider.dimensionId);
 		}
 		
 		dropItems(world, x, y, z);

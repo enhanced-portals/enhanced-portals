@@ -6,7 +6,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
-import alz.mods.enhancedportals.common.Reference;
+import alz.mods.enhancedportals.reference.IO;
 
 import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.util.MathHelper;
@@ -29,7 +29,7 @@ public class TextureNetherPortalFX extends FMLTextureFX
 	@Override
 	public void bindImage(RenderEngine renderEngine)
 	{
-		GL11.glBindTexture(3553, renderEngine.getTexture(Reference.textureLocation));
+		GL11.glBindTexture(3553, renderEngine.getTexture(IO.TerrainPath));
 	}
 	
 	private void loadDefaultTexture()
@@ -103,7 +103,7 @@ public class TextureNetherPortalFX extends FMLTextureFX
 		
 		try
 		{
-			InputStream stream = FMLClientHandler.instance().getClient().texturePackList.getSelectedTexturePack().getResourceAsStream(Reference.textureDirectory + colour + ".png");
+			InputStream stream = FMLClientHandler.instance().getClient().texturePackList.getSelectedTexturePack().getResourceAsStream(IO.TextureDirectory + colour + ".png");
 			
 			if (stream == null)
 			{

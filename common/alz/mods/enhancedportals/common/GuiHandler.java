@@ -1,6 +1,8 @@
 package alz.mods.enhancedportals.common;
 
 import alz.mods.enhancedportals.client.GuiPortalModifier;
+import alz.mods.enhancedportals.reference.GuiID;
+import alz.mods.enhancedportals.reference.IO;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -12,7 +14,7 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		if (ID != Reference.IDPortalModifierGui)
+		if (ID != GuiID.PortalModifier)
 			return null;
 		
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
@@ -21,8 +23,8 @@ public class GuiHandler implements IGuiHandler
 		{
 			TileEntityPortalModifier modifier = (TileEntityPortalModifier)tileEntity;
 			
-			if (Reference.LinkData != null)
-				Reference.LinkData.sendPacketToClient((Player)player, modifier.Frequency, modifier.Colour, x, y, z, world.provider.dimensionId);
+			if (IO.LinkData != null)
+				IO.LinkData.sendPacketToClient((Player)player, modifier.Frequency, modifier.Colour, x, y, z, world.provider.dimensionId);
 				
 			return new ContainerPortalModifier(player.inventory, modifier);
 		}
@@ -33,7 +35,7 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		if (ID != Reference.IDPortalModifierGui)
+		if (ID != GuiID.PortalModifier)
 			return null;
 				
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
