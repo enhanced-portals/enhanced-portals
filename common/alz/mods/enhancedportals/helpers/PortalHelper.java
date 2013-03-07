@@ -3,7 +3,7 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import alz.mods.enhancedportals.common.EnhancedPortals;
+import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.Logger;
 
 import net.minecraft.block.Block;
@@ -14,8 +14,6 @@ import net.minecraft.world.World;
 
 public class PortalHelper
 {
-	static int portalBlock;
-	
 	public static enum PortalShape
 	{
 		X, Z, HORIZONTAL, INVALID
@@ -163,7 +161,7 @@ public class PortalHelper
 				if (sides >= 2)
 				{
 					addedBlocks.add(new int[] { current[0], current[1], current[2], currentID, world.getBlockMetadata(current[0], current[1], current[2]) });
-					world.setBlockAndMetadata(current[0], current[1], current[2], portalBlock, meta);
+					world.setBlockAndMetadata(current[0], current[1], current[2], BlockID.NetherPortal, meta);
 				
 					queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 				}
@@ -277,7 +275,7 @@ public class PortalHelper
 			int[] current = (int[])queue.remove();			
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 			
-			if (currentID == portalBlock && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
+			if (currentID == BlockID.NetherPortal && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
 			{
 				int sides = getSides(world, current[0], current[1], current[2], shape);
 				
@@ -319,7 +317,7 @@ public class PortalHelper
 			int[] current = (int[])queue.remove();
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 			
-			if (currentID == portalBlock)
+			if (currentID == BlockID.NetherPortal)
 			{
 				world.setBlock(current[0], current[1], current[2], 0);			
 				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
@@ -337,7 +335,7 @@ public class PortalHelper
 			
 			if (current.length == 4)
 			{
-				if (current[3] == Block.fire.blockID || current[3] == portalBlock)
+				if (current[3] == Block.fire.blockID || current[3] == BlockID.NetherPortal)
 					current[3] = current[4] = 0;
 				
 				world.setBlockAndMetadata(current[0], current[1], current[2], current[3], current[4]);
@@ -349,10 +347,5 @@ public class PortalHelper
 		}
 		
 		return true;
-	}
-	
-	static
-	{
-		portalBlock = EnhancedPortals.instance.blockNetherPortal.blockID;
 	}
 }

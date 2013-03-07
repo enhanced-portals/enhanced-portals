@@ -3,7 +3,6 @@ package alz.mods.enhancedportals.client;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
-import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.BlockID;
@@ -70,8 +69,8 @@ public class ClientNetworking
 			modifier.Colour = colour;
 			world.markBlockForRenderUpdate(x, y, z);
 			
-			if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID && world.getBlockMetadata(x, y + 1, z) == oldColour)
-				WorldHelper.floodUpdateMetadata(world, x, y + 1, z, EnhancedPortals.instance.blockNetherPortal.blockID, colour);
+			if (world.getBlockId(x, y + 1, z) == BlockID.NetherPortal && world.getBlockMetadata(x, y + 1, z) == oldColour)
+				WorldHelper.floodUpdateMetadata(world, x, y + 1, z, BlockID.NetherPortal, colour);
 		}
 		
 		if (frequency != -1)

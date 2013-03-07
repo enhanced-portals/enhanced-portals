@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Random;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
-import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.Language;
 import alz.mods.enhancedportals.reference.Logger;
@@ -59,7 +59,7 @@ public class BlockNetherPortal extends BlockPortal
 		
 		// TODO Possibly make this neater, more efficient
 		
-		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, EnhancedPortals.instance.blockPortalModifier.blockID, world.getBlockMetadata(x, y, z));
+		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, BlockID.PortalModifier, world.getBlockMetadata(x, y, z));
 		TileEntityPortalModifier modifier = null;
 		
 		if (firstModifier != null)
@@ -99,7 +99,7 @@ public class BlockNetherPortal extends BlockPortal
 					if (exitD != testWorld.provider.dimensionId)
 						testWorld = WorldHelper.getWorld(exitD);
 					
-					if (testWorld.getBlockId(selectedExit[0], selectedExit[1] + 1, selectedExit[2]) == EnhancedPortals.instance.blockNetherPortal.blockID)
+					if (testWorld.getBlockId(selectedExit[0], selectedExit[1] + 1, selectedExit[2]) == this.blockID)
 						isValidPortal = true;
 					else if (testWorld.isAirBlock(selectedExit[0], selectedExit[1] + 1, selectedExit[2]))
 						isValidPortal = PortalHelper.createPortal(testWorld, selectedExit[0], selectedExit[1] + 1, selectedExit[2], modifier.Colour);
@@ -134,7 +134,7 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public boolean tryToCreatePortal(World world, int x, int y, int z)
 	{
-		if (world.getBlockId(x, y, z) == EnhancedPortals.instance.blockObsidian.blockID)
+		if (world.getBlockId(x, y, z) == BlockID.Obsidian)
 			y += 1;
 		
 		return PortalHelper.createPortal(world, x, y, z, 0);

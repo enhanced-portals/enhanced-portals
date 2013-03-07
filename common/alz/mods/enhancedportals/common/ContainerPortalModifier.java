@@ -1,6 +1,7 @@
 package alz.mods.enhancedportals.common;
 
 import alz.mods.enhancedportals.client.GuiModifierSlot;
+import alz.mods.enhancedportals.reference.ItemID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -49,12 +50,12 @@ public class ContainerPortalModifier extends Container
 			ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
             
-            if (slot >= 3 && stackInSlot.itemID == EnhancedPortals.instance.itemUpgrade.itemID)
+            if (slot >= 3 && stackInSlot.itemID == ItemID.ModifierUpgrade)
             {
             	if (!this.mergeItemStack(stackInSlot, 0, 3, true))
             		return null;
             }
-            else if (slot < 3 && stackInSlot.itemID == EnhancedPortals.instance.itemUpgrade.itemID)
+            else if (slot < 3 && stackInSlot.itemID == ItemID.ModifierUpgrade)
             {
             	if (!this.mergeItemStack(stackInSlot, 3, 37, true))
             		return null;

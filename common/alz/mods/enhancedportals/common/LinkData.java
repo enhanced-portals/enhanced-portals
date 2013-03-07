@@ -296,8 +296,8 @@ public class LinkData
         	
         	sendPacketToNearbyClients(-1, colour, new int[] { x, y, z, dim });
         	
-        	if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID)
-        		WorldHelper.floodUpdateMetadata(world, x, y + 1, z, EnhancedPortals.instance.blockNetherPortal.blockID, colour);
+        	if (world.getBlockId(x, y + 1, z) == BlockID.NetherPortal)
+        		WorldHelper.floodUpdateMetadata(world, x, y + 1, z, BlockID.NetherPortal, colour);
         }
                 
         if (frequency != -1)

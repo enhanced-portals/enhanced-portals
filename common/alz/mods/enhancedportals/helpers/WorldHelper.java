@@ -3,8 +3,8 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
+import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -162,7 +162,7 @@ public class WorldHelper
 	
 	public static boolean isBlockPortalFrame(int ID, boolean includeSelf)
 	{
-		if (includeSelf && ID == EnhancedPortals.instance.blockNetherPortal.blockID)
+		if (includeSelf && ID == BlockID.NetherPortal)
 			return true;
 		
 		return Settings.BorderBlocks.contains(ID);

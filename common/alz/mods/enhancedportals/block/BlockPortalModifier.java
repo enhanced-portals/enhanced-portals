@@ -64,8 +64,8 @@ public class BlockPortalModifier extends BlockContainer
 				if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
 					currentItem.stackSize--;
 				
-				if (world.getBlockId(x, y + 1, z) == EnhancedPortals.instance.blockNetherPortal.blockID)
-					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, EnhancedPortals.instance.blockNetherPortal.blockID, colour);
+				if (world.getBlockId(x, y + 1, z) == BlockID.NetherPortal)
+					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, BlockID.NetherPortal, colour);
 				else
 					world.markBlockForRenderUpdate(x, y, z);
 				
@@ -189,7 +189,7 @@ public class BlockPortalModifier extends BlockContainer
 			if (hasMultiUpgrade)
 				PortalHelper.removePortalAround(world, x, y, z);
 			else
-				if (blockIDAbove == EnhancedPortals.instance.blockNetherPortal.blockID && metaAbove == modifier.Colour)
+				if (blockIDAbove == BlockID.NetherPortal && metaAbove == modifier.Colour)
 					PortalHelper.removePortal(world, x, y + 1, z);
 		}
 		
