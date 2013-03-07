@@ -1,6 +1,5 @@
 package alz.mods.enhancedportals.client;
 
-import alz.mods.enhancedportals.common.EnhancedPortals;
 import alz.mods.enhancedportals.reference.ItemID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
