@@ -95,17 +95,17 @@ public class BlockPortalModifier extends BlockContainer
 				
 		if (modifier.hasUpgrade(0))
 		{
-			return 16 + modifier.Colour;
+			return side == meta ? 32 + modifier.Colour : 16 + modifier.Colour;
 		}
 		
-		return side == meta ? 16 + modifier.Colour : 32;
+		return side == meta ? 16 + modifier.Colour : 48;
 	}
 
 	// For inventory
 	@Override
 	public int getBlockTextureFromSide(int side)
 	{		
-		return side == 1 ? 16 : 32;
+		return side == 1 ? 16 : 48;
 	}
 	
 	@Override
