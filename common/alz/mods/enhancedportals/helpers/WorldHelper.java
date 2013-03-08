@@ -9,6 +9,7 @@ import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeDirection;
 
 public class WorldHelper
 {	
@@ -166,5 +167,38 @@ public class WorldHelper
 			return true;
 		
 		return Settings.BorderBlocks.contains(ID);
+	}
+	
+	public static ForgeDirection getBlockDirection(World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+				
+		return ForgeDirection.getOrientation(meta);
+	}
+	
+	public static int[] offsetDirectionBased(World world, int x, int y, int z)
+	{
+		return offsetDirectionBased(world, x, y, z, WorldHelper.getBlockDirection(world, x, y, z));
+	}
+	
+	public static int[] offsetDirectionBased(World world, int x, int y, int z, ForgeDirection direction)
+	{
+		if (direction == ForgeDirection.UNKNOWN)
+			return null;
+		
+		if (direction == ForgeDirection.NORTH)
+			z -= 1;
+		else if (direction == ForgeDirection.SOUTH)
+			z += 1;
+		else if (direction == ForgeDirection.EAST)
+			x += 1;
+		else if (direction == ForgeDirection.WEST)
+			x -= 1;
+		else if (direction == ForgeDirection.UP)
+			y += 1;
+		else if (direction == ForgeDirection.DOWN)
+			y -= 1;
+		
+		return new int[] { x, y, z };
 	}
 }

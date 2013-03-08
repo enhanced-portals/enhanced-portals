@@ -16,6 +16,7 @@ import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -23,8 +24,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public class BlockPortalModifier extends BlockContainer
 {
@@ -88,13 +91,14 @@ public class BlockPortalModifier extends BlockContainer
 	public int getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
-		
+		int meta = world.getBlockMetadata(x, y, z);
+				
 		if (modifier.hasUpgrade(0))
 		{
 			return 16 + modifier.Colour;
 		}
 		
-		return side == 1 ? 16 + modifier.Colour : 32;
+		return side == meta ? 16 + modifier.Colour : 32;
 	}
 
 	// For inventory
@@ -173,26 +177,53 @@ public class BlockPortalModifier extends BlockContainer
 	{
 		TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
 		boolean gettingPower = world.isBlockIndirectlyGettingPowered(x, y, z), hadPower = modifier.HadPower;
-		int blockIDAbove = world.getBlockId(x, y + 1, z), metaAbove = world.getBlockMetadata(x, y + 1, z);
 		boolean hasMultiUpgrade = modifier.hasUpgrade(0);
+		
+		ForgeDirection direction = WorldHelper.getBlockDirection(world, x, y, z);
+		int[] blockToTest = WorldHelper.offsetDirectionBased(world, x, y, z, direction);
+		int blockID = world.getBlockId(blockToTest[0], blockToTest[1], blockToTest[2]),
+			meta = world.getBlockMetadata(blockToTest[0], blockToTest[1], blockToTest[2]);
 		
 		if (gettingPower && !hadPower)
 		{			
 			if (hasMultiUpgrade)
 				PortalHelper.createPortalAround(world, x, y, z, modifier.Colour);
 			else
-				if (WorldHelper.isBlockPortalRemovable(blockIDAbove))
-					PortalHelper.createPortal(world, x, y + 1, z, modifier.Colour);
+				if (WorldHelper.isBlockPortalRemovable(blockID))
+					PortalHelper.createPortal(world, blockToTest[0], blockToTest[1], blockToTest[2], modifier.Colour);
 		}
 		else if (!gettingPower && hadPower)
 		{
 			if (hasMultiUpgrade)
 				PortalHelper.removePortalAround(world, x, y, z);
 			else
-				if (blockIDAbove == BlockID.NetherPortal && metaAbove == modifier.Colour)
-					PortalHelper.removePortal(world, x, y + 1, z);
+				if (blockID == BlockID.NetherPortal && meta == modifier.Colour)
+					PortalHelper.removePortal(world, blockToTest[0], blockToTest[1], blockToTest[2]);
 		}
 		
 		modifier.HadPower = gettingPower;
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving)
+	{
+		int direction = 0;
+        int facing = MathHelper.floor_double((double)(entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+        if (facing == 0)
+            direction = ForgeDirection.NORTH.ordinal();
+        else if (facing == 1) 
+            direction = ForgeDirection.EAST.ordinal();
+        else if (facing == 2) 
+            direction = ForgeDirection.SOUTH.ordinal();
+        else if (facing == 3)
+            direction = ForgeDirection.WEST.ordinal();
+                
+        if (entityLiving.rotationPitch > 65 && entityLiving.rotationPitch <= 90)
+        	direction = ForgeDirection.UP.ordinal();
+        else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
+        	direction = ForgeDirection.DOWN.ordinal();
+
+        world.setBlockMetadataWithNotify(x, y, z, direction);
 	}
 }
