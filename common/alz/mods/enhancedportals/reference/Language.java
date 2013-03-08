@@ -8,4 +8,6 @@ public class Language
 	public static String Frequency = "Frequency";
 	public static String Upgrades = "Upgrades";
 	public static String PortalModifierTitle = "Portal Modifier";
+	public static String SaveCharacter = "S";
+	public static String CancelCharacter = "C";
 }

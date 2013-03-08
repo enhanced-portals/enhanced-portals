@@ -32,11 +32,10 @@ public class GuiPortalModifier extends GuiContainer
 		super.initGui();
 		
 		textBox = new GuiIntegerBox(fontRenderer, (((this.width - 20) / 2) - (75 / 2)), this.guiTop + 42, 75, 16);
-		textBox.setFocused(true);
 		textBox.setText("" + Modifier.Frequency);
 		
-		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 61, this.guiTop + 40, 20, 20, "§2S");
-		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 40, this.guiTop + 40, 20, 20, "§cC");
+		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 61, this.guiTop + 40, 20, 20, "§2" + Language.SaveCharacter);
+		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 40, this.guiTop + 40, 20, 20, "§c" + Language.CancelCharacter);
 		
 		button.enabled = false;
 		button2.enabled = Integer.parseInt(textBox.getText()) != 0;
