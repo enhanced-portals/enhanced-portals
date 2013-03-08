@@ -83,40 +83,11 @@ public class BlockNetherPortal extends BlockPortal
 				}
 				else
 				{
-					int[] selectedExit = validExits.get(world.rand.nextInt(validExits.size()));					
-					double exitX = selectedExit[0] + 0.5, exitY = selectedExit[1] + 1.0, exitZ = selectedExit[2] + 0.5;
-					int exitD = selectedExit[3];
-					boolean isValidPortal = false, canTeleport = true;
-					World testWorld = world;
+					int[] selectedExit = validExits.get(world.rand.nextInt(validExits.size()));
 					
-					if (exitD == world.provider.dimensionId)
-						canTeleport = modifier.hasUpgrade(1) || modifier.hasUpgrade(2);
-					else if ((exitD == 0 && world.provider.dimensionId == -1) || (exitD == -1 && world.provider.dimensionId == 0))
-						canTeleport = true;
-					else
-						canTeleport = modifier.hasUpgrade(2);
-					
-					if (exitD != testWorld.provider.dimensionId)
-						testWorld = WorldHelper.getWorld(exitD);
-					
-					if (testWorld.getBlockId(selectedExit[0], selectedExit[1] + 1, selectedExit[2]) == this.blockID)
-						isValidPortal = true;
-					else if (testWorld.isAirBlock(selectedExit[0], selectedExit[1] + 1, selectedExit[2]))
-						isValidPortal = PortalHelper.createPortal(testWorld, selectedExit[0], selectedExit[1] + 1, selectedExit[2], modifier.Colour);
-					
-					if (isValidPortal && canTeleport)
+					if (WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity))
 					{
-						EntityHelper.sendEntityToDimensionAndLocation(entity, exitD, exitX, exitY, exitZ, false);
-					}
-					else if (!canTeleport)
-					{
-						Logger.LogData(String.format("Couldn't teleport entity (%s) - Modifier does not have the required upgrade.", entity.getEntityName()));
-						EntityHelper.sendMessage(entity, Language.NoUpgrade);
-					}
-					else
-					{
-						Logger.LogData(String.format("Couldn't teleport entity (%s) - Exit is blocked.", entity.getEntityName()));
-						EntityHelper.sendMessage(entity, Language.ExitBlocked);
+						EntityHelper.sendEntityToDimensionAndLocation(entity, selectedExit[3], selectedExit[0], selectedExit[1], selectedExit[2], false);
 					}
 				}
 			}

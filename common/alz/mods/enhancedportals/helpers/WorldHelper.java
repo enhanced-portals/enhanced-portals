@@ -5,7 +5,10 @@ import java.util.Queue;
 
 import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.reference.BlockID;
+import alz.mods.enhancedportals.reference.Language;
+import alz.mods.enhancedportals.reference.Logger;
 import alz.mods.enhancedportals.reference.Settings;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -200,5 +203,50 @@ public class WorldHelper
 			y -= 1;
 		
 		return new int[] { x, y, z };
+	}
+	
+	public static boolean isValidExitPortal(World baseWorld, int[] selectedExit, TileEntityPortalModifier baseModifier, Entity entity)
+	{
+		boolean hasUpgradesRequired = false;
+		World theWorld = baseWorld;
+		
+		if (selectedExit[3] == baseWorld.provider.dimensionId)
+		{
+			hasUpgradesRequired = baseModifier.hasUpgrade(1) || baseModifier.hasUpgrade(2);
+		}
+		else if ((selectedExit[3] == 0 && baseWorld.provider.dimensionId == -1) || (selectedExit[3] == -1 && baseWorld.provider.dimensionId == 0))
+		{
+			hasUpgradesRequired = true;
+		}
+		else
+		{
+			hasUpgradesRequired = baseModifier.hasUpgrade(2);
+			theWorld = getWorld(selectedExit[3]);
+		}
+		
+		if (!hasUpgradesRequired)
+		{
+			Logger.LogData(String.format("Couldn't teleport entity (%s) - Modifier does not have the required upgrade.", entity.getEntityName()));
+			EntityHelper.sendMessage(entity, Language.NoUpgrade);
+			return false;
+		}
+		
+		int[] offset = offsetDirectionBased(theWorld, selectedExit[0], selectedExit[1], selectedExit[2]);
+		
+		if (theWorld.getBlockId(offset[0], offset[1], offset[2]) == BlockID.NetherPortal)
+		{
+			return true;
+		}
+		else
+		{
+			boolean createdPortal =  PortalHelper.createPortal(theWorld, offset[0], offset[1], offset[2], 0);
+			
+			if (createdPortal)
+				return true;
+		}
+		
+		Logger.LogData(String.format("Couldn't teleport entity (%s) - Exit is blocked.", entity.getEntityName()));
+		EntityHelper.sendMessage(entity, Language.ExitBlocked);		
+		return false;
 	}
 }
