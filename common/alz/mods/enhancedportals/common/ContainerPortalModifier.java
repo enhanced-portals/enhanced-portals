@@ -50,12 +50,12 @@ public class ContainerPortalModifier extends Container
 			ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
             
-            if (slot >= 3 && stackInSlot.itemID == ItemID.ModifierUpgrade)
+            if (slot >= 3 && stackInSlot.itemID == ItemID.ModifierUpgrade + 256)
             {
             	if (!this.mergeItemStack(stackInSlot, 0, 3, true))
             		return null;
             }
-            else if (slot < 3 && stackInSlot.itemID == ItemID.ModifierUpgrade)
+            else if (slot < 3 && stackInSlot.itemID == ItemID.ModifierUpgrade + 256)
             {
             	if (!this.mergeItemStack(stackInSlot, 3, 37, true))
             		return null;

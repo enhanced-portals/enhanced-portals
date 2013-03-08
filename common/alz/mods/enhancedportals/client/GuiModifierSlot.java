@@ -28,6 +28,6 @@ public class GuiModifierSlot extends Slot
 	@Override
 	public boolean isItemValid(ItemStack itemStack)
 	{
-		return itemStack.itemID == ItemID.ModifierUpgrade;
+		return itemStack.itemID == (ItemID.ModifierUpgrade + 256);
 	}
 }
