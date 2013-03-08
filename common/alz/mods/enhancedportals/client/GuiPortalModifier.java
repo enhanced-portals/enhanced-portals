@@ -31,13 +31,13 @@ public class GuiPortalModifier extends GuiContainer
 	{
 		super.initGui();
 		
-		textBox = new GuiIntegerBox(fontRenderer, (((this.width - 20) / 2) - (75 / 2)), this.guiTop + 32, 75, 16);
+		textBox = new GuiIntegerBox(fontRenderer, (((this.width - 20) / 2) - (75 / 2)), this.guiTop + 42, 75, 16);
 		textBox.setFocused(true);
 		textBox.setText("" + Modifier.Frequency);
 		
-		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 25, this.guiTop + 50, 40, 20, "Save");
-		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 25, this.guiTop + 50, 40, 20, "Clear");
-				
+		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 61, this.guiTop + 40, 20, 20, "§2S");
+		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 40, this.guiTop + 40, 20, 20, "§cC");
+		
 		button.enabled = false;
 		button2.enabled = Integer.parseInt(textBox.getText()) != 0;
 				
@@ -107,7 +107,7 @@ public class GuiPortalModifier extends GuiContainer
 	{
 		fontRenderer.drawString(Language.PortalModifierTitle, 8, 6, 4210752);
 						
-		fontRenderer.drawString(Language.Frequency, (((this.width - 20) / 2) - (fontRenderer.getStringWidth(Language.Frequency) / 2)) - this.guiLeft, 20, 4210752);
+		fontRenderer.drawString(Language.Frequency, (((this.width - 20) / 2) - (fontRenderer.getStringWidth(Language.Frequency) / 2)) - this.guiLeft, 30, 4210752);
 		//fontRenderer.drawString(Language.Upgrades, (this.xSize - 7) - fontRenderer.getStringWidth(Language.Upgrades), 6, 4210752);
 		
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);

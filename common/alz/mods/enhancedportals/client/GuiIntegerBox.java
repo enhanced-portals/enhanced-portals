@@ -11,7 +11,6 @@ public class GuiIntegerBox extends GuiTextField
 		super(par1FontRenderer, par2, par3, par4, par5);
 		
 		setMaxStringLength(10);
-		setTextColor(1111111);
 	}
 	
 	@Override
