@@ -16,9 +16,9 @@ public class ContainerPortalModifier extends Container
 	{
 		tileEntity = modifier;
 		
-		addSlotToContainer(new GuiModifierSlot(tileEntity, 0, 8, 46));
-		addSlotToContainer(new GuiModifierSlot(tileEntity, 1, 26, 46));
-		addSlotToContainer(new GuiModifierSlot(tileEntity, 2, 44, 46));
+		addSlotToContainer(new GuiModifierSlot(tileEntity, 0, 152, 55));
+		addSlotToContainer(new GuiModifierSlot(tileEntity, 1, 152, 35));
+		addSlotToContainer(new GuiModifierSlot(tileEntity, 2, 152, 15));
 		
 		bindPlayerInventory(inventoryPlayer);
 	}

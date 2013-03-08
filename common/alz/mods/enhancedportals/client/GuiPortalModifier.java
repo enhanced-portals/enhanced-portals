@@ -17,11 +17,9 @@ import net.minecraft.util.StatCollector;
 public class GuiPortalModifier extends GuiContainer
 {
 	GuiTextField textBox;
-	GuiButton button;
+	GuiButton button, button2;
 	public TileEntityPortalModifier Modifier;
-	
-	String originalText;
-	
+		
 	public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
 	{
 		super(new ContainerPortalModifier(player, modifier));
@@ -33,23 +31,40 @@ public class GuiPortalModifier extends GuiContainer
 	{
 		super.initGui();
 		
-		textBox = new GuiTextField(fontRenderer, this.guiLeft + 8, this.guiTop + 21, 52, 16);
+		textBox = new GuiIntegerBox(fontRenderer, (((this.width - 20) / 2) - (75 / 2)), this.guiTop + 32, 75, 16);
 		textBox.setFocused(true);
 		textBox.setText("" + Modifier.Frequency);
-		originalText = "" + Modifier.Frequency;
-		button = new GuiButton(1, this.guiLeft + this.xSize - 44, this.guiTop + (this.ySize / 2) - 25, 37, 20, "Save");
-		controlList.add(button);
+		
+		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 25, this.guiTop + 50, 40, 20, "Save");
+		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 25, this.guiTop + 50, 40, 20, "Clear");
+				
 		button.enabled = false;
+		button2.enabled = Integer.parseInt(textBox.getText()) != 0;
+				
+		controlList.add(button);
+		controlList.add(button2);
 	}
 	
 	protected void actionPerformed(GuiButton button)
 	{
-		if (button.id == 1 && button.enabled == true)
+		if (!button.enabled)
+			return;
+		
+		if (button.id == 1)
 		{
 			textBox.setText(String.format("%1s", textBox.getText()).replace(' ', '0'));
+			this.button.enabled = false;
+			
+			Modifier.Frequency = Integer.parseInt(textBox.getText());			
+			ClientNetworking.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
+		}
+		else if (button.id == 2)
+		{
+			textBox.setText("0");
+			this.button.enabled = false;
+			button2.enabled = false;
+			
 			Modifier.Frequency = Integer.parseInt(textBox.getText());
-			button.enabled = false;
-			originalText = textBox.getText();
 			ClientNetworking.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
 		}
 	}
@@ -69,14 +84,13 @@ public class GuiPortalModifier extends GuiContainer
 			return;
 		}
 		
-		if (!Character.isDigit(par1) && par2 != 14  && par2 != 211 && par2 != 203 && par2 != 205)
-			return;
-		
-		if (textBox.getText().length() > 5 && par2 != 14  && par2 != 211 && par2 != 203 && par2 != 205)
-			return;
-		
 		if (!button.enabled)
 			button.enabled = true;
+		
+		if (textBox.getText() == "0")
+			button2.enabled = false;
+		else
+			button2.enabled = true;
 		
 		textBox.textboxKeyTyped(par1, par2);
 	}
@@ -91,19 +105,10 @@ public class GuiPortalModifier extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		int swappedColour = Modifier.Colour;
-		
-		if (swappedColour == 0)
-			swappedColour = 5;
-		else if (swappedColour == 5)
-			swappedColour = 0;
-		
 		fontRenderer.drawString(Language.PortalModifierTitle, 8, 6, 4210752);
-				
-		fontRenderer.drawString(Language.Frequency, 70, 25, 4210752);
-		fontRenderer.drawString(Language.Upgrades, 70, 50, 4210752);
-		
-		//fontRenderer.drawString(ItemDye.dyeColorNames[swappedColour].substring(0, 1).toUpperCase() + ItemDye.dyeColorNames[swappedColour].substring(1), 125, 6, ItemDye.dyeColors[swappedColour]);
+						
+		fontRenderer.drawString(Language.Frequency, (((this.width - 20) / 2) - (fontRenderer.getStringWidth(Language.Frequency) / 2)) - this.guiLeft, 20, 4210752);
+		//fontRenderer.drawString(Language.Upgrades, (this.xSize - 7) - fontRenderer.getStringWidth(Language.Upgrades), 6, 4210752);
 		
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
