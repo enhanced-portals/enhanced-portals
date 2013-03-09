@@ -135,6 +135,15 @@ public class GuiPortalModifier extends GuiContainer
 	{
 		super.drawScreen(par1, par2, par3);
 		textBox.drawTextBox();
+		
+		if (this.isPointInRegion(19, 40, 18, 20, par1, par2))
+        {
+            this.drawCreativeTabHoveringText(Language.CancelString, par1, par2);
+        }
+		else if (this.isPointInRegion(120, 40, 18, 20, par1, par2))
+        {
+            this.drawCreativeTabHoveringText(Language.SaveString, par1, par2);
+        }
 	}
 	
 	@Override

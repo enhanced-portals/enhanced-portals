@@ -38,7 +38,7 @@ public class GuiIntegerBox extends GuiTextField
 		if (!clickedInside)
 			return;
 		
-		if (getText().length() > 0 && (getText() == "0" || getText() == "Not set" || Integer.parseInt(getText()) == 0))
+		if (getText().length() > 0 && (getText() == "0" || Integer.parseInt(getText()) == 0))
 		{
 			setText("");
 		}

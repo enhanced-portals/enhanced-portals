@@ -9,5 +9,7 @@ public class Language
 	public static String Upgrades = "Upgrades";
 	public static String PortalModifierTitle = "Portal Modifier";
 	public static String SaveCharacter = "S";
+	public static String SaveString = "Save the frequency";
 	public static String CancelCharacter = "C";
+	public static String CancelString = "Clear the frequency";
 }
