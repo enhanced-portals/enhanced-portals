@@ -168,7 +168,6 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory
 	@Override
 	public boolean func_94042_c()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 

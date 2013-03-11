@@ -54,7 +54,7 @@ public class EnhancedPortals
 		
 		BlockID.ObsidianStairs = Settings.GetFromConfig("ObsidianStairsID", 512, true);
 		BlockID.PortalModifier = Settings.GetFromConfig("PortalModifierID", 513, true);
-		ItemID.ModifierUpgrade = Settings.GetFromConfig("PortalModifierUpgradeID", 6000, false) - 256;
+		ItemID.ModifierUpgrade = Settings.GetFromConfig("PortalModifierUpgradeID", 6000, false);
 		
 		Language.NoUpgrade = Settings.GetFromConfig("TEXT_NoUpgrade", "You do not have the required upgrade.");
 		Language.ExitBlocked = Settings.GetFromConfig("TEXT_ExitBlocked", "The exit portal is blocked or invalid.");
@@ -76,8 +76,7 @@ public class EnhancedPortals
 		Blocks.Init();
 		TileEntities.Init();
 		Items.Init();
-				
-		// Events etc
+		
 		MinecraftForge.EVENT_BUS.register(new EventHooks());
 		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());		
 	}
