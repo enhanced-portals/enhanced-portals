@@ -1,4 +1,4 @@
-package alz.mods.enhancedportals.common;
+package alz.mods.enhancedportals.tileentity;
 
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import net.minecraft.entity.player.EntityPlayer;

@@ -4,9 +4,8 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import alz.mods.enhancedportals.client.ClientNetworking;
-import alz.mods.enhancedportals.common.EnhancedPortals;
-import alz.mods.enhancedportals.common.TileEntityPortalModifier;
+import alz.mods.enhancedportals.EnhancedPortals;
+import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.BlockID;
@@ -14,6 +13,7 @@ import alz.mods.enhancedportals.reference.GuiID;
 import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.ModData;
 import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -124,7 +124,7 @@ public class BlockPortalModifier extends BlockContainer
 				
 				if (world.isRemote)
 				{
-					ClientNetworking.SendBlockUpdate(-1, colour, x, y, z, world.provider.dimensionId);
+					ClientProxy.SendBlockUpdate(-1, colour, x, y, z, world.provider.dimensionId);
 				}
 								
 				return true;

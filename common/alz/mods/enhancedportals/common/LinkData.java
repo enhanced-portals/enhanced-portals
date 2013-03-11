@@ -18,6 +18,7 @@ import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.ModData;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;

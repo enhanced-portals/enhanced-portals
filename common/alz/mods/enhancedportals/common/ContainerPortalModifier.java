@@ -3,6 +3,7 @@ package alz.mods.enhancedportals.common;
 import alz.mods.enhancedportals.client.GuiModifierSlot;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.reference.ItemID;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

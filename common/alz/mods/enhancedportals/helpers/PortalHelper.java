@@ -310,7 +310,7 @@ public class PortalHelper
 	{
 		Queue<int[]> queue = new LinkedList<int[]>();
 		queue.add(new int[] { x, y, z });
-		System.out.println("Removing portal...");
+
 		while (!queue.isEmpty())
 		{
 			int[] current = (int[])queue.remove();
@@ -331,18 +331,7 @@ public class PortalHelper
 		while (!queue.isEmpty())
 		{
 			int[] current = (int[])queue.remove();
-			
-			//if (current.length == 4)
-			//{
-			//	if (current[3] == Block.fire.blockID || current[3] == BlockID.NetherPortal)
-			//		current[3] = current[4] = 0;
-			//	
-			//	world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], current[3], current[4], 1);
-			//}
-			//else
-			//{
-				world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], 0, 0, 2);
-			//}
+			world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], 0, 0, 2);			
 		}
 		
 		return true;

@@ -3,11 +3,11 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.Language;
 import alz.mods.enhancedportals.reference.Logger;
 import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -217,11 +217,18 @@ public class WorldHelper
 		else if ((selectedExit[3] == 0 && baseWorld.provider.dimensionId == -1) || (selectedExit[3] == -1 && baseWorld.provider.dimensionId == 0))
 		{
 			hasUpgradesRequired = true;
+			theWorld = getWorld(selectedExit[3]);
 		}
 		else
 		{
 			hasUpgradesRequired = baseModifier.hasUpgrade(2);
 			theWorld = getWorld(selectedExit[3]);
+		}
+		
+		if (baseWorld.provider.dimensionId == 1 && selectedExit[3] != 1)
+		{
+			Logger.LogData(String.format("Couldn't teleport entity (%s) - Teleportation from The End to another dimension is currently broken.", entity.getEntityName()));
+			return false;
 		}
 		
 		if (!hasUpgradesRequired)

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
-import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
@@ -15,6 +14,7 @@ import alz.mods.enhancedportals.reference.Language;
 import alz.mods.enhancedportals.reference.Logger;
 import alz.mods.enhancedportals.reference.ModData;
 import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -84,7 +84,7 @@ public class BlockNetherPortal extends BlockPortal
 		else
 		{
 			if (EntityHelper.canEntityTravel(entity))
-			{				
+			{
 				List<int[]> validExits = IO.LinkData.getFrequencyExcluding(modifier.Frequency, new int[] { modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId });
 				
 				if (validExits == null || validExits.isEmpty())

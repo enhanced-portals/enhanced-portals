@@ -5,9 +5,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 
 import alz.mods.enhancedportals.common.ContainerPortalModifier;
-import alz.mods.enhancedportals.common.TileEntityPortalModifier;
 import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.Language;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -56,7 +56,7 @@ public class GuiPortalModifier extends GuiContainer
 			this.button.enabled = false;
 			
 			Modifier.Frequency = Integer.parseInt(textBox.getText());			
-			ClientNetworking.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
+			ClientProxy.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
 		}
 		else if (button.id == 2)
 		{
@@ -65,7 +65,7 @@ public class GuiPortalModifier extends GuiContainer
 			button2.enabled = false;
 			
 			Modifier.Frequency = Integer.parseInt(textBox.getText());
-			ClientNetworking.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
+			ClientProxy.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
 		}
 	}
 	

@@ -3,7 +3,7 @@ package alz.mods.enhancedportals.common;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
-import alz.mods.enhancedportals.client.ClientNetworking;
+import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.ModData;
 
@@ -42,7 +42,7 @@ public class PacketHandler implements IPacketHandler
 		
 		if (type == 1)
 		{
-			ClientNetworking.RecieveBlockUpdate(frequency, colour, x, y, z, dim);
+			ClientProxy.RecieveBlockUpdate(frequency, colour, x, y, z, dim);
 		}
 		else if (type == 2 && IO.LinkData != null)
 		{

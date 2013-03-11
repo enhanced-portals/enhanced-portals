@@ -3,6 +3,7 @@ package alz.mods.enhancedportals.common;
 import alz.mods.enhancedportals.client.GuiPortalModifier;
 import alz.mods.enhancedportals.reference.GuiID;
 import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
