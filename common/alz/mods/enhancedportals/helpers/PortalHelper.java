@@ -6,7 +6,6 @@ import java.util.Queue;
 import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.Logger;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.IBlockAccess;
@@ -161,8 +160,8 @@ public class PortalHelper
 				if (sides >= 2)
 				{
 					addedBlocks.add(new int[] { current[0], current[1], current[2], currentID, world.getBlockMetadata(current[0], current[1], current[2]) });
-					world.setBlockAndMetadata(current[0], current[1], current[2], BlockID.NetherPortal, meta);
-				
+					world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], BlockID.NetherPortal, meta, 2);
+									
 					queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 				}
 			}
@@ -311,7 +310,7 @@ public class PortalHelper
 	{
 		Queue<int[]> queue = new LinkedList<int[]>();
 		queue.add(new int[] { x, y, z });
-		
+		System.out.println("Removing portal...");
 		while (!queue.isEmpty())
 		{
 			int[] current = (int[])queue.remove();
@@ -319,7 +318,7 @@ public class PortalHelper
 			
 			if (currentID == BlockID.NetherPortal)
 			{
-				world.setBlock(current[0], current[1], current[2], 0);			
+				world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], 0, 0, 2);
 				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 			}
 		}
@@ -333,17 +332,17 @@ public class PortalHelper
 		{
 			int[] current = (int[])queue.remove();
 			
-			if (current.length == 4)
-			{
-				if (current[3] == Block.fire.blockID || current[3] == BlockID.NetherPortal)
-					current[3] = current[4] = 0;
-				
-				world.setBlockAndMetadata(current[0], current[1], current[2], current[3], current[4]);
-			}
-			else
-			{
-				world.setBlock(current[0], current[1], current[2], 0);
-			}
+			//if (current.length == 4)
+			//{
+			//	if (current[3] == Block.fire.blockID || current[3] == BlockID.NetherPortal)
+			//		current[3] = current[4] = 0;
+			//	
+			//	world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], current[3], current[4], 1);
+			//}
+			//else
+			//{
+				world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], 0, 0, 2);
+			//}
 		}
 		
 		return true;

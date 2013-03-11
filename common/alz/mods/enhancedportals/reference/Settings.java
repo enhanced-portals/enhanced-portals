@@ -101,6 +101,6 @@ public class Settings
 	
 	public static String GetFromConfig(String key, String defaultValue)
 	{
-		return ConfigFile.get(Configuration.CATEGORY_GENERAL, key, defaultValue).value;
+		return ConfigFile.get(Configuration.CATEGORY_GENERAL, key, defaultValue).getString();
 	}
 }

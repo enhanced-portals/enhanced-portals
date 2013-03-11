@@ -12,9 +12,11 @@ import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.GuiID;
 import alz.mods.enhancedportals.reference.IO;
+import alz.mods.enhancedportals.reference.ModData;
 import alz.mods.enhancedportals.reference.Settings;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -24,6 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,14 +34,61 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class BlockPortalModifier extends BlockContainer
 {
+	private Icon[] activeFace;
+	private Icon sideFace;
+	
 	public BlockPortalModifier()
 	{
-		super(BlockID.PortalModifier, 0, Material.rock);
+		super(BlockID.PortalModifier, Material.rock);
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
-		setBlockName("blockPortalModifier");
+		setUnlocalizedName("portalModifier");
 		setCreativeTab(CreativeTabs.tabBlock);
+	}
+		
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void func_94332_a(IconRegister iconRegister)
+	{
+		sideFace = iconRegister.func_94245_a(ModData.ID + ":portalModifier_side");
+		
+		activeFace = new Icon[16];
+		
+		for (int i = 0; i < 16; i++)
+		{
+			activeFace[i] = iconRegister.func_94245_a(ModData.ID + ":portalModifier_active_" + i);
+		}
+	}
+	
+	// Placed in world
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	{
+		TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+				
+		if (modifier.hasUpgrade(0))
+		{
+			return activeFace[modifier.Colour];
+		}
+				
+		return side == meta ? activeFace[modifier.Colour] : sideFace;
+	}
+	
+	// For inventory
+	//@Override
+	//public Icon getBlockTextureFromSide(int side)
+	//{		
+	//	return side == 1 ? 16 : 48;
+	//}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
+	{
+		return side == 1 ? activeFace[0] : sideFace;
 	}
 	
 	@Override
@@ -73,7 +123,9 @@ public class BlockPortalModifier extends BlockContainer
 					world.markBlockForRenderUpdate(x, y, z);
 				
 				if (world.isRemote)
+				{
 					ClientNetworking.SendBlockUpdate(-1, colour, x, y, z, world.provider.dimensionId);
+				}
 								
 				return true;
 			}
@@ -84,40 +136,11 @@ public class BlockPortalModifier extends BlockContainer
 		player.openGui(EnhancedPortals.instance, GuiID.PortalModifier, world, x, y, z);
 		return true;
 	}
-	
-	// Placed in world
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
-	{
-		TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z);
-				
-		if (modifier.hasUpgrade(0))
-		{
-			return side == meta ? 32 + modifier.Colour : 16 + modifier.Colour;
-		}
 		
-		return side == meta ? 16 + modifier.Colour : 48;
-	}
-
-	// For inventory
-	@Override
-	public int getBlockTextureFromSide(int side)
-	{		
-		return side == 1 ? 16 : 48;
-	}
-	
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityPortalModifier();
-	}
-	
-	@Override
-	public String getTextureFile()
-	{
-		return IO.TerrainPath;
 	}
 	
 	@Override
@@ -204,8 +227,8 @@ public class BlockPortalModifier extends BlockContainer
 		modifier.HadPower = gettingPower;
 	}
 	
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving)
+	@Override	
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
 	{
 		int direction = 0;
         int facing = MathHelper.floor_double((double)(entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -224,6 +247,6 @@ public class BlockPortalModifier extends BlockContainer
         else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
         	direction = ForgeDirection.DOWN.ordinal();
 
-        world.setBlockMetadataWithNotify(x, y, z, direction);
+        world.setBlockAndMetadataWithNotify(x, y, z, blockID, direction, 0);
 	}
 }

@@ -1,8 +1,11 @@
 package alz.mods.enhancedportals.helpers;
 
+import alz.mods.enhancedportals.reference.ItemID;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -106,5 +109,31 @@ public class EntityHelper
 		}
 		
 		return new double[] { x, y, z };
+	}
+	
+	public static boolean canAcceptItemStack(IInventory inventory, ItemStack stack)
+	{
+		if (stack.itemID != ItemID.ModifierUpgrade + 256)
+			return false;
+		
+		ItemStack firstSlot = inventory.getStackInSlot(0), secondSlot = inventory.getStackInSlot(1), thirdSlot = inventory.getStackInSlot(2);
+				
+		if (firstSlot != null)
+		{
+			if (firstSlot.getItemDamage() == stack.getItemDamage())
+				return false;
+		}
+		else if (secondSlot != null)
+		{
+			if (secondSlot.getItemDamage() == stack.getItemDamage())
+				return false;
+		}
+		else if (thirdSlot != null)
+		{
+			if (thirdSlot.getItemDamage() == stack.getItemDamage())
+				return false;
+		}
+		
+		return true;
 	}
 }

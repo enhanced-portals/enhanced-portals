@@ -1,5 +1,6 @@
 package alz.mods.enhancedportals.common;
 
+import alz.mods.enhancedportals.helpers.EntityHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -10,12 +11,13 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityPortalModifier extends TileEntity implements IInventory
 {
 	public int Colour, Frequency;
-	public boolean HadPower;
+	public boolean HadPower, TestSynch;
 	ItemStack[] inv;
 	
 	public TileEntityPortalModifier()
 	{
 		inv = new ItemStack[3];
+		TestSynch = false;
 	}
 	
 	public boolean hasUpgrade(int id)
@@ -161,4 +163,18 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory
 
 	@Override
 	public void closeChest() { }
+
+	// ?
+	@Override
+	public boolean func_94042_c()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean func_94041_b(int i, ItemStack itemstack)
+	{
+		return EntityHelper.canAcceptItemStack(this, itemstack);
+	}	
 }

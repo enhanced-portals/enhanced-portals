@@ -15,7 +15,7 @@ public class BlockStairsObsidian extends BlockStairs
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
-		setBlockName("blockStairsObsidian");
+		setUnlocalizedName("blockStairsObsidian");
 		setLightOpacity(0);
 	}
 	

@@ -26,6 +26,7 @@ public class GuiPortalModifier extends GuiContainer
 		Modifier = modifier;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
@@ -39,9 +40,9 @@ public class GuiPortalModifier extends GuiContainer
 		
 		button.enabled = false;
 		button2.enabled = Integer.parseInt(textBox.getText()) != 0;
-				
-		controlList.add(button);
-		controlList.add(button2);
+	
+		buttonList.add(button);
+		buttonList.add(button2);
 	}
 	
 	protected void actionPerformed(GuiButton button)
@@ -122,9 +123,8 @@ public class GuiPortalModifier extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
 	{
-		int texture = mc.renderEngine.getTexture(IO.GuiTextureDirectory + "portalModifier.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(texture);
+        mc.renderEngine.func_98187_b(IO.GuiTextureDirectory + "portalModifier.png");
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);		

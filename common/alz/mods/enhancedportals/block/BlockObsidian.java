@@ -8,11 +8,11 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
 {
 	public BlockObsidian()
 	{
-		super(49, 37);
+		super(49);
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
-		setBlockName("obsidian");
+		setUnlocalizedName("obsidian");
 	}
 	
 	@Override

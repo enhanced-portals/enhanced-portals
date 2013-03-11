@@ -1,6 +1,6 @@
 package alz.mods.enhancedportals.client;
 
-import alz.mods.enhancedportals.reference.ItemID;
+import alz.mods.enhancedportals.helpers.EntityHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -27,7 +27,7 @@ public class GuiModifierSlot extends Slot
 	
 	@Override
 	public boolean isItemValid(ItemStack itemStack)
-	{
-		return itemStack.itemID == (ItemID.ModifierUpgrade + 256);
+	{				
+		return EntityHelper.canAcceptItemStack(inventory, itemStack);
 	}
 }

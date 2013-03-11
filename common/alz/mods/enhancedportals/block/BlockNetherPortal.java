@@ -13,6 +13,7 @@ import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.Language;
 import alz.mods.enhancedportals.reference.Logger;
+import alz.mods.enhancedportals.reference.ModData;
 import alz.mods.enhancedportals.reference.Settings;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -20,31 +21,41 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.BlockPortal;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockNetherPortal extends BlockPortal
 {
+	Icon[] textures;
+	
 	public BlockNetherPortal()
 	{
-		super(90, 14);
+		super(90);
 		setHardness(-1.0F);
 		setStepSound(soundGlassFootstep);
 		setLightValue(0.75F);
-		setBlockName("portal");
+		setUnlocalizedName("portal");
 	}
-		
+
+	@Override
 	@SideOnly(Side.CLIENT)
-	public String getTextureFile()
+	public void func_94332_a(IconRegister iconRegister)
 	{
-		return IO.TerrainPath;
+		textures = new Icon[16];
+		
+		for (int i = 0; i < 16; i++)
+		{
+			textures[i] = iconRegister.func_94245_a(ModData.ID + ":netherPortal_" + i);
+		}
 	}
-	
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
@@ -97,9 +108,9 @@ public class BlockNetherPortal extends BlockPortal
 	}
 	
 	@Override
-	public int getBlockTextureFromSideAndMetadata(int side, int meta)
+	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
 	{
-		return meta;
+		return textures[meta];
 	}
 	
 	@Override
@@ -183,13 +194,9 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		// If the ID isn't 0, the portal wasn't destroyed
-		if (id != 0)
-			return;
-				
 		// Lets see if the portal is still intact
 		if (PortalHelper.getPortalShape((World)world, x, y, z) == PortalShape.INVALID)
-			PortalHelper.removePortal(world, x, y, z); // If it's not, deconstruct it
+			PortalHelper.removePortal(world, x, y, z, PortalShape.INVALID); // If it's not, deconstruct it
 	}
 	
 	@Override
