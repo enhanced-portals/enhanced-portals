@@ -42,15 +42,16 @@ public class EntityHelper
 		if (entity instanceof EntityPlayerMP)
 			((EntityPlayerMP)entity).playerNetServerHandler.setPlayerLocation(offset[0], offset[1], offset[2], entity.rotationYaw, entity.rotationPitch);
 		else
-		{
-			//if (entity instanceof EntityMinecart)
-			//	y += 0.5;
-			
+		{			
 			entity.setPositionAndRotation(offset[0], offset[1], offset[2], entity.rotationYaw, entity.rotationPitch);
 		}
 		
 		if (!keepVelocity)
-			entity.setVelocity(0, 0, 0);
+		{
+			entity.motionX = 0;
+			entity.motionY = 0;
+			entity.motionZ = 0;
+		}
 	}
 	
 	public static void sendEntityToDimension(Entity Entity, int Dimension)
