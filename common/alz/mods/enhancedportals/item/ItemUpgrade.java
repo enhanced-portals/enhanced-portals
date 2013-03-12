@@ -17,7 +17,7 @@ import net.minecraft.util.Icon;
 
 public class ItemUpgrade extends Item
 {
-	String[] text = new String[] { "Multiple Portals", "Dimensional", "Advanced Dimensional" };
+	String[] text = new String[] { "Multiple Portals", "Dimensional", "Advanced Dimensional", "Modifier Camouflage" };
 	Icon[] textures;
 	
 	public ItemUpgrade()

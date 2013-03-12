@@ -14,6 +14,7 @@ import alz.mods.enhancedportals.reference.IO;
 import alz.mods.enhancedportals.reference.ModData;
 import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -68,8 +69,12 @@ public class BlockPortalModifier extends BlockContainer
 	{
 		TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
-				
-		if (modifier.hasUpgrade(0))
+		
+		if (modifier.hasUpgrade(3))
+		{
+			return Block.blocksList[BlockID.Obsidian].getBlockTextureFromSide(0);
+		}
+		else if (modifier.hasUpgrade(0))
 		{
 			return activeFace[modifier.Colour];
 		}
@@ -78,12 +83,6 @@ public class BlockPortalModifier extends BlockContainer
 	}
 	
 	// For inventory
-	//@Override
-	//public Icon getBlockTextureFromSide(int side)
-	//{		
-	//	return side == 1 ? 16 : 48;
-	//}
-	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
