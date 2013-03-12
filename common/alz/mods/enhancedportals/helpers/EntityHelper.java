@@ -73,9 +73,6 @@ public class EntityHelper
 	
 	public static double[] offsetDirectionBased(World world, double x, double y, double z, ForgeDirection direction)
 	{
-		if (direction == ForgeDirection.UNKNOWN)
-			return null;
-		
 		if (direction == ForgeDirection.NORTH)
 		{
 			z -= 0.5;
