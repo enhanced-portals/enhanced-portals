@@ -33,16 +33,16 @@
 	
 	<target name="reobfuscate">
 		<exec dir="${dir.development}\mcp" executable="cmd" os="Windows 7">
-			<arg line="/c reobfuscate.bat" />
+			<arg line="/c reobfuscate_srg.bat" />
 		</exec>
 		<exec dir="${dir.development}\mcp" executable="cmd" os="Windows 8">
-			<arg line="/c reobfuscate.bat" />
+			<arg line="/c reobfuscate_srg.bat" />
 		</exec>
 		<exec dir="${dir.development}\mcp" executable="bash" os="Linux">
-			<arg line="reobfuscate.sh" />
+			<arg line="reobfuscate_srg.sh" />
 		</exec>
 		<exec dir="${dir.development}\mcp" executable="bash" os="Mac OS X">
-			<arg line="reobfuscate.sh" />
+			<arg line="reobfuscate_srg.sh" />
 		</exec>
 	</target>
 	
