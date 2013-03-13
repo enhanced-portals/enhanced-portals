@@ -28,7 +28,7 @@ public class ItemUpgrade extends Item
         this.setCreativeTab(CreativeTabs.tabMisc);
         setUnlocalizedName("modifierUpgrade");
         maxStackSize = 1;
-	}
+	}	
 	
 	@Override
 	@SideOnly(Side.CLIENT)

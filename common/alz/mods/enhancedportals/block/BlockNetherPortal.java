@@ -23,6 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
@@ -63,6 +64,28 @@ public class BlockNetherPortal extends BlockPortal
 		{
 			entity.setInPortal(); // Make the magical effects
 			return; // There's nothing else we need to do on the client side here.
+		}
+				
+		if (Settings.CanDyePortals && Settings.CanDyeByThrowing && entity instanceof EntityItem)
+		{
+			ItemStack item = ((EntityItem) entity).getEntityItem();
+			
+			if (item.itemID == Item.dyePowder.itemID)
+			{
+				int damage = item.getItemDamage();
+				
+				if (damage == 0)
+					damage = 5;
+				else if (damage == 5)
+					damage = 0;
+				
+				WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, damage);
+				
+				if (Settings.DoesDyingCost)
+					entity.isDead = true;
+				
+				return;
+			}
 		}
 		
 		if (!Settings.AllowTeleporting)

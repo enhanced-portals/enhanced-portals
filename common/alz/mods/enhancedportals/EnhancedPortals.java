@@ -44,6 +44,7 @@ public class EnhancedPortals
 		Settings.AllowTeleporting = Settings.GetFromConfig("AllowTeleporting", true);
 		Settings.CanDyePortals = Settings.GetFromConfig("CanDyePortals", true);
 		Settings.DoesDyingCost = Settings.GetFromConfig("DoesDyingCost", true);
+		Settings.CanDyeByThrowing = Settings.GetFromConfig("CanDyeByThrowing", true);
 		Settings.AllowModifiers = Settings.GetFromConfig("AllowModifiers", true);
 		Settings.AllowObsidianStairs = Settings.GetFromConfig("AllowObsidianStairs", true);
 		Settings.PrintPortalMessages = Settings.GetFromConfig("PrintPortalCreationMessages", true);

@@ -13,6 +13,7 @@ public class Settings
 	public static boolean AllowModifiers;
 	public static boolean AllowObsidianStairs;
 	public static boolean PrintPortalMessages;
+	public static boolean CanDyeByThrowing;
 	
 	public static int PigmenSpawnChance;
 	public static int SoundLevel;

@@ -47,7 +47,7 @@ public class BlockPortalModifier extends BlockContainer
 		setUnlocalizedName("portalModifier");
 		setCreativeTab(CreativeTabs.tabBlock);
 	}
-		
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void func_94332_a(IconRegister iconRegister)
