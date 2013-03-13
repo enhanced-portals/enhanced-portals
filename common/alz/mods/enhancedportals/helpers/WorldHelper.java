@@ -93,6 +93,7 @@ public class WorldHelper
 	{
 		Queue<int[]> queue = new LinkedList<int[]>();
 		Queue<String> checkedQueue = new LinkedList<String>();
+		Queue<int[]> nonIdeal = new LinkedList<int[]>();
 	    queue.add(new int[] { x, y, z });
 		
 		while (!queue.isEmpty())
@@ -111,12 +112,13 @@ public class WorldHelper
 	        	queue.add(new int[] { current[0] + 1, current[1], current[2] });
 	        	queue.add(new int[] { current[0] - 1, current[1], current[2] });
 	    	}
-	    	else if (currentID == blockToFind)
+	    	else if (currentID == blockToFind && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
 	    	{
 	    		if (((TileEntityPortalModifier)world.getBlockTileEntity(current[0], current[1], current[2])).Colour == colourToFind)
 	    			return current;
 	    		else
 	    		{
+	    			nonIdeal.add(new int[] {current[0], current[1], current[2] });
 		    		checkedQueue.add(current[0] + "," + current[1] + "," + current[2]);
 
 		    		queue.add(new int[] { current[0], current[1] - 1, current[2] });
@@ -129,7 +131,10 @@ public class WorldHelper
 	    	}
 	    }
 		
-		return null;
+		if (nonIdeal.isEmpty())		
+			return null;
+		
+		return nonIdeal.remove();
 	}
 	
 	public static void floodUpdateMetadata(World world, int x, int y, int z, int blockID, int newMeta)
