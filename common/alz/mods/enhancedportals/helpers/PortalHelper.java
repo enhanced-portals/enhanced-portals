@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import alz.mods.enhancedportals.reference.BlockID;
 import alz.mods.enhancedportals.reference.Logger;
+import alz.mods.enhancedportals.reference.Settings;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -140,6 +141,13 @@ public class PortalHelper
 			int[] current = (int[])queue.remove();
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 			
+			if (Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Settings.MaximumPortalSize)
+			{
+				removePortal(world, addedBlocks);
+				Logger.LogData(String.format("Failed to create a portal at %s, %s, %s. Portal size limit reached.", x, y, z), world.isRemote);
+				return false;
+			}
+			
 			if (WorldHelper.isBlockPortalRemovable(currentID))
 			{
 				int sides = getSides(world, current[0], current[1], current[2], shape);
@@ -147,7 +155,7 @@ public class PortalHelper
 				if (sides == -1)
 				{
 					removePortal(world, addedBlocks);
-					//Reference.LogData(String.format("Failed to create a portal at %s, %s, %s, shape code: %s. Unexpected block found.", x, y, z, shape), world.isRemote);
+					//Logger.LogData(String.format("Failed to create a portal at %s, %s, %s, shape code: %s. Unexpected block found.", x, y, z, shape), world.isRemote);
 					return false;
 				}
 				

@@ -49,6 +49,8 @@ public class EnhancedPortals
 		Settings.AllowObsidianStairs = Settings.GetFromConfig("AllowObsidianStairs", true);
 		Settings.PrintPortalMessages = Settings.GetFromConfig("PrintPortalCreationMessages", true);
 		
+		Settings.MaximumPortalSize = Settings.GetFromConfig("MaximumPortalSize", 0);
+		
 		Settings.PigmenSpawnChance = Settings.GetFromConfig("PigmenSpawnChance", 100, 0, 100);
 		Settings.SoundLevel = Settings.GetFromConfig("SoundLevel", 100, 0, 100);
 		Settings.ParticleLevel = Settings.GetFromConfig("ParticleLevel", 100, 0, 100);

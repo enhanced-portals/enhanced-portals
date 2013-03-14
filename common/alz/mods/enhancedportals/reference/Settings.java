@@ -15,6 +15,7 @@ public class Settings
 	public static boolean PrintPortalMessages;
 	public static boolean CanDyeByThrowing;
 	
+	public static int MaximumPortalSize;	
 	public static int PigmenSpawnChance;
 	public static int SoundLevel;
 	public static int ParticleLevel;
@@ -90,6 +91,11 @@ public class Settings
 			return maxValue;
 		
 		return val;
+	}
+	
+	public static int GetFromConfig(String key, int defaultValue)
+	{
+		return ConfigFile.get(Configuration.CATEGORY_GENERAL, key, defaultValue).getInt(defaultValue);
 	}
 	
 	public static int GetFromConfig(String key, int defaultValue, boolean block)
