@@ -24,4 +24,4 @@ When done, your directory structure should look like this:
 ***
 
 ###Translation
-Currently I am in need of people that can translate Enhanced Portals into many different languages. If you are fluent in another language, feel free to head over to the [lang directory](/tree/master/resources/mods/enhancedportals/lang), see what needs to be done and copy and edit the en_US.xml file.
+Currently I am in need of people that can translate Enhanced Portals into many different languages. If you are fluent in another language, feel free to head over to the [lang directory](https://github.com/ShadedDimension/enhanced-portals/tree/master/resources/mods/enhancedportals/lang), see what needs to be done and copy and edit the en_US.xml file.
