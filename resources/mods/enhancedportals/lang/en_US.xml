@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+	<comment>English (US) Localization File</comment>
+	<entry key="tile.portalModifier.name">Portal Modifier</entry>
+	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
+	<entry key="item.portalModifierUpgrade.name">Portal Modifier Upgrade</entry>
+	<entry key="item.portalModifierUpgrade.multiplePortals">Multiple Portals</entry>
+	<entry key="item.portalModifierUpgrade.dimensional">Dimensional</entry>
+	<entry key="item.portalModifierUpgrade.advancedDimensional">Advanced Dimensional</entry>
+	<entry key="item.portalModifierUpgrade.modifierCamo">Modifier Camouflage</entry>
+	<entry key="gui.portalModifier.frequency">Frequency</entry>
+	<entry key="gui.portalModifier.clearCharacter">C</entry>
+	<entry key="gui.portalModifier.saveCharacter">S</entry>
+	<entry key="gui.portalModifier.clearFrequency">Clear the frequency</entry>
+	<entry key="gui.portalModifier.saveFrequency">Save the frequency</entry>
+	<entry key="portal.noExitFound">No valid exit portal was found.</entry>
+	<entry key="portal.missingUpgrade">The Portal Modifier is missing an upgrade.</entry>
+	<entry key="portal.exitBlocked">The exit portal is invalid or blocked.</entry>
+	<entry key="console.portal.noExitFound">Could not teleport entity %s. No exit was found.</entry>
+	<entry key="console.portal.missingUpgrade">Could not teleport entity %s. The portal is missing an upgrade.</entry>
+	<entry key="console.portal.exitBlocked">Could not teleport entity %s. The exit is blocked or invalid.</entry>
+	<entry key="console.portal.sizeFail">Failed to create a portal at %s, %s, %s. Portal size limit reached.</entry>
+	<entry key="console.portal.success">Successfully created a portal of %s blocks at %s, %s, %s.</entry>
+	<entry key="console.portal.fail">Failed to create a portal at %s, %s, %s. Failed portal validation.</entry>
+</properties>

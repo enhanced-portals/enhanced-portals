@@ -3,10 +3,8 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import alz.mods.enhancedportals.reference.BlockID;
-import alz.mods.enhancedportals.reference.Language;
-import alz.mods.enhancedportals.reference.Logger;
-import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.reference.Localizations;
+import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -151,7 +149,7 @@ public class WorldHelper
 	    	{
 	    		int X = current[0]; int Y = current[1]; int Z = current[2];
 
-	    		world.setBlockAndMetadataWithNotify(X, Y, Z, BlockID.NetherPortal, newMeta, 3);
+	    		world.setBlockAndMetadataWithNotify(X, Y, Z, Reference.BlockIDs.NetherPortal, newMeta, 3);
 	    		world.markBlockForUpdate(X, Y, Z);
 	    		
 	    		queue.add(new int[] { X, Y - 1, Z });
@@ -166,15 +164,15 @@ public class WorldHelper
 	
 	public static boolean isBlockPortalRemovable(int ID)
 	{
-		return Settings.RemovableBlocks.contains(ID);
+		return Reference.Settings.RemovableBlocks.contains(ID);
 	}
 	
 	public static boolean isBlockPortalFrame(int ID, boolean includeSelf)
 	{
-		if (includeSelf && ID == BlockID.NetherPortal)
+		if (includeSelf && ID == Reference.BlockIDs.NetherPortal)
 			return true;
 		
-		return Settings.BorderBlocks.contains(ID);
+		return Reference.Settings.BorderBlocks.contains(ID);
 	}
 	
 	public static ForgeDirection getBlockDirection(World world, int x, int y, int z)
@@ -231,21 +229,18 @@ public class WorldHelper
 		}
 		
 		if (baseWorld.provider.dimensionId == 1 && selectedExit[3] != 1)
-		{
-			Logger.LogData(String.format("Couldn't teleport entity (%s) - Teleportation from The End to another dimension is currently broken.", entity.getEntityName()));
 			return false;
-		}
 		
 		if (!hasUpgradesRequired)
 		{
-			Logger.LogData(String.format("Couldn't teleport entity (%s) - Modifier does not have the required upgrade.", entity.getEntityName()));
-			EntityHelper.sendMessage(entity, Language.NoUpgrade);
+			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_MissingUpgrade), entity.getEntityName()));
+			EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_MissingUpgrade));
 			return false;
 		}
 		
 		int[] offset = offsetDirectionBased(theWorld, selectedExit[0], selectedExit[1], selectedExit[2]);
 		
-		if (theWorld.getBlockId(offset[0], offset[1], offset[2]) == BlockID.NetherPortal)
+		if (theWorld.getBlockId(offset[0], offset[1], offset[2]) == Reference.BlockIDs.NetherPortal)
 		{
 			return true;
 		}
@@ -257,8 +252,8 @@ public class WorldHelper
 				return true;
 		}
 		
-		Logger.LogData(String.format("Couldn't teleport entity (%s) - Exit is blocked.", entity.getEntityName()));
-		EntityHelper.sendMessage(entity, Language.ExitBlocked);		
+		Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_ExitBlocked), entity.getEntityName()));
+		EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_ExitBlocked));	
 		return false;
 	}
 }

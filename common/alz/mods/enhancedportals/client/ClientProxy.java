@@ -9,8 +9,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import alz.mods.enhancedportals.common.CommonProxy;
 import alz.mods.enhancedportals.helpers.WorldHelper;
-import alz.mods.enhancedportals.reference.BlockID;
-import alz.mods.enhancedportals.reference.ModData;
+import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ClientProxy extends CommonProxy
@@ -45,7 +44,7 @@ public class ClientProxy extends CommonProxy
 		}
 		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = ModData.ID;
+		packet.channel = Reference.MOD_ID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
 		
@@ -56,11 +55,8 @@ public class ClientProxy extends CommonProxy
 	{		
 		World world = FMLClientHandler.instance().getClient().theWorld;
 		
-		if (world.provider.dimensionId != dim || world.getBlockId(x, y, z) != BlockID.PortalModifier)
-		{
-			System.out.println("Invalid dimension or not a valid block");
+		if (world.provider.dimensionId != dim || world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
 			return;
-		}
 		
 		TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
 		
@@ -70,8 +66,8 @@ public class ClientProxy extends CommonProxy
 			modifier.Colour = colour;
 			world.markBlockForRenderUpdate(x, y, z);
 			
-			if (world.getBlockId(x, y + 1, z) == BlockID.NetherPortal && world.getBlockMetadata(x, y + 1, z) == oldColour)
-				WorldHelper.floodUpdateMetadata(world, x, y + 1, z, BlockID.NetherPortal, colour);
+			if (world.getBlockId(x, y + 1, z) == Reference.BlockIDs.NetherPortal && world.getBlockMetadata(x, y + 1, z) == oldColour)
+				WorldHelper.floodUpdateMetadata(world, x, y + 1, z, Reference.BlockIDs.NetherPortal, colour);
 		}
 		
 		if (frequency != -1)

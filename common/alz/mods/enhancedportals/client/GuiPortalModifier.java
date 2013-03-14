@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 
 import alz.mods.enhancedportals.common.ContainerPortalModifier;
-import alz.mods.enhancedportals.reference.IO;
-import alz.mods.enhancedportals.reference.Language;
+import alz.mods.enhancedportals.reference.Localizations;
+import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -35,8 +35,8 @@ public class GuiPortalModifier extends GuiContainer
 		textBox = new GuiIntegerBox(fontRenderer, (((this.width - 20) / 2) - (75 / 2)), this.guiTop + 42, 75, 16);
 		textBox.setText("" + Modifier.Frequency);
 		
-		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 61, this.guiTop + 40, 20, 20, Language.SaveCharacter);
-		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 40, this.guiTop + 40, 20, 20, Language.CancelCharacter);
+		button = new GuiButton(1, (((this.width - 20) / 2) - (40 / 2)) + 61, this.guiTop + 40, 20, 20, Localizations.getLocalizedString(Reference.Strings.GUI_SaveCharacter));
+		button2 = new GuiButton(2, (((this.width - 20) / 2) - (40 / 2)) - 40, this.guiTop + 40, 20, 20, Localizations.getLocalizedString(Reference.Strings.GUI_ClearCharacter));
 		
 		button.enabled = false;
 		button2.enabled = Integer.parseInt(textBox.getText()) != 0;
@@ -105,11 +105,10 @@ public class GuiPortalModifier extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		fontRenderer.drawString(Language.PortalModifierTitle, 8, 6, 4210752);
-						
-		fontRenderer.drawString(Language.Frequency, (((this.width - 20) / 2) - (fontRenderer.getStringWidth(Language.Frequency) / 2)) - this.guiLeft, 30, 4210752);
-		//fontRenderer.drawString(Language.Upgrades, (this.xSize - 7) - fontRenderer.getStringWidth(Language.Upgrades), 6, 4210752);
+		String freq = Localizations.getLocalizedString(Reference.Strings.GUI_Frequency);
 		
+		fontRenderer.drawString(Localizations.getLocalizedString("tile." + Reference.Strings.PortalModifier_Name + ".name"), 8, 6, 4210752);
+		fontRenderer.drawString(freq, (((this.width - 20) / 2) - (fontRenderer.getStringWidth(freq) / 2)) - this.guiLeft, 30, 4210752);
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 	
@@ -124,7 +123,7 @@ public class GuiPortalModifier extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
 	{
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.func_98187_b(IO.GuiTextureDirectory + "portalModifier.png");
+        mc.renderEngine.func_98187_b(Reference.File.GuiTextureDirectory + "portalModifier.png");
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);		
@@ -138,11 +137,11 @@ public class GuiPortalModifier extends GuiContainer
 		
 		if (this.isPointInRegion(19, 40, 18, 20, par1, par2))
         {
-            this.drawCreativeTabHoveringText(Language.CancelString, par1, par2);
+            this.drawCreativeTabHoveringText(Localizations.getLocalizedString(Reference.Strings.GUI_ClearFrequency), par1, par2);
         }
 		else if (this.isPointInRegion(120, 40, 18, 20, par1, par2))
         {
-            this.drawCreativeTabHoveringText(Language.SaveString, par1, par2);
+            this.drawCreativeTabHoveringText(Localizations.getLocalizedString(Reference.Strings.GUI_SaveFrequency), par1, par2);
         }
 	}
 	

@@ -1,6 +1,6 @@
 package alz.mods.enhancedportals.helpers;
 
-import alz.mods.enhancedportals.reference.ItemID;
+import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -111,7 +111,7 @@ public class EntityHelper
 	
 	public static boolean canAcceptItemStack(IInventory inventory, ItemStack stack)
 	{
-		if (stack.itemID != ItemID.ModifierUpgrade + 256)
+		if (stack.itemID != Reference.ItemIDs.PortalModifierUpgrade + 256)
 			return false;
 		
 		ItemStack firstSlot = inventory.getStackInSlot(0), secondSlot = inventory.getStackInSlot(1), thirdSlot = inventory.getStackInSlot(2);

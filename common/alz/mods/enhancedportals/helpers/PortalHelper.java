@@ -3,9 +3,8 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import alz.mods.enhancedportals.reference.BlockID;
-import alz.mods.enhancedportals.reference.Logger;
-import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.reference.Localizations;
+import alz.mods.enhancedportals.reference.Reference;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -141,10 +140,10 @@ public class PortalHelper
 			int[] current = (int[])queue.remove();
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 			
-			if (Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Settings.MaximumPortalSize)
+			if (Reference.Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Reference.Settings.MaximumPortalSize)
 			{
 				removePortal(world, addedBlocks);
-				Logger.LogData(String.format("Failed to create a portal at %s, %s, %s. Portal size limit reached.", x, y, z), world.isRemote);
+				Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_sizeFail), x, y, z), world.isRemote);
 				return false;
 			}
 			
@@ -155,7 +154,6 @@ public class PortalHelper
 				if (sides == -1)
 				{
 					removePortal(world, addedBlocks);
-					//Logger.LogData(String.format("Failed to create a portal at %s, %s, %s, shape code: %s. Unexpected block found.", x, y, z, shape), world.isRemote);
 					return false;
 				}
 				
@@ -168,7 +166,7 @@ public class PortalHelper
 				if (sides >= 2)
 				{
 					addedBlocks.add(new int[] { current[0], current[1], current[2], currentID, world.getBlockMetadata(current[0], current[1], current[2]) });
-					world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], BlockID.NetherPortal, meta, 2);
+					world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], Reference.BlockIDs.NetherPortal, meta, 2);
 									
 					queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 				}
@@ -177,13 +175,13 @@ public class PortalHelper
 		
 		if (validatePortal(world, x, y, z, shape))
 		{
-			Logger.LogData(String.format("Successfully created a portal of %s blocks at %s, %s, %s.", addedBlocks.size(), x, y, z), world.isRemote);
+			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_success), addedBlocks.size(), x, y, z), world.isRemote);
 						
 			return true;
 		}
 		else
 		{
-			Logger.LogData(String.format("Failed to create a portal of %s blocks at %s, %s, %s. (Failed validation)", addedBlocks.size(), x, y, z), world.isRemote);
+			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_fail), addedBlocks.size(), x, y, z), world.isRemote);
 
 			removePortal(world, addedBlocks);
 			return false;
@@ -282,7 +280,7 @@ public class PortalHelper
 			int[] current = (int[])queue.remove();			
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 			
-			if (currentID == BlockID.NetherPortal && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
+			if (currentID == Reference.BlockIDs.NetherPortal && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
 			{
 				int sides = getSides(world, current[0], current[1], current[2], shape);
 				
@@ -324,7 +322,7 @@ public class PortalHelper
 			int[] current = (int[])queue.remove();
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 			
-			if (currentID == BlockID.NetherPortal)
+			if (currentID == Reference.BlockIDs.NetherPortal)
 			{
 				world.setBlockAndMetadataWithNotify(current[0], current[1], current[2], 0, 0, 2);
 				queue = updateQueue(queue, shape, current[0], current[1], current[2]);

@@ -8,11 +8,7 @@ import alz.mods.enhancedportals.EnhancedPortals;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
-import alz.mods.enhancedportals.reference.BlockID;
-import alz.mods.enhancedportals.reference.GuiID;
-import alz.mods.enhancedportals.reference.IO;
-import alz.mods.enhancedportals.reference.ModData;
-import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -40,11 +36,11 @@ public class BlockPortalModifier extends BlockContainer
 	
 	public BlockPortalModifier()
 	{
-		super(BlockID.PortalModifier, Material.rock);
+		super(Reference.BlockIDs.PortalModifier, Material.rock);
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
-		setUnlocalizedName("portalModifier");
+		setUnlocalizedName(Reference.Strings.PortalModifier_Name);
 		setCreativeTab(CreativeTabs.tabBlock);
 	}
 	
@@ -52,13 +48,13 @@ public class BlockPortalModifier extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void func_94332_a(IconRegister iconRegister)
 	{
-		sideFace = iconRegister.func_94245_a(ModData.ID + ":portalModifier_side");
+		sideFace = iconRegister.func_94245_a(Reference.Strings.PortalModifier_Icon_Side);
 		
 		activeFace = new Icon[16];
 		
 		for (int i = 0; i < 16; i++)
 		{
-			activeFace[i] = iconRegister.func_94245_a(ModData.ID + ":portalModifier_active_" + i);
+			activeFace[i] = iconRegister.func_94245_a(String.format(Reference.Strings.PortalModifier_Icon_Active, i));
 		}
 	}
 	
@@ -72,7 +68,7 @@ public class BlockPortalModifier extends BlockContainer
 		
 		if (modifier.hasUpgrade(3))
 		{
-			return Block.blocksList[BlockID.Obsidian].getBlockTextureFromSide(0);
+			return Block.blocksList[Reference.BlockIDs.Obsidian].getBlockTextureFromSide(0);
 		}
 		else if (modifier.hasUpgrade(0))
 		{
@@ -102,7 +98,7 @@ public class BlockPortalModifier extends BlockContainer
 		{
 			ItemStack currentItem = player.inventory.mainInventory[player.inventory.currentItem];
 						
-			if (currentItem != null && Settings.CanDyePortals && currentItem.itemID == Item.dyePowder.itemID)
+			if (currentItem != null && Reference.Settings.CanDyePortals && currentItem.itemID == Item.dyePowder.itemID)
 			{
 				int colour = currentItem.getItemDamage();
 				
@@ -113,11 +109,11 @@ public class BlockPortalModifier extends BlockContainer
 				
 				tileEntity.Colour = colour;
 				
-				if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
+				if (!player.capabilities.isCreativeMode && Reference.Settings.DoesDyingCost)
 					currentItem.stackSize--;
 				
-				if (world.getBlockId(x, y + 1, z) == BlockID.NetherPortal)
-					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, BlockID.NetherPortal, colour);
+				if (world.getBlockId(x, y + 1, z) == Reference.BlockIDs.NetherPortal)
+					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, Reference.BlockIDs.NetherPortal, colour);
 				else
 					world.markBlockForRenderUpdate(x, y, z);
 				
@@ -132,7 +128,7 @@ public class BlockPortalModifier extends BlockContainer
 		else
 			return true;
 						
-		player.openGui(EnhancedPortals.instance, GuiID.PortalModifier, world, x, y, z);
+		player.openGui(EnhancedPortals.instance, Reference.GuiIDs.PortalModifier, world, x, y, z);
 		return true;
 	}
 		
@@ -150,7 +146,7 @@ public class BlockPortalModifier extends BlockContainer
 			TileEntityPortalModifier tileEntity = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
 			
 			if (tileEntity != null && tileEntity.Frequency != 0)
-				IO.LinkData.RemoveFromFrequency(tileEntity.Frequency, x, y, z, world.provider.dimensionId);
+				Reference.LinkData.RemoveFromFrequency(tileEntity.Frequency, x, y, z, world.provider.dimensionId);
 		}
 		
 		dropItems(world, x, y, z);
@@ -219,7 +215,7 @@ public class BlockPortalModifier extends BlockContainer
 			if (hasMultiUpgrade)
 				PortalHelper.removePortalAround(world, x, y, z);
 			else
-				if (blockID == BlockID.NetherPortal && meta == modifier.Colour)
+				if (blockID == Reference.BlockIDs.NetherPortal && meta == modifier.Colour)
 					PortalHelper.removePortal(world, blockToTest[0], blockToTest[1], blockToTest[2]);
 		}
 		

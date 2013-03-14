@@ -8,12 +8,8 @@ import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
 import alz.mods.enhancedportals.helpers.WorldHelper;
-import alz.mods.enhancedportals.reference.BlockID;
-import alz.mods.enhancedportals.reference.IO;
-import alz.mods.enhancedportals.reference.Language;
-import alz.mods.enhancedportals.reference.Logger;
-import alz.mods.enhancedportals.reference.ModData;
-import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.reference.Localizations;
+import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -53,7 +49,7 @@ public class BlockNetherPortal extends BlockPortal
 		
 		for (int i = 0; i < 16; i++)
 		{
-			textures[i] = iconRegister.func_94245_a(ModData.ID + ":netherPortal_" + i);
+			textures[i] = iconRegister.func_94245_a(String.format(Reference.Strings.NetherPortal_Icon, i));
 		}
 	}
 
@@ -66,7 +62,7 @@ public class BlockNetherPortal extends BlockPortal
 			return; // There's nothing else we need to do on the client side here.
 		}
 				
-		if (Settings.CanDyePortals && Settings.CanDyeByThrowing && entity instanceof EntityItem)
+		if (Reference.Settings.CanDyePortals && Reference.Settings.CanDyeByThrowing && entity instanceof EntityItem)
 		{
 			ItemStack item = ((EntityItem) entity).getEntityItem();
 			
@@ -81,19 +77,19 @@ public class BlockNetherPortal extends BlockPortal
 				
 				WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, damage);
 				
-				if (Settings.DoesDyingCost)
+				if (Reference.Settings.DoesDyingCost)
 					entity.isDead = true;
 				
 				return;
 			}
 		}
 		
-		if (!Settings.AllowTeleporting)
+		if (!Reference.Settings.AllowTeleporting)
 			return;
 		
 		// TODO Possibly make this neater, more efficient
 		
-		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, BlockID.PortalModifier, world.getBlockMetadata(x, y, z));
+		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
 		TileEntityPortalModifier modifier = null;
 		
 		if (firstModifier != null)
@@ -108,12 +104,12 @@ public class BlockNetherPortal extends BlockPortal
 		{
 			if (EntityHelper.canEntityTravel(entity))
 			{
-				List<int[]> validExits = IO.LinkData.getFrequencyExcluding(modifier.Frequency, new int[] { modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId });
+				List<int[]> validExits = Reference.LinkData.getFrequencyExcluding(modifier.Frequency, new int[] { modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId });
 				
 				if (validExits == null || validExits.isEmpty())
 				{
-					Logger.LogData(String.format("Couldn't teleport entity (%s) - No valid exit found.", entity.getEntityName()));
-					EntityHelper.sendMessage(entity, Language.NoExit);
+					Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_NoExitFound), entity.getEntityName()));
+					EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_NoExitFound));
 				}
 				else
 				{
@@ -139,7 +135,7 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public boolean tryToCreatePortal(World world, int x, int y, int z)
 	{
-		if (world.getBlockId(x, y, z) == BlockID.Obsidian)
+		if (world.getBlockId(x, y, z) == Reference.BlockIDs.Obsidian)
 			y += 1;
 		
 		return PortalHelper.createPortal(world, x, y, z, 0);
@@ -228,7 +224,7 @@ public class BlockNetherPortal extends BlockPortal
 	{
 		if (par5Random.nextInt(100) == 0)
         {
-			if (Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Settings.SoundLevel)
+			if (Reference.Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Reference.Settings.SoundLevel)
 				par1World.playSound((double)par2 + 0.5D, (double)par3 + 0.5D, (double)par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
         }
 
@@ -256,9 +252,9 @@ public class BlockNetherPortal extends BlockPortal
                 var17 = (double)(par5Random.nextFloat() * 2.0F * (float)var19);
             }
 
-            if (Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Settings.ParticleLevel)
+            if (Reference.Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Reference.Settings.ParticleLevel)
             {
-            	if (Settings.CanDyePortals)
+            	if (Reference.Settings.CanDyePortals)
             		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, par1World.getBlockMetadata(par2, par3, par4), var7, var9, var11, var13, var15, var17));
             	else
             		par1World.spawnParticle("portal", var7, var9, var11, var13, var15, var17);
@@ -271,7 +267,7 @@ public class BlockNetherPortal extends BlockPortal
 	{
 		super.updateTick(par1World, par2, par3, par4, par5Random);
 
-		if (Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Settings.PigmenSpawnChance)
+		if (Reference.Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Reference.Settings.PigmenSpawnChance)
 	        if (par1World.provider.isSurfaceWorld() && par5Random.nextInt(2000) < par1World.difficultySetting)
 	        {
 	            int var6;
@@ -296,7 +292,7 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if (!Settings.CanDyePortals)
+		if (!Reference.Settings.CanDyePortals)
 			return false;
 		
 		ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
@@ -312,7 +308,7 @@ public class BlockNetherPortal extends BlockPortal
 			
 			WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, colour);
 			
-			if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
+			if (!player.capabilities.isCreativeMode && Reference.Settings.DoesDyingCost)
 				item.stackSize--;
 			
 			return true;

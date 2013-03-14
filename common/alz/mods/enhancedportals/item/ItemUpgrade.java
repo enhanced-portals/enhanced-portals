@@ -2,8 +2,8 @@ package alz.mods.enhancedportals.item;
 
 import java.util.List;
 
-import alz.mods.enhancedportals.reference.ItemID;
-import alz.mods.enhancedportals.reference.ModData;
+import alz.mods.enhancedportals.reference.Localizations;
+import alz.mods.enhancedportals.reference.Reference;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,16 +17,16 @@ import net.minecraft.util.Icon;
 
 public class ItemUpgrade extends Item
 {
-	String[] text = new String[] { "Multiple Portals", "Dimensional", "Advanced Dimensional", "Modifier Camouflage" };
+	String[] text = new String[] { Reference.Strings.PortalModifierUpgrade_MultiplePortals_Name, Reference.Strings.PortalModifierUpgrade_Dimensional_Name, Reference.Strings.PortalModifierUpgrade_AdvancedDimensional_Name, Reference.Strings.PortalModifierUpgrade_ModifierCamo_Name };
 	Icon[] textures;
 	
 	public ItemUpgrade()
 	{
-		super(ItemID.ModifierUpgrade);
+		super(Reference.ItemIDs.PortalModifierUpgrade);
 		hasSubtypes = true;
 		this.setMaxDamage(0);
         this.setCreativeTab(CreativeTabs.tabMisc);
-        setUnlocalizedName("modifierUpgrade");
+        setUnlocalizedName(Reference.Strings.PortalModifierUpgrade_Name);
         maxStackSize = 1;
 	}	
 	
@@ -38,7 +38,7 @@ public class ItemUpgrade extends Item
 		
 		for (int i = 0; i < textures.length; i++)
 		{
-			textures[i] = iconRegister.func_94245_a(ModData.ID + ":modifierUpgrade_" + i);
+			textures[i] = iconRegister.func_94245_a(String.format(Reference.Strings.PortalModifierUpgrade_Icon, i));
 		}
 	}
 	
@@ -76,6 +76,6 @@ public class ItemUpgrade extends Item
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		list.add(text[itemStack.getItemDamage()]);
+		list.add(Localizations.getLocalizedString(text[itemStack.getItemDamage()]));
 	}
 }

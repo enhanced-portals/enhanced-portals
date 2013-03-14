@@ -3,7 +3,7 @@ package alz.mods.enhancedportals.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import alz.mods.enhancedportals.helpers.PortalHelper;
-import alz.mods.enhancedportals.reference.BlockID;
+import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -17,11 +17,11 @@ public class BlockStairsObsidian extends BlockStairs
 	
 	public BlockStairsObsidian()
 	{
-		super(BlockID.ObsidianStairs, Block.obsidian, 0);
+		super(Reference.BlockIDs.ObsidianStairs, Block.obsidian, 0);
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
-		setUnlocalizedName("stairsObsidian");
+		setUnlocalizedName(Reference.Strings.ObsidianStairs_Name);
 		setLightOpacity(0);
 	}
 	

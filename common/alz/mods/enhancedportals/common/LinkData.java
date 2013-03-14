@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import alz.mods.enhancedportals.helpers.WorldHelper;
-import alz.mods.enhancedportals.reference.BlockID;
-import alz.mods.enhancedportals.reference.IO;
-import alz.mods.enhancedportals.reference.ModData;
+import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -49,16 +47,16 @@ public class LinkData
 		List<int[]> items = new ArrayList<int[]>();
 		
 		if (FMLCommonHandler.instance().getSide() == Side.SERVER)		
-			IO.DataFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + "EnhancedPortals.dat").getAbsolutePath();
+			Reference.File.DataFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + ".dat").getAbsolutePath();
 		else
-			IO.DataFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + "EnhancedPortals.dat").getAbsolutePath();
+			Reference.File.DataFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID +".dat").getAbsolutePath();
 		
-		if (!new File(IO.DataFile).exists())
+		if (!new File(Reference.File.DataFile).exists())
 			return;
 		
 		try
 		{
-			reader = new BufferedReader(new FileReader(IO.DataFile));
+			reader = new BufferedReader(new FileReader(Reference.File.DataFile));
 			String line = null;			
 			
 			while ((line = reader.readLine()) != null)
@@ -113,7 +111,7 @@ public class LinkData
 		
 		try
 		{
-			writer = new BufferedWriter(new FileWriter(IO.DataFile));
+			writer = new BufferedWriter(new FileWriter(Reference.File.DataFile));
 			
 			for (int list : LinkData.keySet())
 			{
@@ -286,7 +284,7 @@ public class LinkData
         
         World world = serverInstance.worldServerForDimension(dim);
         
-        if (world.getBlockId(x, y, z) != BlockID.PortalModifier)
+        if (world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
         	return;
         	
         TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
@@ -297,8 +295,8 @@ public class LinkData
         	
         	sendPacketToNearbyClients(-1, colour, new int[] { x, y, z, dim });
         	
-        	if (world.getBlockId(x, y + 1, z) == BlockID.NetherPortal)
-        		WorldHelper.floodUpdateMetadata(world, x, y + 1, z, BlockID.NetherPortal, colour);
+        	if (world.getBlockId(x, y + 1, z) == Reference.BlockIDs.NetherPortal)
+        		WorldHelper.floodUpdateMetadata(world, x, y + 1, z, Reference.BlockIDs.NetherPortal, colour);
         }
                 
         if (frequency != -1)
@@ -344,7 +342,7 @@ public class LinkData
 		}
 		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = ModData.ID;
+		packet.channel = Reference.MOD_ID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
 		
@@ -376,7 +374,7 @@ public class LinkData
 		}
 		
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = ModData.ID;
+		packet.channel = Reference.MOD_ID;
 		packet.data = bos.toByteArray();
 		packet.length = bos.size();
 		

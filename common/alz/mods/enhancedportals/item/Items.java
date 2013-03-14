@@ -1,8 +1,7 @@
 package alz.mods.enhancedportals.item;
 
-import alz.mods.enhancedportals.reference.Settings;
+import alz.mods.enhancedportals.reference.Reference;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,11 +10,10 @@ public class Items
 {
 	public static void Init()
 	{
-		if (!Settings.AllowModifiers)
+		if (!Reference.Settings.AllowModifiers)
 			return; // All items are upgrades for the portal modifier
 		
 		SetupItems();
-		SetupLanguage();
 		SetupRecipes();
 	}
 	
@@ -24,11 +22,6 @@ public class Items
 	private static void SetupItems()
 	{
 		itemUpgrade = new ItemUpgrade();
-	}
-	
-	private static void SetupLanguage()
-	{
-		LanguageRegistry.addName(itemUpgrade, "Portal Modifier Upgrade");
 	}
 	
 	private static void SetupRecipes()
