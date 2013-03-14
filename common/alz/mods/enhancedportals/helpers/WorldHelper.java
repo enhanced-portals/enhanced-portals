@@ -131,7 +131,7 @@ public class WorldHelper
 	    	}
 	    }
 		
-		if (nonIdeal.isEmpty())		
+		if (nonIdeal.isEmpty())
 			return null;
 		
 		return nonIdeal.remove();
