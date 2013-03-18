@@ -16,7 +16,7 @@ public class Reference
 	public static Logger Logger;
 	
 	public static final String MOD_NAME = "Enhanced Portals";
-	public static final String MOD_ID = "EnhancedPortals";
+	public static final String MOD_ID = "enhancedportals";
 	public static final String MOD_VERSION = "2.0.4-dev";
 	
 	/*** Block IDs ***/
