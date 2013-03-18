@@ -91,10 +91,6 @@ public class EntityHelper
 			entity = recreateEntity(entity, world);
 		}
 		
-		entity.setLocationAndAngles(teleportData.GetXOffsetEntity(), teleportData.GetYOffsetEntity(), teleportData.GetZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
-		world.updateEntityWithOptionalForce(entity, false);
-		entity.setLocationAndAngles(teleportData.GetXOffsetEntity(), teleportData.GetYOffsetEntity(), teleportData.GetZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
-		
 		if (entity instanceof EntityPlayerMP)
 		{
 			player = (EntityPlayerMP) entity;
