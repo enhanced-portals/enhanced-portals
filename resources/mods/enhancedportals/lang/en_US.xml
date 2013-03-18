@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
+	<!-- Contributors: Alz454 -->
 	<comment>English (US) Localization File</comment>
 	<entry key="tile.portalModifier.name">Portal Modifier</entry>
 	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
