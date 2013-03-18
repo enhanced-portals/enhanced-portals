@@ -3,6 +3,7 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import alz.mods.enhancedportals.common.TeleportData;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -208,28 +209,25 @@ public class WorldHelper
 		return new int[] { x, y, z };
 	}
 	
-	public static boolean isValidExitPortal(World baseWorld, int[] selectedExit, TileEntityPortalModifier baseModifier, Entity entity)
+	public static boolean isValidExitPortal(World baseWorld, TeleportData selectedExit, TileEntityPortalModifier baseModifier, Entity entity)
 	{
 		boolean hasUpgradesRequired = false;
 		World theWorld = baseWorld;
 		
-		if (selectedExit[3] == baseWorld.provider.dimensionId)
+		if (selectedExit.GetDimension() == baseWorld.provider.dimensionId)
 		{
 			hasUpgradesRequired = baseModifier.hasUpgrade(1) || baseModifier.hasUpgrade(2);
 		}
-		else if ((selectedExit[3] == 0 && baseWorld.provider.dimensionId == -1) || (selectedExit[3] == -1 && baseWorld.provider.dimensionId == 0))
+		else if ((selectedExit.GetDimension() == 0 && baseWorld.provider.dimensionId == -1) || (selectedExit.GetDimension() == -1 && baseWorld.provider.dimensionId == 0))
 		{
 			hasUpgradesRequired = true;
-			theWorld = getWorld(selectedExit[3]);
+			theWorld = getWorld(selectedExit.GetDimension());
 		}
 		else
 		{
 			hasUpgradesRequired = baseModifier.hasUpgrade(2);
-			theWorld = getWorld(selectedExit[3]);
+			theWorld = getWorld(selectedExit.GetDimension());
 		}
-		
-		if (baseWorld.provider.dimensionId == 1 && selectedExit[3] != 1)
-			return false;
 		
 		if (!hasUpgradesRequired)
 		{
@@ -237,16 +235,14 @@ public class WorldHelper
 			EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_MissingUpgrade));
 			return false;
 		}
-		
-		int[] offset = offsetDirectionBased(theWorld, selectedExit[0], selectedExit[1], selectedExit[2]);
-		
-		if (theWorld.getBlockId(offset[0], offset[1], offset[2]) == Reference.BlockIDs.NetherPortal)
+				
+		if (theWorld.getBlockId(selectedExit.GetXOffsetBlock(), selectedExit.GetYOffsetBlock(), selectedExit.GetZOffsetBlock()) == Reference.BlockIDs.NetherPortal)
 		{
 			return true;
 		}
 		else
 		{
-			boolean createdPortal =  PortalHelper.createPortal(theWorld, offset[0], offset[1], offset[2], 0);
+			boolean createdPortal =  PortalHelper.createPortal(theWorld, selectedExit.GetXOffsetBlock(), selectedExit.GetYOffsetBlock(), selectedExit.GetZOffsetBlock(), 0);
 			
 			if (createdPortal)
 				return true;

@@ -51,7 +51,6 @@ public class Reference
 	{
 		public static final String GuiTextureDirectory = "/mods/" + MOD_ID + "/textures/gui/";
 		public static final String LanguageDirectory = "/mods/" + MOD_ID + "/lang/";
-		public static final String DataFile_Name = MOD_ID + ".dat";
 		
 		public static String DataFile;
 	}
@@ -218,12 +217,7 @@ public class Reference
 		public static final String GUI_SaveFrequency = "gui.portalModifier.saveFrequency";
 		public static final String GUI_Frequency = "gui.portalModifier.frequency";
 	}
-	
-	public static void LoadSettings()
-	{
-		// TODO
-	}
-	
+		
 	public static void LoadLanguage()
 	{
 		Localizations.loadLocales();

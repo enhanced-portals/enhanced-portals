@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
+import alz.mods.enhancedportals.common.TeleportData;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
@@ -86,9 +87,7 @@ public class BlockNetherPortal extends BlockPortal
 		
 		if (!Reference.Settings.AllowTeleporting)
 			return;
-		
-		// TODO Possibly make this neater, more efficient
-		
+				
 		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
 		TileEntityPortalModifier modifier = null;
 		
@@ -104,7 +103,7 @@ public class BlockNetherPortal extends BlockPortal
 		{
 			if (EntityHelper.canEntityTravel(entity))
 			{
-				List<int[]> validExits = Reference.LinkData.getFrequencyExcluding(modifier.Frequency, new int[] { modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId });
+				List<TeleportData> validExits = Reference.LinkData.getFrequencyExcluding(modifier.Frequency, new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
 				
 				if (validExits == null || validExits.isEmpty())
 				{
@@ -113,11 +112,11 @@ public class BlockNetherPortal extends BlockPortal
 				}
 				else
 				{
-					int[] selectedExit = validExits.get(world.rand.nextInt(validExits.size()));
+					TeleportData selectedExit = validExits.get(world.rand.nextInt(validExits.size()));
 					
 					if (WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity))
 					{
-						EntityHelper.sendEntityToDimensionAndLocation(entity, selectedExit[3], selectedExit[0], selectedExit[1], selectedExit[2], false);
+						EntityHelper.teleportEntity(entity, selectedExit);
 					}
 				}
 			}
@@ -213,6 +212,9 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
+		if (world.isRemote)
+			return;
+		
 		// Lets see if the portal is still intact
 		if (PortalHelper.getPortalShape((World)world, x, y, z) == PortalShape.INVALID)
 			PortalHelper.removePortal(world, x, y, z, PortalShape.INVALID); // If it's not, deconstruct it

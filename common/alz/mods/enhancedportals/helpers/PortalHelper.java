@@ -77,6 +77,9 @@ public class PortalHelper
 	
 	public static boolean createPortalAround(World world, int x, int y, int z, int meta, EntityPlayer player)
 	{
+		if (world.isRemote)
+			return true;
+		
 		boolean createdPortal = false;
 		
 		if (player != null)
@@ -113,6 +116,9 @@ public class PortalHelper
 	
 	public static boolean createPortal(World world, int x, int y, int z, int meta)
 	{
+		if (world.isRemote)
+			return true;
+		
 		if (!WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
 			return false;
 		
@@ -126,6 +132,9 @@ public class PortalHelper
 	
 	public static boolean createPortal(World world, int x, int y, int z, int meta, PortalShape shape)
 	{
+		if (world.isRemote)
+			return true;
+		
 		if (shape == PortalShape.INVALID || !WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
 			return false;
 		
@@ -271,6 +280,9 @@ public class PortalHelper
 	
 	private static boolean validatePortal(World world, int x, int y, int z, PortalShape shape)
 	{
+		if (world.isRemote)
+			return true;
+		
 		Queue<int[]> queue = new LinkedList<int[]>();
 		Queue<String> checkedQueue = new LinkedList<String>();
 		queue.add(new int[] { x, y, z });

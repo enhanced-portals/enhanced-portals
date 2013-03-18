@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 
 public class LinkData
 {
-	Map<Integer, List<int[]>> LinkData;
+	Map<Integer, List<TeleportData>> LinkData;
 	MinecraftServer serverInstance;
 	
 	public LinkData(MinecraftServer server)
@@ -41,10 +41,10 @@ public class LinkData
 	public void loadWorldData()
 	{
 		World world = serverInstance.worldServerForDimension(0);
-		LinkData = new HashMap<Integer, List<int[]>>();
+		LinkData = new HashMap<Integer, List<TeleportData>>();
 		BufferedReader reader;
 		int frequency = -1;
-		List<int[]> items = new ArrayList<int[]>();
+		List<TeleportData> items = new ArrayList<TeleportData>();
 		
 		if (FMLCommonHandler.instance().getSide() == Side.SERVER)		
 			Reference.File.DataFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + ".dat").getAbsolutePath();
@@ -67,14 +67,14 @@ public class LinkData
 					{
 						AddFrequency(frequency);
 						
-						for (int[] item : items)
+						for (TeleportData item : items)
 						{
 							AddToFrequency(frequency, item);
 						}
 					}
 					
 					frequency = Integer.parseInt(line.replace(">", ""));
-					items = new ArrayList<int[]>();
+					items = new ArrayList<TeleportData>();
 				}
 				else if (line.startsWith("#"))
 				{
@@ -82,7 +82,7 @@ public class LinkData
 
 					if (theLine.length == 4)
 					{
-						items.add(new int[] { Integer.parseInt(theLine[0]), Integer.parseInt(theLine[1]), Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3]) });
+						items.add(new TeleportData(Integer.parseInt(theLine[0]), Integer.parseInt(theLine[1]), Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3])));
 					}
 				}
 			}
@@ -91,7 +91,7 @@ public class LinkData
 			{
 				AddFrequency(frequency);
 				
-				for (int[] item : items)
+				for (TeleportData item : items)
 				{
 					AddToFrequency(frequency, item);
 				}
@@ -115,14 +115,14 @@ public class LinkData
 			
 			for (int list : LinkData.keySet())
 			{
-				List<int[]> items = GetFrequency(list);
+				List<TeleportData> items = GetFrequency(list);
 				
 				writer.write(">" + list);
 				writer.newLine();
 				
-				for (int[] item : items)
+				for (TeleportData item : items)
 				{
-					writer.write("#" + item[0] + "," + item[1] + "," + item[2] + "," + item[3]);	
+					writer.write("#" + item.GetX() + "," + item.GetY() + "," + item.GetZ() + "," + item.GetDimension());	
 					writer.newLine();
 				}
 			}
@@ -135,20 +135,20 @@ public class LinkData
 		}
 	}
 	
-	public List<int[]> getFrequencyExcluding(int frequency, int[] exclude)
+	public List<TeleportData> getFrequencyExcluding(int frequency, TeleportData exclude)
 	{
-		List<int[]> theItems = GetFrequency(frequency);
-		List<int[]> returnItems = new ArrayList<int[]>();
+		List<TeleportData> theItems = GetFrequency(frequency);
+		List<TeleportData> returnItems = new ArrayList<TeleportData>();
 		
 		if (theItems == null)
 			return returnItems;
 		
 		for (int i = 0; i < theItems.size(); i++)
 		{
-			int[] item = theItems.get(i);
+			TeleportData item = theItems.get(i);
 			
-			if (item[0] == exclude[0] && item[1] == exclude[1] &&
-				item[2] == exclude[2] && item[3] == exclude[3])
+			if (item.GetX() == exclude.GetX() && item.GetY() == exclude.GetY() &&
+				item.GetZ() == exclude.GetZ() && item.GetDimension() == exclude.GetDimension())
 			{
 				;
 			}
@@ -164,23 +164,23 @@ public class LinkData
 		return LinkData.containsKey(frequency);
 	}
 	
-	public boolean IsInFrequency(int frequency, int[] data)
+	public boolean IsInFrequency(int frequency, TeleportData data)
 	{
 		if (!DoesFrequencyExist(frequency))
 			return false;
 		
-		List<int[]> list = GetFrequency(frequency);
+		List<TeleportData> list = GetFrequency(frequency);
 		
 		for (int i = 0; i < list.size(); i++)
 		{
-			if (list.get(i)[0] == data[0] && list.get(i)[1] == data[1] && list.get(i)[2] == data[2] && list.get(i)[3] == data[3])
+			if (list.get(i).GetX() == data.GetX() && list.get(i).GetY() == data.GetY() && list.get(i).GetZ() == data.GetZ() && list.get(i).GetDimension() == data.GetDimension())
 				return true;
 		}
 		
-		return false;		
+		return false;
 	}
 	
-	public List<int[]> GetFrequency(int frequency)
+	public List<TeleportData> GetFrequency(int frequency)
 	{
 		if (!DoesFrequencyExist(frequency))
 			return null;
@@ -193,45 +193,39 @@ public class LinkData
 		if (LinkData.containsKey(frequency))
 			return;
 		
-		LinkData.put(frequency, new ArrayList<int[]>());
+		LinkData.put(frequency, new ArrayList<TeleportData>());
 	}
 	
 	public void AddToFrequency(int frequency, int x, int y, int z, int dimension)
 	{
-		AddToFrequency(frequency, new int[] { x, y, z, dimension });
+		AddToFrequency(frequency, new TeleportData(x, y, z, dimension));
 	}
 	
-	public void AddToFrequency(int frequency, int[] data)
+	public void AddToFrequency(int frequency, TeleportData data)
 	{
 		if (!DoesFrequencyExist(frequency))
 			AddFrequency(frequency);
-		
-		if (data.length != 4)
-			return;
 		
 		GetFrequency(frequency).add(data);
 	}
 		
 	public void RemoveFromFrequency(int frequency, int x, int y, int z, int dimension)
 	{
-		RemoveFromFrequency(frequency, new int[] { x, y, z, dimension });
+		RemoveFromFrequency(frequency, new TeleportData(x, y, z, dimension));
 	}
 	
-	public void RemoveFromFrequency(int frequency, int[] data)
+	public void RemoveFromFrequency(int frequency, TeleportData data)
 	{
 		if (!DoesFrequencyExist(frequency))
 			AddFrequency(frequency);
-		
-		if (data.length != 4)
-			return;
-		
+				
 		if (IsInFrequency(frequency, data))
 		{
-			List<int[]> list = GetFrequency(frequency);
+			List<TeleportData> list = GetFrequency(frequency);
 			
 			for (int i = 0; i < list.size(); i++)
 			{
-				if (list.get(i)[0] == data[0] && list.get(i)[1] == data[1] && list.get(i)[2] == data[2] && list.get(i)[3] == data[3])
+				if (list.get(i).GetX() == data.GetX() && list.get(i).GetY() == data.GetY() && list.get(i).GetZ() == data.GetZ() && list.get(i).GetDimension() == data.GetDimension())
 					list.remove(i);
 			}
 		}
@@ -245,7 +239,7 @@ public class LinkData
 		LinkData.remove(frequency);
 	}
 	
-	public long IsInAFrequency(int[] data)
+	public long IsInAFrequency(TeleportData data)
 	{
 		for (int key : LinkData.keySet())
 		{
@@ -303,10 +297,10 @@ public class LinkData
         {
         	modifier.Frequency = frequency;
         	
-	        long oldFreq = IsInAFrequency(new int[] { x, y, z, dim });
+	        long oldFreq = IsInAFrequency(new TeleportData(x, y, z, dim));
 	        	
 	        if (oldFreq != Integer.MAX_VALUE + 1)
-	        	RemoveFromFrequency((int)oldFreq, new int[] { x, y, z, dim });
+	        	RemoveFromFrequency((int)oldFreq, new TeleportData(x, y, z, dim));
 	        	
 	        AddToFrequency(frequency, x, y, z, dim);
         }
