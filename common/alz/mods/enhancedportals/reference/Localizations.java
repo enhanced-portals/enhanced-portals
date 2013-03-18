@@ -4,7 +4,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class Localizations
 {
-	private static String[] localeFiles = new String[] { "en_GB" };
+	private static String[] localeFiles = new String[] { "en_GB", "en_US", "it_IT" };
 	
 	public static void loadLocales()
 	{
