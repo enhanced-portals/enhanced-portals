@@ -31,6 +31,9 @@ public class EntityHelper
 	
 	public static boolean canEntityTravel(Entity Entity)
 	{
+		if (Entity == null)
+			return false;
+		
 		return Entity.timeUntilPortal == 0;
 	}
 		
@@ -46,7 +49,6 @@ public class EntityHelper
 	{
 		World world = MinecraftServer.getServer().worldServerForDimension(data.GetDimension());
 		
-		setCanEntityTravel(entity, false);
 		teleportEntity(world, entity, data);		
 	}
 	
@@ -55,13 +57,11 @@ public class EntityHelper
 		if (!Reference.Settings.AllowTeleporting && canEntityTravel(entity))
 			return entity;
 		
-		Entity mount = entity.riddenByEntity;
-		
 		if (entity.riddenByEntity != null)
-		{
+			entity.riddenByEntity.mountEntity(null);
+		
+		if (entity.ridingEntity != null)
 			entity.mountEntity(null);
-			mount = teleportEntity(world, mount, teleportData);
-		}
 		
 		boolean dimensionalTeleport = entity.worldObj != world;
 				
@@ -111,17 +111,7 @@ public class EntityHelper
 		
 		entity.setLocationAndAngles(teleportData.GetXOffsetEntity(), teleportData.GetYOffsetEntity(), teleportData.GetZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
 				
-		if (entity != null && mount != null)
-		{
-			if (mount instanceof EntityPlayerMP)
-			{
-				world.updateEntityWithOptionalForce(entity, true);
-			}
-			
-			//entity.mountEntity(mount);
-			mount.mountEntity(entity);
-		}
-		
+		setCanEntityTravel(entity, false);
 		return entity;
 	}
 	
@@ -146,6 +136,7 @@ public class EntityHelper
 		{
 			NBTTagCompound nbt = new NBTTagCompound();
 			entity.isDead = false;
+			entity.riddenByEntity = null;
 			entity.addEntityID(nbt);
 			entity.isDead = true;
 			
@@ -161,6 +152,7 @@ public class EntityHelper
 		return entity;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	private static void syncPlayer(EntityPlayerMP player, World world)
 	{
 		player.theItemInWorldManager.setWorld((WorldServer)world);
