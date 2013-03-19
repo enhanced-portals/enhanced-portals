@@ -102,7 +102,7 @@ public class BlockNetherPortal extends BlockPortal
 		else
 		{
 			if (EntityHelper.canEntityTravel(entity))
-			{
+			{				
 				List<TeleportData> validExits = Reference.LinkData.getFrequencyExcluding(modifier.Frequency, new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
 				
 				if (validExits == null || validExits.isEmpty())
@@ -113,7 +113,7 @@ public class BlockNetherPortal extends BlockPortal
 				else
 				{
 					TeleportData selectedExit = validExits.get(world.rand.nextInt(validExits.size()));
-					
+										
 					if (WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity))
 					{
 						EntityHelper.teleportEntity(entity, selectedExit);

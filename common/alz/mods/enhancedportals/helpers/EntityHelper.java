@@ -31,14 +31,9 @@ public class EntityHelper
 	
 	public static boolean canEntityTravel(Entity Entity)
 	{
-		return Entity.timeUntilPortal == 0 && isValidEntityForTravel(Entity);
+		return Entity.timeUntilPortal == 0;
 	}
-	
-	public static boolean isValidEntityForTravel(Entity Entity)
-	{
-		return true;
-	}
-	
+		
 	public static void setCanEntityTravel(Entity Entity, boolean State)
 	{
 		if (State)
@@ -51,19 +46,20 @@ public class EntityHelper
 	{
 		World world = MinecraftServer.getServer().worldServerForDimension(data.GetDimension());
 		
-		teleportEntity(world, entity, data);
+		setCanEntityTravel(entity, false);
+		teleportEntity(world, entity, data);		
 	}
 	
 	private static Entity teleportEntity(World world, Entity entity, TeleportData teleportData)
 	{
-		if (!Reference.Settings.AllowTeleporting)
+		if (!Reference.Settings.AllowTeleporting && canEntityTravel(entity))
 			return entity;
 		
-		Entity mount = entity.ridingEntity;
+		Entity mount = entity.riddenByEntity;
 		
-		if (entity.ridingEntity != null)
+		if (entity.riddenByEntity != null)
 		{
-			entity.mountEntity(entity.ridingEntity);
+			entity.mountEntity(null);
 			mount = teleportEntity(world, mount, teleportData);
 		}
 		
@@ -89,6 +85,9 @@ public class EntityHelper
 		if (dimensionalTeleport)
 		{
 			entity = recreateEntity(entity, world);
+			
+			if (entity == null)
+				return null;
 		}
 		
 		if (entity instanceof EntityPlayerMP)
@@ -114,12 +113,13 @@ public class EntityHelper
 				
 		if (entity != null && mount != null)
 		{
-			if (entity instanceof EntityPlayerMP)
+			if (mount instanceof EntityPlayerMP)
 			{
 				world.updateEntityWithOptionalForce(entity, true);
 			}
 			
-			entity.mountEntity(mount);
+			//entity.mountEntity(mount);
+			mount.mountEntity(entity);
 		}
 		
 		return entity;
@@ -233,7 +233,7 @@ public class EntityHelper
 		}
 		else if (direction == ForgeDirection.UP)
 		{
-			y += 1;
+			y += 1.0;
 			z += 0.5;
 			x += 0.5;
 		}
