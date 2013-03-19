@@ -70,6 +70,6 @@ public class EnhancedPortals
 		Items.Init();
 		
 		MinecraftForge.EVENT_BUS.register(new EventHooks());
-		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());		
+		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 	}
 }

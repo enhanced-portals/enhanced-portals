@@ -110,11 +110,28 @@ public class BlockNetherPortal extends BlockPortal
 					Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_NoExitFound), entity.getEntityName()));
 					EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_NoExitFound));
 				}
-				else
+				else 
 				{
-					TeleportData selectedExit = validExits.get(world.rand.nextInt(validExits.size()));
-										
-					if (WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity))
+					TeleportData selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
+					boolean isValidExit = true;
+					
+					while (!WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity, true))
+					{
+						if (validExits.isEmpty())
+						{
+							isValidExit = false;
+							break;
+						}
+						
+						selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
+					}
+					
+					if (!isValidExit)
+					{
+						Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_NoExitFound), entity.getEntityName()));
+						EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_NoExitFound));
+					}
+					else
 					{
 						EntityHelper.teleportEntity(entity, selectedExit);
 					}

@@ -211,6 +211,11 @@ public class WorldHelper
 	
 	public static boolean isValidExitPortal(World baseWorld, TeleportData selectedExit, TileEntityPortalModifier baseModifier, Entity entity)
 	{
+		return isValidExitPortal(baseWorld, selectedExit, baseModifier, entity, false);
+	}
+	
+	public static boolean isValidExitPortal(World baseWorld, TeleportData selectedExit, TileEntityPortalModifier baseModifier, Entity entity, boolean suppressWarnings)
+	{
 		boolean hasUpgradesRequired = false;
 		World theWorld = baseWorld;
 		
@@ -231,8 +236,12 @@ public class WorldHelper
 		
 		if (!hasUpgradesRequired)
 		{
-			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_MissingUpgrade), entity.getEntityName()));
-			EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_MissingUpgrade));
+			if (!suppressWarnings)
+			{
+				Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_MissingUpgrade), entity.getEntityName()));
+				EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_MissingUpgrade));
+			}
+			
 			return false;
 		}
 				
@@ -248,8 +257,12 @@ public class WorldHelper
 				return true;
 		}
 		
-		Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_ExitBlocked), entity.getEntityName()));
-		EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_ExitBlocked));	
+		if (!suppressWarnings)
+		{
+			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_ExitBlocked), entity.getEntityName()));
+			EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_ExitBlocked));
+		}
+		
 		return false;
 	}
 }
