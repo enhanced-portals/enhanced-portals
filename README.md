@@ -28,4 +28,5 @@ Currently I am in need of people that can translate Enhanced Portals into many d
 
 ###Translators
 English en_GB, en_US - Alz454
+
 Italian it_IT - Eziroth
