@@ -55,9 +55,13 @@ public class PacketHandler implements IPacketHandler
 			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
 			
 			modifier.parseUpdatePacket(packet);
-						
+			
 			if (type == 0)
+			{
 				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+				
+				Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.dimension);
+			}
 		}
 	}
 }

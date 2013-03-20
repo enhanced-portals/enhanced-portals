@@ -199,6 +199,11 @@ public class LinkData
 	
 	public void AddToFrequency(int frequency, TeleportData data)
 	{
+		long freq = IsInAFrequency(data);
+		
+		if (freq != Integer.MAX_VALUE + 1)
+			RemoveFromFrequency((int)freq, data);
+		
 		if (!DoesFrequencyExist(frequency))
 			AddFrequency(frequency);
 		

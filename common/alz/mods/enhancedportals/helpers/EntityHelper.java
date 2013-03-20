@@ -77,7 +77,7 @@ public class EntityHelper
 		
 		if (dimensionalTeleport)
 			removeEntityFromWorld(entity.worldObj, entity);
-				
+		
 		entity.setLocationAndAngles(teleportData.GetXOffsetEntity(), teleportData.GetYOffsetEntity(), teleportData.GetZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
 		((WorldServer)world).theChunkProviderServer.loadChunk(teleportData.GetX() >> 4, teleportData.GetZ() >> 4);
 		

@@ -253,6 +253,8 @@ public class WorldHelper
 			theWorld = getWorld(selectedExit.GetDimension());
 		}
 		
+		theWorld.getChunkProvider().loadChunk(selectedExit.GetX() >> 4, selectedExit.GetY() >> 4);
+		
 		if (!hasUpgradesRequired)
 		{
 			if (!suppressWarnings)
