@@ -76,7 +76,7 @@ public class BlockNetherPortal extends BlockPortal
 				else if (damage == 5)
 					damage = 0;
 				
-				WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, damage);
+				WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, damage, true);
 				
 				if (Reference.Settings.DoesDyingCost)
 					entity.isDead = true;
@@ -325,7 +325,7 @@ public class BlockNetherPortal extends BlockPortal
 		    else if (colour == 5)
 		    	colour = 0;
 			
-			WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, colour);
+			WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, colour, true);
 			
 			if (!player.capabilities.isCreativeMode && Reference.Settings.DoesDyingCost)
 				item.stackSize--;

@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Reference.BlockIDs;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
@@ -137,6 +138,11 @@ public class WorldHelper
 	
 	public static void floodUpdateMetadata(World world, int x, int y, int z, int blockID, int newMeta)
 	{
+		floodUpdateMetadata(world, x, y, z, blockID, newMeta, false);
+	}
+	
+	public static void floodUpdateMetadata(World world, int x, int y, int z, int blockID, int newMeta, boolean affectModifiers)
+	{
 		Queue<int[]> queue = new LinkedList<int[]>();
 	    queue.add(new int[] { x, y, z });
 
@@ -158,6 +164,20 @@ public class WorldHelper
 	    		queue.add(new int[] { X, Y, Z + 1 });
 	        	queue.add(new int[] { X + 1, Y, Z });
 	        	queue.add(new int[] { X - 1, Y, Z });
+	    	}
+	    	if (affectModifiers && currentID == BlockIDs.PortalModifier)
+	    	{
+	    		TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(current[0], current[1], current[2]);
+	    		
+	    		if (modifier.Colour != newMeta)
+	    		{
+	    			modifier.Colour = newMeta;
+	    			
+	    			if (!world.isRemote)
+	    				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+	    			else
+	    				world.markBlockForRenderUpdate(current[0], current[1], current[2]);
+	    		}
 	    	}
 	    }
 	}
