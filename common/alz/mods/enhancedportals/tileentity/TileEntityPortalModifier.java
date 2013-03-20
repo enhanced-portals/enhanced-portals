@@ -1,6 +1,8 @@
 package alz.mods.enhancedportals.tileentity;
 
 import alz.mods.enhancedportals.helpers.EntityHelper;
+import alz.mods.enhancedportals.networking.ITileEntityNetworking;
+import alz.mods.enhancedportals.networking.PacketTileUpdate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -8,16 +10,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityPortalModifier extends TileEntity implements IInventory
+public class TileEntityPortalModifier extends TileEntity implements IInventory, ITileEntityNetworking
 {
 	public int Colour, Frequency;
-	public boolean HadPower, TestSynch;
+	public boolean HadPower;
 	ItemStack[] inv;
-	
+		
 	public TileEntityPortalModifier()
 	{
 		inv = new ItemStack[3];
-		TestSynch = false;
 	}
 	
 	public boolean hasUpgrade(int id)
@@ -164,7 +165,6 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory
 	@Override
 	public void closeChest() { }
 
-	// ?
 	@Override
 	public boolean func_94042_c()
 	{
@@ -175,5 +175,24 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory
 	public boolean func_94041_b(int i, ItemStack itemstack)
 	{
 		return EntityHelper.canAcceptItemStack(this, itemstack);
-	}	
+	}
+	
+	@Override
+	public PacketTileUpdate getUpdatePacket()
+	{		
+		return new PacketTileUpdate(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, new int[] { Frequency, Colour });
+	}
+
+	@Override
+	public void parseUpdatePacket(PacketTileUpdate packet)
+	{
+		if (packet.data == null)
+			return;
+		
+		Frequency = packet.data[0];
+		Colour = packet.data[1];
+		
+		if (worldObj.isRemote)
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
 }

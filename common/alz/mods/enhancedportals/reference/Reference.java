@@ -19,11 +19,13 @@ public class Reference
 	public static final String MOD_ID = "enhancedportals";
 	public static final String MOD_VERSION = "2.0.4-dev";
 	
+	public static final int Update_Range = 128;
+	
 	/*** Block IDs ***/
 	public static class BlockIDs
 	{
-		public static final int ObsidianStairs_Default = 512;
-		public static final int PortalModifier_Default = 513;
+		public static final int ObsidianStairs_Default = 1345;
+		public static final int PortalModifier_Default = 1346;
 		public static final int Obsidian_Default = 49;
 		public static final int NetherPortal_Default = 90;
 		
@@ -44,6 +46,11 @@ public class Reference
 	public static class GuiIDs
 	{
 		public static final int PortalModifier = 0;
+	}
+	
+	public static class Networking
+	{
+		public static final int TileEntityUpdate = 0;
 	}
 	
 	/*** Contains everything related to I/O ***/

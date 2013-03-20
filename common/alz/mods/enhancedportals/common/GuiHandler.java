@@ -24,7 +24,7 @@ public class GuiHandler implements IGuiHandler
 			TileEntityPortalModifier modifier = (TileEntityPortalModifier)tileEntity;
 			
 			if (Reference.LinkData != null)
-				Reference.LinkData.sendPacketToClient((Player)player, modifier.Frequency, modifier.Colour, x, y, z, world.provider.dimensionId);
+				Reference.LinkData.sendUpdatePacketToPlayer(modifier, (Player)player);
 				
 			return new ContainerPortalModifier(player.inventory, modifier);
 		}

@@ -3,11 +3,14 @@ package alz.mods.enhancedportals.common;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
-import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
+import alz.mods.enhancedportals.networking.PacketTileUpdate;
 
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.World;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
@@ -19,33 +22,43 @@ public class PacketHandler implements IPacketHandler
 		if (!packet.channel.equals(Reference.MOD_ID))
 			return;
 		
-		DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(packet.data));
-		byte type;
-        int frequency, colour, x, y, z, dim;
-       
-        try
-        {
-        	type = inputStream.readByte();
-        	frequency = inputStream.readInt();
-	        colour = inputStream.readInt();
-	        x = inputStream.readInt();
-	        y = inputStream.readInt();
-	        z = inputStream.readInt();        	
-        	dim = inputStream.readInt();
-        }
-        catch (Exception e)
-        {
-        	e.printStackTrace();
-        	return;
-        }
-		
-		if (type == 1)
+		DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+				
+		try
 		{
-			ClientProxy.RecieveBlockUpdate(frequency, colour, x, y, z, dim);
+			int packetID = dataStream.read();
+			byte packetType = dataStream.readByte();
+			
+			if (packetID == Reference.Networking.TileEntityUpdate)
+			{
+				PacketTileUpdate packetUpdate = new PacketTileUpdate();
+				packetUpdate.getPacketData(dataStream);
+				onTileEntityUpdate(packetUpdate, packetType);
+			}
 		}
-		else if (type == 2 && Reference.LinkData != null)
+		catch (Exception e)
 		{
-			Reference.LinkData.HandlePacket(packet);
+			e.printStackTrace();
+		}
+	}
+	
+	private void onTileEntityUpdate(PacketTileUpdate packet, byte type)
+	{
+		World world = null;
+		
+		if (type == 0)
+			world = Reference.LinkData.serverInstance.worldServerForDimension(packet.dimension);
+		else if (type == 1)
+			world = FMLClientHandler.instance().getClient().theWorld;
+				
+		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.PortalModifier && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+		{
+			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+			
+			modifier.parseUpdatePacket(packet);
+						
+			if (type == 0)
+				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
 		}
 	}
 }

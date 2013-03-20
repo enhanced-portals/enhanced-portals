@@ -55,8 +55,8 @@ public class GuiPortalModifier extends GuiContainer
 			textBox.setText(String.format("%1s", textBox.getText()).replace(' ', '0'));
 			this.button.enabled = false;
 			
-			Modifier.Frequency = Integer.parseInt(textBox.getText());			
-			ClientProxy.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
+			Modifier.Frequency = Integer.parseInt(textBox.getText());
+			ClientProxy.SendBlockUpdate(Modifier);
 		}
 		else if (button.id == 2)
 		{
@@ -65,7 +65,7 @@ public class GuiPortalModifier extends GuiContainer
 			button2.enabled = false;
 			
 			Modifier.Frequency = Integer.parseInt(textBox.getText());
-			ClientProxy.SendBlockUpdate(Modifier.Frequency, -1, Modifier.xCoord, Modifier.yCoord, Modifier.zCoord, Modifier.worldObj.provider.dimensionId);
+			ClientProxy.SendBlockUpdate(Modifier);
 		}
 	}
 	

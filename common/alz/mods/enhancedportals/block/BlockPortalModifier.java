@@ -116,11 +116,11 @@ public class BlockPortalModifier extends BlockContainer
 					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, Reference.BlockIDs.NetherPortal, colour);
 				else
 					world.markBlockForRenderUpdate(x, y, z);
-				
+								
 				if (world.isRemote)
-				{
-					ClientProxy.SendBlockUpdate(-1, colour, x, y, z, world.provider.dimensionId);
-				}
+					ClientProxy.SendBlockUpdate(tileEntity);
+				else if (!world.isRemote)
+					Reference.LinkData.sendUpdatePacketToNearbyClients(tileEntity);
 								
 				return true;
 			}

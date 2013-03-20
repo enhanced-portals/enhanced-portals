@@ -2,10 +2,6 @@ package alz.mods.enhancedportals.common;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -22,9 +17,9 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class LinkData
 {
@@ -250,128 +245,25 @@ public class LinkData
 		return Integer.MAX_VALUE + 1;
 	}
 	
-	public void HandlePacket(Packet250CustomPayload packet)
+	public void sendUpdatePacketToPlayer(int x, int y, int z, int dim, Player player)
 	{
-		DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(packet.data));
-	    
-        byte type;
-        int frequency, colour, x, y, z, dim;
-       
-        try
-        {
-        	type = inputStream.readByte();
-        	frequency = inputStream.readInt();
-        	colour = inputStream.readInt();
-        	x = inputStream.readInt();
-        	y = inputStream.readInt();
-        	z = inputStream.readInt();
-        	dim = inputStream.readInt();
-        }
-        catch (Exception e)
-        {
-        	e.printStackTrace();
-        	return;
-        }
-        
-        if (type != 2)
-        	return;
-        
-        World world = serverInstance.worldServerForDimension(dim);
-        
-        if (world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
-        	return;
-        	
-        TileEntityPortalModifier modifier = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
-        
-        if (colour != -1)
-        {
-        	modifier.Colour = colour;
-        	
-        	sendPacketToNearbyClients(-1, colour, new int[] { x, y, z, dim });
-        	
-        	if (world.getBlockId(x, y + 1, z) == Reference.BlockIDs.NetherPortal)
-        		WorldHelper.floodUpdateMetadata(world, x, y + 1, z, Reference.BlockIDs.NetherPortal, colour);
-        }
-                
-        if (frequency != -1)
-        {
-        	modifier.Frequency = frequency;
-        	
-	        long oldFreq = IsInAFrequency(new TeleportData(x, y, z, dim));
-	        	
-	        if (oldFreq != Integer.MAX_VALUE + 1)
-	        	RemoveFromFrequency((int)oldFreq, new TeleportData(x, y, z, dim));
-	        	
-	        AddToFrequency(frequency, x, y, z, dim);
-        }
+		WorldServer world = serverInstance.worldServerForDimension(dim);
+		
+		if (world.getBlockId(x, y, z) == Reference.BlockIDs.PortalModifier && world.blockHasTileEntity(x, y, z))
+		{
+			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+			
+			sendUpdatePacketToPlayer(modifier, player);
+		}
 	}
 	
-	public void sendPacketToClient(Player player, int freq, int colour, int x, int y, int z, int dim)
+	public void sendUpdatePacketToPlayer(TileEntityPortalModifier modifier, Player player)
 	{
-		sendPacketToClient(player, freq, colour, new int[] { x, y, z, dim });
+		PacketDispatcher.sendPacketToPlayer(modifier.getUpdatePacket().getServerPacket(), player);
 	}
 	
-	public void sendPacketToClient(Player player, int freq, int colour, int[] data)
+	public void sendUpdatePacketToNearbyClients(TileEntityPortalModifier modifier)
 	{
-		if (data.length != 4 || colour < 0 || colour > 15)
-			return;
-		
-		// construct & send packet
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream outputStream = new DataOutputStream(bos);
-		
-		try
-		{
-			outputStream.writeByte((byte)1);  // Identifier for packet
-			outputStream.writeInt(freq);      // Frequency
-			outputStream.writeInt(colour);    // Colour
-			outputStream.writeInt(data[0]);   // X
-			outputStream.writeInt(data[1]);   // Y
-			outputStream.writeInt(data[2]);   // Z
-			outputStream.writeInt(data[3]);   // D
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Reference.MOD_ID;
-		packet.data = bos.toByteArray();
-		packet.length = bos.size();
-		
-		PacketDispatcher.sendPacketToPlayer(packet, player);
-	}
-	
-	public void sendPacketToNearbyClients(int freq, int colour, int[] data)
-	{
-		if (data.length != 4 || colour < 0 || colour > 15)
-			return;
-		
-		// construct & send packet
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream outputStream = new DataOutputStream(bos);
-		
-		try
-		{
-			outputStream.writeByte((byte)1);  // Identifier for packet
-			outputStream.writeInt(freq);      // Frequency
-			outputStream.writeInt(colour);    // Colour
-			outputStream.writeInt(data[0]);   // X
-			outputStream.writeInt(data[1]);   // Y
-			outputStream.writeInt(data[2]);   // Z
-			outputStream.writeInt(data[3]);   // D
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = Reference.MOD_ID;
-		packet.data = bos.toByteArray();
-		packet.length = bos.size();
-		
-		PacketDispatcher.sendPacketToAllAround(data[0], data[1], data[2], 32, data[3], packet);
+		PacketDispatcher.sendPacketToAllAround(modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, 128, modifier.worldObj.provider.dimensionId, modifier.getUpdatePacket().getServerPacket());
 	}
 }
