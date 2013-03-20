@@ -76,10 +76,15 @@ public class BlockNetherPortal extends BlockPortal
 				else if (damage == 5)
 					damage = 0;
 				
+				if (damage == world.getBlockMetadata(x, y, z))
+					return;
+				
 				WorldHelper.floodUpdateMetadata(world, x, y, z, this.blockID, damage, true);
 				
 				if (Reference.Settings.DoesDyingCost)
-					entity.isDead = true;
+				{
+					item.stackSize--;
+				}
 				
 				return;
 			}
@@ -87,7 +92,7 @@ public class BlockNetherPortal extends BlockPortal
 		
 		if (!Reference.Settings.AllowTeleporting)
 			return;
-				
+		
 		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, this.blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
 		TileEntityPortalModifier modifier = null;
 		
