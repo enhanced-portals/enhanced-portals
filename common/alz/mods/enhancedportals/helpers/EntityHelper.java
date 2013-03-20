@@ -3,7 +3,6 @@ package alz.mods.enhancedportals.helpers;
 import java.util.Iterator;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import alz.mods.enhancedportals.common.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;

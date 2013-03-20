@@ -1,8 +1,6 @@
-package alz.mods.enhancedportals.common;
+package alz.mods.enhancedportals.helpers;
 
 import net.minecraft.server.MinecraftServer;
-import alz.mods.enhancedportals.helpers.EntityHelper;
-import alz.mods.enhancedportals.helpers.WorldHelper;
 
 public class TeleportData
 {

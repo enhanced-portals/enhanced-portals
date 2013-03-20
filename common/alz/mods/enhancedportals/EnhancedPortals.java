@@ -4,8 +4,8 @@ import alz.mods.enhancedportals.block.Blocks;
 import alz.mods.enhancedportals.common.CommonProxy;
 import alz.mods.enhancedportals.common.EventHooks;
 import alz.mods.enhancedportals.common.GuiHandler;
-import alz.mods.enhancedportals.common.PacketHandler;
 import alz.mods.enhancedportals.item.Items;
+import alz.mods.enhancedportals.networking.PacketHandler;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntities;
 import net.minecraftforge.common.Configuration;
@@ -24,12 +24,12 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 @NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={Reference.MOD_ID}, packetHandler=PacketHandler.class)
 public class EnhancedPortals
 {
-	@SidedProxy(clientSide="alz.mods.enhancedportals.client.ClientProxy", serverSide="alz.mods.enhancedportals.common.CommonProxy")
+	@SidedProxy(clientSide=Reference.PROXY_CLIENT, serverSide=Reference.PROXY_COMMON)
 	public static CommonProxy proxy;
 	
 	@Instance(Reference.MOD_ID)
 	public static EnhancedPortals instance;
-		
+	
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event)
 	{

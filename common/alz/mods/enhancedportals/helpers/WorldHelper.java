@@ -3,7 +3,6 @@ package alz.mods.enhancedportals.helpers;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import alz.mods.enhancedportals.common.TeleportData;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;

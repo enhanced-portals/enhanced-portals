@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import alz.mods.enhancedportals.helpers.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -24,7 +25,7 @@ import net.minecraft.world.WorldServer;
 public class LinkData
 {
 	Map<Integer, List<TeleportData>> LinkData;
-	MinecraftServer serverInstance;
+	public MinecraftServer serverInstance;
 	
 	public LinkData(MinecraftServer server)
 	{

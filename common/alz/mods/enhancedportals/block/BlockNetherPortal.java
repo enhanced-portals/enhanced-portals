@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
-import alz.mods.enhancedportals.common.TeleportData;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
+import alz.mods.enhancedportals.helpers.TeleportData;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.Localizations;

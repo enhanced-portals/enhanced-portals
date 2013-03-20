@@ -1,11 +1,10 @@
-package alz.mods.enhancedportals.common;
+package alz.mods.enhancedportals.networking;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
-import alz.mods.enhancedportals.networking.PacketTileUpdate;
 
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
