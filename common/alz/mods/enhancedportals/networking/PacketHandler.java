@@ -3,13 +3,13 @@ package alz.mods.enhancedportals.networking;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
+import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
@@ -43,25 +43,21 @@ public class PacketHandler implements IPacketHandler
 	
 	private void onTileEntityUpdate(PacketTileUpdate packet, byte type)
 	{
-		World world = null;
+		if (type == 1)
+		{
+			ClientProxy.OnTileUpdate(packet, type);
+			return;
+		}
 		
-		if (type == 0)
-			world = Reference.LinkData.serverInstance.worldServerForDimension(packet.dimension);
-		else if (type == 1)
-			world = FMLClientHandler.instance().getClient().theWorld;
+		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.dimension);
 				
 		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.PortalModifier && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
 			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
 			
-			modifier.parseUpdatePacket(packet);
-			
-			if (type == 0)
-			{
-				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
-				
-				Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.dimension);
-			}
+			modifier.parseUpdatePacket(packet);			
+			Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);				
+			Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.dimension);
 		}
 	}
 }
