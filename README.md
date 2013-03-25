@@ -1,5 +1,5 @@
 ##Enhanced Portals
-**Latest Release**: [2.0.3 for Minecraft 1.5 | 2.0.2-Quickfix for Minecraft 1.4.7](http://www.minecraftforum.net/topic/1301217-)
+**Latest Release**: [2.1 for Minecraft 1.5/1.5.1](http://www.minecraftforum.net/topic/1301217-)
 
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
 
@@ -25,8 +25,3 @@ When done, your directory structure should look like this:
 
 ###Translation
 Currently I am in need of people that can translate Enhanced Portals into many different languages. If you are fluent in another language, feel free to head over to the [lang directory](https://github.com/ShadedDimension/enhanced-portals/tree/master/resources/mods/enhancedportals/lang), see what needs to be done and copy and edit the en_US.xml file.
-
-###Translators
-English en_GB, en_US - Alz454
-
-Italian it_IT - Eziroth
