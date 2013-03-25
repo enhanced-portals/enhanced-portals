@@ -1,5 +1,6 @@
 package alz.mods.enhancedportals.tileentity;
 
+import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.networking.ITileEntityNetworking;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
@@ -194,5 +195,16 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		
 		if (worldObj.isRemote)
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+	
+	@Override
+	public void validate()
+	{
+		super.validate();
+		
+		if (worldObj.isRemote)
+		{
+			ClientProxy.RequestTileData(this);
+		}
 	}
 }

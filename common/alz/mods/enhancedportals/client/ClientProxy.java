@@ -4,6 +4,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import alz.mods.enhancedportals.common.CommonProxy;
+import alz.mods.enhancedportals.networking.PacketDataRequest;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -28,5 +29,10 @@ public class ClientProxy extends CommonProxy
 			
 			modifier.parseUpdatePacket(packet);
 		}
+	}
+	
+	public static void RequestTileData(TileEntityPortalModifier modifier)
+	{
+		PacketDispatcher.sendPacketToServer(new PacketDataRequest(modifier).getPacket());
 	}
 }

@@ -52,6 +52,7 @@ public class Reference
 	public static class Networking
 	{
 		public static final int TileEntityUpdate = 0;
+		public static final int DataRequest = 1;
 	}
 	
 	/*** Contains everything related to I/O ***/

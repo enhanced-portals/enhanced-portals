@@ -26,13 +26,20 @@ public class PacketHandler implements IPacketHandler
 		try
 		{
 			int packetID = dataStream.read();
-			byte packetType = dataStream.readByte();
-			
+						
 			if (packetID == Reference.Networking.TileEntityUpdate)
 			{
+				byte packetType = dataStream.readByte();
+				
 				PacketTileUpdate packetUpdate = new PacketTileUpdate();
 				packetUpdate.getPacketData(dataStream);
 				onTileEntityUpdate(packetUpdate, packetType);
+			}
+			else if (packetID == Reference.Networking.DataRequest)
+			{
+				PacketDataRequest packetData = new PacketDataRequest();
+				packetData.getPacketData(dataStream);
+				onDataRequest(packetData, player);
 			}
 		}
 		catch (Exception e)
@@ -58,6 +65,21 @@ public class PacketHandler implements IPacketHandler
 			modifier.parseUpdatePacket(packet);			
 			Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);				
 			Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.dimension);
+		}
+	}
+	
+	private void onDataRequest(PacketDataRequest packet, Player player)
+	{
+		if (Reference.LinkData == null)
+			return;
+		
+		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.dimension);
+		
+		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.PortalModifier && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+		{
+			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+			
+			Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
 		}
 	}
 }
