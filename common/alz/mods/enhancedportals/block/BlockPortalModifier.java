@@ -91,14 +91,14 @@ public class BlockPortalModifier extends BlockContainer
 	{
 		TileEntityPortalModifier tileEntity = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
 		
-		if (player.isSneaking() || tileEntity == null)
+		if (tileEntity == null)
 			return false;
 		
 		if (!PortalHelper.createPortalAround(world, x, y, z, tileEntity.Colour, player))
 		{
 			ItemStack currentItem = player.inventory.mainInventory[player.inventory.currentItem];
 						
-			if (currentItem != null && Reference.Settings.CanDyePortals && currentItem.itemID == Item.dyePowder.itemID)
+			if (currentItem != null && !player.isSneaking() && Reference.Settings.CanDyePortals && currentItem.itemID == Item.dyePowder.itemID)
 			{
 				int colour = currentItem.getItemDamage();
 				
@@ -121,9 +121,21 @@ public class BlockPortalModifier extends BlockContainer
 					ClientProxy.SendBlockUpdate(tileEntity);
 				else if (!world.isRemote)
 					Reference.LinkData.sendUpdatePacketToNearbyClients(tileEntity);
-								
+				
 				return true;
 			}
+			if (currentItem == null && player.isSneaking())
+			{
+				int currentRotation = world.getBlockMetadata(x, y, z), nextRotation = currentRotation + 1;
+				
+				if (nextRotation >= ForgeDirection.VALID_DIRECTIONS.length)
+					nextRotation = 0;
+				
+				rotateBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[nextRotation]);				
+				return false;
+			}
+			else if (player.isSneaking())
+				return false;
 		}
 		else
 			return true;
@@ -243,5 +255,17 @@ public class BlockPortalModifier extends BlockContainer
         	direction = ForgeDirection.DOWN.ordinal();
         
         world.setBlockMetadataWithNotify(x, y, z, direction, 0);
+	}
+	
+	@Override
+	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
+	{
+		return world.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 0);
+	}
+	
+	@Override
+	public ForgeDirection[] getValidRotations(World world, int x, int y, int z)
+	{
+		return ForgeDirection.VALID_DIRECTIONS;
 	}
 }
