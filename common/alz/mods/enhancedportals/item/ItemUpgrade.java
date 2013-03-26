@@ -17,7 +17,7 @@ import net.minecraft.util.Icon;
 
 public class ItemUpgrade extends Item
 {
-	String[] text = new String[] { Reference.Strings.PortalModifierUpgrade_MultiplePortals_Name, Reference.Strings.PortalModifierUpgrade_Dimensional_Name, Reference.Strings.PortalModifierUpgrade_AdvancedDimensional_Name, Reference.Strings.PortalModifierUpgrade_ModifierCamo_Name };
+	String[] text = new String[] { Reference.Strings.PortalModifierUpgrade_MultiplePortals_Name, Reference.Strings.PortalModifierUpgrade_Dimensional_Name, Reference.Strings.PortalModifierUpgrade_AdvancedDimensional_Name, Reference.Strings.PortalModifierUpgrade_ModifierCamo_Name, Reference.Strings.PortalModifierUpgrade_Computer_Name };
 	Icon[] textures;
 	
 	public ItemUpgrade()
@@ -67,7 +67,12 @@ public class ItemUpgrade extends Item
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
         for (int var4 = 0; var4 < text.length; var4++)
+        {
+        	if (var4 == 4 && Reference.ComputercraftComputer == null)
+        		continue;
+        	
             par3List.add(new ItemStack(par1, 1, var4));
+        }
     }
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

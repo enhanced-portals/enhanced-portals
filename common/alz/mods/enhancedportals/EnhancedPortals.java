@@ -1,5 +1,7 @@
 package alz.mods.enhancedportals;
 
+import java.lang.reflect.Field;
+
 import alz.mods.enhancedportals.block.Blocks;
 import alz.mods.enhancedportals.common.CommonProxy;
 import alz.mods.enhancedportals.common.EventHooks;
@@ -8,6 +10,7 @@ import alz.mods.enhancedportals.item.Items;
 import alz.mods.enhancedportals.networking.PacketHandler;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntities;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
@@ -29,7 +32,7 @@ public class EnhancedPortals
 	
 	@Instance(Reference.MOD_ID)
 	public static EnhancedPortals instance;
-	
+		
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event)
 	{
@@ -52,7 +55,9 @@ public class EnhancedPortals
 		
 		Reference.BlockIDs.ObsidianStairs = Reference.Settings.GetFromConfig("ObsidianStairsID", Reference.BlockIDs.ObsidianStairs_Default, true);
 		Reference.BlockIDs.PortalModifier = Reference.Settings.GetFromConfig("PortalModifierID", Reference.BlockIDs.PortalModifier_Default, true);
+		
 		Reference.ItemIDs.PortalModifierUpgrade = Reference.Settings.GetFromConfig("PortalModifierUpgradeID", Reference.ItemIDs.PortalModifierUpgrade_Default, false);
+		Reference.ItemIDs.MiscItems = Reference.Settings.GetFromConfig("MiscItemsID", Reference.ItemIDs.MiscItems_Default, false);
 	
 		Reference.Settings.AddToBorderBlocks(Reference.Settings.GetFromConfig("CustomBorderBlocks", ""));
 		Reference.Settings.AddToDestroyBlocks(Reference.Settings.GetFromConfig("CustomDestroyBlocks", "8,9,10,11,6,18,30,31,32,37,38,39,40,78,104,105,106,111,115"));
@@ -65,11 +70,22 @@ public class EnhancedPortals
 	{
 		Reference.LoadLanguage();
 		
+		MinecraftForge.EVENT_BUS.register(new EventHooks());
+		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+		
+		try
+		{
+			@SuppressWarnings("rawtypes")
+			Class ccClass = Class.forName("dan200.ComputerCraft");
+			Field blockComputer = ccClass.getField("computerBlockID");
+			
+			Reference.ComputercraftComputer = Block.blocksList[(int) blockComputer.get(blockComputer)];
+			Reference.LogData("Found and loaded ComputerCraft module.");
+		}
+		catch (Exception e) { Reference.LogData("ComputerCraft was not found."); }
+		
 		Blocks.Init();
 		TileEntities.Init();
 		Items.Init();
-		
-		MinecraftForge.EVENT_BUS.register(new EventHooks());
-		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 	}
 }

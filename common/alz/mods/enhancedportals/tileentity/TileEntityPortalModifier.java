@@ -1,17 +1,23 @@
 package alz.mods.enhancedportals.tileentity;
 
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.IPeripheral;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.EntityHelper;
+import alz.mods.enhancedportals.helpers.PortalHelper;
+import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.networking.ITileEntityNetworking;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
+import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 
-public class TileEntityPortalModifier extends TileEntity implements IInventory, ITileEntityNetworking
+public class TileEntityPortalModifier extends TileEntity implements IInventory, ITileEntityNetworking, IPeripheral
 {
 	public int Colour, Frequency;
 	public boolean HadPower;
@@ -206,5 +212,137 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	public boolean isStackValidForSlot(int i, ItemStack itemstack)
 	{
 		return EntityHelper.canAcceptItemStack(this, itemstack);
+	}
+
+	/* COMPUTERCRAFT */
+	
+	@Override
+	public String getType()
+	{
+		return "Portal Modifier";
+	}
+
+	@Override
+	public String[] getMethodNames()
+	{
+		return new String[] { "getFrequency", "setFrequency", "getColour", "setColour", "turnOn", "createPortal", "create", "turnOff", "removePortal", "remove" };
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+	{
+		if (method == 0)
+		{
+			return new Object[] { Frequency };
+		}
+		else if (method == 1)
+		{
+			if (arguments == null || arguments.length != 1)
+				return new Object[] { "Usage: setFrequency(<frequency>)" };
+			
+			try
+			{
+				Frequency = (int)Double.parseDouble(arguments[0].toString());
+				return new Object[] { true };
+			}
+			catch (NumberFormatException e)
+			{
+				return new Object[] { false };
+			}
+		}
+		else if (method == 2)
+		{
+			return new Object[] { Colour };
+		}
+		else if (method == 3)
+		{
+			if (arguments == null || arguments.length != 1)
+				return new Object[] { "Usage: setColour(<colour [0-15]>)" };
+			
+			try
+			{
+				int col = (int)Double.parseDouble(arguments[0].toString());
+				
+				if (col < 0)
+					col = 0;
+				
+				if (col > 15)
+					col = 15;
+				
+				Colour = col;
+				
+				if (Reference.LinkData != null)
+					Reference.LinkData.sendUpdatePacketToNearbyClients(this);
+				
+				int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
+				WorldHelper.floodUpdateMetadata(worldObj, offset[0], offset[1], offset[2], 90, col);
+				
+				return new Object[] { true };
+			}
+			catch (NumberFormatException e)
+			{
+				return new Object[] { false };
+			}
+		}
+		else if (method == 4 || method == 5 || method == 6)
+		{
+			return computerCreatePortal();
+		}
+		else if (method == 7 || method == 8 || method == 9)
+		{
+			return computerRemovePortal();
+		}
+		
+		return null;
+	}
+	
+	private Object[] computerCreatePortal()
+	{
+		ForgeDirection direction = WorldHelper.getBlockDirection(worldObj, xCoord, yCoord, zCoord);
+		int[] blockToTest = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord, direction);
+		int blockID = worldObj.getBlockId(blockToTest[0], blockToTest[1], blockToTest[2]);
+		boolean createdPortal = false;
+		
+		if (hasUpgrade(0))
+			createdPortal = PortalHelper.createPortalAround(worldObj, xCoord, yCoord, zCoord, Colour);
+		else
+			if (WorldHelper.isBlockPortalRemovable(blockID))
+				createdPortal = PortalHelper.createPortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2], Colour);
+		
+		return new Object[] { createdPortal };
+	}
+	
+	private Object[] computerRemovePortal()
+	{
+		ForgeDirection direction = WorldHelper.getBlockDirection(worldObj, xCoord, yCoord, zCoord);
+		int[] blockToTest = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord, direction);
+		int blockID = worldObj.getBlockId(blockToTest[0], blockToTest[1], blockToTest[2]), meta = worldObj.getBlockMetadata(blockToTest[0], blockToTest[1], blockToTest[2]);
+		boolean createdPortal = false;
+		
+		if (hasUpgrade(0))
+			createdPortal = PortalHelper.removePortalAround(worldObj, xCoord, yCoord, zCoord);
+		else
+			if (blockID == Reference.BlockIDs.NetherPortal && meta == Colour)
+				createdPortal = PortalHelper.removePortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2]);
+		
+		return new Object[] { createdPortal };
+	}
+
+	@Override
+	public boolean canAttachToSide(int side)
+	{
+		return hasUpgrade(4);
+	}
+
+	@Override
+	public void attach(IComputerAccess computer)
+	{
+		
+	}
+
+	@Override
+	public void detach(IComputerAccess computer)
+	{
+		
 	}
 }
