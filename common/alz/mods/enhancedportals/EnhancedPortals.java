@@ -79,8 +79,8 @@ public class EnhancedPortals
 			Class ccClass = Class.forName("dan200.ComputerCraft");
 			Field blockComputer = ccClass.getField("computerBlockID");
 			
-			Reference.ComputercraftComputer = Block.blocksList[(int) blockComputer.get(blockComputer)];
-			Reference.LogData("Found and loaded ComputerCraft module.");
+			Reference.ComputercraftComputer = Block.blocksList[(int) blockComputer.getInt(blockComputer)];
+			Reference.LogData("Found and loaded ComputerCraft.");
 		}
 		catch (Exception e) { Reference.LogData("ComputerCraft was not found."); }
 		

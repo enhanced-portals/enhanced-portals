@@ -5,12 +5,14 @@ import dan200.computer.api.IPeripheral;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
+import alz.mods.enhancedportals.helpers.TeleportData;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.networking.ITileEntityNetworking;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
 import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -22,7 +24,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	public int Colour, Frequency;
 	public boolean HadPower;
 	ItemStack[] inv;
-		
+			
 	public TileEntityPortalModifier()
 	{
 		inv = new ItemStack[3];
@@ -243,6 +245,10 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 			try
 			{
 				Frequency = (int)Double.parseDouble(arguments[0].toString());
+				
+				if (Reference.LinkData != null)
+					Reference.LinkData.AddToFrequency(Frequency, new TeleportData(xCoord, yCoord, zCoord, worldObj.provider.dimensionId));
+				
 				return new Object[] { true };
 			}
 			catch (NumberFormatException e)
@@ -257,7 +263,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		else if (method == 3)
 		{
 			if (arguments == null || arguments.length != 1)
-				return new Object[] { "Usage: setColour(<colour [0-15]>)" };
+				return new Object[] { "Usage:", "setColour(<0 - 15>)", "setColour(<colour name>)", "Valid colour names:", "black, red, green, brown, blue, purple, cyan, silver, gray, pink, lime, yellow, lightBlue, magenta, orange, white" };
 			
 			try
 			{
@@ -268,6 +274,12 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 				
 				if (col > 15)
 					col = 15;
+				
+				// Make it so that 0 = black, 5 = purple. (Default minecraft colours)
+				if (col == 0)
+					col = 5;
+				else if (col == 5)
+					col = 0;
 				
 				Colour = col;
 				
@@ -281,6 +293,31 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 			}
 			catch (NumberFormatException e)
 			{
+				int count = 0;
+				
+				for (String str : ItemDye.dyeColorNames)
+				{
+					if (arguments[0].toString().toLowerCase().equals((str.toLowerCase())))
+					{
+						if (count == 0)
+							count = 5;
+						else if (count == 5)
+							count = 0;
+						
+						Colour = count;
+						
+						if (Reference.LinkData != null)
+							Reference.LinkData.sendUpdatePacketToNearbyClients(this);
+						
+						int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
+						WorldHelper.floodUpdateMetadata(worldObj, offset[0], offset[1], offset[2], 90, Colour);
+						
+						return new Object[] { true };
+					}
+					
+					count++;
+				}
+				
 				return new Object[] { false };
 			}
 		}
