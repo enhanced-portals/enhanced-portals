@@ -123,7 +123,7 @@ public class GuiPortalModifier extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
 	{
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.func_98187_b(Reference.File.GuiTextureDirectory + "portalModifier.png");
+        mc.renderEngine.bindTexture(Reference.File.GuiTextureDirectory + "portalModifier.png");
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);		

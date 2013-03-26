@@ -30,17 +30,16 @@ public class ItemUpgrade extends Item
         maxStackSize = 1;
 	}	
 	
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void func_94581_a(IconRegister iconRegister)
-	{
+    public void updateIcons(IconRegister iconRegister)
+    {
 		textures = new Icon[text.length];
-		
+			
 		for (int i = 0; i < textures.length; i++)
 		{
-			textures[i] = iconRegister.func_94245_a(String.format(Reference.Strings.PortalModifierUpgrade_Icon, i));
+			textures[i] = iconRegister.registerIcon(String.format(Reference.Strings.PortalModifierUpgrade_Icon, i));
 		}
-	}
+    }
 	
 	@Override
 	@SideOnly(Side.CLIENT)

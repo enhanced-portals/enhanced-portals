@@ -35,9 +35,9 @@ public class BlockStairsObsidian extends BlockStairs
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void func_94332_a(IconRegister iconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
-		texture = iconRegister.func_94245_a("obsidian");
+		texture = iconRegister.registerIcon("obsidian");
 	}
 	
 	@Override

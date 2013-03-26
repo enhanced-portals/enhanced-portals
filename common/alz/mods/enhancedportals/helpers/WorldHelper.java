@@ -155,7 +155,7 @@ public class WorldHelper
 	    	{
 	    		int X = current[0]; int Y = current[1]; int Z = current[2];
 
-	    		world.setBlockAndMetadataWithNotify(X, Y, Z, Reference.BlockIDs.NetherPortal, newMeta, 3);
+				world.setBlock(current[0], current[1], current[2], Reference.BlockIDs.NetherPortal, newMeta, 3);
 	    		world.markBlockForUpdate(X, Y, Z);
 	    		
 	    		queue.add(new int[] { X, Y - 1, Z });

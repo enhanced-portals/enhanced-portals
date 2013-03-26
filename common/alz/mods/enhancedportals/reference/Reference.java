@@ -17,7 +17,7 @@ public class Reference
 	
 	public static final String MOD_NAME = "Enhanced Portals";
 	public static final String MOD_ID = "enhancedportals";
-	public static final String MOD_VERSION = "2.1";
+	public static final String MOD_VERSION = "2.1.1";
 	
 	public static final String PROXY_CLIENT = "alz.mods.enhancedportals.client.ClientProxy";
 	public static final String PROXY_COMMON = "alz.mods.enhancedportals.common.CommonProxy";

@@ -165,18 +165,6 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 	@Override
 	public void closeChest() { }
-
-	@Override
-	public boolean func_94042_c()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean func_94041_b(int i, ItemStack itemstack)
-	{
-		return EntityHelper.canAcceptItemStack(this, itemstack);
-	}
 	
 	@Override
 	public PacketTileUpdate getUpdatePacket()
@@ -206,5 +194,17 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		{
 			ClientProxy.RequestTileData(this);
 		}
+	}
+
+	@Override
+	public boolean isInvNameLocalized()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isStackValidForSlot(int i, ItemStack itemstack)
+	{
+		return EntityHelper.canAcceptItemStack(this, itemstack);
 	}
 }

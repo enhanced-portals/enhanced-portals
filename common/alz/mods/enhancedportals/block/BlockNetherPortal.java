@@ -41,16 +41,16 @@ public class BlockNetherPortal extends BlockPortal
 		setLightValue(0.75F);
 		setUnlocalizedName("portal");
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void func_94332_a(IconRegister iconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
 		textures = new Icon[16];
 		
 		for (int i = 0; i < 16; i++)
 		{
-			textures[i] = iconRegister.func_94245_a(String.format(Reference.Strings.NetherPortal_Icon, i));
+			textures[i] = iconRegister.registerIcon(String.format(Reference.Strings.NetherPortal_Icon, i));
 		}
 	}
 

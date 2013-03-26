@@ -46,15 +46,15 @@ public class BlockPortalModifier extends BlockContainer
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void func_94332_a(IconRegister iconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
-		sideFace = iconRegister.func_94245_a(Reference.Strings.PortalModifier_Icon_Side);
+		sideFace = iconRegister.registerIcon(Reference.Strings.PortalModifier_Icon_Side);
 		
 		activeFace = new Icon[16];
 		
 		for (int i = 0; i < 16; i++)
 		{
-			activeFace[i] = iconRegister.func_94245_a(String.format(Reference.Strings.PortalModifier_Icon_Active, i));
+			activeFace[i] = iconRegister.registerIcon(String.format(Reference.Strings.PortalModifier_Icon_Active, i));
 		}
 	}
 	
@@ -241,7 +241,7 @@ public class BlockPortalModifier extends BlockContainer
         	direction = ForgeDirection.UP.ordinal();
         else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
         	direction = ForgeDirection.DOWN.ordinal();
-
-        world.setBlockAndMetadataWithNotify(x, y, z, blockID, direction, 0);
+        
+        world.setBlockMetadataWithNotify(x, y, z, direction, 0);
 	}
 }

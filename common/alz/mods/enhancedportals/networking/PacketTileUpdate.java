@@ -89,7 +89,7 @@ public class PacketTileUpdate extends PacketUpdate
 		yCoord = stream.readInt();
 		zCoord = stream.readInt();
 		dimension = stream.readInt();
-		
+
 		int size = stream.readInt();
 				
 		if (size > 0)
