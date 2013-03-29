@@ -99,7 +99,7 @@ public class BlockNetherPortal extends BlockPortal
 		if (firstModifier != null)
 			modifier = (TileEntityPortalModifier)world.getBlockTileEntity(firstModifier[0], firstModifier[1], firstModifier[2]);
 		
-		if (modifier == null || modifier.Frequency == 0)
+		if (modifier == null || modifier.getFrequency() == 0)
 		{
 			if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
 				entity.setInPortal(); // There's no Portal Modifier or it's frequency isn't set.
@@ -108,7 +108,7 @@ public class BlockNetherPortal extends BlockPortal
 		{
 			if (EntityHelper.canEntityTravel(entity))
 			{				
-				List<TeleportData> validExits = Reference.LinkData.getFrequencyExcluding(modifier.Frequency, new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
+				List<TeleportData> validExits = Reference.LinkData.getFrequencyExcluding(modifier.getFrequency(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
 				
 				if (validExits == null || validExits.isEmpty())
 				{

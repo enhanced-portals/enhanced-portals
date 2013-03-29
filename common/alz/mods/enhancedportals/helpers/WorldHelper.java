@@ -113,7 +113,7 @@ public class WorldHelper
 	    	}
 	    	else if (currentID == blockToFind && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
 	    	{
-	    		if (((TileEntityPortalModifier)world.getBlockTileEntity(current[0], current[1], current[2])).Colour == colourToFind)
+	    		if (((TileEntityPortalModifier)world.getBlockTileEntity(current[0], current[1], current[2])).getFrequency() == colourToFind)
 	    			return current;
 	    		else
 	    		{
@@ -169,9 +169,9 @@ public class WorldHelper
 	    	{
 	    		TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(current[0], current[1], current[2]);
 	    		
-	    		if (modifier.Colour != newMeta)
+	    		if (modifier.getColour() != newMeta)
 	    		{
-	    			modifier.Colour = newMeta;
+	    			modifier.setColour(newMeta);
 	    			
 	    			if (!world.isRemote)
 	    				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);

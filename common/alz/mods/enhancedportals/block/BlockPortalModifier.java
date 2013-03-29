@@ -72,10 +72,10 @@ public class BlockPortalModifier extends BlockContainer
 		}
 		else if (modifier.hasUpgrade(0))
 		{
-			return activeFace[modifier.Colour];
+			return activeFace[modifier.getColour()];
 		}
 				
-		return side == meta ? activeFace[modifier.Colour] : sideFace;
+		return side == meta ? activeFace[modifier.getColour()] : sideFace;
 	}
 	
 	// For inventory
@@ -94,7 +94,7 @@ public class BlockPortalModifier extends BlockContainer
 		if (tileEntity == null)
 			return false;
 		
-		if (!PortalHelper.createPortalAround(world, x, y, z, tileEntity.Colour, player))
+		if (!PortalHelper.createPortalAround(world, x, y, z, tileEntity.getColour(), player))
 		{
 			ItemStack currentItem = player.inventory.mainInventory[player.inventory.currentItem];
 						
@@ -107,7 +107,7 @@ public class BlockPortalModifier extends BlockContainer
 			    else if (colour == 5)
 			    	colour = 0;
 				
-				tileEntity.Colour = colour;
+				tileEntity.setColour(colour);
 				
 				if (!player.capabilities.isCreativeMode && Reference.Settings.DoesDyingCost)
 					currentItem.stackSize--;
@@ -157,8 +157,8 @@ public class BlockPortalModifier extends BlockContainer
 		{
 			TileEntityPortalModifier tileEntity = (TileEntityPortalModifier)world.getBlockTileEntity(x, y, z);
 			
-			if (tileEntity != null && tileEntity.Frequency != 0)
-				Reference.LinkData.RemoveFromFrequency(tileEntity.Frequency, x, y, z, world.provider.dimensionId);
+			if (tileEntity != null && tileEntity.getFrequency() != 0)
+				Reference.LinkData.RemoveFromFrequency(tileEntity.getFrequency(), x, y, z, world.provider.dimensionId);
 		}
 		
 		dropItems(world, x, y, z);
@@ -217,17 +217,17 @@ public class BlockPortalModifier extends BlockContainer
 		if (gettingPower && !hadPower)
 		{			
 			if (hasMultiUpgrade)
-				PortalHelper.createPortalAround(world, x, y, z, modifier.Colour);
+				PortalHelper.createPortalAround(world, x, y, z, modifier.getColour());
 			else
 				if (WorldHelper.isBlockPortalRemovable(blockID))
-					PortalHelper.createPortal(world, blockToTest[0], blockToTest[1], blockToTest[2], modifier.Colour);
+					PortalHelper.createPortal(world, blockToTest[0], blockToTest[1], blockToTest[2], modifier.getColour());
 		}
 		else if (!gettingPower && hadPower)
 		{
 			if (hasMultiUpgrade)
 				PortalHelper.removePortalAround(world, x, y, z);
 			else
-				if (blockID == Reference.BlockIDs.NetherPortal && meta == modifier.Colour)
+				if (blockID == Reference.BlockIDs.NetherPortal && meta == modifier.getColour())
 					PortalHelper.removePortal(world, blockToTest[0], blockToTest[1], blockToTest[2]);
 		}
 		

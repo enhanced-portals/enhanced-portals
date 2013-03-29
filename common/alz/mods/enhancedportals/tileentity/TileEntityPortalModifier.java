@@ -1,5 +1,8 @@
 package alz.mods.enhancedportals.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 import alz.mods.enhancedportals.client.ClientProxy;
@@ -21,13 +24,15 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class TileEntityPortalModifier extends TileEntity implements IInventory, ITileEntityNetworking, IPeripheral
 {
-	public int Colour, Frequency;
+	private int Colour, Frequency;
 	public boolean HadPower;
-	ItemStack[] inv;
-			
+	private ItemStack[] inv;
+	private List<IComputerAccess> computerAccess;
+	
 	public TileEntityPortalModifier()
 	{
 		inv = new ItemStack[3];
+		computerAccess = new ArrayList<IComputerAccess>();
 	}
 	
 	public boolean hasUpgrade(int id)
@@ -47,6 +52,57 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 			return false;
 		
 		return true;
+	}
+	
+	public int getColour()
+	{
+		return Colour;
+	}
+	
+	public int getFrequency()
+	{
+		return Frequency;
+	}
+	
+	public void setColour(int colour)
+	{
+		setColour(colour, false);
+	}
+	
+	public void setColour(int colour, boolean swapBlackPurple)
+	{
+		if (swapBlackPurple)
+		{
+			if (colour == 0)
+				colour = 5;
+			else if (colour == 5)
+				colour = 0;
+		}
+		
+		Colour = colour;
+		
+		for (IComputerAccess computer : computerAccess)
+		{
+			computer.queueEvent("enhancedPortals_colourChanged", new Object[] { colour });
+		}
+	}
+	
+	public void setFrequency(int frequency)
+	{
+		Frequency = frequency;
+		
+		for (IComputerAccess computer : computerAccess)
+		{
+			computer.queueEvent("enhancedPortals_frequencyChanged", new Object[] { frequency });
+		}
+	}
+	
+	public void setState(boolean state)
+	{
+		for (IComputerAccess computer : computerAccess)
+		{
+			computer.queueEvent("enhancedPortals_portalChanged", new Object[] { state });
+		}
 	}
 	
 	@Override
@@ -274,14 +330,8 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 				
 				if (col > 15)
 					col = 15;
-				
-				// Make it so that 0 = black, 5 = purple. (Default minecraft colours)
-				if (col == 0)
-					col = 5;
-				else if (col == 5)
-					col = 0;
-				
-				Colour = col;
+								
+				setColour(col, true);
 				
 				if (Reference.LinkData != null)
 					Reference.LinkData.sendUpdatePacketToNearbyClients(this);
@@ -298,13 +348,8 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 				for (String str : ItemDye.dyeColorNames)
 				{
 					if (arguments[0].toString().toLowerCase().equals((str.toLowerCase())))
-					{
-						if (count == 0)
-							count = 5;
-						else if (count == 5)
-							count = 0;
-						
-						Colour = count;
+					{						
+						setColour(count, true);
 						
 						if (Reference.LinkData != null)
 							Reference.LinkData.sendUpdatePacketToNearbyClients(this);
@@ -346,6 +391,8 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 			if (WorldHelper.isBlockPortalRemovable(blockID))
 				createdPortal = PortalHelper.createPortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2], Colour);
 		
+		setState(createdPortal);
+		
 		return new Object[] { createdPortal };
 	}
 	
@@ -354,15 +401,14 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		ForgeDirection direction = WorldHelper.getBlockDirection(worldObj, xCoord, yCoord, zCoord);
 		int[] blockToTest = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord, direction);
 		int blockID = worldObj.getBlockId(blockToTest[0], blockToTest[1], blockToTest[2]), meta = worldObj.getBlockMetadata(blockToTest[0], blockToTest[1], blockToTest[2]);
-		boolean createdPortal = false;
 		
 		if (hasUpgrade(0))
-			createdPortal = PortalHelper.removePortalAround(worldObj, xCoord, yCoord, zCoord);
+			PortalHelper.removePortalAround(worldObj, xCoord, yCoord, zCoord);
 		else
 			if (blockID == Reference.BlockIDs.NetherPortal && meta == Colour)
-				createdPortal = PortalHelper.removePortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2]);
+				PortalHelper.removePortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2]);
 		
-		return new Object[] { createdPortal };
+		return new Object[] { false };
 	}
 
 	@Override
@@ -374,12 +420,12 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	@Override
 	public void attach(IComputerAccess computer)
 	{
-		
+		computerAccess.add(computer);
 	}
 
 	@Override
 	public void detach(IComputerAccess computer)
 	{
-		
+		computerAccess.remove(computer);
 	}
 }
