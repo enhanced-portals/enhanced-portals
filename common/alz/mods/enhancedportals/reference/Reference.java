@@ -30,6 +30,7 @@ public class Reference
 	{
 		public static final int ObsidianStairs_Default = 1345;
 		public static final int PortalModifier_Default = 1346;
+		public static final int DialDevice_Default = 1347;
 		public static final int Obsidian_Default = 49;
 		public static final int NetherPortal_Default = 90;
 		
@@ -37,6 +38,7 @@ public class Reference
 		public static int PortalModifier;
 		public static int Obsidian = Obsidian_Default;
 		public static int NetherPortal = NetherPortal_Default;
+		public static int DialDevice;
 	}
 	
 	/*** Item IDs ***/
@@ -77,10 +79,11 @@ public class Reference
 		public static final boolean DoesDyingCost_Default = true;
 		public static final boolean AllowModifiers_Default = true;
 		public static final boolean AllowObsidianStairs_Default = true;
+		public static final boolean AllowDialDevice_Default = true;
 		public static final boolean PrintPortalMessages_Default = true;
 		public static final boolean CanDyeByThrowing_Default = true;
 		
-		public static final int MaximumPortalSize_Default = 0;	
+		public static final int MaximumPortalSize_Default = 0;
 		public static final int PigmenSpawnChance_Default = 100;
 		public static final int SoundLevel_Default = 100;
 		public static final int ParticleLevel_Default = 100;
@@ -93,6 +96,7 @@ public class Reference
 		public static boolean DoesDyingCost;
 		public static boolean AllowModifiers;
 		public static boolean AllowObsidianStairs;
+		public static boolean AllowDialDevice;
 		public static boolean PrintPortalMessages;
 		public static boolean CanDyeByThrowing;
 		
@@ -191,11 +195,15 @@ public class Reference
 		// Block Names
 		public static final String PortalModifier_Name = "portalModifier";
 		public static final String ObsidianStairs_Name = "stairsObsidian";
+		public static final String DialDevice_Name = "dialDevice";
 		
 		// Block Icons
 		public static final String PortalModifier_Icon_Side = MOD_ID + ":" + PortalModifier_Name + "_side";
 		public static final String PortalModifier_Icon_Active = MOD_ID + ":" + PortalModifier_Name + "_active_%s";
 		public static final String NetherPortal_Icon = MOD_ID + ":netherPortal_%s";
+		public static final String DialDevice_Icon_Side = MOD_ID + ":" + DialDevice_Name + "_side";
+		public static final String DialDevice_Icon_Top = MOD_ID + ":" + DialDevice_Name + "_top";
+		public static final String DialDevice_Icon_Bottom = MOD_ID + ":" + DialDevice_Name + "_bottom";
 		
 		// Item Names
 		public static final String PortalModifierUpgrade_Name = "portalModifierUpgrade";

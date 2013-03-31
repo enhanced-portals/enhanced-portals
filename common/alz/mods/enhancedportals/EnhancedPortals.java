@@ -32,7 +32,7 @@ public class EnhancedPortals
 	
 	@Instance(Reference.MOD_ID)
 	public static EnhancedPortals instance;
-		
+	
 	@PreInit
 	public void preLoad(FMLPreInitializationEvent event)
 	{
@@ -45,6 +45,7 @@ public class EnhancedPortals
 		Reference.Settings.CanDyeByThrowing = Reference.Settings.GetFromConfig("CanDyeByThrowing", Reference.Settings.CanDyeByThrowing_Default);
 		Reference.Settings.AllowModifiers = Reference.Settings.GetFromConfig("AllowModifiers", Reference.Settings.AllowModifiers_Default);
 		Reference.Settings.AllowObsidianStairs = Reference.Settings.GetFromConfig("AllowObsidianStairs", Reference.Settings.AllowObsidianStairs_Default);
+		Reference.Settings.AllowDialDevice = Reference.Settings.GetFromConfig("AllowDialDevice", Reference.Settings.AllowDialDevice_Default);
 		Reference.Settings.PrintPortalMessages = Reference.Settings.GetFromConfig("PrintPortalCreationMessages", Reference.Settings.PrintPortalMessages_Default);
 		
 		Reference.Settings.MaximumPortalSize = Reference.Settings.GetFromConfig("MaximumPortalSize", Reference.Settings.MaximumPortalSize_Default);
@@ -55,6 +56,7 @@ public class EnhancedPortals
 		
 		Reference.BlockIDs.ObsidianStairs = Reference.Settings.GetFromConfig("ObsidianStairsID", Reference.BlockIDs.ObsidianStairs_Default, true);
 		Reference.BlockIDs.PortalModifier = Reference.Settings.GetFromConfig("PortalModifierID", Reference.BlockIDs.PortalModifier_Default, true);
+		Reference.BlockIDs.DialDevice = Reference.Settings.GetFromConfig("DialDeviceID", Reference.BlockIDs.DialDevice_Default, true);
 		
 		Reference.ItemIDs.PortalModifierUpgrade = Reference.Settings.GetFromConfig("PortalModifierUpgradeID", Reference.ItemIDs.PortalModifierUpgrade_Default, false);
 		Reference.ItemIDs.MiscItems = Reference.Settings.GetFromConfig("MiscItemsID", Reference.ItemIDs.MiscItems_Default, false);

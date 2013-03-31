@@ -42,6 +42,12 @@ public class Blocks
 			Block.blocksList[Reference.BlockIDs.ObsidianStairs] = new BlockStairsObsidian();
 			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.ObsidianStairs], Reference.Strings.ObsidianStairs_Name);
 		}
+		
+		if (Reference.Settings.AllowDialDevice)
+		{
+			Block.blocksList[Reference.BlockIDs.DialDevice] = new BlockDialDevice();
+			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice], Reference.Strings.DialDevice_Name);
+		}
 	}
 	
 	private static void SetupRecipes()

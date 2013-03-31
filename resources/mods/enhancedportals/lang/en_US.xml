@@ -5,6 +5,7 @@
 	<comment>English (US) Localization File</comment>
 	<entry key="tile.portalModifier.name">Portal Modifier</entry>
 	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
+	<entry key="tile.dialDevice.name">Dial Device (WIP Name)</entry>
 	<entry key="item.portalModifierUpgrade.name">Portal Modifier Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.multiplePortals">Multiple Portals</entry>
 	<entry key="item.portalModifierUpgrade.dimensional">Dimensional</entry>
