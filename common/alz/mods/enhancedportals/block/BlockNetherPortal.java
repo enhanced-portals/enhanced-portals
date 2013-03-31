@@ -234,9 +234,9 @@ public class BlockNetherPortal extends BlockPortal
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		if (world.isRemote)
+		if (world.isRemote || id == 0)
 			return;
-		
+				
 		// Lets see if the portal is still intact
 		if (PortalHelper.getPortalShape((World)world, x, y, z) == PortalShape.INVALID)
 			PortalHelper.removePortal(world, x, y, z, PortalShape.INVALID); // If it's not, deconstruct it

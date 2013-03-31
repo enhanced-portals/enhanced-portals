@@ -175,10 +175,9 @@ public class PortalHelper
 				if (sides >= 2)
 				{
 					addedBlocks.add(new int[] { current[0], current[1], current[2], currentID, world.getBlockMetadata(current[0], current[1], current[2]) });
-					
-					world.setBlock(current[0], current[1], current[2], Reference.BlockIDs.NetherPortal, meta, 2);
-														
 					queue = updateQueue(queue, shape, current[0], current[1], current[2]);
+					
+					world.setBlock(current[0], current[1], current[2], Reference.BlockIDs.NetherPortal, meta, 3);
 				}
 			}
 		}
@@ -299,7 +298,7 @@ public class PortalHelper
 				
 				if (sides != 4)
 					return false;
-				
+								
 				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 				checkedQueue.add(current[0] + "," + current[1] + "," + current[2]);
 			}			
