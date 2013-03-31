@@ -13,7 +13,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Icon;
 
 public class ItemScroll extends Item
@@ -46,10 +45,12 @@ public class ItemScroll extends Item
     public void setLocationData(ItemStack Stack, TeleportData Data)
     {
         NBTTagCompound Tag = Stack.stackTagCompound;
+        
         if (Tag == null)
         {
             Tag = new NBTTagCompound();
         }
+        
         Tag.setInteger("x", Data.GetX());
         Tag.setInteger("y", Data.GetY());
         Tag.setInteger("z", Data.GetZ());
@@ -61,10 +62,12 @@ public class ItemScroll extends Item
     public TeleportData getLocationdata(ItemStack Stack)
     {
         NBTTagCompound Tag = Stack.stackTagCompound;
+        
         if (Tag == null)
         {
             return null;
         }
+        
         int x = Tag.getInteger("x");
         int y = Tag.getInteger("y");
         int z = Tag.getInteger("z");
@@ -73,16 +76,20 @@ public class ItemScroll extends Item
         return new TeleportData(x,y,z,d);
     }
     
-    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack,
-            EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
     {
         if (par1ItemStack.getItemDamage() == 1)
         {
             TeleportData Data = getLocationdata(par1ItemStack);
+            
             if (Data == null)
+            {
                 return;
+            }
+            
             par3List.add("x: " + Data.GetX());
             par3List.add("y: " + Data.GetY());
             par3List.add("z: " + Data.GetZ());            
@@ -100,7 +107,6 @@ public class ItemScroll extends Item
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack par1ItemStack)
     {
-        // TODO Auto-generated method stub
         return EnumRarity.rare;
     }
 }

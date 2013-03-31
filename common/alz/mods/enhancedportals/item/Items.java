@@ -17,6 +17,7 @@ public class Items
 		SetupRecipes();
 	}
 	
+	@SuppressWarnings("unused")
 	private static Item itemScroll;	
 	private static Item itemUpgrade;
 	
