@@ -17,11 +17,13 @@ public class Items
 		SetupRecipes();
 	}
 	
+	private static Item itemScroll;	
 	private static Item itemUpgrade;
 	
 	private static void SetupItems()
 	{
 		itemUpgrade = new ItemUpgrade();
+		itemScroll = new ItemScroll();
 	}
 	
 	private static void SetupRecipes()

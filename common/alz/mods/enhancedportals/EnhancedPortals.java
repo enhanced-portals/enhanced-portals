@@ -60,6 +60,7 @@ public class EnhancedPortals
 		
 		Reference.ItemIDs.PortalModifierUpgrade = Reference.Settings.GetFromConfig("PortalModifierUpgradeID", Reference.ItemIDs.PortalModifierUpgrade_Default, false);
 		Reference.ItemIDs.MiscItems = Reference.Settings.GetFromConfig("MiscItemsID", Reference.ItemIDs.MiscItems_Default, false);
+		Reference.ItemIDs.ItemScroll = Reference.Settings.GetFromConfig("ItemScrollID", Reference.ItemIDs.ItemScroll_Default, false);
 	
 		Reference.Settings.AddToBorderBlocks(Reference.Settings.GetFromConfig("CustomBorderBlocks", ""));
 		Reference.Settings.AddToDestroyBlocks(Reference.Settings.GetFromConfig("CustomDestroyBlocks", "8,9,10,11,6,18,30,31,32,37,38,39,40,78,104,105,106,111,115"));
