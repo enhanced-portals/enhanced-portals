@@ -46,9 +46,11 @@ public class Reference
 	{
 		public static final int PortalModifierUpgrade_Default = 6000;
 		public static final int MiscItems_Default = 6001;
+		public static final int ItemScroll_Default = 6002;
 		
 		public static int PortalModifierUpgrade;
 		public static int MiscItems;
+		public static int ItemScroll;
 	}
 	
 	public static class GuiIDs
@@ -213,9 +215,11 @@ public class Reference
 		public static final String PortalModifierUpgrade_AdvancedDimensional_Name = "item." + PortalModifierUpgrade_Name + ".advancedDimensional";
 		public static final String PortalModifierUpgrade_ModifierCamo_Name = "item." + PortalModifierUpgrade_Name + ".modifierCamo";
 		public static final String PortalModifierUpgrade_Computer_Name = "item." + PortalModifierUpgrade_Name + ".computer";
+		public static final String ItemScroll_Name = "itemScroll";
 				
 		// Item Icons
 		public static final String PortalModifierUpgrade_Icon = MOD_ID + ":" + PortalModifier_Name + "Upgrade_%s";
+		public static final String ItemScroll_Icon = MOD_ID + ":" + ItemScroll_Name;
 		
 		// Tile Entities
 		public static final String PortalModifier_TE_Name = "epmodif";
