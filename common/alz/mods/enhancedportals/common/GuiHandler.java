@@ -1,11 +1,11 @@
 package alz.mods.enhancedportals.common;
 
-import alz.mods.enhancedportals.client.GuiPortalModifier;
-import alz.mods.enhancedportals.reference.Reference;
-import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import alz.mods.enhancedportals.client.GuiPortalModifier;
+import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.Player;
 
@@ -16,19 +16,21 @@ public class GuiHandler implements IGuiHandler
 	{
 		if (ID != Reference.GuiIDs.PortalModifier)
 			return null;
-		
+
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity instanceof TileEntityPortalModifier)
 		{
-			TileEntityPortalModifier modifier = (TileEntityPortalModifier)tileEntity;
-			
+			TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+
 			if (Reference.LinkData != null)
-				Reference.LinkData.sendUpdatePacketToPlayer(modifier, (Player)player);
-				
+			{
+				Reference.LinkData.sendUpdatePacketToPlayer(modifier, (Player) player);
+			}
+
 			return new ContainerPortalModifier(player.inventory, modifier);
 		}
-		
+
 		return null;
 	}
 
@@ -37,12 +39,12 @@ public class GuiHandler implements IGuiHandler
 	{
 		if (ID != Reference.GuiIDs.PortalModifier)
 			return null;
-				
+
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity instanceof TileEntityPortalModifier)
-			return new GuiPortalModifier(player.inventory, (TileEntityPortalModifier)tileEntity);
-		
+			return new GuiPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
+
 		return null;
 	}
 }

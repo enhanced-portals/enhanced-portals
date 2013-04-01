@@ -111,7 +111,7 @@ public class GuiPortalModifier extends GuiContainer
 		fontRenderer.drawString(freq, (((this.width - 20) / 2) - (fontRenderer.getStringWidth(freq) / 2)) - this.guiLeft, 30, 4210752);
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
-	
+		
 	@Override
 	public void updateScreen()
 	{

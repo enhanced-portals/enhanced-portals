@@ -1,9 +1,9 @@
 package alz.mods.enhancedportals.block;
 
-import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import alz.mods.enhancedportals.reference.Reference;
 
 public class BlockDialDevice extends Block
 {

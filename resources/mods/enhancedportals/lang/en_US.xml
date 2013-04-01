@@ -12,7 +12,8 @@
 	<entry key="item.portalModifierUpgrade.advancedDimensional">Advanced Dimensional</entry>
 	<entry key="item.portalModifierUpgrade.modifierCamo">Modifier Camouflage</entry>
 	<entry key="item.portalModifierUpgrade.computer">Technological</entry>
-	<entry key="item.itemScroll.name">Scroll</entry>
+	<entry key="item.portalModifierUpgrade.scroll">Teleport scroll upgrade name</entry>
+	<entry key="item.itemScroll.name">Teleportation Scroll</entry>
 	<entry key="gui.portalModifier.frequency">Frequency</entry>
 	<entry key="gui.portalModifier.clearCharacter">C</entry>
 	<entry key="gui.portalModifier.saveCharacter">S</entry>

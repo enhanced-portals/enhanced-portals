@@ -8,7 +8,7 @@ public class TileEntities
 	{
 		SetupTileEntities();
 	}
-	
+
 	private static void SetupTileEntities()
 	{
 		GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "epmodif");

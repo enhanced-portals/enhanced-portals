@@ -12,9 +12,11 @@ public class PacketTileUpdate extends PacketUpdate
 {
 	public int xCoord, yCoord, zCoord, dimension;
 	public int[] data;
-	
-	public PacketTileUpdate() { }
-	
+
+	public PacketTileUpdate()
+	{
+	}
+
 	public PacketTileUpdate(int x, int y, int z, int dim, int[] theData)
 	{
 		xCoord = x;
@@ -23,20 +25,20 @@ public class PacketTileUpdate extends PacketUpdate
 		dimension = dim;
 		data = theData;
 	}
-	
+
 	@Override
 	public int getPacketID()
 	{
 		return Reference.Networking.TileEntityUpdate;
-	}	
-	
+	}
+
 	@Override
 	public Packet250CustomPayload getClientPacket()
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataStream = new DataOutputStream(byteStream);
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		
+
 		try
 		{
 			dataStream.writeByte(getPacketID());
@@ -47,22 +49,22 @@ public class PacketTileUpdate extends PacketUpdate
 		{
 			e.printStackTrace();
 		}
-		
+
 		packet.channel = Reference.MOD_ID;
 		packet.data = byteStream.toByteArray();
 		packet.length = packet.data.length;
 		packet.isChunkDataPacket = true;
-		
+
 		return packet;
 	}
-	
+
 	@Override
 	public Packet250CustomPayload getServerPacket()
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataStream = new DataOutputStream(byteStream);
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		
+
 		try
 		{
 			dataStream.writeByte(getPacketID());
@@ -73,12 +75,12 @@ public class PacketTileUpdate extends PacketUpdate
 		{
 			e.printStackTrace();
 		}
-		
+
 		packet.channel = Reference.MOD_ID;
 		packet.data = byteStream.toByteArray();
 		packet.length = packet.data.length;
 		packet.isChunkDataPacket = true;
-		
+
 		return packet;
 	}
 
@@ -91,11 +93,11 @@ public class PacketTileUpdate extends PacketUpdate
 		dimension = stream.readInt();
 
 		int size = stream.readInt();
-				
+
 		if (size > 0)
 		{
 			data = new int[size];
-			
+
 			for (int i = 0; i < size; i++)
 			{
 				data[i] = stream.readInt();
@@ -110,9 +112,9 @@ public class PacketTileUpdate extends PacketUpdate
 		stream.writeInt(yCoord);
 		stream.writeInt(zCoord);
 		stream.writeInt(dimension);
-		
+
 		stream.writeInt(data.length);
-		
+
 		for (int i = 0; i < data.length; i++)
 		{
 			stream.writeInt(data[i]);

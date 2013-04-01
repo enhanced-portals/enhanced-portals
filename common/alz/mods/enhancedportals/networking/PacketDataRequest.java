@@ -12,9 +12,11 @@ import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 public class PacketDataRequest
 {
 	public int xCoord, yCoord, zCoord, dimension;
-	
-	public PacketDataRequest() { }
-	
+
+	public PacketDataRequest()
+	{
+	}
+
 	public PacketDataRequest(TileEntityPortalModifier modifier)
 	{
 		xCoord = modifier.xCoord;
@@ -22,7 +24,7 @@ public class PacketDataRequest
 		zCoord = modifier.zCoord;
 		dimension = modifier.worldObj.provider.dimensionId;
 	}
-	
+
 	public PacketDataRequest(int x, int y, int z, int dim)
 	{
 		xCoord = x;
@@ -30,18 +32,18 @@ public class PacketDataRequest
 		zCoord = z;
 		dimension = dim;
 	}
-	
+
 	public int getPacketID()
 	{
 		return Reference.Networking.DataRequest;
 	}
-	
+
 	public Packet250CustomPayload getPacket()
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataStream = new DataOutputStream(byteStream);
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		
+
 		try
 		{
 			dataStream.writeByte(getPacketID());
@@ -51,15 +53,15 @@ public class PacketDataRequest
 		{
 			e.printStackTrace();
 		}
-		
+
 		packet.channel = Reference.MOD_ID;
 		packet.data = byteStream.toByteArray();
 		packet.length = packet.data.length;
 		packet.isChunkDataPacket = true;
-		
+
 		return packet;
 	}
-	
+
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
 		xCoord = stream.readInt();

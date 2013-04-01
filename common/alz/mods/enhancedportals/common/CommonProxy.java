@@ -1,3 +1,5 @@
 package alz.mods.enhancedportals.common;
 
-public class CommonProxy { }
+public class CommonProxy
+{
+}
