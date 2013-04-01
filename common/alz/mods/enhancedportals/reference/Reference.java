@@ -223,7 +223,7 @@ public class Reference
 		public static final String PortalModifierUpgrade_ModifierCamo_Name = "item." + PortalModifierUpgrade_Name + ".modifierCamo";
 		public static final String PortalModifierUpgrade_Computer_Name = "item." + PortalModifierUpgrade_Name + ".computer";
 		public static final String PortalModifierUpgrade_Scroll_Name = "item." + PortalModifierUpgrade_Name + ".scroll";
-		public static final String ItemScroll_Name = "itemScroll";
+		public static final String ItemScroll_Name = "teleportScroll";
 
 		// Item Icons
 		public static final String PortalModifierUpgrade_Icon = MOD_ID + ":" + PortalModifier_Name + "Upgrade_%s";
