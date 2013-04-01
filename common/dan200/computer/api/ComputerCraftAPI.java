@@ -73,6 +73,7 @@ public class ComputerCraftAPI
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static Method findCCMethod( String name, Class[] args )
 	{
 		try {
@@ -85,6 +86,7 @@ public class ComputerCraftAPI
 	}	
 	
 	private static boolean ccSearched = false;	
+	@SuppressWarnings("rawtypes")
 	private static Class computerCraft = null;
 	private static Method computerCraft_registerExternalPeripheral = null;
 	private static Method computerCraft_getCreativeTab = null;

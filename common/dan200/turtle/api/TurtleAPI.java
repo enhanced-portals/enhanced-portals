@@ -61,6 +61,7 @@ public class TurtleAPI
 		}
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static Method findCCTurtleMethod( String name, Class[] args )
 	{
 		try {
@@ -73,6 +74,7 @@ public class TurtleAPI
 	}	
 	
 	private static boolean ccTurtleSearched = false;	
+	@SuppressWarnings("rawtypes")
 	private static Class ccTurtle = null;
 	private static Method ccTurtle_registerTurtleUpgrade = null;
 }
