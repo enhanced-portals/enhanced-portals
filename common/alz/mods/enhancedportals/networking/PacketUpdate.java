@@ -8,6 +8,8 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 public abstract class PacketUpdate
 {
+	public int xCoord, yCoord, zCoord, Dimension;
+	
 	public abstract int getPacketID();
 
 	public abstract Packet250CustomPayload getClientPacket();

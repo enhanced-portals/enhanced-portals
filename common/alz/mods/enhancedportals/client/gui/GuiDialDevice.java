@@ -2,13 +2,16 @@ package alz.mods.enhancedportals.client.gui;
 
 import java.util.List;
 
+import cpw.mods.fml.client.FMLClientHandler;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import alz.mods.enhancedportals.EnhancedPortals;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.portals.PortalData;
+import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDevice extends GuiScreen
@@ -24,7 +27,7 @@ public class GuiDialDevice extends GuiScreen
 	public GuiDialDevice(EntityPlayer player, TileEntityDialDevice dialDevice)
 	{
 		super();
-		screenTitle = "Dial Device";
+		screenTitle = Localizations.getLocalizedString("tile." + Strings.DialDevice_Name + ".name");
 		theSelectedEntry = dialDevice.SelectedEntry;
 		theList = dialDevice.PortalDataList;
 		DialDevice = dialDevice;
@@ -57,10 +60,10 @@ public class GuiDialDevice extends GuiScreen
 		int middle = width / 2;
 		middle -= 75;
 
-		buttonList.add(new GuiButton(1, middle - 80, height - 55, 150, 20, "Add"));
-		buttonList.add(new GuiButton(2, middle - 80, height - 30, 150, 20, "Remove"));
-		buttonList.add(new GuiButton(3, middle + 80, height - 55, 150, 20, "Edit"));
-		buttonList.add(new GuiButton(4, middle + 80, height - 30, 150, 20, "Close"));
+		buttonList.add(new GuiButton(1, middle - 80, height - 55, 150, 20, Localizations.getLocalizedString(Strings.GUI_Add)));
+		buttonList.add(new GuiButton(2, middle - 80, height - 30, 150, 20, Localizations.getLocalizedString(Strings.GUI_Remove)));
+		buttonList.add(new GuiButton(3, middle + 80, height - 55, 150, 20, Localizations.getLocalizedString(Strings.GUI_Edit)));
+		buttonList.add(new GuiButton(4, middle + 80, height - 30, 150, 20, Localizations.getLocalizedString(Strings.GUI_Close)));
 	}
 
 	public List<PortalData> getSize()
@@ -87,13 +90,7 @@ public class GuiDialDevice extends GuiScreen
 	{
 		theSelectedEntry = i;
 	}
-
-	@Override
-	public void drawDefaultBackground()
-	{
-
-	}
-
+	
 	@Override
 	protected void actionPerformed(GuiButton guiButton)
 	{
@@ -124,5 +121,17 @@ public class GuiDialDevice extends GuiScreen
 		{
 			Player.closeScreen();
 		}
+	}
+	
+	@Override
+	protected void keyTyped(char par1, int par2)
+	{
+		if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode || par2 == 1)
+		{
+			Player.closeScreen();
+			return;
+		}
+		
+		super.keyTyped(par1, par2);
 	}
 }

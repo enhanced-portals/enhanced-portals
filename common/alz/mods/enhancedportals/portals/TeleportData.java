@@ -7,17 +7,28 @@ import net.minecraft.server.MinecraftServer;
 public class TeleportData
 {
 	private double x, y, z;
+	private boolean linksToModifier;
 	private int dimension;
 
 	private int[] blockOffsetLocation;
 	private double[] entityOffsetLocation;
 
+	public TeleportData(int x, int y, int z, int dimension, boolean modifier)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.dimension = dimension;
+		linksToModifier = modifier;
+	}
+	
 	public TeleportData(int x, int y, int z, int dimension)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.dimension = dimension;
+		linksToModifier = false;
 	}
 
 	public TeleportData(double x, double y, double z, int dimension)
@@ -26,8 +37,19 @@ public class TeleportData
 		this.y = y;
 		this.z = z;
 		this.dimension = dimension;
+		linksToModifier = false;
 	}
 
+	public boolean GetLinksToModifier()
+	{
+		return linksToModifier;
+	}
+	
+	public void SetLinksToModifier(boolean state)
+	{
+		linksToModifier = state;
+	}
+	
 	public int GetX()
 	{
 		return (int) Math.floor(x);

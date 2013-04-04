@@ -5,11 +5,16 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.common.ContainerDialDeviceAdd;
+import alz.mods.enhancedportals.item.ItemScroll;
+import alz.mods.enhancedportals.portals.TeleportData;
+import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 public class GuiDialDeviceAdd extends GuiContainer
 {
@@ -17,7 +22,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 	private EntityPlayer Player;
 	
 	private GuiImprovedTextBox[] textBoxes;
-	private int bump;
+	private String moanA, moanB;
 	
 	public GuiDialDeviceAdd(EntityPlayer player, TileEntityDialDevice dialDevice)
 	{
@@ -25,17 +30,24 @@ public class GuiDialDeviceAdd extends GuiContainer
 		Player = player;
 		DialDevice = dialDevice;
 		textBoxes = new GuiImprovedTextBox[10];
-		bump = 15;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
 		super.initGui();
 		
-		textBoxes[0] = new GuiImprovedTextBox(mc.fontRenderer, guiLeft, guiTop, width - guiLeft * 2, 16, 35, false, true, 0, 0);
+		textBoxes[0] = new GuiImprovedTextBox(mc.fontRenderer, guiLeft, guiTop, width - guiLeft * 2, 16, 35, false, true, 0, 0, Localizations.getLocalizedString(Strings.GUI_Name));
 		textBoxes[1] = new GuiImprovedTextBox(mc.fontRenderer, guiLeft, guiTop + 20, 16, 16, 35, false, false, 0, 20);
 		textBoxes[2] = new GuiImprovedTextBox(mc.fontRenderer, width - guiLeft * 2 - 16, guiTop + 20, 16, 16, 35, false, false, width - guiLeft * 2 - 16, 20);
+	
+		buttonList.add(new GuiButton(1, guiLeft + 102, height - 30, 75, 20, Localizations.getLocalizedString(Strings.GUI_Accept)));
+		buttonList.add(new GuiButton(2, guiLeft, height - 30, 75, 20, Localizations.getLocalizedString(Strings.GUI_Cancel)));
+		
+		moanA = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2a);
+		moanB = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2b);
+		setAcceptButtonState(false);
 	}
 	
 	@Override
@@ -53,11 +65,10 @@ public class GuiDialDeviceAdd extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		String nameString = "Name", scrollString = "Scroll", modifierString = "Modifier", moanA = "The Teleportation Scroll is invalid", moanB = "An upgrade is required";
+		String scrollString = Localizations.getLocalizedString(Strings.GUI_DialDevice_Scroll), modifierString = Localizations.getLocalizedString(Strings.GUI_DialDevice_Modifier);
 		
-		//drawString(mc.fontRenderer, nameString, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(nameString)) - 80 + bump, 0, 0xFFFFFF);
-		drawString(mc.fontRenderer, scrollString, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(scrollString)) - 50 + bump, 24, 0xFFFFFF);
-		drawString(mc.fontRenderer, modifierString, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(modifierString)) + 52 + bump, 24, 0xFFFFFF);
+		drawString(mc.fontRenderer, scrollString, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(scrollString)) - 35, 24, 0xFFFFFF);
+		drawString(mc.fontRenderer, modifierString, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(modifierString)) + 67, 24, 0xFFFFFF);
 
 		drawString(mc.fontRenderer, moanA, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(moanA) / 2), 50, 0xDD0000);
 		drawString(mc.fontRenderer, moanB, (width / 2) - guiLeft - (mc.fontRenderer.getStringWidth(moanB) / 2), 60, 0x990000);
@@ -129,15 +140,74 @@ public class GuiDialDeviceAdd extends GuiContainer
 			
 			textBox.updateCursorCounter();
 		}
+		
+		if (!inventorySlots.getSlot(0).getHasStack() && getAcceptButtonState())
+		{
+			moanA = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2a);
+			moanB = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2b);
+			setAcceptButtonState(false);
+		}
+		else if (inventorySlots.getSlot(0).getHasStack() && !getAcceptButtonState())
+		{
+			ItemStack stack = inventorySlots.getSlot(0).getStack();
+			
+			if (stack.getItem() instanceof ItemScroll)
+			{
+				ItemScroll scroll = (ItemScroll)stack.getItem();				
+				TeleportData data = scroll.getLocationData(stack);
+				
+				if (!data.GetLinksToModifier())
+				{
+					moanA = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid1a);
+					moanB = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid1b);
+				}
+				else
+				{
+					moanA = "";
+					moanB = "";
+					setAcceptButtonState(true);
+					return;
+				}
+			}
+			
+			setAcceptButtonState(false);
+		}
+		else if (!inventorySlots.getSlot(0).getHasStack() && !getAcceptButtonState() && moanA != Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2a))
+		{
+			moanA = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2a);
+			moanB = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid2b);
+		}
 	}
 	
 	@Override
-	public void drawScreen(int par1, int par2, float par3)
+	protected void actionPerformed(GuiButton guiButton)
 	{
-		super.drawScreen(par1, par2, par3);
+		if (guiButton.id == 1)
+		{
+			/*ItemStack stack = inventorySlots.getSlot(0).getStack();
+			//ItemStack stack2 = inventorySlots.getSlot(1).getStack();
+			TeleportData data = ((ItemScroll)stack.getItem()).getLocationData(stack);
+			
+			PortalData portalData = new PortalData();
+			portalData.DisplayName = textBoxes[0].getText();
+			portalData.Texture = PortalTexture.getPortalTexture(0);
+			portalData.TeleportData = new TeleportData(data.GetX(), data.GetY(), data.GetZ(), data.GetDimension());
+			
+			DialDevice.PortalDataList.add(portalData);
+			// send packet to add portal data and remove the items*/
+			ClientProxy.SendNewPortalData(DialDevice, textBoxes[0].getText());
+		}
 		
-		//RenderHelper.enableGUIStandardItemLighting();
-		
-		
-	}	
+		ClientProxy.OpenGuiFromLocal(Player, DialDevice, Reference.GuiIDs.DialDevice);
+	}
+	
+	private void setAcceptButtonState(boolean state)
+	{
+		((GuiButton)buttonList.get(0)).enabled = true;
+	}
+	
+	private boolean getAcceptButtonState()
+	{
+		return ((GuiButton)buttonList.get(0)).enabled;
+	}
 }

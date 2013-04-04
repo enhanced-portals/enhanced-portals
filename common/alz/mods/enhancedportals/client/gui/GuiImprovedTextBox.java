@@ -57,6 +57,7 @@ public class GuiImprovedTextBox extends GuiTextField
     /** True if this textbox is visible */
     private boolean visible = true, intsOnly, CanFocus;
     private int drawX, drawY;
+    private String DummyText;
 
 	public GuiImprovedTextBox(FontRenderer par1FontRenderer, int par2, int par3, int par4, int par5, int maxlength, boolean intsonly, boolean canFocus)
 	{
@@ -86,6 +87,24 @@ public class GuiImprovedTextBox extends GuiTextField
 		drawX = drawx;
 		drawY = drawy;
 		fontRenderer =  par1FontRenderer;
+		
+		setMaxStringLength(maxlength);
+	}
+	
+	public GuiImprovedTextBox(FontRenderer par1FontRenderer, int par2, int par3, int par4, int par5, int maxlength, boolean intsonly, boolean canFocus, int drawx, int drawy, String dummyText)
+	{
+		super(par1FontRenderer, par2, par3, par4, par5);
+
+		xPos = par2;
+		yPos = par3;
+		width = par4;
+		height = par5;
+		intsOnly = intsonly;
+		CanFocus = canFocus;
+		drawX = drawx;
+		drawY = drawy;
+		fontRenderer =  par1FontRenderer;
+		DummyText = text = dummyText;
 		
 		setMaxStringLength(maxlength);
 	}
@@ -480,6 +499,11 @@ public class GuiImprovedTextBox extends GuiTextField
 		{
 			return;
 		}
+        
+        if (flag && text == DummyText)
+        {
+        	text = "";
+        }
         
         if (this.canLoseFocus)
         {

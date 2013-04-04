@@ -13,8 +13,10 @@ import java.util.Map;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import alz.mods.enhancedportals.networking.PacketAllPortalData;
 import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -283,5 +285,17 @@ public class LinkData
 	public void sendUpdatePacketToNearbyClients(TileEntityPortalModifier modifier)
 	{
 		PacketDispatcher.sendPacketToAllAround(modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, 128, modifier.worldObj.provider.dimensionId, modifier.getUpdatePacket().getServerPacket());
+	}
+	
+	public void sendDialDevicePacketToNearbyClients(TileEntityDialDevice dialDevice)
+	{
+		PacketAllPortalData packetData = new PacketAllPortalData();
+		packetData.xCoord = dialDevice.xCoord;
+		packetData.yCoord = dialDevice.yCoord;
+		packetData.zCoord = dialDevice.zCoord;
+		packetData.Dimension = dialDevice.worldObj.provider.dimensionId;
+		packetData.portalDataList = dialDevice.PortalDataList;
+		
+		PacketDispatcher.sendPacketToAllAround(dialDevice.xCoord + 0.5, dialDevice.yCoord + 0.5, dialDevice.zCoord + 0.5, 128, dialDevice.worldObj.provider.dimensionId, packetData.getServerPacket());
 	}
 }

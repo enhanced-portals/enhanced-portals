@@ -5,30 +5,19 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.network.packet.Packet250CustomPayload;
+import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.reference.Reference;
 
-public class PacketTileUpdate extends PacketUpdate
+import net.minecraft.network.packet.Packet250CustomPayload;
+
+public class PacketAddPortalData extends PacketUpdate
 {
-	public int[] data;
-
-	public PacketTileUpdate()
-	{
-	}
-
-	public PacketTileUpdate(int x, int y, int z, int dim, int[] theData)
-	{
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-		Dimension = dim;
-		data = theData;
-	}
-
+	public PortalData portalData;
+	
 	@Override
 	public int getPacketID()
 	{
-		return Reference.Networking.TileEntityUpdate;
+		return Reference.Networking.DialDevice_NewPortalData;
 	}
 
 	@Override
@@ -41,7 +30,6 @@ public class PacketTileUpdate extends PacketUpdate
 		try
 		{
 			dataStream.writeByte(getPacketID());
-			dataStream.writeByte(0);
 			addPacketData(dataStream);
 		}
 		catch (IOException e)
@@ -60,27 +48,7 @@ public class PacketTileUpdate extends PacketUpdate
 	@Override
 	public Packet250CustomPayload getServerPacket()
 	{
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		DataOutputStream dataStream = new DataOutputStream(byteStream);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-
-		try
-		{
-			dataStream.writeByte(getPacketID());
-			dataStream.writeByte(1);
-			addPacketData(dataStream);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		packet.channel = Reference.MOD_ID;
-		packet.data = byteStream.toByteArray();
-		packet.length = packet.data.length;
-		packet.isChunkDataPacket = true;
-
-		return packet;
+		return null;
 	}
 
 	@Override
@@ -90,18 +58,8 @@ public class PacketTileUpdate extends PacketUpdate
 		yCoord = stream.readInt();
 		zCoord = stream.readInt();
 		Dimension = stream.readInt();
-
-		int size = stream.readInt();
-
-		if (size > 0)
-		{
-			data = new int[size];
-
-			for (int i = 0; i < size; i++)
-			{
-				data[i] = stream.readInt();
-			}
-		}
+		portalData = new PortalData();
+		portalData.DisplayName = stream.readUTF();
 	}
 
 	@Override
@@ -110,13 +68,7 @@ public class PacketTileUpdate extends PacketUpdate
 		stream.writeInt(xCoord);
 		stream.writeInt(yCoord);
 		stream.writeInt(zCoord);
-		stream.writeInt(Dimension);
-
-		stream.writeInt(data.length);
-
-		for (int i = 0; i < data.length; i++)
-		{
-			stream.writeInt(data[i]);
-		}
+		stream.writeInt(Dimension);		
+		stream.writeUTF(portalData.DisplayName); // Should only need to send the name they chose for it, since the texture & location is calculated from items in the TileEntities inventory.
 	}
 }

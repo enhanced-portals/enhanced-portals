@@ -9,10 +9,8 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
-public class PacketDataRequest
+public class PacketDataRequest extends PacketUpdate
 {
-	public int xCoord, yCoord, zCoord, dimension;
-
 	public PacketDataRequest()
 	{
 	}
@@ -22,7 +20,7 @@ public class PacketDataRequest
 		xCoord = modifier.xCoord;
 		yCoord = modifier.yCoord;
 		zCoord = modifier.zCoord;
-		dimension = modifier.worldObj.provider.dimensionId;
+		Dimension = modifier.worldObj.provider.dimensionId;
 	}
 
 	public PacketDataRequest(int x, int y, int z, int dim)
@@ -30,7 +28,7 @@ public class PacketDataRequest
 		xCoord = x;
 		yCoord = y;
 		zCoord = z;
-		dimension = dim;
+		Dimension = dim;
 	}
 
 	public int getPacketID()
@@ -38,7 +36,24 @@ public class PacketDataRequest
 		return Reference.Networking.DataRequest;
 	}
 
-	public Packet250CustomPayload getPacket()
+	public void getPacketData(DataInputStream stream) throws IOException
+	{
+		xCoord = stream.readInt();
+		yCoord = stream.readInt();
+		zCoord = stream.readInt();
+		Dimension = stream.readInt();
+	}
+
+	public void addPacketData(DataOutputStream stream) throws IOException
+	{
+		stream.writeInt(xCoord);
+		stream.writeInt(yCoord);
+		stream.writeInt(zCoord);
+		stream.writeInt(Dimension);
+	}
+
+	@Override
+	public Packet250CustomPayload getClientPacket()
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataStream = new DataOutputStream(byteStream);
@@ -62,19 +77,9 @@ public class PacketDataRequest
 		return packet;
 	}
 
-	public void getPacketData(DataInputStream stream) throws IOException
+	@Override
+	public Packet250CustomPayload getServerPacket()
 	{
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
-		dimension = stream.readInt();
-	}
-
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
-		stream.writeInt(dimension);
+		return null;
 	}
 }

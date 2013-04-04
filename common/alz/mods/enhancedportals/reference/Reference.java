@@ -64,6 +64,12 @@ public class Reference
 		public static final int TileEntityUpdate = 0;
 		public static final int DataRequest = 1;
 		public static final int GuiRequest = 2;
+		public static final int DialDevice_NewPortalData = 5;
+		public static final int DialDevice_AllPortalData = 6;
+		public static final int DialDevice_GenericData = 7;
+		public static final int DD_Select = 1;
+		public static final int DD_Remove = 2;
+		public static final int DD_RemoveSelect = 3;
 	}
 
 	/*** Contains everything related to I/O ***/

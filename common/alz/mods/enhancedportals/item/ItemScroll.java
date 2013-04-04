@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
@@ -62,7 +63,7 @@ public class ItemScroll extends Item
 		Stack.setItemDamage(1);
 	}
 
-	public TeleportData getLocationdata(ItemStack Stack)
+	public TeleportData getLocationData(ItemStack Stack)
 	{
 		NBTTagCompound Tag = Stack.stackTagCompound;
 
@@ -84,7 +85,7 @@ public class ItemScroll extends Item
 	{
 		if (par1ItemStack.getItemDamage() == 1)
 		{
-			TeleportData Data = getLocationdata(par1ItemStack);
+			TeleportData Data = getLocationData(par1ItemStack);
 			String dimensionString = "Overworld";
 
 			if (Data == null)
@@ -113,6 +114,7 @@ public class ItemScroll extends Item
 			par3List.add("Y: " + Data.GetY());
 			par3List.add("Z: " + Data.GetZ());
 			par3List.add(dimensionString);
+			par3List.add(Data.GetLinksToModifier() ? "Modifier" : "Block");
 		}
 	}
 
@@ -131,15 +133,26 @@ public class ItemScroll extends Item
 	}
 
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
-		if (stack.getItemDamage() == 0 && world.getBlockId(x, y + 1, z) == 0)
+		if (itemStack.getItemDamage() > 0)
 		{
-			setLocationData(stack, new TeleportData(x, y + 1, z, world.provider.dimensionId));
-
-			return true;
+			return itemStack;
 		}
-
-		return false;
+		
+		int x = MathHelper.floor_double(entityPlayer.posX),
+			y = MathHelper.floor_double(entityPlayer.posY),
+			z = MathHelper.floor_double(entityPlayer.posZ);
+		
+		if (world.getBlockId(x, y - 1, z) == Reference.BlockIDs.PortalModifier)
+		{
+			setLocationData(itemStack, new TeleportData(x, y - 1, z, world.provider.dimensionId, true));
+		}
+		else
+		{
+			setLocationData(itemStack, new TeleportData(x, y, z, world.provider.dimensionId, false));
+		}
+		
+		return itemStack;
 	}
 }
