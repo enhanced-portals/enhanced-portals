@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 
 public class PortalHelper
 {
@@ -147,7 +148,7 @@ public class PortalHelper
 			if (Reference.Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Reference.Settings.MaximumPortalSize)
 			{
 				removePortal(world, addedBlocks);
-				Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_sizeFail), x, y, z), world.isRemote);
+				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), x, y, z), world.isRemote);
 				return false;
 			}
 
@@ -179,13 +180,13 @@ public class PortalHelper
 
 		if (validatePortal(world, x, y, z, shape))
 		{
-			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_success), addedBlocks.size(), x, y, z), world.isRemote);
+			Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_success), addedBlocks.size(), x, y, z), world.isRemote);
 
 			return true;
 		}
 		else
 		{
-			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_fail), addedBlocks.size(), x, y, z), world.isRemote);
+			Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_fail), addedBlocks.size(), x, y, z), world.isRemote);
 
 			removePortal(world, addedBlocks);
 			return false;

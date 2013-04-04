@@ -19,6 +19,9 @@
 	<entry key="gui.portalModifier.saveCharacter">S</entry>
 	<entry key="gui.portalModifier.clearFrequency">Clear the frequency</entry>
 	<entry key="gui.portalModifier.saveFrequency">Save the frequency</entry>
+	<entry key="gui.dialDevice.selected">Selected</entry>
+	<entry key="gui.dialDevice.notSelected">Double click to select</entry>
+	<entry key="gui.dialDevice.coords">%s - X: %s Y: %s Z: %s</entry>
 	<entry key="portal.noExitFound">No valid exit portal was found.</entry>
 	<entry key="portal.missingUpgrade">The Portal Modifier is missing an upgrade.</entry>
 	<entry key="portal.exitBlocked">The exit portal is invalid or blocked.</entry>

@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Blocks
@@ -16,6 +17,7 @@ public class Blocks
 		if (Reference.Settings.AllowModifiers)
 		{
 			Reference.Settings.BorderBlocks.add(Reference.BlockIDs.PortalModifier);
+			Reference.Settings.BorderBlocks.add(Reference.BlockIDs.DialDevice + 1);
 		}
 
 		if (Reference.Settings.AllowObsidianStairs)
@@ -38,19 +40,22 @@ public class Blocks
 		if (Reference.Settings.AllowModifiers)
 		{
 			Block.blocksList[Reference.BlockIDs.PortalModifier] = new BlockPortalModifier();
-			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.PortalModifier], Reference.Strings.PortalModifier_Name);
+			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.PortalModifier], Strings.PortalModifier_Name);
+			
+			Block.blocksList[Reference.BlockIDs.DialDevice + 1] = new BlockPortalModifier2();
+			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice + 1], Strings.PortalModifier_Name + "a");
 		}
 
 		if (Reference.Settings.AllowObsidianStairs)
 		{
 			Block.blocksList[Reference.BlockIDs.ObsidianStairs] = new BlockStairsObsidian();
-			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.ObsidianStairs], Reference.Strings.ObsidianStairs_Name);
+			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.ObsidianStairs], Strings.ObsidianStairs_Name);
 		}
 
 		if (Reference.Settings.AllowDialDevice)
 		{
 			Block.blocksList[Reference.BlockIDs.DialDevice] = new BlockDialDevice();
-			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice], Reference.Strings.DialDevice_Name);
+			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice], Strings.DialDevice_Name);
 		}
 	}
 

@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
+import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import cpw.mods.fml.common.registry.GameRegistry;
 

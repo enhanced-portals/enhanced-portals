@@ -18,10 +18,11 @@ import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
-import alz.mods.enhancedportals.helpers.TeleportData;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -48,7 +49,7 @@ public class BlockNetherPortal extends BlockPortal
 
 		for (int i = 0; i < 16; i++)
 		{
-			textures[i] = iconRegister.registerIcon(String.format(Reference.Strings.NetherPortal_Icon, i));
+			textures[i] = iconRegister.registerIcon(String.format(Strings.NetherPortal_Icon, i));
 		}
 	}
 
@@ -118,8 +119,8 @@ public class BlockNetherPortal extends BlockPortal
 
 				if (validExits == null || validExits.isEmpty())
 				{
-					Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_NoExitFound), entity.getEntityName()));
-					EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_NoExitFound));
+					Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
+					EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
 				}
 				else
 				{
@@ -139,8 +140,8 @@ public class BlockNetherPortal extends BlockPortal
 
 					if (!isValidExit)
 					{
-						Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_NoExitFound), entity.getEntityName()));
-						EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_NoExitFound));
+						Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
+						EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
 					}
 					else
 					{

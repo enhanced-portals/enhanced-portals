@@ -1,8 +1,13 @@
 package alz.mods.enhancedportals.client;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import alz.mods.enhancedportals.EnhancedPortals;
 import alz.mods.enhancedportals.common.CommonProxy;
 import alz.mods.enhancedportals.networking.PacketDataRequest;
+import alz.mods.enhancedportals.networking.PacketGuiRequest;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -34,5 +39,11 @@ public class ClientProxy extends CommonProxy
 	public static void RequestTileData(TileEntityPortalModifier modifier)
 	{
 		PacketDispatcher.sendPacketToServer(new PacketDataRequest(modifier).getPacket());
+	}
+	
+	public static void OpenGuiFromLocal(EntityPlayer player, TileEntity tileEntity, int guiID)
+	{
+		PacketDispatcher.sendPacketToServer(new PacketGuiRequest(guiID, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord).getPacket());		
+		player.openGui(EnhancedPortals.instance, guiID, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 	}
 }

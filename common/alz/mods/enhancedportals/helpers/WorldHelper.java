@@ -8,9 +8,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
+import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Reference.BlockIDs;
+import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class WorldHelper
@@ -277,8 +279,8 @@ public class WorldHelper
 		{
 			if (!suppressWarnings)
 			{
-				Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_MissingUpgrade), entity.getEntityName()));
-				EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_MissingUpgrade));
+				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_MissingUpgrade), entity.getEntityName()));
+				EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_MissingUpgrade));
 			}
 
 			return false;
@@ -296,8 +298,8 @@ public class WorldHelper
 
 		if (!suppressWarnings)
 		{
-			Reference.LogData(String.format(Localizations.getLocalizedString(Reference.Strings.Console_ExitBlocked), entity.getEntityName()));
-			EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Reference.Strings.Portal_ExitBlocked));
+			Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_ExitBlocked), entity.getEntityName()));
+			EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_ExitBlocked));
 		}
 
 		return false;

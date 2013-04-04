@@ -15,25 +15,29 @@ import net.minecraftforge.common.ForgeDirection;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.PortalHelper;
-import alz.mods.enhancedportals.helpers.TeleportData;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.networking.ITileEntityNetworking;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
+import alz.mods.enhancedportals.portals.PortalData;
+import alz.mods.enhancedportals.portals.PortalTexture;
+import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 
 public class TileEntityPortalModifier extends TileEntity implements IInventory, ITileEntityNetworking, IPeripheral
 {
-	private int Colour, Frequency;
+	//private int Colour, Frequency;
 	public boolean HadPower;
 	private ItemStack[] inv;
 	private List<IComputerAccess> computerAccess;
-
+	public PortalData PortalData;
+	
 	public TileEntityPortalModifier()
 	{
 		inv = new ItemStack[3];
 		computerAccess = new ArrayList<IComputerAccess>();
+		PortalData = new PortalData();
 	}
 
 	public boolean hasUpgrade(int id)
@@ -57,12 +61,12 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 	public int getColour()
 	{
-		return Colour;
+		return PortalData.Texture.Get();
 	}
 
 	public int getFrequency()
 	{
-		return Frequency;
+		return PortalData.Frequency;
 	}
 
 	public void setColour(int colour)
@@ -72,19 +76,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 	public void setColour(int colour, boolean swapBlackPurple)
 	{
-		if (swapBlackPurple)
-		{
-			if (colour == 0)
-			{
-				colour = 5;
-			}
-			else if (colour == 5)
-			{
-				colour = 0;
-			}
-		}
-
-		Colour = colour;
+		PortalData.Texture = PortalTexture.getPortalTexture(colour);
 
 		for (IComputerAccess computer : computerAccess)
 		{
@@ -94,7 +86,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 	public void setFrequency(int frequency)
 	{
-		Frequency = frequency;
+		PortalData.Frequency = frequency;
 
 		for (IComputerAccess computer : computerAccess)
 		{
@@ -115,8 +107,8 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	{
 		super.readFromNBT(tag);
 
-		Colour = tag.getInteger("colour");
-		Frequency = tag.getInteger("freq");
+		PortalData.Texture = PortalTexture.getPortalTexture(tag.getInteger("colour"));
+		PortalData.Frequency = tag.getInteger("freq");
 		HadPower = tag.getBoolean("power");
 
 		NBTTagList tagList = tag.getTagList("inventory");
@@ -138,8 +130,8 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	{
 		super.writeToNBT(tag);
 
-		tag.setInteger("colour", Colour);
-		tag.setInteger("freq", Frequency);
+		tag.setInteger("colour", PortalData.Texture.Get());
+		tag.setInteger("freq", PortalData.Frequency);
 		tag.setBoolean("power", HadPower);
 
 		NBTTagList tagList = new NBTTagList();
@@ -261,7 +253,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	@Override
 	public PacketTileUpdate getUpdatePacket()
 	{
-		return new PacketTileUpdate(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, new int[] { Frequency, Colour });
+		return new PacketTileUpdate(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, new int[] { PortalData.Frequency, PortalData.Texture.Get() });
 	}
 
 	@Override
@@ -270,8 +262,8 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		if (packet.data == null)
 			return;
 
-		Frequency = packet.data[0];
-		Colour = packet.data[1];
+		PortalData.Frequency = packet.data[0];
+		PortalData.Texture = PortalTexture.getPortalTexture(packet.data[1]);
 
 		if (worldObj.isRemote)
 		{
@@ -320,7 +312,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
 	{
 		if (method == 0)
-			return new Object[] { Frequency };
+			return new Object[] { PortalData.Frequency };
 		else if (method == 1)
 		{
 			if (arguments == null || arguments.length != 1)
@@ -328,11 +320,11 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 			try
 			{
-				Frequency = (int) Double.parseDouble(arguments[0].toString());
+				PortalData.Frequency = (int) Double.parseDouble(arguments[0].toString());
 
 				if (Reference.LinkData != null)
 				{
-					Reference.LinkData.AddToFrequency(Frequency, new TeleportData(xCoord, yCoord, zCoord, worldObj.provider.dimensionId));
+					Reference.LinkData.AddToFrequency(PortalData.Frequency, new TeleportData(xCoord, yCoord, zCoord, worldObj.provider.dimensionId));
 				}
 
 				return new Object[] { true };
@@ -343,7 +335,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 			}
 		}
 		else if (method == 2)
-			return new Object[] { Colour };
+			return new Object[] { PortalData.Texture.GetSwapped() };
 		else if (method == 3)
 		{
 			if (arguments == null || arguments.length != 1)
@@ -391,7 +383,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 						}
 
 						int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
-						WorldHelper.floodUpdateMetadata(worldObj, offset[0], offset[1], offset[2], 90, Colour);
+						WorldHelper.floodUpdateMetadata(worldObj, offset[0], offset[1], offset[2], 90, PortalData.Texture.Get());
 
 						return new Object[] { true };
 					}
@@ -419,11 +411,11 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 		if (hasUpgrade(0))
 		{
-			createdPortal = PortalHelper.createPortalAround(worldObj, xCoord, yCoord, zCoord, Colour);
+			createdPortal = PortalHelper.createPortalAround(worldObj, xCoord, yCoord, zCoord, PortalData.Texture.Get());
 		}
 		else if (WorldHelper.isBlockPortalRemovable(blockID))
 		{
-			createdPortal = PortalHelper.createPortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2], Colour);
+			createdPortal = PortalHelper.createPortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2], PortalData.Texture.Get());
 		}
 
 		setState(createdPortal);
@@ -441,7 +433,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		{
 			PortalHelper.removePortalAround(worldObj, xCoord, yCoord, zCoord);
 		}
-		else if (blockID == Reference.BlockIDs.NetherPortal && meta == Colour)
+		else if (blockID == Reference.BlockIDs.NetherPortal && meta == PortalData.Texture.Get())
 		{
 			PortalHelper.removePortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2]);
 		}

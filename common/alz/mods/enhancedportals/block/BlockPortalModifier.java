@@ -25,6 +25,7 @@ import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,7 +41,7 @@ public class BlockPortalModifier extends BlockContainer
 		setHardness(50.0F);
 		setResistance(2000.0F);
 		setStepSound(soundStoneFootstep);
-		setUnlocalizedName(Reference.Strings.PortalModifier_Name);
+		setUnlocalizedName(Strings.PortalModifier_Name);
 		setCreativeTab(CreativeTabs.tabBlock);
 	}
 
@@ -48,13 +49,13 @@ public class BlockPortalModifier extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister)
 	{
-		sideFace = iconRegister.registerIcon(Reference.Strings.PortalModifier_Icon_Side);
+		sideFace = iconRegister.registerIcon(Strings.PortalModifier_Icon_Side);
 
 		activeFace = new Icon[16];
 
 		for (int i = 0; i < 16; i++)
 		{
-			activeFace[i] = iconRegister.registerIcon(String.format(Reference.Strings.PortalModifier_Icon_Active, i));
+			activeFace[i] = iconRegister.registerIcon(String.format(Strings.PortalModifier_Icon_Active, i));
 		}
 	}
 

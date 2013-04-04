@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import alz.mods.enhancedportals.client.GuiModifierSlot;
+import alz.mods.enhancedportals.client.gui.GuiModifierSlot;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;

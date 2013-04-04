@@ -12,5 +12,7 @@ public class TileEntities
 	private static void SetupTileEntities()
 	{
 		GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "epmodif");
+		GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "portalModifier");
+		GameRegistry.registerTileEntity(TileEntityDialDevice.class, "dialDevice");
 	}
 }

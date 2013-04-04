@@ -1,5 +1,7 @@
-package alz.mods.enhancedportals.helpers;
+package alz.mods.enhancedportals.portals;
 
+import alz.mods.enhancedportals.helpers.EntityHelper;
+import alz.mods.enhancedportals.helpers.WorldHelper;
 import net.minecraft.server.MinecraftServer;
 
 public class TeleportData
@@ -102,5 +104,20 @@ public class TeleportData
 	public int GetDimension()
 	{
 		return dimension;
+	}
+	
+	public String GetDimensionAsString()
+	{
+		switch (dimension)
+		{
+			case -1:
+				return "The Nether";
+			case 0:
+				return "Overworld";
+			case 1:
+				return "The End";
+			default:
+				return "Unknown";
+		}
 	}
 }

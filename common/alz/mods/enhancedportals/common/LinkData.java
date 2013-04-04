@@ -13,7 +13,7 @@ import java.util.Map;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import alz.mods.enhancedportals.helpers.TeleportData;
+import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;

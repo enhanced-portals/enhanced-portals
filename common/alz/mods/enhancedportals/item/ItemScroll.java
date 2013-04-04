@@ -11,8 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import alz.mods.enhancedportals.helpers.TeleportData;
+import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -25,7 +26,7 @@ public class ItemScroll extends Item
 		super(Reference.ItemIDs.ItemScroll);
 		this.setMaxDamage(0);
 		this.setCreativeTab(CreativeTabs.tabMisc);
-		setUnlocalizedName(Reference.Strings.ItemScroll_Name);
+		setUnlocalizedName(Strings.ItemScroll_Name);
 		maxStackSize = 1;
 		hasSubtypes = true;
 	}
@@ -34,7 +35,7 @@ public class ItemScroll extends Item
 	@SideOnly(Side.CLIENT)
 	public void updateIcons(IconRegister IconRegister)
 	{
-		Texture = IconRegister.registerIcon(Reference.Strings.ItemScroll_Icon);
+		Texture = IconRegister.registerIcon(Strings.ItemScroll_Icon);
 	}
 
 	@Override

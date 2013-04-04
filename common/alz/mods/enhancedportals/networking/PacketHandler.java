@@ -3,9 +3,11 @@ package alz.mods.enhancedportals.networking;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.World;
+import alz.mods.enhancedportals.EnhancedPortals;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -39,6 +41,12 @@ public class PacketHandler implements IPacketHandler
 				PacketDataRequest packetData = new PacketDataRequest();
 				packetData.getPacketData(dataStream);
 				onDataRequest(packetData, player);
+			}
+			else if (packetID == Reference.Networking.GuiRequest)
+			{
+				PacketGuiRequest packetGui = new PacketGuiRequest();
+				packetGui.getPacketData(dataStream);
+				onGuiRequest(packetGui, player);
 			}
 		}
 		catch (Exception e)
@@ -80,5 +88,22 @@ public class PacketHandler implements IPacketHandler
 
 			Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
 		}
+	}
+	
+	private void onGuiRequest(PacketGuiRequest packet, Player player)
+	{
+		if (!(player instanceof EntityPlayer))
+		{
+			return;
+		}
+		
+		EntityPlayer Player = (EntityPlayer)player;
+		
+		if (Reference.LinkData == null || Player.worldObj.isRemote)
+		{
+			return;
+		}
+		
+		Player.openGui(EnhancedPortals.instance, packet.guiID, Player.worldObj, packet.xCoord, packet.yCoord, packet.zCoord);
 	}
 }

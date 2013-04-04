@@ -11,12 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Strings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemUpgrade extends Item
 {
-	String[] text = new String[] { Reference.Strings.PortalModifierUpgrade_MultiplePortals_Name, Reference.Strings.PortalModifierUpgrade_Dimensional_Name, Reference.Strings.PortalModifierUpgrade_AdvancedDimensional_Name, Reference.Strings.PortalModifierUpgrade_ModifierCamo_Name, Reference.Strings.PortalModifierUpgrade_Computer_Name, Reference.Strings.PortalModifierUpgrade_Scroll_Name };
+	String[] text = new String[] { Strings.PortalModifierUpgrade_MultiplePortals_Name, Strings.PortalModifierUpgrade_Dimensional_Name, Strings.PortalModifierUpgrade_AdvancedDimensional_Name, Strings.PortalModifierUpgrade_ModifierCamo_Name, Strings.PortalModifierUpgrade_Computer_Name, Strings.PortalModifierUpgrade_Scroll_Name };
 	Icon[] textures;
 
 	public ItemUpgrade()
@@ -25,7 +26,7 @@ public class ItemUpgrade extends Item
 		hasSubtypes = true;
 		this.setMaxDamage(0);
 		this.setCreativeTab(CreativeTabs.tabMisc);
-		setUnlocalizedName(Reference.Strings.PortalModifierUpgrade_Name);
+		setUnlocalizedName(Strings.PortalModifierUpgrade_Name);
 		maxStackSize = 1;
 	}
 
@@ -37,7 +38,7 @@ public class ItemUpgrade extends Item
 
 		for (int i = 0; i < textures.length; i++)
 		{
-			textures[i] = iconRegister.registerIcon(String.format(Reference.Strings.PortalModifierUpgrade_Icon, i));
+			textures[i] = iconRegister.registerIcon(String.format(Strings.PortalModifierUpgrade_Icon, i));
 		}
 	}
 
