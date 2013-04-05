@@ -14,5 +14,6 @@ public class TileEntities
 		GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "epmodif");
 		GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "portalModifier");
 		GameRegistry.registerTileEntity(TileEntityDialDevice.class, "dialDevice");
+		GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "EPNetherPortal");
 	}
 }

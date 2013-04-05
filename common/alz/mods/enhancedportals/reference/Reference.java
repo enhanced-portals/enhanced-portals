@@ -30,9 +30,9 @@ public class Reference
 		public static final int ObsidianStairs_Default = 1345;
 		public static final int PortalModifier_Default = 1346;
 		public static final int DialDevice_Default = 1347;
+		public static final int NetherPortal_Default = 1349;
 		public static final int Obsidian_Default = 49;
-		public static final int NetherPortal_Default = 90;
-
+		
 		public static int ObsidianStairs;
 		public static int PortalModifier;
 		public static int Obsidian = Obsidian_Default;

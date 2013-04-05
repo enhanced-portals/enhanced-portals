@@ -4,43 +4,48 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import alz.mods.enhancedportals.reference.Reference;
+
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 public class PacketDialDevice extends PacketUpdate
 {
-
+	public int SubID;
+	
 	@Override
 	public int getPacketID()
 	{
-		return 0;
+		return Reference.Networking.DialDevice_GenericData;
 	}
 
+	public int getSubPacketID()
+	{
+		return SubID;
+	}
+	
 	@Override
 	public Packet250CustomPayload getClientPacket()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Packet250CustomPayload getServerPacket()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
-		// TODO Auto-generated method stub
-		
+		super.getPacketData(stream);
 	}
 
 	@Override
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
-		// TODO Auto-generated method stub
+		super.addPacketData(stream);
 		
+		stream.writeInt(SubID);
 	}
-
 }

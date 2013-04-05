@@ -5,9 +5,9 @@ import java.util.List;
 
 import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.portals.PortalTexture;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Strings;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -196,10 +196,10 @@ public class TileEntityDialDevice extends TileEntity implements IInventory
 			if (portalData.TeleportData != null)
 			{
 				portalTag.setBoolean("TeleportData", true);
-				portalTag.setInteger("Dimension", portalData.TeleportData.GetDimension());
-				portalTag.setInteger("X", portalData.TeleportData.GetX());
-				portalTag.setInteger("Y", portalData.TeleportData.GetY());
-				portalTag.setInteger("Z", portalData.TeleportData.GetZ());
+				portalTag.setInteger("Dimension", portalData.TeleportData.getDimension());
+				portalTag.setInteger("X", portalData.TeleportData.getX());
+				portalTag.setInteger("Y", portalData.TeleportData.getY());
+				portalTag.setInteger("Z", portalData.TeleportData.getZ());
 			}
 			else
 			{

@@ -54,10 +54,8 @@ public class PacketAddPortalData extends PacketUpdate
 	@Override
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
-		Dimension = stream.readInt();
+		super.getPacketData(stream);
+		
 		portalData = new PortalData();
 		portalData.DisplayName = stream.readUTF();
 	}
@@ -65,10 +63,8 @@ public class PacketAddPortalData extends PacketUpdate
 	@Override
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
-		stream.writeInt(Dimension);		
+		super.addPacketData(stream);
+		
 		stream.writeUTF(portalData.DisplayName); // Should only need to send the name they chose for it, since the texture & location is calculated from items in the TileEntities inventory.
 	}
 }

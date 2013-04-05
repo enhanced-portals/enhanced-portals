@@ -1,4 +1,4 @@
-package alz.mods.enhancedportals.portals;
+package alz.mods.enhancedportals.teleportation;
 
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
@@ -7,20 +7,10 @@ import net.minecraft.server.MinecraftServer;
 public class TeleportData
 {
 	private double x, y, z;
-	private boolean linksToModifier;
 	private int dimension;
 
 	private int[] blockOffsetLocation;
 	private double[] entityOffsetLocation;
-
-	public TeleportData(int x, int y, int z, int dimension, boolean modifier)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.dimension = dimension;
-		linksToModifier = modifier;
-	}
 	
 	public TeleportData(int x, int y, int z, int dimension)
 	{
@@ -28,7 +18,6 @@ public class TeleportData
 		this.y = y;
 		this.z = z;
 		this.dimension = dimension;
-		linksToModifier = false;
 	}
 
 	public TeleportData(double x, double y, double z, int dimension)
@@ -37,30 +26,19 @@ public class TeleportData
 		this.y = y;
 		this.z = z;
 		this.dimension = dimension;
-		linksToModifier = false;
 	}
 
-	public boolean GetLinksToModifier()
-	{
-		return linksToModifier;
-	}
-	
-	public void SetLinksToModifier(boolean state)
-	{
-		linksToModifier = state;
-	}
-	
-	public int GetX()
+	public int getX()
 	{
 		return (int) Math.floor(x);
 	}
 
-	public int GetY()
+	public int getY()
 	{
 		return (int) Math.floor(y);
 	}
 
-	public int GetZ()
+	public int getZ()
 	{
 		return (int) Math.floor(z);
 	}
@@ -69,7 +47,7 @@ public class TeleportData
 	{
 		if (entityOffsetLocation == null)
 		{
-			entityOffsetLocation = EntityHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), GetX(), GetY(), GetZ());
+			entityOffsetLocation = EntityHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), getX(), getY(), getZ());
 		}
 	}
 
@@ -77,58 +55,58 @@ public class TeleportData
 	{
 		if (blockOffsetLocation == null)
 		{
-			blockOffsetLocation = WorldHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), GetX(), GetY(), GetZ());
+			blockOffsetLocation = WorldHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), getX(), getY(), getZ());
 		}
 	}
 
-	public int GetXOffsetBlock()
+	public int getXOffsetBlock()
 	{
 		setupBlockOffset();
 
 		return blockOffsetLocation[0];
 	}
 
-	public int GetYOffsetBlock()
+	public int getYOffsetBlock()
 	{
 		setupBlockOffset();
 
 		return blockOffsetLocation[1];
 	}
 
-	public int GetZOffsetBlock()
+	public int getZOffsetBlock()
 	{
 		setupBlockOffset();
 
 		return blockOffsetLocation[2];
 	}
 
-	public double GetXOffsetEntity()
+	public double getXOffsetEntity()
 	{
 		setupEntityOffset();
 
 		return entityOffsetLocation[0];
 	}
 
-	public double GetYOffsetEntity()
+	public double getYOffsetEntity()
 	{
 		setupEntityOffset();
 
 		return entityOffsetLocation[1];
 	}
 
-	public double GetZOffsetEntity()
+	public double getZOffsetEntity()
 	{
 		setupEntityOffset();
 
 		return entityOffsetLocation[2];
 	}
 
-	public int GetDimension()
+	public int getDimension()
 	{
 		return dimension;
 	}
 	
-	public String GetDimensionAsString()
+	public String getDimensionAsString()
 	{
 		switch (dimension)
 		{

@@ -16,7 +16,19 @@ public abstract class PacketUpdate
 
 	public abstract Packet250CustomPayload getServerPacket();
 
-	public abstract void getPacketData(DataInputStream stream) throws IOException;
+	public void getPacketData(DataInputStream stream) throws IOException
+	{
+		xCoord = stream.readInt();
+		yCoord = stream.readInt();
+		zCoord = stream.readInt();
+		Dimension = stream.readInt();
+	}
 
-	public abstract void addPacketData(DataOutputStream stream) throws IOException;
+	public void addPacketData(DataOutputStream stream) throws IOException
+	{
+		stream.writeInt(xCoord);
+		stream.writeInt(yCoord);
+		stream.writeInt(zCoord);
+		stream.writeInt(Dimension);
+	}
 }

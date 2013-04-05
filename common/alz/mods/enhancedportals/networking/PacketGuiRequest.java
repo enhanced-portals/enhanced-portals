@@ -31,18 +31,16 @@ public class PacketGuiRequest extends PacketUpdate
 
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
+		super.getPacketData(stream);
+		
 		guiID = stream.readInt();
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
 	}
 
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
+		super.addPacketData(stream);
+		
 		stream.writeInt(guiID);
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
 	}
 
 	@Override

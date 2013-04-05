@@ -14,8 +14,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import alz.mods.enhancedportals.networking.PacketAllPortalData;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -123,7 +123,7 @@ public class LinkData
 
 				for (TeleportData item : items)
 				{
-					writer.write("#" + item.GetX() + "," + item.GetY() + "," + item.GetZ() + "," + item.GetDimension());
+					writer.write("#" + item.getX() + "," + item.getY() + "," + item.getZ() + "," + item.getDimension());
 					writer.newLine();
 				}
 			}
@@ -148,7 +148,7 @@ public class LinkData
 		{
 			TeleportData item = theItems.get(i);
 
-			if (item.GetX() == exclude.GetX() && item.GetY() == exclude.GetY() && item.GetZ() == exclude.GetZ() && item.GetDimension() == exclude.GetDimension())
+			if (item.getX() == exclude.getX() && item.getY() == exclude.getY() && item.getZ() == exclude.getZ() && item.getDimension() == exclude.getDimension())
 			{
 				;
 			}
@@ -175,7 +175,7 @@ public class LinkData
 
 		for (int i = 0; i < list.size(); i++)
 		{
-			if (list.get(i).GetX() == data.GetX() && list.get(i).GetY() == data.GetY() && list.get(i).GetZ() == data.GetZ() && list.get(i).GetDimension() == data.GetDimension())
+			if (list.get(i).getX() == data.getX() && list.get(i).getY() == data.getY() && list.get(i).getZ() == data.getZ() && list.get(i).getDimension() == data.getDimension())
 				return true;
 		}
 
@@ -238,7 +238,7 @@ public class LinkData
 
 			for (int i = 0; i < list.size(); i++)
 			{
-				if (list.get(i).GetX() == data.GetX() && list.get(i).GetY() == data.GetY() && list.get(i).GetZ() == data.GetZ() && list.get(i).GetDimension() == data.GetDimension())
+				if (list.get(i).getX() == data.getX() && list.get(i).getY() == data.getY() && list.get(i).getZ() == data.getZ() && list.get(i).getDimension() == data.getDimension())
 				{
 					list.remove(i);
 				}

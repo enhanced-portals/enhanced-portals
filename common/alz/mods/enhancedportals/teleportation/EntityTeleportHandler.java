@@ -1,13 +1,13 @@
-package alz.mods.enhancedportals.helpers;
+package alz.mods.enhancedportals.teleportation;
 
 import java.util.Iterator;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet41EntityEffect;
 import net.minecraft.network.packet.Packet43Experience;
@@ -16,53 +16,61 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.ForgeDirection;
-import alz.mods.enhancedportals.reference.Reference;
-import alz.mods.enhancedportals.teleportation.TeleportData;
-import cpw.mods.fml.common.registry.GameRegistry;
 
-public class EntityHelper
+public class EntityTeleportHandler
 {
-	public static void sendMessage(Entity entity, String message)
+	/***
+	 * Can the entity travel dimensions?
+	 */
+	public static boolean canEntityTravel(Entity entity)
 	{
-		if (entity instanceof EntityPlayer)
+		if (entity == null)
 		{
-			((EntityPlayer) entity).sendChatToPlayer(message);
-		}
-	}
-
-	public static boolean canEntityTravel(Entity Entity)
-	{
-		if (Entity == null)
 			return false;
-
-		return Entity.timeUntilPortal == 0;
+		}
+		
+		return entity.timeUntilPortal == 0;
 	}
-
-	public static void setCanEntityTravel(Entity Entity, boolean State)
+	
+	/***
+	 * Sets the entities ability to travel dimensions
+	 */
+	public static void setCanEntityTravel(Entity entity, boolean state)
 	{
-		if (State)
+		if (state)
 		{
-			Entity.timeUntilPortal = 0;
+			entity.timeUntilPortal = 0;
 		}
 		else
 		{
-			Entity.timeUntilPortal = Entity.getPortalCooldown();
+			entity.timeUntilPortal = entity.getPortalCooldown();
 		}
 	}
-
-	public static void teleportEntity(Entity entity, TeleportData data)
+	
+	/***
+	 * Teleports an entity to the specified location & dimension
+	 */
+	public static void teleportEntity(Entity entity, TeleportData teleportData)
 	{
-		World world = MinecraftServer.getServer().worldServerForDimension(data.getDimension());
-
-		teleportEntity(world, entity, data);
+		if (entity.worldObj.isRemote)
+		{
+			return;
+		}
+		
+		WorldServer world = MinecraftServer.getServer().worldServerForDimension(teleportData.getDimension());
+		
+		teleportEntity(world, entity, teleportData);
 	}
-
-	private static Entity teleportEntity(World world, Entity entity, TeleportData teleportData)
+	
+	private static Entity teleportEntity(WorldServer world, Entity entity, TeleportData teleportData)
 	{
-		if (!Reference.Settings.AllowTeleporting && canEntityTravel(entity))
+		if (!Reference.Settings.AllowTeleporting || !canEntityTravel(entity))
+		{
 			return entity;
-
+		}
+		
+		boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
+		
 		if (entity.riddenByEntity != null)
 		{
 			entity.riddenByEntity.mountEntity(null);
@@ -72,11 +80,8 @@ public class EntityHelper
 		{
 			entity.mountEntity(null);
 		}
-
-		boolean dimensionalTeleport = entity.worldObj != world;
-
+		
 		entity.worldObj.updateEntityWithOptionalForce(entity, false);
-
 		EntityPlayerMP player;
 
 		if (entity instanceof EntityPlayerMP)
@@ -90,9 +95,9 @@ public class EntityHelper
 		{
 			removeEntityFromWorld(entity.worldObj, entity);
 		}
-
+		
 		entity.setLocationAndAngles(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
-		((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
+		world.theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
 
 		if (dimensionalTeleport)
 		{
@@ -108,7 +113,7 @@ public class EntityHelper
 
 			if (dimensionalTeleport)
 			{
-				player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) world);
+				player.mcServer.getConfigurationManager().func_72375_a(player, world);
 			}
 
 			player.playerNetServerHandler.setPlayerLocation(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
@@ -128,8 +133,8 @@ public class EntityHelper
 		setCanEntityTravel(entity, false);
 		return entity;
 	}
-
-	private static EntityPlayerMP handlePlayerRespawn(Entity entity, EntityPlayerMP player, World world, boolean dimensionalTeleport)
+	
+	private static EntityPlayerMP handlePlayerRespawn(Entity entity, EntityPlayerMP player, WorldServer world, boolean dimensionalTeleport)
 	{
 		player.closeScreen();
 
@@ -167,10 +172,10 @@ public class EntityHelper
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static void syncPlayer(EntityPlayerMP player, World world)
+	private static void syncPlayer(EntityPlayerMP player, WorldServer world)
 	{
-		player.theItemInWorldManager.setWorld((WorldServer) world);
-		player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, (WorldServer) world);
+		player.theItemInWorldManager.setWorld(world);
+		player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, world);
 		player.mcServer.getConfigurationManager().syncPlayerInventory(player);
 
 		Iterator iter = player.getActivePotionEffects().iterator();
@@ -208,74 +213,5 @@ public class EntityHelper
 		}
 
 		entity.isDead = false;
-	}
-
-	public static double[] offsetDirectionBased(World world, int x, int y, int z)
-	{
-		return offsetDirectionBased(world, x, y, z, WorldHelper.getBlockDirection(world, x, y, z));
-	}
-
-	public static double[] offsetDirectionBased(World world, double x, double y, double z, ForgeDirection direction)
-	{
-		if (direction == ForgeDirection.NORTH)
-		{
-			z -= 0.5;
-			x += 0.5;
-		}
-		else if (direction == ForgeDirection.SOUTH)
-		{
-			z += 1.5;
-			x += 0.5;
-		}
-		else if (direction == ForgeDirection.EAST)
-		{
-			x += 1.5;
-			z += 0.5;
-		}
-		else if (direction == ForgeDirection.WEST)
-		{
-			x -= 0.5;
-			z += 0.5;
-		}
-		else if (direction == ForgeDirection.UP)
-		{
-			y += 1.0;
-			z += 0.5;
-			x += 0.5;
-		}
-		else if (direction == ForgeDirection.DOWN)
-		{
-			y -= 2;
-			z += 0.5;
-			x += 0.5;
-		}
-
-		return new double[] { x, y, z };
-	}
-
-	public static boolean canAcceptItemStack(IInventory inventory, ItemStack stack)
-	{
-		if (stack.itemID != Reference.ItemIDs.PortalModifierUpgrade + 256)
-			return false;
-
-		ItemStack firstSlot = inventory.getStackInSlot(0), secondSlot = inventory.getStackInSlot(1), thirdSlot = inventory.getStackInSlot(2);
-
-		if (firstSlot != null)
-		{
-			if (firstSlot.getItemDamage() == stack.getItemDamage())
-				return false;
-		}
-		else if (secondSlot != null)
-		{
-			if (secondSlot.getItemDamage() == stack.getItemDamage())
-				return false;
-		}
-		else if (thirdSlot != null)
-		{
-			if (thirdSlot.getItemDamage() == stack.getItemDamage())
-				return false;
-		}
-
-		return true;
 	}
 }

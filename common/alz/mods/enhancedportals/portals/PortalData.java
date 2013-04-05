@@ -1,5 +1,7 @@
 package alz.mods.enhancedportals.portals;
 
+import alz.mods.enhancedportals.teleportation.TeleportData;
+
 public class PortalData
 {
 	public String DisplayName;

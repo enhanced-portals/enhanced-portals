@@ -86,11 +86,8 @@ public class PacketTileUpdate extends PacketUpdate
 	@Override
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
-		Dimension = stream.readInt();
-
+		super.getPacketData(stream);
+		
 		int size = stream.readInt();
 
 		if (size > 0)
@@ -107,11 +104,8 @@ public class PacketTileUpdate extends PacketUpdate
 	@Override
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
-		stream.writeInt(Dimension);
-
+		super.addPacketData(stream);
+		
 		stream.writeInt(data.length);
 
 		for (int i = 0; i < data.length; i++)

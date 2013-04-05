@@ -34,8 +34,6 @@ public class Blocks
 	{
 		Block.blocksList[Reference.BlockIDs.Obsidian] = null;
 		Block.blocksList[Reference.BlockIDs.Obsidian] = new BlockObsidian();
-		Block.blocksList[Reference.BlockIDs.NetherPortal] = null;
-		Block.blocksList[Reference.BlockIDs.NetherPortal] = new BlockNetherPortal();
 
 		if (Reference.Settings.AllowModifiers)
 		{
@@ -57,6 +55,9 @@ public class Blocks
 			Block.blocksList[Reference.BlockIDs.DialDevice] = new BlockDialDevice();
 			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice], Strings.DialDevice_Name);
 		}
+		
+		Block.blocksList[Reference.BlockIDs.NetherPortal] = new BlockNetherPortal();
+		GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.NetherPortal], "portal");
 	}
 
 	private static void SetupRecipes()

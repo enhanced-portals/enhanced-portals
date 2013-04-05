@@ -105,7 +105,7 @@ public class GuiDialDeviceSlot extends GuiSlot
 			showString = true;
 		
         parentGui.drawString(fontRenderer, displayName, j + 2, k + 1, mainColour);
-        parentGui.drawString(fontRenderer, String.format(Localizations.getLocalizedString(Strings.GUI_DialDevice_Coords), currentEntry.TeleportData.GetDimensionAsString(), currentEntry.TeleportData.GetX(), currentEntry.TeleportData.GetY(), currentEntry.TeleportData.GetZ()), j + 2, k + 12, 8421504);
+        parentGui.drawString(fontRenderer, String.format(Localizations.getLocalizedString(Strings.GUI_DialDevice_Coords), currentEntry.TeleportData.getDimensionAsString(), currentEntry.TeleportData.getX(), currentEntry.TeleportData.getY(), currentEntry.TeleportData.getZ()), j + 2, k + 12, 8421504);
         parentGui.drawString(fontRenderer, currentEntry.GetTextureAsString(), j + 2, k + 12 + 10, 8421504);
                 
         if (showString)

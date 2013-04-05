@@ -8,11 +8,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Reference.BlockIDs;
 import alz.mods.enhancedportals.reference.Strings;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class WorldHelper
@@ -258,22 +258,22 @@ public class WorldHelper
 		boolean hasUpgradesRequired = false;
 		World theWorld = baseWorld;
 
-		if (selectedExit.GetDimension() == baseWorld.provider.dimensionId)
+		if (selectedExit.getDimension() == baseWorld.provider.dimensionId)
 		{
 			hasUpgradesRequired = baseModifier.hasUpgrade(1) || baseModifier.hasUpgrade(2);
 		}
-		else if (selectedExit.GetDimension() == 0 && baseWorld.provider.dimensionId == -1 || selectedExit.GetDimension() == -1 && baseWorld.provider.dimensionId == 0)
+		else if (selectedExit.getDimension() == 0 && baseWorld.provider.dimensionId == -1 || selectedExit.getDimension() == -1 && baseWorld.provider.dimensionId == 0)
 		{
 			hasUpgradesRequired = true;
-			theWorld = getWorld(selectedExit.GetDimension());
+			theWorld = getWorld(selectedExit.getDimension());
 		}
 		else
 		{
 			hasUpgradesRequired = baseModifier.hasUpgrade(2);
-			theWorld = getWorld(selectedExit.GetDimension());
+			theWorld = getWorld(selectedExit.getDimension());
 		}
 
-		theWorld.getChunkProvider().loadChunk(selectedExit.GetX() >> 4, selectedExit.GetY() >> 4);
+		theWorld.getChunkProvider().loadChunk(selectedExit.getX() >> 4, selectedExit.getY() >> 4);
 
 		if (!hasUpgradesRequired)
 		{
@@ -286,11 +286,11 @@ public class WorldHelper
 			return false;
 		}
 
-		if (theWorld.getBlockId(selectedExit.GetXOffsetBlock(), selectedExit.GetYOffsetBlock(), selectedExit.GetZOffsetBlock()) == Reference.BlockIDs.NetherPortal)
+		if (theWorld.getBlockId(selectedExit.getXOffsetBlock(), selectedExit.getYOffsetBlock(), selectedExit.getZOffsetBlock()) == Reference.BlockIDs.NetherPortal)
 			return true;
 		else
 		{
-			boolean createdPortal = PortalHelper.createPortal(theWorld, selectedExit.GetXOffsetBlock(), selectedExit.GetYOffsetBlock(), selectedExit.GetZOffsetBlock(), 0);
+			boolean createdPortal = PortalHelper.createPortal(theWorld, selectedExit.getXOffsetBlock(), selectedExit.getYOffsetBlock(), selectedExit.getZOffsetBlock(), 0);
 
 			if (createdPortal)
 				return true;

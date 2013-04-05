@@ -6,10 +6,10 @@ import cpw.mods.fml.client.FMLClientHandler;
 import alz.mods.enhancedportals.client.ClientProxy;
 import alz.mods.enhancedportals.common.ContainerDialDeviceAdd;
 import alz.mods.enhancedportals.item.ItemScroll;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Strings;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -156,7 +156,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 				ItemScroll scroll = (ItemScroll)stack.getItem();				
 				TeleportData data = scroll.getLocationData(stack);
 				
-				if (!data.GetLinksToModifier())
+				/*if (!data.getLinksToModifier())
 				{
 					moanA = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid1a);
 					moanB = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid1b);
@@ -167,7 +167,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 					moanB = "";
 					setAcceptButtonState(true);
 					return;
-				}
+				}*/
 			}
 			
 			setAcceptButtonState(false);
@@ -191,7 +191,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 			PortalData portalData = new PortalData();
 			portalData.DisplayName = textBoxes[0].getText();
 			portalData.Texture = PortalTexture.getPortalTexture(0);
-			portalData.TeleportData = new TeleportData(data.GetX(), data.GetY(), data.GetZ(), data.GetDimension());
+			portalData.TeleportData = new TeleportData(data.getX(), data.getY(), data.getZ(), data.getDimension());
 			
 			DialDevice.PortalDataList.add(portalData);
 			// send packet to add portal data and remove the items*/

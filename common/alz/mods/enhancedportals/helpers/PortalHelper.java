@@ -334,7 +334,7 @@ public class PortalHelper
 
 			if (currentID == Reference.BlockIDs.NetherPortal)
 			{
-				world.setBlock(current[0], current[1], current[2], 0);
+				world.setBlockToAir(current[0], current[1], current[2]);
 
 				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 			}
@@ -348,7 +348,7 @@ public class PortalHelper
 		while (!queue.isEmpty())
 		{
 			int[] current = queue.remove();
-			world.setBlock(current[0], current[1], current[2], 0);
+			world.setBlockToAir(current[0], current[1], current[2]);
 		}
 
 		return true;

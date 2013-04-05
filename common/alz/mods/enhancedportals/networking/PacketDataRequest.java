@@ -38,18 +38,12 @@ public class PacketDataRequest extends PacketUpdate
 
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
-		Dimension = stream.readInt();
+		super.getPacketData(stream);
 	}
 
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
-		stream.writeInt(Dimension);
+		super.addPacketData(stream);
 	}
 
 	@Override

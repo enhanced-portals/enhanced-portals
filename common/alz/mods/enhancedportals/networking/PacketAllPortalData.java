@@ -9,8 +9,8 @@ import java.util.List;
 
 import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.portals.PortalTexture;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 
 import net.minecraft.network.packet.Packet250CustomPayload;
 
@@ -72,10 +72,7 @@ public class PacketAllPortalData extends PacketUpdate
 	@Override
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
-		Dimension = stream.readInt();
+		super.getPacketData(stream);
 		
 		int size = stream.readInt();
 		
@@ -103,10 +100,8 @@ public class PacketAllPortalData extends PacketUpdate
 	@Override
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
-		stream.writeInt(Dimension);
+		super.addPacketData(stream);
+		
 		stream.writeInt(portalDataList.size());
 		
 		for (PortalData portalData : portalDataList)
@@ -117,10 +112,10 @@ public class PacketAllPortalData extends PacketUpdate
 			if (portalData.TeleportData != null)
 			{
 				stream.writeBoolean(true);
-				stream.writeInt(portalData.TeleportData.GetX());
-				stream.writeInt(portalData.TeleportData.GetY());
-				stream.writeInt(portalData.TeleportData.GetZ());
-				stream.writeInt(portalData.TeleportData.GetDimension());
+				stream.writeInt(portalData.TeleportData.getX());
+				stream.writeInt(portalData.TeleportData.getY());
+				stream.writeInt(portalData.TeleportData.getZ());
+				stream.writeInt(portalData.TeleportData.getDimension());
 			}
 			else
 			{

@@ -20,8 +20,8 @@ import alz.mods.enhancedportals.networking.ITileEntityNetworking;
 import alz.mods.enhancedportals.networking.PacketTileUpdate;
 import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.portals.PortalTexture;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 

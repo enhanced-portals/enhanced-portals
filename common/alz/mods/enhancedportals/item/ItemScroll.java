@@ -12,9 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import alz.mods.enhancedportals.portals.TeleportData;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Strings;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -55,10 +55,10 @@ public class ItemScroll extends Item
 			Tag = new NBTTagCompound();
 		}
 
-		Tag.setInteger("x", Data.GetX());
-		Tag.setInteger("y", Data.GetY());
-		Tag.setInteger("z", Data.GetZ());
-		Tag.setInteger("d", Data.GetDimension());
+		Tag.setInteger("x", Data.getX());
+		Tag.setInteger("y", Data.getY());
+		Tag.setInteger("z", Data.getZ());
+		Tag.setInteger("d", Data.getDimension());
 		Stack.stackTagCompound = Tag;
 		Stack.setItemDamage(1);
 	}
@@ -91,7 +91,7 @@ public class ItemScroll extends Item
 			if (Data == null)
 				return;
 
-			switch (Data.GetDimension())
+			switch (Data.getDimension())
 			{
 				case 0:
 					dimensionString = "Overworld";
@@ -110,11 +110,10 @@ public class ItemScroll extends Item
 					break;
 			}
 
-			par3List.add("X: " + Data.GetX());
-			par3List.add("Y: " + Data.GetY());
-			par3List.add("Z: " + Data.GetZ());
+			par3List.add("X: " + Data.getX());
+			par3List.add("Y: " + Data.getY());
+			par3List.add("Z: " + Data.getZ());
 			par3List.add(dimensionString);
-			par3List.add(Data.GetLinksToModifier() ? "Modifier" : "Block");
 		}
 	}
 
@@ -144,14 +143,7 @@ public class ItemScroll extends Item
 			y = MathHelper.floor_double(entityPlayer.posY),
 			z = MathHelper.floor_double(entityPlayer.posZ);
 		
-		if (world.getBlockId(x, y - 1, z) == Reference.BlockIDs.PortalModifier)
-		{
-			setLocationData(itemStack, new TeleportData(x, y - 1, z, world.provider.dimensionId, true));
-		}
-		else
-		{
-			setLocationData(itemStack, new TeleportData(x, y, z, world.provider.dimensionId, false));
-		}
+		setLocationData(itemStack, new TeleportData(x, y, z, world.provider.dimensionId));
 		
 		return itemStack;
 	}
