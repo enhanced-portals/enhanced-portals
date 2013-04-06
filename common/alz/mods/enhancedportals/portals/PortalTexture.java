@@ -26,12 +26,27 @@ public enum PortalTexture
 	UNKNOWN(18);
 	
 	private static PortalTexture[] VALID_TEXTURES = { PURPLE, RED, GREEN, BROWN, BLUE, BLACK, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE, LAVA, WATER };
+	private static int[] PARTICLE_COLOURS = { 1973019, 11743532, 3887386, 5320730, 2437522, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522 };
 	public final int portalColour;
 	
 	private PortalTexture(int id)
 	{
 		portalColour = id;
 		ordinal();
+	}
+	
+	public static int getParticleColour(int id)
+	{
+		if (id < 0)
+		{
+			id = 0;
+		}
+		else if (id > PARTICLE_COLOURS.length)
+		{
+			id = PARTICLE_COLOURS.length;
+		}
+		
+		return PARTICLE_COLOURS[id];
 	}
 	
 	public static int SwapColours(int id)

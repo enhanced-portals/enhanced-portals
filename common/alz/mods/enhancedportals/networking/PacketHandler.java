@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import alz.mods.enhancedportals.EnhancedPortals;
 import alz.mods.enhancedportals.client.ClientProxy;
@@ -16,6 +17,7 @@ import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
+import alz.mods.enhancedportals.tileentity.TileEntityNetherPortal;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
@@ -85,13 +87,18 @@ public class PacketHandler implements IPacketHandler
 
 		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
 
-		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.PortalModifier && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
-			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
-
-			modifier.parseUpdatePacket(packet);
-			Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
-			Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension);
+			TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+			
+			if (tileEntity instanceof TileEntityPortalModifier)
+			{
+				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+	
+				modifier.parseUpdatePacket(packet);
+				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+				Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension);
+			}
 		}
 	}
 
@@ -102,11 +109,20 @@ public class PacketHandler implements IPacketHandler
 
 		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
 
-		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.PortalModifier && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
-			TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
-
-			Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
+			TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+			
+			if (tileEntity instanceof TileEntityPortalModifier)
+			{
+				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;	
+				Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
+			}
+			else if (tileEntity instanceof TileEntityNetherPortal)
+			{
+				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;				
+				Reference.LinkData.sendUpdatePacketToPlayer(netherPortal, player);
+			}
 		}
 	}
 	

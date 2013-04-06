@@ -13,10 +13,12 @@ import java.util.Map;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import alz.mods.enhancedportals.networking.ITileEntityNetworking;
 import alz.mods.enhancedportals.networking.PacketAllPortalData;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
+import alz.mods.enhancedportals.tileentity.TileEntityNetherPortal;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -277,12 +279,17 @@ public class LinkData
 		}
 	}
 
-	public void sendUpdatePacketToPlayer(TileEntityPortalModifier modifier, Player player)
+	public void sendUpdatePacketToPlayer(ITileEntityNetworking tileEntity, Player player)
 	{
-		PacketDispatcher.sendPacketToPlayer(modifier.getUpdatePacket().getServerPacket(), player);
+		PacketDispatcher.sendPacketToPlayer(tileEntity.getUpdatePacket().getServerPacket(), player);
 	}
 
 	public void sendUpdatePacketToNearbyClients(TileEntityPortalModifier modifier)
+	{
+		PacketDispatcher.sendPacketToAllAround(modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, 128, modifier.worldObj.provider.dimensionId, modifier.getUpdatePacket().getServerPacket());
+	}
+	
+	public void sendUpdatePacketToNearbyClients(TileEntityNetherPortal modifier)
 	{
 		PacketDispatcher.sendPacketToAllAround(modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, 128, modifier.worldObj.provider.dimensionId, modifier.getUpdatePacket().getServerPacket());
 	}

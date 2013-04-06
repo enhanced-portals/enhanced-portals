@@ -2,13 +2,29 @@ package alz.mods.enhancedportals.common;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public class WorldLocation
 {
 	public World worldObj;
+	public IBlockAccess blockAccess;
 	public int xCoord, yCoord, zCoord;
+	
+	public WorldLocation()
+	{
 		
+	}
+	
+	public WorldLocation(IBlockAccess world, int x, int y, int z)
+	{
+		blockAccess = world;
+		xCoord = x;
+		yCoord = y;
+		zCoord = z;
+	}
+	
 	public WorldLocation(World world, int x, int y, int z)
 	{
 		worldObj = world;
@@ -60,13 +76,30 @@ public class WorldLocation
 		return worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}
 	
+	public int getBlockMeta()
+	{
+		if (worldObj == null)
+		{
+			return 0;
+		}
+		
+		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+	}
+	
 	public TileEntity getBlockTileEntity()
 	{
 		if (worldObj == null)
 		{
-			return null;
+			if (blockAccess == null)
+			{
+				return null;
+			}
+			else
+			{
+				return blockAccess.getBlockTileEntity(xCoord, yCoord, zCoord);
+			}
 		}
-		
+				
 		return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
 	}
 	
@@ -86,6 +119,16 @@ public class WorldLocation
 			worldObj.setBlock(xCoord, yCoord, zCoord, id);
 		}
 	}
+		
+	public void setBlockToAir()
+	{
+		if (worldObj == null)
+		{
+			return;
+		}
+		
+		worldObj.setBlock(xCoord, yCoord, zCoord, 0, 0, 2);
+	}
 	
 	public void markBlockForUpdate()
 	{
@@ -95,5 +138,17 @@ public class WorldLocation
 		}
 		
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+	
+	public WorldLocation getOffset(ForgeDirection direction)
+	{
+		WorldLocation newLocation = new WorldLocation();
+		newLocation.worldObj = worldObj;
+		newLocation.blockAccess = blockAccess;
+		newLocation.xCoord = xCoord + direction.offsetX;
+		newLocation.yCoord = yCoord + direction.offsetY;
+		newLocation.zCoord = zCoord + direction.offsetZ;
+		
+		return newLocation;
 	}
 }

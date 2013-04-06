@@ -1,10 +1,11 @@
 package alz.mods.enhancedportals.block;
 
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
+import alz.mods.enhancedportals.common.WorldLocation;
 import alz.mods.enhancedportals.helpers.EntityHelper;
-import alz.mods.enhancedportals.helpers.PortalHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
-import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
+import alz.mods.enhancedportals.portals.PortalHandler;
+import alz.mods.enhancedportals.portals.PortalShape;
 import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
@@ -59,6 +60,13 @@ public class BlockNetherPortal extends BlockContainer
     }
     
     @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
+    {
+    	return textures[0];
+    }
+    
+    @Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister)
 	{
@@ -110,7 +118,7 @@ public class BlockNetherPortal extends BlockContainer
     
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
-    	PortalHelper.PortalShape portalShape = PortalHelper.getPortalShape(world, x, y, z);
+    	PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
 
 		if (portalShape == PortalShape.X)
 		{
@@ -146,7 +154,7 @@ public class BlockNetherPortal extends BlockContainer
 			y += 1;
 		}
 
-		return PortalHelper.createPortal(world, x, y, z, 0);
+		return PortalHandler.Create.createPortal(new WorldLocation(world, x, y, z));
     }
 
     public void onNeighborBlockChange(World world, int x, int y, int z, int id)
@@ -155,9 +163,9 @@ public class BlockNetherPortal extends BlockContainer
 			return;
 
 		// Lets see if the portal is still intact
-		if (PortalHelper.getPortalShape(world, x, y, z) == PortalShape.INVALID)
+		if (PortalShape.getPortalShape(new WorldLocation(world, x, y, z)) == PortalShape.UNKNOWN)
 		{
-			PortalHelper.removePortal(world, x, y, z, PortalShape.INVALID); // If it's not, deconstruct it
+			PortalHandler.Remove.removePortal(new WorldLocation(world, x, y, z), PortalShape.UNKNOWN); // If it's not, deconstruct it
 		}
     }
 
@@ -189,7 +197,7 @@ public class BlockNetherPortal extends BlockContainer
 			x--;
 		}
 
-		PortalHelper.PortalShape portalShape = PortalHelper.getPortalShape(world, x, y, z);
+		PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
 
 		if (portalShape == PortalShape.HORIZONTAL)
 		{
@@ -244,24 +252,32 @@ public class BlockNetherPortal extends BlockContainer
 		if (Reference.Settings.CanDyePortals && Reference.Settings.CanDyeByThrowing && entity instanceof EntityItem)
 		{
 			ItemStack item = ((EntityItem) entity).getEntityItem();
-
+			PortalTexture newTexture = null;
+			
 			if (item.itemID == Item.dyePowder.itemID)
 			{
-				int damage = item.getItemDamage();
-
-				if (damage == 0)
+				newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
+			}
+			else if (item.itemID == Item.bucketLava.itemID)
+			{
+				newTexture = PortalTexture.LAVA;
+			}
+			else if (item.itemID == Item.bucketWater.itemID)
+			{
+				newTexture = PortalTexture.WATER;
+			}
+			
+			if (newTexture != null)
+			{
+				WorldLocation location = new WorldLocation(world, x, y, z);
+				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity(); 
+				
+				if (netherPortal.Texture == newTexture)
 				{
-					damage = 5;
-				}
-				else if (damage == 5)
-				{
-					damage = 0;
-				}
-
-				if (damage == world.getBlockMetadata(x, y, z))
 					return;
+				}
 
-				WorldHelper.floodUpdateMetadata(world, x, y, z, blockID, damage, true);
+				PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
 
 				if (Reference.Settings.DoesDyingCost)
 				{
@@ -378,7 +394,10 @@ public class BlockNetherPortal extends BlockContainer
 			{
 				if (Reference.Settings.CanDyePortals)
 				{
-					FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, par1World.getBlockMetadata(par2, par3, par4), var7, var9, var11, var13, var15, var17));
+					WorldLocation location = new WorldLocation(par1World, par2, par3, par4);
+					TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
+					
+					FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, PortalTexture.SwapColours(netherPortal.Texture.ordinal()), var7, var9, var11, var13, var15, var17));
 				}
 				else
 				{
@@ -398,28 +417,57 @@ public class BlockNetherPortal extends BlockContainer
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
 		if (!Reference.Settings.CanDyePortals)
-			return false;
-
-		ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
-
-		if (item != null && item.itemID == Item.dyePowder.itemID)
 		{
-			int colour = item.getItemDamage();
-
-			if (colour == 0)
+			return false;
+		}
+		
+		ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
+		PortalTexture newTexture = null;
+		boolean isBucket = false;
+		
+		if (item == null)
+		{
+			return false;
+		}	
+		
+		if (item.itemID == Item.dyePowder.itemID)
+		{
+			newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
+		}
+		else if (item.itemID == Item.bucketLava.itemID)
+		{
+			newTexture = PortalTexture.LAVA;
+			isBucket = true;
+		}
+		else if (item.itemID == Item.bucketWater.itemID)
+		{
+			newTexture = PortalTexture.WATER;
+			isBucket = true;
+		}
+				
+		if (newTexture != null)
+		{
+			WorldLocation location = new WorldLocation(world, x, y, z);
+			TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity(); 
+			
+			if (netherPortal.Texture == newTexture)
 			{
-				colour = 5;
+				return false;
 			}
-			else if (colour == 5)
+
+			if (!world.isRemote)
 			{
-				colour = 0;
+				PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
 			}
 
-			WorldHelper.floodUpdateMetadata(world, x, y, z, blockID, colour, true);
-
-			if (!player.capabilities.isCreativeMode && Reference.Settings.DoesDyingCost)
+			if (Reference.Settings.DoesDyingCost && !player.capabilities.isCreativeMode)
 			{
 				item.stackSize--;
+				
+				if (isBucket)
+				{
+					player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
+				}
 			}
 
 			return true;

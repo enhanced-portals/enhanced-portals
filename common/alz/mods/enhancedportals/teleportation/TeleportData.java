@@ -2,15 +2,35 @@ package alz.mods.enhancedportals.teleportation;
 
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import net.minecraft.server.MinecraftServer;
 
 public class TeleportData
 {
 	private double x, y, z;
 	private int dimension;
+	private boolean linksToModifier;
 
 	private int[] blockOffsetLocation;
 	private double[] entityOffsetLocation;
+	
+	public TeleportData(int x, int y, int z, int dimension, boolean modifier)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.dimension = dimension;
+		linksToModifier = modifier;
+	}
+	
+	public TeleportData(TileEntityPortalModifier modifier)
+	{
+		this.x = modifier.xCoord;
+		this.y = modifier.yCoord;
+		this.z = modifier.zCoord;
+		this.dimension = modifier.worldObj.provider.dimensionId;
+		linksToModifier = true;
+	}
 	
 	public TeleportData(int x, int y, int z, int dimension)
 	{
@@ -18,6 +38,7 @@ public class TeleportData
 		this.y = y;
 		this.z = z;
 		this.dimension = dimension;
+		linksToModifier = false;
 	}
 
 	public TeleportData(double x, double y, double z, int dimension)
@@ -26,6 +47,7 @@ public class TeleportData
 		this.y = y;
 		this.z = z;
 		this.dimension = dimension;
+		linksToModifier = false;
 	}
 
 	public int getX()
@@ -119,5 +141,10 @@ public class TeleportData
 			default:
 				return "Unknown";
 		}
+	}
+	
+	public boolean linksToModifier()
+	{
+		return linksToModifier;
 	}
 }

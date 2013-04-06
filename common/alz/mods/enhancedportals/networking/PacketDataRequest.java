@@ -6,8 +6,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
 import alz.mods.enhancedportals.reference.Reference;
-import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketDataRequest extends PacketUpdate
 {
@@ -15,12 +15,12 @@ public class PacketDataRequest extends PacketUpdate
 	{
 	}
 
-	public PacketDataRequest(TileEntityPortalModifier modifier)
+	public PacketDataRequest(TileEntity tileEntity)
 	{
-		xCoord = modifier.xCoord;
-		yCoord = modifier.yCoord;
-		zCoord = modifier.zCoord;
-		Dimension = modifier.worldObj.provider.dimensionId;
+		xCoord = tileEntity.xCoord;
+		yCoord = tileEntity.yCoord;
+		zCoord = tileEntity.zCoord;
+		Dimension = tileEntity.worldObj.provider.dimensionId;
 	}
 
 	public PacketDataRequest(int x, int y, int z, int dim)

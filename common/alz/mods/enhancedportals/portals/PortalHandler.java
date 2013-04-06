@@ -5,8 +5,8 @@ import java.util.Queue;
 
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import alz.mods.enhancedportals.common.WorldLocation;
-import alz.mods.enhancedportals.helpers.PortalHelper.PortalShape;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
@@ -24,7 +24,9 @@ public class PortalHandler
 	public static boolean isBlockFrame(int ID, boolean includeSelf)
 	{
 		if (includeSelf && ID == Reference.BlockIDs.NetherPortal)
+		{
 			return true;
+		}
 
 		return Reference.Settings.BorderBlocks.contains(ID);
 	}
@@ -33,36 +35,49 @@ public class PortalHandler
 	{
 		if (shape == PortalShape.X)
 		{
-			queue.add(new WorldLocation(location.xCoord, location.yCoord - 1, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord + 1, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord - 1, location.yCoord, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord + 1, location.yCoord, location.zCoord));
+			queue.add(location.getOffset(ForgeDirection.UP));
+			queue.add(location.getOffset(ForgeDirection.DOWN));
+			queue.add(location.getOffset(ForgeDirection.EAST));
+			queue.add(location.getOffset(ForgeDirection.WEST));			
 		}
 		else if (shape == PortalShape.Z)
 		{
-			queue.add(new WorldLocation(location.xCoord, location.yCoord - 1, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord + 1, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord, location.zCoord - 1));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord, location.zCoord + 1));
+			queue.add(location.getOffset(ForgeDirection.UP));
+			queue.add(location.getOffset(ForgeDirection.DOWN));
+			queue.add(location.getOffset(ForgeDirection.NORTH));
+			queue.add(location.getOffset(ForgeDirection.SOUTH));
 		}
 		else if (shape == PortalShape.HORIZONTAL)
 		{
-			queue.add(new WorldLocation(location.xCoord - 1, location.yCoord, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord + 1, location.yCoord, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord, location.zCoord - 1));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord, location.zCoord + 1));
+			queue.add(location.getOffset(ForgeDirection.NORTH));
+			queue.add(location.getOffset(ForgeDirection.SOUTH));
+			queue.add(location.getOffset(ForgeDirection.EAST));
+			queue.add(location.getOffset(ForgeDirection.WEST));
 		}
-		else if (shape == PortalShape.INVALID) // used for deconstructing portals
+		else if (shape == PortalShape.UNKNOWN) // used for deconstructing portals
 		{
-			queue.add(new WorldLocation(location.xCoord, location.yCoord - 1, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord + 1, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord - 1, location.yCoord, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord + 1, location.yCoord, location.zCoord));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord, location.zCoord - 1));
-			queue.add(new WorldLocation(location.xCoord, location.yCoord, location.zCoord + 1));
+			queue.add(location.getOffset(ForgeDirection.UP));
+			queue.add(location.getOffset(ForgeDirection.DOWN));
+			queue.add(location.getOffset(ForgeDirection.NORTH));
+			queue.add(location.getOffset(ForgeDirection.SOUTH));
+			queue.add(location.getOffset(ForgeDirection.EAST));
+			queue.add(location.getOffset(ForgeDirection.WEST));
 		}
 		
 		return queue;
+	}
+	
+	private static boolean queueContains(Queue<WorldLocation> queue, WorldLocation loc)
+	{
+		for (WorldLocation queueLoc : queue)
+		{
+			if (queueLoc.equals(loc))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public static class Create
@@ -78,17 +93,16 @@ public class PortalHandler
 		 */
 		public static boolean createPortal(WorldLocation location, PortalShape shape, PortalTexture texture)
 		{
-			if (shape == PortalShape.INVALID || location.worldObj.isRemote || !isBlockRemovable(location.getBlockId()))
+			if (shape == PortalShape.UNKNOWN || location.worldObj.isRemote || !isBlockRemovable(location.getBlockId()))
 			{
 				return false;
 			}
-
-			if (texture == PortalTexture.UNKNOWN)
+			
+			if (texture == null || texture == PortalTexture.UNKNOWN)
 			{
 				texture = PortalTexture.PURPLE;
 			}
 			
-			World world = location.worldObj;
 			Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
 			Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
 			int usedChances = 0;
@@ -98,12 +112,12 @@ public class PortalHandler
 			while (!queue.isEmpty())
 			{
 				WorldLocation current = queue.remove();
-				int currentBlockID = world.getBlockId(current.xCoord, current.yCoord, current.zCoord);
-				
+				int currentBlockID = current.getBlockId();
+								
 				if (Reference.Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Reference.Settings.MaximumPortalSize)
 				{
 					Remove.removePortal(addedBlocks);
-					Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), location.xCoord, location.yCoord, location.zCoord), world.isRemote);
+					Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), location.xCoord, location.yCoord, location.zCoord), location.worldObj.isRemote);
 					return false;
 				}
 				
@@ -123,24 +137,29 @@ public class PortalHandler
 					}
 					
 					if (sides >= 2)
-					{
-						addedBlocks.add(new WorldLocation(world, current.xCoord, current.yCoord, current.zCoord));
-						world.setBlock(current.xCoord, current.yCoord, current.zCoord, Reference.BlockIDs.NetherPortal);
-						Data.updateTexture(current, texture, PortalTexture.UNKNOWN);
+					{						
+						addedBlocks.add(current);						
+						current.setBlock(Reference.BlockIDs.NetherPortal);
+						Data.updateTexture(current, texture, PortalTexture.UNKNOWN);						
 						queue = updateQueue(queue, current, shape);
+						
+						if (addedBlocks.size() == 1)
+						{
+							current.worldObj.setBlockMetadataWithNotify(current.xCoord, current.yCoord, current.zCoord, 1, 2);
+						}
 					}
 				}
 			}
-			
+						
 			if (validatePortal(location, shape))
 			{
-				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_success), addedBlocks.size(), location.xCoord, location.yCoord, location.zCoord), world.isRemote);
+				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_success), addedBlocks.size(), location.xCoord, location.yCoord, location.zCoord), location.worldObj.isRemote);
 
 				return true;
 			}
 			else
 			{
-				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_fail), addedBlocks.size(), location.xCoord, location.yCoord, location.zCoord), world.isRemote);
+				Reference.LogData(String.format("%s " + Localizations.getLocalizedString(Strings.Console_fail), shape, addedBlocks.size(), location.xCoord, location.yCoord, location.zCoord), location.worldObj.isRemote);
 
 				Remove.removePortal(addedBlocks);
 				return false;
@@ -200,52 +219,27 @@ public class PortalHandler
 		 */
 		public static boolean createPortalAroundBlock(WorldLocation location, PortalTexture texture)
 		{
-			location.xCoord -= 1;
-			
-			// Attempt to create a portal at x - 1
-			if (createPortal(location, texture))
+			if (createPortal(location.getOffset(ForgeDirection.UP), texture))
 			{
 				return true;
 			}
-			
-			location.xCoord += 2;
-			
-			// Attempt to create a portal at x + 1
-			if (createPortal(location, texture))
+			else if (createPortal(location.getOffset(ForgeDirection.DOWN), texture))
 			{
 				return true;
 			}
-			
-			location.xCoord -= 1;
-			location.zCoord -= 1;
-			
-			// Attempt to create a portal at z - 1
-			if (createPortal(location, texture))
+			else if (createPortal(location.getOffset(ForgeDirection.NORTH), texture))
 			{
 				return true;
 			}
-			
-			location.zCoord += 2;
-			
-			// Attempt to create a portal at z + 1
-			if (createPortal(location, texture))
+			else if (createPortal(location.getOffset(ForgeDirection.SOUTH), texture))
 			{
 				return true;
 			}
-			
-			location.zCoord -=1;
-			location.yCoord -= 1;
-			
-			// Attempt to create a portal at y - 1
-			if (createPortal(location, texture))
+			else if (createPortal(location.getOffset(ForgeDirection.EAST), texture))
 			{
 				return true;
 			}
-			
-			location.yCoord += 2;
-			
-			// Attempt to create a portal at y + 1
-			if (createPortal(location, texture))
+			else if (createPortal(location.getOffset(ForgeDirection.WEST), texture))
 			{
 				return true;
 			}
@@ -277,31 +271,29 @@ public class PortalHandler
 		
 		private static int getSides(WorldLocation location, PortalShape shape)
 		{
-			int totalSides = 0;
-			
+			int totalSides = 0;			
 			int[] allBlocks = new int[4];
 
-			// Add the sides for horizontal portals		
 			if (shape == PortalShape.HORIZONTAL)
 			{
-				allBlocks[0] = location.worldObj.getBlockId(location.xCoord - 1, location.yCoord, location.zCoord);
-				allBlocks[1] = location.worldObj.getBlockId(location.xCoord + 1, location.yCoord, location.zCoord);
-				allBlocks[2] = location.worldObj.getBlockId(location.xCoord, location.yCoord, location.zCoord + 1);
-				allBlocks[3] = location.worldObj.getBlockId(location.xCoord, location.yCoord, location.zCoord - 1);
+				allBlocks[0] = location.getOffset(ForgeDirection.NORTH).getBlockId();
+				allBlocks[1] = location.getOffset(ForgeDirection.SOUTH).getBlockId();
+				allBlocks[2] = location.getOffset(ForgeDirection.EAST).getBlockId();
+				allBlocks[3] = location.getOffset(ForgeDirection.WEST).getBlockId();
 			}
-			else if (shape == PortalShape.X) // For the X-Axis portals
+			else if (shape == PortalShape.X)
 			{
-				allBlocks[0] = location.worldObj.getBlockId(location.xCoord, location.yCoord + 1, location.zCoord);
-				allBlocks[1] = location.worldObj.getBlockId(location.xCoord, location.yCoord - 1, location.zCoord);
-				allBlocks[2] = location.worldObj.getBlockId(location.xCoord - 1, location.yCoord, location.zCoord);
-				allBlocks[3] = location.worldObj.getBlockId(location.xCoord + 1, location.yCoord, location.zCoord);
+				allBlocks[0] = location.getOffset(ForgeDirection.WEST).getBlockId();
+				allBlocks[1] = location.getOffset(ForgeDirection.EAST).getBlockId();
+				allBlocks[2] = location.getOffset(ForgeDirection.UP).getBlockId();
+				allBlocks[3] = location.getOffset(ForgeDirection.DOWN).getBlockId();
 			}
-			else if (shape == PortalShape.Z) // For the Z-Axis portals
+			else if (shape == PortalShape.Z)
 			{
-				allBlocks[0] = location.worldObj.getBlockId(location.xCoord, location.yCoord + 1, location.zCoord);
-				allBlocks[1] = location.worldObj.getBlockId(location.xCoord, location.yCoord - 1, location.zCoord);
-				allBlocks[2] = location.worldObj.getBlockId(location.xCoord, location.yCoord, location.zCoord + 1);
-				allBlocks[3] = location.worldObj.getBlockId(location.xCoord, location.yCoord, location.zCoord - 1);
+				allBlocks[0] = location.getOffset(ForgeDirection.NORTH).getBlockId();
+				allBlocks[1] = location.getOffset(ForgeDirection.SOUTH).getBlockId();
+				allBlocks[2] = location.getOffset(ForgeDirection.UP).getBlockId();
+				allBlocks[3] = location.getOffset(ForgeDirection.DOWN).getBlockId();
 			}
 			
 			for (int val : allBlocks)
@@ -310,7 +302,7 @@ public class PortalHandler
 				{
 					totalSides++;
 				}
-				else if (isBlockRemovable(val))
+				else if (!isBlockRemovable(val))
 				{
 					return -1;
 				}
@@ -333,9 +325,9 @@ public class PortalHandler
 			while (!queue.isEmpty())
 			{
 				WorldLocation current = queue.remove();
-				int currentBlockID = location.getBlockId();
-				
-				if (currentBlockID == Reference.BlockIDs.NetherPortal && !checkedQueue.contains(current))
+				int currentBlockID = current.getBlockId();
+								
+				if (currentBlockID == Reference.BlockIDs.NetherPortal && !queueContains(checkedQueue, current))
 				{				
 					int sides = getSides(current, shape);
 					
@@ -377,7 +369,7 @@ public class PortalHandler
 				
 				if (currentBlockID == Reference.BlockIDs.NetherPortal)
 				{
-					current.setBlock(0);
+					current.setBlockToAir();
 					queue = updateQueue(queue, current, shape);
 				}
 			}
@@ -390,7 +382,7 @@ public class PortalHandler
 		 */
 		public static void removePortal(WorldLocation location)
 		{
-			removePortal(location, PortalShape.INVALID);
+			removePortal(location, PortalShape.UNKNOWN);
 		}
 		
 		/***
@@ -403,7 +395,7 @@ public class PortalHandler
 			while (!addedBlocks.isEmpty())
 			{
 				WorldLocation current = addedBlocks.remove();
-				current.setBlock(0);
+				current.setBlockToAir();
 			}
 		}
 		
@@ -432,7 +424,7 @@ public class PortalHandler
 		 */
 		public static boolean floodUpdateTexture(WorldLocation location, PortalTexture newTexture, PortalTexture oldTexture, boolean updateModifiers)
 		{
-			if (location.getBlockId() != Reference.BlockIDs.NetherPortal)
+			if (location.getBlockId() != Reference.BlockIDs.NetherPortal || oldTexture == null || oldTexture == PortalTexture.UNKNOWN)
 			{
 				return false;
 			}
@@ -444,12 +436,16 @@ public class PortalHandler
 			{
 				WorldLocation current = queue.remove();
 				int currentBlockID = current.getBlockId();
-				PortalTexture texture = ((TileEntityNetherPortal)current.getBlockTileEntity()).Texture;
 				
-				if (currentBlockID == Reference.BlockIDs.NetherPortal && texture != newTexture)
+				if (currentBlockID == Reference.BlockIDs.NetherPortal)
 				{
-					updateTexture(current, newTexture, oldTexture, false);
-					queue = updateQueue(queue, current, PortalShape.INVALID);
+					PortalTexture texture = ((TileEntityNetherPortal)current.getBlockTileEntity()).Texture;
+					
+					if (texture == oldTexture)
+					{
+						updateTexture(current, newTexture, oldTexture, false);
+						queue = updateQueue(queue, current, PortalShape.UNKNOWN);
+					}
 				}
 				else if (updateModifiers && currentBlockID == Reference.BlockIDs.PortalModifier)
 				{
@@ -471,8 +467,6 @@ public class PortalHandler
 				}
 			}
 			
-			// TODO send client floodfill packet from main location
-			
 			return true;
 		}
 		
@@ -492,13 +486,17 @@ public class PortalHandler
 			
 			netherPortal.Texture = newTexture;
 			
-			if (!location.worldObj.isRemote && sendPacket)
-			{
-				// TODO send packet
-			}
-			else if (location.worldObj.isRemote)
+			// TODO not sure if required
+			if (location.worldObj.isRemote)
 			{
 				location.markBlockForUpdate();
+			}
+			else
+			{
+				if (location.getBlockMeta() == 1)
+				{
+					Reference.LinkData.sendUpdatePacketToNearbyClients(netherPortal);
+				}
 			}
 			
 			return true;
@@ -557,7 +555,7 @@ public class PortalHandler
 				return PortalShape.HORIZONTAL;
 			}
 
-			return PortalShape.INVALID;
+			return PortalShape.UNKNOWN;
 		}
 
 		/***
@@ -586,7 +584,7 @@ public class PortalHandler
 				return PortalShape.HORIZONTAL;
 			}
 
-			return PortalShape.INVALID;
+			return PortalShape.UNKNOWN;
 		}
 	}
 }

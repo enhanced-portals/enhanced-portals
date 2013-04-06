@@ -4,8 +4,8 @@ import java.awt.Color;
 
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.ItemDye;
 import net.minecraft.world.World;
+import alz.mods.enhancedportals.portals.PortalTexture;
 
 public class TextureNetherPortalEntityFX extends EntityFX
 {
@@ -22,19 +22,8 @@ public class TextureNetherPortalEntityFX extends EntityFX
 		motionZ = par12;
 		portalPosX = posX = par2;
 		portalPosY = posY = par4;
-		portalPosZ = posZ = par6;
-
-		if (colour == 0)
-		{
-			colour = 5;
-		}
-		else if (colour == 5)
-		{
-			colour = 0;
-		}
-
-		Color color = Color.decode(String.valueOf(ItemDye.dyeColors[colour]));
-
+		portalPosZ = posZ = par6;		
+		Color color = Color.decode(String.valueOf(PortalTexture.getParticleColour(colour)));
 		particleRed = color.getRed() / 255.0F;
 		particleGreen = color.getGreen() / 255.0F;
 		particleBlue = color.getBlue() / 255.0F;

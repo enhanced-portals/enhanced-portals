@@ -10,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.teleportation.TeleportData;
@@ -59,6 +59,7 @@ public class ItemScroll extends Item
 		Tag.setInteger("y", Data.getY());
 		Tag.setInteger("z", Data.getZ());
 		Tag.setInteger("d", Data.getDimension());
+		Tag.setBoolean("m", Data.linksToModifier());
 		Stack.stackTagCompound = Tag;
 		Stack.setItemDamage(1);
 	}
@@ -74,8 +75,9 @@ public class ItemScroll extends Item
 		int y = Tag.getInteger("y");
 		int z = Tag.getInteger("z");
 		int d = Tag.getInteger("d");
+		boolean m = Tag.getBoolean("m");
 
-		return new TeleportData(x, y, z, d);
+		return new TeleportData(x, y, z, d, m);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -114,6 +116,11 @@ public class ItemScroll extends Item
 			par3List.add("Y: " + Data.getY());
 			par3List.add("Z: " + Data.getZ());
 			par3List.add(dimensionString);
+			
+			if (Data.linksToModifier())
+			{
+				par3List.add(Localizations.getLocalizedString("tile." + Strings.PortalModifier_Name + ".name"));
+			}
 		}
 	}
 
@@ -132,19 +139,19 @@ public class ItemScroll extends Item
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
-		if (itemStack.getItemDamage() > 0)
+		if (stack.getItemDamage() > 0)
 		{
-			return itemStack;
+			return false;
 		}
 		
-		int x = MathHelper.floor_double(entityPlayer.posX),
-			y = MathHelper.floor_double(entityPlayer.posY),
-			z = MathHelper.floor_double(entityPlayer.posZ);
+		if (world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
+		{
+			y += 1;
+		}
 		
-		setLocationData(itemStack, new TeleportData(x, y, z, world.provider.dimensionId));
-		
-		return itemStack;
+		setLocationData(stack, new TeleportData(x, y, z, world.provider.dimensionId, true));		
+		return true;
 	}
 }

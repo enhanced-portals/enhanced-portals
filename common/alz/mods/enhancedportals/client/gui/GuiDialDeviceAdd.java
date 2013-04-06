@@ -156,7 +156,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 				ItemScroll scroll = (ItemScroll)stack.getItem();				
 				TeleportData data = scroll.getLocationData(stack);
 				
-				/*if (!data.getLinksToModifier())
+				if (!data.linksToModifier())
 				{
 					moanA = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid1a);
 					moanB = Localizations.getLocalizedString(Strings.GUI_DialDevice_Invalid1b);
@@ -167,7 +167,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 					moanB = "";
 					setAcceptButtonState(true);
 					return;
-				}*/
+				}
 			}
 			
 			setAcceptButtonState(false);
@@ -203,7 +203,7 @@ public class GuiDialDeviceAdd extends GuiContainer
 	
 	private void setAcceptButtonState(boolean state)
 	{
-		((GuiButton)buttonList.get(0)).enabled = true;
+		((GuiButton)buttonList.get(0)).enabled = state;
 	}
 	
 	private boolean getAcceptButtonState()
