@@ -1,33 +1,33 @@
 package alz.mods.enhancedportals.common;
 
-import alz.mods.enhancedportals.client.gui.GuiDialDeviceItemSlot;
-import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import alz.mods.enhancedportals.client.gui.GuiDialDeviceItemSlot;
+import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 
 public class ContainerDialDeviceAdd extends Container
 {
 	TileEntityDialDevice DialDevice;
-	
+
 	public ContainerDialDeviceAdd(InventoryPlayer inventoryPlayer, TileEntityDialDevice dialDevice)
 	{
 		DialDevice = dialDevice;
-		
+
 		addSlotToContainer(new GuiDialDeviceItemSlot(dialDevice, 0, 0, 20));
 		addSlotToContainer(new GuiDialDeviceItemSlot(dialDevice, 1, 161, 20));
-		
+
 		bindPlayerInventory(inventoryPlayer);
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
 		return true;
 	}
-	
+
 	protected void bindPlayerInventory(InventoryPlayer player)
 	{
 		for (int i = 0; i < 3; i++)
@@ -43,7 +43,7 @@ public class ContainerDialDeviceAdd extends Container
 			addSlotToContainer(new Slot(player, i, 8 + i * 18, 142));
 		}
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
 	{

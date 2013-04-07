@@ -11,7 +11,7 @@ import alz.mods.enhancedportals.reference.Reference;
 public class PacketGuiRequest extends PacketUpdate
 {
 	public int guiID;
-	
+
 	public PacketGuiRequest()
 	{
 	}
@@ -24,22 +24,25 @@ public class PacketGuiRequest extends PacketUpdate
 		zCoord = z;
 	}
 
+	@Override
 	public int getPacketID()
 	{
 		return Reference.Networking.GuiRequest;
 	}
 
+	@Override
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
 		super.getPacketData(stream);
-		
+
 		guiID = stream.readInt();
 	}
 
+	@Override
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
 		super.addPacketData(stream);
-		
+
 		stream.writeInt(guiID);
 	}
 

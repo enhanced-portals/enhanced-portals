@@ -22,7 +22,7 @@ public class TextureNetherPortalEntityFX extends EntityFX
 		motionZ = par12;
 		portalPosX = posX = par2;
 		portalPosY = posY = par4;
-		portalPosZ = posZ = par6;		
+		portalPosZ = posZ = par6;
 		Color color = Color.decode(String.valueOf(PortalTexture.getParticleColour(colour)));
 		particleRed = color.getRed() / 255.0F;
 		particleGreen = color.getGreen() / 255.0F;

@@ -116,7 +116,7 @@ public class ItemScroll extends Item
 			par3List.add("Y: " + Data.getY());
 			par3List.add("Z: " + Data.getZ());
 			par3List.add(dimensionString);
-			
+
 			if (Data.linksToModifier())
 			{
 				par3List.add(Localizations.getLocalizedString("tile." + Strings.PortalModifier_Name + ".name"));
@@ -142,16 +142,14 @@ public class ItemScroll extends Item
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
 		if (stack.getItemDamage() > 0)
-		{
 			return false;
-		}
-		
+
 		if (world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
 		{
 			y += 1;
 		}
-		
-		setLocationData(stack, new TeleportData(x, y, z, world.provider.dimensionId, true));		
+
+		setLocationData(stack, new TeleportData(x, y, z, world.provider.dimensionId, true));
 		return true;
 	}
 }

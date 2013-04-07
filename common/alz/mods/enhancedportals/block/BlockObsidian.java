@@ -22,16 +22,16 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
 		ItemStack current = player.inventory.mainInventory[player.inventory.currentItem];
-			
+
 		if (current != null && current.itemID == Item.flintAndSteel.itemID)
 		{
 			if (PortalHandler.Create.createPortalAroundBlock(new WorldLocation(world, x, y, z)))
 			{
-				current.damageItem(1, player);				
+				current.damageItem(1, player);
 				return true;
-			}			
+			}
 		}
-						
+
 		return false;
 	}
 }

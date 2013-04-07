@@ -32,7 +32,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 	private ItemStack[] inv;
 	private List<IComputerAccess> computerAccess;
 	public PortalData PortalData;
-	
+
 	public TileEntityPortalModifier()
 	{
 		inv = new ItemStack[3];

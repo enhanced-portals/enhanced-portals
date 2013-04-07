@@ -29,11 +29,11 @@ public class Strings
 	// Item Icons
 	public static final String PortalModifierUpgrade_Icon = Reference.MOD_ID + ":" + PortalModifier_Name + "Upgrade_%s";
 	public static final String ItemScroll_Icon = Reference.MOD_ID + ":" + ItemScroll_Name;
-	
+
 	// Tile Entities
 	public static final String PortalModifier_TE_Name = "epmodif";
 	public static final String DialDevice_TE_Name = DialDevice_Name;
-	
+
 	// Portal
 	public static final String Portal_NoExitFound = "portal.noExitFound";
 	public static final String Portal_MissingUpgrade = "portal.missingUpgrade";
@@ -53,7 +53,7 @@ public class Strings
 	public static final String GUI_ClearFrequency = "gui.portalModifier.clearFrequency"; // Clear the frequency
 	public static final String GUI_SaveFrequency = "gui.portalModifier.saveFrequency"; // Save the frequency
 	public static final String GUI_Frequency = "gui.portalModifier.frequency"; // Frequency
-	
+
 	public static final String GUI_Accept = "gui.accept"; // Accept
 	public static final String GUI_Cancel = "gui.cancel"; // Cancel
 	public static final String GUI_Name = "gui.name"; // Name
@@ -61,7 +61,7 @@ public class Strings
 	public static final String GUI_Remove = "gui.remove"; // Remove
 	public static final String GUI_Edit = "gui.edit"; // Edit
 	public static final String GUI_Close = "gui.close"; // Close
-	
+
 	public static final String GUI_DialDevice_Selected = "gui.dialDevice.selected"; // Selected
 	public static final String GUI_DialDevice_NotSelected = "gui.dialDevice.notSelected"; // Double click to select
 	public static final String GUI_DialDevice_Coords = "gui.dialDevice.coords"; // %s - X: %s Y: %s Z: %s

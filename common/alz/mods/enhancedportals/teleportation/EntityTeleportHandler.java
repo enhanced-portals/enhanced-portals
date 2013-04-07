@@ -2,8 +2,6 @@ package alz.mods.enhancedportals.teleportation;
 
 import java.util.Iterator;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import alz.mods.enhancedportals.reference.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +14,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import alz.mods.enhancedportals.reference.Reference;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class EntityTeleportHandler
 {
@@ -25,13 +25,11 @@ public class EntityTeleportHandler
 	public static boolean canEntityTravel(Entity entity)
 	{
 		if (entity == null)
-		{
 			return false;
-		}
-		
+
 		return entity.timeUntilPortal == 0;
 	}
-	
+
 	/***
 	 * Sets the entities ability to travel dimensions
 	 */
@@ -46,31 +44,27 @@ public class EntityTeleportHandler
 			entity.timeUntilPortal = entity.getPortalCooldown();
 		}
 	}
-	
+
 	/***
 	 * Teleports an entity to the specified location & dimension
 	 */
 	public static void teleportEntity(Entity entity, TeleportData teleportData)
 	{
 		if (entity.worldObj.isRemote)
-		{
 			return;
-		}
-		
+
 		WorldServer world = MinecraftServer.getServer().worldServerForDimension(teleportData.getDimension());
-		
+
 		teleportEntity(world, entity, teleportData);
 	}
-	
+
 	private static Entity teleportEntity(WorldServer world, Entity entity, TeleportData teleportData)
 	{
 		if (!Reference.Settings.AllowTeleporting || !canEntityTravel(entity))
-		{
 			return entity;
-		}
-		
+
 		boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
-		
+
 		if (entity.riddenByEntity != null)
 		{
 			entity.riddenByEntity.mountEntity(null);
@@ -80,7 +74,7 @@ public class EntityTeleportHandler
 		{
 			entity.mountEntity(null);
 		}
-		
+
 		entity.worldObj.updateEntityWithOptionalForce(entity, false);
 		EntityPlayerMP player;
 
@@ -95,7 +89,7 @@ public class EntityTeleportHandler
 		{
 			removeEntityFromWorld(entity.worldObj, entity);
 		}
-		
+
 		entity.setLocationAndAngles(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
 		world.theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
 
@@ -133,7 +127,7 @@ public class EntityTeleportHandler
 		setCanEntityTravel(entity, false);
 		return entity;
 	}
-	
+
 	private static EntityPlayerMP handlePlayerRespawn(Entity entity, EntityPlayerMP player, WorldServer world, boolean dimensionalTeleport)
 	{
 		player.closeScreen();

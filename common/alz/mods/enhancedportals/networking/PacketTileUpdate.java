@@ -87,7 +87,7 @@ public class PacketTileUpdate extends PacketUpdate
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
 		super.getPacketData(stream);
-		
+
 		int size = stream.readInt();
 
 		if (size > 0)
@@ -105,7 +105,7 @@ public class PacketTileUpdate extends PacketUpdate
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
 		super.addPacketData(stream);
-		
+
 		stream.writeInt(data.length);
 
 		for (int i = 0; i < data.length; i++)

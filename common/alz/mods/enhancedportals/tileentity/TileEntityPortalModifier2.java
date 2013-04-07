@@ -7,9 +7,9 @@ public class TileEntityPortalModifier2 extends TileEntity
 	public int Colour, Frequency;
 	public byte Power;
 	boolean powerState;
-	
+
 	public TileEntityPortalModifier2()
 	{
-		
+
 	}
 }

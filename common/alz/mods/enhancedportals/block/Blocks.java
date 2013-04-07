@@ -39,7 +39,7 @@ public class Blocks
 		{
 			Block.blocksList[Reference.BlockIDs.PortalModifier] = new BlockPortalModifier();
 			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.PortalModifier], Strings.PortalModifier_Name);
-			
+
 			Block.blocksList[Reference.BlockIDs.DialDevice + 1] = new BlockPortalModifier2();
 			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice + 1], Strings.PortalModifier_Name + "a");
 		}
@@ -55,7 +55,7 @@ public class Blocks
 			Block.blocksList[Reference.BlockIDs.DialDevice] = new BlockDialDevice();
 			GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.DialDevice], Strings.DialDevice_Name);
 		}
-		
+
 		Block.blocksList[Reference.BlockIDs.NetherPortal] = new BlockNetherPortal();
 		GameRegistry.registerBlock(Block.blocksList[Reference.BlockIDs.NetherPortal], "portal");
 	}

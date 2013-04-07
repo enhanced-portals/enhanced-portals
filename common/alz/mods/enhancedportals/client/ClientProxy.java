@@ -29,26 +29,24 @@ public class ClientProxy extends CommonProxy
 	public static void OnTileUpdate(PacketTileUpdate packet, byte type)
 	{
 		if (type == 0)
-		{
 			return;
-		}
-		
+
 		World world = FMLClientHandler.instance().getClient().theWorld;
 
 		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
 			TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
-			
+
 			if (tileEntity instanceof TileEntityPortalModifier)
 			{
 				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-	
+
 				modifier.parseUpdatePacket(packet);
 			}
 			else if (tileEntity instanceof TileEntityNetherPortal)
 			{
 				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;
-				
+
 				netherPortal.parseUpdatePacket(packet);
 			}
 		}
@@ -58,10 +56,10 @@ public class ClientProxy extends CommonProxy
 	{
 		PacketDispatcher.sendPacketToServer(new PacketDataRequest(tileEntity).getClientPacket());
 	}
-	
+
 	public static void OpenGuiFromLocal(EntityPlayer player, TileEntity tileEntity, int guiID)
 	{
-		PacketDispatcher.sendPacketToServer(new PacketGuiRequest(guiID, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord).getClientPacket());		
+		PacketDispatcher.sendPacketToServer(new PacketGuiRequest(guiID, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord).getClientPacket());
 		player.openGui(EnhancedPortals.instance, guiID, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 	}
 
@@ -74,23 +72,21 @@ public class ClientProxy extends CommonProxy
 		packet.xCoord = dialDevice.xCoord;
 		packet.yCoord = dialDevice.yCoord;
 		packet.zCoord = dialDevice.zCoord;
-		
+
 		PacketDispatcher.sendPacketToServer(packet.getClientPacket());
 	}
 
 	public static void onAllPacketData(PacketAllPortalData packetPortal)
 	{
 		World world = FMLClientHandler.instance().getClient().theWorld;
-				
+
 		if (world.provider.dimensionId != packetPortal.Dimension)
-		{
 			return;
-		}
-		
+
 		if (world.getBlockId(packetPortal.xCoord, packetPortal.yCoord, packetPortal.zCoord) == Reference.BlockIDs.DialDevice)
 		{
 			TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(packetPortal.xCoord, packetPortal.yCoord, packetPortal.zCoord);
-			
+
 			dialDevice.PortalDataList = null;
 			dialDevice.PortalDataList = packetPortal.portalDataList;
 		}

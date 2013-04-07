@@ -7,22 +7,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.network.packet.Packet250CustomPayload;
 import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.teleportation.TeleportData;
 
-import net.minecraft.network.packet.Packet250CustomPayload;
-
 public class PacketAllPortalData extends PacketUpdate
 {
 	public List<PortalData> portalDataList;
-	
+
 	public PacketAllPortalData()
 	{
 		portalDataList = new ArrayList<PortalData>();
 	}
-	
+
 	public PacketAllPortalData(int x, int y, int z, int dim, List<PortalData> portalData)
 	{
 		xCoord = x;
@@ -31,7 +30,7 @@ public class PacketAllPortalData extends PacketUpdate
 		Dimension = dim;
 		portalDataList = portalData;
 	}
-	
+
 	@Override
 	public int getPacketID()
 	{
@@ -65,7 +64,7 @@ public class PacketAllPortalData extends PacketUpdate
 		packet.data = byteStream.toByteArray();
 		packet.length = packet.data.length;
 		packet.isChunkDataPacket = true;
-		
+
 		return packet;
 	}
 
@@ -73,17 +72,17 @@ public class PacketAllPortalData extends PacketUpdate
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
 		super.getPacketData(stream);
-		
+
 		int size = stream.readInt();
-		
+
 		for (int i = 0; i < size; i++)
 		{
 			PortalData PortalData = new PortalData();
 			PortalData.DisplayName = stream.readUTF();
 			PortalData.Texture = PortalTexture.getPortalTexture(stream.readInt());
-			
+
 			boolean hasTeleportData = stream.readBoolean();
-			
+
 			if (hasTeleportData)
 			{
 				PortalData.TeleportData = new TeleportData(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt());
@@ -92,7 +91,7 @@ public class PacketAllPortalData extends PacketUpdate
 			{
 				PortalData.Frequency = stream.readInt();
 			}
-			
+
 			portalDataList.add(PortalData);
 		}
 	}
@@ -101,14 +100,14 @@ public class PacketAllPortalData extends PacketUpdate
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
 		super.addPacketData(stream);
-		
+
 		stream.writeInt(portalDataList.size());
-		
+
 		for (PortalData portalData : portalDataList)
 		{
 			stream.writeUTF(portalData.DisplayName);
 			stream.writeInt(portalData.Texture.ordinal());
-			
+
 			if (portalData.TeleportData != null)
 			{
 				stream.writeBoolean(true);

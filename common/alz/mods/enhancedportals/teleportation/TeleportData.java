@@ -1,9 +1,9 @@
 package alz.mods.enhancedportals.teleportation;
 
+import net.minecraft.server.MinecraftServer;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
-import net.minecraft.server.MinecraftServer;
 
 public class TeleportData
 {
@@ -13,7 +13,7 @@ public class TeleportData
 
 	private int[] blockOffsetLocation;
 	private double[] entityOffsetLocation;
-	
+
 	public TeleportData(int x, int y, int z, int dimension, boolean modifier)
 	{
 		this.x = x;
@@ -22,16 +22,16 @@ public class TeleportData
 		this.dimension = dimension;
 		linksToModifier = modifier;
 	}
-	
+
 	public TeleportData(TileEntityPortalModifier modifier)
 	{
-		this.x = modifier.xCoord;
-		this.y = modifier.yCoord;
-		this.z = modifier.zCoord;
-		this.dimension = modifier.worldObj.provider.dimensionId;
+		x = modifier.xCoord;
+		y = modifier.yCoord;
+		z = modifier.zCoord;
+		dimension = modifier.worldObj.provider.dimensionId;
 		linksToModifier = true;
 	}
-	
+
 	public TeleportData(int x, int y, int z, int dimension)
 	{
 		this.x = x;
@@ -127,7 +127,7 @@ public class TeleportData
 	{
 		return dimension;
 	}
-	
+
 	public String getDimensionAsString()
 	{
 		switch (dimension)
@@ -142,7 +142,7 @@ public class TeleportData
 				return "Unknown";
 		}
 	}
-	
+
 	public boolean linksToModifier()
 	{
 		return linksToModifier;

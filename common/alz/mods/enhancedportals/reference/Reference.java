@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
-import alz.mods.enhancedportals.common.LinkData;
+import alz.mods.enhancedportals.server.LinkData;
 
 public class Reference
 {
@@ -32,7 +32,7 @@ public class Reference
 		public static final int DialDevice_Default = 1347;
 		public static final int NetherPortal_Default = 1349;
 		public static final int Obsidian_Default = 49;
-		
+
 		public static int ObsidianStairs;
 		public static int PortalModifier;
 		public static int Obsidian = Obsidian_Default;
@@ -204,6 +204,51 @@ public class Reference
 		public static String GetFromConfig(String key, String defaultValue)
 		{
 			return ConfigFile.get(Configuration.CATEGORY_GENERAL, key, defaultValue).getString();
+		}
+
+		public static void updateSetting(String category, String property, String value)
+		{
+			ConfigFile.load();
+
+			if (ConfigFile.getCategoryNames().contains(category))
+			{
+				if (ConfigFile.getCategory(category).containsKey(property))
+				{
+					ConfigFile.getCategory(category).get(property).set(value);
+				}
+			}
+
+			ConfigFile.save();
+		}
+
+		public static void updateSetting(String category, String property, boolean value)
+		{
+			ConfigFile.load();
+
+			if (ConfigFile.getCategoryNames().contains(category))
+			{
+				if (ConfigFile.getCategory(category).containsKey(property))
+				{
+					ConfigFile.getCategory(category).get(property).set(value);
+				}
+			}
+
+			ConfigFile.save();
+		}
+
+		public static void updateSetting(String category, String property, int value)
+		{
+			ConfigFile.load();
+
+			if (ConfigFile.getCategoryNames().contains(category))
+			{
+				if (ConfigFile.getCategory(category).containsKey(property))
+				{
+					ConfigFile.getCategory(category).get(property).set(value);
+				}
+			}
+
+			ConfigFile.save();
 		}
 	}
 

@@ -2,8 +2,6 @@ package alz.mods.enhancedportals.client.gui;
 
 import java.util.List;
 
-import cpw.mods.fml.client.FMLClientHandler;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +11,7 @@ import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
+import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiDialDevice extends GuiScreen
 {
@@ -39,7 +38,7 @@ public class GuiDialDevice extends GuiScreen
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
 	{
@@ -90,7 +89,7 @@ public class GuiDialDevice extends GuiScreen
 	{
 		theSelectedEntry = i;
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton guiButton)
 	{
@@ -122,7 +121,7 @@ public class GuiDialDevice extends GuiScreen
 			Player.closeScreen();
 		}
 	}
-	
+
 	@Override
 	protected void keyTyped(char par1, int par2)
 	{
@@ -131,7 +130,7 @@ public class GuiDialDevice extends GuiScreen
 			Player.closeScreen();
 			return;
 		}
-		
+
 		super.keyTyped(par1, par2);
 	}
 }

@@ -1,4 +1,4 @@
-package alz.mods.enhancedportals.common;
+package alz.mods.enhancedportals.server;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -288,12 +288,12 @@ public class LinkData
 	{
 		PacketDispatcher.sendPacketToAllAround(modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, 128, modifier.worldObj.provider.dimensionId, modifier.getUpdatePacket().getServerPacket());
 	}
-	
+
 	public void sendUpdatePacketToNearbyClients(TileEntityNetherPortal modifier)
 	{
 		PacketDispatcher.sendPacketToAllAround(modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, 128, modifier.worldObj.provider.dimensionId, modifier.getUpdatePacket().getServerPacket());
 	}
-	
+
 	public void sendDialDevicePacketToNearbyClients(TileEntityDialDevice dialDevice)
 	{
 		PacketAllPortalData packetData = new PacketAllPortalData();
@@ -302,7 +302,7 @@ public class LinkData
 		packetData.zCoord = dialDevice.zCoord;
 		packetData.Dimension = dialDevice.worldObj.provider.dimensionId;
 		packetData.portalDataList = dialDevice.PortalDataList;
-		
+
 		PacketDispatcher.sendPacketToAllAround(dialDevice.xCoord + 0.5, dialDevice.yCoord + 0.5, dialDevice.zCoord + 0.5, 128, dialDevice.worldObj.provider.dimensionId, packetData.getServerPacket());
 	}
 }

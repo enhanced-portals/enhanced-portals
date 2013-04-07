@@ -5,15 +5,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import net.minecraft.network.packet.Packet250CustomPayload;
 import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.reference.Reference;
-
-import net.minecraft.network.packet.Packet250CustomPayload;
 
 public class PacketAddPortalData extends PacketUpdate
 {
 	public PortalData portalData;
-	
+
 	@Override
 	public int getPacketID()
 	{
@@ -55,7 +54,7 @@ public class PacketAddPortalData extends PacketUpdate
 	public void getPacketData(DataInputStream stream) throws IOException
 	{
 		super.getPacketData(stream);
-		
+
 		portalData = new PortalData();
 		portalData.DisplayName = stream.readUTF();
 	}
@@ -64,7 +63,7 @@ public class PacketAddPortalData extends PacketUpdate
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
 		super.addPacketData(stream);
-		
+
 		stream.writeUTF(portalData.DisplayName); // Should only need to send the name they chose for it, since the texture & location is calculated from items in the TileEntities inventory.
 	}
 }

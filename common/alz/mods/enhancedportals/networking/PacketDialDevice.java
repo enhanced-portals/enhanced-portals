@@ -4,14 +4,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import alz.mods.enhancedportals.reference.Reference;
-
 import net.minecraft.network.packet.Packet250CustomPayload;
+import alz.mods.enhancedportals.reference.Reference;
 
 public class PacketDialDevice extends PacketUpdate
 {
 	public int SubID;
-	
+
 	@Override
 	public int getPacketID()
 	{
@@ -22,7 +21,7 @@ public class PacketDialDevice extends PacketUpdate
 	{
 		return SubID;
 	}
-	
+
 	@Override
 	public Packet250CustomPayload getClientPacket()
 	{
@@ -45,7 +44,7 @@ public class PacketDialDevice extends PacketUpdate
 	public void addPacketData(DataOutputStream stream) throws IOException
 	{
 		super.addPacketData(stream);
-		
+
 		stream.writeInt(SubID);
 	}
 }
