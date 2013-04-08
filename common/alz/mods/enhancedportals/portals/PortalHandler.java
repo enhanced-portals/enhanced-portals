@@ -10,6 +10,7 @@ import alz.mods.enhancedportals.common.WorldLocation;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.tileentity.TileEntityNetherPortal;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -18,7 +19,7 @@ public class PortalHandler
 {
 	public static boolean isBlockRemovable(int ID)
 	{
-		return Reference.Settings.RemovableBlocks.contains(ID);
+		return Settings.RemovableBlocks.contains(ID);
 	}
 
 	public static boolean isBlockFrame(int ID, boolean includeSelf)
@@ -26,7 +27,7 @@ public class PortalHandler
 		if (includeSelf && ID == Reference.BlockIDs.NetherPortal)
 			return true;
 
-		return Reference.Settings.BorderBlocks.contains(ID);
+		return Settings.BorderBlocks.contains(ID);
 	}
 
 	private static Queue<WorldLocation> updateQueue(Queue<WorldLocation> queue, WorldLocation location, PortalShape shape)
@@ -93,7 +94,7 @@ public class PortalHandler
 		 */
 		public static boolean createPortal(WorldLocation location, PortalShape shape, PortalTexture texture)
 		{
-			if (shape == PortalShape.UNKNOWN || location.worldObj.isRemote || !isBlockRemovable(location.getBlockId()))
+			if (shape == PortalShape.UNKNOWN || location.worldObj == null || location.worldObj.isRemote || !isBlockRemovable(location.getBlockId()))
 				return false;
 
 			if (texture == null || texture == PortalTexture.UNKNOWN)
@@ -112,7 +113,7 @@ public class PortalHandler
 				WorldLocation current = queue.remove();
 				int currentBlockID = current.getBlockId();
 
-				if (Reference.Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Reference.Settings.MaximumPortalSize)
+				if (Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Settings.MaximumPortalSize)
 				{
 					Remove.removePortal(addedBlocks);
 					Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), location.xCoord, location.yCoord, location.zCoord), location.worldObj.isRemote);
@@ -405,6 +406,22 @@ public class PortalHandler
 
 			removePortal(new WorldLocation(modifier.worldObj, offset[0], offset[1], offset[2]));
 		}
+
+		/***
+		 * Removes all portals around this block
+		 * 
+		 * @param location
+		 *            The location of the base block
+		 */
+		public static void removePortalAround(WorldLocation location)
+		{
+			removePortal(location.getOffset(ForgeDirection.UP));
+			removePortal(location.getOffset(ForgeDirection.DOWN));
+			removePortal(location.getOffset(ForgeDirection.NORTH));
+			removePortal(location.getOffset(ForgeDirection.SOUTH));
+			removePortal(location.getOffset(ForgeDirection.EAST));
+			removePortal(location.getOffset(ForgeDirection.WEST));
+		}
 	}
 
 	public static class Data
@@ -463,7 +480,7 @@ public class PortalHandler
 						}
 						else
 						{
-							Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+							Reference.ServerHandler.sendUpdatePacketToNearbyClients(modifier);
 						}
 					}
 				}
@@ -492,7 +509,7 @@ public class PortalHandler
 			{
 				if (location.getBlockMeta() == 1)
 				{
-					Reference.LinkData.sendUpdatePacketToNearbyClients(netherPortal);
+					Reference.ServerHandler.sendUpdatePacketToNearbyClients(netherPortal);
 				}
 			}
 
@@ -518,13 +535,19 @@ public class PortalHandler
 		public static boolean floodUpdateTextureModifier(TileEntityPortalModifier modifier, PortalTexture newTexture, boolean updateSelf)
 		{
 			int[] offset = WorldHelper.offsetDirectionBased(modifier.worldObj, modifier.xCoord, modifier.yCoord, modifier.zCoord);
+			PortalTexture oldTexture = modifier.PortalData.Texture;
 
 			if (updateSelf)
 			{
 				modifier.PortalData.Texture = newTexture;
+
+				if (!modifier.worldObj.isRemote)
+				{
+					Reference.ServerHandler.sendUpdatePacketToNearbyClients(modifier);
+				}
 			}
 
-			return floodUpdateTexture(new WorldLocation(modifier.worldObj, offset[0], offset[1], offset[2]), newTexture, modifier.PortalData.Texture, false);
+			return floodUpdateTexture(new WorldLocation(modifier.worldObj, offset[0], offset[1], offset[2]), newTexture, oldTexture, false);
 		}
 	}
 

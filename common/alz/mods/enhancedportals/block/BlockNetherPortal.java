@@ -3,9 +3,9 @@ package alz.mods.enhancedportals.block;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
@@ -27,6 +28,7 @@ import alz.mods.enhancedportals.portals.PortalShape;
 import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityNetherPortal;
@@ -37,8 +39,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockNetherPortal extends BlockContainer
 {
-	Icon[] textures;
-
 	public BlockNetherPortal()
 	{
 		super(Reference.BlockIDs.NetherPortal, Material.portal);
@@ -53,31 +53,21 @@ public class BlockNetherPortal extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int par5)
 	{
-		PortalTexture texture = ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).Texture;
-
-		return textures[texture.ordinal()];
+		return ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).Texture.getPortalIcon();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
 	{
-		return textures[0];
+		return PortalTexture.getPortalIcon(0);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister)
 	{
-		textures = new Icon[18];
-
-		for (int i = 0; i < 16; i++)
-		{
-			textures[i] = iconRegister.registerIcon(String.format(Strings.NetherPortal_Icon, i));
-		}
-
-		textures[16] = Block.lavaMoving.getBlockTextureFromSide(0);
-		textures[17] = Block.waterMoving.getBlockTextureFromSide(0);
+		PortalTexture.registerTextures(iconRegister);
 	}
 
 	@Override
@@ -85,7 +75,7 @@ public class BlockNetherPortal extends BlockContainer
 	{
 		super.updateTick(par1World, par2, par3, par4, par5Random);
 
-		if (Reference.Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Reference.Settings.PigmenSpawnChance)
+		if (Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Settings.PigmenSpawnChance)
 		{
 			if (par1World.provider.isSurfaceWorld() && par5Random.nextInt(2000) < par1World.difficultySetting)
 			{
@@ -252,7 +242,7 @@ public class BlockNetherPortal extends BlockContainer
 			return; // There's nothing else we need to do on the client side here.
 		}
 
-		if (Reference.Settings.CanDyePortals && Reference.Settings.CanDyeByThrowing && entity instanceof EntityItem)
+		if (Settings.CanDyePortals && Settings.CanDyeByThrowing && entity instanceof EntityItem)
 		{
 			ItemStack item = ((EntityItem) entity).getEntityItem();
 			PortalTexture newTexture = null;
@@ -280,7 +270,7 @@ public class BlockNetherPortal extends BlockContainer
 
 				PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
 
-				if (Reference.Settings.DoesDyingCost)
+				if (Settings.DoesDyingCost)
 				{
 					item.stackSize--;
 				}
@@ -289,7 +279,7 @@ public class BlockNetherPortal extends BlockContainer
 			}
 		}
 
-		if (!Reference.Settings.AllowTeleporting)
+		if (!Settings.AllowTeleporting)
 			return;
 
 		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
@@ -311,7 +301,7 @@ public class BlockNetherPortal extends BlockContainer
 		{
 			if (EntityHelper.canEntityTravel(entity))
 			{
-				List<TeleportData> validExits = Reference.LinkData.getFrequencyExcluding(modifier.getFrequency(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
+				List<TeleportData> validExits = Reference.ServerHandler.ModifierNetwork.getFrequencyExcluding("" + modifier.getFrequency(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
 
 				if (validExits == null || validExits.isEmpty())
 				{
@@ -363,7 +353,7 @@ public class BlockNetherPortal extends BlockContainer
 	{
 		if (par5Random.nextInt(100) == 0)
 		{
-			if (Reference.Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Reference.Settings.SoundLevel)
+			if (Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Settings.SoundLevel)
 			{
 				par1World.playSound(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
 			}
@@ -393,9 +383,9 @@ public class BlockNetherPortal extends BlockContainer
 				var17 = par5Random.nextFloat() * 2.0F * var19;
 			}
 
-			if (Reference.Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Reference.Settings.ParticleLevel)
+			if (Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Settings.ParticleLevel)
 			{
-				if (Reference.Settings.CanDyePortals)
+				if (Settings.CanDyePortals)
 				{
 					WorldLocation location = new WorldLocation(par1World, par2, par3, par4);
 					TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
@@ -420,7 +410,7 @@ public class BlockNetherPortal extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		if (!Reference.Settings.CanDyePortals)
+		if (!Settings.CanDyePortals)
 			return false;
 
 		ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
@@ -458,7 +448,7 @@ public class BlockNetherPortal extends BlockContainer
 				PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
 			}
 
-			if (Reference.Settings.DoesDyingCost && !player.capabilities.isCreativeMode)
+			if (Settings.DoesDyingCost && !player.capabilities.isCreativeMode)
 			{
 				item.stackSize--;
 
@@ -478,5 +468,19 @@ public class BlockNetherPortal extends BlockContainer
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityNetherPortal();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addBlockDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+	{
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addBlockHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer)
+	{
+		return true;
 	}
 }

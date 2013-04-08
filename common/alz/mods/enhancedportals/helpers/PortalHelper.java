@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.reference.Strings;
 
 public class PortalHelper
@@ -145,7 +146,7 @@ public class PortalHelper
 			int[] current = queue.remove();
 			int currentID = world.getBlockId(current[0], current[1], current[2]);
 
-			if (Reference.Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Reference.Settings.MaximumPortalSize)
+			if (Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Settings.MaximumPortalSize)
 			{
 				removePortal(world, addedBlocks);
 				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), x, y, z), world.isRemote);

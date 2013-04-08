@@ -14,7 +14,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Settings;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class EntityTeleportHandler
@@ -60,7 +60,7 @@ public class EntityTeleportHandler
 
 	private static Entity teleportEntity(WorldServer world, Entity entity, TeleportData teleportData)
 	{
-		if (!Reference.Settings.AllowTeleporting || !canEntityTravel(entity))
+		if (!Settings.AllowTeleporting || !canEntityTravel(entity))
 			return entity;
 
 		boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;

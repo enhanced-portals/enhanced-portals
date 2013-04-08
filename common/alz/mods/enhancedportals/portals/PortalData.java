@@ -54,4 +54,12 @@ public class PortalData
 	{
 		return PortalTexture.GetLocalizedName(Texture);
 	}
+
+	public boolean equals(PortalData data)
+	{
+		if (data.DisplayName.equalsIgnoreCase(DisplayName) && data.Frequency == Frequency && data.Texture == Texture && data.TeleportData.equals(TeleportData))
+			return true;
+
+		return false;
+	}
 }

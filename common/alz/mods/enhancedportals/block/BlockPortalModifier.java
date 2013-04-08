@@ -21,11 +21,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import alz.mods.enhancedportals.EnhancedPortals;
-import alz.mods.enhancedportals.client.ClientProxy;
-import alz.mods.enhancedportals.helpers.PortalHelper;
+import alz.mods.enhancedportals.common.WorldLocation;
 import alz.mods.enhancedportals.helpers.WorldHelper;
+import alz.mods.enhancedportals.portals.PortalHandler;
+import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.reference.Strings;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -50,13 +53,15 @@ public class BlockPortalModifier extends BlockContainer
 	public void registerIcons(IconRegister iconRegister)
 	{
 		sideFace = iconRegister.registerIcon(Strings.PortalModifier_Icon_Side);
-
-		activeFace = new Icon[16];
+		activeFace = new Icon[18];
 
 		for (int i = 0; i < 16; i++)
 		{
 			activeFace[i] = iconRegister.registerIcon(String.format(Strings.PortalModifier_Icon_Active, i));
 		}
+
+		activeFace[16] = activeFace[14];
+		activeFace[17] = activeFace[4];
 	}
 
 	// Placed in world
@@ -86,72 +91,64 @@ public class BlockPortalModifier extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		TileEntityPortalModifier tileEntity = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+		TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+		ItemStack currentItem = player.inventory.mainInventory[player.inventory.currentItem];
 
-		if (tileEntity == null)
-			return false;
-
-		if (!PortalHelper.createPortalAround(world, x, y, z, tileEntity.getColour(), player))
+		if (currentItem != null || !player.isSneaking())
 		{
-			ItemStack currentItem = player.inventory.mainInventory[player.inventory.currentItem];
-
-			if (currentItem != null && !player.isSneaking() && Reference.Settings.CanDyePortals && currentItem.itemID == Item.dyePowder.itemID)
+			if (Settings.CanDyePortals && currentItem != null)
 			{
-				int colour = currentItem.getItemDamage();
+				if (currentItem.itemID == Item.dyePowder.itemID)
+				{
+					PortalHandler.Data.floodUpdateTextureModifier(modifier, PortalTexture.getPortalTexture(PortalTexture.SwapColours(currentItem.getItemDamage())), true);
 
-				if (colour == 0)
-				{
-					colour = 5;
-				}
-				else if (colour == 5)
-				{
-					colour = 0;
-				}
+					if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
+					{
+						currentItem.stackSize--;
+					}
 
-				tileEntity.setColour(colour);
+					return true;
+				}
+				else if (currentItem.itemID == Item.bucketLava.itemID)
+				{
+					PortalHandler.Data.floodUpdateTextureModifier(modifier, PortalTexture.LAVA, true);
 
-				if (!player.capabilities.isCreativeMode && Reference.Settings.DoesDyingCost)
-				{
-					currentItem.stackSize--;
-				}
+					if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
+					{
+						currentItem.stackSize--;
+						player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
+					}
 
-				if (world.getBlockId(x, y + 1, z) == Reference.BlockIDs.NetherPortal)
-				{
-					WorldHelper.floodUpdateMetadata(world, x, y + 1, z, Reference.BlockIDs.NetherPortal, colour);
+					return true;
 				}
-				else
+				else if (currentItem.itemID == Item.bucketWater.itemID)
 				{
-					world.markBlockForRenderUpdate(x, y, z);
-				}
+					PortalHandler.Data.floodUpdateTextureModifier(modifier, PortalTexture.WATER, true);
 
-				if (world.isRemote)
-				{
-					ClientProxy.SendBlockUpdate(tileEntity);
-				}
-				else if (!world.isRemote)
-				{
-					Reference.LinkData.sendUpdatePacketToNearbyClients(tileEntity);
-				}
+					if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
+					{
+						currentItem.stackSize--;
+						player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
+					}
 
-				return true;
+					return true;
+				}
 			}
-			if (currentItem == null && player.isSneaking())
-			{
-				int currentRotation = world.getBlockMetadata(x, y, z), nextRotation = currentRotation + 1;
-
-				if (nextRotation >= ForgeDirection.VALID_DIRECTIONS.length)
-				{
-					nextRotation = 0;
-				}
-
-				rotateBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[nextRotation]);
-				return false;
-			}
-			else if (player.isSneaking())
-				return false;
 		}
-		else
+		else if (currentItem == null && player.isSneaking())
+		{
+			int nextRotation = world.getBlockMetadata(x, y, z) + 1;
+
+			if (nextRotation >= ForgeDirection.VALID_DIRECTIONS.length)
+			{
+				nextRotation = 0;
+			}
+
+			rotateBlock(world, x, y, z, ForgeDirection.VALID_DIRECTIONS[nextRotation]);
+			world.markBlockForRenderUpdate(x, y, z);
+
 			return true;
+		}
 
 		player.openGui(EnhancedPortals.instance, Reference.GuiIDs.PortalModifier, world, x, y, z);
 		return true;
@@ -172,7 +169,7 @@ public class BlockPortalModifier extends BlockContainer
 
 			if (tileEntity != null && tileEntity.getFrequency() != 0)
 			{
-				Reference.LinkData.RemoveFromFrequency(tileEntity.getFrequency(), x, y, z, world.provider.dimensionId);
+				Reference.ServerHandler.ModifierNetwork.removeFromNetwork("" + tileEntity.getFrequency(), new TeleportData(x, y, z, world.provider.dimensionId));
 			}
 		}
 
@@ -232,22 +229,22 @@ public class BlockPortalModifier extends BlockContainer
 		{
 			if (hasMultiUpgrade)
 			{
-				PortalHelper.createPortalAround(world, x, y, z, modifier.getColour());
+				PortalHandler.Create.createPortalAroundBlock(new WorldLocation(x, y, z), modifier.PortalData.Texture);
 			}
 			else if (WorldHelper.isBlockPortalRemovable(blockID))
 			{
-				PortalHelper.createPortal(world, blockToTest[0], blockToTest[1], blockToTest[2], modifier.getColour());
+				PortalHandler.Create.createPortal(new WorldLocation(world, blockToTest[0], blockToTest[1], blockToTest[2]), modifier.PortalData.Texture);
 			}
 		}
 		else if (!gettingPower && hadPower)
 		{
 			if (hasMultiUpgrade)
 			{
-				PortalHelper.removePortalAround(world, x, y, z);
+				PortalHandler.Remove.removePortalAround(new WorldLocation(world, x, y, z));
 			}
 			else if (blockID == Reference.BlockIDs.NetherPortal && meta == modifier.getColour())
 			{
-				PortalHelper.removePortal(world, blockToTest[0], blockToTest[1], blockToTest[2]);
+				PortalHandler.Remove.removePortal(new WorldLocation(world, blockToTest[0], blockToTest[1], blockToTest[2]));
 			}
 		}
 

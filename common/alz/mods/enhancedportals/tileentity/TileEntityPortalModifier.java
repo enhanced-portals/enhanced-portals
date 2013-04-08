@@ -59,6 +59,16 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 		return true;
 	}
 
+	public void setPortalData(PortalData data)
+	{
+		PortalData = data;
+	}
+
+	public void setTexture(PortalTexture texture)
+	{
+		PortalData.Texture = texture;
+	}
+
 	public int getColour()
 	{
 		return PortalData.Texture.Get();
@@ -322,9 +332,9 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 			{
 				PortalData.Frequency = (int) Double.parseDouble(arguments[0].toString());
 
-				if (Reference.LinkData != null)
+				if (Reference.ServerHandler != null)
 				{
-					Reference.LinkData.AddToFrequency(PortalData.Frequency, new TeleportData(xCoord, yCoord, zCoord, worldObj.provider.dimensionId));
+					Reference.ServerHandler.ModifierNetwork.addToNetwork("" + PortalData.Frequency, new TeleportData(xCoord, yCoord, zCoord, worldObj.provider.dimensionId));
 				}
 
 				return new Object[] { true };
@@ -357,9 +367,9 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
 				setColour(col, true);
 
-				if (Reference.LinkData != null)
+				if (Reference.ServerHandler != null)
 				{
-					Reference.LinkData.sendUpdatePacketToNearbyClients(this);
+					Reference.ServerHandler.sendUpdatePacketToNearbyClients(this);
 				}
 
 				int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
@@ -377,9 +387,9 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 					{
 						setColour(count, true);
 
-						if (Reference.LinkData != null)
+						if (Reference.ServerHandler != null)
 						{
-							Reference.LinkData.sendUpdatePacketToNearbyClients(this);
+							Reference.ServerHandler.sendUpdatePacketToNearbyClients(this);
 						}
 
 						int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);

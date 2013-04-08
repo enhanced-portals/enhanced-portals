@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.teleportation.TeleportData;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -60,7 +61,7 @@ public class EntityHelper
 
 	private static Entity teleportEntity(World world, Entity entity, TeleportData teleportData)
 	{
-		if (!Reference.Settings.AllowTeleporting && canEntityTravel(entity))
+		if (!Settings.AllowTeleporting && canEntityTravel(entity))
 			return entity;
 
 		if (entity.riddenByEntity != null)

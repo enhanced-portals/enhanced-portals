@@ -11,6 +11,7 @@ import net.minecraftforge.common.ForgeDirection;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Reference.BlockIDs;
+import alz.mods.enhancedportals.reference.Settings;
 import alz.mods.enhancedportals.reference.Strings;
 import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -179,7 +180,7 @@ public class WorldHelper
 
 					if (!world.isRemote)
 					{
-						Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+						Reference.ServerHandler.sendUpdatePacketToNearbyClients(modifier);
 					}
 					else
 					{
@@ -192,7 +193,7 @@ public class WorldHelper
 
 	public static boolean isBlockPortalRemovable(int ID)
 	{
-		return Reference.Settings.RemovableBlocks.contains(ID);
+		return Settings.RemovableBlocks.contains(ID);
 	}
 
 	public static boolean isBlockPortalFrame(int ID, boolean includeSelf)
@@ -200,7 +201,7 @@ public class WorldHelper
 		if (includeSelf && ID == Reference.BlockIDs.NetherPortal)
 			return true;
 
-		return Reference.Settings.BorderBlocks.contains(ID);
+		return Settings.BorderBlocks.contains(ID);
 	}
 
 	public static ForgeDirection getBlockDirection(World world, int x, int y, int z)

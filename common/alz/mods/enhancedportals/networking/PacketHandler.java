@@ -16,6 +16,7 @@ import alz.mods.enhancedportals.item.ItemScroll;
 import alz.mods.enhancedportals.portals.PortalData;
 import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Reference;
+import alz.mods.enhancedportals.teleportation.TeleportData;
 import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 import alz.mods.enhancedportals.tileentity.TileEntityNetherPortal;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
@@ -35,8 +36,6 @@ public class PacketHandler implements IPacketHandler
 		try
 		{
 			int packetID = dataStream.read();
-
-			System.out.println("Recieved packet ID of " + packetID);
 
 			if (packetID == Reference.Networking.TileEntityUpdate)
 			{
@@ -85,7 +84,8 @@ public class PacketHandler implements IPacketHandler
 			return;
 		}
 
-		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
+		World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
+		//World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
 
 		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
@@ -96,18 +96,22 @@ public class PacketHandler implements IPacketHandler
 				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
 
 				modifier.parseUpdatePacket(packet);
-				Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
-				Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension);
+
+				Reference.ServerHandler.sendUpdatePacketToNearbyClients(modifier);
+				Reference.ServerHandler.ModifierNetwork.addToNetwork("" + packet.data[0], new TeleportData(packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension));
+
+				//Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+				//Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension);
 			}
 		}
 	}
 
 	private void onDataRequest(PacketDataRequest packet, Player player)
 	{
-		if (Reference.LinkData == null)
+		if (Reference.ServerHandler == null)
 			return;
 
-		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
+		World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
 
 		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
@@ -116,12 +120,14 @@ public class PacketHandler implements IPacketHandler
 			if (tileEntity instanceof TileEntityPortalModifier)
 			{
 				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-				Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
+				//Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
+				Reference.ServerHandler.sendUpdatePacketToPlayer(modifier, player);
 			}
 			else if (tileEntity instanceof TileEntityNetherPortal)
 			{
 				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;
-				Reference.LinkData.sendUpdatePacketToPlayer(netherPortal, player);
+				//Reference.LinkData.sendUpdatePacketToPlayer(netherPortal, player);
+				Reference.ServerHandler.sendUpdatePacketToPlayer(netherPortal, player);
 			}
 		}
 	}
@@ -133,7 +139,7 @@ public class PacketHandler implements IPacketHandler
 
 		EntityPlayer Player = (EntityPlayer) player;
 
-		if (Reference.LinkData == null || Player.worldObj.isRemote)
+		if (Reference.ServerHandler == null || Player.worldObj.isRemote)
 			return;
 
 		Player.openGui(EnhancedPortals.instance, packet.guiID, Player.worldObj, packet.xCoord, packet.yCoord, packet.zCoord);
@@ -141,10 +147,10 @@ public class PacketHandler implements IPacketHandler
 
 	private void onAddPortalData(PacketAddPortalData packet, Player player)
 	{
-		if (Reference.LinkData == null || ((EntityPlayer) player).worldObj.isRemote)
+		if (Reference.ServerHandler == null || ((EntityPlayer) player).worldObj.isRemote)
 			return;
 
-		World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
+		World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
 
 		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.DialDevice && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
 		{
@@ -181,7 +187,7 @@ public class PacketHandler implements IPacketHandler
 			}
 
 			dialDevice.PortalDataList.add(portalData);
-			Reference.LinkData.sendDialDevicePacketToNearbyClients(dialDevice);
+			Reference.ServerHandler.sendDialDevicePacketToNearbyClients(dialDevice);
 		}
 	}
 }

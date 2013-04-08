@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import alz.mods.enhancedportals.helpers.WorldHelper;
 
 public class WorldLocation
 {
@@ -134,6 +135,19 @@ public class WorldLocation
 		newLocation.xCoord = xCoord + direction.offsetX;
 		newLocation.yCoord = yCoord + direction.offsetY;
 		newLocation.zCoord = zCoord + direction.offsetZ;
+
+		return newLocation;
+	}
+
+	public WorldLocation getOffsetFromModifier()
+	{
+		int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
+		WorldLocation newLocation = new WorldLocation();
+		newLocation.worldObj = worldObj;
+		newLocation.blockAccess = blockAccess;
+		newLocation.xCoord = offset[0];
+		newLocation.yCoord = offset[1];
+		newLocation.zCoord = offset[2];
 
 		return newLocation;
 	}

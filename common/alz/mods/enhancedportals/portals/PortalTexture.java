@@ -1,7 +1,11 @@
 package alz.mods.enhancedportals.portals;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemDye;
+import net.minecraft.util.Icon;
 import net.minecraft.util.StringTranslate;
+import alz.mods.enhancedportals.reference.Strings;
 
 public enum PortalTexture
 {
@@ -9,12 +13,36 @@ public enum PortalTexture
 
 	private static PortalTexture[] VALID_TEXTURES = { PURPLE, RED, GREEN, BROWN, BLUE, BLACK, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE, LAVA, WATER };
 	private static int[] PARTICLE_COLOURS = { 1973019, 11743532, 3887386, 5320730, 2437522, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522 };
+	private static Icon[] TEXTURE_ICONS = {};
 	public final int portalColour;
 
 	private PortalTexture(int id)
 	{
 		portalColour = id;
 		ordinal();
+	}
+
+	public Icon getPortalIcon()
+	{
+		return TEXTURE_ICONS[ordinal()];
+	}
+
+	public static Icon getPortalIcon(int id)
+	{
+		return TEXTURE_ICONS[id];
+	}
+
+	public static void registerTextures(IconRegister iconRegister)
+	{
+		TEXTURE_ICONS = new Icon[VALID_TEXTURES.length];
+
+		for (int i = 0; i < 16; i++)
+		{
+			TEXTURE_ICONS[i] = iconRegister.registerIcon(String.format(Strings.NetherPortal_Icon, i));
+		}
+
+		TEXTURE_ICONS[LAVA.ordinal()] = Block.lavaMoving.getBlockTextureFromSide(0);
+		TEXTURE_ICONS[WATER.ordinal()] = Block.waterMoving.getBlockTextureFromSide(0);
 	}
 
 	public static int getParticleColour(int id)

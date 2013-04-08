@@ -147,4 +147,12 @@ public class TeleportData
 	{
 		return linksToModifier;
 	}
+
+	public boolean equals(TeleportData data)
+	{
+		if (data.x == x && data.y == y && data.z == z && data.dimension == dimension && data.linksToModifier == data.linksToModifier)
+			return true;
+
+		return false;
+	}
 }
