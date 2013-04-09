@@ -20,136 +20,142 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemScroll extends Item
 {
-	Icon Texture;
+    Icon Texture;
 
-	public ItemScroll()
-	{
-		super(Reference.ItemIDs.ItemScroll);
-		this.setMaxDamage(0);
-		this.setCreativeTab(CreativeTabs.tabMisc);
-		setUnlocalizedName(Strings.ItemScroll_Name);
-		maxStackSize = 1;
-		hasSubtypes = true;
-	}
+    public ItemScroll()
+    {
+        super(Reference.ItemIDs.ItemScroll);
+        setMaxDamage(0);
+        setCreativeTab(CreativeTabs.tabMisc);
+        setUnlocalizedName(Strings.ItemScroll_Name);
+        maxStackSize = 1;
+        hasSubtypes = true;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateIcons(IconRegister IconRegister)
-	{
-		Texture = IconRegister.registerIcon(Strings.ItemScroll_Icon);
-	}
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    {
+        if (par1ItemStack.getItemDamage() == 1)
+        {
+            TeleportData Data = getLocationData(par1ItemStack);
+            String dimensionString = "Overworld";
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIconFromDamage(int par1)
-	{
-		return Texture;
-	}
+            if (Data == null)
+            {
+                return;
+            }
 
-	public void setLocationData(ItemStack Stack, TeleportData Data)
-	{
-		NBTTagCompound Tag = Stack.stackTagCompound;
+            switch (Data.getDimension())
+            {
+                case 0:
+                    dimensionString = "Overworld";
+                    break;
 
-		if (Tag == null)
-		{
-			Tag = new NBTTagCompound();
-		}
+                case 1:
+                    dimensionString = "The End";
+                    break;
 
-		Tag.setInteger("x", Data.getX());
-		Tag.setInteger("y", Data.getY());
-		Tag.setInteger("z", Data.getZ());
-		Tag.setInteger("d", Data.getDimension());
-		Tag.setBoolean("m", Data.linksToModifier());
-		Stack.stackTagCompound = Tag;
-		Stack.setItemDamage(1);
-	}
+                case -1:
+                    dimensionString = "The Nether";
+                    break;
 
-	public TeleportData getLocationData(ItemStack Stack)
-	{
-		NBTTagCompound Tag = Stack.stackTagCompound;
+                default:
+                    dimensionString = "Unknown";
+                    break;
+            }
 
-		if (Tag == null)
-			return null;
+            par3List.add("X: " + Data.getX());
+            par3List.add("Y: " + Data.getY());
+            par3List.add("Z: " + Data.getZ());
+            par3List.add(dimensionString);
 
-		int x = Tag.getInteger("x");
-		int y = Tag.getInteger("y");
-		int z = Tag.getInteger("z");
-		int d = Tag.getInteger("d");
-		boolean m = Tag.getBoolean("m");
+            if (Data.linksToModifier())
+            {
+                par3List.add(Localizations.getLocalizedString("tile." + Strings.PortalModifier_Name + ".name"));
+            }
+        }
+    }
 
-		return new TeleportData(x, y, z, d, m);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIconFromDamage(int par1)
+    {
+        return Texture;
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
-	{
-		if (par1ItemStack.getItemDamage() == 1)
-		{
-			TeleportData Data = getLocationData(par1ItemStack);
-			String dimensionString = "Overworld";
+    public TeleportData getLocationData(ItemStack Stack)
+    {
+        NBTTagCompound Tag = Stack.stackTagCompound;
 
-			if (Data == null)
-				return;
+        if (Tag == null)
+        {
+            return null;
+        }
 
-			switch (Data.getDimension())
-			{
-				case 0:
-					dimensionString = "Overworld";
-					break;
+        int x = Tag.getInteger("x");
+        int y = Tag.getInteger("y");
+        int z = Tag.getInteger("z");
+        int d = Tag.getInteger("d");
+        boolean m = Tag.getBoolean("m");
 
-				case 1:
-					dimensionString = "The End";
-					break;
+        return new TeleportData(x, y, z, d, m);
+    }
 
-				case -1:
-					dimensionString = "The Nether";
-					break;
+    @Override
+    @SideOnly(Side.CLIENT)
+    public EnumRarity getRarity(ItemStack par1ItemStack)
+    {
+        return EnumRarity.rare;
+    }
 
-				default:
-					dimensionString = "Unknown";
-					break;
-			}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack par1ItemStack)
+    {
+        return par1ItemStack.getItemDamage() == 1;
+    }
 
-			par3List.add("X: " + Data.getX());
-			par3List.add("Y: " + Data.getY());
-			par3List.add("Z: " + Data.getZ());
-			par3List.add(dimensionString);
+    @Override
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    {
+        if (stack.getItemDamage() > 0)
+        {
+            return false;
+        }
 
-			if (Data.linksToModifier())
-			{
-				par3List.add(Localizations.getLocalizedString("tile." + Strings.PortalModifier_Name + ".name"));
-			}
-		}
-	}
+        if (world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
+        {
+            y += 1;
+        }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack par1ItemStack)
-	{
-		return par1ItemStack.getItemDamage() == 1;
-	}
+        setLocationData(stack, new TeleportData(x, y, z, world.provider.dimensionId, true));
+        return true;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public EnumRarity getRarity(ItemStack par1ItemStack)
-	{
-		return EnumRarity.rare;
-	}
+    public void setLocationData(ItemStack Stack, TeleportData Data)
+    {
+        NBTTagCompound Tag = Stack.stackTagCompound;
 
-	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-	{
-		if (stack.getItemDamage() > 0)
-			return false;
+        if (Tag == null)
+        {
+            Tag = new NBTTagCompound();
+        }
 
-		if (world.getBlockId(x, y, z) != Reference.BlockIDs.PortalModifier)
-		{
-			y += 1;
-		}
+        Tag.setInteger("x", Data.getX());
+        Tag.setInteger("y", Data.getY());
+        Tag.setInteger("z", Data.getZ());
+        Tag.setInteger("d", Data.getDimension());
+        Tag.setBoolean("m", Data.linksToModifier());
+        Stack.stackTagCompound = Tag;
+        Stack.setItemDamage(1);
+    }
 
-		setLocationData(stack, new TeleportData(x, y, z, world.provider.dimensionId, true));
-		return true;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateIcons(IconRegister IconRegister)
+    {
+        Texture = IconRegister.registerIcon(Strings.ItemScroll_Icon);
+    }
 }

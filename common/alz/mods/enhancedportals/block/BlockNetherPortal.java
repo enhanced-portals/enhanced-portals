@@ -39,448 +39,477 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockNetherPortal extends BlockContainer
 {
-	public BlockNetherPortal()
-	{
-		super(Reference.BlockIDs.NetherPortal, Material.portal);
-		setHardness(-1.0F);
-		setStepSound(soundGlassFootstep);
-		setLightValue(0.75F);
-		setUnlocalizedName("portal");
-		this.setTickRandomly(true);
-	}
+    public BlockNetherPortal()
+    {
+        super(Reference.BlockIDs.NetherPortal, Material.portal);
+        setHardness(-1.0F);
+        setStepSound(soundGlassFootstep);
+        setLightValue(0.75F);
+        setUnlocalizedName("portal");
+        setTickRandomly(true);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int par5)
-	{
-		return ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).Texture.getPortalIcon();
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean addBlockDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+    {
+        return true;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
-	{
-		return PortalTexture.getPortalIcon(0);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean addBlockHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer)
+    {
+        return true;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
-	{
-		PortalTexture.registerTextures(iconRegister);
-	}
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileEntityNetherPortal();
+    }
 
-	@Override
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
-	{
-		super.updateTick(par1World, par2, par3, par4, par5Random);
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int par5)
+    {
+        return ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).Texture.getPortalIcon();
+    }
 
-		if (Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Settings.PigmenSpawnChance)
-		{
-			if (par1World.provider.isSurfaceWorld() && par5Random.nextInt(2000) < par1World.difficultySetting)
-			{
-				int var6;
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
+    {
+        return PortalTexture.getPortalIcon(0);
+    }
 
-				for (var6 = par3; !par1World.doesBlockHaveSolidTopSurface(par2, var6, par4) && var6 > 0; --var6)
-				{
-					;
-				}
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    {
+        return null;
+    }
 
-				if (var6 > 0 && !par1World.isBlockNormalCube(par2, var6 + 1, par4))
-				{
-					Entity var7 = ItemMonsterPlacer.spawnCreature(par1World, 57, par2 + 0.5D, var6 + 1.1D, par4 + 0.5D);
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderBlockPass()
+    {
+        return 1;
+    }
 
-					if (var7 != null)
-					{
-						var7.timeUntilPortal = var7.getPortalCooldown();
-					}
-				}
-			}
-		}
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int idPicked(World par1World, int par2, int par3, int par4)
+    {
+        return 0;
+    }
 
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
-	{
-		return null;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-	{
-		PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        if (!Settings.CanDyePortals)
+        {
+            return false;
+        }
 
-		if (portalShape == PortalShape.X)
-		{
-			this.setBlockBounds(0.0F, 0.0F, 0.375F, 1.0F, 1.0F, 0.625F);
-		}
-		else if (portalShape == PortalShape.Z)
-		{
-			this.setBlockBounds(0.375F, 0.0F, 0.0F, 0.625F, 1.0F, 1.0F);
-		}
-		else if (portalShape == PortalShape.HORIZONTAL)
-		{
-			this.setBlockBounds(0.0F, 0.375F, 0.0F, 1.0F, 0.625F, 1.0F);
-		}
-	}
+        ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
+        PortalTexture newTexture = null;
+        boolean isBucket = false;
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+        if (item == null)
+        {
+            return false;
+        }
 
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
+        if (item.itemID == Item.dyePowder.itemID)
+        {
+            newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
+        }
+        else if (item.itemID == Item.bucketLava.itemID)
+        {
+            newTexture = PortalTexture.LAVA;
+            isBucket = true;
+        }
+        else if (item.itemID == Item.bucketWater.itemID)
+        {
+            newTexture = PortalTexture.WATER;
+            isBucket = true;
+        }
 
-	public boolean tryToCreatePortal(World world, int x, int y, int z)
-	{
-		if (world.getBlockId(x, y, z) == Reference.BlockIDs.Obsidian)
-		{
-			y += 1;
-		}
+        if (newTexture != null)
+        {
+            WorldLocation location = new WorldLocation(world, x, y, z);
+            TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
 
-		return PortalHandler.Create.createPortal(new WorldLocation(world, x, y, z));
-	}
+            if (netherPortal.Texture == newTexture)
+            {
+                return false;
+            }
 
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
-	{
-		if (world.isRemote || id == 0)
-			return;
+            if (!world.isRemote)
+            {
+                PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
+            }
 
-		// Lets see if the portal is still intact
-		if (PortalShape.getPortalShape(new WorldLocation(world, x, y, z)) == PortalShape.UNKNOWN)
-		{
-			PortalHandler.Remove.removePortal(new WorldLocation(world, x, y, z), PortalShape.UNKNOWN); // If it's not, deconstruct it
-		}
-	}
+            if (Settings.DoesDyingCost && !player.capabilities.isCreativeMode)
+            {
+                item.stackSize--;
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
-	{
-		if (side == 0)
-		{
-			y++;
-		}
-		else if (side == 1)
-		{
-			y--;
-		}
-		else if (side == 2)
-		{
-			z++;
-		}
-		else if (side == 3)
-		{
-			z--;
-		}
-		else if (side == 4)
-		{
-			x++;
-		}
-		else if (side == 5)
-		{
-			x--;
-		}
+                if (isBucket)
+                {
+                    player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
+                }
+            }
 
-		PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
+            return true;
+        }
 
-		if (portalShape == PortalShape.HORIZONTAL)
-		{
-			if (side == 1 && world.getBlockId(x, y + 1, z) == blockID)
-				return false;
-			if (side == 0 && world.getBlockId(x, y - 1, z) == blockID)
-				return false;
-			if (side == 0 || side == 1)
-				return true;
+        return false;
+    }
 
-			return false;
-		}
-		else if (portalShape == PortalShape.X)
-		{
-			if (side == 2 && world.getBlockId(x, y, z - 1) == blockID)
-				return false;
-			if (side == 3 && world.getBlockId(x, y, z + 1) == blockID)
-				return false;
-			if (side == 2 || side == 3)
-				return true;
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    {
+        if (world.isRemote)
+        {
+            entity.setInPortal(); // Make the magical effects
+            return; // There's nothing else we need to do on the client side here.
+        }
 
-			return false;
-		}
-		else if (portalShape == PortalShape.Z)
-		{
-			if (side == 4 && world.getBlockId(x - 1, y, z) == blockID)
-				return false;
-			if (side == 5 && world.getBlockId(x + 1, y, z) == blockID)
-				return false;
-			if (side == 4 || side == 5)
-				return true;
+        if (Settings.CanDyePortals && Settings.CanDyeByThrowing && entity instanceof EntityItem)
+        {
+            ItemStack item = ((EntityItem) entity).getEntityItem();
+            PortalTexture newTexture = null;
 
-			return false;
-		}
+            if (item.itemID == Item.dyePowder.itemID)
+            {
+                newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
+            }
+            else if (item.itemID == Item.bucketLava.itemID)
+            {
+                newTexture = PortalTexture.LAVA;
+            }
+            else if (item.itemID == Item.bucketWater.itemID)
+            {
+                newTexture = PortalTexture.WATER;
+            }
 
-		return false;
-	}
+            if (newTexture != null)
+            {
+                WorldLocation location = new WorldLocation(world, x, y, z);
+                TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
 
-	@Override
-	public int quantityDropped(Random par1Random)
-	{
-		return 0;
-	}
+                if (netherPortal.Texture == newTexture)
+                {
+                    return;
+                }
 
-	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-	{
-		if (world.isRemote)
-		{
-			entity.setInPortal(); // Make the magical effects
-			return; // There's nothing else we need to do on the client side here.
-		}
+                PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
 
-		if (Settings.CanDyePortals && Settings.CanDyeByThrowing && entity instanceof EntityItem)
-		{
-			ItemStack item = ((EntityItem) entity).getEntityItem();
-			PortalTexture newTexture = null;
+                if (Settings.DoesDyingCost)
+                {
+                    item.stackSize--;
+                }
 
-			if (item.itemID == Item.dyePowder.itemID)
-			{
-				newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
-			}
-			else if (item.itemID == Item.bucketLava.itemID)
-			{
-				newTexture = PortalTexture.LAVA;
-			}
-			else if (item.itemID == Item.bucketWater.itemID)
-			{
-				newTexture = PortalTexture.WATER;
-			}
+                return;
+            }
+        }
 
-			if (newTexture != null)
-			{
-				WorldLocation location = new WorldLocation(world, x, y, z);
-				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
+        if (!Settings.AllowTeleporting)
+        {
+            return;
+        }
 
-				if (netherPortal.Texture == newTexture)
-					return;
+        int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
+        TileEntityPortalModifier modifier = null;
 
-				PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
+        if (firstModifier != null)
+        {
+            modifier = (TileEntityPortalModifier) world.getBlockTileEntity(firstModifier[0], firstModifier[1], firstModifier[2]);
+        }
 
-				if (Settings.DoesDyingCost)
-				{
-					item.stackSize--;
-				}
+        if (modifier == null || modifier.getFrequency() == 0)
+        {
+            if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
+            {
+                entity.setInPortal(); // There's no Portal Modifier or it's frequency isn't set.
+            }
+        }
+        else
+        {
+            if (EntityHelper.canEntityTravel(entity))
+            {
+                List<TeleportData> validExits = Reference.ServerHandler.ModifierNetwork.getFrequencyExcluding("" + modifier.getFrequency(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
 
-				return;
-			}
-		}
+                if (validExits == null || validExits.isEmpty())
+                {
+                    Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
+                    EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
+                }
+                else
+                {
+                    TeleportData selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
+                    boolean isValidExit = true;
 
-		if (!Settings.AllowTeleporting)
-			return;
+                    while (!WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity, true))
+                    {
+                        if (validExits.isEmpty())
+                        {
+                            isValidExit = false;
+                            break;
+                        }
 
-		int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
-		TileEntityPortalModifier modifier = null;
+                        selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
+                    }
 
-		if (firstModifier != null)
-		{
-			modifier = (TileEntityPortalModifier) world.getBlockTileEntity(firstModifier[0], firstModifier[1], firstModifier[2]);
-		}
+                    if (!isValidExit)
+                    {
+                        Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
+                        EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
+                    }
+                    else
+                    {
+                        EntityHelper.teleportEntity(entity, selectedExit);
+                    }
+                }
+            }
 
-		if (modifier == null || modifier.getFrequency() == 0)
-		{
-			if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
-			{
-				entity.setInPortal(); // There's no Portal Modifier or it's frequency isn't set.
-			}
-		}
-		else
-		{
-			if (EntityHelper.canEntityTravel(entity))
-			{
-				List<TeleportData> validExits = Reference.ServerHandler.ModifierNetwork.getFrequencyExcluding("" + modifier.getFrequency(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
+            EntityHelper.setCanEntityTravel(entity, false);
+        }
+    }
 
-				if (validExits == null || validExits.isEmpty())
-				{
-					Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
-					EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
-				}
-				else
-				{
-					TeleportData selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
-					boolean isValidExit = true;
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+    {
+        if (world.isRemote || id == 0)
+        {
+            return;
+        }
 
-					while (!WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity, true))
-					{
-						if (validExits.isEmpty())
-						{
-							isValidExit = false;
-							break;
-						}
+        if (PortalShape.getPortalShape(new WorldLocation(world, x, y, z)) == PortalShape.UNKNOWN)
+        {
+            PortalHandler.Remove.removePortal(new WorldLocation(world, x, y, z), PortalShape.UNKNOWN);
+        }
+    }
 
-						selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
-					}
+    @Override
+    public int quantityDropped(Random par1Random)
+    {
+        return 0;
+    }
 
-					if (!isValidExit)
-					{
-						Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
-						EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
-					}
-					else
-					{
-						EntityHelper.teleportEntity(entity, selectedExit);
-					}
-				}
-			}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    {
+        if (par5Random.nextInt(100) == 0)
+        {
+            if (Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Settings.SoundLevel)
+            {
+                par1World.playSound(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
+            }
+        }
 
-			EntityHelper.setCanEntityTravel(entity, false);
-		}
-	}
+        for (int var6 = 0; var6 < 4; ++var6)
+        {
+            double var7 = par2 + par5Random.nextFloat();
+            double var9 = par3 + par5Random.nextFloat();
+            double var11 = par4 + par5Random.nextFloat();
+            double var13 = 0.0D;
+            double var15 = 0.0D;
+            double var17 = 0.0D;
+            int var19 = par5Random.nextInt(2) * 2 - 1;
+            var13 = (par5Random.nextFloat() - 0.5D) * 0.5D;
+            var15 = (par5Random.nextFloat() - 0.5D) * 0.5D;
+            var17 = (par5Random.nextFloat() - 0.5D) * 0.5D;
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderBlockPass()
-	{
-		return 1;
-	}
+            if (par1World.getBlockId(par2 - 1, par3, par4) != blockID && par1World.getBlockId(par2 + 1, par3, par4) != blockID)
+            {
+                var7 = par2 + 0.5D + 0.25D * var19;
+                var13 = par5Random.nextFloat() * 2.0F * var19;
+            }
+            else
+            {
+                var11 = par4 + 0.5D + 0.25D * var19;
+                var17 = par5Random.nextFloat() * 2.0F * var19;
+            }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
-	{
-		if (par5Random.nextInt(100) == 0)
-		{
-			if (Settings.SoundLevel > 0 && par5Random.nextInt(100) <= Settings.SoundLevel)
-			{
-				par1World.playSound(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
-			}
-		}
+            if (Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Settings.ParticleLevel)
+            {
+                if (Settings.CanDyePortals)
+                {
+                    WorldLocation location = new WorldLocation(par1World, par2, par3, par4);
+                    TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
 
-		for (int var6 = 0; var6 < 4; ++var6)
-		{
-			double var7 = par2 + par5Random.nextFloat();
-			double var9 = par3 + par5Random.nextFloat();
-			double var11 = par4 + par5Random.nextFloat();
-			double var13 = 0.0D;
-			double var15 = 0.0D;
-			double var17 = 0.0D;
-			int var19 = par5Random.nextInt(2) * 2 - 1;
-			var13 = (par5Random.nextFloat() - 0.5D) * 0.5D;
-			var15 = (par5Random.nextFloat() - 0.5D) * 0.5D;
-			var17 = (par5Random.nextFloat() - 0.5D) * 0.5D;
+                    FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, PortalTexture.SwapColours(netherPortal.Texture.ordinal()), var7, var9, var11, var13, var15, var17));
+                }
+                else
+                {
+                    par1World.spawnParticle("portal", var7, var9, var11, var13, var15, var17);
+                }
+            }
+        }
+    }
 
-			if (par1World.getBlockId(par2 - 1, par3, par4) != blockID && par1World.getBlockId(par2 + 1, par3, par4) != blockID)
-			{
-				var7 = par2 + 0.5D + 0.25D * var19;
-				var13 = par5Random.nextFloat() * 2.0F * var19;
-			}
-			else
-			{
-				var11 = par4 + 0.5D + 0.25D * var19;
-				var17 = par5Random.nextFloat() * 2.0F * var19;
-			}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        PortalTexture.registerTextures(iconRegister);
+    }
 
-			if (Settings.ParticleLevel > 0 && par5Random.nextInt(100) <= Settings.ParticleLevel)
-			{
-				if (Settings.CanDyePortals)
-				{
-					WorldLocation location = new WorldLocation(par1World, par2, par3, par4);
-					TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
-					FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, PortalTexture.SwapColours(netherPortal.Texture.ordinal()), var7, var9, var11, var13, var15, var17));
-				}
-				else
-				{
-					par1World.spawnParticle("portal", var7, var9, var11, var13, var15, var17);
-				}
-			}
-		}
-	}
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+    {
+        PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int idPicked(World par1World, int par2, int par3, int par4)
-	{
-		return 0;
-	}
+        if (portalShape == PortalShape.X)
+        {
+            setBlockBounds(0.0F, 0.0F, 0.375F, 1.0F, 1.0F, 0.625F);
+        }
+        else if (portalShape == PortalShape.Z)
+        {
+            setBlockBounds(0.375F, 0.0F, 0.0F, 0.625F, 1.0F, 1.0F);
+        }
+        else if (portalShape == PortalShape.HORIZONTAL)
+        {
+            setBlockBounds(0.0F, 0.375F, 0.0F, 1.0F, 0.625F, 1.0F);
+        }
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
-		if (!Settings.CanDyePortals)
-			return false;
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
+    {
+        if (side == 0)
+        {
+            y++;
+        }
+        else if (side == 1)
+        {
+            y--;
+        }
+        else if (side == 2)
+        {
+            z++;
+        }
+        else if (side == 3)
+        {
+            z--;
+        }
+        else if (side == 4)
+        {
+            x++;
+        }
+        else if (side == 5)
+        {
+            x--;
+        }
 
-		ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
-		PortalTexture newTexture = null;
-		boolean isBucket = false;
+        PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
 
-		if (item == null)
-			return false;
+        if (portalShape == PortalShape.HORIZONTAL)
+        {
+            if (side == 1 && world.getBlockId(x, y + 1, z) == blockID)
+            {
+                return false;
+            }
+            if (side == 0 && world.getBlockId(x, y - 1, z) == blockID)
+            {
+                return false;
+            }
+            if (side == 0 || side == 1)
+            {
+                return true;
+            }
 
-		if (item.itemID == Item.dyePowder.itemID)
-		{
-			newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
-		}
-		else if (item.itemID == Item.bucketLava.itemID)
-		{
-			newTexture = PortalTexture.LAVA;
-			isBucket = true;
-		}
-		else if (item.itemID == Item.bucketWater.itemID)
-		{
-			newTexture = PortalTexture.WATER;
-			isBucket = true;
-		}
+            return false;
+        }
+        else if (portalShape == PortalShape.X)
+        {
+            if (side == 2 && world.getBlockId(x, y, z - 1) == blockID)
+            {
+                return false;
+            }
+            if (side == 3 && world.getBlockId(x, y, z + 1) == blockID)
+            {
+                return false;
+            }
+            if (side == 2 || side == 3)
+            {
+                return true;
+            }
 
-		if (newTexture != null)
-		{
-			WorldLocation location = new WorldLocation(world, x, y, z);
-			TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
+            return false;
+        }
+        else if (portalShape == PortalShape.Z)
+        {
+            if (side == 4 && world.getBlockId(x - 1, y, z) == blockID)
+            {
+                return false;
+            }
+            if (side == 5 && world.getBlockId(x + 1, y, z) == blockID)
+            {
+                return false;
+            }
+            if (side == 4 || side == 5)
+            {
+                return true;
+            }
 
-			if (netherPortal.Texture == newTexture)
-				return false;
+            return false;
+        }
 
-			if (!world.isRemote)
-			{
-				PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
-			}
+        return false;
+    }
 
-			if (Settings.DoesDyingCost && !player.capabilities.isCreativeMode)
-			{
-				item.stackSize--;
+    public boolean tryToCreatePortal(World world, int x, int y, int z)
+    {
+        if (world.getBlockId(x, y, z) == Reference.BlockIDs.Obsidian)
+        {
+            y += 1;
+        }
 
-				if (isBucket)
-				{
-					player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
-				}
-			}
+        return PortalHandler.Create.createPortal(new WorldLocation(world, x, y, z));
+    }
 
-			return true;
-		}
+    @Override
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    {
+        super.updateTick(par1World, par2, par3, par4, par5Random);
 
-		return false;
-	}
+        if (Settings.PigmenSpawnChance > 0 && par5Random.nextInt(100) <= Settings.PigmenSpawnChance)
+        {
+            if (par1World.provider.isSurfaceWorld() && par5Random.nextInt(2000) < par1World.difficultySetting)
+            {
+                int var6;
 
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityNetherPortal();
-	}
+                for (var6 = par3; !par1World.doesBlockHaveSolidTopSurface(par2, var6, par4) && var6 > 0; --var6)
+                {
+                    ;
+                }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addBlockDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
-	{
-		return true;
-	}
+                if (var6 > 0 && !par1World.isBlockNormalCube(par2, var6 + 1, par4))
+                {
+                    Entity var7 = ItemMonsterPlacer.spawnCreature(par1World, 57, par2 + 0.5D, var6 + 1.1D, par4 + 0.5D);
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addBlockHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer)
-	{
-		return true;
-	}
+                    if (var7 != null)
+                    {
+                        var7.timeUntilPortal = var7.getPortalCooldown();
+                    }
+                }
+            }
+        }
+    }
 }

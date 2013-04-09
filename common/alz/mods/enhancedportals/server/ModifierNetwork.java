@@ -19,233 +19,259 @@ import cpw.mods.fml.relauncher.Side;
 
 public class ModifierNetwork implements INetworkManager
 {
-	public Map<String, List<TeleportData>> Network;
-	private String SaveFile;
-	private MinecraftServer serverInstance;
+    public Map<String, List<TeleportData>> Network;
+    private String SaveFile;
+    private MinecraftServer serverInstance;
 
-	public ModifierNetwork(MinecraftServer server)
-	{
-		serverInstance = server;
-		WorldServer world = serverInstance.worldServerForDimension(0);
-		Network = new HashMap<String, List<TeleportData>>();
+    public ModifierNetwork(MinecraftServer server)
+    {
+        serverInstance = server;
+        WorldServer world = serverInstance.worldServerForDimension(0);
+        Network = new HashMap<String, List<TeleportData>>();
 
-		if (FMLCommonHandler.instance().getSide() == Side.SERVER)
-		{
-			SaveFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + ".dat").getAbsolutePath();
-		}
-		else
-		{
-			SaveFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + ".dat").getAbsolutePath();
-		}
+        if (FMLCommonHandler.instance().getSide() == Side.SERVER)
+        {
+            SaveFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + ".dat").getAbsolutePath();
+        }
+        else
+        {
+            SaveFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + ".dat").getAbsolutePath();
+        }
 
-		if (!new File(SaveFile).exists())
-			return;
+        if (!new File(SaveFile).exists())
+        {
+            return;
+        }
 
-		loadData();
-	}
+        loadData();
+    }
 
-	@Override
-	public void loadData()
-	{
-		BufferedReader reader = null;
-		String network = "undefined";
-		List<TeleportData> items = new ArrayList<TeleportData>();
+    public void addNetwork(String key)
+    {
+        if (hasNetwork(key))
+        {
+            return;
+        }
 
-		try
-		{
-			reader = new BufferedReader(new FileReader(SaveFile));
-			String line = null;
+        Network.put(key, new ArrayList<TeleportData>());
+    }
 
-			while ((line = reader.readLine()) != null)
-			{
-				if (line.startsWith(">"))
-				{
-					if (network != "undefined")
-					{
-						addNetwork(network);
+    public void addToNetwork(String key, TeleportData data)
+    {
+        if (!hasNetwork(key))
+        {
+            addNetwork(key);
+        }
 
-						for (TeleportData item : items)
-						{
-							addToNetwork(network, item);
-						}
-					}
+        if (networkContains(key, data))
+        {
+            return;
+        }
 
-					network = line.replace(">", "");
-					items = new ArrayList<TeleportData>();
-				}
-				else if (line.startsWith("#"))
-				{
-					String theLine[] = line.replace("#", "").split(",");
+        getNetwork(key).add(data);
+    }
 
-					if (theLine.length == 4)
-					{
-						items.add(new TeleportData(Integer.parseInt(theLine[0]), Integer.parseInt(theLine[1]), Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3])));
-					}
-				}
-			}
+    public List<TeleportData> getFrequencyExcluding(String key, TeleportData data)
+    {
+        List<TeleportData> list = getNetwork(key);
 
-			if (network != "undefined")
-			{
-				addNetwork(network);
+        for (int i = 0; i < list.size(); i++)
+        {
+            if (list.get(i).equals(data))
+            {
+                list.remove(i);
+            }
+        }
 
-				for (TeleportData item : items)
-				{
-					addToNetwork(network, item);
-				}
-			}
+        return list;
+    }
 
-			reader.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+    public List<TeleportData> getNetwork(String key)
+    {
+        if (!hasNetwork(key))
+        {
+            return null;
+        }
 
-	@Override
-	public void saveData()
-	{
-		BufferedWriter writer;
+        return Network.get(key);
+    }
 
-		if (Network.keySet() == null)
-			return;
+    public String getNetwork(TeleportData data)
+    {
+        for (String key : Network.keySet())
+        {
+            if (isInNetwork(key, data))
+            {
+                return key;
+            }
+        }
 
-		try
-		{
-			writer = new BufferedWriter(new FileWriter(SaveFile));
+        return "undefined";
+    }
 
-			for (String key : Network.keySet())
-			{
-				List<TeleportData> items = getNetwork(key);
+    public boolean hasNetwork(String key)
+    {
+        for (String key2 : Network.keySet())
+        {
+            if (key.equals(key2))
+            {
+                return true;
+            }
+        }
 
-				writer.write(">" + key);
-				writer.newLine();
+        return false;
+    }
 
-				for (TeleportData item : items)
-				{
-					writer.write("#" + item.getX() + "," + item.getY() + "," + item.getZ() + "," + item.getDimension());
-					writer.newLine();
-				}
-			}
+    public boolean isInNetwork(String key, TeleportData data)
+    {
+        if (!hasNetwork(key))
+        {
+            return false;
+        }
 
-			writer.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+        return networkContains(key, data);
+    }
 
-	public boolean hasNetwork(String key)
-	{
-		for (String key2 : Network.keySet())
-		{
-			if (key.equals(key2))
-				return true;
-		}
+    @Override
+    public void loadData()
+    {
+        BufferedReader reader = null;
+        String network = "undefined";
+        List<TeleportData> items = new ArrayList<TeleportData>();
 
-		return false;
-	}
+        try
+        {
+            reader = new BufferedReader(new FileReader(SaveFile));
+            String line = null;
 
-	public List<TeleportData> getNetwork(String key)
-	{
-		if (!hasNetwork(key))
-			return null;
+            while ((line = reader.readLine()) != null)
+            {
+                if (line.startsWith(">"))
+                {
+                    if (network != "undefined")
+                    {
+                        addNetwork(network);
 
-		return Network.get(key);
-	}
+                        for (TeleportData item : items)
+                        {
+                            addToNetwork(network, item);
+                        }
+                    }
 
-	public void addNetwork(String key)
-	{
-		if (hasNetwork(key))
-			return;
+                    network = line.replace(">", "");
+                    items = new ArrayList<TeleportData>();
+                }
+                else if (line.startsWith("#"))
+                {
+                    String theLine[] = line.replace("#", "").split(",");
 
-		Network.put(key, new ArrayList<TeleportData>());
-	}
+                    if (theLine.length == 4)
+                    {
+                        items.add(new TeleportData(Integer.parseInt(theLine[0]), Integer.parseInt(theLine[1]), Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3])));
+                    }
+                }
+            }
 
-	public void addToNetwork(String key, TeleportData data)
-	{
-		if (!hasNetwork(key))
-		{
-			addNetwork(key);
-		}
+            if (network != "undefined")
+            {
+                addNetwork(network);
 
-		if (networkContains(key, data))
-			return;
+                for (TeleportData item : items)
+                {
+                    addToNetwork(network, item);
+                }
+            }
 
-		getNetwork(key).add(data);
-	}
+            reader.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public void removeNetwork(String key)
-	{
-		if (!hasNetwork(key))
-			return;
+    public boolean networkContains(String key, TeleportData data)
+    {
+        if (!hasNetwork(key))
+        {
+            return false;
+        }
 
-		Network.remove(key);
-	}
+        for (TeleportData keyData : getNetwork(key))
+        {
+            if (keyData.equals(key))
+            {
+                return true;
+            }
+        }
 
-	public boolean networkContains(String key, TeleportData data)
-	{
-		if (!hasNetwork(key))
-			return false;
+        return false;
+    }
 
-		for (TeleportData keyData : getNetwork(key))
-		{
-			if (keyData.equals(key))
-				return true;
-		}
+    public void removeFromNetwork(String key, TeleportData data)
+    {
+        if (!hasNetwork(key))
+        {
+            return;
+        }
 
-		return false;
-	}
+        if (isInNetwork(key, data))
+        {
+            return;
+        }
 
-	public boolean isInNetwork(String key, TeleportData data)
-	{
-		if (!hasNetwork(key))
-			return false;
+        for (int i = 0; i < getNetwork(key).size(); i++)
+        {
+            if (getNetwork(key).get(i).equals(data))
+            {
+                getNetwork(key).remove(i);
+            }
+        }
+    }
 
-		return networkContains(key, data);
-	}
+    public void removeNetwork(String key)
+    {
+        if (!hasNetwork(key))
+        {
+            return;
+        }
 
-	public String getNetwork(TeleportData data)
-	{
-		for (String key : Network.keySet())
-		{
-			if (isInNetwork(key, data))
-				return key;
-		}
+        Network.remove(key);
+    }
 
-		return "undefined";
-	}
+    @Override
+    public void saveData()
+    {
+        BufferedWriter writer;
 
-	public void removeFromNetwork(String key, TeleportData data)
-	{
-		if (!hasNetwork(key))
-			return;
+        if (Network.keySet() == null)
+        {
+            return;
+        }
 
-		if (isInNetwork(key, data))
-			return;
+        try
+        {
+            writer = new BufferedWriter(new FileWriter(SaveFile));
 
-		for (int i = 0; i < getNetwork(key).size(); i++)
-		{
-			if (getNetwork(key).get(i).equals(data))
-			{
-				getNetwork(key).remove(i);
-			}
-		}
-	}
+            for (String key : Network.keySet())
+            {
+                List<TeleportData> items = getNetwork(key);
 
-	public List<TeleportData> getFrequencyExcluding(String key, TeleportData data)
-	{
-		List<TeleportData> list = getNetwork(key);
+                writer.write(">" + key);
+                writer.newLine();
 
-		for (int i = 0; i < list.size(); i++)
-		{
-			if (list.get(i).equals(data))
-			{
-				list.remove(i);
-			}
-		}
+                for (TeleportData item : items)
+                {
+                    writer.write("#" + item.getX() + "," + item.getY() + "," + item.getZ() + "," + item.getDimension());
+                    writer.newLine();
+                }
+            }
 
-		return list;
-	}
+            writer.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

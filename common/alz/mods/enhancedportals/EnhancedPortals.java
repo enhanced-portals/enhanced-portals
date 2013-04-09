@@ -33,79 +33,79 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = { Reference.MOD_ID }, packetHandler = PacketHandler.class)
 public class EnhancedPortals
 {
-	@SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
-	public static CommonProxy proxy;
+    @SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
+    public static CommonProxy proxy;
 
-	@Instance(Reference.MOD_ID)
-	public static EnhancedPortals instance;
+    @Instance(Reference.MOD_ID)
+    public static EnhancedPortals instance;
 
-	@PreInit
-	public void preLoad(FMLPreInitializationEvent event)
-	{
-		Settings.ConfigFile = new Configuration(event.getSuggestedConfigurationFile());
-		Reference.Logger = event.getModLog();
+    @Init
+    public void load(FMLInitializationEvent event)
+    {
+        Reference.LoadLanguage();
 
-		Settings.AllowTeleporting = Settings.GetFromConfig("AllowTeleporting", Settings.AllowTeleporting_Default);
-		Settings.CanDyePortals = Settings.GetFromConfig("CanDyePortals", Settings.CanDyePortals_Default);
-		Settings.DoesDyingCost = Settings.GetFromConfig("DoesDyingCost", Settings.DoesDyingCost_Default);
-		Settings.CanDyeByThrowing = Settings.GetFromConfig("CanDyeByThrowing", Settings.CanDyeByThrowing_Default);
-		Settings.AllowModifiers = Settings.GetFromConfig("AllowModifiers", Settings.AllowModifiers_Default);
-		Settings.AllowObsidianStairs = Settings.GetFromConfig("AllowObsidianStairs", Settings.AllowObsidianStairs_Default);
-		Settings.AllowDialDevice = Settings.GetFromConfig("AllowDialDevice", Settings.AllowDialDevice_Default);
-		Settings.PrintPortalMessages = Settings.GetFromConfig("PrintPortalCreationMessages", Settings.PrintPortalMessages_Default);
+        MinecraftForge.EVENT_BUS.register(new EventHooks());
+        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 
-		Settings.MaximumPortalSize = Settings.GetFromConfig("MaximumPortalSize", Settings.MaximumPortalSize_Default);
+        try
+        {
+            @SuppressWarnings("rawtypes")
+            Class ccClass = Class.forName("dan200.ComputerCraft");
+            Field blockComputer = ccClass.getField("computerBlockID");
 
-		Settings.PigmenSpawnChance = Settings.GetFromConfig("PigmenSpawnChance", 100, 0, 100);
-		Settings.SoundLevel = Settings.GetFromConfig("SoundLevel", 100, 0, 100);
-		Settings.ParticleLevel = Settings.GetFromConfig("ParticleLevel", 100, 0, 100);
+            Reference.ComputercraftComputer = Block.blocksList[blockComputer.getInt(blockComputer)];
+            Reference.LogData("Found and loaded ComputerCraft.");
+        }
+        catch (Exception e)
+        {
+            Reference.LogData("ComputerCraft was not found.");
+        }
 
-		Reference.BlockIDs.ObsidianStairs = Settings.GetFromConfig("ObsidianStairsID", Reference.BlockIDs.ObsidianStairs_Default, true);
-		Reference.BlockIDs.PortalModifier = Settings.GetFromConfig("PortalModifierID", Reference.BlockIDs.PortalModifier_Default, true);
-		Reference.BlockIDs.DialDevice = Settings.GetFromConfig("DialDeviceID", Reference.BlockIDs.DialDevice_Default, true);
+        Blocks.Init();
+        TileEntities.Init();
+        Items.Init();
+    }
 
-		Reference.ItemIDs.PortalModifierUpgrade = Settings.GetFromConfig("PortalModifierUpgradeID", Reference.ItemIDs.PortalModifierUpgrade_Default, false);
-		Reference.ItemIDs.MiscItems = Settings.GetFromConfig("MiscItemsID", Reference.ItemIDs.MiscItems_Default, false);
-		Reference.ItemIDs.ItemScroll = Settings.GetFromConfig("ItemScrollID", Reference.ItemIDs.ItemScroll_Default, false);
+    @PreInit
+    public void preLoad(FMLPreInitializationEvent event)
+    {
+        Settings.ConfigFile = new Configuration(event.getSuggestedConfigurationFile());
+        Reference.Logger = event.getModLog();
 
-		Settings.AddToBorderBlocks(Settings.GetFromConfig("CustomBorderBlocks", ""));
-		Settings.AddToDestroyBlocks(Settings.GetFromConfig("CustomDestroyBlocks", "8,9,10,11,6,18,30,31,32,37,38,39,40,78,104,105,106,111,115"));
+        Settings.AllowTeleporting = Settings.GetFromConfig("AllowTeleporting", Settings.AllowTeleporting_Default);
+        Settings.CanDyePortals = Settings.GetFromConfig("CanDyePortals", Settings.CanDyePortals_Default);
+        Settings.DoesDyingCost = Settings.GetFromConfig("DoesDyingCost", Settings.DoesDyingCost_Default);
+        Settings.CanDyeByThrowing = Settings.GetFromConfig("CanDyeByThrowing", Settings.CanDyeByThrowing_Default);
+        Settings.AllowModifiers = Settings.GetFromConfig("AllowModifiers", Settings.AllowModifiers_Default);
+        Settings.AllowObsidianStairs = Settings.GetFromConfig("AllowObsidianStairs", Settings.AllowObsidianStairs_Default);
+        Settings.AllowDialDevice = Settings.GetFromConfig("AllowDialDevice", Settings.AllowDialDevice_Default);
+        Settings.PrintPortalMessages = Settings.GetFromConfig("PrintPortalCreationMessages", Settings.PrintPortalMessages_Default);
 
-		Settings.ConfigFile.save();
-	}
+        Settings.MaximumPortalSize = Settings.GetFromConfig("MaximumPortalSize", Settings.MaximumPortalSize_Default);
 
-	@Init
-	public void load(FMLInitializationEvent event)
-	{
-		Reference.LoadLanguage();
+        Settings.PigmenSpawnChance = Settings.GetFromConfig("PigmenSpawnChance", 100, 0, 100);
+        Settings.SoundLevel = Settings.GetFromConfig("SoundLevel", 100, 0, 100);
+        Settings.ParticleLevel = Settings.GetFromConfig("ParticleLevel", 100, 0, 100);
 
-		MinecraftForge.EVENT_BUS.register(new EventHooks());
-		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+        Reference.BlockIDs.ObsidianStairs = Settings.GetFromConfig("ObsidianStairsID", Reference.BlockIDs.ObsidianStairs_Default, true);
+        Reference.BlockIDs.PortalModifier = Settings.GetFromConfig("PortalModifierID", Reference.BlockIDs.PortalModifier_Default, true);
+        Reference.BlockIDs.DialDevice = Settings.GetFromConfig("DialDeviceID", Reference.BlockIDs.DialDevice_Default, true);
 
-		try
-		{
-			@SuppressWarnings("rawtypes")
-			Class ccClass = Class.forName("dan200.ComputerCraft");
-			Field blockComputer = ccClass.getField("computerBlockID");
+        Reference.ItemIDs.PortalModifierUpgrade = Settings.GetFromConfig("PortalModifierUpgradeID", Reference.ItemIDs.PortalModifierUpgrade_Default, false);
+        Reference.ItemIDs.MiscItems = Settings.GetFromConfig("MiscItemsID", Reference.ItemIDs.MiscItems_Default, false);
+        Reference.ItemIDs.ItemScroll = Settings.GetFromConfig("ItemScrollID", Reference.ItemIDs.ItemScroll_Default, false);
 
-			Reference.ComputercraftComputer = Block.blocksList[blockComputer.getInt(blockComputer)];
-			Reference.LogData("Found and loaded ComputerCraft.");
-		}
-		catch (Exception e)
-		{
-			Reference.LogData("ComputerCraft was not found.");
-		}
+        Settings.AddToBorderBlocks(Settings.GetFromConfig("CustomBorderBlocks", ""));
+        Settings.AddToDestroyBlocks(Settings.GetFromConfig("CustomDestroyBlocks", "8,9,10,11,6,18,30,31,32,37,38,39,40,78,104,105,106,111,115"));
 
-		Blocks.Init();
-		TileEntities.Init();
-		Items.Init();
-	}
+        Settings.ConfigFile.save();
+    }
 
-	@ServerStarting
-	public void serverStarting(FMLServerStartingEvent event)
-	{
-		event.registerServerCommand(new CommandEP());
-		event.registerServerCommand(new CommandEPClient());
-		Reference.ServerHandler = new ServerHandler();
-	}
+    @ServerStarting
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandEP());
+        event.registerServerCommand(new CommandEPClient());
+        Reference.ServerHandler = new ServerHandler();
+    }
 }

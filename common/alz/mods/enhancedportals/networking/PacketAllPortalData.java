@@ -15,112 +15,112 @@ import alz.mods.enhancedportals.teleportation.TeleportData;
 
 public class PacketAllPortalData extends PacketUpdate
 {
-	public List<PortalData> portalDataList;
+    public List<PortalData> portalDataList;
 
-	public PacketAllPortalData()
-	{
-		portalDataList = new ArrayList<PortalData>();
-	}
+    public PacketAllPortalData()
+    {
+        portalDataList = new ArrayList<PortalData>();
+    }
 
-	public PacketAllPortalData(int x, int y, int z, int dim, List<PortalData> portalData)
-	{
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-		Dimension = dim;
-		portalDataList = portalData;
-	}
+    public PacketAllPortalData(int x, int y, int z, int dim, List<PortalData> portalData)
+    {
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+        Dimension = dim;
+        portalDataList = portalData;
+    }
 
-	@Override
-	public int getPacketID()
-	{
-		return Reference.Networking.DialDevice_AllPortalData;
-	}
+    @Override
+    public void addPacketData(DataOutputStream stream) throws IOException
+    {
+        super.addPacketData(stream);
 
-	@Override
-	public Packet250CustomPayload getClientPacket()
-	{
-		return null; // We don't want to send this packet from the client
-	}
+        stream.writeInt(portalDataList.size());
 
-	@Override
-	public Packet250CustomPayload getServerPacket()
-	{
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		DataOutputStream dataStream = new DataOutputStream(byteStream);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
+        for (PortalData portalData : portalDataList)
+        {
+            stream.writeUTF(portalData.DisplayName);
+            stream.writeInt(portalData.Texture.ordinal());
 
-		try
-		{
-			dataStream.writeByte(getPacketID());
-			addPacketData(dataStream);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+            if (portalData.TeleportData != null)
+            {
+                stream.writeBoolean(true);
+                stream.writeInt(portalData.TeleportData.getX());
+                stream.writeInt(portalData.TeleportData.getY());
+                stream.writeInt(portalData.TeleportData.getZ());
+                stream.writeInt(portalData.TeleportData.getDimension());
+            }
+            else
+            {
+                stream.writeBoolean(false);
+                stream.writeInt(portalData.Frequency);
+            }
+        }
+    }
 
-		packet.channel = Reference.MOD_ID;
-		packet.data = byteStream.toByteArray();
-		packet.length = packet.data.length;
-		packet.isChunkDataPacket = true;
+    @Override
+    public Packet250CustomPayload getClientPacket()
+    {
+        return null; // We don't want to send this packet from the client
+    }
 
-		return packet;
-	}
+    @Override
+    public void getPacketData(DataInputStream stream) throws IOException
+    {
+        super.getPacketData(stream);
 
-	@Override
-	public void getPacketData(DataInputStream stream) throws IOException
-	{
-		super.getPacketData(stream);
+        int size = stream.readInt();
 
-		int size = stream.readInt();
+        for (int i = 0; i < size; i++)
+        {
+            PortalData PortalData = new PortalData();
+            PortalData.DisplayName = stream.readUTF();
+            PortalData.Texture = PortalTexture.getPortalTexture(stream.readInt());
 
-		for (int i = 0; i < size; i++)
-		{
-			PortalData PortalData = new PortalData();
-			PortalData.DisplayName = stream.readUTF();
-			PortalData.Texture = PortalTexture.getPortalTexture(stream.readInt());
+            boolean hasTeleportData = stream.readBoolean();
 
-			boolean hasTeleportData = stream.readBoolean();
+            if (hasTeleportData)
+            {
+                PortalData.TeleportData = new TeleportData(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt());
+            }
+            else
+            {
+                PortalData.Frequency = stream.readInt();
+            }
 
-			if (hasTeleportData)
-			{
-				PortalData.TeleportData = new TeleportData(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt());
-			}
-			else
-			{
-				PortalData.Frequency = stream.readInt();
-			}
+            portalDataList.add(PortalData);
+        }
+    }
 
-			portalDataList.add(PortalData);
-		}
-	}
+    @Override
+    public int getPacketID()
+    {
+        return Reference.Networking.DialDevice_AllPortalData;
+    }
 
-	@Override
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		super.addPacketData(stream);
+    @Override
+    public Packet250CustomPayload getServerPacket()
+    {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        Packet250CustomPayload packet = new Packet250CustomPayload();
 
-		stream.writeInt(portalDataList.size());
+        try
+        {
+            dataStream.writeByte(getPacketID());
+            addPacketData(dataStream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
-		for (PortalData portalData : portalDataList)
-		{
-			stream.writeUTF(portalData.DisplayName);
-			stream.writeInt(portalData.Texture.ordinal());
+        packet.channel = Reference.MOD_ID;
+        packet.data = byteStream.toByteArray();
+        packet.length = packet.data.length;
+        packet.isChunkDataPacket = true;
 
-			if (portalData.TeleportData != null)
-			{
-				stream.writeBoolean(true);
-				stream.writeInt(portalData.TeleportData.getX());
-				stream.writeInt(portalData.TeleportData.getY());
-				stream.writeInt(portalData.TeleportData.getZ());
-				stream.writeInt(portalData.TeleportData.getDimension());
-			}
-			else
-			{
-				stream.writeBoolean(false);
-				stream.writeInt(portalData.Frequency);
-			}
-		}
-	}
+        return packet;
+    }
 }

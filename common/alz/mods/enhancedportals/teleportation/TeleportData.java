@@ -7,152 +7,154 @@ import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class TeleportData
 {
-	private double x, y, z;
-	private int dimension;
-	private boolean linksToModifier;
+    private double x, y, z;
+    private int dimension;
+    private boolean linksToModifier;
 
-	private int[] blockOffsetLocation;
-	private double[] entityOffsetLocation;
+    private int[] blockOffsetLocation;
+    private double[] entityOffsetLocation;
 
-	public TeleportData(int x, int y, int z, int dimension, boolean modifier)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.dimension = dimension;
-		linksToModifier = modifier;
-	}
+    public TeleportData(double x, double y, double z, int dimension)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.dimension = dimension;
+        linksToModifier = false;
+    }
 
-	public TeleportData(TileEntityPortalModifier modifier)
-	{
-		x = modifier.xCoord;
-		y = modifier.yCoord;
-		z = modifier.zCoord;
-		dimension = modifier.worldObj.provider.dimensionId;
-		linksToModifier = true;
-	}
+    public TeleportData(int x, int y, int z, int dimension)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.dimension = dimension;
+        linksToModifier = false;
+    }
 
-	public TeleportData(int x, int y, int z, int dimension)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.dimension = dimension;
-		linksToModifier = false;
-	}
+    public TeleportData(int x, int y, int z, int dimension, boolean modifier)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.dimension = dimension;
+        linksToModifier = modifier;
+    }
 
-	public TeleportData(double x, double y, double z, int dimension)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.dimension = dimension;
-		linksToModifier = false;
-	}
+    public TeleportData(TileEntityPortalModifier modifier)
+    {
+        x = modifier.xCoord;
+        y = modifier.yCoord;
+        z = modifier.zCoord;
+        dimension = modifier.worldObj.provider.dimensionId;
+        linksToModifier = true;
+    }
 
-	public int getX()
-	{
-		return (int) Math.floor(x);
-	}
+    public boolean equals(TeleportData data)
+    {
+        if (data.x == x && data.y == y && data.z == z && data.dimension == dimension && data.linksToModifier == data.linksToModifier)
+        {
+            return true;
+        }
 
-	public int getY()
-	{
-		return (int) Math.floor(y);
-	}
+        return false;
+    }
 
-	public int getZ()
-	{
-		return (int) Math.floor(z);
-	}
+    public int getDimension()
+    {
+        return dimension;
+    }
 
-	private void setupEntityOffset()
-	{
-		if (entityOffsetLocation == null)
-		{
-			entityOffsetLocation = EntityHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), getX(), getY(), getZ());
-		}
-	}
+    public String getDimensionAsString()
+    {
+        switch (dimension)
+        {
+            case -1:
+                return "The Nether";
+            case 0:
+                return "Overworld";
+            case 1:
+                return "The End";
+            default:
+                return "Unknown";
+        }
+    }
 
-	private void setupBlockOffset()
-	{
-		if (blockOffsetLocation == null)
-		{
-			blockOffsetLocation = WorldHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), getX(), getY(), getZ());
-		}
-	}
+    public int getX()
+    {
+        return (int) Math.floor(x);
+    }
 
-	public int getXOffsetBlock()
-	{
-		setupBlockOffset();
+    public int getXOffsetBlock()
+    {
+        setupBlockOffset();
 
-		return blockOffsetLocation[0];
-	}
+        return blockOffsetLocation[0];
+    }
 
-	public int getYOffsetBlock()
-	{
-		setupBlockOffset();
+    public double getXOffsetEntity()
+    {
+        setupEntityOffset();
 
-		return blockOffsetLocation[1];
-	}
+        return entityOffsetLocation[0];
+    }
 
-	public int getZOffsetBlock()
-	{
-		setupBlockOffset();
+    public int getY()
+    {
+        return (int) Math.floor(y);
+    }
 
-		return blockOffsetLocation[2];
-	}
+    public int getYOffsetBlock()
+    {
+        setupBlockOffset();
 
-	public double getXOffsetEntity()
-	{
-		setupEntityOffset();
+        return blockOffsetLocation[1];
+    }
 
-		return entityOffsetLocation[0];
-	}
+    public double getYOffsetEntity()
+    {
+        setupEntityOffset();
 
-	public double getYOffsetEntity()
-	{
-		setupEntityOffset();
+        return entityOffsetLocation[1];
+    }
 
-		return entityOffsetLocation[1];
-	}
+    public int getZ()
+    {
+        return (int) Math.floor(z);
+    }
 
-	public double getZOffsetEntity()
-	{
-		setupEntityOffset();
+    public int getZOffsetBlock()
+    {
+        setupBlockOffset();
 
-		return entityOffsetLocation[2];
-	}
+        return blockOffsetLocation[2];
+    }
 
-	public int getDimension()
-	{
-		return dimension;
-	}
+    public double getZOffsetEntity()
+    {
+        setupEntityOffset();
 
-	public String getDimensionAsString()
-	{
-		switch (dimension)
-		{
-			case -1:
-				return "The Nether";
-			case 0:
-				return "Overworld";
-			case 1:
-				return "The End";
-			default:
-				return "Unknown";
-		}
-	}
+        return entityOffsetLocation[2];
+    }
 
-	public boolean linksToModifier()
-	{
-		return linksToModifier;
-	}
+    public boolean linksToModifier()
+    {
+        return linksToModifier;
+    }
 
-	public boolean equals(TeleportData data)
-	{
-		if (data.x == x && data.y == y && data.z == z && data.dimension == dimension && data.linksToModifier == data.linksToModifier)
-			return true;
+    private void setupBlockOffset()
+    {
+        if (blockOffsetLocation == null)
+        {
+            blockOffsetLocation = WorldHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), getX(), getY(), getZ());
+        }
+    }
 
-		return false;
-	}
+    private void setupEntityOffset()
+    {
+        if (entityOffsetLocation == null)
+        {
+            entityOffsetLocation = EntityHelper.offsetDirectionBased(MinecraftServer.getServer().worldServerForDimension(dimension), getX(), getY(), getZ());
+        }
+    }
 }

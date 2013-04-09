@@ -9,42 +9,42 @@ import alz.mods.enhancedportals.reference.Reference;
 
 public class PacketDialDevice extends PacketUpdate
 {
-	public int SubID;
+    public int SubID;
 
-	@Override
-	public int getPacketID()
-	{
-		return Reference.Networking.DialDevice_GenericData;
-	}
+    @Override
+    public void addPacketData(DataOutputStream stream) throws IOException
+    {
+        super.addPacketData(stream);
 
-	public int getSubPacketID()
-	{
-		return SubID;
-	}
+        stream.writeInt(SubID);
+    }
 
-	@Override
-	public Packet250CustomPayload getClientPacket()
-	{
-		return null;
-	}
+    @Override
+    public Packet250CustomPayload getClientPacket()
+    {
+        return null;
+    }
 
-	@Override
-	public Packet250CustomPayload getServerPacket()
-	{
-		return null;
-	}
+    @Override
+    public void getPacketData(DataInputStream stream) throws IOException
+    {
+        super.getPacketData(stream);
+    }
 
-	@Override
-	public void getPacketData(DataInputStream stream) throws IOException
-	{
-		super.getPacketData(stream);
-	}
+    @Override
+    public int getPacketID()
+    {
+        return Reference.Networking.DialDevice_GenericData;
+    }
 
-	@Override
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		super.addPacketData(stream);
+    @Override
+    public Packet250CustomPayload getServerPacket()
+    {
+        return null;
+    }
 
-		stream.writeInt(SubID);
-	}
+    public int getSubPacketID()
+    {
+        return SubID;
+    }
 }

@@ -20,199 +20,223 @@ import cpw.mods.fml.relauncher.Side;
 
 public class DialDeviceNetwork implements INetworkManager
 {
-	public Map<String, List<PortalData>> Network;
-	private String SaveFile;
-	private MinecraftServer serverInstance;
+    public Map<String, List<PortalData>> Network;
+    private String SaveFile;
+    private MinecraftServer serverInstance;
 
-	public DialDeviceNetwork(MinecraftServer server)
-	{
-		serverInstance = server;
-		WorldServer world = serverInstance.worldServerForDimension(0);
-		Network = new HashMap<String, List<PortalData>>();
+    public DialDeviceNetwork(MinecraftServer server)
+    {
+        serverInstance = server;
+        WorldServer world = serverInstance.worldServerForDimension(0);
+        Network = new HashMap<String, List<PortalData>>();
 
-		if (FMLCommonHandler.instance().getSide() == Side.SERVER)
-		{
-			SaveFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + "_dd.dat").getAbsolutePath();
-		}
-		else
-		{
-			SaveFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + "_dd.dat").getAbsolutePath();
-		}
+        if (FMLCommonHandler.instance().getSide() == Side.SERVER)
+        {
+            SaveFile = serverInstance.getFile(world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + "_dd.dat").getAbsolutePath();
+        }
+        else
+        {
+            SaveFile = serverInstance.getFile("saves" + File.separator + world.getSaveHandler().getSaveDirectoryName() + File.separator + Reference.MOD_ID + "_dd.dat").getAbsolutePath();
+        }
 
-		if (!new File(SaveFile).exists())
-			return;
+        if (!new File(SaveFile).exists())
+        {
+            return;
+        }
 
-		loadData();
-	}
+        loadData();
+    }
 
-	@Override
-	public void loadData()
-	{
-		BufferedReader reader = null;
-		String network = "undefined";
-		List<PortalData> items = new ArrayList<PortalData>();
+    public void addNetwork(String key)
+    {
+        if (!hasNetwork(key))
+        {
+            return;
+        }
 
-		try
-		{
-			reader = new BufferedReader(new FileReader(SaveFile));
-			String line = null;
+        Network.put(key, new ArrayList<PortalData>());
+    }
 
-			while ((line = reader.readLine()) != null)
-			{
-				if (line.startsWith(">"))
-				{
-					if (network != "undefined")
-					{
-						addNetwork(network);
+    public void addToNetwork(String key, PortalData data)
+    {
+        if (!hasNetwork(key))
+        {
+            return;
+        }
 
-						for (PortalData item : items)
-						{
-							addToNetwork(network, item);
-						}
-					}
+        if (networkContains(key, data))
+        {
+            return;
+        }
 
-					network = line.replace(">", "");
-					items = new ArrayList<PortalData>();
-				}
-				else if (line.startsWith("#"))
-				{
-					String theLine[] = line.replace("#", "").split(",");
+        getNetwork(key).add(data);
+    }
 
-					if (theLine.length == 6)
-					{
-						items.add(new PortalData(theLine[0], Integer.parseInt(theLine[1]), new TeleportData(Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3]), Integer.parseInt(theLine[4]), Integer.parseInt(theLine[5]))));
-					}
-				}
-			}
+    public String getFrequency(PortalData data)
+    {
+        for (String key : Network.keySet())
+        {
+            if (isInNetwork(key, data))
+            {
+                return key;
+            }
+        }
 
-			if (network != "undefined")
-			{
-				addNetwork(network);
+        return "undefined";
+    }
 
-				for (PortalData item : items)
-				{
-					addToNetwork(network, item);
-				}
-			}
+    public List<PortalData> getNetwork(String key)
+    {
+        if (!hasNetwork(key))
+        {
+            return null;
+        }
 
-			reader.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+        return Network.get(key);
+    }
 
-	@Override
-	public void saveData()
-	{
-		BufferedWriter writer;
+    public boolean hasNetwork(String key)
+    {
+        for (String key2 : Network.keySet())
+        {
+            if (key.equals(key2))
+            {
+                return true;
+            }
+        }
 
-		if (Network.keySet() == null)
-			return;
+        return false;
+    }
 
-		try
-		{
-			writer = new BufferedWriter(new FileWriter(SaveFile));
+    public boolean isInNetwork(String key, PortalData data)
+    {
+        if (!hasNetwork(key))
+        {
+            return false;
+        }
 
-			for (String key : Network.keySet())
-			{
-				List<PortalData> items = getNetwork(key);
+        return networkContains(key, data);
+    }
 
-				writer.write(">" + key);
-				writer.newLine();
+    @Override
+    public void loadData()
+    {
+        BufferedReader reader = null;
+        String network = "undefined";
+        List<PortalData> items = new ArrayList<PortalData>();
 
-				for (PortalData item : items)
-				{
-					writer.write("#" + item.DisplayName + "," + item.Texture.ordinal() + "," + item.TeleportData.getX() + "," + item.TeleportData.getY() + "," + item.TeleportData.getZ() + "," + item.TeleportData.getDimension());
-					writer.newLine();
-				}
-			}
+        try
+        {
+            reader = new BufferedReader(new FileReader(SaveFile));
+            String line = null;
 
-			writer.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+            while ((line = reader.readLine()) != null)
+            {
+                if (line.startsWith(">"))
+                {
+                    if (network != "undefined")
+                    {
+                        addNetwork(network);
 
-	public boolean hasNetwork(String key)
-	{
-		for (String key2 : Network.keySet())
-		{
-			if (key.equals(key2))
-				return true;
-		}
+                        for (PortalData item : items)
+                        {
+                            addToNetwork(network, item);
+                        }
+                    }
 
-		return false;
-	}
+                    network = line.replace(">", "");
+                    items = new ArrayList<PortalData>();
+                }
+                else if (line.startsWith("#"))
+                {
+                    String theLine[] = line.replace("#", "").split(",");
 
-	public List<PortalData> getNetwork(String key)
-	{
-		if (!hasNetwork(key))
-			return null;
+                    if (theLine.length == 6)
+                    {
+                        items.add(new PortalData(theLine[0], Integer.parseInt(theLine[1]), new TeleportData(Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3]), Integer.parseInt(theLine[4]), Integer.parseInt(theLine[5]))));
+                    }
+                }
+            }
 
-		return Network.get(key);
-	}
+            if (network != "undefined")
+            {
+                addNetwork(network);
 
-	public void addNetwork(String key)
-	{
-		if (hasNetwork(key))
-			return;
+                for (PortalData item : items)
+                {
+                    addToNetwork(network, item);
+                }
+            }
 
-		Network.put(key, new ArrayList<PortalData>());
-	}
+            reader.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public void addToNetwork(String key, PortalData data)
-	{
-		if (!hasNetwork(key))
-			return;
+    public boolean networkContains(String key, PortalData data)
+    {
+        if (!hasNetwork(key))
+        {
+            return false;
+        }
 
-		if (networkContains(key, data))
-			return;
+        for (PortalData keyData : getNetwork(key))
+        {
+            if (keyData.equals(key))
+            {
+                return true;
+            }
+        }
 
-		getNetwork(key).add(data);
-	}
+        return false;
+    }
 
-	public void removeNetwork(String key)
-	{
-		if (!hasNetwork(key))
-			return;
+    public void removeNetwork(String key)
+    {
+        if (!hasNetwork(key))
+        {
+            return;
+        }
 
-		Network.remove(key);
-	}
+        Network.remove(key);
+    }
 
-	public boolean networkContains(String key, PortalData data)
-	{
-		if (!hasNetwork(key))
-			return false;
+    @Override
+    public void saveData()
+    {
+        BufferedWriter writer;
 
-		for (PortalData keyData : getNetwork(key))
-		{
-			if (keyData.equals(key))
-				return true;
-		}
+        if (Network.keySet() == null)
+        {
+            return;
+        }
 
-		return false;
-	}
+        try
+        {
+            writer = new BufferedWriter(new FileWriter(SaveFile));
 
-	public boolean isInNetwork(String key, PortalData data)
-	{
-		if (!hasNetwork(key))
-			return false;
+            for (String key : Network.keySet())
+            {
+                List<PortalData> items = getNetwork(key);
 
-		return networkContains(key, data);
-	}
+                writer.write(">" + key);
+                writer.newLine();
 
-	public String getFrequency(PortalData data)
-	{
-		for (String key : Network.keySet())
-		{
-			if (isInNetwork(key, data))
-				return key;
-		}
+                for (PortalData item : items)
+                {
+                    writer.write("#" + item.DisplayName + "," + item.Texture.ordinal() + "," + item.TeleportData.getX() + "," + item.TeleportData.getY() + "," + item.TeleportData.getZ() + "," + item.TeleportData.getDimension());
+                    writer.newLine();
+                }
+            }
 
-		return "undefined";
-	}
+            writer.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

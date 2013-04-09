@@ -25,169 +25,179 @@ import cpw.mods.fml.common.network.Player;
 
 public class PacketHandler implements IPacketHandler
 {
-	@Override
-	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
-	{
-		if (!packet.channel.equals(Reference.MOD_ID))
-			return;
+    private void onAddPortalData(PacketAddPortalData packet, Player player)
+    {
+        if (Reference.ServerHandler == null || ((EntityPlayer) player).worldObj.isRemote)
+        {
+            return;
+        }
 
-		DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+        World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
 
-		try
-		{
-			int packetID = dataStream.read();
+        if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.DialDevice && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+        {
+            TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
 
-			if (packetID == Reference.Networking.TileEntityUpdate)
-			{
-				byte packetType = dataStream.readByte();
+            ItemStack itemScroll = dialDevice.inventory[0], itemModifier = dialDevice.inventory[1];
+            PortalData portalData = packet.portalData;
 
-				PacketTileUpdate packetUpdate = new PacketTileUpdate();
-				packetUpdate.getPacketData(dataStream);
-				onTileEntityUpdate(packetUpdate, packetType);
-			}
-			else if (packetID == Reference.Networking.DataRequest)
-			{
-				PacketDataRequest packetData = new PacketDataRequest();
-				packetData.getPacketData(dataStream);
-				onDataRequest(packetData, player);
-			}
-			else if (packetID == Reference.Networking.GuiRequest)
-			{
-				PacketGuiRequest packetGui = new PacketGuiRequest();
-				packetGui.getPacketData(dataStream);
-				onGuiRequest(packetGui, player);
-			}
-			else if (packetID == Reference.Networking.DialDevice_NewPortalData)
-			{
-				PacketAddPortalData packetPortal = new PacketAddPortalData();
-				packetPortal.getPacketData(dataStream);
-				onAddPortalData(packetPortal, player);
-			}
-			else if (packetID == Reference.Networking.DialDevice_AllPortalData)
-			{
-				PacketAllPortalData packetPortal = new PacketAllPortalData();
-				packetPortal.getPacketData(dataStream);
-				ClientProxy.onAllPacketData(packetPortal);
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+            dialDevice.inventory = new ItemStack[dialDevice.getSizeInventory()];
 
-	private void onTileEntityUpdate(PacketTileUpdate packet, byte type)
-	{
-		if (type == 1)
-		{
-			ClientProxy.OnTileUpdate(packet, type);
-			return;
-		}
+            if (itemScroll.itemID == Reference.ItemIDs.ItemScroll + 256 && itemScroll.getItemDamage() == 1)
+            {
+                portalData.TeleportData = ((ItemScroll) itemScroll.getItem()).getLocationData(itemScroll);
+            }
 
-		World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
-		//World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
+            if (itemModifier != null)
+            {
+                if (itemModifier.itemID == Item.bucketLava.itemID)
+                {
+                    portalData.Texture = PortalTexture.LAVA;
+                }
+                else if (itemModifier.itemID == Item.bucketWater.itemID)
+                {
+                    portalData.Texture = PortalTexture.WATER;
+                }
+                else if (itemModifier.itemID == Item.dyePowder.itemID)
+                {
+                    portalData.Texture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(itemModifier.getItemDamage()));
+                }
+            }
+            else
+            {
+                portalData.Texture = PortalTexture.PURPLE;
+            }
 
-		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
-		{
-			TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+            dialDevice.PortalDataList.add(portalData);
+            Reference.ServerHandler.sendDialDevicePacketToNearbyClients(dialDevice);
+        }
+    }
 
-			if (tileEntity instanceof TileEntityPortalModifier)
-			{
-				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+    private void onDataRequest(PacketDataRequest packet, Player player)
+    {
+        if (Reference.ServerHandler == null)
+        {
+            return;
+        }
 
-				modifier.parseUpdatePacket(packet);
+        World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
 
-				Reference.ServerHandler.sendUpdatePacketToNearbyClients(modifier);
-				Reference.ServerHandler.ModifierNetwork.addToNetwork("" + packet.data[0], new TeleportData(packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension));
+        if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
 
-				//Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
-				//Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension);
-			}
-		}
-	}
+            if (tileEntity instanceof TileEntityPortalModifier)
+            {
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+                //Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
+                Reference.ServerHandler.sendUpdatePacketToPlayer(modifier, player);
+            }
+            else if (tileEntity instanceof TileEntityNetherPortal)
+            {
+                TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;
+                //Reference.LinkData.sendUpdatePacketToPlayer(netherPortal, player);
+                Reference.ServerHandler.sendUpdatePacketToPlayer(netherPortal, player);
+            }
+        }
+    }
 
-	private void onDataRequest(PacketDataRequest packet, Player player)
-	{
-		if (Reference.ServerHandler == null)
-			return;
+    private void onGuiRequest(PacketGuiRequest packet, Player player)
+    {
+        if (!(player instanceof EntityPlayer))
+        {
+            return;
+        }
 
-		World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
+        EntityPlayer Player = (EntityPlayer) player;
 
-		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
-		{
-			TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+        if (Reference.ServerHandler == null || Player.worldObj.isRemote)
+        {
+            return;
+        }
 
-			if (tileEntity instanceof TileEntityPortalModifier)
-			{
-				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-				//Reference.LinkData.sendUpdatePacketToPlayer(modifier, player);
-				Reference.ServerHandler.sendUpdatePacketToPlayer(modifier, player);
-			}
-			else if (tileEntity instanceof TileEntityNetherPortal)
-			{
-				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;
-				//Reference.LinkData.sendUpdatePacketToPlayer(netherPortal, player);
-				Reference.ServerHandler.sendUpdatePacketToPlayer(netherPortal, player);
-			}
-		}
-	}
+        Player.openGui(EnhancedPortals.instance, packet.guiID, Player.worldObj, packet.xCoord, packet.yCoord, packet.zCoord);
+    }
 
-	private void onGuiRequest(PacketGuiRequest packet, Player player)
-	{
-		if (!(player instanceof EntityPlayer))
-			return;
+    @Override
+    public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
+    {
+        if (!packet.channel.equals(Reference.MOD_ID))
+        {
+            return;
+        }
 
-		EntityPlayer Player = (EntityPlayer) player;
+        DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
 
-		if (Reference.ServerHandler == null || Player.worldObj.isRemote)
-			return;
+        try
+        {
+            int packetID = dataStream.read();
 
-		Player.openGui(EnhancedPortals.instance, packet.guiID, Player.worldObj, packet.xCoord, packet.yCoord, packet.zCoord);
-	}
+            if (packetID == Reference.Networking.TileEntityUpdate)
+            {
+                byte packetType = dataStream.readByte();
 
-	private void onAddPortalData(PacketAddPortalData packet, Player player)
-	{
-		if (Reference.ServerHandler == null || ((EntityPlayer) player).worldObj.isRemote)
-			return;
+                PacketTileUpdate packetUpdate = new PacketTileUpdate();
+                packetUpdate.getPacketData(dataStream);
+                onTileEntityUpdate(packetUpdate, packetType);
+            }
+            else if (packetID == Reference.Networking.DataRequest)
+            {
+                PacketDataRequest packetData = new PacketDataRequest();
+                packetData.getPacketData(dataStream);
+                onDataRequest(packetData, player);
+            }
+            else if (packetID == Reference.Networking.GuiRequest)
+            {
+                PacketGuiRequest packetGui = new PacketGuiRequest();
+                packetGui.getPacketData(dataStream);
+                onGuiRequest(packetGui, player);
+            }
+            else if (packetID == Reference.Networking.DialDevice_NewPortalData)
+            {
+                PacketAddPortalData packetPortal = new PacketAddPortalData();
+                packetPortal.getPacketData(dataStream);
+                onAddPortalData(packetPortal, player);
+            }
+            else if (packetID == Reference.Networking.DialDevice_AllPortalData)
+            {
+                PacketAllPortalData packetPortal = new PacketAllPortalData();
+                packetPortal.getPacketData(dataStream);
+                ClientProxy.onAllPacketData(packetPortal);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-		World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
+    private void onTileEntityUpdate(PacketTileUpdate packet, byte type)
+    {
+        if (type == 1)
+        {
+            ClientProxy.OnTileUpdate(packet, type);
+            return;
+        }
 
-		if (world.getBlockId(packet.xCoord, packet.yCoord, packet.zCoord) == Reference.BlockIDs.DialDevice && world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
-		{
-			TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+        World world = Reference.ServerHandler.getWorldServerForDimension(packet.Dimension);
+        //World world = Reference.LinkData.serverInstance.worldServerForDimension(packet.Dimension);
 
-			ItemStack itemScroll = dialDevice.inventory[0], itemModifier = dialDevice.inventory[1];
-			PortalData portalData = packet.portalData;
+        if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
 
-			dialDevice.inventory = new ItemStack[dialDevice.getSizeInventory()];
+            if (tileEntity instanceof TileEntityPortalModifier)
+            {
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
 
-			if (itemScroll.itemID == Reference.ItemIDs.ItemScroll + 256 && itemScroll.getItemDamage() == 1)
-			{
-				portalData.TeleportData = ((ItemScroll) itemScroll.getItem()).getLocationData(itemScroll);
-			}
+                modifier.parseUpdatePacket(packet);
 
-			if (itemModifier != null)
-			{
-				if (itemModifier.itemID == Item.bucketLava.itemID)
-				{
-					portalData.Texture = PortalTexture.LAVA;
-				}
-				else if (itemModifier.itemID == Item.bucketWater.itemID)
-				{
-					portalData.Texture = PortalTexture.WATER;
-				}
-				else if (itemModifier.itemID == Item.dyePowder.itemID)
-				{
-					portalData.Texture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(itemModifier.getItemDamage()));
-				}
-			}
-			else
-			{
-				portalData.Texture = PortalTexture.PURPLE;
-			}
+                Reference.ServerHandler.sendUpdatePacketToNearbyClients(modifier);
+                Reference.ServerHandler.ModifierNetwork.addToNetwork("" + packet.data[0], new TeleportData(packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension));
 
-			dialDevice.PortalDataList.add(portalData);
-			Reference.ServerHandler.sendDialDevicePacketToNearbyClients(dialDevice);
-		}
-	}
+                //Reference.LinkData.sendUpdatePacketToNearbyClients(modifier);
+                //Reference.LinkData.AddToFrequency(packet.data[0], packet.xCoord, packet.yCoord, packet.zCoord, packet.Dimension);
+            }
+        }
+    }
 }

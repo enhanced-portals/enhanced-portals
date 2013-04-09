@@ -21,74 +21,78 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
-	public static void SendBlockUpdate(ITileEntityNetworking tileEntity)
-	{
-		PacketDispatcher.sendPacketToServer(tileEntity.getUpdatePacket().getClientPacket());
-	}
+    public static void onAllPacketData(PacketAllPortalData packetPortal)
+    {
+        World world = FMLClientHandler.instance().getClient().theWorld;
 
-	public static void OnTileUpdate(PacketTileUpdate packet, byte type)
-	{
-		if (type == 0)
-			return;
+        if (world.provider.dimensionId != packetPortal.Dimension)
+        {
+            return;
+        }
 
-		World world = FMLClientHandler.instance().getClient().theWorld;
+        if (world.getBlockId(packetPortal.xCoord, packetPortal.yCoord, packetPortal.zCoord) == Reference.BlockIDs.DialDevice)
+        {
+            TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(packetPortal.xCoord, packetPortal.yCoord, packetPortal.zCoord);
 
-		if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
-		{
-			TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
+            dialDevice.PortalDataList = null;
+            dialDevice.PortalDataList = packetPortal.portalDataList;
+        }
+    }
 
-			if (tileEntity instanceof TileEntityPortalModifier)
-			{
-				TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+    public static void OnTileUpdate(PacketTileUpdate packet, byte type)
+    {
+        if (type == 0)
+        {
+            return;
+        }
 
-				modifier.parseUpdatePacket(packet);
-			}
-			else if (tileEntity instanceof TileEntityNetherPortal)
-			{
-				TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;
+        World world = FMLClientHandler.instance().getClient().theWorld;
 
-				netherPortal.parseUpdatePacket(packet);
-			}
-		}
-	}
+        if (world.blockHasTileEntity(packet.xCoord, packet.yCoord, packet.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(packet.xCoord, packet.yCoord, packet.zCoord);
 
-	public static void RequestTileData(TileEntity tileEntity)
-	{
-		PacketDispatcher.sendPacketToServer(new PacketDataRequest(tileEntity).getClientPacket());
-	}
+            if (tileEntity instanceof TileEntityPortalModifier)
+            {
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
 
-	public static void OpenGuiFromLocal(EntityPlayer player, TileEntity tileEntity, int guiID)
-	{
-		PacketDispatcher.sendPacketToServer(new PacketGuiRequest(guiID, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord).getClientPacket());
-		player.openGui(EnhancedPortals.instance, guiID, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-	}
+                modifier.parseUpdatePacket(packet);
+            }
+            else if (tileEntity instanceof TileEntityNetherPortal)
+            {
+                TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) tileEntity;
 
-	public static void SendNewPortalData(TileEntityDialDevice dialDevice, String text)
-	{
-		PacketAddPortalData packet = new PacketAddPortalData();
-		packet.portalData = new PortalData();
-		packet.portalData.DisplayName = text;
-		packet.Dimension = dialDevice.worldObj.provider.dimensionId;
-		packet.xCoord = dialDevice.xCoord;
-		packet.yCoord = dialDevice.yCoord;
-		packet.zCoord = dialDevice.zCoord;
+                netherPortal.parseUpdatePacket(packet);
+            }
+        }
+    }
 
-		PacketDispatcher.sendPacketToServer(packet.getClientPacket());
-	}
+    public static void OpenGuiFromLocal(EntityPlayer player, TileEntity tileEntity, int guiID)
+    {
+        PacketDispatcher.sendPacketToServer(new PacketGuiRequest(guiID, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord).getClientPacket());
+        player.openGui(EnhancedPortals.instance, guiID, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+    }
 
-	public static void onAllPacketData(PacketAllPortalData packetPortal)
-	{
-		World world = FMLClientHandler.instance().getClient().theWorld;
+    public static void RequestTileData(TileEntity tileEntity)
+    {
+        PacketDispatcher.sendPacketToServer(new PacketDataRequest(tileEntity).getClientPacket());
+    }
 
-		if (world.provider.dimensionId != packetPortal.Dimension)
-			return;
+    public static void SendBlockUpdate(ITileEntityNetworking tileEntity)
+    {
+        PacketDispatcher.sendPacketToServer(tileEntity.getUpdatePacket().getClientPacket());
+    }
 
-		if (world.getBlockId(packetPortal.xCoord, packetPortal.yCoord, packetPortal.zCoord) == Reference.BlockIDs.DialDevice)
-		{
-			TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(packetPortal.xCoord, packetPortal.yCoord, packetPortal.zCoord);
+    public static void SendNewPortalData(TileEntityDialDevice dialDevice, String text)
+    {
+        PacketAddPortalData packet = new PacketAddPortalData();
+        packet.portalData = new PortalData();
+        packet.portalData.DisplayName = text;
+        packet.Dimension = dialDevice.worldObj.provider.dimensionId;
+        packet.xCoord = dialDevice.xCoord;
+        packet.yCoord = dialDevice.yCoord;
+        packet.zCoord = dialDevice.zCoord;
 
-			dialDevice.PortalDataList = null;
-			dialDevice.PortalDataList = packetPortal.portalDataList;
-		}
-	}
+        PacketDispatcher.sendPacketToServer(packet.getClientPacket());
+    }
 }

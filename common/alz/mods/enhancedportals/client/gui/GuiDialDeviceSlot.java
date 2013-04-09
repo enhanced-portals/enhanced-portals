@@ -11,106 +11,116 @@ import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiDialDeviceSlot extends GuiSlot
 {
-	GuiDialDevice parentGui;
-	Minecraft mc;
-	FontRenderer fontRenderer;
+    GuiDialDevice parentGui;
+    Minecraft mc;
+    FontRenderer fontRenderer;
 
-	public GuiDialDeviceSlot(GuiDialDevice parentGui)
-	{
-		super(FMLClientHandler.instance().getClient(), parentGui.width, parentGui.height, 32, parentGui.height - 64, 36);
-		this.parentGui = parentGui;
+    public GuiDialDeviceSlot()
+    {
+        super(FMLClientHandler.instance().getClient(), FMLClientHandler.instance().getClient().currentScreen.width, FMLClientHandler.instance().getClient().currentScreen.height, 32, FMLClientHandler.instance().getClient().currentScreen.height - 64, 36);
 
-		mc = FMLClientHandler.instance().getClient();
-		fontRenderer = mc.fontRenderer;
-	}
+        mc = FMLClientHandler.instance().getClient();
+        fontRenderer = mc.fontRenderer;
+    }
 
-	public GuiDialDeviceSlot()
-	{
-		super(FMLClientHandler.instance().getClient(), FMLClientHandler.instance().getClient().currentScreen.width, FMLClientHandler.instance().getClient().currentScreen.height, 32, FMLClientHandler.instance().getClient().currentScreen.height - 64, 36);
+    public GuiDialDeviceSlot(GuiDialDevice parentGui)
+    {
+        super(FMLClientHandler.instance().getClient(), parentGui.width, parentGui.height, 32, parentGui.height - 64, 36);
+        this.parentGui = parentGui;
 
-		mc = FMLClientHandler.instance().getClient();
-		fontRenderer = mc.fontRenderer;
-	}
+        mc = FMLClientHandler.instance().getClient();
+        fontRenderer = mc.fontRenderer;
+    }
 
-	@Override
-	protected int getSize()
-	{
-		if (parentGui == null)
-			return 0;
+    @Override
+    protected void drawBackground()
+    {
+        if (parentGui == null)
+        {
+            return;
+        }
 
-		return parentGui.getSize().size();
-	}
+        parentGui.drawDefaultBackground();
+    }
 
-	@Override
-	protected void elementClicked(int i, boolean flag)
-	{
-		if (parentGui == null)
-			return;
+    @Override
+    protected void drawSlot(int i, int j, int k, int l, Tessellator tessellator)
+    {
+        if (parentGui == null)
+        {
+            return;
+        }
 
-		parentGui.onElementSelected(i);
+        PortalData currentEntry = parentGui.getSize().get(i);
+        String doubleClick = Localizations.getLocalizedString(Strings.GUI_DialDevice_NotSelected), selected = Localizations.getLocalizedString(Strings.GUI_DialDevice_Selected);
 
-		if (flag)
-		{
-			parentGui.selectWorld(i);
-		}
-	}
+        int mainColour = 16777215;
+        boolean showString = false;
+        String displayName = currentEntry.DisplayName;
 
-	@Override
-	protected boolean isSelected(int i)
-	{
-		if (parentGui == null)
-			return false;
+        if (displayName.length() > 35)
+        {
+            displayName = displayName.substring(0, 35);
+        }
 
-		return i == parentGui.getSelectedWorld();
-	}
+        if (parentGui.getActive() == i)
+        {
+            mainColour = 56162;
+        }
+        else if (i != parentGui.getActive() && i == parentGui.getSelectedWorld())
+        {
+            showString = true;
+        }
 
-	@Override
-	protected void drawBackground()
-	{
-		if (parentGui == null)
-			return;
+        parentGui.drawString(fontRenderer, displayName, j + 2, k + 1, mainColour);
+        parentGui.drawString(fontRenderer, String.format(Localizations.getLocalizedString(Strings.GUI_DialDevice_Coords), currentEntry.TeleportData.getDimensionAsString(), currentEntry.TeleportData.getX(), currentEntry.TeleportData.getY(), currentEntry.TeleportData.getZ()), j + 2, k + 12, 8421504);
+        parentGui.drawString(fontRenderer, currentEntry.GetTextureAsString(), j + 2, k + 12 + 10, 8421504);
 
-		parentGui.drawDefaultBackground();
-	}
+        if (showString)
+        {
+            parentGui.drawString(fontRenderer, doubleClick, j + 215 - fontRenderer.getStringWidth(doubleClick), k + 22, 8421504 / 2);
+        }
+        else if (!showString && parentGui.getSelectedWorld() == i)
+        {
+            parentGui.drawString(fontRenderer, selected, j + 215 - fontRenderer.getStringWidth(selected), k + 22, 8421504 / 2);
+        }
+    }
 
-	@Override
-	protected void drawSlot(int i, int j, int k, int l, Tessellator tessellator)
-	{
-		if (parentGui == null)
-			return;
+    @Override
+    protected void elementClicked(int i, boolean flag)
+    {
+        if (parentGui == null)
+        {
+            return;
+        }
 
-		PortalData currentEntry = parentGui.getSize().get(i);
-		String doubleClick = Localizations.getLocalizedString(Strings.GUI_DialDevice_NotSelected), selected = Localizations.getLocalizedString(Strings.GUI_DialDevice_Selected);
+        parentGui.onElementSelected(i);
 
-		int mainColour = 16777215;
-		boolean showString = false;
-		String displayName = currentEntry.DisplayName;
+        if (flag)
+        {
+            parentGui.selectWorld(i);
+        }
+    }
 
-		if (displayName.length() > 35)
-		{
-			displayName = displayName.substring(0, 35);
-		}
+    @Override
+    protected int getSize()
+    {
+        if (parentGui == null)
+        {
+            return 0;
+        }
 
-		if (parentGui.getActive() == i)
-		{
-			mainColour = 56162;
-		}
-		else if (i != parentGui.getActive() && i == parentGui.getSelectedWorld())
-		{
-			showString = true;
-		}
+        return parentGui.getSize().size();
+    }
 
-		parentGui.drawString(fontRenderer, displayName, j + 2, k + 1, mainColour);
-		parentGui.drawString(fontRenderer, String.format(Localizations.getLocalizedString(Strings.GUI_DialDevice_Coords), currentEntry.TeleportData.getDimensionAsString(), currentEntry.TeleportData.getX(), currentEntry.TeleportData.getY(), currentEntry.TeleportData.getZ()), j + 2, k + 12, 8421504);
-		parentGui.drawString(fontRenderer, currentEntry.GetTextureAsString(), j + 2, k + 12 + 10, 8421504);
+    @Override
+    protected boolean isSelected(int i)
+    {
+        if (parentGui == null)
+        {
+            return false;
+        }
 
-		if (showString)
-		{
-			parentGui.drawString(fontRenderer, doubleClick, j + 215 - fontRenderer.getStringWidth(doubleClick), k + 22, 8421504 / 2);
-		}
-		else if (!showString && parentGui.getSelectedWorld() == i)
-		{
-			parentGui.drawString(fontRenderer, selected, j + 215 - fontRenderer.getStringWidth(selected), k + 22, 8421504 / 2);
-		}
-	}
+        return i == parentGui.getSelectedWorld();
+    }
 }

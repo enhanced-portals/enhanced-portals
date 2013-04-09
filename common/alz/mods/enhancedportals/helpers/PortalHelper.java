@@ -14,344 +14,382 @@ import alz.mods.enhancedportals.reference.Strings;
 
 public class PortalHelper
 {
-	public static enum PortalShape
-	{
-		X, Z, HORIZONTAL, INVALID
-	}
+    public static enum PortalShape
+    {
+        X, Z, HORIZONTAL, INVALID
+    }
 
-	public static PortalShape getPortalShape(IBlockAccess world, int x, int y, int z)
-	{
-		if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
-			return PortalShape.X;
-		else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
-			return PortalShape.Z;
-		else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true))
-			return PortalShape.HORIZONTAL;
+    public static boolean createPortal(World world, int x, int y, int z, int meta)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
 
-		return PortalShape.INVALID;
-	}
+        if (!WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
+        {
+            return false;
+        }
 
-	public static PortalShape getPortalShape(World world, int x, int y, int z)
-	{
-		if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
-			return PortalShape.X;
-		else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
-			return PortalShape.Z;
-		else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true))
-			return PortalShape.HORIZONTAL;
+        if (!createPortal(world, x, y, z, meta, PortalShape.X))
+        {
+            if (!createPortal(world, x, y, z, meta, PortalShape.Z))
+            {
+                if (!createPortal(world, x, y, z, meta, PortalShape.HORIZONTAL))
+                {
+                    return false;
+                }
+            }
+        }
 
-		return PortalShape.INVALID;
-	}
+        return true;
+    }
 
-	public static boolean createPortalAround(World world, int x, int y, int z)
-	{
-		return createPortalAround(world, x, y, z, 0, null);
-	}
+    public static boolean createPortal(World world, int x, int y, int z, int meta, PortalShape shape)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
 
-	public static boolean createPortalAround(World world, int x, int y, int z, int meta)
-	{
-		return createPortalAround(world, x, y, z, meta, null);
-	}
+        if (shape == PortalShape.INVALID || !WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
+        {
+            return false;
+        }
 
-	public static boolean createPortalAround(World world, int x, int y, int z, EntityPlayer player)
-	{
-		return createPortalAround(world, x, y, z, 0, player);
-	}
+        Queue<int[]> queue = new LinkedList<int[]>();
+        Queue<int[]> addedBlocks = new LinkedList<int[]>();
+        int usedChances = 0, maxChances = 10;
 
-	public static boolean createPortalAround(World world, int x, int y, int z, int meta, EntityPlayer player)
-	{
-		if (world.isRemote)
-			return true;
+        queue.add(new int[] { x, y, z });
 
-		boolean createdPortal = false;
+        while (!queue.isEmpty())
+        {
+            int[] current = queue.remove();
+            int currentID = world.getBlockId(current[0], current[1], current[2]);
 
-		if (player != null)
-		{
-			if (player.inventory.mainInventory[player.inventory.currentItem] == null)
-				return false;
-			else if (player.inventory.mainInventory[player.inventory.currentItem].itemID != Item.flintAndSteel.itemID)
-				return false;
-		}
+            if (Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Settings.MaximumPortalSize)
+            {
+                removePortal(world, addedBlocks);
+                Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), x, y, z), world.isRemote);
+                return false;
+            }
 
-		if (createPortal(world, x, y + 1, z, meta))
-		{
-			createdPortal = true;
-		}
+            if (WorldHelper.isBlockPortalRemovable(currentID))
+            {
+                int sides = getSides(world, current[0], current[1], current[2], shape);
 
-		if (createPortal(world, x, y - 1, z, meta))
-		{
-			createdPortal = true;
-		}
+                if (sides == -1)
+                {
+                    removePortal(world, addedBlocks);
+                    return false;
+                }
 
-		if (createPortal(world, x + 1, y, z, meta))
-		{
-			createdPortal = true;
-		}
+                if (sides < 2 && usedChances < maxChances)
+                {
+                    usedChances++;
+                    sides += 2;
+                }
 
-		if (createPortal(world, x - 1, y, z, meta))
-		{
-			createdPortal = true;
-		}
+                if (sides >= 2)
+                {
+                    addedBlocks.add(new int[] { current[0], current[1], current[2], currentID, world.getBlockMetadata(current[0], current[1], current[2]) });
+                    queue = updateQueue(queue, shape, current[0], current[1], current[2]);
 
-		if (createPortal(world, x, y, z + 1, meta))
-		{
-			createdPortal = true;
-		}
+                    world.setBlock(current[0], current[1], current[2], Reference.BlockIDs.NetherPortal, meta, 3);
+                }
+            }
+        }
 
-		if (createPortal(world, x, y, z - 1, meta))
-		{
-			createdPortal = true;
-		}
+        if (validatePortal(world, x, y, z, shape))
+        {
+            Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_success), addedBlocks.size(), x, y, z), world.isRemote);
 
-		if (createdPortal && player != null)
-		{
-			player.inventory.mainInventory[player.inventory.currentItem].damageItem(1, player);
-		}
+            return true;
+        }
+        else
+        {
+            Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_fail), addedBlocks.size(), x, y, z), world.isRemote);
 
-		return createdPortal;
-	}
+            removePortal(world, addedBlocks);
+            return false;
+        }
+    }
 
-	public static boolean createPortal(World world, int x, int y, int z, int meta)
-	{
-		if (world.isRemote)
-			return true;
+    public static boolean createPortalAround(World world, int x, int y, int z)
+    {
+        return createPortalAround(world, x, y, z, 0, null);
+    }
 
-		if (!WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
-			return false;
+    public static boolean createPortalAround(World world, int x, int y, int z, EntityPlayer player)
+    {
+        return createPortalAround(world, x, y, z, 0, player);
+    }
 
-		if (!createPortal(world, x, y, z, meta, PortalShape.X))
-			if (!createPortal(world, x, y, z, meta, PortalShape.Z))
-				if (!createPortal(world, x, y, z, meta, PortalShape.HORIZONTAL))
-					return false;
+    public static boolean createPortalAround(World world, int x, int y, int z, int meta)
+    {
+        return createPortalAround(world, x, y, z, meta, null);
+    }
 
-		return true;
-	}
+    public static boolean createPortalAround(World world, int x, int y, int z, int meta, EntityPlayer player)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
 
-	public static boolean createPortal(World world, int x, int y, int z, int meta, PortalShape shape)
-	{
-		if (world.isRemote)
-			return true;
+        boolean createdPortal = false;
 
-		if (shape == PortalShape.INVALID || !WorldHelper.isBlockPortalRemovable(world.getBlockId(x, y, z)))
-			return false;
+        if (player != null)
+        {
+            if (player.inventory.mainInventory[player.inventory.currentItem] == null)
+            {
+                return false;
+            }
+            else if (player.inventory.mainInventory[player.inventory.currentItem].itemID != Item.flintAndSteel.itemID)
+            {
+                return false;
+            }
+        }
 
-		Queue<int[]> queue = new LinkedList<int[]>();
-		Queue<int[]> addedBlocks = new LinkedList<int[]>();
-		int usedChances = 0, maxChances = 10;
+        if (createPortal(world, x, y + 1, z, meta))
+        {
+            createdPortal = true;
+        }
 
-		queue.add(new int[] { x, y, z });
+        if (createPortal(world, x, y - 1, z, meta))
+        {
+            createdPortal = true;
+        }
 
-		while (!queue.isEmpty())
-		{
-			int[] current = queue.remove();
-			int currentID = world.getBlockId(current[0], current[1], current[2]);
+        if (createPortal(world, x + 1, y, z, meta))
+        {
+            createdPortal = true;
+        }
 
-			if (Settings.MaximumPortalSize > 0 && addedBlocks.size() >= Settings.MaximumPortalSize)
-			{
-				removePortal(world, addedBlocks);
-				Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_sizeFail), x, y, z), world.isRemote);
-				return false;
-			}
+        if (createPortal(world, x - 1, y, z, meta))
+        {
+            createdPortal = true;
+        }
 
-			if (WorldHelper.isBlockPortalRemovable(currentID))
-			{
-				int sides = getSides(world, current[0], current[1], current[2], shape);
+        if (createPortal(world, x, y, z + 1, meta))
+        {
+            createdPortal = true;
+        }
 
-				if (sides == -1)
-				{
-					removePortal(world, addedBlocks);
-					return false;
-				}
+        if (createPortal(world, x, y, z - 1, meta))
+        {
+            createdPortal = true;
+        }
 
-				if (sides < 2 && usedChances < maxChances)
-				{
-					usedChances++;
-					sides += 2;
-				}
+        if (createdPortal && player != null)
+        {
+            player.inventory.mainInventory[player.inventory.currentItem].damageItem(1, player);
+        }
 
-				if (sides >= 2)
-				{
-					addedBlocks.add(new int[] { current[0], current[1], current[2], currentID, world.getBlockMetadata(current[0], current[1], current[2]) });
-					queue = updateQueue(queue, shape, current[0], current[1], current[2]);
+        return createdPortal;
+    }
 
-					world.setBlock(current[0], current[1], current[2], Reference.BlockIDs.NetherPortal, meta, 3);
-				}
-			}
-		}
+    public static PortalShape getPortalShape(IBlockAccess world, int x, int y, int z)
+    {
+        if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
+        {
+            return PortalShape.X;
+        }
+        else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
+        {
+            return PortalShape.Z;
+        }
+        else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true))
+        {
+            return PortalShape.HORIZONTAL;
+        }
 
-		if (validatePortal(world, x, y, z, shape))
-		{
-			Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_success), addedBlocks.size(), x, y, z), world.isRemote);
+        return PortalShape.INVALID;
+    }
 
-			return true;
-		}
-		else
-		{
-			Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_fail), addedBlocks.size(), x, y, z), world.isRemote);
+    public static PortalShape getPortalShape(World world, int x, int y, int z)
+    {
+        if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
+        {
+            return PortalShape.X;
+        }
+        else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y + 1, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y - 1, z), true))
+        {
+            return PortalShape.Z;
+        }
+        else if (WorldHelper.isBlockPortalFrame(world.getBlockId(x - 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x + 1, y, z), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z + 1), true) && WorldHelper.isBlockPortalFrame(world.getBlockId(x, y, z - 1), true))
+        {
+            return PortalShape.HORIZONTAL;
+        }
 
-			removePortal(world, addedBlocks);
-			return false;
-		}
-	}
+        return PortalShape.INVALID;
+    }
 
-	private static Queue<int[]> updateQueue(Queue<int[]> queue, PortalShape shape, int x, int y, int z)
-	{
-		if (shape == PortalShape.X)
-		{
-			queue.add(new int[] { x, y - 1, z });
-			queue.add(new int[] { x, y + 1, z });
-			queue.add(new int[] { x - 1, y, z });
-			queue.add(new int[] { x + 1, y, z });
-		}
-		else if (shape == PortalShape.Z)
-		{
-			queue.add(new int[] { x, y - 1, z });
-			queue.add(new int[] { x, y + 1, z });
-			queue.add(new int[] { x, y, z - 1 });
-			queue.add(new int[] { x, y, z + 1 });
-		}
-		else if (shape == PortalShape.HORIZONTAL)
-		{
-			queue.add(new int[] { x - 1, y, z });
-			queue.add(new int[] { x + 1, y, z });
-			queue.add(new int[] { x, y, z - 1 });
-			queue.add(new int[] { x, y, z + 1 });
-		}
-		else if (shape == PortalShape.INVALID) // used for deconstructing portals
-		{
-			queue.add(new int[] { x, y - 1, z });
-			queue.add(new int[] { x, y + 1, z });
-			queue.add(new int[] { x - 1, y, z });
-			queue.add(new int[] { x + 1, y, z });
-			queue.add(new int[] { x, y, z - 1 });
-			queue.add(new int[] { x, y, z + 1 });
-		}
+    private static int[] getSideBlocks(World world, int x, int y, int z, PortalShape shape)
+    {
+        int[] allBlocks = new int[4];
 
-		return queue;
-	}
+        // Add the sides for horizontal portals		
+        if (shape == PortalShape.HORIZONTAL)
+        {
+            allBlocks[0] = world.getBlockId(x - 1, y, z);
+            allBlocks[1] = world.getBlockId(x + 1, y, z);
+            allBlocks[2] = world.getBlockId(x, y, z + 1);
+            allBlocks[3] = world.getBlockId(x, y, z - 1);
+        }
+        else if (shape == PortalShape.X) // For the X-Axis portals
+        {
+            allBlocks[0] = world.getBlockId(x, y + 1, z);
+            allBlocks[1] = world.getBlockId(x, y - 1, z);
+            allBlocks[2] = world.getBlockId(x - 1, y, z);
+            allBlocks[3] = world.getBlockId(x + 1, y, z);
+        }
+        else if (shape == PortalShape.Z) // For the Z-Axis portals
+        {
+            allBlocks[0] = world.getBlockId(x, y + 1, z);
+            allBlocks[1] = world.getBlockId(x, y - 1, z);
+            allBlocks[2] = world.getBlockId(x, y, z + 1);
+            allBlocks[3] = world.getBlockId(x, y, z - 1);
+        }
 
-	private static int getSides(World world, int x, int y, int z, PortalShape shape)
-	{
-		int totalSides = 0;
+        return allBlocks;
+    }
 
-		for (int val : getSideBlocks(world, x, y, z, shape))
-		{
-			if (WorldHelper.isBlockPortalFrame(val, true))
-			{
-				totalSides++;
-			}
-			else if (!WorldHelper.isBlockPortalRemovable(val))
-				return -1;
-		}
+    private static int getSides(World world, int x, int y, int z, PortalShape shape)
+    {
+        int totalSides = 0;
 
-		return totalSides;
-	}
+        for (int val : getSideBlocks(world, x, y, z, shape))
+        {
+            if (WorldHelper.isBlockPortalFrame(val, true))
+            {
+                totalSides++;
+            }
+            else if (!WorldHelper.isBlockPortalRemovable(val))
+            {
+                return -1;
+            }
+        }
 
-	private static int[] getSideBlocks(World world, int x, int y, int z, PortalShape shape)
-	{
-		int[] allBlocks = new int[4];
+        return totalSides;
+    }
 
-		// Add the sides for horizontal portals		
-		if (shape == PortalShape.HORIZONTAL)
-		{
-			allBlocks[0] = world.getBlockId(x - 1, y, z);
-			allBlocks[1] = world.getBlockId(x + 1, y, z);
-			allBlocks[2] = world.getBlockId(x, y, z + 1);
-			allBlocks[3] = world.getBlockId(x, y, z - 1);
-		}
-		else if (shape == PortalShape.X) // For the X-Axis portals
-		{
-			allBlocks[0] = world.getBlockId(x, y + 1, z);
-			allBlocks[1] = world.getBlockId(x, y - 1, z);
-			allBlocks[2] = world.getBlockId(x - 1, y, z);
-			allBlocks[3] = world.getBlockId(x + 1, y, z);
-		}
-		else if (shape == PortalShape.Z) // For the Z-Axis portals
-		{
-			allBlocks[0] = world.getBlockId(x, y + 1, z);
-			allBlocks[1] = world.getBlockId(x, y - 1, z);
-			allBlocks[2] = world.getBlockId(x, y, z + 1);
-			allBlocks[3] = world.getBlockId(x, y, z - 1);
-		}
+    public static boolean removePortal(World world, int x, int y, int z)
+    {
+        return removePortal(world, x, y, z, getPortalShape(world, x, y, z));
+    }
 
-		return allBlocks;
-	}
+    public static boolean removePortal(World world, int x, int y, int z, PortalShape shape)
+    {
+        Queue<int[]> queue = new LinkedList<int[]>();
+        queue.add(new int[] { x, y, z });
 
-	private static boolean validatePortal(World world, int x, int y, int z, PortalShape shape)
-	{
-		if (world.isRemote)
-			return true;
+        while (!queue.isEmpty())
+        {
+            int[] current = queue.remove();
+            int currentID = world.getBlockId(current[0], current[1], current[2]);
 
-		Queue<int[]> queue = new LinkedList<int[]>();
-		Queue<String> checkedQueue = new LinkedList<String>();
-		queue.add(new int[] { x, y, z });
+            if (currentID == Reference.BlockIDs.NetherPortal)
+            {
+                world.setBlockToAir(current[0], current[1], current[2]);
 
-		while (!queue.isEmpty())
-		{
-			int[] current = queue.remove();
-			int currentID = world.getBlockId(current[0], current[1], current[2]);
+                queue = updateQueue(queue, shape, current[0], current[1], current[2]);
+            }
+        }
 
-			if (currentID == Reference.BlockIDs.NetherPortal && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
-			{
-				int sides = getSides(world, current[0], current[1], current[2], shape);
+        return true;
+    }
 
-				if (sides != 4)
-					return false;
+    public static boolean removePortal(World world, Queue<int[]> queue)
+    {
+        while (!queue.isEmpty())
+        {
+            int[] current = queue.remove();
+            world.setBlockToAir(current[0], current[1], current[2]);
+        }
 
-				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
-				checkedQueue.add(current[0] + "," + current[1] + "," + current[2]);
-			}
-		}
+        return true;
+    }
 
-		return true;
-	}
+    public static boolean removePortalAround(World world, int x, int y, int z)
+    {
+        removePortal(world, x, y + 1, z);
+        removePortal(world, x, y - 1, z);
+        removePortal(world, x + 1, y, z);
+        removePortal(world, x - 1, y, z);
+        removePortal(world, x, y, z + 1);
+        removePortal(world, x, y, z - 1);
 
-	public static boolean removePortal(World world, int x, int y, int z)
-	{
-		return removePortal(world, x, y, z, getPortalShape(world, x, y, z));
-	}
+        return true;
+    }
 
-	public static boolean removePortalAround(World world, int x, int y, int z)
-	{
-		removePortal(world, x, y + 1, z);
-		removePortal(world, x, y - 1, z);
-		removePortal(world, x + 1, y, z);
-		removePortal(world, x - 1, y, z);
-		removePortal(world, x, y, z + 1);
-		removePortal(world, x, y, z - 1);
+    private static Queue<int[]> updateQueue(Queue<int[]> queue, PortalShape shape, int x, int y, int z)
+    {
+        if (shape == PortalShape.X)
+        {
+            queue.add(new int[] { x, y - 1, z });
+            queue.add(new int[] { x, y + 1, z });
+            queue.add(new int[] { x - 1, y, z });
+            queue.add(new int[] { x + 1, y, z });
+        }
+        else if (shape == PortalShape.Z)
+        {
+            queue.add(new int[] { x, y - 1, z });
+            queue.add(new int[] { x, y + 1, z });
+            queue.add(new int[] { x, y, z - 1 });
+            queue.add(new int[] { x, y, z + 1 });
+        }
+        else if (shape == PortalShape.HORIZONTAL)
+        {
+            queue.add(new int[] { x - 1, y, z });
+            queue.add(new int[] { x + 1, y, z });
+            queue.add(new int[] { x, y, z - 1 });
+            queue.add(new int[] { x, y, z + 1 });
+        }
+        else if (shape == PortalShape.INVALID) // used for deconstructing portals
+        {
+            queue.add(new int[] { x, y - 1, z });
+            queue.add(new int[] { x, y + 1, z });
+            queue.add(new int[] { x - 1, y, z });
+            queue.add(new int[] { x + 1, y, z });
+            queue.add(new int[] { x, y, z - 1 });
+            queue.add(new int[] { x, y, z + 1 });
+        }
 
-		return true;
-	}
+        return queue;
+    }
 
-	public static boolean removePortal(World world, int x, int y, int z, PortalShape shape)
-	{
-		Queue<int[]> queue = new LinkedList<int[]>();
-		queue.add(new int[] { x, y, z });
+    private static boolean validatePortal(World world, int x, int y, int z, PortalShape shape)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
 
-		while (!queue.isEmpty())
-		{
-			int[] current = queue.remove();
-			int currentID = world.getBlockId(current[0], current[1], current[2]);
+        Queue<int[]> queue = new LinkedList<int[]>();
+        Queue<String> checkedQueue = new LinkedList<String>();
+        queue.add(new int[] { x, y, z });
 
-			if (currentID == Reference.BlockIDs.NetherPortal)
-			{
-				world.setBlockToAir(current[0], current[1], current[2]);
+        while (!queue.isEmpty())
+        {
+            int[] current = queue.remove();
+            int currentID = world.getBlockId(current[0], current[1], current[2]);
 
-				queue = updateQueue(queue, shape, current[0], current[1], current[2]);
-			}
-		}
+            if (currentID == Reference.BlockIDs.NetherPortal && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
+            {
+                int sides = getSides(world, current[0], current[1], current[2], shape);
 
-		return true;
-	}
+                if (sides != 4)
+                {
+                    return false;
+                }
 
-	public static boolean removePortal(World world, Queue<int[]> queue)
-	{
-		while (!queue.isEmpty())
-		{
-			int[] current = queue.remove();
-			world.setBlockToAir(current[0], current[1], current[2]);
-		}
+                queue = updateQueue(queue, shape, current[0], current[1], current[2]);
+                checkedQueue.add(current[0] + "," + current[1] + "," + current[2]);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

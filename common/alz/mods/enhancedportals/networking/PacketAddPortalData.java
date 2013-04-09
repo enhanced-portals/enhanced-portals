@@ -11,59 +11,59 @@ import alz.mods.enhancedportals.reference.Reference;
 
 public class PacketAddPortalData extends PacketUpdate
 {
-	public PortalData portalData;
+    public PortalData portalData;
 
-	@Override
-	public int getPacketID()
-	{
-		return Reference.Networking.DialDevice_NewPortalData;
-	}
+    @Override
+    public void addPacketData(DataOutputStream stream) throws IOException
+    {
+        super.addPacketData(stream);
 
-	@Override
-	public Packet250CustomPayload getClientPacket()
-	{
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		DataOutputStream dataStream = new DataOutputStream(byteStream);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
+        stream.writeUTF(portalData.DisplayName); // Should only need to send the name they chose for it, since the texture & location is calculated from items in the TileEntities inventory.
+    }
 
-		try
-		{
-			dataStream.writeByte(getPacketID());
-			addPacketData(dataStream);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+    @Override
+    public Packet250CustomPayload getClientPacket()
+    {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        Packet250CustomPayload packet = new Packet250CustomPayload();
 
-		packet.channel = Reference.MOD_ID;
-		packet.data = byteStream.toByteArray();
-		packet.length = packet.data.length;
-		packet.isChunkDataPacket = true;
+        try
+        {
+            dataStream.writeByte(getPacketID());
+            addPacketData(dataStream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
-		return packet;
-	}
+        packet.channel = Reference.MOD_ID;
+        packet.data = byteStream.toByteArray();
+        packet.length = packet.data.length;
+        packet.isChunkDataPacket = true;
 
-	@Override
-	public Packet250CustomPayload getServerPacket()
-	{
-		return null;
-	}
+        return packet;
+    }
 
-	@Override
-	public void getPacketData(DataInputStream stream) throws IOException
-	{
-		super.getPacketData(stream);
+    @Override
+    public void getPacketData(DataInputStream stream) throws IOException
+    {
+        super.getPacketData(stream);
 
-		portalData = new PortalData();
-		portalData.DisplayName = stream.readUTF();
-	}
+        portalData = new PortalData();
+        portalData.DisplayName = stream.readUTF();
+    }
 
-	@Override
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		super.addPacketData(stream);
+    @Override
+    public int getPacketID()
+    {
+        return Reference.Networking.DialDevice_NewPortalData;
+    }
 
-		stream.writeUTF(portalData.DisplayName); // Should only need to send the name they chose for it, since the texture & location is calculated from items in the TileEntities inventory.
-	}
+    @Override
+    public Packet250CustomPayload getServerPacket()
+    {
+        return null;
+    }
 }

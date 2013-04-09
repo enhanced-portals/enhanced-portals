@@ -8,27 +8,27 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 public abstract class PacketUpdate
 {
-	public int xCoord, yCoord, zCoord, Dimension;
+    public int xCoord, yCoord, zCoord, Dimension;
 
-	public abstract int getPacketID();
+    public void addPacketData(DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(xCoord);
+        stream.writeInt(yCoord);
+        stream.writeInt(zCoord);
+        stream.writeInt(Dimension);
+    }
 
-	public abstract Packet250CustomPayload getClientPacket();
+    public abstract Packet250CustomPayload getClientPacket();
 
-	public abstract Packet250CustomPayload getServerPacket();
+    public void getPacketData(DataInputStream stream) throws IOException
+    {
+        xCoord = stream.readInt();
+        yCoord = stream.readInt();
+        zCoord = stream.readInt();
+        Dimension = stream.readInt();
+    }
 
-	public void getPacketData(DataInputStream stream) throws IOException
-	{
-		xCoord = stream.readInt();
-		yCoord = stream.readInt();
-		zCoord = stream.readInt();
-		Dimension = stream.readInt();
-	}
+    public abstract int getPacketID();
 
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		stream.writeInt(xCoord);
-		stream.writeInt(yCoord);
-		stream.writeInt(zCoord);
-		stream.writeInt(Dimension);
-	}
+    public abstract Packet250CustomPayload getServerPacket();
 }

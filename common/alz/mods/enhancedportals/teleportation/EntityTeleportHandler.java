@@ -19,193 +19,203 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class EntityTeleportHandler
 {
-	/***
-	 * Can the entity travel dimensions?
-	 */
-	public static boolean canEntityTravel(Entity entity)
-	{
-		if (entity == null)
-			return false;
+    /***
+     * Can the entity travel dimensions?
+     */
+    public static boolean canEntityTravel(Entity entity)
+    {
+        if (entity == null)
+        {
+            return false;
+        }
 
-		return entity.timeUntilPortal == 0;
-	}
+        return entity.timeUntilPortal == 0;
+    }
 
-	/***
-	 * Sets the entities ability to travel dimensions
-	 */
-	public static void setCanEntityTravel(Entity entity, boolean state)
-	{
-		if (state)
-		{
-			entity.timeUntilPortal = 0;
-		}
-		else
-		{
-			entity.timeUntilPortal = entity.getPortalCooldown();
-		}
-	}
+    private static EntityPlayerMP handlePlayerRespawn(Entity entity, EntityPlayerMP player, WorldServer world, boolean dimensionalTeleport)
+    {
+        player.closeScreen();
 
-	/***
-	 * Teleports an entity to the specified location & dimension
-	 */
-	public static void teleportEntity(Entity entity, TeleportData teleportData)
-	{
-		if (entity.worldObj.isRemote)
-			return;
+        if (dimensionalTeleport)
+        {
+            player.dimension = world.provider.dimensionId;
+            player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, world.getWorldInfo().getTerrainType(), world.getHeight(), player.theItemInWorldManager.getGameType()));
 
-		WorldServer world = MinecraftServer.getServer().worldServerForDimension(teleportData.getDimension());
+            ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
+        }
 
-		teleportEntity(world, entity, teleportData);
-	}
+        return player;
+    }
 
-	private static Entity teleportEntity(WorldServer world, Entity entity, TeleportData teleportData)
-	{
-		if (!Settings.AllowTeleporting || !canEntityTravel(entity))
-			return entity;
+    private static Entity recreateEntity(Entity entity, World world)
+    {
+        if (!(entity instanceof EntityPlayer))
+        {
+            NBTTagCompound nbt = new NBTTagCompound();
+            entity.isDead = false;
+            entity.riddenByEntity = null;
+            entity.addEntityID(nbt);
+            entity.isDead = true;
 
-		boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
+            entity = EntityList.createEntityFromNBT(nbt, world);
 
-		if (entity.riddenByEntity != null)
-		{
-			entity.riddenByEntity.mountEntity(null);
-		}
+            if (entity == null)
+            {
+                return null;
+            }
+        }
 
-		if (entity.ridingEntity != null)
-		{
-			entity.mountEntity(null);
-		}
+        world.spawnEntityInWorld(entity);
+        entity.setWorld(world);
 
-		entity.worldObj.updateEntityWithOptionalForce(entity, false);
-		EntityPlayerMP player;
+        return entity;
+    }
 
-		if (entity instanceof EntityPlayerMP)
-		{
-			player = (EntityPlayerMP) entity;
+    private static void removeEntityFromWorld(World world, Entity entity)
+    {
+        if (entity instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer) entity;
 
-			handlePlayerRespawn(entity, player, world, dimensionalTeleport);
-		}
+            player.closeScreen();
+            world.playerEntities.remove(player);
+            world.updateAllPlayersSleepingFlag();
 
-		if (dimensionalTeleport)
-		{
-			removeEntityFromWorld(entity.worldObj, entity);
-		}
+            int chunkX = entity.chunkCoordX, chunkZ = entity.chunkCoordZ;
 
-		entity.setLocationAndAngles(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
-		world.theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
+            if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
+            {
+                world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
+                world.getChunkFromChunkCoords(chunkX, chunkZ).isModified = true;
+            }
 
-		if (dimensionalTeleport)
-		{
-			entity = recreateEntity(entity, world);
+            world.loadedEntityList.remove(entity);
+            world.releaseEntitySkin(entity);
+        }
 
-			if (entity == null)
-				return null;
-		}
+        entity.isDead = false;
+    }
 
-		if (entity instanceof EntityPlayerMP)
-		{
-			player = (EntityPlayerMP) entity;
+    /***
+     * Sets the entities ability to travel dimensions
+     */
+    public static void setCanEntityTravel(Entity entity, boolean state)
+    {
+        if (state)
+        {
+            entity.timeUntilPortal = 0;
+        }
+        else
+        {
+            entity.timeUntilPortal = entity.getPortalCooldown();
+        }
+    }
 
-			if (dimensionalTeleport)
-			{
-				player.mcServer.getConfigurationManager().func_72375_a(player, world);
-			}
+    @SuppressWarnings("rawtypes")
+    private static void syncPlayer(EntityPlayerMP player, WorldServer world)
+    {
+        player.theItemInWorldManager.setWorld(world);
+        player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, world);
+        player.mcServer.getConfigurationManager().syncPlayerInventory(player);
 
-			player.playerNetServerHandler.setPlayerLocation(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
-		}
+        Iterator iter = player.getActivePotionEffects().iterator();
 
-		world.updateEntityWithOptionalForce(entity, false);
+        while (iter.hasNext())
+        {
+            PotionEffect effect = (PotionEffect) iter.next();
+            player.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(player.entityId, effect));
+        }
 
-		if (entity instanceof EntityPlayerMP && dimensionalTeleport)
-		{
-			player = (EntityPlayerMP) entity;
+        player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
+        GameRegistry.onPlayerChangedDimension(player);
+    }
 
-			syncPlayer(player, world);
-		}
+    /***
+     * Teleports an entity to the specified location & dimension
+     */
+    public static void teleportEntity(Entity entity, TeleportData teleportData)
+    {
+        if (entity.worldObj.isRemote)
+        {
+            return;
+        }
 
-		entity.setLocationAndAngles(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
+        WorldServer world = MinecraftServer.getServer().worldServerForDimension(teleportData.getDimension());
 
-		setCanEntityTravel(entity, false);
-		return entity;
-	}
+        teleportEntity(world, entity, teleportData);
+    }
 
-	private static EntityPlayerMP handlePlayerRespawn(Entity entity, EntityPlayerMP player, WorldServer world, boolean dimensionalTeleport)
-	{
-		player.closeScreen();
+    private static Entity teleportEntity(WorldServer world, Entity entity, TeleportData teleportData)
+    {
+        if (!Settings.AllowTeleporting || !canEntityTravel(entity))
+        {
+            return entity;
+        }
 
-		if (dimensionalTeleport)
-		{
-			player.dimension = world.provider.dimensionId;
-			player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, world.getWorldInfo().getTerrainType(), world.getHeight(), player.theItemInWorldManager.getGameType()));
+        boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
 
-			((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
-		}
+        if (entity.riddenByEntity != null)
+        {
+            entity.riddenByEntity.mountEntity(null);
+        }
 
-		return player;
-	}
+        if (entity.ridingEntity != null)
+        {
+            entity.mountEntity(null);
+        }
 
-	private static Entity recreateEntity(Entity entity, World world)
-	{
-		if (!(entity instanceof EntityPlayer))
-		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			entity.isDead = false;
-			entity.riddenByEntity = null;
-			entity.addEntityID(nbt);
-			entity.isDead = true;
+        entity.worldObj.updateEntityWithOptionalForce(entity, false);
+        EntityPlayerMP player;
 
-			entity = EntityList.createEntityFromNBT(nbt, world);
+        if (entity instanceof EntityPlayerMP)
+        {
+            player = (EntityPlayerMP) entity;
 
-			if (entity == null)
-				return null;
-		}
+            handlePlayerRespawn(entity, player, world, dimensionalTeleport);
+        }
 
-		world.spawnEntityInWorld(entity);
-		entity.setWorld(world);
+        if (dimensionalTeleport)
+        {
+            removeEntityFromWorld(entity.worldObj, entity);
+        }
 
-		return entity;
-	}
+        entity.setLocationAndAngles(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
+        world.theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
 
-	@SuppressWarnings("rawtypes")
-	private static void syncPlayer(EntityPlayerMP player, WorldServer world)
-	{
-		player.theItemInWorldManager.setWorld(world);
-		player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, world);
-		player.mcServer.getConfigurationManager().syncPlayerInventory(player);
+        if (dimensionalTeleport)
+        {
+            entity = recreateEntity(entity, world);
 
-		Iterator iter = player.getActivePotionEffects().iterator();
+            if (entity == null)
+            {
+                return null;
+            }
+        }
 
-		while (iter.hasNext())
-		{
-			PotionEffect effect = (PotionEffect) iter.next();
-			player.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(player.entityId, effect));
-		}
+        if (entity instanceof EntityPlayerMP)
+        {
+            player = (EntityPlayerMP) entity;
 
-		player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
-		GameRegistry.onPlayerChangedDimension(player);
-	}
+            if (dimensionalTeleport)
+            {
+                player.mcServer.getConfigurationManager().func_72375_a(player, world);
+            }
 
-	private static void removeEntityFromWorld(World world, Entity entity)
-	{
-		if (entity instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) entity;
+            player.playerNetServerHandler.setPlayerLocation(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
+        }
 
-			player.closeScreen();
-			world.playerEntities.remove(player);
-			world.updateAllPlayersSleepingFlag();
+        world.updateEntityWithOptionalForce(entity, false);
 
-			int chunkX = entity.chunkCoordX, chunkZ = entity.chunkCoordZ;
+        if (entity instanceof EntityPlayerMP && dimensionalTeleport)
+        {
+            player = (EntityPlayerMP) entity;
 
-			if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
-			{
-				world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
-				world.getChunkFromChunkCoords(chunkX, chunkZ).isModified = true;
-			}
+            syncPlayer(player, world);
+        }
 
-			world.loadedEntityList.remove(entity);
-			world.releaseEntitySkin(entity);
-		}
+        entity.setLocationAndAngles(teleportData.getXOffsetEntity(), teleportData.getYOffsetEntity(), teleportData.getZOffsetEntity(), entity.rotationYaw, entity.rotationPitch);
 
-		entity.isDead = false;
-	}
+        setCanEntityTravel(entity, false);
+        return entity;
+    }
 }

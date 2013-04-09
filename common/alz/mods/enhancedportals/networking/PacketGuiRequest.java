@@ -10,70 +10,70 @@ import alz.mods.enhancedportals.reference.Reference;
 
 public class PacketGuiRequest extends PacketUpdate
 {
-	public int guiID;
+    public int guiID;
 
-	public PacketGuiRequest()
-	{
-	}
+    public PacketGuiRequest()
+    {
+    }
 
-	public PacketGuiRequest(int GUIID, int x, int y, int z)
-	{
-		guiID = GUIID;
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-	}
+    public PacketGuiRequest(int GUIID, int x, int y, int z)
+    {
+        guiID = GUIID;
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+    }
 
-	@Override
-	public int getPacketID()
-	{
-		return Reference.Networking.GuiRequest;
-	}
+    @Override
+    public void addPacketData(DataOutputStream stream) throws IOException
+    {
+        super.addPacketData(stream);
 
-	@Override
-	public void getPacketData(DataInputStream stream) throws IOException
-	{
-		super.getPacketData(stream);
+        stream.writeInt(guiID);
+    }
 
-		guiID = stream.readInt();
-	}
+    @Override
+    public Packet250CustomPayload getClientPacket()
+    {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        Packet250CustomPayload packet = new Packet250CustomPayload();
 
-	@Override
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		super.addPacketData(stream);
+        try
+        {
+            dataStream.writeByte(getPacketID());
+            addPacketData(dataStream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
-		stream.writeInt(guiID);
-	}
+        packet.channel = Reference.MOD_ID;
+        packet.data = byteStream.toByteArray();
+        packet.length = packet.data.length;
+        packet.isChunkDataPacket = true;
 
-	@Override
-	public Packet250CustomPayload getClientPacket()
-	{
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		DataOutputStream dataStream = new DataOutputStream(byteStream);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
+        return packet;
+    }
 
-		try
-		{
-			dataStream.writeByte(getPacketID());
-			addPacketData(dataStream);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+    @Override
+    public void getPacketData(DataInputStream stream) throws IOException
+    {
+        super.getPacketData(stream);
 
-		packet.channel = Reference.MOD_ID;
-		packet.data = byteStream.toByteArray();
-		packet.length = packet.data.length;
-		packet.isChunkDataPacket = true;
+        guiID = stream.readInt();
+    }
 
-		return packet;
-	}
+    @Override
+    public int getPacketID()
+    {
+        return Reference.Networking.GuiRequest;
+    }
 
-	@Override
-	public Packet250CustomPayload getServerPacket()
-	{
-		return null;
-	}
+    @Override
+    public Packet250CustomPayload getServerPacket()
+    {
+        return null;
+    }
 }

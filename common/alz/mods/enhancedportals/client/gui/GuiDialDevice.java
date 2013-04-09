@@ -15,122 +15,122 @@ import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiDialDevice extends GuiScreen
 {
-	private GuiDialDeviceSlot worldSlotContainer;
-	private String screenTitle;
-	private List<PortalData> theList;
-	private int selectedWorld;
-	private int theSelectedEntry;
-	private TileEntityDialDevice DialDevice;
-	private EntityPlayer Player;
+    private GuiDialDeviceSlot worldSlotContainer;
+    private String screenTitle;
+    private List<PortalData> theList;
+    private int selectedWorld;
+    private int theSelectedEntry;
+    private TileEntityDialDevice DialDevice;
+    private EntityPlayer Player;
 
-	public GuiDialDevice(EntityPlayer player, TileEntityDialDevice dialDevice)
-	{
-		super();
-		screenTitle = Localizations.getLocalizedString("tile." + Strings.DialDevice_Name + ".name");
-		theSelectedEntry = dialDevice.SelectedEntry;
-		theList = dialDevice.PortalDataList;
-		DialDevice = dialDevice;
-		Player = player;
-	}
+    public GuiDialDevice(EntityPlayer player, TileEntityDialDevice dialDevice)
+    {
+        super();
+        screenTitle = Localizations.getLocalizedString("tile." + Strings.DialDevice_Name + ".name");
+        theSelectedEntry = dialDevice.SelectedEntry;
+        theList = dialDevice.PortalDataList;
+        DialDevice = dialDevice;
+        Player = player;
+    }
 
-	@Override
-	public boolean doesGuiPauseGame()
-	{
-		return false;
-	}
+    @Override
+    protected void actionPerformed(GuiButton guiButton)
+    {
+        if (guiButton.id == 1)
+        {
+            ClientProxy.OpenGuiFromLocal(Player, DialDevice, Reference.GuiIDs.DialDevice + 1);
+        }
+        else if (guiButton.id == 2)
+        {
+            if (theList.isEmpty() || theList.size() < selectedWorld || theList.get(selectedWorld) == null)
+            {
+                theSelectedEntry = 0;
+                return;
+            }
 
-	@Override
-	public void drawScreen(int par1, int par2, float par3)
-	{
-		worldSlotContainer.drawScreen(par1, par2, par3);
-		drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 16777215);
-		super.drawScreen(par1, par2, par3);
-	}
+            if (selectedWorld == getActive())
+            {
+                theSelectedEntry = 0;
+            }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void initGui()
-	{
-		super.initGui();
+            theList.remove(selectedWorld);
+        }
+        else if (guiButton.id == 3)
+        {
+            System.out.println("Edit");
+        }
+        else if (guiButton.id == 4)
+        {
+            Player.closeScreen();
+        }
+    }
 
-		worldSlotContainer = new GuiDialDeviceSlot(this);
-		worldSlotContainer.registerScrollButtons(buttonList, 4, 5);
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
 
-		int middle = width / 2;
-		middle -= 75;
+    @Override
+    public void drawScreen(int par1, int par2, float par3)
+    {
+        worldSlotContainer.drawScreen(par1, par2, par3);
+        drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 16777215);
+        super.drawScreen(par1, par2, par3);
+    }
 
-		buttonList.add(new GuiButton(1, middle - 80, height - 55, 150, 20, Localizations.getLocalizedString(Strings.GUI_Add)));
-		buttonList.add(new GuiButton(2, middle - 80, height - 30, 150, 20, Localizations.getLocalizedString(Strings.GUI_Remove)));
-		buttonList.add(new GuiButton(3, middle + 80, height - 55, 150, 20, Localizations.getLocalizedString(Strings.GUI_Edit)));
-		buttonList.add(new GuiButton(4, middle + 80, height - 30, 150, 20, Localizations.getLocalizedString(Strings.GUI_Close)));
-	}
+    public int getActive()
+    {
+        return theSelectedEntry;
+    }
 
-	public List<PortalData> getSize()
-	{
-		return theList;
-	}
+    public int getSelectedWorld()
+    {
+        return selectedWorld;
+    }
 
-	public int onElementSelected(int par1)
-	{
-		return selectedWorld = par1;
-	}
+    public List<PortalData> getSize()
+    {
+        return theList;
+    }
 
-	public int getSelectedWorld()
-	{
-		return selectedWorld;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+        super.initGui();
 
-	public int getActive()
-	{
-		return theSelectedEntry;
-	}
+        worldSlotContainer = new GuiDialDeviceSlot(this);
+        worldSlotContainer.registerScrollButtons(buttonList, 4, 5);
 
-	public void selectWorld(int i)
-	{
-		theSelectedEntry = i;
-	}
+        int middle = width / 2;
+        middle -= 75;
 
-	@Override
-	protected void actionPerformed(GuiButton guiButton)
-	{
-		if (guiButton.id == 1)
-		{
-			ClientProxy.OpenGuiFromLocal(Player, DialDevice, Reference.GuiIDs.DialDevice + 1);
-		}
-		else if (guiButton.id == 2)
-		{
-			if (theList.isEmpty() || theList.size() < selectedWorld || theList.get(selectedWorld) == null)
-			{
-				theSelectedEntry = 0;
-				return;
-			}
+        buttonList.add(new GuiButton(1, middle - 80, height - 55, 150, 20, Localizations.getLocalizedString(Strings.GUI_Add)));
+        buttonList.add(new GuiButton(2, middle - 80, height - 30, 150, 20, Localizations.getLocalizedString(Strings.GUI_Remove)));
+        buttonList.add(new GuiButton(3, middle + 80, height - 55, 150, 20, Localizations.getLocalizedString(Strings.GUI_Edit)));
+        buttonList.add(new GuiButton(4, middle + 80, height - 30, 150, 20, Localizations.getLocalizedString(Strings.GUI_Close)));
+    }
 
-			if (selectedWorld == getActive())
-			{
-				theSelectedEntry = 0;
-			}
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode || par2 == 1)
+        {
+            Player.closeScreen();
+            return;
+        }
 
-			theList.remove(selectedWorld);
-		}
-		else if (guiButton.id == 3)
-		{
-			System.out.println("Edit");
-		}
-		else if (guiButton.id == 4)
-		{
-			Player.closeScreen();
-		}
-	}
+        super.keyTyped(par1, par2);
+    }
 
-	@Override
-	protected void keyTyped(char par1, int par2)
-	{
-		if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode || par2 == 1)
-		{
-			Player.closeScreen();
-			return;
-		}
+    public int onElementSelected(int par1)
+    {
+        return selectedWorld = par1;
+    }
 
-		super.keyTyped(par1, par2);
-	}
+    public void selectWorld(int i)
+    {
+        theSelectedEntry = i;
+    }
 }

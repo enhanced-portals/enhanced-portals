@@ -10,107 +10,107 @@ import alz.mods.enhancedportals.reference.Reference;
 
 public class PacketTileUpdate extends PacketUpdate
 {
-	public int[] data;
+    public int[] data;
 
-	public PacketTileUpdate()
-	{
-	}
+    public PacketTileUpdate()
+    {
+    }
 
-	public PacketTileUpdate(int x, int y, int z, int dim, int[] theData)
-	{
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-		Dimension = dim;
-		data = theData;
-	}
+    public PacketTileUpdate(int x, int y, int z, int dim, int[] theData)
+    {
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+        Dimension = dim;
+        data = theData;
+    }
 
-	@Override
-	public int getPacketID()
-	{
-		return Reference.Networking.TileEntityUpdate;
-	}
+    @Override
+    public void addPacketData(DataOutputStream stream) throws IOException
+    {
+        super.addPacketData(stream);
 
-	@Override
-	public Packet250CustomPayload getClientPacket()
-	{
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		DataOutputStream dataStream = new DataOutputStream(byteStream);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
+        stream.writeInt(data.length);
 
-		try
-		{
-			dataStream.writeByte(getPacketID());
-			dataStream.writeByte(0);
-			addPacketData(dataStream);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+        for (int element : data)
+        {
+            stream.writeInt(element);
+        }
+    }
 
-		packet.channel = Reference.MOD_ID;
-		packet.data = byteStream.toByteArray();
-		packet.length = packet.data.length;
-		packet.isChunkDataPacket = true;
+    @Override
+    public Packet250CustomPayload getClientPacket()
+    {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        Packet250CustomPayload packet = new Packet250CustomPayload();
 
-		return packet;
-	}
+        try
+        {
+            dataStream.writeByte(getPacketID());
+            dataStream.writeByte(0);
+            addPacketData(dataStream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
-	@Override
-	public Packet250CustomPayload getServerPacket()
-	{
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		DataOutputStream dataStream = new DataOutputStream(byteStream);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
+        packet.channel = Reference.MOD_ID;
+        packet.data = byteStream.toByteArray();
+        packet.length = packet.data.length;
+        packet.isChunkDataPacket = true;
 
-		try
-		{
-			dataStream.writeByte(getPacketID());
-			dataStream.writeByte(1);
-			addPacketData(dataStream);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+        return packet;
+    }
 
-		packet.channel = Reference.MOD_ID;
-		packet.data = byteStream.toByteArray();
-		packet.length = packet.data.length;
-		packet.isChunkDataPacket = true;
+    @Override
+    public void getPacketData(DataInputStream stream) throws IOException
+    {
+        super.getPacketData(stream);
 
-		return packet;
-	}
+        int size = stream.readInt();
 
-	@Override
-	public void getPacketData(DataInputStream stream) throws IOException
-	{
-		super.getPacketData(stream);
+        if (size > 0)
+        {
+            data = new int[size];
 
-		int size = stream.readInt();
+            for (int i = 0; i < size; i++)
+            {
+                data[i] = stream.readInt();
+            }
+        }
+    }
 
-		if (size > 0)
-		{
-			data = new int[size];
+    @Override
+    public int getPacketID()
+    {
+        return Reference.Networking.TileEntityUpdate;
+    }
 
-			for (int i = 0; i < size; i++)
-			{
-				data[i] = stream.readInt();
-			}
-		}
-	}
+    @Override
+    public Packet250CustomPayload getServerPacket()
+    {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        Packet250CustomPayload packet = new Packet250CustomPayload();
 
-	@Override
-	public void addPacketData(DataOutputStream stream) throws IOException
-	{
-		super.addPacketData(stream);
+        try
+        {
+            dataStream.writeByte(getPacketID());
+            dataStream.writeByte(1);
+            addPacketData(dataStream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
-		stream.writeInt(data.length);
+        packet.channel = Reference.MOD_ID;
+        packet.data = byteStream.toByteArray();
+        packet.length = packet.data.length;
+        packet.isChunkDataPacket = true;
 
-		for (int i = 0; i < data.length; i++)
-		{
-			stream.writeInt(data[i]);
-		}
-	}
+        return packet;
+    }
 }

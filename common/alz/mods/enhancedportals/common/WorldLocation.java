@@ -9,146 +9,161 @@ import alz.mods.enhancedportals.helpers.WorldHelper;
 
 public class WorldLocation
 {
-	public World worldObj;
-	public IBlockAccess blockAccess;
-	public int xCoord, yCoord, zCoord;
+    public static boolean equals(WorldLocation location, WorldLocation location2)
+    {
+        return location2.xCoord == location.xCoord && location2.yCoord == location.yCoord && location2.zCoord == location.zCoord && location2.worldObj == location.worldObj;
+    }
 
-	public WorldLocation()
-	{
+    public World worldObj;
+    public IBlockAccess blockAccess;
 
-	}
+    public int xCoord, yCoord, zCoord;
 
-	public WorldLocation(IBlockAccess world, int x, int y, int z)
-	{
-		blockAccess = world;
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-	}
+    public WorldLocation()
+    {
 
-	public WorldLocation(World world, int x, int y, int z)
-	{
-		worldObj = world;
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-	}
+    }
 
-	public WorldLocation(int dimID, int x, int y, int z)
-	{
-		worldObj = MinecraftServer.getServer().worldServerForDimension(dimID);
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-	}
+    public WorldLocation(IBlockAccess world, int x, int y, int z)
+    {
+        blockAccess = world;
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+    }
 
-	public WorldLocation(TileEntity tileEntity)
-	{
-		worldObj = tileEntity.worldObj;
-		xCoord = tileEntity.xCoord;
-		yCoord = tileEntity.yCoord;
-		zCoord = tileEntity.zCoord;
-	}
+    public WorldLocation(int x, int y, int z)
+    {
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+    }
 
-	public WorldLocation(int x, int y, int z)
-	{
-		xCoord = x;
-		yCoord = y;
-		zCoord = z;
-	}
+    public WorldLocation(int dimID, int x, int y, int z)
+    {
+        worldObj = MinecraftServer.getServer().worldServerForDimension(dimID);
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+    }
 
-	public boolean equals(WorldLocation location)
-	{
-		return xCoord == location.xCoord && yCoord == location.yCoord && zCoord == location.zCoord && worldObj == location.worldObj;
-	}
+    public WorldLocation(TileEntity tileEntity)
+    {
+        worldObj = tileEntity.worldObj;
+        xCoord = tileEntity.xCoord;
+        yCoord = tileEntity.yCoord;
+        zCoord = tileEntity.zCoord;
+    }
 
-	public static boolean equals(WorldLocation location, WorldLocation location2)
-	{
-		return location2.xCoord == location.xCoord && location2.yCoord == location.yCoord && location2.zCoord == location.zCoord && location2.worldObj == location.worldObj;
-	}
+    public WorldLocation(World world, int x, int y, int z)
+    {
+        worldObj = world;
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+    }
 
-	public int getBlockId()
-	{
-		if (worldObj == null)
-			return 0;
+    public boolean equals(WorldLocation location)
+    {
+        return xCoord == location.xCoord && yCoord == location.yCoord && zCoord == location.zCoord && worldObj == location.worldObj;
+    }
 
-		return worldObj.getBlockId(xCoord, yCoord, zCoord);
-	}
+    public int getBlockId()
+    {
+        if (worldObj == null)
+        {
+            return 0;
+        }
 
-	public int getBlockMeta()
-	{
-		if (worldObj == null)
-			return 0;
+        return worldObj.getBlockId(xCoord, yCoord, zCoord);
+    }
 
-		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-	}
+    public int getBlockMeta()
+    {
+        if (worldObj == null)
+        {
+            return 0;
+        }
 
-	public TileEntity getBlockTileEntity()
-	{
-		if (worldObj == null)
-		{
-			if (blockAccess == null)
-				return null;
-			else
-				return blockAccess.getBlockTileEntity(xCoord, yCoord, zCoord);
-		}
+        return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+    }
 
-		return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
-	}
+    public TileEntity getBlockTileEntity()
+    {
+        if (worldObj == null)
+        {
+            if (blockAccess == null)
+            {
+                return null;
+            }
+            else
+            {
+                return blockAccess.getBlockTileEntity(xCoord, yCoord, zCoord);
+            }
+        }
 
-	public void setBlock(int id)
-	{
-		if (worldObj == null)
-			return;
+        return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord);
+    }
 
-		if (id == 0)
-		{
-			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-		}
-		else
-		{
-			worldObj.setBlock(xCoord, yCoord, zCoord, id);
-		}
-	}
+    public WorldLocation getOffset(ForgeDirection direction)
+    {
+        WorldLocation newLocation = new WorldLocation();
+        newLocation.worldObj = worldObj;
+        newLocation.blockAccess = blockAccess;
+        newLocation.xCoord = xCoord + direction.offsetX;
+        newLocation.yCoord = yCoord + direction.offsetY;
+        newLocation.zCoord = zCoord + direction.offsetZ;
 
-	public void setBlockToAir()
-	{
-		if (worldObj == null)
-			return;
+        return newLocation;
+    }
 
-		worldObj.setBlock(xCoord, yCoord, zCoord, 0, 0, 2);
-	}
+    public WorldLocation getOffsetFromModifier()
+    {
+        int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
+        WorldLocation newLocation = new WorldLocation();
+        newLocation.worldObj = worldObj;
+        newLocation.blockAccess = blockAccess;
+        newLocation.xCoord = offset[0];
+        newLocation.yCoord = offset[1];
+        newLocation.zCoord = offset[2];
 
-	public void markBlockForUpdate()
-	{
-		if (worldObj == null)
-			return;
+        return newLocation;
+    }
 
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
+    public void markBlockForUpdate()
+    {
+        if (worldObj == null)
+        {
+            return;
+        }
 
-	public WorldLocation getOffset(ForgeDirection direction)
-	{
-		WorldLocation newLocation = new WorldLocation();
-		newLocation.worldObj = worldObj;
-		newLocation.blockAccess = blockAccess;
-		newLocation.xCoord = xCoord + direction.offsetX;
-		newLocation.yCoord = yCoord + direction.offsetY;
-		newLocation.zCoord = zCoord + direction.offsetZ;
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
 
-		return newLocation;
-	}
+    public void setBlock(int id)
+    {
+        if (worldObj == null)
+        {
+            return;
+        }
 
-	public WorldLocation getOffsetFromModifier()
-	{
-		int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
-		WorldLocation newLocation = new WorldLocation();
-		newLocation.worldObj = worldObj;
-		newLocation.blockAccess = blockAccess;
-		newLocation.xCoord = offset[0];
-		newLocation.yCoord = offset[1];
-		newLocation.zCoord = offset[2];
+        if (id == 0)
+        {
+            worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+        }
+        else
+        {
+            worldObj.setBlock(xCoord, yCoord, zCoord, id);
+        }
+    }
 
-		return newLocation;
-	}
+    public void setBlockToAir()
+    {
+        if (worldObj == null)
+        {
+            return;
+        }
+
+        worldObj.setBlock(xCoord, yCoord, zCoord, 0, 0, 2);
+    }
 }

@@ -13,29 +13,31 @@ import alz.mods.enhancedportals.tileentity.TileEntityDialDevice;
 
 public class BlockDialDevice extends BlockContainer
 {
-	public BlockDialDevice()
-	{
-		super(Reference.BlockIDs.DialDevice, Material.rock);
-		setHardness(50.0F);
-		setResistance(2000.0F);
-		setStepSound(soundStoneFootstep);
-		setUnlocalizedName(Strings.DialDevice_Name);
-		setCreativeTab(CreativeTabs.tabBlock);
-	}
+    public BlockDialDevice()
+    {
+        super(Reference.BlockIDs.DialDevice, Material.rock);
+        setHardness(50.0F);
+        setResistance(2000.0F);
+        setStepSound(soundStoneFootstep);
+        setUnlocalizedName(Strings.DialDevice_Name);
+        setCreativeTab(CreativeTabs.tabBlock);
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-	{
-		if (player.isSneaking())
-			return false;
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileEntityDialDevice();
+    }
 
-		player.openGui(EnhancedPortals.instance, Reference.GuiIDs.DialDevice, world, x, y, z);
-		return true;
-	}
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        if (player.isSneaking())
+        {
+            return false;
+        }
 
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileEntityDialDevice();
-	}
+        player.openGui(EnhancedPortals.instance, Reference.GuiIDs.DialDevice, world, x, y, z);
+        return true;
+    }
 }
