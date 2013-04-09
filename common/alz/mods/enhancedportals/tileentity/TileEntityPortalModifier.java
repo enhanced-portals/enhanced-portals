@@ -78,7 +78,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
         }
         else if (method == 2)
         {
-            return new Object[] { PortalData.Texture.GetSwapped() };
+            return new Object[] { PortalData.Texture.getSwapped() };
         }
         else if (method == 3)
         {
@@ -129,7 +129,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
                         }
 
                         int[] offset = WorldHelper.offsetDirectionBased(worldObj, xCoord, yCoord, zCoord);
-                        WorldHelper.floodUpdateMetadata(worldObj, offset[0], offset[1], offset[2], 90, PortalData.Texture.Get());
+                        WorldHelper.floodUpdateMetadata(worldObj, offset[0], offset[1], offset[2], 90, PortalData.Texture.get());
 
                         return new Object[] { true };
                     }
@@ -172,11 +172,11 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
         if (hasUpgrade(0))
         {
-            createdPortal = PortalHelper.createPortalAround(worldObj, xCoord, yCoord, zCoord, PortalData.Texture.Get());
+            createdPortal = PortalHelper.createPortalAround(worldObj, xCoord, yCoord, zCoord, PortalData.Texture.get());
         }
         else if (WorldHelper.isBlockPortalRemovable(blockID))
         {
-            createdPortal = PortalHelper.createPortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2], PortalData.Texture.Get());
+            createdPortal = PortalHelper.createPortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2], PortalData.Texture.get());
         }
 
         setState(createdPortal);
@@ -194,7 +194,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
         {
             PortalHelper.removePortalAround(worldObj, xCoord, yCoord, zCoord);
         }
-        else if (blockID == Reference.BlockIDs.NetherPortal && meta == PortalData.Texture.Get())
+        else if (blockID == Reference.BlockIDs.NetherPortal && meta == PortalData.Texture.get())
         {
             PortalHelper.removePortal(worldObj, blockToTest[0], blockToTest[1], blockToTest[2]);
         }
@@ -242,7 +242,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
 
     public int getColour()
     {
-        return PortalData.Texture.Get();
+        return PortalData.Texture.get();
     }
 
     public int getFrequency()
@@ -302,7 +302,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
     @Override
     public PacketTileUpdate getUpdatePacket()
     {
-        return new PacketTileUpdate(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, new int[] { PortalData.Frequency, PortalData.Texture.Get() });
+        return new PacketTileUpdate(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, new int[] { PortalData.Frequency, PortalData.Texture.get() });
     }
 
     public boolean hasFreeSpace()
@@ -463,7 +463,7 @@ public class TileEntityPortalModifier extends TileEntity implements IInventory, 
     {
         super.writeToNBT(tag);
 
-        tag.setInteger("colour", PortalData.Texture.Get());
+        tag.setInteger("colour", PortalData.Texture.get());
         tag.setInteger("freq", PortalData.Frequency);
         tag.setBoolean("power", HadPower);
 

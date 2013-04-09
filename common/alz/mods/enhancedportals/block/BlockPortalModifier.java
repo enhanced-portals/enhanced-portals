@@ -158,7 +158,7 @@ public class BlockPortalModifier extends BlockContainer
             {
                 if (currentItem.itemID == Item.dyePowder.itemID)
                 {
-                    PortalHandler.Data.floodUpdateTextureModifier(modifier, PortalTexture.getPortalTexture(PortalTexture.SwapColours(currentItem.getItemDamage())), true);
+                    PortalHandler.Data.floodUpdateTextureModifier(modifier, PortalTexture.getPortalTexture(PortalTexture.swapColours(currentItem.getItemDamage())), true);
 
                     if (!player.capabilities.isCreativeMode && Settings.DoesDyingCost)
                     {

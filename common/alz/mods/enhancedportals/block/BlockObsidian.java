@@ -28,8 +28,9 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
             if (PortalHandler.Create.createPortalAroundBlock(new WorldLocation(world, x, y, z)))
             {
                 current.damageItem(1, player);
-                return true;
             }
+            
+            return true;
         }
 
         return false;

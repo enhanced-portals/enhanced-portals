@@ -57,7 +57,7 @@ public class PortalData
 
     public String GetTextureAsString()
     {
-        return PortalTexture.GetLocalizedName(Texture);
+        return PortalTexture.getLocalizedName(Texture);
     }
 
     public boolean UseTeleportData()

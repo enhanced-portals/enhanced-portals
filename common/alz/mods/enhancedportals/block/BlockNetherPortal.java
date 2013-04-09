@@ -19,6 +19,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import alz.mods.enhancedportals.client.TextureNetherPortalEntityFX;
 import alz.mods.enhancedportals.common.WorldLocation;
 import alz.mods.enhancedportals.helpers.EntityHelper;
@@ -128,7 +129,7 @@ public class BlockNetherPortal extends BlockContainer
 
         if (item.itemID == Item.dyePowder.itemID)
         {
-            newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
+            newTexture = PortalTexture.getPortalTexture(PortalTexture.swapColours(item.getItemDamage()));
         }
         else if (item.itemID == Item.bucketLava.itemID)
         {
@@ -188,7 +189,7 @@ public class BlockNetherPortal extends BlockContainer
 
             if (item.itemID == Item.dyePowder.itemID)
             {
-                newTexture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(item.getItemDamage()));
+                newTexture = PortalTexture.getPortalTexture(PortalTexture.swapColours(item.getItemDamage()));
             }
             else if (item.itemID == Item.bucketLava.itemID)
             {
@@ -346,7 +347,7 @@ public class BlockNetherPortal extends BlockContainer
                     WorldLocation location = new WorldLocation(par1World, par2, par3, par4);
                     TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
 
-                    FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, PortalTexture.SwapColours(netherPortal.Texture.ordinal()), var7, var9, var11, var13, var15, var17));
+                    FMLClientHandler.instance().getClient().effectRenderer.addEffect(new TextureNetherPortalEntityFX(par1World, PortalTexture.swapColours(netherPortal.Texture.ordinal()), var7, var9, var11, var13, var15, var17));
                 }
                 else
                 {
@@ -392,83 +393,35 @@ public class BlockNetherPortal extends BlockContainer
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
     {
-        if (side == 0)
+        Material material = world.getBlockMaterial(x, y, z);
+        
+        if (material == Material.portal)
         {
-            y++;
-        }
-        else if (side == 1)
-        {
-            y--;
-        }
-        else if (side == 2)
-        {
-            z++;
-        }
-        else if (side == 3)
-        {
-            z--;
-        }
-        else if (side == 4)
-        {
-            x++;
-        }
-        else if (side == 5)
-        {
-            x--;
-        }
-
-        PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z));
-
-        if (portalShape == PortalShape.HORIZONTAL)
-        {
-            if (side == 1 && world.getBlockId(x, y + 1, z) == blockID)
-            {
-                return false;
-            }
-            if (side == 0 && world.getBlockId(x, y - 1, z) == blockID)
-            {
-                return false;
-            }
-            if (side == 0 || side == 1)
-            {
-                return true;
-            }
-
             return false;
         }
-        else if (portalShape == PortalShape.X)
+
+        PortalShape portalShape = PortalShape.getPortalShape(new WorldLocation(world, x, y, z).getOffset(ForgeDirection.getOrientation(side).getOpposite()));
+        
+        if (portalShape == PortalShape.X)
         {
-            if (side == 2 && world.getBlockId(x, y, z - 1) == blockID)
-            {
-                return false;
-            }
-            if (side == 3 && world.getBlockId(x, y, z + 1) == blockID)
-            {
-                return false;
-            }
             if (side == 2 || side == 3)
             {
                 return true;
             }
-
-            return false;
         }
         else if (portalShape == PortalShape.Z)
         {
-            if (side == 4 && world.getBlockId(x - 1, y, z) == blockID)
-            {
-                return false;
-            }
-            if (side == 5 && world.getBlockId(x + 1, y, z) == blockID)
-            {
-                return false;
-            }
             if (side == 4 || side == 5)
             {
                 return true;
             }
-
-            return false;
+        }
+        else if (portalShape == PortalShape.HORIZONTAL)
+        {
+            if (side == 0 || side == 1)
+            {
+                return true;
+            }
         }
 
         return false;
@@ -476,11 +429,6 @@ public class BlockNetherPortal extends BlockContainer
 
     public boolean tryToCreatePortal(World world, int x, int y, int z)
     {
-        if (world.getBlockId(x, y, z) == Reference.BlockIDs.Obsidian)
-        {
-            y += 1;
-        }
-
         return PortalHandler.Create.createPortal(new WorldLocation(world, x, y, z));
     }
 

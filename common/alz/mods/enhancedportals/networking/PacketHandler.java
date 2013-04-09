@@ -60,7 +60,7 @@ public class PacketHandler implements IPacketHandler
                 }
                 else if (itemModifier.itemID == Item.dyePowder.itemID)
                 {
-                    portalData.Texture = PortalTexture.getPortalTexture(PortalTexture.SwapColours(itemModifier.getItemDamage()));
+                    portalData.Texture = PortalTexture.getPortalTexture(PortalTexture.swapColours(itemModifier.getItemDamage()));
                 }
             }
             else
