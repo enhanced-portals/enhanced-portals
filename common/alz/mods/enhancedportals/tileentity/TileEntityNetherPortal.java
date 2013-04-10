@@ -12,10 +12,12 @@ import alz.mods.enhancedportals.portals.PortalTexture;
 public class TileEntityNetherPortal extends TileEntity implements ITileEntityNetworking
 {
     public PortalTexture Texture;
+    public WorldLocation ParentModifier;
 
     public TileEntityNetherPortal()
     {
         Texture = PortalTexture.PURPLE;
+        ParentModifier = null;
     }
 
     @Override

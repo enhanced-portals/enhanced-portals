@@ -60,6 +60,11 @@ public class PortalHandler
          */
         public static boolean createPortal(WorldLocation location, PortalShape shape, PortalTexture texture)
         {
+            return createPortal(location, shape, texture, null);
+        }
+        
+        public static boolean createPortal(WorldLocation location, PortalShape shape, PortalTexture texture, TileEntityPortalModifier modifier)
+        {
             if (shape == PortalShape.UNKNOWN || location.worldObj == null || location.worldObj.isRemote || !isBlockRemovable(location.getBlockId()))
             {
                 return false;
@@ -108,6 +113,12 @@ public class PortalHandler
                         addedBlocks.add(current);
                         current.setBlock(Reference.BlockIDs.NetherPortal);
                         Data.updateTexture(current, texture, PortalTexture.UNKNOWN);
+                        
+                        if (modifier != null)
+                        {
+                            Data.setModifierParent(current, modifier);
+                        }
+                        
                         queue = updateQueue(queue, current, shape);
 
                         if (addedBlocks.size() == 1)
@@ -153,6 +164,24 @@ public class PortalHandler
                 return true;
             }
             else if (createPortal(location, PortalShape.HORIZONTAL, texture))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        
+        public static boolean createPortal(WorldLocation location, PortalTexture texture, TileEntityPortalModifier modifier)
+        {
+            if (createPortal(location, PortalShape.X, texture, modifier))
+            {
+                return true;
+            }
+            else if (createPortal(location, PortalShape.Z, texture, modifier))
+            {
+                return true;
+            }
+            else if (createPortal(location, PortalShape.HORIZONTAL, texture, modifier))
             {
                 return true;
             }
@@ -222,7 +251,7 @@ public class PortalHandler
         {
             int[] offset = WorldHelper.offsetDirectionBased(modifier.worldObj, modifier.xCoord, modifier.yCoord, modifier.zCoord);
 
-            return createPortal(new WorldLocation(modifier.worldObj, offset[0], offset[1], offset[2]), modifier.PortalData.Texture);
+            return createPortal(new WorldLocation(modifier.worldObj, offset[0], offset[1], offset[2]), modifier.getTexture(), modifier);
         }
 
         private static int getSides(WorldLocation location, PortalShape shape)
@@ -349,9 +378,9 @@ public class PortalHandler
                 {
                     TileEntityPortalModifier modifier = (TileEntityPortalModifier) current.getBlockTileEntity();
 
-                    if (modifier.PortalData.Texture == oldTexture) // This should only affect modifiers if they're the same texture as what's being replaced
+                    if (modifier.getTexture() == oldTexture) // This should only affect modifiers if they're the same texture as what's being replaced
                     {
-                        modifier.PortalData.Texture = newTexture;
+                        modifier.setTexture(newTexture);
 
                         if (current.worldObj.isRemote)
                         {
@@ -382,11 +411,11 @@ public class PortalHandler
         public static boolean floodUpdateTextureModifier(TileEntityPortalModifier modifier, PortalTexture newTexture, boolean updateSelf)
         {
             int[] offset = WorldHelper.offsetDirectionBased(modifier.worldObj, modifier.xCoord, modifier.yCoord, modifier.zCoord);
-            PortalTexture oldTexture = modifier.PortalData.Texture;
+            PortalTexture oldTexture = modifier.getTexture();
 
             if (updateSelf)
             {
-                modifier.PortalData.Texture = newTexture;
+                modifier.setTexture(newTexture);
 
                 if (!modifier.worldObj.isRemote)
                 {
@@ -431,6 +460,17 @@ public class PortalHandler
             }
 
             return true;
+        }
+        
+        public static void setModifierParent(WorldLocation portal, TileEntityPortalModifier modifier)
+        {
+            if (portal.worldObj.provider.dimensionId != modifier.worldObj.provider.dimensionId)
+            {
+                return;
+            }
+                        
+            TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) portal.getBlockTileEntity();
+            netherPortal.ParentModifier = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord);
         }
     }
 

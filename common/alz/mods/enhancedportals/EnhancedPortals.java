@@ -80,6 +80,7 @@ public class EnhancedPortals
         Settings.AllowObsidianStairs = Settings.GetFromConfig("AllowObsidianStairs", Settings.AllowObsidianStairs_Default);
         Settings.AllowDialDevice = Settings.GetFromConfig("AllowDialDevice", Settings.AllowDialDevice_Default);
         Settings.PrintPortalMessages = Settings.GetFromConfig("PrintPortalCreationMessages", Settings.PrintPortalMessages_Default);
+        Settings.RenderPortalEffects = Settings.GetFromConfig("RenderPortalEffects", Settings.RenderPortalEffects_Default);
 
         Settings.MaximumPortalSize = Settings.GetFromConfig("MaximumPortalSize", Settings.MaximumPortalSize_Default);
 

@@ -18,7 +18,6 @@ public class Blocks
         if (Settings.AllowModifiers)
         {
             Settings.BorderBlocks.add(Reference.BlockIDs.PortalModifier);
-            Settings.BorderBlocks.add(Reference.BlockIDs.DialDevice + 1);
         }
 
         if (Settings.AllowObsidianStairs)

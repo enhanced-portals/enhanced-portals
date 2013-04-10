@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
+import alz.mods.enhancedportals.portals.PortalTexture;
 import alz.mods.enhancedportals.reference.Localizations;
 import alz.mods.enhancedportals.reference.Reference;
 import alz.mods.enhancedportals.reference.Reference.BlockIDs;
@@ -43,7 +44,7 @@ public class WorldHelper
             }
             else if (currentID == blockToFind && !checkedQueue.contains(current[0] + "," + current[1] + "," + current[2]))
             {
-                if (((TileEntityPortalModifier) world.getBlockTileEntity(current[0], current[1], current[2])).getFrequency() == colourToFind)
+                if (((TileEntityPortalModifier) world.getBlockTileEntity(current[0], current[1], current[2])).getTexture().ordinal() == colourToFind)
                 {
                     return current;
                 }
@@ -140,9 +141,9 @@ public class WorldHelper
             {
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(current[0], current[1], current[2]);
 
-                if (modifier.getColour() != newMeta)
+                if (modifier.getTexture().ordinal() != newMeta)
                 {
-                    modifier.setColour(newMeta);
+                    modifier.setTexture(PortalTexture.getPortalTexture(newMeta));
 
                     if (!world.isRemote)
                     {

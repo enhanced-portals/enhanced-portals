@@ -1,58 +1,49 @@
 package alz.mods.enhancedportals.teleportation;
 
 import net.minecraft.server.MinecraftServer;
+import alz.mods.enhancedportals.common.WorldLocation;
 import alz.mods.enhancedportals.helpers.EntityHelper;
 import alz.mods.enhancedportals.helpers.WorldHelper;
 import alz.mods.enhancedportals.tileentity.TileEntityPortalModifier;
 
-public class TeleportData
+public class TeleportData extends WorldLocation
 {
-    private double x, y, z;
-    private int dimension;
     private boolean linksToModifier;
+    private int dimension;
 
     private int[] blockOffsetLocation;
     private double[] entityOffsetLocation;
 
-    public TeleportData(double x, double y, double z, int dimension)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.dimension = dimension;
-        linksToModifier = false;
-    }
-
     public TeleportData(int x, int y, int z, int dimension)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.xCoord = x;
+        this.yCoord = y;
+        this.zCoord = z;
         this.dimension = dimension;
         linksToModifier = false;
     }
 
     public TeleportData(int x, int y, int z, int dimension, boolean modifier)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.xCoord = x;
+        this.yCoord = y;
+        this.zCoord = z;
         this.dimension = dimension;
         linksToModifier = modifier;
     }
 
     public TeleportData(TileEntityPortalModifier modifier)
     {
-        x = modifier.xCoord;
-        y = modifier.yCoord;
-        z = modifier.zCoord;
-        dimension = modifier.worldObj.provider.dimensionId;
+        this.xCoord = modifier.xCoord;
+        this.yCoord = modifier.yCoord;
+        this.zCoord = modifier.zCoord;
+        this.dimension = modifier.worldObj.provider.dimensionId;
         linksToModifier = true;
     }
 
     public boolean equals(TeleportData data)
     {
-        if (data.x == x && data.y == y && data.z == z && data.dimension == dimension && data.linksToModifier == data.linksToModifier)
+        if (data.getX() == getX() && data.getY() == getY() && data.getZ() == getZ() && data.getDimension() == getDimension() && data.linksToModifier == data.linksToModifier)
         {
             return true;
         }
@@ -82,7 +73,7 @@ public class TeleportData
 
     public int getX()
     {
-        return (int) Math.floor(x);
+        return xCoord;
     }
 
     public int getXOffsetBlock()
@@ -101,7 +92,7 @@ public class TeleportData
 
     public int getY()
     {
-        return (int) Math.floor(y);
+        return yCoord;
     }
 
     public int getYOffsetBlock()
@@ -120,7 +111,7 @@ public class TeleportData
 
     public int getZ()
     {
-        return (int) Math.floor(z);
+        return zCoord;
     }
 
     public int getZOffsetBlock()

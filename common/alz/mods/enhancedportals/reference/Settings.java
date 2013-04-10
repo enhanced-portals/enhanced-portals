@@ -17,6 +17,7 @@ public class Settings
     public static final boolean AllowDialDevice_Default = true;
     public static final boolean PrintPortalMessages_Default = true;
     public static final boolean CanDyeByThrowing_Default = true;
+    public static final boolean RenderPortalEffects_Default = true;
 
     public static final int MaximumPortalSize_Default = 0;
     public static final int PigmenSpawnChance_Default = 100;
@@ -34,6 +35,7 @@ public class Settings
     public static boolean AllowDialDevice;
     public static boolean PrintPortalMessages;
     public static boolean CanDyeByThrowing;
+    public static boolean RenderPortalEffects;
 
     public static int MaximumPortalSize;
     public static int PigmenSpawnChance;
@@ -186,5 +188,22 @@ public class Settings
         }
 
         ConfigFile.save();
+    }
+    
+    public static String makeString(List<Integer> list)
+    {
+        String returnString = "";
+        
+        for (int i : list)
+        {
+            returnString += i + ",";
+        }
+        
+        if (returnString.length() > 1)
+        {
+            returnString = returnString.substring(0, returnString.length() - 1);
+        }
+        
+        return returnString;
     }
 }

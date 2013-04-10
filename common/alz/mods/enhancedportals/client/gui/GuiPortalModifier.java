@@ -41,7 +41,7 @@ public class GuiPortalModifier extends GuiContainer
             textBox.setText(String.format("%1s", textBox.getText()).replace(' ', '0'));
             this.button.enabled = false;
 
-            Modifier.setFrequency(Integer.parseInt(textBox.getText()));
+            Modifier.setNetwork(textBox.getText());
             ClientProxy.SendBlockUpdate(Modifier);
         }
         else if (button.id == 2)
@@ -50,7 +50,7 @@ public class GuiPortalModifier extends GuiContainer
             this.button.enabled = false;
             button2.enabled = false;
 
-            Modifier.setFrequency(Integer.parseInt(textBox.getText()));
+            Modifier.setNetwork(textBox.getText());
             ClientProxy.SendBlockUpdate(Modifier);
         }
     }
@@ -98,7 +98,7 @@ public class GuiPortalModifier extends GuiContainer
         super.initGui();
 
         textBox = new GuiImprovedTextBox(fontRenderer, (width - 20) / 2 - 75 / 2, guiTop + 42, 75, 16, 10, true, true);
-        textBox.setText("" + Modifier.getFrequency());
+        textBox.setText(Modifier.getNetwork());
 
         button = new GuiButton(1, (width - 20) / 2 - 40 / 2 + 61, guiTop + 40, 20, 20, Localizations.getLocalizedString(Strings.GUI_SaveCharacter));
         button2 = new GuiButton(2, (width - 20) / 2 - 40 / 2 - 40, guiTop + 40, 20, 20, Localizations.getLocalizedString(Strings.GUI_ClearCharacter));

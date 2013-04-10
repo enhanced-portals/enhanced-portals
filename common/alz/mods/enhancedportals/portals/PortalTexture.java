@@ -2,7 +2,10 @@ package alz.mods.enhancedportals.portals;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StringTranslate;
 import alz.mods.enhancedportals.reference.Strings;
@@ -14,6 +17,7 @@ public enum PortalTexture
     private static PortalTexture[] VALID_TEXTURES = { PURPLE, RED, GREEN, BROWN, BLUE, BLACK, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE, LAVA, WATER, LAVA_STILL, WATER_STILL };
     private static int[] PARTICLE_COLOURS = { 1973019, 11743532, 3887386, 5320730, 2437522, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522, 15435844, 2437522 };
     private static Icon[] TEXTURE_ICONS = {};
+    private static Icon[] PORTAL_MODIFIER_ICONS = {};
 
     public static String getLocalizedName(int id)
     {
@@ -58,6 +62,11 @@ public enum PortalTexture
     {
         return TEXTURE_ICONS[id];
     }
+    
+    public static Icon getModifierIcon(int id)
+    {
+        return PORTAL_MODIFIER_ICONS[id];
+    }
 
     public static PortalTexture getPortalTexture(int id)
     {
@@ -72,16 +81,23 @@ public enum PortalTexture
     public static void registerTextures(IconRegister iconRegister)
     {
         TEXTURE_ICONS = new Icon[VALID_TEXTURES.length];
+        PORTAL_MODIFIER_ICONS = new Icon[VALID_TEXTURES.length];
 
         for (int i = 0; i < 16; i++)
         {
             TEXTURE_ICONS[i] = iconRegister.registerIcon(String.format(Strings.NetherPortal_Icon, i));
+            PORTAL_MODIFIER_ICONS[i] = iconRegister.registerIcon(String.format(Strings.PortalModifier_Icon_Active, i));
         }
 
         TEXTURE_ICONS[LAVA.ordinal()] = Block.lavaMoving.getBlockTextureFromSide(2);
+        PORTAL_MODIFIER_ICONS[LAVA.ordinal()] = PORTAL_MODIFIER_ICONS[14];
+        TEXTURE_ICONS[LAVA_STILL.ordinal()] = Block.lavaStill.getBlockTextureFromSide(0);
+        PORTAL_MODIFIER_ICONS[LAVA_STILL.ordinal()] = PORTAL_MODIFIER_ICONS[14];
+        
         TEXTURE_ICONS[WATER.ordinal()] = Block.waterMoving.getBlockTextureFromSide(2);
-        TEXTURE_ICONS[LAVA_STILL.ordinal()] = Block.lavaMoving.getBlockTextureFromSide(0);
-        TEXTURE_ICONS[WATER_STILL.ordinal()] = Block.waterMoving.getBlockTextureFromSide(0);
+        PORTAL_MODIFIER_ICONS[WATER.ordinal()] = PORTAL_MODIFIER_ICONS[4];
+        TEXTURE_ICONS[WATER_STILL.ordinal()] = Block.waterStill.getBlockTextureFromSide(0);
+        PORTAL_MODIFIER_ICONS[WATER_STILL.ordinal()] = PORTAL_MODIFIER_ICONS[4];
     }
 
     public static int swapColours(int id)
@@ -120,9 +136,72 @@ public enum PortalTexture
     {
         return TEXTURE_ICONS[ordinal()];
     }
+    
+    public Icon getModifierIcon()
+    {
+        return PORTAL_MODIFIER_ICONS[ordinal()];
+    }
 
     public int getSwapped()
     {
         return swapColours(ordinal());
+    }
+    
+    public PortalTexture getPortalTextureFromItem(ItemStack item, boolean consumeItem, EntityPlayer player)
+    {
+        return getPortalTextureFromItem(item, this, consumeItem, player);
+    }
+    
+    public static PortalTexture getPortalTextureFromItem(ItemStack item, PortalTexture currentTexture, boolean consumeItem, EntityPlayer player)
+    {
+        if (item != null)
+        {
+            PortalTexture newTexture = PortalTexture.UNKNOWN;
+            boolean isBucket = false;
+            
+            if (item.itemID == Item.dyePowder.itemID)
+            {
+                newTexture = PortalTexture.getPortalTexture(PortalTexture.swapColours(item.getItemDamage()));
+            }
+            else if (item.itemID == Item.bucketLava.itemID)
+            {
+                newTexture = PortalTexture.LAVA;
+                isBucket = true;
+                
+                if (currentTexture == PortalTexture.LAVA)
+                {
+                    newTexture = PortalTexture.LAVA_STILL;
+                    consumeItem = false;
+                }
+            }
+            else if (item.itemID == Item.bucketWater.itemID)
+            {
+                newTexture = PortalTexture.WATER;
+                isBucket = true;
+                
+                if (currentTexture == PortalTexture.WATER)
+                {
+                    newTexture = PortalTexture.WATER_STILL;
+                    consumeItem = false;
+                }
+            }
+
+            if (newTexture != null && newTexture != PortalTexture.UNKNOWN)
+            {
+                if (consumeItem)
+                {
+                    item.stackSize--;
+
+                    if (isBucket && player != null)
+                    {
+                        player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
+                    }
+                }
+
+                return newTexture;
+            }
+        }
+
+        return PortalTexture.UNKNOWN;
     }
 }

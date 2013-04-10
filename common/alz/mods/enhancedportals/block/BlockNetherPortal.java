@@ -10,9 +10,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -113,64 +111,19 @@ public class BlockNetherPortal extends BlockContainer
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-        if (!Settings.CanDyePortals)
-        {
-            return false;
-        }
-
-        ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
-        PortalTexture newTexture = null;
-        boolean isBucket = false;
-
-        if (item == null)
-        {
-            return false;
-        }
-
-        if (item.itemID == Item.dyePowder.itemID)
-        {
-            newTexture = PortalTexture.getPortalTexture(PortalTexture.swapColours(item.getItemDamage()));
-        }
-        else if (item.itemID == Item.bucketLava.itemID)
-        {
-            newTexture = PortalTexture.LAVA;
-            isBucket = true;
-        }
-        else if (item.itemID == Item.bucketWater.itemID)
-        {
-            newTexture = PortalTexture.WATER;
-            isBucket = true;
-        }
-
-        if (newTexture != null)
+        if (Settings.CanDyePortals)
         {
             WorldLocation location = new WorldLocation(world, x, y, z);
             TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
-
-            if (netherPortal.Texture == newTexture)
-            {
-                return false;
-            }
-
-            if (!world.isRemote)
+            PortalTexture newTexture = PortalTexture.getPortalTextureFromItem(player.inventory.mainInventory[player.inventory.currentItem], netherPortal.Texture, Settings.DoesDyingCost && !player.capabilities.isCreativeMode, player);
+            
+            if (newTexture != PortalTexture.UNKNOWN && !world.isRemote)
             {
                 PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
             }
-
-            if (Settings.DoesDyingCost && !player.capabilities.isCreativeMode)
-            {
-                item.stackSize--;
-
-                if (isBucket)
-                {
-                    player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty));
-                }
-            }
-
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -178,109 +131,80 @@ public class BlockNetherPortal extends BlockContainer
     {
         if (world.isRemote)
         {
-            entity.setInPortal(); // Make the magical effects
-            return; // There's nothing else we need to do on the client side here.
+            if (Settings.RenderPortalEffects)
+            {
+                entity.setInPortal();
+            }
+            
+            return;
         }
 
+        WorldLocation location = new WorldLocation(world, x, y, z);
+        TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
+        
         if (Settings.CanDyePortals && Settings.CanDyeByThrowing && entity instanceof EntityItem)
         {
-            ItemStack item = ((EntityItem) entity).getEntityItem();
-            PortalTexture newTexture = null;
+            PortalTexture newTexture = PortalTexture.getPortalTextureFromItem(((EntityItem) entity).getEntityItem(), netherPortal.Texture, Settings.DoesDyingCost, null);
 
-            if (item.itemID == Item.dyePowder.itemID)
+            if (newTexture != PortalTexture.UNKNOWN)
             {
-                newTexture = PortalTexture.getPortalTexture(PortalTexture.swapColours(item.getItemDamage()));
-            }
-            else if (item.itemID == Item.bucketLava.itemID)
-            {
-                newTexture = PortalTexture.LAVA;
-            }
-            else if (item.itemID == Item.bucketWater.itemID)
-            {
-                newTexture = PortalTexture.WATER;
-            }
-
-            if (newTexture != null)
-            {
-                WorldLocation location = new WorldLocation(world, x, y, z);
-                TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) location.getBlockTileEntity();
-
-                if (netherPortal.Texture == newTexture)
-                {
-                    return;
-                }
-
                 PortalHandler.Data.floodUpdateTexture(location, newTexture, netherPortal.Texture, true);
-
-                if (Settings.DoesDyingCost)
-                {
-                    item.stackSize--;
-                }
-
                 return;
             }
         }
 
-        if (!Settings.AllowTeleporting)
-        {
-            return;
-        }
-
-        int[] firstModifier = WorldHelper.findBestAttachedModifier(world, x, y, z, blockID, Reference.BlockIDs.PortalModifier, world.getBlockMetadata(x, y, z));
-        TileEntityPortalModifier modifier = null;
-
-        if (firstModifier != null)
-        {
-            modifier = (TileEntityPortalModifier) world.getBlockTileEntity(firstModifier[0], firstModifier[1], firstModifier[2]);
-        }
-
-        if (modifier == null || modifier.getFrequency() == 0)
-        {
-            if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
+        if (Settings.AllowTeleporting)
+        {       
+            TileEntityPortalModifier modifier = (TileEntityPortalModifier) netherPortal.ParentModifier.getBlockTileEntity();
+                
+            if (modifier == null || modifier.getNetwork() == "undefined")
             {
-                entity.setInPortal(); // There's no Portal Modifier or it's frequency isn't set.
-            }
-        }
-        else
-        {
-            if (EntityHelper.canEntityTravel(entity))
-            {
-                List<TeleportData> validExits = Reference.ServerHandler.ModifierNetwork.getFrequencyExcluding("" + modifier.getFrequency(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
-
-                if (validExits == null || validExits.isEmpty())
+                if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
                 {
-                    Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
-                    EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
+                    entity.setInPortal();
                 }
-                else
+            }
+            else
+            {
+                if (EntityHelper.canEntityTravel(entity))
                 {
-                    TeleportData selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
-                    boolean isValidExit = true;
-
-                    while (!WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity, true))
-                    {
-                        if (validExits.isEmpty())
-                        {
-                            isValidExit = false;
-                            break;
-                        }
-
-                        selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
-                    }
-
-                    if (!isValidExit)
+                    List<TeleportData> validExits = Reference.ServerHandler.ModifierNetwork.getFrequencyExcluding(modifier.getNetwork(), new TeleportData(modifier.xCoord, modifier.yCoord, modifier.zCoord, world.provider.dimensionId));
+    
+                    if (validExits == null || validExits.isEmpty())
                     {
                         Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
                         EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
                     }
                     else
                     {
-                        EntityHelper.teleportEntity(entity, selectedExit);
+                        TeleportData selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
+                        boolean isValidExit = true;
+    
+                        while (!WorldHelper.isValidExitPortal(world, selectedExit, modifier, entity, true))
+                        {
+                            if (validExits.isEmpty())
+                            {
+                                isValidExit = false;
+                                break;
+                            }
+    
+                            selectedExit = validExits.remove(world.rand.nextInt(validExits.size()));
+                        }
+    
+                        if (!isValidExit)
+                        {
+                            Reference.LogData(String.format(Localizations.getLocalizedString(Strings.Console_NoExitFound), entity.getEntityName()));
+                            EntityHelper.sendMessage(entity, Localizations.getLocalizedString(Strings.Portal_NoExitFound));
+                        }
+                        else
+                        {
+                            EntityHelper.teleportEntity(entity, selectedExit);
+                        }
                     }
                 }
+    
+                EntityHelper.setCanEntityTravel(entity, false);
             }
-
-            EntityHelper.setCanEntityTravel(entity, false);
         }
     }
 
@@ -393,9 +317,7 @@ public class BlockNetherPortal extends BlockContainer
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
     {
-        Material material = world.getBlockMaterial(x, y, z);
-        
-        if (material == Material.portal)
+        if (world.getBlockMaterial(x, y, z) == Material.portal)
         {
             return false;
         }
