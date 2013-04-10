@@ -3,6 +3,9 @@ package alz.mods.enhancedportals.reference;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraftforge.common.Configuration;
 
 public class Settings
@@ -15,13 +18,17 @@ public class Settings
     public static final boolean AllowModifiers_Default = true;
     public static final boolean AllowObsidianStairs_Default = true;
     public static final boolean AllowDialDevice_Default = true;
+    public static final boolean CanDyeByThrowing_Default = true;    
+    @SideOnly(Side.CLIENT)
+    public static final boolean RenderPortalEffects_Default = true;    
+    @SideOnly(Side.SERVER)
     public static final boolean PrintPortalMessages_Default = true;
-    public static final boolean CanDyeByThrowing_Default = true;
-    public static final boolean RenderPortalEffects_Default = true;
 
     public static final int MaximumPortalSize_Default = 0;
-    public static final int PigmenSpawnChance_Default = 100;
+    public static final int PigmenSpawnChance_Default = 100;    
+    @SideOnly(Side.CLIENT)
     public static final int SoundLevel_Default = 100;
+    @SideOnly(Side.CLIENT)
     public static final int ParticleLevel_Default = 100;
 
     public static final List<Integer> RemovableBlocks_Default = new ArrayList<Integer>();
@@ -33,13 +40,17 @@ public class Settings
     public static boolean AllowModifiers;
     public static boolean AllowObsidianStairs;
     public static boolean AllowDialDevice;
+    @SideOnly(Side.SERVER)
     public static boolean PrintPortalMessages;
     public static boolean CanDyeByThrowing;
+    @SideOnly(Side.CLIENT)
     public static boolean RenderPortalEffects;
 
     public static int MaximumPortalSize;
     public static int PigmenSpawnChance;
+    @SideOnly(Side.CLIENT)
     public static int SoundLevel;
+    @SideOnly(Side.CLIENT)
     public static int ParticleLevel;
 
     public static List<Integer> RemovableBlocks = new ArrayList<Integer>();
