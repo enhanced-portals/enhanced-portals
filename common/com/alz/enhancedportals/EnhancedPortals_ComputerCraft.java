@@ -1,4 +1,4 @@
-package com.alz.enhancedportals.computercraft;
+package com.alz.enhancedportals;
 
 import java.util.logging.Level;
 
@@ -19,10 +19,10 @@ import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid=Reference.MOD_ID + "_cc", name=Reference.MOD_NAME + " ComputerCraft", version=Reference.MOD_VERSION, dependencies="required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION)
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
-public class EP_ComputerCraft
+public class EnhancedPortals_ComputerCraft
 {
     @Instance(Reference.MOD_ID + "_cc")
-    public static EP_ComputerCraft instance;
+    public static EnhancedPortals_ComputerCraft instance;
     
     public static Block ccComputer = null;
     
