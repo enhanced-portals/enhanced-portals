@@ -2,7 +2,7 @@
 {
   "modid" : "enhancedportals",
   "name" : "Enhanced Portals",
-  "version" : "2.1.2",
+  "version" : "2.2",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",
   "authors": [
@@ -12,6 +12,22 @@
   "logoFile" : "",
   "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
   "parent" : "",
+  "screenshots": [
+  ]
+},
+{
+  "modid" : "enhancedportals_cc",
+  "name" : "Enhanced Portals ComputerCraft",
+  "version" : "2.2",
+  "url" : "http://www.minecraftforum.net/topic/1301217-/",
+  "credits" : "",
+  "authors": [
+    "Alz454"
+  ],
+  "description": "An addon that allows ComputerCraft to interact with the Dial Home Device and Portal Modifier.",
+  "logoFile" : "",
+  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
+  "parent" : "enhancedportals",
   "screenshots": [
   ]
 }
