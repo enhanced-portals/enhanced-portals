@@ -2,7 +2,7 @@
 {
   "modid" : "enhancedportals",
   "name" : "Enhanced Portals",
-  "version" : "2.2",
+  "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",
   "authors": [
@@ -18,7 +18,7 @@
 {
   "modid" : "enhancedportals_cc",
   "name" : "Enhanced Portals ComputerCraft",
-  "version" : "2.2",
+  "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",
   "authors": [

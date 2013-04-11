@@ -17,7 +17,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
-@Mod(modid=Reference.MOD_ID + "_cc", name=Reference.MOD_NAME + " ComputerCraft", version=Reference.MOD_VERSION, dependencies="required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION)
+@Mod(modid=Reference.MOD_ID + "_cc", name=Reference.MOD_NAME + " ComputerCraft", version=Reference.MOD_VERSION, dependencies="required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION + ";required-after:ComputerCraft@1.52")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class EnhancedPortals_ComputerCraft
 {
@@ -33,7 +33,7 @@ public class EnhancedPortals_ComputerCraft
         {
             try
             {
-                ccComputer = Block.blocksList[(int) Class.forName("dan200.ComputerCraft").getField("computerBlockID").get(null)];
+                ccComputer = Block.blocksList[Integer.parseInt(Class.forName("dan200.ComputerCraft").getField("computerBlockID").get(null).toString())];
                 loadData();
                 Log.log(Level.INFO, "Successfully loaded ComputerCraft addon.");
             }
