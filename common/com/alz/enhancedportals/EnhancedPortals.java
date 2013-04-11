@@ -12,11 +12,14 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 import com.alz.enhancedportals.core.blocks.BlockHandler;
+import com.alz.enhancedportals.core.items.ItemHandler;
 import com.alz.enhancedportals.core.networking.PacketHandler;
 import com.alz.enhancedportals.core.proxy.CommonProxy;
+import com.alz.enhancedportals.core.tileentity.TileEntityHandler;
 import com.alz.enhancedportals.reference.Localizations;
 import com.alz.enhancedportals.reference.Log;
 import com.alz.enhancedportals.reference.Reference;
+import com.alz.enhancedportals.reference.Settings;
 
 @Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, version=Reference.MOD_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels={Reference.MOD_ID}, packetHandler=PacketHandler.class)
@@ -34,13 +37,15 @@ public class EnhancedPortals
         Localizations.loadLocales();
         
         BlockHandler.init();
+        ItemHandler.init();
+        TileEntityHandler.init();
     }
     
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
-        // configs
-        Log.setLogger(event.getModLog());        
+        Log.setLogger(event.getModLog());
+        Settings.loadSettings(event.getSuggestedConfigurationFile());
     }
     
     @ServerStarting

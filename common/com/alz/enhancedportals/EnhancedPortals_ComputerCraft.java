@@ -63,7 +63,7 @@ public class EnhancedPortals_ComputerCraft
         Block.blocksList[BlockIds.PORTAL_MODIFIER] = null;
         Block.blocksList[BlockIds.PORTAL_MODIFIER] = new BlockPortalModifierCC();
         
-        GameRegistry.registerTileEntity(TileEntityDialHomeDeviceCC.class, Strings.Block.DIAL_HOME_DEVICE_NAME);
-        GameRegistry.registerTileEntity(TileEntityPortalModifierCC.class, Strings.Block.PORTAL_MODIFIER_NAME);
+        GameRegistry.registerTileEntity(TileEntityDialHomeDeviceCC.class, Strings.Block.DIAL_HOME_DEVICE_NAME + "cc");
+        GameRegistry.registerTileEntity(TileEntityPortalModifierCC.class, Strings.Block.PORTAL_MODIFIER_NAME + "cc");
     }
 }

@@ -6,7 +6,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TileEntityHandler
 {
-    public void init()
+    public static void init()
     {
         GameRegistry.registerTileEntity(TileEntityDialHomeDevice.class, Strings.Block.DIAL_HOME_DEVICE_NAME);
         GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "netherPortal");
