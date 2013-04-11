@@ -4,6 +4,9 @@ import java.util.logging.Level;
 
 import net.minecraft.block.Block;
 
+import com.alz.enhancedportals.computercraft.block.BlockDialHomeDeviceCC;
+import com.alz.enhancedportals.computercraft.block.BlockPortalModifierCC;
+import com.alz.enhancedportals.reference.BlockIds;
 import com.alz.enhancedportals.reference.Log;
 import com.alz.enhancedportals.reference.Reference;
 
@@ -45,7 +48,11 @@ public class EP_ComputerCraft
     private static void loadData()
     {
         // add recipes
-        // enable cc stuff
-        // replace portal modifier and dial device with cc versions
+        
+        Block.blocksList[BlockIds.DIAL_HOME_DEVICE] = null;
+        Block.blocksList[BlockIds.DIAL_HOME_DEVICE] = new BlockDialHomeDeviceCC();
+        
+        Block.blocksList[BlockIds.PORTAL_MODIFIER] = null;
+        Block.blocksList[BlockIds.PORTAL_MODIFIER] = new BlockPortalModifierCC();
     }
 }
