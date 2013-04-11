@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockDialHomeDevice extends BlockEnhancedPortalsContainer
@@ -27,6 +28,7 @@ public class BlockDialHomeDevice extends BlockEnhancedPortalsContainer
         setStepSound(soundStoneFootstep);
         setUnlocalizedName(Strings.Block.DIAL_HOME_DEVICE_NAME);
         setCreativeTab(CreativeTabEnhancedPortals.tabEnhancedPortals);
+        setBlockBounds(0F, 0F, 0F, 1F, 0.75F, 1F);
     }
     
     @Override
@@ -47,5 +49,24 @@ public class BlockDialHomeDevice extends BlockEnhancedPortalsContainer
     public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
     {
         return texture;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getBlockTexture(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
+    {
+        return texture;
+    }
+    
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
     }
 }
