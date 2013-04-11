@@ -13,6 +13,7 @@ import com.alz.enhancedportals.reference.Reference;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
@@ -20,6 +21,9 @@ import cpw.mods.fml.common.network.NetworkMod;
 @NetworkMod(clientSideRequired=true, serverSideRequired=false)
 public class EP_ComputerCraft
 {
+    @Instance(Reference.MOD_ID + "_cc")
+    public static EP_ComputerCraft instance;
+    
     public static Block ccComputer = null;
     
     @Init

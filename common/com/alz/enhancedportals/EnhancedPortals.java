@@ -11,8 +11,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
+import com.alz.enhancedportals.core.blocks.BlockHandler;
 import com.alz.enhancedportals.core.networking.PacketHandler;
 import com.alz.enhancedportals.core.proxy.CommonProxy;
+import com.alz.enhancedportals.reference.Localizations;
 import com.alz.enhancedportals.reference.Log;
 import com.alz.enhancedportals.reference.Reference;
 
@@ -29,7 +31,9 @@ public class EnhancedPortals
     @Init
     private void init(FMLInitializationEvent event)
     {
+        Localizations.loadLocales();
         
+        BlockHandler.init();
     }
     
     @PreInit
