@@ -1,7 +1,5 @@
 package com.alz.enhancedportals.portals;
 
-import com.alz.enhancedportals.reference.Strings;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +8,8 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StringTranslate;
+
+import com.alz.enhancedportals.reference.Strings;
 
 public enum PortalTexture
 {
@@ -131,7 +131,7 @@ public enum PortalTexture
 
         return PortalTexture.UNKNOWN;
     }
-    
+
     public static void registerTextures(IconRegister iconRegister)
     {
         TEXTURE_ICONS = new Icon[VALID_TEXTURES.length];

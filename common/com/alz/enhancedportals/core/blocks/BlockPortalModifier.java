@@ -1,15 +1,5 @@
 package com.alz.enhancedportals.core.blocks;
 
-import com.alz.enhancedportals.core.tileentity.TileEntityDialHomeDevice;
-import com.alz.enhancedportals.creativetab.CreativeTabEnhancedPortals;
-import com.alz.enhancedportals.portals.PortalTexture;
-import com.alz.enhancedportals.reference.BlockIds;
-import com.alz.enhancedportals.reference.Reference;
-import com.alz.enhancedportals.reference.Strings;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
@@ -22,10 +12,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
+import com.alz.enhancedportals.core.tileentity.TileEntityDialHomeDevice;
+import com.alz.enhancedportals.creativetab.CreativeTabEnhancedPortals;
+import com.alz.enhancedportals.portals.PortalTexture;
+import com.alz.enhancedportals.reference.BlockIds;
+import com.alz.enhancedportals.reference.Reference;
+import com.alz.enhancedportals.reference.Strings;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class BlockPortalModifier extends BlockEnhancedPortalsContainer
 {
     Icon sideTexture;
-    
+
     public BlockPortalModifier()
     {
         super(BlockIds.PORTAL_MODIFIER, Material.rock);
@@ -35,34 +35,24 @@ public class BlockPortalModifier extends BlockEnhancedPortalsContainer
         setUnlocalizedName(Strings.Block.PORTAL_MODIFIER_NAME);
         setCreativeTab(CreativeTabEnhancedPortals.tabEnhancedPortals);
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntityDialHomeDevice();
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        sideTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Strings.Block.PORTAL_MODIFIER_NAME + "_side");
-        
-        // TODO: Move to a better place...
-        PortalTexture.registerTextures(iconRegister);
-    }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         int metaData = blockAccess.getBlockMetadata(x, y, z);
-        
+
         if (side == metaData)
         {
             return PortalTexture.PURPLE.getModifierIcon(); // TODO: Use TileEntity data
         }
-        
+
         return sideTexture;
     }
 
@@ -72,7 +62,35 @@ public class BlockPortalModifier extends BlockEnhancedPortalsContainer
     {
         return side == 1 ? PortalTexture.PURPLE.getModifierIcon() : sideTexture;
     }
-    
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        if (player.isSneaking())
+        {
+            if (player.inventory.mainInventory[player.inventory.currentItem] == null)
+            {
+                ForgeDirection nextRotation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+
+                if (nextRotation.ordinal() + 1 < ForgeDirection.VALID_DIRECTIONS.length)
+                {
+                    nextRotation = ForgeDirection.getOrientation(nextRotation.ordinal() + 1);
+                }
+                else
+                {
+                    nextRotation = ForgeDirection.getOrientation(0);
+                }
+
+                rotateBlock(world, x, y, z, nextRotation);
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
     {
@@ -107,45 +125,27 @@ public class BlockPortalModifier extends BlockEnhancedPortalsContainer
 
         world.setBlockMetadataWithNotify(x, y, z, direction, 0);
     }
-    
+
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
     {
-        if (player.isSneaking())
-        {
-            if (player.inventory.mainInventory[player.inventory.currentItem] == null)
-            {
-                ForgeDirection nextRotation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-                
-                if (nextRotation.ordinal() + 1 < ForgeDirection.VALID_DIRECTIONS.length)
-                {
-                    nextRotation = ForgeDirection.getOrientation(nextRotation.ordinal() + 1);
-                }
-                else
-                {
-                    nextRotation = ForgeDirection.getOrientation(0);
-                }
-                
-                rotateBlock(world, x, y, z, nextRotation);
-                return true;
-            }
-            
-            return false;
-        }
-        
-        return false;
+        sideTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Strings.Block.PORTAL_MODIFIER_NAME + "_side");
+
+        // TODO: Move to a better place...
+        PortalTexture.registerTextures(iconRegister);
     }
-    
+
     @Override
     public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
     {
         boolean success = world.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 0);
-        
+
         if (world.isRemote && success)
         {
             world.markBlockForRenderUpdate(x, y, z);
         }
-        
+
         return success;
     }
 }

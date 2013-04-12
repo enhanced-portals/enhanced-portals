@@ -1,11 +1,11 @@
 package com.alz.enhancedportals.core.blocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockStairs;
+
 import com.alz.enhancedportals.creativetab.CreativeTabEnhancedPortals;
 import com.alz.enhancedportals.reference.BlockIds;
 import com.alz.enhancedportals.reference.Strings;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
 
 public class BlockObsidianStairs extends BlockStairs
 {

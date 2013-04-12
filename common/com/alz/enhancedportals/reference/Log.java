@@ -6,14 +6,14 @@ import java.util.logging.Logger;
 public class Log
 {
     private static Logger logger;
-    
-    public static void setLogger(Logger log)
-    {
-        logger = log;
-    }
-    
+
     public static void log(Level level, String string)
     {
         logger.log(level, string);
+    }
+
+    public static void setLogger(Logger log)
+    {
+        logger = log;
     }
 }

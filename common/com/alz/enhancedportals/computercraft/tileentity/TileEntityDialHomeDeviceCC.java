@@ -11,17 +11,11 @@ import dan200.computer.api.IPeripheral;
 public class TileEntityDialHomeDeviceCC extends TileEntityDialHomeDevice implements IPeripheral
 {
     List<IComputerAccess> computers = new ArrayList<IComputerAccess>();
-    
-    @Override
-    public String getType()
-    {
-        return "dialHomeDevice";
-    }
 
     @Override
-    public String[] getMethodNames()
+    public void attach(IComputerAccess computer)
     {
-        return new String[] { "activate", "deactivate", "selectEntry", "addEntry", "removeEntry" };
+        computers.add(computer);
     }
 
     @Override
@@ -37,14 +31,20 @@ public class TileEntityDialHomeDeviceCC extends TileEntityDialHomeDevice impleme
     }
 
     @Override
-    public void attach(IComputerAccess computer)
-    {
-        computers.add(computer);
-    }
-
-    @Override
     public void detach(IComputerAccess computer)
     {
         computers.remove(computer);
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "activate", "deactivate", "selectEntry", "addEntry", "removeEntry" };
+    }
+
+    @Override
+    public String getType()
+    {
+        return "dialHomeDevice";
     }
 }

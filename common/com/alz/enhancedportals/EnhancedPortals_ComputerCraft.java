@@ -21,15 +21,15 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid=Reference.MOD_ID + "_cc", name=Reference.MOD_NAME + " ComputerCraft", version=Reference.MOD_VERSION, dependencies="required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION + ";required-after:ComputerCraft@1.52")
-@NetworkMod(clientSideRequired=true, serverSideRequired=false)
+@Mod(modid = Reference.MOD_ID + "_cc", name = Reference.MOD_NAME + " ComputerCraft", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION + ";required-after:ComputerCraft@1.52")
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class EnhancedPortals_ComputerCraft
 {
     @Instance(Reference.MOD_ID + "_cc")
     public static EnhancedPortals_ComputerCraft instance;
-    
+
     public static Block ccComputer = null;
-    
+
     @Init
     public static void init(FMLInitializationEvent event)
     {
@@ -52,17 +52,17 @@ public class EnhancedPortals_ComputerCraft
             Log.log(Level.INFO, "Could not load ComputerCraft addon: ComputerCraft was not found.");
         }
     }
-    
+
     private static void loadData()
     {
         // add recipes
-        
+
         Block.blocksList[BlockIds.DIAL_HOME_DEVICE] = null;
         Block.blocksList[BlockIds.DIAL_HOME_DEVICE] = new BlockDialHomeDeviceCC();
-        
+
         Block.blocksList[BlockIds.PORTAL_MODIFIER] = null;
         Block.blocksList[BlockIds.PORTAL_MODIFIER] = new BlockPortalModifierCC();
-        
+
         GameRegistry.registerTileEntity(TileEntityDialHomeDeviceCC.class, Strings.Block.DIAL_HOME_DEVICE_NAME + "cc");
         GameRegistry.registerTileEntity(TileEntityPortalModifierCC.class, Strings.Block.PORTAL_MODIFIER_NAME + "cc");
     }

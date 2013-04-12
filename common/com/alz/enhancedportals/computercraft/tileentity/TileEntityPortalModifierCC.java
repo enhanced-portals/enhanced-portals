@@ -11,17 +11,11 @@ import dan200.computer.api.IPeripheral;
 public class TileEntityPortalModifierCC extends TileEntityPortalModifier implements IPeripheral
 {
     List<IComputerAccess> computers = new ArrayList<IComputerAccess>();
-    
-    @Override
-    public String getType()
-    {
-        return "portalModifier";
-    }
 
     @Override
-    public String[] getMethodNames()
+    public void attach(IComputerAccess computer)
     {
-        return new String[] { "activate", "deactivate", "getNetwork", "setNetwork", "getTexture", "setTexture" };
+        computers.add(computer);
     }
 
     @Override
@@ -34,19 +28,25 @@ public class TileEntityPortalModifierCC extends TileEntityPortalModifier impleme
     public boolean canAttachToSide(int side)
     {
         // only if has upgrade
-        
-        return true;
-    }
 
-    @Override
-    public void attach(IComputerAccess computer)
-    {
-        computers.add(computer);
+        return true;
     }
 
     @Override
     public void detach(IComputerAccess computer)
     {
         computers.remove(computer);
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "activate", "deactivate", "getNetwork", "setNetwork", "getTexture", "setTexture" };
+    }
+
+    @Override
+    public String getType()
+    {
+        return "portalModifier";
     }
 }

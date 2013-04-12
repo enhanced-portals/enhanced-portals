@@ -6,14 +6,19 @@ public class NetworkManager
 {
     private DialHomeDeviceNetwork DHDNetwork;
     private PortalModifierNetwork PMNetwork;
-    
-    private MinecraftServer serverInstance;
-    
-    public void init(MinecraftServer server)
+    public MinecraftServer serverInstance;
+
+    public NetworkManager(MinecraftServer server)
     {
         serverInstance = server;
-        
-        DHDNetwork = new DialHomeDeviceNetwork();
-        PMNetwork = new PortalModifierNetwork();
+
+        DHDNetwork = new DialHomeDeviceNetwork(this);
+        PMNetwork = new PortalModifierNetwork(this);
+    }
+
+    public void saveData()
+    {
+        DHDNetwork.saveData();
+        PMNetwork.saveData();
     }
 }

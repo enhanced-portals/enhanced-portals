@@ -8,12 +8,12 @@ public class PacketRequestSync extends PacketEnhancedPortals
     {
         super();
     }
-    
+
     public PacketRequestSync(int x, int y, int z, int dimension)
     {
         super(x, y, z, dimension);
     }
-    
+
     public PacketRequestSync(TileEntity tileEntity)
     {
         super(tileEntity);

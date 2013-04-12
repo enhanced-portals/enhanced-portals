@@ -4,15 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.util.logging.Level;
 
-import com.alz.enhancedportals.core.networking.packets.PacketTileEntityUpdate;
-import com.alz.enhancedportals.core.tileentity.TileEntityEnhancedPortals;
-import com.alz.enhancedportals.reference.Log;
-import com.alz.enhancedportals.reference.PacketIds;
-
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
+
+import com.alz.enhancedportals.core.networking.packets.PacketTileEntityUpdate;
+import com.alz.enhancedportals.core.tileentity.TileEntityEnhancedPortals;
+import com.alz.enhancedportals.reference.Log;
+import com.alz.enhancedportals.reference.PacketIds;
 
 public class ClientPacketHandler
 {
@@ -20,11 +20,11 @@ public class ClientPacketHandler
     {
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(packet.data));
         byte packetID = -1;
-        
+
         try
         {
             packetID = stream.readByte();
-            
+
             switch (packetID)
             {
                 default:
@@ -38,8 +38,9 @@ public class ClientPacketHandler
                 {
                     PacketTileEntityUpdate packetUpdate = new PacketTileEntityUpdate();
                     packetUpdate.readPacketData(stream);
-                    handleTileEntityUpdate(packetUpdate);                    
-                };
+                    handleTileEntityUpdate(packetUpdate);
+                }
+                    ;
             }
         }
         catch (Exception e)
@@ -47,15 +48,15 @@ public class ClientPacketHandler
             e.printStackTrace();
         }
     }
-    
+
     private static void handleTileEntityUpdate(PacketTileEntityUpdate packetUpdate)
     {
         WorldServer world = MinecraftServer.getServer().worldServerForDimension(packetUpdate.Dimension);
         TileEntity tileEntity = world.getBlockTileEntity(packetUpdate.xCoord, packetUpdate.yCoord, packetUpdate.zCoord);
-        
+
         if (tileEntity != null && tileEntity instanceof TileEntityEnhancedPortals)
         {
-            ((TileEntityEnhancedPortals)tileEntity).parseTileData(packetUpdate);
+            ((TileEntityEnhancedPortals) tileEntity).parseTileData(packetUpdate);
         }
         else
         {

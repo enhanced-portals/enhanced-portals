@@ -5,20 +5,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.alz.enhancedportals.reference.Reference;
-
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+
+import com.alz.enhancedportals.reference.Reference;
 
 public class PacketEnhancedPortals
 {
     public int xCoord, yCoord, zCoord, Dimension;
-    
+
     public PacketEnhancedPortals()
     {
-        
+
     }
-    
+
     public PacketEnhancedPortals(int x, int y, int z, int dimension)
     {
         xCoord = x;
@@ -26,7 +26,7 @@ public class PacketEnhancedPortals
         zCoord = z;
         Dimension = dimension;
     }
-    
+
     public PacketEnhancedPortals(TileEntity tileEntity)
     {
         xCoord = tileEntity.xCoord;
@@ -34,23 +34,18 @@ public class PacketEnhancedPortals
         zCoord = tileEntity.zCoord;
         Dimension = tileEntity.worldObj.provider.dimensionId;
     }
-    
-    public byte getPacketID()
-    {
-        return 0;
-    }
-    
+
     public boolean getChunkDataPacket()
     {
         return false;
     }
-    
+
     public Packet250CustomPayload getPacket()
     {
         Packet250CustomPayload packet = new Packet250CustomPayload();
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream stream = new DataOutputStream(byteStream);
-        
+
         try
         {
             stream.writeByte(getPacketID());
@@ -60,15 +55,20 @@ public class PacketEnhancedPortals
         {
             e.printStackTrace();
         }
-        
+
         packet.channel = Reference.MOD_ID;
         packet.data = byteStream.toByteArray();
         packet.length = packet.data.length;
         packet.isChunkDataPacket = getChunkDataPacket();
-        
+
         return packet;
     }
-    
+
+    public byte getPacketID()
+    {
+        return 0;
+    }
+
     public void readPacketData(DataInputStream stream) throws IOException
     {
         xCoord = stream.readInt();
@@ -76,7 +76,7 @@ public class PacketEnhancedPortals
         zCoord = stream.readInt();
         Dimension = stream.readInt();
     }
-    
+
     public void writePacketData(DataOutputStream stream) throws IOException
     {
         stream.writeInt(xCoord);

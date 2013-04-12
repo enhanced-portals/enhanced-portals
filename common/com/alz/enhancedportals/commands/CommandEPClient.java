@@ -15,7 +15,7 @@ public class CommandEPClient extends CommandBase
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        
+
     }
 
 }
