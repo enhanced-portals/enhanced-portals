@@ -21,7 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = Reference.MOD_ID + "_cc", name = Reference.MOD_NAME + " ComputerCraft", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION + ";required-after:ComputerCraft@1.52")
+@Mod(modid = Reference.MOD_ID + "_cc", name = Reference.MOD_NAME_SHORT + " ComputerCraft", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID + "@" + Reference.MOD_VERSION + ";required-after:ComputerCraft@1.52")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class EnhancedPortals_ComputerCraft
 {

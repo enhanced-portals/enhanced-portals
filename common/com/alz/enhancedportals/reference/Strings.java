@@ -29,5 +29,7 @@ public class Strings
 
     public static final String LANGUAGE_DIRECTORY = "/mods/" + Reference.MOD_ID + "/lang/";
     public static final String GUI_DIRECTORY = "/mods/" + Reference.MOD_ID + "/textures/gui/";
+    public static final String Console_NoExitFound = null;
+    public static final String Portal_NoExitFound = null;
 
 }

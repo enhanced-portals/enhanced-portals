@@ -1,11 +1,13 @@
 package com.alz.enhancedportals.networks;
 
+import com.alz.enhancedportals.core.tileentity.TileEntityEnhancedPortals;
+
 import net.minecraft.server.MinecraftServer;
 
 public class NetworkManager
 {
-    private DialHomeDeviceNetwork DHDNetwork;
-    private PortalModifierNetwork PMNetwork;
+    public DialHomeDeviceNetwork DHDNetwork;
+    public PortalModifierNetwork PMNetwork;
     public MinecraftServer serverInstance;
 
     public NetworkManager(MinecraftServer server)
@@ -20,5 +22,10 @@ public class NetworkManager
     {
         DHDNetwork.saveData();
         PMNetwork.saveData();
+    }
+
+    public void sendUpdatePacketToNearbyClients(TileEntityEnhancedPortals tileEntity)
+    {
+        
     }
 }

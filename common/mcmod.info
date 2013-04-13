@@ -16,8 +16,24 @@
   ]
 },
 {
+  "modid" : "enhancedportals_world",
+  "name" : "EP World",
+  "version" : "@VERSION@",
+  "url" : "http://www.minecraftforum.net/topic/1301217-/",
+  "credits" : "",
+  "authors": [
+    "Alz454"
+  ],
+  "description": "An addon that allows Enhanced Portals to interact with the world, adding loot to dungeons and creating new dungeons and random ruins.",
+  "logoFile" : "",
+  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
+  "parent" : "enhancedportals",
+  "screenshots": [
+  ]
+},
+{
   "modid" : "enhancedportals_cc",
-  "name" : "Enhanced Portals ComputerCraft",
+  "name" : "EP ComputerCraft",
   "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",

@@ -13,13 +13,16 @@ import com.alz.enhancedportals.reference.Strings;
 
 public enum PortalTexture
 {
-    PURPLE(0), RED(1), GREEN(2), BROWN(3), BLUE(4), BLACK(5), CYAN(6), LIGHT_GRAY(7), GRAY(8), PINK(9), LIME(10), YELLOW(11), LIGHT_BLUE(12), MAGENTA(13), ORANGE(14), WHITE(15), LAVA(16), WATER(17), LAVA_STILL(18), WATER_STILL(19), UNKNOWN(20);
+    PURPLE(0), RED(1), GREEN(2), BROWN(3), BLUE(4), BLACK(5), CYAN(6), LIGHT_GRAY(7), GRAY(8), PINK(9), LIME(10), YELLOW(11), LIGHT_BLUE(12), MAGENTA(13), ORANGE(14), WHITE(15), LAVA(16), WATER(17), LAVA_STILL(18), WATER_STILL(19), UNKNOWN(20), CUSTOM(-1);
 
-    private static PortalTexture[] VALID_TEXTURES = { PURPLE, RED, GREEN, BROWN, BLUE, BLACK, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE, LAVA, WATER, LAVA_STILL, WATER_STILL };
-    private static int[] PARTICLE_COLOURS = { 1973019, 11743532, 3887386, 5320730, 2437522, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522, 15435844, 2437522 };
+    private static PortalTexture[] VALID_TEXTURES = { PURPLE, RED, GREEN, BROWN, BLUE, BLACK, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE, LAVA, WATER, LAVA_STILL, WATER_STILL, CUSTOM };
+    private static int[] PARTICLE_COLOURS = { 1973019, 11743532, 3887386, 5320730, 2437522, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522, 15435844, 2437522, 0 };
     private static Icon[] TEXTURE_ICONS = new Icon[VALID_TEXTURES.length];
     private static Icon[] PORTAL_MODIFIER_ICONS = new Icon[VALID_TEXTURES.length];
 
+    private static String localizedName;
+    private static Icon texture;
+    
     public static String getLocalizedName(int id)
     {
         return getLocalizedName(getPortalTexture(id));
@@ -176,14 +179,24 @@ public enum PortalTexture
         ordinal();
     }
 
-    public int get()
+    public void setLocalizedName(String name)
     {
-        return ordinal();
+        localizedName = name;
     }
 
     public String getLocalizedName()
     {
+        if (localizedName.length() > 1)
+        {
+            return localizedName;
+        }
+        
         return getLocalizedName(ordinal());
+    }
+    
+    public void setIcon(Icon icon)
+    {
+        texture = icon;
     }
 
     public Icon getModifierIcon()
@@ -193,6 +206,11 @@ public enum PortalTexture
 
     public Icon getPortalIcon()
     {
+        if (texture != null)
+        {
+            return texture;
+        }
+        
         return TEXTURE_ICONS[ordinal()];
     }
 

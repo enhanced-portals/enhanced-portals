@@ -123,7 +123,7 @@ public class BlockPortalModifier extends BlockEnhancedPortalsContainer
             direction = ForgeDirection.DOWN.ordinal();
         }
 
-        world.setBlockMetadataWithNotify(x, y, z, direction, 0);
+        world.setBlockMetadataWithNotify(x, y, z, direction, 2);
     }
 
     @Override

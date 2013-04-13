@@ -66,6 +66,7 @@ public class Settings
         public static final boolean PRINT_PORTAL_MESSAGES_DEFAULT = true;
         public static final String REMOVABLE_BLOCKS_DEFAULT = "";
         public static final String BORDER_BLOCKS_DEFAULT = "8,9,10,11,6,18,30,31,32,37,38,39,40,78,104,105,106,111,115";
+        public static final boolean DOES_DYING_COST_DEFAULT = true;
 
         public static boolean CAN_TELEPORT;
         public static boolean CAN_DYE_PORTALS;
@@ -74,6 +75,7 @@ public class Settings
         public static boolean PRINT_PORTAL_MESSAGES;
         public static List<Integer> REMOVABLE_BLOCKS = new ArrayList<Integer>();
         public static List<Integer> BORDER_BLOCKS = new ArrayList<Integer>();
+        public static boolean DOES_DYING_COST;
 
         private static void loadSettings()
         {
@@ -82,6 +84,7 @@ public class Settings
             CAN_DYE_PORTALS_BY_THROWING_DYE = config.get(CATEGORY_SERVER, "CanDyePortalsByThrowingDye", CAN_DYE_PORTALS_BY_THROWING_DYE_DEFAULT).getBoolean(CAN_DYE_PORTALS_BY_THROWING_DYE_DEFAULT);
             PIGMEN_SPAWN_CHANCE = config.get(CATEGORY_SERVER, "PigmenSpawnChance", PIGMEN_SPAWN_CHANCE_DEFAULT).getInt();
             PRINT_PORTAL_MESSAGES = config.get(CATEGORY_SERVER, "PrintPortalMessages", PRINT_PORTAL_MESSAGES_DEFAULT).getBoolean(PRINT_PORTAL_MESSAGES_DEFAULT);
+            DOES_DYING_COST = config.get(CATEGORY_SERVER, "DoesDyingCost", DOES_DYING_COST_DEFAULT).getBoolean(DOES_DYING_COST_DEFAULT);
 
             String BorderBlocks = config.get(CATEGORY_SERVER, "CustomBorderBlocks", REMOVABLE_BLOCKS_DEFAULT).getString(), RemovableBlocks = config.get(CATEGORY_SERVER, "CustomDestroyBlocks", BORDER_BLOCKS_DEFAULT).getString();
 

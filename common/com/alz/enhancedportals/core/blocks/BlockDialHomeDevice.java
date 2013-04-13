@@ -1,30 +1,21 @@
 package com.alz.enhancedportals.core.blocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import com.alz.enhancedportals.core.tileentity.TileEntityDialHomeDevice;
 import com.alz.enhancedportals.creativetab.CreativeTabEnhancedPortals;
 import com.alz.enhancedportals.reference.BlockIds;
-import com.alz.enhancedportals.reference.Reference;
 import com.alz.enhancedportals.reference.Strings;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockDialHomeDevice extends BlockEnhancedPortalsContainer
 {
-    Icon texture;
-
     public BlockDialHomeDevice()
     {
         super(BlockIds.DIAL_HOME_DEVICE, Material.rock);
@@ -39,20 +30,6 @@ public class BlockDialHomeDevice extends BlockEnhancedPortalsContainer
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntityDialHomeDevice();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5)
-    {
-        return texture;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getBlockTextureFromSideAndMetadata(int side, int meta)
-    {
-        return texture;
     }
 
     @Override
@@ -109,14 +86,7 @@ public class BlockDialHomeDevice extends BlockEnhancedPortalsContainer
             direction = ForgeDirection.WEST.ordinal();
         }
 
-        world.setBlockMetadataWithNotify(x, y, z, direction, 0);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Strings.Block.DIAL_HOME_DEVICE_NAME);
+        world.setBlockMetadataWithNotify(x, y, z, direction, 2);
     }
 
     @Override
