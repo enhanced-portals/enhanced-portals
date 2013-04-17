@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+    <!-- Contributors: Gamewalker -->
+    <comment>German (DE) Localization File</comment>
+    <entry key="tile.portalModifier.name">Portal Modifikator</entry>
+    <entry key="tile.stairsObsidian.name">Obsidian Stufen</entry>
+    <entry key="tile.dialDevice.name">Einwahl Gerät (WIP Name)</entry>
+    <entry key="item.portalModifierUpgrade.name">Portal Modifikator Upgrade</entry>
+    <entry key="item.portalModifierUpgrade.multiplePortals">Mehrfach Portale</entry>
+    <entry key="item.portalModifierUpgrade.dimensional">Dimensional</entry>
+    <entry key="item.portalModifierUpgrade.advancedDimensional">Erweitert Dimensional</entry>
+    <entry key="item.portalModifierUpgrade.modifierCamo">Tarn Modifikation</entry>
+    <entry key="item.portalModifierUpgrade.computer">Technologisch</entry>
+    <entry key="item.portalModifierUpgrade.scroll">Teleport-Schriftrolle Upgrade Name</entry>
+    <entry key="item.teleportScroll.name">Teleport-Schriftrolle</entry>
+    <entry key="gui.portalModifier.frequency">Frequenz</entry>
+    <entry key="gui.portalModifier.clearCharacter">C</entry>
+    <entry key="gui.portalModifier.saveCharacter">S</entry>
+    <entry key="gui.portalModifier.clearFrequency">Frequenz freigeben</entry>
+    <entry key="gui.portalModifier.saveFrequency">Frequenz speichern</entry>
+    <entry key="gui.dialDevice.selected">Selektiert</entry>
+    <entry key="gui.dialDevice.notSelected">Doppelklicken zum selektieren</entry>
+    <entry key="gui.dialDevice.coords">%s - X: %s Y: %s Z: %s</entry>
+    <entry key="gui.dialDevice.scroll">Schriftrolle</entry>
+    <entry key="gui.dialDevice.modifier">Modifikator</entry>
+    <entry key="gui.dialDevice.invalid.1a">Die Teleportationsrolle ist ungültig</entry>
+    <entry key="gui.dialDevice.invalid.1b">Ein Upgrade wird benötigt</entry>
+    <entry key="gui.dialDevice.invalid.2a">Eine Teleportationsrolle wird benötigt.</entry>
+    <entry key="gui.dialDevice.invalid.2b"></entry>
+    <entry key="gui.name">Name</entry>
+    <entry key="gui.accept">Akzeptieren</entry>
+    <entry key="gui.cancel">Abbrechen</entry>
+    <entry key="gui.add">Hinzufügen</entry>
+    <entry key="gui.edit">Bearbeiten</entry>
+    <entry key="gui.remove">Entfernen</entry>
+    <entry key="gui.close">Schließen</entry>
+    <entry key="portal.noExitFound">Es wurde kein gültiges Ausgangsportal gefunden.</entry>
+    <entry key="portal.missingUpgrade">Dem Portalmodifikator  fehlt ein Upgrade.</entry>
+    <entry key="portal.exitBlocked">Das Ausgangsportal ist ungültig oder blockiert.</entry>
+    <entry key="console.portal.noExitFound">Konnte Entität %s nicht teleportieren. Es wurde kein Ausgang gefunden.</entry>
+    <entry key="console.portal.missingUpgrade">Konnte Entität  %s nicht teleportieren. Dem Portal fehlt ein Upgrade.</entry>
+    <entry key="console.portal.exitBlocked">Konnte Entität  %s nicht teleportieren. Der Ausgang ist blockiert oder ungültig.</entry>
+    <entry key="console.portal.sizeFail">Portalerstellung an Koordinaten %s, %s, %s fehlgeschlagen. Portal Limit wurde erreicht.</entry>
+    <entry key="console.portal.success">Portalerstellung aus %s erfolgreich an Position %s, %s, %s.</entry>
+    <entry key="console.portal.fail">Portalerstellung fehlgeschlagen an Position %s, %s, %s. Validierung fehlgeschlagen.</entry>
+</properties>
