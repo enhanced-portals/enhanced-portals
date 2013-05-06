@@ -125,7 +125,7 @@ public class PortalTexture
                 return PORTAL_MODIFIER_ICONS[Colour.ORANGE.ordinal()];
             }
             
-            return PORTAL_MODIFIER_ICONS[0];
+            return PORTAL_MODIFIER_ICONS[5];
         }
 
         return null;
@@ -135,7 +135,7 @@ public class PortalTexture
     {
         if (type == Type.COLOUR)
         {
-            return PARTICLE_COLOURS[colour.ordinal()];
+            return PARTICLE_COLOURS[swapColours(colour.ordinal())];
         }
         else if (type == Type.BLOCK)
         {
@@ -148,7 +148,7 @@ public class PortalTexture
                 return PARTICLE_COLOURS[Colour.ORANGE.ordinal()];
             }
             
-            return PARTICLE_COLOURS[0];
+            return PARTICLE_COLOURS[5];
         }
 
         return 0;
