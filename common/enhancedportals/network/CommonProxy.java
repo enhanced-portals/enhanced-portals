@@ -22,61 +22,61 @@ public class CommonProxy
 {
     public BlockNetherPortal blockNetherPortal;
     public BlockObsidian blockObsidian;
-    
-    public void loadSettings()
+
+    public World getClientWorld()
     {
-        
-    }
-    
-    public void loadBlocks()
-    {
-        Block.blocksList[BlockIds.Obsidian] = null; 
-        
-        blockNetherPortal = new BlockNetherPortal();
-        blockObsidian = new BlockObsidian();
-        
-        GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
-        GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
-    }
-    
-    public void loadItems()
-    {
-        
-    }
-    
-    public void loadTileEntities()
-    {
-        GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "EPNPortal");
-    }
-    
-    public void loadRecipes()
-    {
-        
+        return null;
     }
 
     public MinecraftServer getMinecraftServer()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance();
     }
-    
+
     public WorldServer getWorldForDimension(int dimension)
     {
         return getMinecraftServer().worldServerForDimension(dimension);
     }
 
-    public void parseTileEntityUpdate(PacketTEUpdate update)
+    public void loadBlocks()
     {
-        // Nothing to do serverside.
+        Block.blocksList[BlockIds.Obsidian] = null;
+
+        blockNetherPortal = new BlockNetherPortal();
+        blockObsidian = new BlockObsidian();
+
+        GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
+        GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
     }
-    
+
+    public void loadItems()
+    {
+
+    }
+
+    public void loadRecipes()
+    {
+
+    }
+
+    public void loadSettings()
+    {
+
+    }
+
+    public void loadTileEntities()
+    {
+        GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "EPNPortal");
+    }
+
     public void parseRequestSync(PacketRequestSync sync, Player player)
     {
         WorldServer world = getMinecraftServer().worldServerForDimension(sync.dimension);
-        
+
         if (world.blockHasTileEntity(sync.xCoord, sync.yCoord, sync.zCoord))
         {
             TileEntity tileEntity = world.getBlockTileEntity(sync.xCoord, sync.yCoord, sync.zCoord);
-            
+
             if (tileEntity instanceof TileEntityEnhancedPortals)
             {
                 PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityEnhancedPortals) tileEntity).getPacket(), player);
@@ -84,8 +84,8 @@ public class CommonProxy
         }
     }
 
-    public World getClientWorld()
+    public void parseTileEntityUpdate(PacketTEUpdate update)
     {
-        return null;
+        // Nothing to do serverside.
     }
 }

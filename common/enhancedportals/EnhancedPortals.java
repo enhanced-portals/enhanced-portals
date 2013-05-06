@@ -18,16 +18,28 @@ import enhancedportals.lib.Reference;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.PacketHandler;
 
-@Mod(name=Reference.MOD_NAME, modid=Reference.MOD_ID, version=Reference.MOD_VERSION)
-@NetworkMod(channels={Reference.MOD_ID}, clientSideRequired=true, serverSideRequired=false, packetHandler=PacketHandler.class)
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
+@NetworkMod(channels = { Reference.MOD_ID }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class EnhancedPortals
 {
     @Instance(Reference.MOD_NAME)
     public static EnhancedPortals instance;
-    
-    @SidedProxy(clientSide=Reference.PROXY_CLIENT, serverSide=Reference.PROXY_COMMON)
+
+    @SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
     public static CommonProxy proxy;
-    
+
+    @Init
+    private void init(FMLInitializationEvent event)
+    {
+
+    }
+
+    @PostInit
+    private void postInit(FMLPostInitializationEvent event)
+    {
+
+    }
+
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
@@ -37,28 +49,16 @@ public class EnhancedPortals
         proxy.loadTileEntities();
         proxy.loadRecipes();
     }
-    
-    @Init
-    private void init(FMLInitializationEvent event)
-    {
-        
-    }
-    
-    @PostInit
-    private void postInit(FMLPostInitializationEvent event)
-    {
-        
-    }
-    
+
     @ServerStarting
     private void serverStarting(FMLServerStartingEvent event)
     {
-        
+
     }
-    
+
     @ServerStopping
     private void serverStopping(FMLServerStoppingEvent event)
     {
-        
+
     }
 }

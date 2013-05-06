@@ -29,15 +29,15 @@ public class PacketHandler implements IPacketHandler
         try
         {
             packetID = stream.readByte();
-         
+
             System.out.println("Recieved packet of ID " + packetID);
-            
+
             if (packetID == PacketIds.TileEntityUpdate)
             {
                 EnhancedPortals.proxy.parseTileEntityUpdate(new PacketTEUpdate(stream));
             }
             else if (packetID == PacketIds.RequestSync)
-            {                
+            {
                 EnhancedPortals.proxy.parseRequestSync(new PacketRequestSync(stream), player);
             }
         }

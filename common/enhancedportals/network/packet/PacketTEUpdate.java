@@ -13,11 +13,16 @@ public class PacketTEUpdate extends PacketUpdate
     {
         super();
     }
-    
+
+    public PacketTEUpdate(DataInputStream stream)
+    {
+        super(stream);
+    }
+
     public PacketTEUpdate(TileEntityEnhancedPortals tileEntity)
     {
         super();
-        
+
         xCoord = tileEntity.xCoord;
         yCoord = tileEntity.yCoord;
         zCoord = tileEntity.zCoord;
@@ -25,25 +30,20 @@ public class PacketTEUpdate extends PacketUpdate
         packetData = tileEntity.getPacketData();
         isChunkPacket = true;
     }
-    
-    public PacketTEUpdate(DataInputStream stream)
+
+    @Override
+    public int getPacketID()
     {
-        super(stream);
+        return PacketIds.TileEntityUpdate;
+    }
+
+    public TileEntity getTileEntity(World world)
+    {
+        return world.getBlockTileEntity(xCoord, yCoord, zCoord);
     }
 
     public boolean tileEntityExists(World world)
     {
         return world.blockExists(xCoord, yCoord, zCoord);
-    }
-    
-    public TileEntity getTileEntity(World world)
-    {
-        return world.getBlockTileEntity(xCoord, yCoord, zCoord);
-    }
-    
-    @Override
-    public int getPacketID()
-    {
-        return PacketIds.TileEntityUpdate;
     }
 }

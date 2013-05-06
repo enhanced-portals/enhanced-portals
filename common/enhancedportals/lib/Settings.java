@@ -7,16 +7,16 @@ public class Settings
 {
     public static boolean AllowPortalModifiers;
     public static boolean AllowDialHomeDevices;
-    
+
     public static boolean DisableModifierRecipe;
     public static boolean DisableDHDRecipe;
-    
+
     public static int PigmenLevel;
-    
+
     @SideOnly(Side.CLIENT)
     public static int SoundLevel;
     @SideOnly(Side.CLIENT)
     public static int ParticleLevel;
     @SideOnly(Side.CLIENT)
-    public static boolean RenderPortalEffect;    
+    public static boolean RenderPortalEffect;
 }

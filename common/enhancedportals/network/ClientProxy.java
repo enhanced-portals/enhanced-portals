@@ -9,34 +9,34 @@ import enhancedportals.tileentity.TileEntityEnhancedPortals;
 public class ClientProxy extends CommonProxy
 {
     @Override
-    public void loadSettings()
+    public World getClientWorld()
     {
-        super.loadSettings();
+        return FMLClientHandler.instance().getClient().theWorld;
     }
-    
-    @Override
-    public void loadTileEntities()
-    {
-        super.loadTileEntities();
-    }
-    
+
     @Override
     public MinecraftServer getMinecraftServer()
     {
         return FMLClientHandler.instance().getServer();
     }
-    
+
     @Override
-    public World getClientWorld()
+    public void loadSettings()
     {
-        return FMLClientHandler.instance().getClient().theWorld;
+        super.loadSettings();
     }
-    
+
+    @Override
+    public void loadTileEntities()
+    {
+        super.loadTileEntities();
+    }
+
     @Override
     public void parseTileEntityUpdate(PacketTEUpdate update)
     {
         World world = getClientWorld();
-                
+
         if (update.tileEntityExists(world))
         {
             ((TileEntityEnhancedPortals) update.getTileEntity(world)).parsePacketData(update.packetData);

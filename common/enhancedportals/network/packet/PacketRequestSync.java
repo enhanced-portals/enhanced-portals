@@ -12,20 +12,20 @@ public class PacketRequestSync extends PacketUpdate
         packetData = null;
         isChunkPacket = false;
     }
-    
-    public PacketRequestSync(TileEntityEnhancedPortals tileEntity)
-    {
-        super();
-        
-        xCoord = tileEntity.xCoord;
-        yCoord = tileEntity.yCoord;
-        zCoord = tileEntity.zCoord;
-        dimension = tileEntity.worldObj.provider.dimensionId;        
-    }
-    
+
     public PacketRequestSync(DataInputStream stream)
     {
         super(stream);
+    }
+
+    public PacketRequestSync(TileEntityEnhancedPortals tileEntity)
+    {
+        super();
+
+        xCoord = tileEntity.xCoord;
+        yCoord = tileEntity.yCoord;
+        zCoord = tileEntity.zCoord;
+        dimension = tileEntity.worldObj.provider.dimensionId;
     }
 
     @Override

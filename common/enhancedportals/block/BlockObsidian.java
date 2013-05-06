@@ -18,7 +18,7 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
         setStepSound(soundStoneFootstep);
         setUnlocalizedName(Localization.Obsidian_Name);
     }
-    
+
     @Override
     public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
@@ -50,10 +50,10 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
             {
                 current.damageItem(1, player);
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
 }
