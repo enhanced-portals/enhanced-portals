@@ -17,6 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityNetherPortal;
+import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class Portal
 {
@@ -24,7 +25,13 @@ public class Portal
     public PortalTexture portalTexture;
     public byte portalShape, portalThickness;
     public boolean producesParticles, producesSound;
+    public WorldLocation portalModifier;
 
+    public Portal()
+    {
+        
+    }
+    
     public Portal(int x, int y, int z, World world)
     {
         xCoord = x;
@@ -134,6 +141,20 @@ public class Portal
             portalThickness = 0;
         }
     }
+    
+    public Portal(int x, int y, int z, World world, TileEntityPortalModifier portalmodifier)
+    {
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+        dimension = world.provider.dimensionId;
+        portalTexture = portalmodifier.texture;
+        portalShape = 0;
+        producesSound = portalmodifier.sounds;
+        producesParticles = portalmodifier.particles;
+        portalThickness = portalmodifier.thickness;
+        portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
+    }
 
     public boolean createPortal()
     {
@@ -179,7 +200,17 @@ public class Portal
 
                     if (te != null && te instanceof TileEntityNetherPortal)
                     {
-                        ((TileEntityNetherPortal) te).texture = portalTexture;
+                        TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
+                        
+                        portal.texture = portalTexture;
+                        portal.producesParticles = producesParticles;
+                        portal.producesSound = producesSound;
+                        portal.thickness = portalThickness;
+                        
+                        if (portalModifier != null)
+                        {
+                            portal.parentModifier = portalModifier;
+                        }
                     }
                 }
             }
@@ -493,7 +524,7 @@ public class Portal
             return true;
         }
 
-        return val == 49; // TODO CONFIG
+        return val == 49 || val == BlockIds.PortalModifier; // TODO CONFIG
     }
 
     private boolean isBlockRemovable(int currentBlockID)
@@ -501,7 +532,7 @@ public class Portal
         return currentBlockID == 0 || currentBlockID == 51; // TODO CONFIG
     }
 
-    private boolean isTextureValid(int id)
+    public boolean isTextureValid(int id)
     {
         return id != Block.rail.blockID && id != Block.railActivator.blockID && id != Block.railDetector.blockID && id != Block.railPowered.blockID && id != Block.tripWireSource.blockID; // TODO CONFIG
     }

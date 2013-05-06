@@ -2,8 +2,11 @@ package enhancedportals.block;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -62,7 +65,7 @@ public class BlockEnhancedPortals extends BlockContainer
     @Override
     public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-        if (canRotate)
+        if (canRotate && player.isSneaking())
         {
             ForgeDirection nextRotation = getNextRotation(worldObj, x, y, z);
 
@@ -91,5 +94,43 @@ public class BlockEnhancedPortals extends BlockContainer
     public void setCanRotate()
     {
         canRotate = true;
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
+    {
+        if (canRotate)
+        {
+            int direction = 0;
+            int facing = MathHelper.floor_double(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+    
+            if (facing == 0)
+            {
+                direction = ForgeDirection.NORTH.ordinal();
+            }
+            else if (facing == 1)
+            {
+                direction = ForgeDirection.EAST.ordinal();
+            }
+            else if (facing == 2)
+            {
+                direction = ForgeDirection.SOUTH.ordinal();
+            }
+            else if (facing == 3)
+            {
+                direction = ForgeDirection.WEST.ordinal();
+            }
+    
+            if (entityLiving.rotationPitch > 65 && entityLiving.rotationPitch <= 90)
+            {
+                direction = ForgeDirection.UP.ordinal();
+            }
+            else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
+            {
+                direction = ForgeDirection.DOWN.ordinal();
+            }
+    
+            world.setBlockMetadataWithNotify(x, y, z, direction, 0);
+        }
     }
 }

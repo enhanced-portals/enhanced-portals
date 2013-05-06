@@ -11,17 +11,20 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedportals.block.BlockNetherPortal;
 import enhancedportals.block.BlockObsidian;
+import enhancedportals.block.BlockPortalModifier;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityNetherPortal;
+import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class CommonProxy
 {
     public BlockNetherPortal blockNetherPortal;
     public BlockObsidian blockObsidian;
+    public BlockPortalModifier blockPortalModifier;
 
     public World getClientWorld()
     {
@@ -43,9 +46,11 @@ public class CommonProxy
         Block.blocksList[BlockIds.Obsidian] = null;
 
         blockNetherPortal = new BlockNetherPortal();
+        blockPortalModifier = new BlockPortalModifier();
         blockObsidian = new BlockObsidian();
 
         GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
+        GameRegistry.registerBlock(blockPortalModifier, Localization.PortalModifier_Name);
         GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
     }
 
@@ -67,6 +72,7 @@ public class CommonProxy
     public void loadTileEntities()
     {
         GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "EPNPortal");
+        GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "EPPModifier");
     }
 
     public void parseRequestSync(PacketRequestSync sync, Player player)
