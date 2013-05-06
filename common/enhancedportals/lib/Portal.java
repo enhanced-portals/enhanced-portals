@@ -23,6 +23,7 @@ public class Portal
     public int xCoord, yCoord, zCoord, dimension;
     public PortalTexture portalTexture;
     public byte portalShape;
+    public boolean producesParticles, producesSound;
 
     public Portal(int x, int y, int z, World world)
     {
@@ -38,16 +39,24 @@ public class Portal
 
             if (te instanceof TileEntityNetherPortal)
             {
-                portalTexture = ((TileEntityNetherPortal) te).texture;
+                TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
+                
+                portalTexture = portal.texture;
+                producesSound = portal.producesSound;
+                producesParticles = portal.producesParticles;                
             }
             else
             {
                 portalTexture = new PortalTexture(0);
+                producesParticles = true;
+                producesSound = true;
             }
         }
         else
         {
             portalTexture = new PortalTexture(0);
+            producesParticles = true;
+            producesSound = true;
         }
     }
 
@@ -59,6 +68,29 @@ public class Portal
         dimension = world.provider.dimensionId;
         portalTexture = portaltexture;
         portalShape = 0;
+        
+        if (world.getBlockId(x, y, z) == BlockIds.NetherPortal)
+        {
+            TileEntity te = world.getBlockTileEntity(x, y, z);
+
+            if (te instanceof TileEntityNetherPortal)
+            {
+                TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
+                
+                producesSound = portal.producesSound;
+                producesParticles = portal.producesParticles;                
+            }
+            else
+            {
+                producesParticles = true;
+                producesSound = true;
+            }
+        }
+        else
+        {
+            producesParticles = true;
+            producesSound = true;
+        }
     }
 
     public Portal(int x, int y, int z, World world, PortalTexture portaltexture, byte portalshape)
@@ -69,6 +101,29 @@ public class Portal
         dimension = world.provider.dimensionId;
         portalTexture = portaltexture;
         portalShape = portalshape;
+        
+        if (world.getBlockId(x, y, z) == BlockIds.NetherPortal)
+        {
+            TileEntity te = world.getBlockTileEntity(x, y, z);
+
+            if (te instanceof TileEntityNetherPortal)
+            {
+                TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
+                
+                producesSound = portal.producesSound;
+                producesParticles = portal.producesParticles;                
+            }
+            else
+            {
+                producesParticles = true;
+                producesSound = true;
+            }
+        }
+        else
+        {
+            producesParticles = true;
+            producesSound = true;
+        }
     }
 
     public boolean createPortal()
@@ -348,6 +403,14 @@ public class Portal
 
                 return true;
             }
+            else if (item.itemID == Item.redstone.itemID)
+            {
+                updateData(!producesSound, producesParticles);
+            }
+            else if (item.itemID == Item.stick.itemID)
+            {
+                updateData(producesSound, !producesParticles);
+            }
             else if (item.itemID < 4096 && Block.blocksList[item.itemID] != null && item.itemID != BlockIds.NetherPortal)
             {
                 Block potentialBlock = Block.blocksList[item.itemID];
@@ -588,6 +651,43 @@ public class Portal
 
                 queue = updateQueue(queue, current);
                 checkedQueue.add(current);
+            }
+        }
+
+        return true;
+    }
+
+    public boolean updateData(boolean sound, boolean particles)
+    {
+        World world = getWorld();
+
+        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || (producesSound == sound && producesParticles == particles))
+        {
+            return false;
+        }
+
+        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
+        Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
+        queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
+
+        while (!queue.isEmpty())
+        {
+            WorldLocation current = queue.remove();
+            TileEntity te = current.getTileEntity();
+
+            if (te != null && te instanceof TileEntityNetherPortal && !queueContains(addedBlocks, current))
+            {
+                TileEntityNetherPortal portal = ((TileEntityNetherPortal) te);                
+                portal.producesSound = sound;
+                portal.producesParticles = particles;
+                
+                addedBlocks.add(current);
+                updateQueue(queue, current);
+
+                if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+                {
+                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
+                }
             }
         }
 

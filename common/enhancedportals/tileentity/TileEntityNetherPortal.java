@@ -7,47 +7,40 @@ import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
-import enhancedportals.network.packet.PacketTEUpdate;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {
     public PortalTexture texture;
-    WorldLocation parentModifier;
+    public boolean producesSound, producesParticles;
+    public WorldLocation parentModifier;
 
     public TileEntityNetherPortal()
     {
         texture = new PortalTexture(0);
+        producesSound = true;
+        producesParticles = true;
     }
 
     @Override
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData };
+        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0 };
 
         return data;
-    }
-
-    public WorldLocation getParentModifier()
-    {
-        return parentModifier;
-    }
-
-    public PortalTexture getTexture()
-    {
-        return texture;
     }
 
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 3)
+        if (data == null || data.integerData == null || data.integerData.length != 5)
         {
             System.out.println("Unexpected packet recieved." + data);
             return;
         }
 
         PortalTexture newTexture;
+        boolean sound, particles;
 
         if (data.integerData[0] != -1)
         {
@@ -57,10 +50,13 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         {
             newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
         }
-
-        new Portal(xCoord, yCoord, zCoord, worldObj).updateTexture(newTexture);
-
-        //PortalHandler.floodFillTexture(new WorldLocation(xCoord, yCoord, zCoord, worldObj), newTexture, texture, getBlockMetadata());
+        
+        sound = data.integerData[3] == 1;
+        particles = data.integerData[4] == 1;
+        
+        Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
+        portal.updateTexture(newTexture);
+        portal.updateData(sound, particles);
     }
 
     @Override
@@ -78,31 +74,9 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         {
             texture = new PortalTexture(blockID, metadata);
         }
-    }
-
-    public void setParentModifier(WorldLocation loc)
-    {
-        parentModifier = loc;
-    }
-
-    public void setTexture(PortalTexture texture)
-    {
-        if (this.texture.isEqualTo(texture))
-        {
-            System.out.println("Texture is old texture: " + texture.blockID + ", " + (worldObj.isRemote ? "CLIENT" : "SERVER"));
-            return;
-        }
-
-        this.texture = texture;
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-
-        if (!worldObj.isRemote)
-        {
-            if (getBlockMetadata() == 3 || getBlockMetadata() == 5 || getBlockMetadata() == 7)
-            {
-                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
-            }
-        }
+        
+        producesSound = tagCompound.getBoolean("Sound");
+        producesParticles = tagCompound.getBoolean("Particles");
     }
 
     @Override
@@ -127,5 +101,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         tagCompound.setInteger("Colour", texture.colour == null ? -1 : texture.colour.ordinal());
         tagCompound.setInteger("BlockID", texture.blockID);
         tagCompound.setInteger("Metadata", texture.metaData);
+        tagCompound.setBoolean("Sound", producesSound);
+        tagCompound.setBoolean("Particles", producesParticles);
     }
 }

@@ -1,8 +1,5 @@
 package enhancedportals.lib;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 public class Settings
 {
     public static boolean AllowPortalModifiers;
@@ -13,10 +10,8 @@ public class Settings
 
     public static int PigmenLevel;
 
-    @SideOnly(Side.CLIENT)
-    public static int SoundLevel;
-    @SideOnly(Side.CLIENT)
-    public static int ParticleLevel;
-    @SideOnly(Side.CLIENT)
-    public static boolean RenderPortalEffect;
+    public static int SoundLevel = 10;
+    public static int ParticleLevel = 75;
+    public static boolean RenderPortalEffect = false;
+    public static boolean AllowPortalColours = true;
 }

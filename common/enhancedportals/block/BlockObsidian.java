@@ -26,27 +26,7 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
 
         if (current != null && current.itemID == Item.flintAndSteel.itemID)
         {
-            if (new Portal(x, y + 1, z, worldObj).createPortal())
-            {
-                current.damageItem(1, player);
-            }
-            else if (new Portal(x, y - 1, z, worldObj).createPortal())
-            {
-                current.damageItem(1, player);
-            }
-            else if (new Portal(x + 1, y, z, worldObj).createPortal())
-            {
-                current.damageItem(1, player);
-            }
-            else if (new Portal(x - 1, y, z, worldObj).createPortal())
-            {
-                current.damageItem(1, player);
-            }
-            else if (new Portal(x, y, z + 1, worldObj).createPortal())
-            {
-                current.damageItem(1, player);
-            }
-            else if (new Portal(x, y, z - 1, worldObj).createPortal())
+            if (new Portal(x, y + 1, z, worldObj).createPortal() || new Portal(x, y - 1, z, worldObj).createPortal() || new Portal(x + 1, y, z, worldObj).createPortal() || new Portal(x - 1, y, z, worldObj).createPortal() || new Portal(x, y, z + 1, worldObj).createPortal() || new Portal(x, y, z - 1, worldObj).createPortal())
             {
                 current.damageItem(1, player);
             }

@@ -12,15 +12,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Portal;
 import enhancedportals.lib.PortalTexture;
-import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.WorldLocationBA;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class BlockNetherPortal extends BlockEnhancedPortals
@@ -32,7 +32,6 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         setStepSound(soundGlassFootstep);
         setLightValue(0.75F);
         setUnlocalizedName(Localization.NetherPortal_Name);
-        setCreativeTab(Reference.CREATIVE_TAB);
         setTickRandomly(true);
     }
 
@@ -47,7 +46,14 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z);
-        return netherPortal.getTexture().getIcon(side);
+        return netherPortal.texture.getIcon(side);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int side, int meta)
+    {
+        return new PortalTexture(0).getIcon(side);
     }
 
     @Override
@@ -104,7 +110,9 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
-        if (random.nextInt(100) < Settings.SoundLevel - 1 && random.nextInt(100) == 0)
+        Portal portal = new Portal(x, y, z, world);
+        
+        if (random.nextInt(100) < Settings.SoundLevel - 1 && random.nextInt(100) == 0 && portal.producesSound)
         {
             world.playSound(x + 0.5, y + 0.5, z + 0.5, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
@@ -135,7 +143,14 @@ public class BlockNetherPortal extends BlockEnhancedPortals
                     d5 = random.nextFloat() * 2.0F * i1;
                 }
 
-                world.spawnParticle("portal", d0, d1, d2, d3, d4, d5); // TODO COLOURED PARTICLES
+                if (Settings.AllowPortalColours && portal.producesParticles)
+                {
+                    FMLClientHandler.instance().getClient().effectRenderer.addEffect(new NetherPortalFX(world, portal.portalTexture, d0, d1, d2, d3, d4, d5));
+                }
+                else if (!Settings.AllowPortalColours && portal.producesParticles)
+                {
+                    world.spawnParticle("portal", d0, d1, d2, d3, d4, d5);
+                }
             }
         }
     }
@@ -182,7 +197,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         {
             if (!blockAccess.isBlockOpaqueCube(x, y, z))
             {
-                return new WorldLocationBA(x, y, z, blockAccess).getMaterial() != blockMaterial;
+                return blockAccess.getBlockMaterial(x, y, z) != blockMaterial;
             }
         }
         if (meta == 2 || meta == 3) // XY

@@ -116,6 +116,15 @@ public class PortalTexture
         }
         else if (type == Type.BLOCK)
         {
+            if (blockID == 8 || blockID == 9)
+            {
+                return PORTAL_MODIFIER_ICONS[Colour.BLUE.ordinal()];
+            }
+            else if (blockID == 10 || blockID == 11)
+            {
+                return PORTAL_MODIFIER_ICONS[Colour.ORANGE.ordinal()];
+            }
+            
             return PORTAL_MODIFIER_ICONS[0];
         }
 
@@ -130,6 +139,15 @@ public class PortalTexture
         }
         else if (type == Type.BLOCK)
         {
+            if (blockID == 8 || blockID == 9)
+            {
+                return PARTICLE_COLOURS[Colour.BLUE.ordinal()];
+            }
+            else if (blockID == 10 || blockID == 11)
+            {
+                return PARTICLE_COLOURS[Colour.ORANGE.ordinal()];
+            }
+            
             return PARTICLE_COLOURS[0];
         }
 
@@ -138,8 +156,6 @@ public class PortalTexture
 
     public boolean isEqualTo(PortalTexture texture)
     {
-        // TODO
-        //System.out.println(String.format("Types: %s, %s. BlockIDs: %s, %s. MetaData: %s, %s. Colour: %s, %s. Match: %s", type, texture.type, blockID, texture.blockID, metaData, texture.metaData, colour, texture.colour, (type == texture.type && blockID == texture.blockID && metaData == texture.metaData && colour == texture.colour)));
         if (type.ordinal() == texture.type.ordinal())
         {
             if (type == Type.BLOCK)
@@ -159,7 +175,5 @@ public class PortalTexture
         }
 
         return false;
-
-        //return type.ordinal() == texture.type.ordinal() && blockID == texture.blockID && metaData == texture.metaData && colour == texture.colour;
     }
 }
