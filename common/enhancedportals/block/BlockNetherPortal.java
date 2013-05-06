@@ -10,6 +10,7 @@ import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -172,18 +173,20 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         int meta = blockAccess.getBlockMetadata(x, y, z);
-
+        byte thickness = ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).thickness;
+        float thick = 0.095F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
+                
         if (meta == 2 || meta == 3) // XY
         {
-            setBlockBounds(0.0F, 0.0F, 0.375F, 1.0F, 1.0F, 0.625F);
+            setBlockBounds(0.0F, 0.0F, thickA, 1.0F, 1.0F, thickB);
         }
         else if (meta == 4 || meta == 5) // ZY
         {
-            setBlockBounds(0.375F, 0.0F, 0.0F, 0.625F, 1.0F, 1.0F);
+            setBlockBounds(thickA, 0.0F, 0.0F, thickB, 1.0F, 1.0F);
         }
         else if (meta == 6 || meta == 7) // XZ
         {
-            setBlockBounds(0.0F, 0.375F, 0.0F, 1.0F, 0.625F, 1.0F);
+            setBlockBounds(0.0F, thickA, 0.0F, 1.0F, thickB, 1.0F);
         }
     }
 

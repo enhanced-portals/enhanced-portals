@@ -22,7 +22,7 @@ public class Portal
 {
     public int xCoord, yCoord, zCoord, dimension;
     public PortalTexture portalTexture;
-    public byte portalShape;
+    public byte portalShape, portalThickness;
     public boolean producesParticles, producesSound;
 
     public Portal(int x, int y, int z, World world)
@@ -43,13 +43,15 @@ public class Portal
                 
                 portalTexture = portal.texture;
                 producesSound = portal.producesSound;
-                producesParticles = portal.producesParticles;                
+                producesParticles = portal.producesParticles;
+                portalThickness = portal.thickness;
             }
             else
             {
                 portalTexture = new PortalTexture(0);
                 producesParticles = true;
                 producesSound = true;
+                portalThickness = 0;
             }
         }
         else
@@ -57,6 +59,7 @@ public class Portal
             portalTexture = new PortalTexture(0);
             producesParticles = true;
             producesSound = true;
+            portalThickness = 0;
         }
     }
 
@@ -78,18 +81,21 @@ public class Portal
                 TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
                 
                 producesSound = portal.producesSound;
-                producesParticles = portal.producesParticles;                
+                producesParticles = portal.producesParticles;
+                portalThickness = portal.thickness;
             }
             else
             {
                 producesParticles = true;
                 producesSound = true;
+                portalThickness = 0;
             }
         }
         else
         {
             producesParticles = true;
             producesSound = true;
+            portalThickness = 0;
         }
     }
 
@@ -111,18 +117,21 @@ public class Portal
                 TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
                 
                 producesSound = portal.producesSound;
-                producesParticles = portal.producesParticles;                
+                producesParticles = portal.producesParticles;
+                portalThickness = portal.thickness;
             }
             else
             {
                 producesParticles = true;
                 producesSound = true;
+                portalThickness = 0;
             }
         }
         else
         {
             producesParticles = true;
             producesSound = true;
+            portalThickness = 0;
         }
     }
 
@@ -405,11 +414,22 @@ public class Portal
             }
             else if (item.itemID == Item.redstone.itemID)
             {
-                updateData(!producesSound, producesParticles);
+                updateData(!producesSound, producesParticles, portalThickness);
             }
             else if (item.itemID == Item.stick.itemID)
             {
-                updateData(producesSound, !producesParticles);
+                updateData(producesSound, !producesParticles, portalThickness);
+            }
+            else if (item.itemID == Item.arrow.itemID)
+            {
+                byte thickness = portalThickness;
+                
+                if (thickness < 4)
+                    thickness++;
+                else
+                    thickness = 0;
+                
+                updateData(producesSound, producesParticles, thickness);
             }
             else if (item.itemID < 4096 && Block.blocksList[item.itemID] != null && item.itemID != BlockIds.NetherPortal)
             {
@@ -657,11 +677,11 @@ public class Portal
         return true;
     }
 
-    public boolean updateData(boolean sound, boolean particles)
+    public boolean updateData(boolean sound, boolean particles, byte thickness)
     {
         World world = getWorld();
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || (producesSound == sound && producesParticles == particles))
+        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || (producesSound == sound && producesParticles == particles && portalThickness == thickness))
         {
             return false;
         }
@@ -680,7 +700,9 @@ public class Portal
                 TileEntityNetherPortal portal = ((TileEntityNetherPortal) te);                
                 portal.producesSound = sound;
                 portal.producesParticles = particles;
+                portal.thickness = thickness;
                 
+                current.markBlockForUpdate();
                 addedBlocks.add(current);
                 updateQueue(queue, current);
 
