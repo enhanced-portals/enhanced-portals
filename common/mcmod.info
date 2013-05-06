@@ -40,7 +40,7 @@
   "authors": [
     "Alz454"
   ],
-  "description": "An addon that allows ComputerCraft to interact with the Dial Home Device and Portal Modifier.",
+  "description": "An addon that allows ComputerCraft to interact with the Dial Device and Portal Modifier.",
   "logoFile" : "",
   "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
   "parent" : "enhancedportals",

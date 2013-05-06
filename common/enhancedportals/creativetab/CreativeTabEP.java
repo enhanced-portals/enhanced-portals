@@ -15,6 +15,6 @@ public class CreativeTabEP extends CreativeTabs
     @Override
     public ItemStack getIconItemStack()
     {
-        return new ItemStack(EnhancedPortals.proxy.blockNetherPortal);
+        return new ItemStack(EnhancedPortals.proxy.blockPortalModifier);
     }
 }

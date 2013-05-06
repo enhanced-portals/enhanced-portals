@@ -124,7 +124,7 @@ public class PortalTexture
             {
                 return PORTAL_MODIFIER_ICONS[Colour.ORANGE.ordinal()];
             }
-            
+
             return PORTAL_MODIFIER_ICONS[5];
         }
 
@@ -147,7 +147,7 @@ public class PortalTexture
             {
                 return PARTICLE_COLOURS[Colour.ORANGE.ordinal()];
             }
-            
+
             return PARTICLE_COLOURS[5];
         }
 

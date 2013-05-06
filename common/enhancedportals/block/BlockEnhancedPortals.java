@@ -81,29 +81,13 @@ public class BlockEnhancedPortals extends BlockContainer
     }
 
     @Override
-    public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis)
-    {
-        if (canRotate)
-        {
-            worldObj.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 2);
-        }
-
-        return true;
-    }
-
-    public void setCanRotate()
-    {
-        canRotate = true;
-    }
-    
-    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
     {
         if (canRotate)
         {
             int direction = 0;
             int facing = MathHelper.floor_double(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-    
+
             if (facing == 0)
             {
                 direction = ForgeDirection.NORTH.ordinal();
@@ -120,7 +104,7 @@ public class BlockEnhancedPortals extends BlockContainer
             {
                 direction = ForgeDirection.WEST.ordinal();
             }
-    
+
             if (entityLiving.rotationPitch > 65 && entityLiving.rotationPitch <= 90)
             {
                 direction = ForgeDirection.UP.ordinal();
@@ -129,8 +113,24 @@ public class BlockEnhancedPortals extends BlockContainer
             {
                 direction = ForgeDirection.DOWN.ordinal();
             }
-    
+
             world.setBlockMetadataWithNotify(x, y, z, direction, 0);
         }
+    }
+
+    @Override
+    public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis)
+    {
+        if (canRotate)
+        {
+            worldObj.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 2);
+        }
+
+        return true;
+    }
+
+    public void setCanRotate()
+    {
+        canRotate = true;
     }
 }

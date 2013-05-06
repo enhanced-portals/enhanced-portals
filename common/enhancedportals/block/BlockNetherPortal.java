@@ -51,18 +51,18 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z);
         return netherPortal.texture.getIcon(side);
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta)
-    {
-        return new PortalTexture(0).getIcon(side);
-    }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
         return null;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int side, int meta)
+    {
+        return new PortalTexture(0).getIcon(side);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
     {
-        // TODO Teleport
+        new Portal(x, y, z, world).handleEntityCollide(entity);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
         Portal portal = new Portal(x, y, z, world);
-        
+
         if (random.nextInt(100) < Settings.SoundLevel - 1 && random.nextInt(100) == 0 && portal.producesSound)
         {
             world.playSound(x + 0.5, y + 0.5, z + 0.5, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
@@ -177,7 +177,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         int meta = blockAccess.getBlockMetadata(x, y, z);
         byte thickness = ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).thickness;
         float thick = 0.095F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
-                
+
         if (meta == 2 || meta == 3) // XY
         {
             setBlockBounds(0.0F, 0.0F, thickA, 1.0F, 1.0F, thickB);

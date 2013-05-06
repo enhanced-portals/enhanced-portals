@@ -19,7 +19,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class BlockPortalModifier extends BlockEnhancedPortals
 {
     Icon texture;
-    
+
     public BlockPortalModifier()
     {
         super(BlockIds.PortalModifier, Material.rock);
@@ -30,50 +30,35 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         setStepSound(soundStoneFootstep);
         setUnlocalizedName(Localization.PortalModifier_Name);
     }
-    
+
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
         return new TileEntityPortalModifier();
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) blockAccess.getBlockTileEntity(x, y, z);
-        
+
         return side == blockAccess.getBlockMetadata(x, y, z) ? modifier.texture.getModifierIcon() : texture;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
         return side == 1 ? new PortalTexture(0).getModifierIcon() : texture;
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        texture = iconRegister.registerIcon("enhancedportals:portalModifier_Side");
-    }
-    
+
     @Override
     public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
     {
         return ForgeDirection.VALID_DIRECTIONS;
     }
-    
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
-    {
-        boolean currentRedstoneState = world.getStrongestIndirectPower(x, y, z) > 0;
-        
-        ((TileEntityPortalModifier) world.getBlockTileEntity(x, y, z)).handleRedstoneChanges(currentRedstoneState);
-    }
-    
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
@@ -81,7 +66,22 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         {
             return true;
         }
-        
+
         return super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+    {
+        boolean currentRedstoneState = world.getStrongestIndirectPower(x, y, z) > 0;
+
+        ((TileEntityPortalModifier) world.getBlockTileEntity(x, y, z)).handleRedstoneChanges(currentRedstoneState);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        texture = iconRegister.registerIcon("enhancedportals:portalModifier_Side");
     }
 }

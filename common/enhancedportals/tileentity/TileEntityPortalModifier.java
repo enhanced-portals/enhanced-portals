@@ -31,7 +31,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         sounds = true;
         oldRedstoneState = false;
     }
-    
+
     @Override
     public PacketData getPacketData()
     {
@@ -41,124 +41,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         return data;
     }
 
-    @Override
-    public void parsePacketData(PacketData data)
-    {
-        if (data == null || data.integerData == null || data.integerData.length != 6)
-        {
-            System.out.println("Unexpected packet recieved. " + data);
-            return;
-        }
-
-        PortalTexture newTexture;
-        boolean sound, particles;
-        byte portalThickness;
-
-        if (data.integerData[0] != -1)
-        {
-            newTexture = new PortalTexture(data.integerData[0]);
-        }
-        else
-        {
-            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
-        }
-        
-        sound = data.integerData[3] == 1;
-        particles = data.integerData[4] == 1;
-        portalThickness = (byte) data.integerData[5];
-        
-        Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
-        portal.updateTexture(newTexture);
-        portal.updateData(sound, particles, portalThickness);
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-        
-        tagCompound.setInteger("Colour", texture.colour == null ? -1 : texture.colour.ordinal());
-        tagCompound.setInteger("BlockID", texture.blockID);
-        tagCompound.setInteger("Metadata", texture.metaData);
-        tagCompound.setByte("Thickness", thickness);
-        tagCompound.setByte("RedstoneSetting", redstoneSetting);
-        tagCompound.setInteger("Frequency", frequency);
-        tagCompound.setBoolean("Particles", particles);
-        tagCompound.setBoolean("Sounds", sounds);
-        tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
-    }
-    
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-        
-        int colour = tagCompound.getInteger("Colour"), blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
-
-        if (colour != -1)
-        {
-            texture = new PortalTexture(colour);
-        }
-        else
-        {
-            texture = new PortalTexture(blockID, metadata);
-        }
-        
-        thickness = tagCompound.getByte("Thickness");
-        redstoneSetting = tagCompound.getByte("RedstoneSetting");
-        frequency = tagCompound.getInteger("Frequency");
-        particles = tagCompound.getBoolean("Particles");
-        sounds = tagCompound.getBoolean("Sounds");
-        oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
-    }
-
-    public void handleRedstoneChanges(boolean currentRedstoneState)
-    {
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-                
-        if (!oldRedstoneState && currentRedstoneState)
-        {
-            new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
-        }
-        else if (oldRedstoneState && !currentRedstoneState)
-        {
-            new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
-        }
-        
-        oldRedstoneState = currentRedstoneState;
-    }
-    
-    public boolean updateTexture(PortalTexture text)
-    {
-        if (text.isEqualTo(texture))
-        {
-            return false;
-        }
-        
-        texture = text;
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-        
-        if (!worldObj.isRemote)
-        {
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
-        }
-        
-        return true;
-    }
-    
-    public boolean updateData(boolean sound, boolean part, byte thick)
-    {
-        if (sound == sounds && part == particles && thick == thickness)
-        {
-            return false;
-        }
-        
-        sounds = sound;
-        particles = part;
-        thickness = thick;        
-        return true;
-    }
-    
     public boolean handleBlockActivation(EntityPlayer player)
     {
         ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
@@ -231,12 +113,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
             else if (item.itemID == Item.arrow.itemID)
             {
                 byte thick = thickness;
-                
+
                 if (thick < 4)
+                {
                     thick++;
+                }
                 else
+                {
                     thick = 0;
-                
+                }
+
                 updateData(sounds, particles, thick);
             }
             else if (item.itemID < 4096 && Block.blocksList[item.itemID] != null && item.itemID != BlockIds.NetherPortal)
@@ -260,8 +146,129 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         return false;
     }
 
+    public void handleRedstoneChanges(boolean currentRedstoneState)
+    {
+        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        // TODO CHANGE TO USE REDSTONE SETTING
+        if (!oldRedstoneState && currentRedstoneState)
+        {
+            new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
+        }
+        else if (oldRedstoneState && !currentRedstoneState)
+        {
+            new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+        }
+
+        oldRedstoneState = currentRedstoneState;
+    }
+
+    public boolean isActive()
+    {
+        return new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata())).getBlockId() == BlockIds.NetherPortal;
+    }
+
     private boolean isTextureValid(int itemID)
     {
         return new Portal().isTextureValid(itemID);
+    }
+
+    @Override
+    public void parsePacketData(PacketData data)
+    {
+        if (data == null || data.integerData == null || data.integerData.length != 6)
+        {
+            System.out.println("Unexpected packet recieved. " + data);
+            return;
+        }
+
+        PortalTexture newTexture;
+        boolean sound, particles;
+        byte portalThickness;
+
+        if (data.integerData[0] != -1)
+        {
+            newTexture = new PortalTexture(data.integerData[0]);
+        }
+        else
+        {
+            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
+        }
+
+        sound = data.integerData[3] == 1;
+        particles = data.integerData[4] == 1;
+        portalThickness = (byte) data.integerData[5];
+        updateTexture(newTexture);
+        updateData(sound, particles, portalThickness);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+
+        int colour = tagCompound.getInteger("Colour"), blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
+
+        if (colour != -1)
+        {
+            texture = new PortalTexture(colour);
+        }
+        else
+        {
+            texture = new PortalTexture(blockID, metadata);
+        }
+
+        thickness = tagCompound.getByte("Thickness");
+        redstoneSetting = tagCompound.getByte("RedstoneSetting");
+        frequency = tagCompound.getInteger("Frequency");
+        particles = tagCompound.getBoolean("Particles");
+        sounds = tagCompound.getBoolean("Sounds");
+        oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
+    }
+
+    public boolean updateData(boolean sound, boolean part, byte thick)
+    {
+        if (sound == sounds && part == particles && thick == thickness)
+        {
+            return false;
+        }
+
+        sounds = sound;
+        particles = part;
+        thickness = thick;
+        return true;
+    }
+
+    public boolean updateTexture(PortalTexture text)
+    {
+        if (text.isEqualTo(texture))
+        {
+            return false;
+        }
+
+        texture = text;
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+
+        if (!worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+        }
+
+        return true;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+
+        tagCompound.setInteger("Colour", texture.colour == null ? -1 : texture.colour.ordinal());
+        tagCompound.setInteger("BlockID", texture.blockID);
+        tagCompound.setInteger("Metadata", texture.metaData);
+        tagCompound.setByte("Thickness", thickness);
+        tagCompound.setByte("RedstoneSetting", redstoneSetting);
+        tagCompound.setInteger("Frequency", frequency);
+        tagCompound.setBoolean("Particles", particles);
+        tagCompound.setBoolean("Sounds", sounds);
+        tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
     }
 }

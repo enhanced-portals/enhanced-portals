@@ -53,11 +53,11 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         {
             newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
         }
-        
+
         sound = data.integerData[3] == 1;
         particles = data.integerData[4] == 1;
         portalThickness = (byte) data.integerData[5];
-        
+
         Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
         portal.updateTexture(newTexture);
         portal.updateData(sound, particles, portalThickness);
@@ -78,10 +78,16 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         {
             texture = new PortalTexture(blockID, metadata);
         }
-        
+
         producesSound = tagCompound.getBoolean("Sound");
         producesParticles = tagCompound.getBoolean("Particles");
         thickness = tagCompound.getByte("Thickness");
+        
+        if (tagCompound.getBoolean("HasModifier"))
+        {
+            int x = tagCompound.getInteger("ParentX"), y = tagCompound.getInteger("ParentY"), z = tagCompound.getInteger("ParentZ");
+            parentModifier = new WorldLocation(x, y, z);
+        }
     }
 
     @Override
@@ -109,5 +115,13 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         tagCompound.setBoolean("Sound", producesSound);
         tagCompound.setBoolean("Particles", producesParticles);
         tagCompound.setByte("Thickness", thickness);
+        tagCompound.setBoolean("HasModifier", parentModifier != null);
+        
+        if (parentModifier != null)
+        {
+            tagCompound.setInteger("ParentX", parentModifier.xCoord);
+            tagCompound.setInteger("ParentY", parentModifier.yCoord);
+            tagCompound.setInteger("ParentZ", parentModifier.zCoord);
+        }
     }
 }

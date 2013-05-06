@@ -34,8 +34,8 @@ public class NetherPortalFX extends EntityFX
     }
 
     /**
-* Gets how bright this entity is.
-*/
+     * Gets how bright this entity is.
+     */
     @Override
     public float getBrightness(float par1)
     {
@@ -65,8 +65,8 @@ public class NetherPortalFX extends EntityFX
     }
 
     /**
-* Called to update the entity's position/logic.
-*/
+     * Called to update the entity's position/logic.
+     */
     @Override
     public void onUpdate()
     {
