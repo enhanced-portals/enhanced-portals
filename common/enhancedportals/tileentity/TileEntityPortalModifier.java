@@ -7,11 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Portal;
 import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
+import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 
 public class TileEntityPortalModifier extends TileEntityEnhancedPortals
@@ -142,6 +145,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
                 }
             }
         }
+        
+        if (!player.isSneaking())
+        {
+            player.openGui(EnhancedPortals.instance, GuiIds.PortalModifier, worldObj, xCoord, yCoord, zCoord);
+            return true;
+        }
 
         return false;
     }
@@ -270,5 +279,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         tagCompound.setBoolean("Particles", particles);
         tagCompound.setBoolean("Sounds", sounds);
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
+    }
+    
+    @Override
+    public void validate()
+    {
+        super.validate();
+        
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+        }
     }
 }

@@ -9,6 +9,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
+import enhancedportals.block.BlockDummyPortal;
 import enhancedportals.block.BlockNetherPortal;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.block.BlockPortalModifier;
@@ -25,6 +26,7 @@ public class CommonProxy
     public BlockNetherPortal blockNetherPortal;
     public BlockObsidian blockObsidian;
     public BlockPortalModifier blockPortalModifier;
+    public BlockDummyPortal blockDummyPortal;
 
     public World getClientWorld()
     {
@@ -48,10 +50,12 @@ public class CommonProxy
         blockNetherPortal = new BlockNetherPortal();
         blockPortalModifier = new BlockPortalModifier();
         blockObsidian = new BlockObsidian();
+        blockDummyPortal = new BlockDummyPortal();
 
         GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
         GameRegistry.registerBlock(blockPortalModifier, Localization.PortalModifier_Name);
         GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
+        GameRegistry.registerBlock(blockDummyPortal, "Dummy Portal");
     }
 
     public void loadItems()

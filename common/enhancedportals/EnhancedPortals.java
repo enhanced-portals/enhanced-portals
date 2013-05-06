@@ -14,6 +14,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import enhancedportals.client.gui.GuiHandler;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.PacketHandler;
@@ -22,7 +24,7 @@ import enhancedportals.network.PacketHandler;
 @NetworkMod(channels = { Reference.MOD_ID }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class EnhancedPortals
 {
-    @Instance(Reference.MOD_NAME)
+    @Instance(Reference.MOD_ID)
     public static EnhancedPortals instance;
 
     @SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
@@ -31,7 +33,7 @@ public class EnhancedPortals
     @Init
     private void init(FMLInitializationEvent event)
     {
-
+        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
     }
 
     @PostInit
@@ -53,12 +55,12 @@ public class EnhancedPortals
     @ServerStarting
     private void serverStarting(FMLServerStartingEvent event)
     {
-
+        // Load up networks
     }
 
     @ServerStopping
     private void serverStopping(FMLServerStoppingEvent event)
     {
-
+        // Save networks
     }
 }
