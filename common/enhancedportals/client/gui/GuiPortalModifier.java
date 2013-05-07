@@ -2,14 +2,17 @@ package enhancedportals.client.gui;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
@@ -22,6 +25,7 @@ public class GuiPortalModifier extends GuiContainer
     TileEntityPortalModifier portalModifier;
     boolean hasInteractedWith = false, isActive = false;
     GuiButton okayButton;
+    GuiTextField textBox;
     
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
@@ -34,7 +38,7 @@ public class GuiPortalModifier extends GuiContainer
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture("/mods/enhancedportals/textures/gui/dialDeviceInventory.png"); // TODO TEMPORARY CALL
+        mc.renderEngine.bindTexture("/mods/enhancedportals/textures/gui/dialDeviceInventory.png"); // TODO TEMPORARY
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -51,15 +55,14 @@ public class GuiPortalModifier extends GuiContainer
         
         if (itemstack != null)
         {
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 152, guiTop + 54);
+            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + xSize - 16, guiTop + 54);
         }
     }
     
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {        
-        fontRenderer.drawString("Portal Modifier", 8, -16, 0xFFFFFF);        
-        String txt = "";
+    {
+        String pModifier = "Portal Modifier", txt = "", frequency = "Frequency:";
         
         if (portalModifier.texture.blockID == -1)
         {
@@ -79,7 +82,10 @@ public class GuiPortalModifier extends GuiContainer
             }
         }
         
-        fontRenderer.drawString(txt, 148 - fontRenderer.getStringWidth(txt), 58, 0xFFFFFF);
+        fontRenderer.drawString(pModifier, (xSize / 2) - (fontRenderer.getStringWidth(pModifier) / 2), -16, 0xFFFFFF);
+        fontRenderer.drawString(frequency, ((xSize - 70) / 2) - (fontRenderer.getStringWidth(frequency) / 2), 10, 0xFFFFFF);
+        fontRenderer.drawString(txt, xSize - (20 + fontRenderer.getStringWidth(txt)), 58, 0xFFFFFF);
+        fontRenderer.drawString(EnumChatFormatting.AQUA + "Normal", 0, 58, 0xFFFFFF);
     }
     
     @SuppressWarnings("unchecked")
@@ -89,8 +95,11 @@ public class GuiPortalModifier extends GuiContainer
         super.initGui();
         okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");
         
-        buttonList.add(new GuiButton(1, guiLeft, guiTop, 50, 20, "Test"));
+        buttonList.add(new GuiButton(1, guiLeft + xSize - 60, guiTop, 60, 20, (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles"));
+        buttonList.add(new GuiButton(2, guiLeft + xSize - 60, guiTop + 25, 60, 20, (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds"));
         buttonList.add(okayButton);
+        
+        textBox = new GuiTextField(fontRenderer, guiLeft + 2, guiTop + 27, 100, 16);
         
         okayButton.drawButton = isActive;
     }
@@ -104,6 +113,17 @@ public class GuiPortalModifier extends GuiContainer
         }
         
         hasInteractedWith = true;
+        
+        if (button.id == 1) // particles
+        {
+            portalModifier.particles = !portalModifier.particles;
+            button.displayString = (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles";
+        }
+        else if (button.id == 2) // sounds
+        {
+            portalModifier.sounds = !portalModifier.sounds;
+            button.displayString = (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds";
+        }
     }
     
     @Override
@@ -123,6 +143,7 @@ public class GuiPortalModifier extends GuiContainer
         if (!isActive)
         {
             super.drawScreen(par1, par2, par3);
+            textBox.drawTextBox();
         }
         else
         {
@@ -132,5 +153,36 @@ public class GuiPortalModifier extends GuiContainer
             fontRenderer.drawString(txt, width / 2 - (fontRenderer.getStringWidth(txt) / 2), guiTop, 0xFFFFFF);
             okayButton.drawButton(mc, 0, 0);
         }
+    }
+    
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        if (!textBox.isFocused() || par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode || par2 == 1)
+        {
+            super.keyTyped(par1, par2);
+            return;
+        }
+                
+        if (!Character.isDigit(par1) && par2 != 14 && par2 != 211 && par2 != 203 && par2 != 205)
+        {
+            return; // We only want integers, leaving full manipulation intact
+        }
+        
+        textBox.textboxKeyTyped(par1, par2);
+    }
+    
+    @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+        textBox.updateCursorCounter();
+    }
+    
+    @Override
+    protected void mouseClicked(int par1, int par2, int par3)
+    {
+        super.mouseClicked(par1, par2, par3);
+        textBox.mouseClicked(par1, par2, par3);
     }
 }
