@@ -23,7 +23,7 @@ public class Settings
     public static boolean AllowPortalColours = true;
     
     public static int[] ExcludedBlockList = new int[] { Block.torchWood.blockID };
-    public static int[] ValidItemsList = new int[] { Item.bucketLava.itemID, Item.bucketWater.itemID };
+    public static int[] ValidItemsList = new int[] { Item.bucketLava.itemID, Item.bucketWater.itemID, Item.dyePowder.itemID };
     public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();
     
     public static boolean isBlockExcluded(int id)
