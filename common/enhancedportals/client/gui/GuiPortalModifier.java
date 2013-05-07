@@ -8,13 +8,16 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifier extends GuiContainer
 {
     TileEntityPortalModifier portalModifier;
+    boolean hasInited = false;
     
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
@@ -56,11 +59,25 @@ public class GuiPortalModifier extends GuiContainer
         super.initGui();
         
         buttonList.add(new GuiButton(1, guiLeft, guiTop, 50, 20, "Test"));
+        
     }
     
     @Override
     protected void actionPerformed(GuiButton button)
     {
+        hasInited = true;
+    }
+    
+    @Override
+    public void onGuiClosed()
+    {
+        super.onGuiClosed();
         
+        System.out.println(hasInited);
+        
+        if (hasInited)
+        {
+            PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
+        }
     }
 }

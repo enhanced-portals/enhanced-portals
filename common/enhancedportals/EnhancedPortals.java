@@ -14,14 +14,18 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.client.gui.GuiHandler;
 import enhancedportals.lib.Reference;
+import enhancedportals.network.ClientPacketHandler;
 import enhancedportals.network.CommonProxy;
-import enhancedportals.network.PacketHandler;
+import enhancedportals.network.ServerPacketHandler;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
-@NetworkMod(channels = { Reference.MOD_ID }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+@NetworkMod(channels = { Reference.MOD_ID }, clientSideRequired = true, serverSideRequired = false,
+    clientPacketHandlerSpec=@SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class),
+    serverPacketHandlerSpec=@SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
 public class EnhancedPortals
 {
     @Instance(Reference.MOD_ID)
