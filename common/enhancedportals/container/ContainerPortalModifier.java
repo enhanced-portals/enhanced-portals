@@ -93,4 +93,15 @@ public class ContainerPortalModifier extends Container
 
         return stack;
     }
+    
+    @Override
+    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+    {
+        if (portalModifier.isActive())
+        {
+            return null;
+        }
+        
+        return super.slotClick(par1, par2, par3, par4EntityPlayer);
+    }
 }

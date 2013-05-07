@@ -17,12 +17,14 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class GuiPortalModifier extends GuiContainer
 {
     TileEntityPortalModifier portalModifier;
-    boolean hasInteractedWith = false;
+    boolean hasInteractedWith = false, isActive = false;
+    GuiButton okayButton;
     
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
         super(new ContainerPortalModifier(player, modifier));
         portalModifier = modifier;
+        isActive = portalModifier.isActive();
     }
 
     @Override
@@ -48,8 +50,8 @@ public class GuiPortalModifier extends GuiContainer
     
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
-        fontRenderer.drawString("Portal Modifier", 8, -16, 4210752);
+    {        
+        fontRenderer.drawString("Portal Modifier", 8, -16, 0xFFFFFF);
     }
     
     @SuppressWarnings("unchecked")
@@ -57,14 +59,22 @@ public class GuiPortalModifier extends GuiContainer
     public void initGui()
     {
         super.initGui();
+        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");
         
         buttonList.add(new GuiButton(1, guiLeft, guiTop, 50, 20, "Test"));
+        buttonList.add(okayButton);
         
+        okayButton.drawButton = isActive;
     }
     
     @Override
     protected void actionPerformed(GuiButton button)
     {
+        if (button.id == 100)
+        {
+            mc.thePlayer.closeScreen();
+        }
+        
         hasInteractedWith = true;
     }
     
@@ -72,12 +82,27 @@ public class GuiPortalModifier extends GuiContainer
     public void onGuiClosed()
     {
         super.onGuiClosed();
-        
-        System.out.println(hasInteractedWith);
-        
+                
         if (hasInteractedWith)
         {
             PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
+        }
+    }
+    
+    @Override
+    public void drawScreen(int par1, int par2, float par3)
+    {        
+        if (!isActive)
+        {
+            super.drawScreen(par1, par2, par3);
+        }
+        else
+        {
+            String txt = "You cannot change any settings while the Portal Modifier is active.";
+            
+            drawDefaultBackground();
+            fontRenderer.drawString(txt, width / 2 - (fontRenderer.getStringWidth(txt) / 2), guiTop, 0xFFFFFF);
+            okayButton.drawButton(mc, 0, 0);
         }
     }
 }

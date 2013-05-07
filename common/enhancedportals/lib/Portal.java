@@ -402,7 +402,7 @@ public class Portal
             {
                 if (((TileEntityPortalModifier) portal.parentModifier.getTileEntity()).isActive())
                 {
-                    player.sendChatToPlayer("You must modify this portal through its parent Portal Modifier.");
+                    player.sendChatToPlayer("You must modify this portal through its Portal Modifier.");
                     return true;
                 }
             }
