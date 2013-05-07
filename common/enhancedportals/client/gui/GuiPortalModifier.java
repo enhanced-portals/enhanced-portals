@@ -35,15 +35,19 @@ public class GuiPortalModifier extends GuiContainer
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+        ItemStack itemstack = null;
         
         if (portalModifier.texture.blockID != -1)
         {
-            ItemStack itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 152, guiTop + 54);
+            itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
         }
         else if (portalModifier.texture.colour != null)
         {
-            ItemStack itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour.ordinal());
+             itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour.ordinal());
+        }
+        
+        if (itemstack != null)
+        {
             itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 152, guiTop + 54);
         }
     }

@@ -464,45 +464,6 @@ public class Portal
 
                 return true;
             }
-            else if (item.itemID == Item.redstone.itemID)
-            {
-                updateData(!producesSound, producesParticles, portalThickness);
-            }
-            else if (item.itemID == Item.stick.itemID)
-            {
-                updateData(producesSound, !producesParticles, portalThickness);
-            }
-            else if (item.itemID == Item.arrow.itemID)
-            {
-                byte thickness = portalThickness;
-
-                if (thickness < 4)
-                {
-                    thickness++;
-                }
-                else
-                {
-                    thickness = 0;
-                }
-
-                updateData(producesSound, producesParticles, thickness);
-            }
-            else if (item.itemID < 4096 && Block.blocksList[item.itemID] != null && item.itemID != BlockIds.NetherPortal)
-            {
-                Block potentialBlock = Block.blocksList[item.itemID];
-
-                if (new ItemStack(potentialBlock, 1, item.getItemDamage()).isItemEqual(item) && isTextureValid(item.itemID))
-                {
-                    PortalTexture texture = new PortalTexture(item.itemID, item.getItemDamage());
-
-                    if (updateTexture(texture) && !player.capabilities.isCreativeMode)
-                    {
-                        item.stackSize--;
-                    }
-
-                    return true;
-                }
-            }
         }
         
         return false;
@@ -560,11 +521,6 @@ public class Portal
     private boolean isBlockRemovable(int currentBlockID)
     {
         return currentBlockID == 0 || currentBlockID == 51; // TODO CONFIG
-    }
-
-    public boolean isTextureValid(int id)
-    {
-        return id != Block.rail.blockID && id != Block.railActivator.blockID && id != Block.railDetector.blockID && id != Block.railPowered.blockID && id != Block.tripWireSource.blockID; // TODO CONFIG
     }
 
     private boolean preChecks()

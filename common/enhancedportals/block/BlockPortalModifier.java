@@ -10,7 +10,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.Reference;
@@ -62,8 +64,9 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-        if (((TileEntityPortalModifier) world.getBlockTileEntity(x, y, z)).handleBlockActivation(player))
+        if (!player.isSneaking())
         {
+            player.openGui(EnhancedPortals.instance, GuiIds.PortalModifier, world, x, y, z);
             return true;
         }
 

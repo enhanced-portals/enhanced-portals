@@ -4,9 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.GuiPortalModifierSlot;
 import enhancedportals.lib.PortalTexture;
+import enhancedportals.lib.Settings;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ContainerPortalModifier extends Container
@@ -17,9 +19,8 @@ public class ContainerPortalModifier extends Container
     {
         portalModifier = modifier;
 
-        addSlotToContainer(new Slot(portalModifier, 0, 152, 54));
+        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 152, 54));
 
-        // Add player inventory
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -41,27 +42,61 @@ public class ContainerPortalModifier extends Container
     }
 
     @Override
+    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+    {
+        if (portalModifier.isActive())
+        {
+            return null;
+        }
+
+        return super.slotClick(par1, par2, par3, par4EntityPlayer);
+    }
+
+    @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot)
     {
         ItemStack stack = null;
         Slot slotObject = (Slot) inventorySlots.get(slot);
 
         if (slotObject != null && slotObject.getHasStack())
-        {
+        {            
             ItemStack stackInSlot = slotObject.getStack();
-            stack = stackInSlot.copy();
             
-            if (!EnhancedPortals.instance.isValidItemForPortalTexture(stackInSlot) || PortalTexture.getTextureFromItemStack(stackInSlot).isEqualTo(portalModifier.texture))
+            if (stackInSlot.itemID == Item.dyePowder.itemID)
+            {
+                if (new PortalTexture(stackInSlot.getItemDamage()).isEqualTo(portalModifier.texture))
+                {
+                    return null;
+                }
+            }
+            else if (Settings.isValidItem(stackInSlot.itemID))
+            {
+                if (Settings.getPortalTextureFromItem(stackInSlot, portalModifier.texture).isEqualTo(portalModifier.texture))
+                {
+                    return null;
+                }
+            }
+            else if (stackInSlot.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(stackInSlot.itemID))
+            {
+                if (new PortalTexture(stackInSlot.itemID, stackInSlot.getItemDamage()).isEqualTo(portalModifier.texture))
+                {
+                    return null;
+                }
+            }
+            else
             {
                 return null;
             }
             
+            stack = stackInSlot.copy();            
+            
             ItemStack newStack = stackInSlot.copy();
             newStack.stackSize = 1;
+            
             stack.stackSize--;
             stackInSlot.stackSize--;
-                        
-            if (slot < 1)
+            
+            if (slot < 9)
             {
                 if (!mergeItemStack(newStack, 1, 37, true))
                 {
@@ -90,18 +125,7 @@ public class ContainerPortalModifier extends Container
             
             slotObject.onPickupFromSlot(player, stackInSlot);
         }
-
-        return stack;
-    }
-    
-    @Override
-    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
-    {
-        if (portalModifier.isActive())
-        {
-            return null;
-        }
         
-        return super.slotClick(par1, par2, par3, par4EntityPlayer);
+        return stack;
     }
 }
