@@ -44,4 +44,5 @@
 	<entry key="console.portal.sizeFail">Failed to create a portal at %s, %s, %s. Portal size limit reached.</entry>
 	<entry key="console.portal.success">Successfully created a portal of %s blocks at %s, %s, %s.</entry>
 	<entry key="console.portal.fail">Failed to create a portal at %s, %s, %s. Failed portal validation.</entry>
+	<entry key="itemGroup.enhancedportals">Enhanced Portals</entry>
 </properties>

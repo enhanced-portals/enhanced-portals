@@ -4,13 +4,16 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.PortalTexture;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -55,7 +58,28 @@ public class GuiPortalModifier extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {        
-        fontRenderer.drawString("Portal Modifier", 8, -16, 0xFFFFFF);
+        fontRenderer.drawString("Portal Modifier", 8, -16, 0xFFFFFF);        
+        String txt = "";
+        
+        if (portalModifier.texture.blockID == -1)
+        {
+            txt = StatCollector.translateToLocal("item.fireworksCharge." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour.ordinal())]) + " Portal";
+        }
+        else
+        {
+            txt = Block.blocksList[portalModifier.texture.blockID].getLocalizedName();
+            
+            if (portalModifier.texture.blockID == 9 || portalModifier.texture.blockID == 11)
+            {
+                txt = "Still " + txt;
+            }
+            else if (portalModifier.texture.blockID == 8 || portalModifier.texture.blockID == 10)
+            {
+                txt = "Flowing " + txt;
+            }
+        }
+        
+        fontRenderer.drawString(txt, 148 - fontRenderer.getStringWidth(txt), 58, 0xFFFFFF);
     }
     
     @SuppressWarnings("unchecked")

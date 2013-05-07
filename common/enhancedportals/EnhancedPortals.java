@@ -18,6 +18,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.client.gui.GuiHandler;
+import enhancedportals.lib.Localization;
 import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
@@ -62,6 +63,8 @@ public class EnhancedPortals
         proxy.loadItems();
         proxy.loadTileEntities();
         proxy.loadRecipes();
+        
+        Localization.loadLocales();
     }
 
     @ServerStarting

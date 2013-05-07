@@ -1,5 +1,6 @@
 package enhancedportals.block;
 
+import enhancedportals.lib.Localization;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -25,6 +26,12 @@ public class BlockEnhancedPortals extends BlockContainer
         return null;
     }
 
+    @Override
+    public String getLocalizedName()
+    {
+        return Localization.getLocalizedString(getUnlocalizedName() + ".name");
+    }
+    
     private ForgeDirection getNextRotation(World worldObj, int x, int y, int z)
     {
         if (canRotate)
