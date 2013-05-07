@@ -17,7 +17,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class GuiPortalModifier extends GuiContainer
 {
     TileEntityPortalModifier portalModifier;
-    boolean hasInited = false;
+    boolean hasInteractedWith = false;
     
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
@@ -29,7 +29,7 @@ public class GuiPortalModifier extends GuiContainer
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture("/mods/enhancedportals/textures/gui/dialDeviceInventory.png");
+        mc.renderEngine.bindTexture("/mods/enhancedportals/textures/gui/dialDeviceInventory.png"); // TODO TEMPORARY CALL
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -37,12 +37,12 @@ public class GuiPortalModifier extends GuiContainer
         if (portalModifier.texture.blockID != -1)
         {
             ItemStack itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 155, guiTop + 55);
+            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 152, guiTop + 54);
         }
         else if (portalModifier.texture.colour != null)
         {
             ItemStack itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour.ordinal());
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 155, guiTop + 55);
+            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + 152, guiTop + 54);
         }
     }
     
@@ -65,7 +65,7 @@ public class GuiPortalModifier extends GuiContainer
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        hasInited = true;
+        hasInteractedWith = true;
     }
     
     @Override
@@ -73,9 +73,9 @@ public class GuiPortalModifier extends GuiContainer
     {
         super.onGuiClosed();
         
-        System.out.println(hasInited);
+        System.out.println(hasInteractedWith);
         
-        if (hasInited)
+        if (hasInteractedWith)
         {
             PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
         }

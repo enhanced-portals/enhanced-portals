@@ -1,5 +1,7 @@
 package enhancedportals;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -17,13 +19,14 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.client.gui.GuiHandler;
+import enhancedportals.lib.Portal;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.ClientPacketHandler;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.ServerPacketHandler;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
-@NetworkMod(channels = { Reference.MOD_ID }, clientSideRequired = true, serverSideRequired = false,
+@NetworkMod(clientSideRequired = true, serverSideRequired = false,
     clientPacketHandlerSpec=@SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class),
     serverPacketHandlerSpec=@SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
 public class EnhancedPortals
@@ -66,5 +69,20 @@ public class EnhancedPortals
     private void serverStopping(FMLServerStoppingEvent event)
     {
         // Save networks
+    }
+
+    public boolean isValidItemForPortalTexture(ItemStack stack)
+    {
+        if (stack == null)
+        {
+            return false;
+        }
+        
+        if (stack.itemID == Item.dyePowder.itemID || stack.itemID == Item.bucketLava.itemID || stack.itemID == Item.bucketWater.itemID || new Portal().isTextureValid(stack.itemID))
+        {
+            return true;
+        }
+        
+        return false;
     }
 }

@@ -2,6 +2,8 @@ package enhancedportals.lib;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 
 public class PortalTexture
@@ -175,5 +177,24 @@ public class PortalTexture
         }
 
         return false;
+    }
+
+    public static PortalTexture getTextureFromItemStack(ItemStack stack)
+    {
+        PortalTexture returnTexture = null;
+        
+        if (stack.itemID == Item.dyePowder.itemID)
+        {
+            returnTexture = new PortalTexture(swapColours(stack.getItemDamage()));
+        }
+        else
+        {
+            if (new Portal().isTextureValid(stack.itemID))
+            {
+                returnTexture = new PortalTexture(stack.itemID, stack.getItemDamage());
+            }
+        }
+        
+        return returnTexture;
     }
 }

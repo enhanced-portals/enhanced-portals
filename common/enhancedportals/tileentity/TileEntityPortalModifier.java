@@ -1,7 +1,9 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +12,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
+import enhancedportals.lib.Localization;
 import enhancedportals.lib.Portal;
 import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.WorldLocation;
@@ -17,12 +20,13 @@ import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 
-public class TileEntityPortalModifier extends TileEntityEnhancedPortals
+public class TileEntityPortalModifier extends TileEntityEnhancedPortals implements IInventory
 {
     public PortalTexture texture;
     public byte thickness, redstoneSetting;
     public int frequency;
     public boolean particles, sounds, oldRedstoneState;
+    public ItemStack[] inventory;
 
     public TileEntityPortalModifier()
     {
@@ -33,6 +37,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         particles = true;
         sounds = true;
         oldRedstoneState = false;
+        inventory = new ItemStack[1];
     }
 
     @Override
@@ -289,6 +294,135 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         if (worldObj.isRemote)
         {
             PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+        }
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return inventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        ItemStack stack = getStackInSlot(i);
+        stack.stackSize -= j;
+        
+        return stack;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        if (isStackValidForSlot(i, itemstack))
+        {
+            inventory[i] = itemstack;
+        }
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return Localization.PortalModifier_Name;
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 1;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void openChest()
+    {
+        
+    }
+
+    @Override
+    public void closeChest()
+    {
+        
+    }
+
+    @Override
+    public boolean isStackValidForSlot(int i, ItemStack stack)
+    {
+        if (stack == null)
+        {
+            return true;
+        }
+        
+        return EnhancedPortals.instance.isValidItemForPortalTexture(stack) && !PortalTexture.getTextureFromItemStack(stack).isEqualTo(texture);
+    }
+    
+    @Override
+    public void onInventoryChanged()
+    {
+        super.onInventoryChanged();
+        
+        if (getStackInSlot(0) != null)
+        {
+            ItemStack stack = getStackInSlot(0);
+            
+            if (EnhancedPortals.instance.isValidItemForPortalTexture(stack))
+            {
+                PortalTexture newTexture = PortalTexture.getTextureFromItemStack(stack);
+                boolean isLiquid = false;
+                
+                if (newTexture.isEqualTo(new PortalTexture(Block.lavaStill.blockID)))
+                {
+                    if (newTexture.isEqualTo(this.texture))
+                    {
+                        newTexture = new PortalTexture(Block.lavaMoving.blockID, 0);
+                    }
+                    
+                    isLiquid = true;
+                }
+                else if (newTexture.isEqualTo(new PortalTexture(Block.waterStill.blockID)))
+                {
+                    if (newTexture.isEqualTo(this.texture))
+                    {
+                        newTexture = new PortalTexture(Block.waterMoving.blockID, 0);
+                    }
+                    
+                    isLiquid = true;
+                }
+                
+                texture = newTexture;
+                worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+                setInventorySlotContents(0, null);
+                                
+                if (isLiquid && !worldObj.isRemote)
+                {
+                    EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, new ItemStack(Item.bucketEmpty, 1));
+                    worldObj.spawnEntityInWorld(entityItem);
+                }
+            }
         }
     }
 }
