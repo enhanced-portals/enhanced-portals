@@ -1,6 +1,7 @@
 package enhancedportals;
 
 import net.minecraft.item.Item;
+import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,9 +28,7 @@ import enhancedportals.network.CommonProxy;
 import enhancedportals.network.ServerPacketHandler;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false,
-    clientPacketHandlerSpec=@SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class),
-    serverPacketHandlerSpec=@SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
 public class EnhancedPortals
 {
     @Instance(Reference.MOD_ID)
@@ -42,7 +41,7 @@ public class EnhancedPortals
     private void init(FMLInitializationEvent event)
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-        
+
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0", new PortalTexture(10, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0_", new PortalTexture(11, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
@@ -58,12 +57,12 @@ public class EnhancedPortals
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
-        proxy.loadSettings();
+        proxy.loadSettings(new Configuration(event.getSuggestedConfigurationFile()));
         proxy.loadBlocks();
         proxy.loadItems();
         proxy.loadTileEntities();
         proxy.loadRecipes();
-        
+
         Localization.loadLocales();
     }
 
@@ -77,5 +76,5 @@ public class EnhancedPortals
     private void serverStopping(FMLServerStoppingEvent event)
     {
         // Save networks
-    }    
+    }
 }

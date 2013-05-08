@@ -20,6 +20,11 @@ import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
 public class ServerPacketHandler implements IPacketHandler
 {
+    public WorldServer getWorldForDimension(int dim)
+    {
+        return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dim);
+    }
+
     @Override
     public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
     {
@@ -51,12 +56,7 @@ public class ServerPacketHandler implements IPacketHandler
             e.printStackTrace();
         }
     }
-    
-    public WorldServer getWorldForDimension(int dim)
-    {
-        return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dim);
-    }
-    
+
     public void parseRequestSync(PacketRequestSync sync, Player player)
     {
         WorldServer world = getWorldForDimension(sync.dimension);

@@ -43,7 +43,7 @@ public class ClientPacketHandler implements IPacketHandler
             e.printStackTrace();
         }
     }
-    
+
     public void parseTileEntityUpdate(PacketTEUpdate update)
     {
         World world = FMLClientHandler.instance().getClient().theWorld;

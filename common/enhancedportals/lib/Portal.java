@@ -395,7 +395,7 @@ public class Portal
                     return false;
                 }
             }
-                        
+
             if (item.itemID == Item.dyePowder.itemID)
             {
                 if (updateTexture(new PortalTexture(PortalTexture.swapColours(item.getItemDamage()))) && !player.capabilities.isCreativeMode)
@@ -454,7 +454,7 @@ public class Portal
                 return true;
             }
         }
-        
+
         return false;
     }
 

@@ -60,9 +60,9 @@ public class ContainerPortalModifier extends Container
         Slot slotObject = (Slot) inventorySlots.get(slot);
 
         if (slotObject != null && slotObject.getHasStack())
-        {            
+        {
             ItemStack stackInSlot = slotObject.getStack();
-            
+
             if (stackInSlot.itemID == Item.dyePowder.itemID)
             {
                 if (new PortalTexture(stackInSlot.getItemDamage()).isEqualTo(portalModifier.texture))
@@ -88,15 +88,15 @@ public class ContainerPortalModifier extends Container
             {
                 return null;
             }
-            
-            stack = stackInSlot.copy();            
-            
+
+            stack = stackInSlot.copy();
+
             ItemStack newStack = stackInSlot.copy();
             newStack.stackSize = 1;
-            
+
             stack.stackSize--;
             stackInSlot.stackSize--;
-            
+
             if (slot < 9)
             {
                 if (!mergeItemStack(newStack, 1, 37, true))
@@ -123,10 +123,10 @@ public class ContainerPortalModifier extends Container
             {
                 return null;
             }
-            
+
             slotObject.onPickupFromSlot(player, stackInSlot);
         }
-        
+
         return stack;
     }
 }

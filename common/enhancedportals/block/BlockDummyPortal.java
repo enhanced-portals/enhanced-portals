@@ -22,7 +22,7 @@ public class BlockDummyPortal extends Block
     {
         return new PortalTexture(meta).getIcon(side);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)

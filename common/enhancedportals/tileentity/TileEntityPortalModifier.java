@@ -38,6 +38,33 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     }
 
     @Override
+    public void closeChest()
+    {
+
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        ItemStack stack = inventory[i];
+        stack.stackSize -= j;
+
+        return stack;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 1;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return Localization.PortalModifier_Name;
+    }
+
+    @Override
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
@@ -46,10 +73,28 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         return data;
     }
 
+    @Override
+    public int getSizeInventory()
+    {
+        return inventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return inventory[i];
+    }
+
     public void handleRedstoneChanges(boolean currentRedstoneState)
     {
         WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        
+
         if (redstoneSetting == 0)
         {
             if (!oldRedstoneState && currentRedstoneState && !isAnyActive())
@@ -75,26 +120,19 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         oldRedstoneState = currentRedstoneState;
     }
-    
-    public boolean isAnyActive()
-    {
-        WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        
-        return block.getBlockId() == BlockIds.NetherPortal;
-    }
 
     public boolean isActive()
     {
         WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
         TileEntityNetherPortal portal = null;
-        
+
         if (block.getBlockId() != BlockIds.NetherPortal)
         {
             return false;
         }
 
-        portal = ((TileEntityNetherPortal) block.getTileEntity());
-        
+        portal = (TileEntityNetherPortal) block.getTileEntity();
+
         if (worldObj.isRemote)
         {
             return portal.hasParent;
@@ -102,7 +140,69 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         else
         {
             return portal != null && portal.parentModifier != null && portal.parentModifier.equals(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
-        }        
+        }
+    }
+
+    public boolean isAnyActive()
+    {
+        WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+
+        return block.getBlockId() == BlockIds.NetherPortal;
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isStackValidForSlot(int i, ItemStack itemstack)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void onInventoryChanged()
+    {
+        super.onInventoryChanged();
+
+        if (getStackInSlot(0) != null)
+        {
+            ItemStack stack = getStackInSlot(0);
+            PortalTexture text = null;
+
+            if (stack.itemID == Item.dyePowder.itemID)
+            {
+                text = new PortalTexture(stack.getItemDamage());
+            }
+            else if (Settings.isValidItem(stack.itemID))
+            {
+                text = Settings.getPortalTextureFromItem(stack, texture);
+            }
+            else if (stack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(stack.itemID))
+            {
+                text = new PortalTexture(stack.itemID, stack.getItemDamage());
+            }
+
+            if (text != null)
+            {
+                updateTexture(text);
+                setInventorySlotContents(0, null);
+            }
+        }
+    }
+
+    @Override
+    public void openChest()
+    {
+
     }
 
     @Override
@@ -160,6 +260,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
     }
 
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        inventory[i] = itemstack;
+    }
+
     public boolean updateData(boolean sound, boolean part, byte thick)
     {
         if (sound == sounds && part == particles && thick == thickness)
@@ -192,6 +298,17 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     }
 
     @Override
+    public void validate()
+    {
+        super.validate();
+
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+        }
+    }
+
+    @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
@@ -206,122 +323,5 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         tagCompound.setBoolean("Sounds", sounds);
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
-    }
-    
-    @Override
-    public void validate()
-    {
-        super.validate();
-        
-        if (worldObj.isRemote)
-        {
-            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
-        }
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return inventory.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return inventory[i];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        ItemStack stack = inventory[i];
-        stack.stackSize -= j;
-        
-        return stack;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return inventory[i];
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        inventory[i] = itemstack;        
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return Localization.PortalModifier_Name;
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 1;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void openChest()
-    {
-        
-    }
-
-    @Override
-    public void closeChest()
-    {
-        
-    }
-
-    @Override
-    public boolean isStackValidForSlot(int i, ItemStack itemstack)
-    {
-        return true;
-    }
-    
-    @Override
-    public void onInventoryChanged()
-    {
-        super.onInventoryChanged();
-        
-        if (getStackInSlot(0) != null)
-        {
-            ItemStack stack = getStackInSlot(0);
-            PortalTexture text = null;
-            
-            if (stack.itemID == Item.dyePowder.itemID)
-            {
-                text = new PortalTexture(stack.getItemDamage());
-            }
-            else if (Settings.isValidItem(stack.itemID))
-            {
-                text = Settings.getPortalTextureFromItem(stack, texture);
-            }
-            else if (stack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(stack.itemID))
-            {
-                text = new PortalTexture(stack.itemID, stack.getItemDamage());
-            }
-            
-            if (text != null)
-            {
-                updateTexture(text);
-                setInventorySlotContents(0, null);
-            }
-        }
     }
 }

@@ -63,7 +63,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
         portal.updateTexture(newTexture);
         portal.updateData(sound, particles, portalThickness);
-        
+
         if (worldObj.isRemote)
         {
             hasParent = data.integerData[6] == 1;
@@ -89,7 +89,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         producesSound = tagCompound.getBoolean("Sound");
         producesParticles = tagCompound.getBoolean("Particles");
         thickness = tagCompound.getByte("Thickness");
-        
+
         if (tagCompound.getBoolean("HasModifier"))
         {
             int x = tagCompound.getInteger("ParentX"), y = tagCompound.getInteger("ParentY"), z = tagCompound.getInteger("ParentZ");
@@ -123,7 +123,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         tagCompound.setBoolean("Particles", producesParticles);
         tagCompound.setByte("Thickness", thickness);
         tagCompound.setBoolean("HasModifier", parentModifier != null);
-        
+
         if (parentModifier != null)
         {
             tagCompound.setInteger("ParentX", parentModifier.xCoord);
