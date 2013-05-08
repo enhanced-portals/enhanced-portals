@@ -19,7 +19,8 @@ public class ContainerPortalModifier extends Container
     {
         portalModifier = modifier;
 
-        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 160, 54));
+        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 152, 64));
+        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 8, 64));
 
         for (int i = 0; i < 3; i++)
         {

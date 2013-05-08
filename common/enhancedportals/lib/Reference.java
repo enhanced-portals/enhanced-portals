@@ -21,5 +21,7 @@ public class Reference
     public static final String PROXY_COMMON = "enhancedportals.network.CommonProxy";
 
     public static CreativeTabs CREATIVE_TAB = new CreativeTabEP();
+    
     public static final String LOCALE_LOCATION = "/mods/" + MOD_ID + "/lang/";
+    public static final String GUI_LOCATION = "/mods/enhancedportals/textures/gui/";
 }

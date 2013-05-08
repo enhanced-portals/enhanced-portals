@@ -5,9 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+import enhancedportals.EnhancedPortals;
 
 public class WorldLocation
 {
@@ -84,14 +82,7 @@ public class WorldLocation
 
     public World getWorld()
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-        {
-            return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimension);
-        }
-        else
-        {
-            return FMLClientHandler.instance().getClient().theWorld;
-        }
+        return EnhancedPortals.proxy.getWorld(dimension);
     }
 
     public boolean isBlockAir()

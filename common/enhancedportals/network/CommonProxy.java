@@ -1,6 +1,8 @@
 package enhancedportals.network;
 
 import net.minecraft.block.Block;
+import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedportals.block.BlockDummyPortal;
 import enhancedportals.block.BlockNetherPortal;
@@ -52,5 +54,10 @@ public class CommonProxy
     {
         GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "EPNPortal");
         GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "EPPModifier");
+    }
+
+    public World getWorld(int dimension)
+    {
+        return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimension);
     }
 }

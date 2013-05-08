@@ -21,6 +21,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.PortalTexture;
+import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -36,16 +37,19 @@ public class GuiPortalModifier extends GuiContainer
         super(new ContainerPortalModifier(player, modifier));
         portalModifier = modifier;
         isActive = portalModifier.isActive();
+        
+        xSize += 3;
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture("/mods/enhancedportals/textures/gui/dialDeviceInventory.png"); // TODO TEMPORARY
-        int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2;
-        drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png");
+        int x = (width - xSize) / 2 - 12;
+        int y = (height - ySize) / 2 - 4;
+        drawTexturedModalRect(x, y, 0, 0, xSize + 22, ySize + 4);
+        
         ItemStack itemstack = null;
         
         if (portalModifier.texture.blockID != -1)
@@ -59,11 +63,11 @@ public class GuiPortalModifier extends GuiContainer
         
         if (itemstack != null)
         {
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + xSize - 16, guiTop + 54);
+            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + xSize - 27, guiTop + 64);
         }
         
         // Draw redstone control icons
-        int x2 = guiLeft + xSize + 3, y2 = guiTop, y3 = y2, colour = 0xFF666666, activeColour = 0xFFCC0000, backColour = 0xFF343434;
+        int x2 = guiLeft + xSize + 13, y2 = guiTop + 5, y3 = y2, colour = 0xFF666666, activeColour = 0xFFCC0000, backColour = 0xFF343434;
                 
         // 1
         drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
@@ -80,14 +84,6 @@ public class GuiPortalModifier extends GuiContainer
         drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
         drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
         
-        // 3    
-        /*y2 += 18;
-        drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
-        drawRect(x2, y2, x2 + 16, y2 - 1, portalModifier.redstoneSetting == 2 ? activeColour : colour);
-        drawRect(x2, y2 + 16, x2 + 16, y2 - 1 + 16, portalModifier.redstoneSetting == 2 ? activeColour : colour);
-        drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 2 ? activeColour : colour);
-        drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 2 ? activeColour : colour);*/
-        
         drawRect(0, 0, 0, 0, 0xFFFFFFFF); // Otherwise the icons seem to change colour
         
         // 1
@@ -98,11 +94,6 @@ public class GuiPortalModifier extends GuiContainer
         y3 += 18;
         mc.renderEngine.bindTexture("/textures/blocks/redtorch.png");
         drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);
-        
-        // 3
-        /*y3 += 18;
-        mc.renderEngine.bindTexture("/textures/items/redstone.png");
-        drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);*/
     }
     
     public void drawTexturedRect(int par1, int par2, int par3, int par4, int par5, int par6)
@@ -121,49 +112,12 @@ public class GuiPortalModifier extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        String pModifier = "Portal Modifier", txt = "", frequency = "Frequency:", thickness = "Normal";
-        
-        if (portalModifier.texture.blockID == -1)
-        {
-            txt = StatCollector.translateToLocal("item.fireworksCharge." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour.ordinal())]) + " Portal";
-        }
-        else
-        {
-            txt = Block.blocksList[portalModifier.texture.blockID].getLocalizedName();
-            
-            if (portalModifier.texture.blockID == 9 || portalModifier.texture.blockID == 11)
-            {
-                txt = "Still " + txt;
-            }
-            else if (portalModifier.texture.blockID == 8 || portalModifier.texture.blockID == 10)
-            {
-                txt = "Flowing " + txt;
-            }
-        }
-        
-        switch (portalModifier.thickness)
-        {
-            case 0:
-                thickness = "Normal";
-                break;
+        String pModifier = "Portal Modifier", frequency = "Frequency:", thickness = "Thickness", camo = "Camouflage"; // TODO LANGUAGE
                 
-            case 1:
-                thickness = "Thick";
-                break;
-                
-            case 2:
-                thickness = "Thicker";
-                break;
-                
-            case 3:
-                thickness = "Full Block";
-                break;
-        }
-        
-        fontRenderer.drawString(pModifier, (xSize / 2) - (fontRenderer.getStringWidth(pModifier) / 2), -16, 0xFFFFFF);
-        fontRenderer.drawString(frequency, ((xSize - 70) / 2) - (fontRenderer.getStringWidth(frequency) / 2), 10, 0xFFFFFF);
-        fontRenderer.drawString(txt, xSize - (20 + fontRenderer.getStringWidth(txt)), 58, 0xFFFFFF);
-        fontRenderer.drawString(EnumChatFormatting.AQUA + thickness, 0, 58, 0xFFFFFF);
+        fontRenderer.drawString(pModifier, (xSize / 2) - (fontRenderer.getStringWidth(pModifier) / 2), -15, 0xFFFFFF);
+        fontRenderer.drawString(frequency, ((xSize - 70) / 2) - (fontRenderer.getStringWidth(frequency) / 2), 15, 4210752);
+        fontRenderer.drawString(thickness, 27, 68, 4210752);
+        fontRenderer.drawString(camo, (xSize - 58) - (fontRenderer.getStringWidth(camo) / 2), 68, 4210752);
     }
     
     @SuppressWarnings("unchecked")
@@ -173,11 +127,11 @@ public class GuiPortalModifier extends GuiContainer
         super.initGui();
         okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");
         
-        buttonList.add(new GuiButton(1, guiLeft + xSize - 60, guiTop, 60, 20, (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles"));
-        buttonList.add(new GuiButton(2, guiLeft + xSize - 60, guiTop + 25, 60, 20, (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds"));
+        buttonList.add(new GuiButton(1, guiLeft + xSize - 60, guiTop + 5, 60, 20, (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles"));
+        buttonList.add(new GuiButton(2, guiLeft + xSize - 60, guiTop + 30, 60, 20, (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds"));
         buttonList.add(okayButton);
         
-        textBox = new GuiTextField(fontRenderer, guiLeft + 2, guiTop + 27, 100, 16);
+        textBox = new GuiTextField(fontRenderer, guiLeft + 2, guiTop + 32, 100, 16);
         
         okayButton.drawButton = isActive;
     }
@@ -195,12 +149,12 @@ public class GuiPortalModifier extends GuiContainer
         if (button.id == 1) // particles
         {
             portalModifier.particles = !portalModifier.particles;
-            button.displayString = (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles";
+            button.displayString = (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles";  // TODO LANGUAGE
         }
         else if (button.id == 2) // sounds
         {
             portalModifier.sounds = !portalModifier.sounds;
-            button.displayString = (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds";
+            button.displayString = (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds";  // TODO LANGUAGE
         }
     }
     
@@ -223,13 +177,13 @@ public class GuiPortalModifier extends GuiContainer
             super.drawScreen(x, y, par3);
             textBox.drawTextBox();
             
-            int x2 = xSize + 3, y2 = 0;
+            int x2 = xSize + 13, y2 = 5;
             
             if (isPointInRegion(x2, y2, 16, 16, x, y))
             {
                 List<String> list = new ArrayList<String>();
                 list.add("High");
-                list.add(EnumChatFormatting.GRAY + "Activate on a redstone signal.");
+                list.add(EnumChatFormatting.GRAY + "Activate on a redstone signal.");  // TODO LANGUAGE
                 drawHoveringText(list, x, y, fontRenderer);
             }
             
@@ -239,23 +193,68 @@ public class GuiPortalModifier extends GuiContainer
             {
                 List<String> list = new ArrayList<String>();
                 list.add("Low");
-                list.add(EnumChatFormatting.GRAY + "Activate without a redstone signal.");
+                list.add(EnumChatFormatting.GRAY + "Activate without a redstone signal."); // TODO LANGUAGE
                 drawHoveringText(list, x, y, fontRenderer);
             }
             
-            /*y2 += 18;
-            
-            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            if (isPointInRegion(8, 64, 16, 16, x, y))
             {
+                String thickness = "Unknown";
+                
+                switch (portalModifier.thickness)  // TODO LANGUAGE
+                {
+                    case 0:
+                        thickness = "Normal";
+                        break;
+                        
+                    case 1:
+                        thickness = "Thick";
+                        break;
+                        
+                    case 2:
+                        thickness = "Thicker";
+                        break;
+                        
+                    case 3:
+                        thickness = "Full Block";
+                        break;
+                }
+                
                 List<String> list = new ArrayList<String>();
-                list.add("Pulse");
-                list.add(EnumChatFormatting.GRAY + "Activate on a redstone pulse.");
+                list.add("Portal Thickness");
+                list.add(EnumChatFormatting.GRAY + thickness);
                 drawHoveringText(list, x, y, fontRenderer);
-            }*/
+            }
+            else if (isPointInRegion(152, 64, 16, 16, x, y))
+            {
+                String txt = "Unknown";
+                
+                if (portalModifier.texture.blockID == -1)  // TODO BETTER LANGUAGE
+                {
+                    txt = StatCollector.translateToLocal("item.fireworksCharge." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour.ordinal())]) + " Portal";
+                }
+                else
+                {
+                    txt = Block.blocksList[portalModifier.texture.blockID].getLocalizedName();
+                    
+                    if (portalModifier.texture.blockID == 9 || portalModifier.texture.blockID == 11)
+                    {
+                        txt = "Still " + txt;
+                    }
+                    else if (portalModifier.texture.blockID == 8 || portalModifier.texture.blockID == 10)
+                    {
+                        txt = "Flowing " + txt;
+                    }
+                }
+                
+                List<String> list = new ArrayList<String>();
+                list.add(txt);
+                drawHoveringText(list, x, y, fontRenderer);
+            }
         }
         else
         {
-            String txt = "You cannot change any settings while the Portal Modifier is active.";
+            String txt = "You cannot change any settings while the Portal Modifier is active.";  // TODO LANGUAGE
             
             drawDefaultBackground();
             fontRenderer.drawString(txt, width / 2 - (fontRenderer.getStringWidth(txt) / 2), guiTop, 0xFFFFFF);
@@ -301,7 +300,7 @@ public class GuiPortalModifier extends GuiContainer
         
         if (buttonClicked == 0)
         {
-            int x2 = xSize + 3, y2 = 0;
+            int x2 = xSize + 13, y2 = 5;
             
             if (isPointInRegion(x2, y2, 16, 16, x, y))
             {
@@ -316,14 +315,6 @@ public class GuiPortalModifier extends GuiContainer
                 portalModifier.redstoneSetting = 1;
                 hasInteractedWith = true;
             }
-            
-            /*y2 += 18;
-            
-            if (isPointInRegion(x2, y2, 16, 16, x, y))
-            {
-                portalModifier.redstoneSetting = 2;
-                hasInteractedWith = true;
-            }*/
         }
     }
 }

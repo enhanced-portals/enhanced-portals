@@ -12,10 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityNetherPortal;
@@ -306,18 +306,7 @@ public class Portal
 
     private World getWorld()
     {
-        Side side = FMLCommonHandler.instance().getEffectiveSide();
-
-        if (side == Side.SERVER)
-        {
-            return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimension);
-        }
-        else if (side == Side.CLIENT)
-        {
-            return FMLClientHandler.instance().getClient().theWorld;
-        }
-
-        return null;
+        return EnhancedPortals.proxy.getWorld(dimension);
     }
 
     private byte ghostPortal()
