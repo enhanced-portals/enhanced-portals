@@ -1,9 +1,13 @@
 package enhancedportals.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
@@ -57,12 +61,67 @@ public class GuiPortalModifier extends GuiContainer
         {
             itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRenderer, this.mc.renderEngine, itemstack, guiLeft + xSize - 16, guiTop + 54);
         }
+        
+        // Draw redstone control icons
+        int x2 = guiLeft + xSize + 3, y2 = guiTop, y3 = y2, colour = 0xFF666666, activeColour = 0xFFCC0000, backColour = 0xFF343434;
+                
+        // 1
+        drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
+        drawRect(x2, y2, x2 + 16, y2 - 1, portalModifier.redstoneSetting == 0 ? activeColour : colour);
+        drawRect(x2, y2 + 16, x2 + 16, y2 - 1 + 16, portalModifier.redstoneSetting == 0 ? activeColour : colour);
+        drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 0 ? activeColour : colour);
+        drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 0 ? activeColour : colour);        
+        
+        // 2  
+        y2 += 18;
+        drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
+        drawRect(x2, y2, x2 + 16, y2 - 1, portalModifier.redstoneSetting == 1 ? activeColour : colour);
+        drawRect(x2, y2 + 16, x2 + 16, y2 - 1 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
+        drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
+        drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
+        
+        // 3    
+        /*y2 += 18;
+        drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
+        drawRect(x2, y2, x2 + 16, y2 - 1, portalModifier.redstoneSetting == 2 ? activeColour : colour);
+        drawRect(x2, y2 + 16, x2 + 16, y2 - 1 + 16, portalModifier.redstoneSetting == 2 ? activeColour : colour);
+        drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 2 ? activeColour : colour);
+        drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 2 ? activeColour : colour);*/
+        
+        drawRect(0, 0, 0, 0, 0xFFFFFFFF); // Otherwise the icons seem to change colour
+        
+        // 1
+        mc.renderEngine.bindTexture("/textures/blocks/redtorch_lit.png");
+        drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);        
+        
+        // 2
+        y3 += 18;
+        mc.renderEngine.bindTexture("/textures/blocks/redtorch.png");
+        drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);
+        
+        // 3
+        /*y3 += 18;
+        mc.renderEngine.bindTexture("/textures/items/redstone.png");
+        drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);*/
+    }
+    
+    public void drawTexturedRect(int par1, int par2, int par3, int par4, int par5, int par6)
+    {
+        float f = 0.062F;
+        float f1 = 0.062F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV((double)(par1 + 0), (double)(par2 + par6), (double)this.zLevel, (double)((float)(par3 + 0) * f), (double)((float)(par4 + par6) * f1));
+        tessellator.addVertexWithUV((double)(par1 + par5), (double)(par2 + par6), (double)this.zLevel, (double)((float)(par3 + par5) * f), (double)((float)(par4 + par6) * f1));
+        tessellator.addVertexWithUV((double)(par1 + par5), (double)(par2 + 0), (double)this.zLevel, (double)((float)(par3 + par5) * f), (double)((float)(par4 + 0) * f1));
+        tessellator.addVertexWithUV((double)(par1 + 0), (double)(par2 + 0), (double)this.zLevel, (double)((float)(par3 + 0) * f), (double)((float)(par4 + 0) * f1));
+        tessellator.draw();
     }
     
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        String pModifier = "Portal Modifier", txt = "", frequency = "Frequency:";
+        String pModifier = "Portal Modifier", txt = "", frequency = "Frequency:", thickness = "Normal";
         
         if (portalModifier.texture.blockID == -1)
         {
@@ -82,10 +141,29 @@ public class GuiPortalModifier extends GuiContainer
             }
         }
         
+        switch (portalModifier.thickness)
+        {
+            case 0:
+                thickness = "Normal";
+                break;
+                
+            case 1:
+                thickness = "Thick";
+                break;
+                
+            case 2:
+                thickness = "Thicker";
+                break;
+                
+            case 3:
+                thickness = "Full Block";
+                break;
+        }
+        
         fontRenderer.drawString(pModifier, (xSize / 2) - (fontRenderer.getStringWidth(pModifier) / 2), -16, 0xFFFFFF);
         fontRenderer.drawString(frequency, ((xSize - 70) / 2) - (fontRenderer.getStringWidth(frequency) / 2), 10, 0xFFFFFF);
         fontRenderer.drawString(txt, xSize - (20 + fontRenderer.getStringWidth(txt)), 58, 0xFFFFFF);
-        fontRenderer.drawString(EnumChatFormatting.AQUA + "Normal", 0, 58, 0xFFFFFF);
+        fontRenderer.drawString(EnumChatFormatting.AQUA + thickness, 0, 58, 0xFFFFFF);
     }
     
     @SuppressWarnings("unchecked")
@@ -138,12 +216,42 @@ public class GuiPortalModifier extends GuiContainer
     }
     
     @Override
-    public void drawScreen(int par1, int par2, float par3)
+    public void drawScreen(int x, int y, float par3)
     {        
         if (!isActive)
         {
-            super.drawScreen(par1, par2, par3);
+            super.drawScreen(x, y, par3);
             textBox.drawTextBox();
+            
+            int x2 = xSize + 3, y2 = 0;
+            
+            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            {
+                List<String> list = new ArrayList<String>();
+                list.add("High");
+                list.add(EnumChatFormatting.GRAY + "Activate on a redstone signal.");
+                drawHoveringText(list, x, y, fontRenderer);
+            }
+            
+            y2 += 18;
+            
+            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            {
+                List<String> list = new ArrayList<String>();
+                list.add("Low");
+                list.add(EnumChatFormatting.GRAY + "Activate without a redstone signal.");
+                drawHoveringText(list, x, y, fontRenderer);
+            }
+            
+            /*y2 += 18;
+            
+            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            {
+                List<String> list = new ArrayList<String>();
+                list.add("Pulse");
+                list.add(EnumChatFormatting.GRAY + "Activate on a redstone pulse.");
+                drawHoveringText(list, x, y, fontRenderer);
+            }*/
         }
         else
         {
@@ -180,9 +288,42 @@ public class GuiPortalModifier extends GuiContainer
     }
     
     @Override
-    protected void mouseClicked(int par1, int par2, int par3)
+    public void handleMouseInput()
     {
-        super.mouseClicked(par1, par2, par3);
-        textBox.mouseClicked(par1, par2, par3);
+        super.handleMouseInput();
+    }
+    
+    @Override
+    protected void mouseClicked(int x, int y, int buttonClicked)
+    {
+        super.mouseClicked(x, y, buttonClicked);
+        textBox.mouseClicked(x, y, buttonClicked);
+        
+        if (buttonClicked == 0)
+        {
+            int x2 = xSize + 3, y2 = 0;
+            
+            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            {
+                portalModifier.redstoneSetting = 0;
+                hasInteractedWith = true;
+            }
+            
+            y2 += 18;
+            
+            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            {
+                portalModifier.redstoneSetting = 1;
+                hasInteractedWith = true;
+            }
+            
+            /*y2 += 18;
+            
+            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            {
+                portalModifier.redstoneSetting = 2;
+                hasInteractedWith = true;
+            }*/
+        }
     }
 }

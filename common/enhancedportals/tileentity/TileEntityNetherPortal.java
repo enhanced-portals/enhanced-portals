@@ -14,6 +14,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     public boolean producesSound, producesParticles;
     public byte thickness;
     public WorldLocation parentModifier;
+    public boolean hasParent;
 
     public TileEntityNetherPortal()
     {
@@ -21,13 +22,14 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         producesSound = true;
         producesParticles = true;
         thickness = 0;
+        hasParent = false;
     }
 
     @Override
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness };
+        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
 
         return data;
     }
@@ -35,7 +37,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 6)
+        if (data == null || data.integerData == null || data.integerData.length != 7)
         {
             System.out.println("Unexpected packet recieved." + data);
             return;
@@ -61,6 +63,11 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
         portal.updateTexture(newTexture);
         portal.updateData(sound, particles, portalThickness);
+        
+        if (worldObj.isRemote)
+        {
+            hasParent = data.integerData[6] == 1;
+        }
     }
 
     @Override

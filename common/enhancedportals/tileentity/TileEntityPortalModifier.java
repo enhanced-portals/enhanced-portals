@@ -41,7 +41,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness };
+        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting };
 
         return data;
     }
@@ -49,28 +49,66 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public void handleRedstoneChanges(boolean currentRedstoneState)
     {
         WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        // TODO CHANGE TO USE REDSTONE SETTING
-        if (!oldRedstoneState && currentRedstoneState)
+        
+        if (redstoneSetting == 0)
         {
-            new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
+            if (!oldRedstoneState && currentRedstoneState && !isAnyActive())
+            {
+                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
+            }
+            else if (oldRedstoneState && !currentRedstoneState && isActive())
+            {
+                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+            }
         }
-        else if (oldRedstoneState && !currentRedstoneState)
+        else if (redstoneSetting == 1)
         {
-            new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+            if (oldRedstoneState && !currentRedstoneState && !isAnyActive())
+            {
+                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
+            }
+            else if (!oldRedstoneState && currentRedstoneState && isActive())
+            {
+                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+            }
         }
 
         oldRedstoneState = currentRedstoneState;
     }
+    
+    public boolean isAnyActive()
+    {
+        WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        
+        return block.getBlockId() == BlockIds.NetherPortal;
+    }
 
     public boolean isActive()
     {
-        return new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata())).getBlockId() == BlockIds.NetherPortal;
+        WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        TileEntityNetherPortal portal = null;
+        
+        if (block.getBlockId() != BlockIds.NetherPortal)
+        {
+            return false;
+        }
+
+        portal = ((TileEntityNetherPortal) block.getTileEntity());
+        
+        if (worldObj.isRemote)
+        {
+            return portal.hasParent;
+        }
+        else
+        {
+            return portal != null && portal.parentModifier != null && portal.parentModifier.equals(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
+        }        
     }
 
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 6)
+        if (data == null || data.integerData == null || data.integerData.length != 7)
         {
             System.out.println("Unexpected packet recieved. " + data);
             return;
@@ -94,6 +132,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         portalThickness = (byte) data.integerData[5];
         updateTexture(newTexture);
         updateData(sound, particles, portalThickness);
+        redstoneSetting = (byte) data.integerData[6];
     }
 
     @Override
@@ -118,6 +157,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         particles = tagCompound.getBoolean("Particles");
         sounds = tagCompound.getBoolean("Sounds");
         oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
+        redstoneSetting = tagCompound.getByte("RedstoneSetting");
     }
 
     public boolean updateData(boolean sound, boolean part, byte thick)
@@ -165,6 +205,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         tagCompound.setBoolean("Particles", particles);
         tagCompound.setBoolean("Sounds", sounds);
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
+        tagCompound.setByte("RedstoneSetting", redstoneSetting);
     }
     
     @Override
