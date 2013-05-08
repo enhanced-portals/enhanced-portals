@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
@@ -94,6 +95,26 @@ public class GuiPortalModifier extends GuiContainer
         y3 += 18;
         mc.renderEngine.bindTexture("/textures/blocks/redtorch.png");
         drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);
+        
+        int padding = 5, width = 10;
+        
+        if (portalModifier.thickness == 1)
+        {
+            padding = 4;
+            width = 8;
+        }
+        else if (portalModifier.thickness == 2)
+        {
+            padding = 2;
+            width = 4;
+        }
+        else if (portalModifier.thickness == 3)
+        {
+            padding = 0;
+            width = 0;
+        }
+                
+        drawRect(guiLeft + 8 + padding, guiTop + 64, guiLeft + (16 - width) + 8 + padding, guiTop + 64 + 16, 0xFF555555);
     }
     
     public void drawTexturedRect(int par1, int par2, int par3, int par4, int par5, int par6)
@@ -221,8 +242,7 @@ public class GuiPortalModifier extends GuiContainer
                 }
                 
                 List<String> list = new ArrayList<String>();
-                list.add("Portal Thickness");
-                list.add(EnumChatFormatting.GRAY + thickness);
+                list.add(thickness);
                 drawHoveringText(list, x, y, fontRenderer);
             }
             else if (isPointInRegion(152, 64, 16, 16, x, y))
@@ -253,7 +273,7 @@ public class GuiPortalModifier extends GuiContainer
             }
         }
         else
-        {
+        {            
             String txt = "You cannot change any settings while the Portal Modifier is active.";  // TODO LANGUAGE
             
             drawDefaultBackground();
@@ -313,6 +333,20 @@ public class GuiPortalModifier extends GuiContainer
             if (isPointInRegion(x2, y2, 16, 16, x, y))
             {
                 portalModifier.redstoneSetting = 1;
+                hasInteractedWith = true;
+            }
+            
+            if (isPointInRegion(8, 64, 16, 16, x, y))
+            {
+                if (portalModifier.thickness < 3)
+                {
+                    portalModifier.thickness++;
+                }
+                else
+                {
+                    portalModifier.thickness = 0;
+                }
+                
                 hasInteractedWith = true;
             }
         }

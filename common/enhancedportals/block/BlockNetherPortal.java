@@ -176,7 +176,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         byte thickness = ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).thickness;
-        float thick = 0.095F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
+        float thick = 0.125F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
 
         if (meta == 2 || meta == 3) // XY
         {

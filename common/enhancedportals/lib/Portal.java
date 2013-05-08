@@ -377,7 +377,7 @@ public class Portal
     {
         if (getWorld().isRemote)
         {
-            return true;
+            return false;
         }
 
         ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
@@ -387,12 +387,12 @@ public class Portal
         {
             TileEntityNetherPortal portal = (TileEntityNetherPortal) getWorld().getBlockTileEntity(xCoord, yCoord, zCoord);
 
-            if (portal.parentModifier != null)
+            if (Settings.isValidItem(item.itemID) && portal.parentModifier != null)
             {
                 if (((TileEntityPortalModifier) portal.parentModifier.getTileEntity()).isActive())
                 {
                     player.sendChatToPlayer("You must modify this portal through its Portal Modifier.");
-                    return true;
+                    return false;
                 }
             }
                         
