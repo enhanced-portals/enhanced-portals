@@ -27,6 +27,6 @@ public class BlockDummyPortal extends Block
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        
+        // Stops from trying to register NULL
     }
 }
