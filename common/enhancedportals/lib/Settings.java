@@ -12,19 +12,19 @@ public class Settings
 {
     public static Configuration config;
     
-    public static boolean AllowPortalModifiers;
-    public static boolean AllowDialHomeDevices;
+    public static boolean AllowPortalModifiers = true;
+    public static boolean AllowDialHomeDevices = true;
 
-    public static boolean DisableModifierRecipe;
-    public static boolean DisableDHDRecipe;
+    public static boolean DisableModifierRecipe = false;
+    public static boolean DisableDHDRecipe = false;
 
-    public static int PigmenLevel;
-
-    public static int SoundLevel = 10;
-    public static int ParticleLevel = 75;
-    public static boolean RenderPortalEffect = false;
+    public static boolean RenderPortalEffect = true;
     public static boolean AllowPortalColours = true;
-
+    
+    public static int PigmenLevel = 100;
+    public static int SoundLevel = 100;
+    public static int ParticleLevel = 100;
+    
     public static int[] ExcludedBlockList = new int[] { Block.torchWood.blockID };
     public static int[] ValidItemsList = new int[] { Item.bucketLava.itemID, Item.bucketWater.itemID, Item.dyePowder.itemID };
     public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();

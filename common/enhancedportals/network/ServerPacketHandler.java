@@ -40,8 +40,6 @@ public class ServerPacketHandler implements IPacketHandler
         {
             packetID = stream.readByte();
 
-            System.out.println("Recieved server packet of ID " + packetID);
-
             if (packetID == PacketIds.TileEntityUpdate)
             {
                 parseTileEntityUpdate(new PacketTEUpdate(stream));

@@ -72,22 +72,6 @@ public class GuiPortalModifier extends GuiContainer
         int y = (height - ySize) / 2 - 4;
         drawTexturedModalRect(x, y, 0, 0, xSize + 22, ySize + 4);
 
-        ItemStack itemstack = null;
-
-        if (portalModifier.texture.blockID != -1)
-        {
-            itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
-        }
-        else if (portalModifier.texture.colour != null)
-        {
-            itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour.ordinal());
-        }
-
-        if (itemstack != null)
-        {
-            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 27, guiTop + 64);
-        }
-
         // Draw redstone control icons
         int x2 = guiLeft + xSize + 13, y2 = guiTop + 5, y3 = y2, colour = 0xFF666666, activeColour = 0xFFCC0000, backColour = 0xFF343434;
 
@@ -106,7 +90,7 @@ public class GuiPortalModifier extends GuiContainer
         drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
         drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
 
-        drawRect(0, 0, 0, 0, 0xFFFFFFFF); // Otherwise the icons seem to change colour
+        drawRect(0, 0, 0, 0, 0xFFFFFFFF); // Otherwise the icons seem to change colour - could change to gl11
 
         // 1
         mc.renderEngine.bindTexture("/textures/blocks/redtorch_lit.png");
@@ -134,8 +118,24 @@ public class GuiPortalModifier extends GuiContainer
             padding = 0;
             width = 0;
         }
+        
         drawTexturedModalRect(0, 0, 0, 0, 0, 0);
         drawRect(guiLeft + 8 + padding, guiTop + 64, guiLeft + 16 - width + 8 + padding, guiTop + 64 + 16, 0xFF555555);
+        ItemStack itemstack = null;
+        
+        if (portalModifier.texture.blockID != -1)
+        {
+            itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
+        }
+        else if (portalModifier.texture.colour != null)
+        {
+            itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour.ordinal());
+        }
+
+        if (itemstack != null)
+        {
+            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 27, guiTop + 64);
+        }
     }
 
     @Override
@@ -231,6 +231,14 @@ public class GuiPortalModifier extends GuiContainer
                 list.add(txt);
                 drawHoveringText(list, x, y, fontRenderer);
             }
+            else if (isPointInRegion(2, 32, 100, 16, x, y))
+            {
+                List<String> list = new ArrayList<String>();
+                list.add("Frequency");
+                list.add(EnumChatFormatting.GRAY + "All Portal Modifiers with the same");
+                list.add(EnumChatFormatting.GRAY + "frequency are linked together.");
+                drawHoveringText(list, x, y, fontRenderer);
+            }
         }
         else
         {
@@ -255,12 +263,6 @@ public class GuiPortalModifier extends GuiContainer
         tessellator.draw();
     }
 
-    @Override
-    public void handleMouseInput()
-    {
-        super.handleMouseInput();
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void initGui()
@@ -273,6 +275,8 @@ public class GuiPortalModifier extends GuiContainer
         buttonList.add(okayButton);
 
         textBox = new GuiTextField(fontRenderer, guiLeft + 2, guiTop + 32, 100, 16);
+        textBox.setMaxStringLength(9);
+        textBox.setText(portalModifier.network);
 
         okayButton.drawButton = isActive;
     }
@@ -292,6 +296,7 @@ public class GuiPortalModifier extends GuiContainer
         }
 
         textBox.textboxKeyTyped(par1, par2);
+        hasInteractedWith = true;
     }
 
     @Override
@@ -341,6 +346,7 @@ public class GuiPortalModifier extends GuiContainer
 
         if (hasInteractedWith)
         {
+            portalModifier.network = ("0" + textBox.getText()).replaceFirst("^0+(?!$)", "");
             PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
         }
     }

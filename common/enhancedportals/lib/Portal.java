@@ -460,7 +460,43 @@ public class Portal
 
     public void handleEntityCollide(Entity entity)
     {
-        // TODO
+        World world = getWorld();
+        
+        if (world.isRemote)
+        {
+            if (Settings.RenderPortalEffect)
+            {
+                entity.setInPortal();
+            }
+            
+            return;
+        }
+        
+        TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+        
+        if (portal.parentModifier == null)
+        {
+            if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
+            {
+                entity.setInPortal();
+            }
+        }
+        else
+        {
+            TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
+            
+            if (modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
+            {
+                if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
+                {
+                    entity.setInPortal();
+                }
+            }
+            else
+            {
+                // Teleport via network
+            }
+        }
     }
 
     public void handleNeighborChange(int id)

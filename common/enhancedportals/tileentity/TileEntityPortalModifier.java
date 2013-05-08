@@ -21,7 +21,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 {
     public PortalTexture texture;
     public byte thickness, redstoneSetting;
-    public int frequency;
+    public String network;
     public boolean particles, sounds, oldRedstoneState;
     public ItemStack[] inventory;
 
@@ -30,7 +30,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         texture = new PortalTexture(0);
         thickness = 0;
         redstoneSetting = 0;
-        frequency = 0;
+        network = "0";
         particles = true;
         sounds = true;
         oldRedstoneState = false;
@@ -69,7 +69,8 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     {
         PacketData data = new PacketData();
         data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting };
-
+        data.stringData = new String[] { network };
+        
         return data;
     }
 
@@ -208,7 +209,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 7)
+        if (data == null || data.integerData == null || data.integerData.length != 7 || data.stringData.length != 1)
         {
             System.out.println("Unexpected packet recieved. " + data);
             return;
@@ -233,6 +234,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         updateTexture(newTexture);
         updateData(sound, particles, portalThickness);
         redstoneSetting = (byte) data.integerData[6];
+        network = data.stringData[0];
     }
 
     @Override
@@ -253,7 +255,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         thickness = tagCompound.getByte("Thickness");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
-        frequency = tagCompound.getInteger("Frequency");
+        network = tagCompound.getString("Frequency");
         particles = tagCompound.getBoolean("Particles");
         sounds = tagCompound.getBoolean("Sounds");
         oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
@@ -318,7 +320,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         tagCompound.setInteger("Metadata", texture.metaData);
         tagCompound.setByte("Thickness", thickness);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
-        tagCompound.setInteger("Frequency", frequency);
+        tagCompound.setString("Frequency", network);
         tagCompound.setBoolean("Particles", particles);
         tagCompound.setBoolean("Sounds", sounds);
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
