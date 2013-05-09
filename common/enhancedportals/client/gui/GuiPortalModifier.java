@@ -79,16 +79,12 @@ public class GuiPortalModifier extends GuiContainer
             if ((Integer.parseInt(portalModifier.network) & val) == 0)
             {
                 portalModifier.network = "" + (Integer.parseInt(portalModifier.network) | val);
-                
-                System.out.println("Added " + val + " (" + portalModifier.network + ")");
             }
             else
             {
                 int flags = Integer.parseInt(portalModifier.network);
                 flags &= ~val;                
                 portalModifier.network = "" + flags;
-                
-                System.out.println("Removed " + val + " (" + portalModifier.network + ")");
             }
             
             hasInteractedWith = true;
@@ -124,7 +120,7 @@ public class GuiPortalModifier extends GuiContainer
         drawTexturedModalRect(x, y, 0, 0, xSize + 22, ySize + 4);
 
         x = guiLeft + 13;
-        y = guiTop + 4;
+        y = guiTop + 3;
         mc.renderEngine.bindTexture("/font/alternate.png");
         
         drawRune(x, y, 16, 64, isFlagSet(1));
