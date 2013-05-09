@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,7 +15,6 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
@@ -30,15 +28,12 @@ public class GuiPortalModifier extends GuiContainer
     TileEntityPortalModifier portalModifier;
     boolean hasInteractedWith = false, isActive = false;
     GuiButton okayButton;
-    GuiTextField textBox;
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
         super(new ContainerPortalModifier(player, modifier));
         portalModifier = modifier;
         isActive = portalModifier.isActive();
-
-        xSize += 3;
     }
 
     @Override
@@ -63,44 +58,108 @@ public class GuiPortalModifier extends GuiContainer
         }
     }
 
+    private void drawRune(int x, int y, int x2, int y2, boolean selected)
+    {
+        if (selected)
+        {
+            GL11.glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
+        }
+        else
+        {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+        
+        drawTexturedModalRect(x, y, x2, y2, 16, 16);
+    }
+    
+    private void clickRune(int mX, int mY, int x, int y, int val)
+    {
+        if (isPointInRegion(x, y, 16, 16, mX, mY))
+        {
+            if ((Integer.parseInt(portalModifier.network) & val) == 0)
+            {
+                portalModifier.network = "" + (Integer.parseInt(portalModifier.network) | val);
+                
+                System.out.println("Added " + val + " (" + portalModifier.network + ")");
+            }
+            else
+            {
+                int flags = Integer.parseInt(portalModifier.network);
+                flags &= ~val;                
+                portalModifier.network = "" + flags;
+                
+                System.out.println("Removed " + val + " (" + portalModifier.network + ")");
+            }
+            
+            hasInteractedWith = true;
+        }
+    }
+    
+    private boolean isFlagSet(int flag)
+    {
+        return (Integer.parseInt(portalModifier.network) & flag) != 0;
+    }
+    
+    private void drawFakeButton(int x, int y, String iconLocation, boolean active, int offColour, int onColour, int backColour)
+    {
+        drawRect(x, y, x + 18, y + 18, active ? onColour : offColour);
+        
+        x += 1;
+        y += 1;
+        
+        drawRect(x, y, x + 16, y + 16, backColour);        
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        
+        mc.renderEngine.bindTexture(iconLocation);
+        drawTexturedRect(x, y, 0, 0, 16, 16);
+    }
+    
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png");
-        int x = (width - xSize) / 2 - 12;
+        int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 4;
         drawTexturedModalRect(x, y, 0, 0, xSize + 22, ySize + 4);
 
-        // Draw redstone control icons
-        int x2 = guiLeft + xSize + 13, y2 = guiTop + 5, y3 = y2, colour = 0xFF666666, activeColour = 0xFFCC0000, backColour = 0xFF343434;
-
-        // 1
-        drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
-        drawRect(x2, y2, x2 + 16, y2 - 1, portalModifier.redstoneSetting == 0 ? activeColour : colour);
-        drawRect(x2, y2 + 16, x2 + 16, y2 - 1 + 16, portalModifier.redstoneSetting == 0 ? activeColour : colour);
-        drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 0 ? activeColour : colour);
-        drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 0 ? activeColour : colour);
-
-        // 2  
-        y2 += 18;
-        drawRect(x2, y2, x2 + 16, y2 + 16, backColour);
-        drawRect(x2, y2, x2 + 16, y2 - 1, portalModifier.redstoneSetting == 1 ? activeColour : colour);
-        drawRect(x2, y2 + 16, x2 + 16, y2 - 1 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
-        drawRect(x2, y2, x2 + 1, y2 - 1 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
-        drawRect(x2 + 16, y2 - 1, x2 + 17, y2 + 16, portalModifier.redstoneSetting == 1 ? activeColour : colour);
-
-        drawRect(0, 0, 0, 0, 0xFFFFFFFF); // Otherwise the icons seem to change colour - could change to gl11
-
-        // 1
-        mc.renderEngine.bindTexture("/textures/blocks/redtorch_lit.png");
-        drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);
-
-        // 2
-        y3 += 18;
-        mc.renderEngine.bindTexture("/textures/blocks/redtorch.png");
-        drawTexturedRect(x2, y3 - 1, 0, 0, 16, 16);
-
+        x = guiLeft + 13;
+        y = guiTop + 4;
+        mc.renderEngine.bindTexture("/font/alternate.png");
+        
+        drawRune(x, y, 16, 64, isFlagSet(1));
+        drawRune(x + 20, y, 32, 64, isFlagSet(2));
+        drawRune(x + 40, y, 48, 64, isFlagSet(4));
+        drawRune(x + 60, y, 64, 64, isFlagSet(8));
+        drawRune(x + 80, y, 80, 64, isFlagSet(16));
+        drawRune(x + 100, y, 96, 64, isFlagSet(32));
+        drawRune(x + 120, y, 112, 64, isFlagSet(64));
+        drawRune(x + 140, y, 128, 64, isFlagSet(128));
+        
+        drawRune(x, y + 20, 16, 80, isFlagSet(256));
+        drawRune(x + 20, y + 20, 32, 80, isFlagSet(512));
+        drawRune(x + 40, y + 20, 48, 80, isFlagSet(1024));
+        drawRune(x + 60, y + 20, 64, 80, isFlagSet(2048));
+        drawRune(x + 80, y + 20, 80, 80, isFlagSet(4096));
+        drawRune(x + 100, y + 20, 96, 80, isFlagSet(8192));
+        drawRune(x + 120, y + 20, 112, 80, isFlagSet(16384));
+        drawRune(x + 140, y + 20, 128, 80, isFlagSet(32768));
+        
+        drawRune(x, y + 40, 0, 80, isFlagSet(65536));
+        drawRune(x + 20, y + 40, 160, 64, isFlagSet(131072));
+        drawRune(x + 40, y + 40, 176, 64, isFlagSet(262144));
+        drawRune(x + 60, y + 40, 192, 64, isFlagSet(524288));
+        drawRune(x + 80, y + 40, 208, 64, isFlagSet(1048576));
+        drawRune(x + 100, y + 40, 224, 64, isFlagSet(2097152));
+        drawRune(x + 120, y + 40, 240, 64, isFlagSet(4194304));
+        drawRune(x + 140, y + 40, 160, 80, isFlagSet(8388608));
+        
+        drawFakeButton(guiLeft + xSize + 2, guiTop + 5, "/textures/blocks/redtorch_lit.png", portalModifier.redstoneSetting == 0, 0xFF666666, 0xFFCC0000, 0xFF343434);
+        drawFakeButton(guiLeft + xSize + 2, guiTop + 25, "/textures/blocks/redtorch.png", portalModifier.redstoneSetting == 1, 0xFF666666, 0xFFCC0000, 0xFF343434);
+        
+        drawFakeButton(guiLeft - 20, guiTop + 5, Reference.GUI_LOCATION + "particleButton.png", portalModifier.particles, 0xFFCC0000, 0xFF00CC00, 0xFF343434);
+        drawFakeButton(guiLeft - 20, guiTop + 25, Reference.GUI_LOCATION + "soundButton.png", portalModifier.sounds, 0xFFCC0000, 0xFF00CC00, 0xFF343434);
+        
         int padding = 5, width = 10;
 
         if (portalModifier.thickness == 1)
@@ -134,19 +193,16 @@ public class GuiPortalModifier extends GuiContainer
 
         if (itemstack != null)
         {
-            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 27, guiTop + 64);
+            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 24, guiTop + 64);
         }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        String pModifier = "Portal Modifier", frequency = "Frequency:", thickness = "Thickness", camo = "Camouflage"; // TODO LANGUAGE
+        String pModifier = "Portal Modifier"; // TODO LANGUAGE
 
         fontRenderer.drawString(pModifier, xSize / 2 - fontRenderer.getStringWidth(pModifier) / 2, -15, 0xFFFFFF);
-        fontRenderer.drawString(frequency, (xSize - 70) / 2 - fontRenderer.getStringWidth(frequency) / 2, 15, 4210752);
-        fontRenderer.drawString(thickness, 27, 68, 4210752);
-        fontRenderer.drawString(camo, xSize - 58 - fontRenderer.getStringWidth(camo) / 2, 68, 4210752);
     }
 
     @Override
@@ -155,11 +211,9 @@ public class GuiPortalModifier extends GuiContainer
         if (!isActive)
         {
             super.drawScreen(x, y, par3);
-            textBox.drawTextBox();
+            int x2 = xSize, y2 = 5;
 
-            int x2 = xSize + 13, y2 = 5;
-
-            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
             {
                 List<String> list = new ArrayList<String>();
                 list.add("High");
@@ -167,13 +221,34 @@ public class GuiPortalModifier extends GuiContainer
                 drawHoveringText(list, x, y, fontRenderer);
             }
 
-            y2 += 18;
+            y2 += 20;
 
-            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
             {
                 List<String> list = new ArrayList<String>();
                 list.add("Low");
                 list.add(EnumChatFormatting.GRAY + "Activate without a redstone signal."); // TODO LANGUAGE
+                drawHoveringText(list, x, y, fontRenderer);
+            }
+            
+            x2 = -20;
+            y2 = 5;
+            
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
+            {
+                List<String> list = new ArrayList<String>();
+                list.add("Particles");
+                list.add(EnumChatFormatting.GRAY + (portalModifier.particles ? "Active" : "Inactive")); // TODO LANGUAGE
+                drawHoveringText(list, x, y, fontRenderer);
+            }
+            
+            y2 += 20;
+            
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
+            {
+                List<String> list = new ArrayList<String>();
+                list.add("Sounds");
+                list.add(EnumChatFormatting.GRAY + (portalModifier.sounds ? "Active" : "Inactive")); // TODO LANGUAGE
                 drawHoveringText(list, x, y, fontRenderer);
             }
 
@@ -202,7 +277,8 @@ public class GuiPortalModifier extends GuiContainer
                 }
 
                 List<String> list = new ArrayList<String>();
-                list.add(thickness);
+                list.add("Thickness");
+                list.add(EnumChatFormatting.GRAY + thickness);
                 drawHoveringText(list, x, y, fontRenderer);
             }
             else if (isPointInRegion(152, 64, 16, 16, x, y))
@@ -228,15 +304,8 @@ public class GuiPortalModifier extends GuiContainer
                 }
 
                 List<String> list = new ArrayList<String>();
-                list.add(txt);
-                drawHoveringText(list, x, y, fontRenderer);
-            }
-            else if (isPointInRegion(2, 32, 100, 16, x, y))
-            {
-                List<String> list = new ArrayList<String>();
-                list.add("Frequency");
-                list.add(EnumChatFormatting.GRAY + "All Portal Modifiers with the same");
-                list.add(EnumChatFormatting.GRAY + "frequency are linked together.");
+                list.add("Facade");
+                list.add(EnumChatFormatting.GRAY + txt);
                 drawHoveringText(list, x, y, fontRenderer);
             }
         }
@@ -270,56 +339,51 @@ public class GuiPortalModifier extends GuiContainer
         super.initGui();
         okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");
 
-        buttonList.add(new GuiButton(1, guiLeft + xSize - 60, guiTop + 5, 60, 20, (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles"));
-        buttonList.add(new GuiButton(2, guiLeft + xSize - 60, guiTop + 30, 60, 20, (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds"));
+        //buttonList.add(new GuiButton(1, guiLeft + xSize - 60, guiTop + 5, 60, 20, (portalModifier.particles ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Particles"));
+        //buttonList.add(new GuiButton(2, guiLeft + xSize - 60, guiTop + 30, 60, 20, (portalModifier.sounds ? EnumChatFormatting.DARK_GREEN : EnumChatFormatting.RED) + "Sounds"));
         buttonList.add(okayButton);
 
-        textBox = new GuiTextField(fontRenderer, guiLeft + 2, guiTop + 32, 100, 16);
-        textBox.setMaxStringLength(9);
-        textBox.setText(portalModifier.network);
-
         okayButton.drawButton = isActive;
-    }
-
-    @Override
-    protected void keyTyped(char par1, int par2)
-    {
-        if (!textBox.isFocused() || par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode || par2 == 1)
-        {
-            super.keyTyped(par1, par2);
-            return;
-        }
-
-        if (!Character.isDigit(par1) && par2 != 14 && par2 != 211 && par2 != 203 && par2 != 205)
-        {
-            return; // We only want integers, leaving full manipulation intact
-        }
-
-        textBox.textboxKeyTyped(par1, par2);
-        hasInteractedWith = true;
     }
 
     @Override
     protected void mouseClicked(int x, int y, int buttonClicked)
     {
         super.mouseClicked(x, y, buttonClicked);
-        textBox.mouseClicked(x, y, buttonClicked);
+        //textBox.mouseClicked(x, y, buttonClicked);
 
         if (buttonClicked == 0)
         {
-            int x2 = xSize + 13, y2 = 5;
+            int x2 = xSize, y2 = 5;
 
-            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
             {
                 portalModifier.redstoneSetting = 0;
                 hasInteractedWith = true;
             }
 
-            y2 += 18;
+            y2 += 20;
 
-            if (isPointInRegion(x2, y2, 16, 16, x, y))
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
             {
                 portalModifier.redstoneSetting = 1;
+                hasInteractedWith = true;
+            }
+            
+            x2 = -20;
+            y2 = 5;
+            
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
+            {
+                portalModifier.particles = !portalModifier.particles;
+                hasInteractedWith = true;
+            }
+            
+            y2 += 20;
+            
+            if (isPointInRegion(x2, y2, 18, 18, x, y))
+            {
+                portalModifier.sounds = !portalModifier.sounds;
                 hasInteractedWith = true;
             }
 
@@ -336,6 +400,36 @@ public class GuiPortalModifier extends GuiContainer
 
                 hasInteractedWith = true;
             }
+            
+            // Runes
+            x2 = 13;
+            y2 = 4;
+            clickRune(x, y, x2, y2, 1);
+            clickRune(x, y, x2 + 20, y2, 2);
+            clickRune(x, y, x2 + 40, y2, 4);
+            clickRune(x, y, x2 + 60, y2, 8);
+            clickRune(x, y, x2 + 80, y2, 16);
+            clickRune(x, y, x2 + 100, y2, 32);
+            clickRune(x, y, x2 + 120, y2, 64);
+            clickRune(x, y, x2 + 140, y2, 128);
+            
+            clickRune(x, y, x2, y2 + 20, 256);
+            clickRune(x, y, x2 + 20, y2 + 20, 512);
+            clickRune(x, y, x2 + 40, y2 + 20, 1024);
+            clickRune(x, y, x2 + 60, y2 + 20, 2048);
+            clickRune(x, y, x2 + 80, y2 + 20, 4096);
+            clickRune(x, y, x2 + 100, y2 + 20, 8192);
+            clickRune(x, y, x2 + 120, y2 + 20, 16384);
+            clickRune(x, y, x2 + 140, y2 + 20, 32768);
+            
+            clickRune(x, y, x2, y2 + 40, 65536);
+            clickRune(x, y, x2 + 20, y2 + 40, 131072);
+            clickRune(x, y, x2 + 40, y2 + 40, 262144);
+            clickRune(x, y, x2 + 60, y2 + 40, 524288);
+            clickRune(x, y, x2 + 80, y2 + 40, 1048576);
+            clickRune(x, y, x2 + 100, y2 + 40, 2097152);
+            clickRune(x, y, x2 + 120, y2 + 40, 4194304);
+            clickRune(x, y, x2 + 140, y2 + 40, 8388608);
         }
     }
 
@@ -346,15 +440,7 @@ public class GuiPortalModifier extends GuiContainer
 
         if (hasInteractedWith)
         {
-            portalModifier.network = ("0" + textBox.getText()).replaceFirst("^0+(?!$)", "");
             PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
         }
-    }
-
-    @Override
-    public void updateScreen()
-    {
-        super.updateScreen();
-        textBox.updateCursorCounter();
     }
 }
