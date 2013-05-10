@@ -19,7 +19,7 @@ public class GuiItemStackButton
     public boolean active, colourInside;
     public List<String> textList;
     public String value;
-    
+
     public GuiItemStackButton(int x, int y, ItemStack stack, GuiPortalModifier p, List<String> list, String val)
     {
         this.x = x;
@@ -31,7 +31,7 @@ public class GuiItemStackButton
         value = val;
         colourInside = false;
     }
-    
+
     public GuiItemStackButton(int x, int y, ItemStack stack, GuiPortalModifier p, List<String> list, String val, boolean colourinside)
     {
         this.x = x;
@@ -48,19 +48,18 @@ public class GuiItemStackButton
     {
         GL11.glDisable(GL11.GL_LIGHTING);
 
-        
         if (!colourInside)
         {
             // BORDER
             if (active)
             {
-                drawRect(x + xOffset  - 1, y + yOffset  - 1, x + xOffset + 17, y + yOffset + 17, 0xFF00CC00);
+                drawRect(x + xOffset - 1, y + yOffset - 1, x + xOffset + 17, y + yOffset + 17, 0xFF00CC00);
             }
             else
             {
-                drawRect(x + xOffset - 1, y + yOffset  - 1, x + xOffset + 17, y + yOffset + 17, 0xFFCC0000);
+                drawRect(x + xOffset - 1, y + yOffset - 1, x + xOffset + 17, y + yOffset + 17, 0xFFCC0000);
             }
-            
+
             // BACKGROUND
             if (isPointInRegion(x + xOffset + 1, y + yOffset + 1, 14, 14, x2, y2))
             {

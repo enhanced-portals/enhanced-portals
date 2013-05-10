@@ -74,9 +74,12 @@ public class ClientPacketHandler implements IPacketHandler
 
     private void parseGui(PacketGui packetGui, Player player)
     {
+        EntityPlayer play = FMLClientHandler.instance().getClient().thePlayer;
+        
         if (packetGui.packetData.integerData[0] == 0 && packetGui.packetData.integerData[1] == 1)
         {
-            ((EntityPlayer)player).openGui(EnhancedPortals.instance, GuiIds.PortalModifierNetwork, FMLClientHandler.instance().getClient().theWorld, packetGui.xCoord, packetGui.yCoord, packetGui.zCoord);
+           // play.closeScreen();
+            play.openGui(EnhancedPortals.instance, packetGui.packetData.integerData[2], FMLClientHandler.instance().getClient().theWorld, packetGui.xCoord, packetGui.yCoord, packetGui.zCoord);
         }
     }
 

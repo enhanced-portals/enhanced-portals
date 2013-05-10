@@ -70,7 +70,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         PacketData data = new PacketData();
         data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting };
         data.stringData = new String[] { network };
-        
+
         return data;
     }
 

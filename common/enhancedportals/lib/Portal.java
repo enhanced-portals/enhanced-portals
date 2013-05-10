@@ -407,15 +407,15 @@ public class Portal
             }
             else if (item.itemID == Item.bucketLava.itemID)
             {
-                PortalTexture pTexture = new PortalTexture(Block.lavaStill.blockID, 0);
+                PortalTexture pTexture = new PortalTexture(Block.lavaMoving.blockID, 0);
                 boolean consumeLiquid = true;
 
                 if (portalTexture.isEqualTo(pTexture))
                 {
-                    pTexture = new PortalTexture(Block.lavaMoving.blockID, 0);
+                    pTexture = new PortalTexture(Block.lavaStill.blockID, 0);
                     consumeLiquid = false;
                 }
-                else if (portalTexture.isEqualTo(new PortalTexture(Block.lavaMoving.blockID, 0)))
+                else if (portalTexture.isEqualTo(new PortalTexture(Block.lavaStill.blockID, 0)))
                 {
                     consumeLiquid = false;
                 }
@@ -431,15 +431,15 @@ public class Portal
             }
             else if (item.itemID == Item.bucketWater.itemID)
             {
-                PortalTexture pTexture = new PortalTexture(Block.waterStill.blockID, 0);
+                PortalTexture pTexture = new PortalTexture(Block.waterMoving.blockID, 0);
                 boolean consumeLiquid = true;
 
                 if (portalTexture.isEqualTo(pTexture))
                 {
-                    pTexture = new PortalTexture(Block.waterMoving.blockID, 0);
+                    pTexture = new PortalTexture(Block.waterStill.blockID, 0);
                     consumeLiquid = false;
                 }
-                else if (portalTexture.isEqualTo(new PortalTexture(Block.waterMoving.blockID, 0)))
+                else if (portalTexture.isEqualTo(new PortalTexture(Block.waterStill.blockID, 0)))
                 {
                     consumeLiquid = false;
                 }
@@ -461,19 +461,19 @@ public class Portal
     public void handleEntityCollide(Entity entity)
     {
         World world = getWorld();
-        
+
         if (world.isRemote)
         {
             if (Settings.RenderPortalEffect)
             {
                 entity.setInPortal();
             }
-            
+
             return;
         }
-        
+
         TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
-        
+
         if (portal.parentModifier == null)
         {
             if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
@@ -484,7 +484,7 @@ public class Portal
         else
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
-            
+
             if (modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
             {
                 if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)

@@ -28,7 +28,7 @@ public class Reference
 
     public static final String LOCALE_LOCATION = "/mods/" + MOD_ID + "/lang/";
     public static final String GUI_LOCATION = "/mods/enhancedportals/textures/gui/";
-    
+
     public static final List<ItemStack> glyphItems = new ArrayList<ItemStack>();
     public static final List<String> glyphValues = new ArrayList<String>();
     public static final String glyphSeperator = " ";

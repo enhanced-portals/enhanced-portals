@@ -28,7 +28,7 @@ public class GuiHandler implements IGuiHandler
             }
         }
         else if (ID == GuiIds.PortalModifierNetwork)
-        {            
+        {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
                 return new GuiPortalModifierNetwork((TileEntityPortalModifier) tileEntity);
@@ -58,7 +58,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == GuiIds.PortalModifierNetwork)
         {
-            
+
         }
         else if (ID == GuiIds.DialDevice)
         {

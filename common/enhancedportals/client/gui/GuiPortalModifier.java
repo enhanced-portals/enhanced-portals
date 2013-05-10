@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -30,7 +31,7 @@ public class GuiPortalModifier extends GuiContainer
     TileEntityPortalModifier portalModifier;
     boolean hasInteractedWith = false, isActive = false;
     GuiButton okayButton;
-    
+
     List<GuiItemStackButton> elementList;
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
@@ -39,25 +40,25 @@ public class GuiPortalModifier extends GuiContainer
         portalModifier = modifier;
         isActive = portalModifier.isActive();
         elementList = new ArrayList<GuiItemStackButton>();
-        
-        List<String> strList = new ArrayList<String>();        
+
+        List<String> strList = new ArrayList<String>();
         strList.add("Redstone Control");
-        strList.add(EnumChatFormatting.GRAY + "High");        
+        strList.add(EnumChatFormatting.GRAY + "High");
         elementList.add(new GuiItemStackButton(xSize + 4, 4, new ItemStack(Block.torchRedstoneActive), this, strList, "redstoneHigh"));
         elementList.get(0).active = portalModifier.redstoneSetting == 0;
-        
+
         List<String> strList1 = new ArrayList<String>();
         strList1.add("Redstone Control");
-        strList1.add(EnumChatFormatting.GRAY + "Low");        
+        strList1.add(EnumChatFormatting.GRAY + "Low");
         elementList.add(new GuiItemStackButton(xSize + 4, 24, new ItemStack(Block.torchRedstoneIdle), this, strList1, "redstoneLow"));
         elementList.get(1).active = portalModifier.redstoneSetting == 1;
-        
+
         List<String> strList3 = new ArrayList<String>();
         strList3.add("Particles");
-        strList3.add(EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));        
-        elementList.add(new GuiItemStackButton(8, 15, new ItemStack(Block.bedrock), this, strList3, "particles", true));
+        strList3.add(EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
+        elementList.add(new GuiItemStackButton(8, 15, new ItemStack(Item.blazePowder), this, strList3, "particles", true));
         elementList.get(2).active = portalModifier.particles;
-        
+
         List<String> strList4 = new ArrayList<String>();
         strList4.add("Sounds");
         strList4.add(EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
@@ -72,15 +73,8 @@ public class GuiPortalModifier extends GuiContainer
         {
             mc.thePlayer.closeScreen();
         }
-
-        hasInteractedWith = true;
-
-        if (button.id == 5)
-        {
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
-        }
     }
-    
+
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
@@ -89,7 +83,7 @@ public class GuiPortalModifier extends GuiContainer
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-        
+
         int padding = 5, width = 10;
 
         if (portalModifier.thickness == 1)
@@ -107,11 +101,11 @@ public class GuiPortalModifier extends GuiContainer
             padding = 0;
             width = 0;
         }
-                
-        drawTexturedModalRect(0, 0, 0, 0, 0, 0);        
+
+        drawTexturedModalRect(0, 0, 0, 0, 0, 0);
         drawRect(guiLeft + 134 + padding, guiTop + 15, guiLeft + 16 - width + 134 + padding, guiTop + 15 + 16, 0xFF555555);
         ItemStack itemstack = null;
-        
+
         if (portalModifier.texture.blockID != -1)
         {
             itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
@@ -144,12 +138,28 @@ public class GuiPortalModifier extends GuiContainer
         if (!isActive)
         {
             super.drawScreen(x, y, par3);
-            
+
+            if (portalModifier.network != "")
+            {
+                String[] split = portalModifier.network.split(Reference.glyphSeperator);
+
+                for (int i = 0; i < split.length; i++)
+                {
+                    for (int j = 0; j < Reference.glyphValues.size(); j++)
+                    {
+                        if (Reference.glyphValues.get(j).equalsIgnoreCase(split[i]))
+                        {
+                            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j), guiLeft + 8 + i * 18, guiTop + 47);
+                        }
+                    }
+                }
+            }
+
             for (int i = elementList.size() - 1; i >= 0; i--)
             {
                 elementList.get(i).drawElement(guiLeft, guiTop, x, y, fontRenderer, itemRenderer, mc.renderEngine);
             }
-            
+
             if (isPointInRegion(134, 15, 16, 16, x, y))
             {
                 String thickness = "Unknown";
@@ -177,7 +187,7 @@ public class GuiPortalModifier extends GuiContainer
                 List<String> list = new ArrayList<String>();
                 list.add("Thickness");
                 list.add(EnumChatFormatting.GRAY + thickness);
-                drawHoveringText(list, x, y, fontRenderer);                
+                drawHoveringText(list, x, y, fontRenderer);
             }
             else if (isPointInRegion(152, 15, 16, 16, x, y))
             {
@@ -206,21 +216,13 @@ public class GuiPortalModifier extends GuiContainer
                 list.add(EnumChatFormatting.GRAY + txt);
                 drawHoveringText(list, x, y, fontRenderer);
             }
-            
-            if (portalModifier.network != "")
+            else if (isPointInRegion(7, 46, 162, 18, x, y))
             {
-                String[] split = portalModifier.network.split(Reference.glyphSeperator);
-                
-                for (int i = 0; i < split.length; i++)
-                {
-                    for (int j = 0; j < Reference.glyphValues.size(); j++)
-                    {
-                        if (Reference.glyphValues.get(j).equalsIgnoreCase(split[i]))
-                        {
-                            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j), guiLeft + 8 + (i * 18), guiTop + 47);
-                        }
-                    }
-                }
+                List<String> str = new ArrayList<String>();
+                str.add("Network");
+                str.add(EnumChatFormatting.GRAY + "Click to change the network");
+                drawHoveringText(str, x, y, fontRenderer);
+
             }
         }
         else
@@ -231,6 +233,11 @@ public class GuiPortalModifier extends GuiContainer
             fontRenderer.drawString(txt, width / 2 - fontRenderer.getStringWidth(txt) / 2, guiTop, 0xFFFFFF);
             okayButton.drawButton(mc, 0, 0);
         }
+    }
+
+    public void drawText(List<String> list, int x2, int y2)
+    {
+        drawHoveringText(list, x2, y2, fontRenderer);
     }
 
     public void drawTexturedRect(int par1, int par2, int par3, int par4, int par5, int par6)
@@ -246,57 +253,12 @@ public class GuiPortalModifier extends GuiContainer
         tessellator.draw();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-        
-        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");        
-        buttonList.add(okayButton);
-        okayButton.drawButton = isActive;
-        
-        buttonList.add(new GuiButton(5, 10, 10, 100, 20, "Network"));
-    }
-
-    @Override
-    protected void mouseClicked(int x, int y, int buttonClicked)
-    {
-        super.mouseClicked(x, y, buttonClicked);
-        
-        for (int i = 0; i < elementList.size(); i++)
-        {
-            elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked);
-        }
-        
-        if (isPointInRegion(134, 15, 16, 16, x, y))
-        {
-            portalModifier.thickness++;
-            
-            if (portalModifier.thickness >= 4)
-            {
-                portalModifier.thickness = 0;
-            }
-        }
-    }
-
-    @Override
-    public void onGuiClosed()
-    {
-        super.onGuiClosed();
-
-        if (hasInteractedWith)
-        {
-            PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
-        }
-    }
-
     public void elementClicked(GuiItemStackButton itemStackButton, int button)
     {
         if (itemStackButton.value.equalsIgnoreCase("redstoneHigh"))
         {
             portalModifier.redstoneSetting = 0;
-            itemStackButton.active = true;            
+            itemStackButton.active = true;
             elementList.get(1).active = false;
         }
         else if (itemStackButton.value.equalsIgnoreCase("redstoneLow"))
@@ -317,12 +279,54 @@ public class GuiPortalModifier extends GuiContainer
             itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
             itemStackButton.active = portalModifier.sounds;
         }
-        
+
         hasInteractedWith = true;
     }
 
-    public void drawText(List<String> list, int x2, int y2)
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
     {
-        drawHoveringText(list, x2, y2, fontRenderer);
+        super.initGui();
+
+        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");
+        buttonList.add(okayButton);
+        okayButton.drawButton = isActive;
+    }
+
+    @Override
+    protected void mouseClicked(int x, int y, int buttonClicked)
+    {
+        super.mouseClicked(x, y, buttonClicked);
+
+        for (int i = 0; i < elementList.size(); i++)
+        {
+            elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked);
+        }
+
+        if (isPointInRegion(134, 15, 16, 16, x, y))
+        {
+            portalModifier.thickness++;
+
+            if (portalModifier.thickness >= 4)
+            {
+                portalModifier.thickness = 0;
+            }
+        }
+        else if (isPointInRegion(7, 46, 162, 18, x, y))
+        {
+            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
+        }
+    }
+
+    @Override
+    public void onGuiClosed()
+    {
+        super.onGuiClosed();
+
+        if (hasInteractedWith)
+        {
+            PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
+        }
     }
 }

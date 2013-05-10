@@ -11,7 +11,7 @@ import net.minecraftforge.common.Configuration;
 public class Settings
 {
     public static Configuration config;
-    
+
     public static boolean AllowPortalModifiers = true;
     public static boolean AllowDialHomeDevices = true;
 
@@ -20,11 +20,11 @@ public class Settings
 
     public static boolean RenderPortalEffect = true;
     public static boolean AllowPortalColours = true;
-    
+
     public static int PigmenLevel = 100;
     public static int SoundLevel = 100;
     public static int ParticleLevel = 100;
-    
+
     public static int[] ExcludedBlockList = new int[] { Block.torchWood.blockID };
     public static int[] ValidItemsList = new int[] { Item.bucketLava.itemID, Item.bucketWater.itemID, Item.dyePowder.itemID };
     public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();

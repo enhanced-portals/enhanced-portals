@@ -47,7 +47,7 @@ public class EnhancedPortals
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0_", new PortalTexture(11, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0_", new PortalTexture(9, 0));
-        
+
         // Row 1
         Reference.glyphItems.add(new ItemStack(Item.diamond));
         Reference.glyphItems.add(new ItemStack(Item.redstone));
@@ -58,7 +58,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.bone));
         Reference.glyphItems.add(new ItemStack(Item.brick));
         Reference.glyphItems.add(new ItemStack(Item.blazeRod));
-        
+
         Reference.glyphValues.add("diamond");
         Reference.glyphValues.add("redstone");
         Reference.glyphValues.add("flint");
@@ -68,7 +68,7 @@ public class EnhancedPortals
         Reference.glyphValues.add("bone");
         Reference.glyphValues.add("brick");
         Reference.glyphValues.add("blazeRod");
-        
+
         // Row 2
         Reference.glyphItems.add(new ItemStack(Item.bread));
         Reference.glyphItems.add(new ItemStack(Item.gunpowder));
@@ -79,7 +79,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.bucketEmpty));
         Reference.glyphItems.add(new ItemStack(Item.egg));
         Reference.glyphItems.add(new ItemStack(Item.feather));
-        
+
         Reference.glyphValues.add("bread");
         Reference.glyphValues.add("gunpowder");
         Reference.glyphValues.add("goldNugget");
@@ -89,7 +89,7 @@ public class EnhancedPortals
         Reference.glyphValues.add("bucket");
         Reference.glyphValues.add("egg");
         Reference.glyphValues.add("feather");
-        
+
         // Row 3
         Reference.glyphItems.add(new ItemStack(Item.appleRed));
         Reference.glyphItems.add(new ItemStack(Item.leather));
@@ -100,7 +100,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.book));
         Reference.glyphItems.add(new ItemStack(Item.shears));
         Reference.glyphItems.add(new ItemStack(Item.slimeBall));
-        
+
         Reference.glyphValues.add("apple");
         Reference.glyphValues.add("leather");
         Reference.glyphValues.add("ghastTear");

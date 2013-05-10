@@ -1,14 +1,14 @@
 package enhancedportals.block;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
 
 public class BlockObsidianStairs extends BlockStairs
 {
@@ -21,14 +21,14 @@ public class BlockObsidianStairs extends BlockStairs
         setUnlocalizedName(Localization.ObsidianStairs_Name);
         setCreativeTab(Reference.CREATIVE_TAB);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int par1, int par2)
     {
         return Block.blocksList[BlockIds.Obsidian].getIcon(par1, par2);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)

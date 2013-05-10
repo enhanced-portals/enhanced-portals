@@ -11,14 +11,14 @@ public class PacketGui extends PacketUpdate
     {
         isChunkPacket = false;
     }
-    
+
     public PacketGui(boolean requesting, boolean state, int id)
     {
         this();
         packetData = new PacketData();
         packetData.integerData = new int[] { requesting ? 1 : 0, state ? 1 : 0, id };
     }
-    
+
     public PacketGui(boolean requesting, boolean state, int id, TileEntityEnhancedPortals portalModifier)
     {
         this();
@@ -29,7 +29,7 @@ public class PacketGui extends PacketUpdate
         zCoord = portalModifier.zCoord;
         dimension = portalModifier.worldObj.provider.dimensionId;
     }
-    
+
     public PacketGui(DataInputStream stream)
     {
         super(stream);
