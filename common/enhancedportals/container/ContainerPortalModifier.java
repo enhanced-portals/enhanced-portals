@@ -19,20 +19,19 @@ public class ContainerPortalModifier extends Container
     {
         portalModifier = modifier;
 
-        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 152, 64));
-        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 8, 64));
+        addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 152, 15));
 
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 67 + i * 18));
             }
         }
 
         for (int i = 0; i < 9; i++)
         {
-            addSlotToContainer(new Slot(player, i, 8 + i * 18, 142));
+            addSlotToContainer(new Slot(player, i, 8 + i * 18, 125));
         }
     }
 

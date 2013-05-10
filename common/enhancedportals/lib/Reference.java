@@ -1,6 +1,10 @@
 package enhancedportals.lib;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import enhancedportals.creativetab.CreativeTabEP;
 
 public class Reference
@@ -24,4 +28,8 @@ public class Reference
 
     public static final String LOCALE_LOCATION = "/mods/" + MOD_ID + "/lang/";
     public static final String GUI_LOCATION = "/mods/enhancedportals/textures/gui/";
+    
+    public static final List<ItemStack> glyphItems = new ArrayList<ItemStack>();
+    public static final List<String> glyphValues = new ArrayList<String>();
+    public static final String glyphSeperator = " ";
 }
