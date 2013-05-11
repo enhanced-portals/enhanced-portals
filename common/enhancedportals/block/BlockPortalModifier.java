@@ -85,6 +85,6 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        texture = iconRegister.registerIcon("enhancedportals:portalModifier_Side");
+        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_Side");
     }
 }

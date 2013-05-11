@@ -12,7 +12,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.PacketIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketGui;
@@ -25,8 +24,8 @@ public class ClientPacketHandler implements IPacketHandler
 {
     @Override
     public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
-    {
-        if (packet.channel != Reference.MOD_ID)
+    {        
+        if (!packet.channel.equals(Reference.MOD_ID))
         {
             return;
         }
@@ -44,7 +43,7 @@ public class ClientPacketHandler implements IPacketHandler
             }
             else if (packetID == PacketIds.Gui)
             {
-                parseGui(new PacketGui(stream), player);
+                parseGui(new PacketGui(stream));
             }
             else if (packetID == PacketIds.NetworkUpdate)
             {
@@ -54,6 +53,16 @@ public class ClientPacketHandler implements IPacketHandler
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    private void parseGui(PacketGui packetGui)
+    {
+        EntityPlayer play = FMLClientHandler.instance().getClient().thePlayer;
+
+        if (packetGui.packetData.integerData[0] == 0 && packetGui.packetData.integerData[1] == 1)
+        {
+            play.openGui(EnhancedPortals.instance, packetGui.packetData.integerData[2], FMLClientHandler.instance().getClient().theWorld, packetGui.xCoord, packetGui.yCoord, packetGui.zCoord);
         }
     }
 
@@ -67,19 +76,8 @@ public class ClientPacketHandler implements IPacketHandler
 
             if (tileEntity instanceof TileEntityPortalModifier)
             {
-                ((TileEntityPortalModifier)tileEntity).network = update.packetData.stringData[0];
+                ((TileEntityPortalModifier) tileEntity).network = update.packetData.stringData[0];
             }
-        }
-    }
-
-    private void parseGui(PacketGui packetGui, Player player)
-    {
-        EntityPlayer play = FMLClientHandler.instance().getClient().thePlayer;
-        
-        if (packetGui.packetData.integerData[0] == 0 && packetGui.packetData.integerData[1] == 1)
-        {
-           // play.closeScreen();
-            play.openGui(EnhancedPortals.instance, packetGui.packetData.integerData[2], FMLClientHandler.instance().getClient().theWorld, packetGui.xCoord, packetGui.yCoord, packetGui.zCoord);
         }
     }
 

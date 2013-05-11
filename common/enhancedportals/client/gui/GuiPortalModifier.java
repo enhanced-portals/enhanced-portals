@@ -43,13 +43,13 @@ public class GuiPortalModifier extends GuiContainer
 
         List<String> strList = new ArrayList<String>();
         strList.add("Redstone Control");
-        strList.add(EnumChatFormatting.GRAY + "High");
+        strList.add(EnumChatFormatting.GRAY + "Normal");
         elementList.add(new GuiItemStackButton(xSize + 4, 4, new ItemStack(Block.torchRedstoneActive), this, strList, "redstoneHigh"));
         elementList.get(0).active = portalModifier.redstoneSetting == 0;
 
         List<String> strList1 = new ArrayList<String>();
         strList1.add("Redstone Control");
-        strList1.add(EnumChatFormatting.GRAY + "Low");
+        strList1.add(EnumChatFormatting.GRAY + "Inverted");
         elementList.add(new GuiItemStackButton(xSize + 4, 24, new ItemStack(Block.torchRedstoneIdle), this, strList1, "redstoneLow"));
         elementList.get(1).active = portalModifier.redstoneSetting == 1;
 
@@ -312,6 +312,8 @@ public class GuiPortalModifier extends GuiContainer
             {
                 portalModifier.thickness = 0;
             }
+            
+            hasInteractedWith = true;
         }
         else if (isPointInRegion(7, 46, 162, 18, x, y))
         {
