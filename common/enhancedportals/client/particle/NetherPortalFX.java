@@ -5,7 +5,7 @@ import java.awt.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
-import enhancedportals.lib.PortalTexture;
+import enhancedportals.portal.PortalTexture;
 
 public class NetherPortalFX extends EntityFX
 {

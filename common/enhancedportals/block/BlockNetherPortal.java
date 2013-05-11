@@ -20,10 +20,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.lib.Portal;
-import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.WorldLocation;
+import enhancedportals.portal.Portal;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class BlockNetherPortal extends BlockEnhancedPortals

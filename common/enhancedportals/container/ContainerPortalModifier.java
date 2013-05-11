@@ -7,8 +7,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.GuiPortalModifierSlot;
-import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.Settings;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ContainerPortalModifier extends Container

@@ -3,6 +3,8 @@ package enhancedportals.lib;
 import java.util.HashMap;
 import java.util.Map;
 
+import enhancedportals.portal.PortalTexture;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

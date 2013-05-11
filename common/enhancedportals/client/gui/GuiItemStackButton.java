@@ -44,6 +44,18 @@ public class GuiItemStackButton
         colourInside = colourinside;
     }
 
+    public GuiItemStackButton(ItemStack stack, GuiPortalModifier p, List<String> list, String val, boolean colourinside)
+    {
+        x = 0;
+        y = 0;
+        itemStack = stack;
+        parent = p;
+        active = false;
+        textList = list;
+        value = val;
+        colourInside = colourinside;
+    }
+
     public void drawElement(int xOffset, int yOffset, int x2, int y2, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine)
     {
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -130,16 +142,31 @@ public class GuiItemStackButton
         GL11.glDisable(GL11.GL_BLEND);
     }
 
-    public void handleMouseClick(int offsetX, int offsetY, int x, int y, int button)
+    public void handleMouseClick(int offsetX, int offsetY, int x, int y, int button, int i)
     {
-        if (isPointInRegion(this.x + offsetX + 1, this.y + offsetY + 1, 14, 14, x, y))
+        if (this.x == 0 && this.y == 0)
         {
-            parent.elementClicked(this, button);
+            if (isPointInRegion(this.x + offsetX + 1 + ((i - 2) * 18) + 8, this.y + offsetY + 1 + 15, 14, 14, x, y))
+            {
+                parent.elementClicked(this, button);
+            }
+        }
+        else
+        {
+            if (isPointInRegion(this.x + offsetX + 1, this.y + offsetY + 1, 14, 14, x, y))
+            {
+                parent.elementClicked(this, button);
+            }
         }
     }
 
     private boolean isPointInRegion(int par1, int par2, int par3, int par4, int par5, int par6)
     {
         return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
+    }
+
+    public void drawElement(int guiLeft, int guiTop, int x2, int y2, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine, int i)
+    {
+        drawElement(guiLeft + 8 + (i * 18), guiTop + 15, x2, y2, fontRenderer, itemRenderer, renderEngine);
     }
 }

@@ -14,8 +14,8 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.Reference;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class BlockPortalModifier extends BlockEnhancedPortals

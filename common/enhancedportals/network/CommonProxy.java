@@ -11,6 +11,7 @@ import enhancedportals.block.BlockNetherPortal;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.block.BlockObsidianStairs;
 import enhancedportals.block.BlockPortalModifier;
+import enhancedportals.item.ItemPortalModifierUpgrade;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
@@ -25,6 +26,8 @@ public class CommonProxy
     public BlockPortalModifier blockPortalModifier;
     public BlockDummyPortal blockDummyPortal;
 
+    public ItemPortalModifierUpgrade portalModifierUpgrade;
+    
     public World getWorld(int dimension)
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimension);
@@ -49,7 +52,9 @@ public class CommonProxy
 
     public void loadItems()
     {
-
+        portalModifierUpgrade = new ItemPortalModifierUpgrade();
+        
+        GameRegistry.registerItem(portalModifierUpgrade, Localization.PortalModifierUpgrade_Name);
     }
 
     public void loadRecipes()

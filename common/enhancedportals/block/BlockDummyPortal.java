@@ -7,7 +7,7 @@ import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.lib.PortalTexture;
+import enhancedportals.portal.PortalTexture;
 
 public class BlockDummyPortal extends Block
 {

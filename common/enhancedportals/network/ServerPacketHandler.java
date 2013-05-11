@@ -3,7 +3,9 @@ package enhancedportals.network;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -14,12 +16,14 @@ import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.PacketIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.network.packet.PacketUpgrade;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -61,10 +65,59 @@ public class ServerPacketHandler implements IPacketHandler
             {
                 parseNetwork(new PacketNetworkUpdate(stream));
             }
+            else if (packetID == PacketIds.PortalModifierUpgrade)
+            {
+                parseUpgrade(new PacketUpgrade(stream), player);
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    private void parseUpgrade(PacketUpgrade upgrade, Player player)
+    {
+        WorldServer world = getWorldForDimension(upgrade.dimension);
+
+        if (world.blockHasTileEntity(upgrade.xCoord, upgrade.yCoord, upgrade.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(upgrade.xCoord, upgrade.yCoord, upgrade.zCoord);
+
+            if (tileEntity instanceof TileEntityPortalModifier)
+            {
+                TileEntityPortalModifier modifier = ((TileEntityPortalModifier) tileEntity);                
+                                
+                if (upgrade.packetData.integerData[1] == 0 && modifier.upgrades[upgrade.packetData.integerData[0]])
+                {
+                    modifier.upgrades[upgrade.packetData.integerData[0]] = false;
+                    ItemStack stack = new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, upgrade.packetData.integerData[0]);
+                    EntityItem item = new EntityItem(modifier.worldObj, upgrade.xCoord + 0.5, upgrade.yCoord + 0.5, upgrade.zCoord + 0.5, stack);                
+                    modifier.worldObj.spawnEntityInWorld(item);
+                    
+                    // Reset the upgrades, so we don't have people putting it in, changing the settings then popping them back out.
+                    if (upgrade.packetData.integerData[0] == 0)
+                    {
+                        modifier.particles = true;
+                    }
+                    else if (upgrade.packetData.integerData[0] == 1)
+                    {
+                        modifier.sounds = true;
+                    }
+                }
+                else if (upgrade.packetData.integerData[1] == 1 && !modifier.upgrades[upgrade.packetData.integerData[0]])
+                {
+                    EntityPlayer play = (EntityPlayer) player;
+                    
+                    if (play.inventory.hasItem(ItemIds.PortalModifierUpgrade))
+                    {
+                        modifier.upgrades[upgrade.packetData.integerData[0]] = true;                        
+                        play.inventory.consumeInventoryItem(ItemIds.PortalModifierUpgrade);
+                    }
+                }
+                
+                PacketDispatcher.sendPacketToAllAround(upgrade.xCoord + 0.5, upgrade.yCoord + 0.5, upgrade.zCoord + 0.5, 256, upgrade.dimension, new PacketTEUpdate(modifier).getPacket());
+            }
         }
     }
 
@@ -90,11 +143,6 @@ public class ServerPacketHandler implements IPacketHandler
 
             if (tileEntity instanceof TileEntityPortalModifier)
             {
-                if (update.packetData == null)
-                {
-                    System.out.println("packet data is null");
-                }
-
                 ((TileEntityPortalModifier) tileEntity).network = update.packetData.stringData[0];
 
                 PacketDispatcher.sendPacketToAllAround(update.xCoord + 0.5, update.yCoord + 0.5, update.zCoord + 0.5, 256, update.dimension, update.getPacket());

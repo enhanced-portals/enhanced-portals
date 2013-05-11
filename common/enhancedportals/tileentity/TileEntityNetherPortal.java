@@ -2,11 +2,11 @@ package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedportals.lib.Portal;
-import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
+import enhancedportals.portal.Portal;
+import enhancedportals.portal.PortalTexture;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {

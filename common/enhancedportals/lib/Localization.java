@@ -8,6 +8,7 @@ public class Localization
     public static final String Obsidian_Name = "obsidian";
     public static final String PortalModifier_Name = "portalModifier";
     public static final String ObsidianStairs_Name = "stairsObsidian";
+    public static final String PortalModifierUpgrade_Name = PortalModifier_Name + "Upgrade";
 
     public static String[] Locales = new String[] { "en_GB", "en_US", "it_IT" };
 
@@ -22,5 +23,11 @@ public class Localization
         {
             LanguageRegistry.instance().loadLocalization(Reference.LOCALE_LOCATION + str + ".xml", str, true);
         }
+    }
+
+    public static String localizeString(String str)
+    {
+        // TODO
+        return str;
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.lib.Portal;
+import enhancedportals.portal.Portal;
 
 public class BlockObsidian extends net.minecraft.block.BlockObsidian
 {

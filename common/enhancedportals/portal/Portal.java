@@ -1,4 +1,4 @@
-package enhancedportals.lib;
+package enhancedportals.portal;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -16,6 +16,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.Settings;
+import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityNetherPortal;

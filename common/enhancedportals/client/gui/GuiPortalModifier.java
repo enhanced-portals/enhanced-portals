@@ -17,13 +17,15 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
-import enhancedportals.lib.PortalTexture;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.network.packet.PacketUpgrade;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifier extends GuiContainer
@@ -47,23 +49,75 @@ public class GuiPortalModifier extends GuiContainer
         elementList.add(new GuiItemStackButton(xSize + 4, 4, new ItemStack(Block.torchRedstoneActive), this, strList, "redstoneHigh"));
         elementList.get(0).active = portalModifier.redstoneSetting == 0;
 
-        List<String> strList1 = new ArrayList<String>();
-        strList1.add("Redstone Control");
-        strList1.add(EnumChatFormatting.GRAY + "Inverted");
-        elementList.add(new GuiItemStackButton(xSize + 4, 24, new ItemStack(Block.torchRedstoneIdle), this, strList1, "redstoneLow"));
+        strList = new ArrayList<String>();
+        strList.add("Redstone Control");
+        strList.add(EnumChatFormatting.GRAY + "Inverted");
+        elementList.add(new GuiItemStackButton(xSize + 4, 24, new ItemStack(Block.torchRedstoneIdle), this, strList, "redstoneLow"));
         elementList.get(1).active = portalModifier.redstoneSetting == 1;
+        
+        int listSize = 1;
+        
+        if (portalModifier.hasUpgrade(0))
+        {
+            listSize++;
+            
+            strList = new ArrayList<String>();
+            strList.add("Particles");
+            strList.add(EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
+            strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
+            elementList.add(new GuiItemStackButton(new ItemStack(Item.blazePowder), this, strList, "particles", true));
+            elementList.get(listSize).active = portalModifier.particles;
+        }
 
-        List<String> strList3 = new ArrayList<String>();
-        strList3.add("Particles");
-        strList3.add(EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
-        elementList.add(new GuiItemStackButton(8, 15, new ItemStack(Item.blazePowder), this, strList3, "particles", true));
-        elementList.get(2).active = portalModifier.particles;
-
-        List<String> strList4 = new ArrayList<String>();
-        strList4.add("Sounds");
-        strList4.add(EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
-        elementList.add(new GuiItemStackButton(26, 15, new ItemStack(Block.jukebox), this, strList4, "sounds", true));
-        elementList.get(3).active = portalModifier.sounds;
+        if (portalModifier.hasUpgrade(1))
+        {
+            listSize++;
+            
+            strList = new ArrayList<String>();
+            strList.add("Sounds");
+            strList.add(EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
+            strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
+            elementList.add(new GuiItemStackButton(new ItemStack(Block.jukebox), this, strList, "sounds", true));
+            elementList.get(listSize).active = portalModifier.sounds;
+        }
+        
+        if (portalModifier.hasUpgrade(2))
+        {
+            listSize++;
+            
+            strList = new ArrayList<String>();
+            strList.add("Dimensional");
+            strList.add(EnumChatFormatting.GRAY + "Allows travel between vanilla dimensions.");
+            strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
+            elementList.add(new GuiItemStackButton(new ItemStack(EnhancedPortals.proxy.blockDummyPortal), this, strList, "dimension", true));
+            elementList.get(listSize).active = true;
+        }
+        
+        if (portalModifier.hasUpgrade(3))
+        {
+            listSize++;
+            
+            strList = new ArrayList<String>();
+            strList.add("Advanced Dimensional");
+            strList.add(EnumChatFormatting.GRAY + "Allows travel between vanilla dimensions.");
+            strList.add(EnumChatFormatting.GRAY + "Allows travel between the same dimension.");
+            strList.add(EnumChatFormatting.GRAY + "Allows travel between modded dimensions.");
+            strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
+            elementList.add(new GuiItemStackButton(new ItemStack(EnhancedPortals.proxy.blockDummyPortal, 1, 14), this, strList, "advancedDimension", true));
+            elementList.get(listSize).active = true;
+        }
+        
+        if (portalModifier.hasUpgrade(4))
+        {
+            listSize++;
+            
+            strList = new ArrayList<String>();
+            strList.add("Technological");
+            strList.add(EnumChatFormatting.GRAY + "Allows interaction with ComputerCraft.");
+            strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
+            elementList.add(new GuiItemStackButton(new ItemStack(Block.jukebox), this, strList, "computer", true));
+            elementList.get(listSize).active = true;
+        }
     }
 
     @Override
@@ -154,12 +208,17 @@ public class GuiPortalModifier extends GuiContainer
                     }
                 }
             }
-
-            for (int i = elementList.size() - 1; i >= 0; i--)
+            
+            for (int i = 0; i < 2; i++)
             {
                 elementList.get(i).drawElement(guiLeft, guiTop, x, y, fontRenderer, itemRenderer, mc.renderEngine);
             }
-
+            
+            for (int i = elementList.size() - 1; i >= 2; i--)
+            {
+                elementList.get(i).drawElement(guiLeft, guiTop, x, y, fontRenderer, itemRenderer, mc.renderEngine, i - 2);
+            }
+            
             if (isPointInRegion(134, 15, 16, 16, x, y))
             {
                 String thickness = "Unknown";
@@ -269,15 +328,72 @@ public class GuiPortalModifier extends GuiContainer
         }
         else if (itemStackButton.value.equalsIgnoreCase("particles"))
         {
-            portalModifier.particles = !portalModifier.particles;
-            itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
-            itemStackButton.active = portalModifier.particles;
+            if (button == 0)
+            {
+                portalModifier.particles = !portalModifier.particles;
+                itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
+                itemStackButton.active = portalModifier.particles;
+            }
+            else if (button == 1 && isShiftKeyDown())
+            {
+                portalModifier.upgrades[0] = false;
+                elementList.remove(itemStackButton);
+                PacketDispatcher.sendPacketToServer(new PacketUpgrade(portalModifier, 0, false).getPacket());   
+            }
         }
         else if (itemStackButton.value.equalsIgnoreCase("sounds"))
         {
-            portalModifier.sounds = !portalModifier.sounds;
-            itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
-            itemStackButton.active = portalModifier.sounds;
+            if (button == 0)
+            {
+                portalModifier.sounds = !portalModifier.sounds;
+                itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
+                itemStackButton.active = portalModifier.sounds;
+            }
+            else if (button == 1 && isShiftKeyDown())
+            {
+                portalModifier.upgrades[1] = false;
+                elementList.remove(itemStackButton);
+                PacketDispatcher.sendPacketToServer(new PacketUpgrade(portalModifier, 1, false).getPacket());
+            }
+        }
+        else if (itemStackButton.value.equalsIgnoreCase("dimension"))
+        {
+            if (button == 0)
+            {
+                
+            }
+            else if (button == 1 && isShiftKeyDown())
+            {
+                portalModifier.upgrades[1] = false;
+                elementList.remove(itemStackButton);
+                PacketDispatcher.sendPacketToServer(new PacketUpgrade(portalModifier, 2, false).getPacket());
+            }
+        }
+        else if (itemStackButton.value.equalsIgnoreCase("advancedDimension"))
+        {
+            if (button == 0)
+            {
+                
+            }
+            else if (button == 1 && isShiftKeyDown())
+            {
+                portalModifier.upgrades[1] = false;
+                elementList.remove(itemStackButton);
+                PacketDispatcher.sendPacketToServer(new PacketUpgrade(portalModifier, 3, false).getPacket());
+            }
+        }
+        else if (itemStackButton.value.equalsIgnoreCase("computer"))
+        {
+            if (button == 0)
+            {
+                
+            }
+            else if (button == 1 && isShiftKeyDown())
+            {
+                portalModifier.upgrades[1] = false;
+                elementList.remove(itemStackButton);
+                PacketDispatcher.sendPacketToServer(new PacketUpgrade(portalModifier, 4, false).getPacket());
+            }
         }
 
         hasInteractedWith = true;
@@ -301,7 +417,7 @@ public class GuiPortalModifier extends GuiContainer
 
         for (int i = 0; i < elementList.size(); i++)
         {
-            elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked);
+            elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked, i);
         }
 
         if (isPointInRegion(134, 15, 16, 16, x, y))

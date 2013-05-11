@@ -1,4 +1,4 @@
-package enhancedportals.lib;
+package enhancedportals.portal;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
