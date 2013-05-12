@@ -3,6 +3,7 @@ package enhancedportals.portal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.portal.teleportation.TeleportManager;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
@@ -489,7 +491,7 @@ public class Portal
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
 
-            if (modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
+            if (modifier == null || modifier.network == null || modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
             {
                 if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
                 {
@@ -498,11 +500,21 @@ public class Portal
             }
             else
             {
-                List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getFrequencyExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, dimension));
+                List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
             
-                if (entity instanceof EntityPlayer && validLocations != null)
+                if (!validLocations.isEmpty())
                 {
-                    ((EntityPlayer)entity).sendChatToPlayer("There are " + validLocations.size() + " valid locations");
+                    WorldLocation randomLocation = validLocations.get(new Random().nextInt(validLocations.size()));
+                    
+                    TeleportManager.teleportEntity(entity, randomLocation, modifier);
+                }
+                else
+                {
+                    if (entity instanceof EntityPlayer)
+                    {
+                        EntityPlayer player = (EntityPlayer) entity;
+                        player.sendChatToPlayer("Unable to find an exit location.");
+                    }
                 }
             }
         }

@@ -17,6 +17,7 @@ public class Settings
 
     public static boolean AllowPortalModifiers = true;
     public static boolean AllowDialHomeDevices = true;
+    public static final boolean AllowTeleporting = true;
 
     public static boolean DisableModifierRecipe = false;
     public static boolean DisableDHDRecipe = false;

@@ -181,21 +181,26 @@ public class NetworkManager
 
         getNetwork(key).add(data);
     }
-
-    public List<WorldLocation> getFrequencyExcluding(String key, WorldLocation data)
+    
+    public List<WorldLocation> getNetworkExcluding(String network, WorldLocation worldLocation)
     {
-        List<WorldLocation> list = getNetwork(key);
+        List<WorldLocation> list = getNetwork(network);
         List<WorldLocation> newList = new ArrayList<WorldLocation>();
-
+        
+        if (list == null)
+        {
+            return new ArrayList<WorldLocation>();
+        }
+        
         for (int i = 0; i < list.size(); i++)
         {
-            if (!list.get(i).equals(data))
+            if (!list.get(i).equals(worldLocation))
             {
                 newList.add(list.get(i));
             }
         }
-
-        return list;
+        
+        return newList;
     }
 
     public List<WorldLocation> getNetwork(String key)
@@ -218,7 +223,7 @@ public class NetworkManager
             }
         }
 
-        return "undefined";
+        return "";
     }
 
     public boolean hasNetwork(String key)
