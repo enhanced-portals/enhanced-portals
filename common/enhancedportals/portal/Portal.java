@@ -155,8 +155,8 @@ public class Portal
         dimension = world.provider.dimensionId;
         portalTexture = portalmodifier.texture;
         portalShape = 0;
-        producesSound = portalmodifier.sounds;
-        producesParticles = portalmodifier.particles;
+        producesSound = portalmodifier.getSounds();
+        producesParticles = portalmodifier.getParticles();
         portalThickness = portalmodifier.thickness;
         portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
     }

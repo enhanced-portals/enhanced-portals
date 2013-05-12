@@ -5,20 +5,19 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ItemPortalModifierUpgrade extends Item
@@ -102,16 +101,21 @@ public class ItemPortalModifierUpgrade extends Item
     {
         for (int var4 = 0; var4 < textures.length; var4++)
         {
+            if (names[var4].equals("computer"))
+            {
+                continue;
+            }
+            
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
     
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-        if (!world.isRemote)
+        if (world.isRemote)
         {
-            return true;
+            return false;
         }
         
         if (world.getBlockId(x, y, z) == BlockIds.PortalModifier)
@@ -120,11 +124,21 @@ public class ItemPortalModifierUpgrade extends Item
             
             if (!modifier.hasUpgrade(stack.getItemDamage()))
             {
-                modifier.installUpgrade(stack.getItemDamage());
-                stack.stackSize--;
+                if (stack.getItemDamage() == 3 && modifier.hasUpgradeNoCheck(2))
+                {
+                    player.sendChatToPlayer("You must remove the dimensional upgrade first.");
+                    return false;
+                }
+                else if (stack.getItemDamage() == 2 && modifier.hasUpgradeNoCheck(3))
+                {
+                    player.sendChatToPlayer("You must remove the advanced dimensional upgrade first.");
+                    return false;
+                }
                 
-                PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
-                return true;
+                modifier.installUpgrade(stack.getItemDamage());
+                player.inventory.mainInventory[player.inventory.currentItem] = null;
+                
+                ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
             }
         }
         

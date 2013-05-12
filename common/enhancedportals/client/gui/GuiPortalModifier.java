@@ -57,31 +57,31 @@ public class GuiPortalModifier extends GuiContainer
         
         int listSize = 1;
         
-        if (portalModifier.hasUpgrade(0))
+        if (portalModifier.hasUpgradeNoCheck(0))
         {
             listSize++;
             
             strList = new ArrayList<String>();
             strList.add("Particles");
-            strList.add(EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
+            strList.add(EnumChatFormatting.GRAY + (portalModifier.getParticles() ? "Enabled" : "Disabled"));
             strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
             elementList.add(new GuiItemStackButton(new ItemStack(Item.blazePowder), this, strList, "particles", true));
-            elementList.get(listSize).active = portalModifier.particles;
+            elementList.get(listSize).active = portalModifier.getParticles();
         }
 
-        if (portalModifier.hasUpgrade(1))
+        if (portalModifier.hasUpgradeNoCheck(1))
         {
             listSize++;
             
             strList = new ArrayList<String>();
             strList.add("Sounds");
-            strList.add(EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
+            strList.add(EnumChatFormatting.GRAY + (portalModifier.getSounds() ? "Enabled" : "Disabled"));
             strList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
             elementList.add(new GuiItemStackButton(new ItemStack(Block.jukebox), this, strList, "sounds", true));
-            elementList.get(listSize).active = portalModifier.sounds;
+            elementList.get(listSize).active = portalModifier.getSounds();
         }
         
-        if (portalModifier.hasUpgrade(2))
+        if (portalModifier.hasUpgradeNoCheck(2))
         {
             listSize++;
             
@@ -93,7 +93,7 @@ public class GuiPortalModifier extends GuiContainer
             elementList.get(listSize).active = true;
         }
         
-        if (portalModifier.hasUpgrade(3))
+        if (portalModifier.hasUpgradeNoCheck(3))
         {
             listSize++;
             
@@ -107,7 +107,7 @@ public class GuiPortalModifier extends GuiContainer
             elementList.get(listSize).active = true;
         }
         
-        if (portalModifier.hasUpgrade(4))
+        if (portalModifier.hasUpgradeNoCheck(4))
         {
             listSize++;
             
@@ -330,9 +330,9 @@ public class GuiPortalModifier extends GuiContainer
         {
             if (button == 0)
             {
-                portalModifier.particles = !portalModifier.particles;
-                itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.particles ? "Enabled" : "Disabled"));
-                itemStackButton.active = portalModifier.particles;
+                portalModifier.setParticles(!portalModifier.getParticles());
+                itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.getParticles() ? "Enabled" : "Disabled"));
+                itemStackButton.active = portalModifier.getParticles();
             }
             else if (button == 1 && isShiftKeyDown())
             {
@@ -345,9 +345,9 @@ public class GuiPortalModifier extends GuiContainer
         {
             if (button == 0)
             {
-                portalModifier.sounds = !portalModifier.sounds;
-                itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.sounds ? "Enabled" : "Disabled"));
-                itemStackButton.active = portalModifier.sounds;
+                portalModifier.setSounds(!portalModifier.getSounds());
+                itemStackButton.textList.set(1, EnumChatFormatting.GRAY + (portalModifier.getSounds() ? "Enabled" : "Disabled"));
+                itemStackButton.active = portalModifier.getSounds();
             }
             else if (button == 1 && isShiftKeyDown())
             {

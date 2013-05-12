@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
+import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.portal.PortalTexture;
@@ -66,6 +67,11 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     {
         if (!player.isSneaking())
         {
+            if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == ItemIds.PortalModifierUpgrade + 256)
+            {
+                return false;
+            }
+            
             player.openGui(EnhancedPortals.instance, GuiIds.PortalModifier, world, x, y, z);
             return true;
         }

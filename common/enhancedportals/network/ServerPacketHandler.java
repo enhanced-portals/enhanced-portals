@@ -98,11 +98,11 @@ public class ServerPacketHandler implements IPacketHandler
                     // Reset the upgrades, so we don't have people putting it in, changing the settings then popping them back out.
                     if (upgrade.packetData.integerData[0] == 0)
                     {
-                        modifier.particles = true;
+                        modifier.setParticles(true);
                     }
                     else if (upgrade.packetData.integerData[0] == 1)
                     {
-                        modifier.sounds = true;
+                        modifier.setSounds(true);
                     }
                 }
                 else if (upgrade.packetData.integerData[1] == 1 && !modifier.upgrades[upgrade.packetData.integerData[0]])
