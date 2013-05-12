@@ -1,14 +1,15 @@
 package enhancedportals.lib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import enhancedportals.portal.PortalTexture;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import enhancedportals.portal.PortalTexture;
 
 public class Settings
 {
@@ -31,6 +32,10 @@ public class Settings
     public static int[] ValidItemsList = new int[] { Item.bucketLava.itemID, Item.bucketWater.itemID, Item.dyePowder.itemID };
     public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();
 
+    public static List<List<String>> externalUpgradeHoverText = new ArrayList<List<String>>();
+    public static List<ItemStack> externalUpgradeItemStack = new ArrayList<ItemStack>();
+    public static List<String> externalUpgradeNames = new ArrayList<String>();
+    
     public static PortalTexture getPortalTextureFromItem(ItemStack stack, PortalTexture texture)
     {
         PortalTexture text = null;

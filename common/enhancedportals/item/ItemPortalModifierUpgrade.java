@@ -23,7 +23,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class ItemPortalModifierUpgrade extends Item
 {
     Icon[] textures;
-    String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer" };
+    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer" };
     
     public ItemPortalModifierUpgrade()
     {

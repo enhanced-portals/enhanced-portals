@@ -43,6 +43,7 @@ public class EnhancedPortals
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 
+        // Map items to textures
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0", new PortalTexture(10, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0_", new PortalTexture(11, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
@@ -50,66 +51,66 @@ public class EnhancedPortals
 
         // Row 1
         Reference.glyphItems.add(new ItemStack(Item.diamond));
+        Reference.glyphItems.add(new ItemStack(Item.emerald));
+        Reference.glyphItems.add(new ItemStack(Item.goldNugget));
         Reference.glyphItems.add(new ItemStack(Item.redstone));
-        Reference.glyphItems.add(new ItemStack(Item.flint));
-        Reference.glyphItems.add(new ItemStack(Item.arrow));
-        Reference.glyphItems.add(new ItemStack(Item.boat));
-        Reference.glyphItems.add(new ItemStack(Item.beefCooked));
-        Reference.glyphItems.add(new ItemStack(Item.bone));
-        Reference.glyphItems.add(new ItemStack(Item.brick));
-        Reference.glyphItems.add(new ItemStack(Item.blazeRod));
+        Reference.glyphItems.add(new ItemStack(Item.ingotIron));
+        Reference.glyphItems.add(new ItemStack(Item.lightStoneDust));
+        Reference.glyphItems.add(new ItemStack(Item.netherQuartz));
+        Reference.glyphItems.add(new ItemStack(Item.bucketLava));
+        Reference.glyphItems.add(new ItemStack(Item.dyePowder, 1, PortalTexture.Colour.BLUE.ordinal()));
 
         Reference.glyphValues.add("diamond");
+        Reference.glyphValues.add("emerald");
+        Reference.glyphValues.add("goldNugget");
         Reference.glyphValues.add("redstone");
-        Reference.glyphValues.add("flint");
-        Reference.glyphValues.add("arrow");
-        Reference.glyphValues.add("boat");
-        Reference.glyphValues.add("steak");
-        Reference.glyphValues.add("bone");
-        Reference.glyphValues.add("brick");
-        Reference.glyphValues.add("blazeRod");
+        Reference.glyphValues.add("ironIngot");
+        Reference.glyphValues.add("glowstoneDust");
+        Reference.glyphValues.add("netherQuartz");
+        Reference.glyphValues.add("lavaBucket");
+        Reference.glyphValues.add("lapisLazuli");
 
         // Row 2
-        Reference.glyphItems.add(new ItemStack(Item.bread));
-        Reference.glyphItems.add(new ItemStack(Item.gunpowder));
-        Reference.glyphItems.add(new ItemStack(Item.goldNugget));
-        Reference.glyphItems.add(new ItemStack(Item.paper));
-        Reference.glyphItems.add(new ItemStack(Item.porkCooked));
-        Reference.glyphItems.add(new ItemStack(Item.coal));
-        Reference.glyphItems.add(new ItemStack(Item.bucketEmpty));
-        Reference.glyphItems.add(new ItemStack(Item.egg));
-        Reference.glyphItems.add(new ItemStack(Item.feather));
+        Reference.glyphItems.add(new ItemStack(Item.appleGold));
+        Reference.glyphItems.add(new ItemStack(Item.blazeRod));
+        Reference.glyphItems.add(new ItemStack(Item.slimeBall));
+        Reference.glyphItems.add(new ItemStack(Item.goldenCarrot));
+        Reference.glyphItems.add(new ItemStack(Item.enderPearl));
+        Reference.glyphItems.add(new ItemStack(Item.fireballCharge));
+        Reference.glyphItems.add(new ItemStack(Item.netherStar));
+        Reference.glyphItems.add(new ItemStack(Item.ghastTear));
+        Reference.glyphItems.add(new ItemStack(Item.magmaCream));
 
-        Reference.glyphValues.add("bread");
-        Reference.glyphValues.add("gunpowder");
-        Reference.glyphValues.add("goldNugget");
-        Reference.glyphValues.add("paper");
-        Reference.glyphValues.add("porkchop");
-        Reference.glyphValues.add("coal");
-        Reference.glyphValues.add("bucket");
-        Reference.glyphValues.add("egg");
-        Reference.glyphValues.add("feather");
+        Reference.glyphValues.add("goldenApple");
+        Reference.glyphValues.add("blazeRod");
+        Reference.glyphValues.add("slimeBall");
+        Reference.glyphValues.add("goldenCarrot");
+        Reference.glyphValues.add("enderPearl");
+        Reference.glyphValues.add("fireCharge");
+        Reference.glyphValues.add("netherStar");
+        Reference.glyphValues.add("ghastTear");
+        Reference.glyphValues.add("magmaCream");
 
         // Row 3
-        Reference.glyphItems.add(new ItemStack(Item.appleRed));
-        Reference.glyphItems.add(new ItemStack(Item.leather));
-        Reference.glyphItems.add(new ItemStack(Item.ghastTear));
-        Reference.glyphItems.add(new ItemStack(Item.bow));
-        Reference.glyphItems.add(new ItemStack(Item.fishingRod));
-        Reference.glyphItems.add(new ItemStack(Item.potato));
-        Reference.glyphItems.add(new ItemStack(Item.book));
-        Reference.glyphItems.add(new ItemStack(Item.shears));
-        Reference.glyphItems.add(new ItemStack(Item.slimeBall));
+        Reference.glyphItems.add(new ItemStack(Item.eyeOfEnder));
+        Reference.glyphItems.add(new ItemStack(Item.firework));
+        Reference.glyphItems.add(new ItemStack(Item.ingotGold));
+        Reference.glyphItems.add(new ItemStack(Item.pickaxeDiamond));
+        Reference.glyphItems.add(new ItemStack(Item.gunpowder));
+        Reference.glyphItems.add(new ItemStack(Item.pocketSundial));
+        Reference.glyphItems.add(new ItemStack(Item.writableBook));
+        Reference.glyphItems.add(new ItemStack(Item.potion));
+        Reference.glyphItems.add(new ItemStack(Item.cake));
 
-        Reference.glyphValues.add("apple");
-        Reference.glyphValues.add("leather");
-        Reference.glyphValues.add("ghastTear");
-        Reference.glyphValues.add("bow");
-        Reference.glyphValues.add("fishingRod");
-        Reference.glyphValues.add("potato");
-        Reference.glyphValues.add("book");
-        Reference.glyphValues.add("shears");
-        Reference.glyphValues.add("slimeBall");
+        Reference.glyphValues.add("eyeOfEnder");
+        Reference.glyphValues.add("firework");
+        Reference.glyphValues.add("goldIngot");
+        Reference.glyphValues.add("diamondPickaxe");
+        Reference.glyphValues.add("gunpowder");
+        Reference.glyphValues.add("clock");
+        Reference.glyphValues.add("bookAndQuill");
+        Reference.glyphValues.add("potion");
+        Reference.glyphValues.add("cake");
     }
 
     @PostInit
