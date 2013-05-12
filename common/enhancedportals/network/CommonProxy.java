@@ -15,6 +15,7 @@ import enhancedportals.item.ItemPortalModifierUpgrade;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
+import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -27,6 +28,8 @@ public class CommonProxy
     public BlockDummyPortal blockDummyPortal;
 
     public ItemPortalModifierUpgrade portalModifierUpgrade;
+    
+    public ModifierNetwork ModifierNetwork;
     
     public World getWorld(int dimension)
     {

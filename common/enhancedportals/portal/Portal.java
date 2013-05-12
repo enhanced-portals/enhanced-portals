@@ -1,6 +1,7 @@
 package enhancedportals.portal;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import net.minecraft.block.Block;
@@ -484,7 +485,7 @@ public class Portal
                 entity.setInPortal();
             }
         }
-        else
+        else if (portal.parentModifier != null && entity.timeUntilPortal == 0)
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
 
@@ -497,9 +498,16 @@ public class Portal
             }
             else
             {
-                // Teleport via network
+                List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getFrequencyExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, dimension));
+            
+                if (entity instanceof EntityPlayer && validLocations != null)
+                {
+                    ((EntityPlayer)entity).sendChatToPlayer("There are " + validLocations.size() + " valid locations");
+                }
             }
         }
+        
+        entity.timeUntilPortal = entity.getPortalCooldown();
     }
 
     public void handleNeighborChange(int id)

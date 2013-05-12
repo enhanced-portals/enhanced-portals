@@ -27,6 +27,7 @@ import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.ServerPacketHandler;
 import enhancedportals.portal.PortalTexture;
+import enhancedportals.portal.network.ModifierNetwork;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
@@ -134,12 +135,12 @@ public class EnhancedPortals
     @ServerStarting
     private void serverStarting(FMLServerStartingEvent event)
     {
-        // Load up networks
+        proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
     }
 
     @ServerStopping
     private void serverStopping(FMLServerStoppingEvent event)
     {
-        // Save networks
+        proxy.ModifierNetwork.saveData();
     }
 }

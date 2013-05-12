@@ -19,6 +19,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.PacketIds;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.network.packet.PacketRequestSync;
@@ -144,7 +145,10 @@ public class ServerPacketHandler implements IPacketHandler
             if (tileEntity instanceof TileEntityPortalModifier)
             {
                 ((TileEntityPortalModifier) tileEntity).network = update.packetData.stringData[0];
-
+                
+                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(update.xCoord, update.yCoord, update.zCoord, update.dimension));
+                EnhancedPortals.proxy.ModifierNetwork.addToNetwork(update.packetData.stringData[0], new WorldLocation(update.xCoord, update.yCoord, update.zCoord, update.dimension));
+                
                 PacketDispatcher.sendPacketToAllAround(update.xCoord + 0.5, update.yCoord + 0.5, update.zCoord + 0.5, 256, update.dimension, update.getPacket());
             }
         }

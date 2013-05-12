@@ -43,6 +43,22 @@ public class WorldLocation
         zCoord = z;
         dimension = world.provider.dimensionId;
     }
+    
+    public WorldLocation(int x, int y, int z, int dim)
+    {
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+        dimension = dim;
+    }
+
+    public WorldLocation(WorldLocation item)
+    {
+        xCoord = item.xCoord;
+        yCoord = item.yCoord;
+        zCoord = item.zCoord;
+        dimension = item.dimension;
+    }
 
     public boolean equals(WorldLocation loc)
     {

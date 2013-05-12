@@ -16,6 +16,7 @@ import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.WorldLocation;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -92,5 +93,21 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     public void registerIcons(IconRegister iconRegister)
     {
         texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_Side");
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        if (world.isRemote)
+        {
+            return;
+        }
+        
+        TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+        
+        if (modifier.network != "" && modifier.network != "undefined")
+        {
+            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
+        }
     }
 }
