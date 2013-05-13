@@ -1,7 +1,11 @@
-##Enhanced Portals
-**Latest Release**: [2.1 for Minecraft 1.5/1.5.1](http://www.minecraftforum.net/topic/1301217-)
-
+##EnhancedPortals 2
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
+
+**Latest Beta**: [1.0 Beta 1](http://goo.gl/6pg5T).
+**Release Notes**:
+* No crafting recipes.
+* No Dial Device.
+* All currently released aspects of this mod need extensive testing, as the entire mod has been rewritten from scratch.
 
 ###Setting up the development environment
 The build scripts are set up in the exact same way as the Equivalent Exchange 3 scripts.
@@ -21,7 +25,8 @@ When done, your directory structure should look like this:
 			\resources\
 			\README.md
 			\other files
+		\computercraft-api\
+			\*
+		\thermalexpansion-api\
+			\*
 ***
-
-###Translation
-Currently I am in need of people that can translate Enhanced Portals into many different languages. If you are fluent in another language, feel free to head over to the [lang directory](https://github.com/ShadedDimension/enhanced-portals/tree/master/resources/mods/enhancedportals/lang), see what needs to be done and copy and edit the en_US.xml file.
