@@ -501,6 +501,11 @@ public class Portal
 
             return;
         }
+        
+        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal)
+        {
+            return;
+        }
 
         TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
