@@ -501,19 +501,14 @@ public class Portal
             else
             {
                 List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
-            
-                if (!validLocations.isEmpty())
+                
+                while (!validLocations.isEmpty())
                 {
-                    WorldLocation randomLocation = validLocations.get(new Random().nextInt(validLocations.size()));
+                    WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));                    
                     
-                    TeleportManager.teleportEntity(entity, randomLocation, modifier);
-                }
-                else
-                {
-                    if (entity instanceof EntityPlayer)
+                    if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() == 1))
                     {
-                        EntityPlayer player = (EntityPlayer) entity;
-                        player.sendChatToPlayer("Unable to find an exit location.");
+                        validLocations.clear();
                     }
                 }
             }

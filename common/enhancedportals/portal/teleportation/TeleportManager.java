@@ -129,11 +129,11 @@ public class TeleportManager
         GameRegistry.onPlayerChangedDimension(player);
     }
     
-    public static void teleportEntity(Entity entity, WorldLocation teleportData, TileEntityPortalModifier originModifier)
+    public static boolean teleportEntity(Entity entity, WorldLocation teleportData, TileEntityPortalModifier originModifier, boolean supressMessages)
     {
         if (entity.worldObj.isRemote)
         {
-            return;
+            return false;
         }
 
         World world = EnhancedPortals.proxy.getWorld(teleportData.dimension);
@@ -152,12 +152,10 @@ public class TeleportManager
             }
             else
             {
-                if (entity instanceof EntityPlayer)
+                if (!supressMessages && entity instanceof EntityPlayer)
                 {
                     ((EntityPlayer) entity).sendChatToPlayer("A portal could not be created at the exit location.");
                 }
-                
-                System.out.println("Cannot teleport entity - Exit is not valid.");
             }
         }
         else if (outModifierOffset.getBlockId() == BlockIds.NetherPortal)
@@ -169,6 +167,8 @@ public class TeleportManager
         {
             teleportEntity((WorldServer) world, entity, teleportData, teleportData.getOffset(ForgeDirection.getOrientation(originModifier.getBlockMetadata())), outModifierOffset.getMetadata());
         }
+        
+        return teleportEntity;
     }
 
     private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, int metaDirection)
