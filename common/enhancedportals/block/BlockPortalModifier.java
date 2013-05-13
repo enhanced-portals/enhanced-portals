@@ -36,6 +36,22 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     }
 
     @Override
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        if (world.isRemote)
+        {
+            return;
+        }
+
+        TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+
+        if (modifier.network != "" && modifier.network != "undefined")
+        {
+            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
+        }
+    }
+
+    @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
         return new TileEntityPortalModifier();
@@ -62,7 +78,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     {
         return ForgeDirection.VALID_DIRECTIONS;
     }
-    
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
@@ -72,7 +88,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             {
                 return false;
             }
-            
+
             player.openGui(EnhancedPortals.instance, GuiIds.PortalModifier, world, x, y, z);
             return true;
         }
@@ -92,22 +108,6 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_Side");
-    }
-    
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-    {
-        if (world.isRemote)
-        {
-            return;
-        }
-        
-        TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
-        
-        if (modifier.network != "" && modifier.network != "undefined")
-        {
-            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
-        }
+        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_side");
     }
 }

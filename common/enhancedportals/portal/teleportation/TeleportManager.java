@@ -33,7 +33,7 @@ public class TeleportManager
 
         return entity.timeUntilPortal == 0;
     }
-    
+
     private static EntityPlayerMP handlePlayerRespawn(Entity entity, EntityPlayerMP player, WorldServer world, boolean dimensionalTeleport)
     {
         player.closeScreen();
@@ -128,7 +128,7 @@ public class TeleportManager
         player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
         GameRegistry.onPlayerChangedDimension(player);
     }
-    
+
     public static boolean teleportEntity(Entity entity, WorldLocation teleportData, TileEntityPortalModifier originModifier, boolean supressMessages)
     {
         if (entity.worldObj.isRemote)
@@ -138,12 +138,12 @@ public class TeleportManager
 
         World world = EnhancedPortals.proxy.getWorld(teleportData.dimension);
         ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
-        
+
         TileEntityPortalModifier outModifier = (TileEntityPortalModifier) teleportData.getTileEntity();
         WorldLocation outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifier.getBlockMetadata()));
-        
+
         boolean teleportEntity = false;
-        
+
         if (outModifierOffset.getBlockId() == 0)
         {
             if (new Portal(outModifierOffset.xCoord, outModifierOffset.yCoord, outModifierOffset.zCoord, world, outModifier).createPortal())
@@ -162,12 +162,12 @@ public class TeleportManager
         {
             teleportEntity = true;
         }
-        
+
         if (teleportEntity)
         {
             teleportEntity((WorldServer) world, entity, teleportData, teleportData.getOffset(ForgeDirection.getOrientation(originModifier.getBlockMetadata())), outModifierOffset.getMetadata());
         }
-        
+
         return teleportEntity;
     }
 
@@ -180,9 +180,9 @@ public class TeleportManager
 
         boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
         float rotationYaw = 0f;
-                
+
         if (metaDirection == 4 || metaDirection == 5)
-        {            
+        {
             if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
             {
                 rotationYaw = 90F;
@@ -193,7 +193,7 @@ public class TeleportManager
             }
         }
         else if (metaDirection == 2 || metaDirection == 3)
-        {            
+        {
             if (teleportDataOffset.getOffset(ForgeDirection.NORTH).isBlockAir())
             {
                 rotationYaw = 180F;
@@ -209,7 +209,7 @@ public class TeleportManager
         }
 
         Entity mountedEntity = null;
-        
+
         if (entity.ridingEntity != null)
         {
             mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
@@ -271,7 +271,7 @@ public class TeleportManager
         {
             entity.mountEntity(mountedEntity);
         }
-        
+
         setCanEntityTravel(entity, false);
         return entity;
     }

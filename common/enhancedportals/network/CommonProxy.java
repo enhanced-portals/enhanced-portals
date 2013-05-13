@@ -28,9 +28,9 @@ public class CommonProxy
     public BlockDummyPortal blockDummyPortal;
 
     public ItemPortalModifierUpgrade portalModifierUpgrade;
-    
+
     public ModifierNetwork ModifierNetwork;
-    
+
     public World getWorld(int dimension)
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimension);
@@ -56,7 +56,7 @@ public class CommonProxy
     public void loadItems()
     {
         portalModifierUpgrade = new ItemPortalModifierUpgrade();
-        
+
         GameRegistry.registerItem(portalModifierUpgrade, Localization.PortalModifierUpgrade_Name);
     }
 

@@ -24,9 +24,9 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public byte thickness, redstoneSetting;
     public String network;
     private boolean particles, sounds, oldRedstoneState;
-    public ItemStack[] inventory;    
+    public ItemStack[] inventory;
     public boolean[] upgrades;
-    
+
     public TileEntityPortalModifier()
     {
         texture = new PortalTexture(0);
@@ -37,100 +37,29 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         sounds = true;
         oldRedstoneState = false;
         inventory = new ItemStack[1];
-        
+
         upgrades = new boolean[6];
-        
+
         for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = false;
         }
     }
-    
-    public int getMaxInstalledUpgrades()
+
+    @Override
+    public void closeChest()
     {
-        return 5;
+
     }
-    
-    public int getInstalledUpgradeCount()
-    {
-        int count = 0;
-        
-        for (int i = 0; i < upgrades.length; i++)
-        {
-            if (upgrades[i])
-            {
-                count++;
-            }
-        }
-        
-        return count;
-    }
-    
-    public boolean getParticles()
-    {
-        if (!hasUpgrade(0))
-        {
-            particles = true;
-        }
-        
-        return particles;
-    }
-    
-    public boolean getSounds()
-    {
-        if (!hasUpgrade(1))
-        {
-            sounds = true;
-        }
-        
-        return sounds;
-    }
-    
+
     public int[] customBorderBlocks()
     {
         if (hasUpgrade(5))
         {
             return new int[] { Block.blockNetherQuartz.blockID };
         }
-        
+
         return null;
-    }
-
-    public void setParticles(boolean state)
-    {
-        if (hasUpgrade(0))
-        {
-            particles = state;
-        }
-    }
-    
-    public void setSounds(boolean state)
-    {
-        if (hasUpgrade(1))
-        {
-            sounds = state;
-        }
-    }
-    
-    public boolean hasUpgrade(int id)
-    {
-        if (getInstalledUpgradeCount() >= getMaxInstalledUpgrades())
-        {
-            return true;
-        }
-        
-        return upgrades.length > id && upgrades[id];
-    }
-    
-    public boolean hasUpgradeNoCheck(int id)
-    {
-        return upgrades.length > id && upgrades[id];
-    }
-    
-    @Override
-    public void closeChest()
-    {
-
     }
 
     @Override
@@ -140,6 +69,21 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         stack.stackSize -= j;
 
         return stack;
+    }
+
+    public int getInstalledUpgradeCount()
+    {
+        int count = 0;
+
+        for (boolean upgrade : upgrades)
+        {
+            if (upgrade)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     @Override
@@ -152,6 +96,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public String getInvName()
     {
         return Localization.PortalModifier_Name;
+    }
+
+    public int getMaxInstalledUpgrades()
+    {
+        return 5;
     }
 
     @Override
@@ -174,31 +123,38 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
          * STRING
          * 0 - network
          */
-        
+
         PacketData data = new PacketData();
-        data.integerData = new int[] {
-                texture.colour == null ? -1 : texture.colour.ordinal(),
-                        texture.blockID,
-                        texture.metaData,
-                        sounds ? 1 : 0,
-                        particles ? 1 : 0,
-                        thickness,
-                        redstoneSetting,
-                        upgrades[0] == true ? 1 : 0,
-                        upgrades[1] == true ? 1 : 0,
-                        upgrades[2] == true ? 1 : 0,
-                        upgrades[3] == true ? 1 : 0,
-                        upgrades[4] == true ? 1 : 0,
-                        upgrades[5] == true ? 1 : 0};
+        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting, upgrades[0] == true ? 1 : 0, upgrades[1] == true ? 1 : 0, upgrades[2] == true ? 1 : 0, upgrades[3] == true ? 1 : 0, upgrades[4] == true ? 1 : 0, upgrades[5] == true ? 1 : 0 };
         data.stringData = new String[] { network };
-        
+
         return data;
+    }
+
+    public boolean getParticles()
+    {
+        if (!hasUpgrade(0))
+        {
+            particles = true;
+        }
+
+        return particles;
     }
 
     @Override
     public int getSizeInventory()
     {
         return inventory.length;
+    }
+
+    public boolean getSounds()
+    {
+        if (!hasUpgrade(1))
+        {
+            sounds = true;
+        }
+
+        return sounds;
     }
 
     @Override
@@ -241,6 +197,29 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         }
 
         oldRedstoneState = currentRedstoneState;
+    }
+
+    public boolean hasUpgrade(int id)
+    {
+        if (getInstalledUpgradeCount() >= getMaxInstalledUpgrades())
+        {
+            return true;
+        }
+
+        return upgrades.length > id && upgrades[id];
+    }
+
+    public boolean hasUpgradeNoCheck(int id)
+    {
+        return upgrades.length > id && upgrades[id];
+    }
+
+    public void installUpgrade(int id)
+    {
+        if (id < upgrades.length && !hasUpgrade(id))
+        {
+            upgrades[id] = true;
+        }
     }
 
     public boolean isActive()
@@ -347,7 +326,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
          * STRING
          * 0 - network
          */
-        
+
         if (data == null || data.integerData == null || data.integerData.length != 13 || data.stringData.length != 1)
         {
             System.out.println("Unexpected packet recieved. " + data);
@@ -374,7 +353,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         updateData(sound, particles, portalThickness);
         redstoneSetting = (byte) data.integerData[6];
         network = data.stringData[0];
-        
+
         for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = data.integerData[7 + i] == 1;
@@ -404,7 +383,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         sounds = tagCompound.getBoolean("Sounds");
         oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
-       
+
         for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = tagCompound.getBoolean("Upgrade" + i);
@@ -415,6 +394,22 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
         inventory[i] = itemstack;
+    }
+
+    public void setParticles(boolean state)
+    {
+        if (hasUpgrade(0))
+        {
+            particles = state;
+        }
+    }
+
+    public void setSounds(boolean state)
+    {
+        if (hasUpgrade(1))
+        {
+            sounds = state;
+        }
     }
 
     public boolean updateData(boolean sound, boolean part, byte thick)
@@ -474,18 +469,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         tagCompound.setBoolean("Sounds", sounds);
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
-        
+
         for (int i = 0; i < upgrades.length; i++)
         {
             tagCompound.setBoolean("Upgrade" + i, upgrades[i]);
-        }
-    }
-
-    public void installUpgrade(int id)
-    {
-        if (id < upgrades.length && !hasUpgrade(id))
-        {
-            upgrades[id] = true;
         }
     }
 }

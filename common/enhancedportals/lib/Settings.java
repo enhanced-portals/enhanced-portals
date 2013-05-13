@@ -35,11 +35,11 @@ public class Settings
 
     public static List<Integer> BorderBlocks = new ArrayList<Integer>();
     public static List<Integer> DestroyBlocks = new ArrayList<Integer>();
-    
+
     public static List<List<String>> externalUpgradeHoverText = new ArrayList<List<String>>();
     public static List<ItemStack> externalUpgradeItemStack = new ArrayList<ItemStack>();
     public static List<String> externalUpgradeNames = new ArrayList<String>();
-    
+
     public static PortalTexture getPortalTextureFromItem(ItemStack stack, PortalTexture texture)
     {
         PortalTexture text = null;
@@ -49,7 +49,7 @@ public class Settings
         if (texture.isEqualTo(text))
         {
             PortalTexture secondTexture = ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage() + "_");
-            
+
             if (secondTexture != null)
             {
                 return secondTexture;

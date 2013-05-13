@@ -9,7 +9,7 @@ public class ModifierNetwork extends NetworkManager
     {
         super(server);
     }
-    
+
     @Override
     public String getSaveFileName()
     {

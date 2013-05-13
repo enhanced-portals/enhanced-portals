@@ -164,30 +164,6 @@ public class Portal
         portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
     }
 
-    public boolean createPortal(int[] extraBorderBlocks)
-    {
-        if (extraBorderBlocks == null || extraBorderBlocks.length == 0)
-        {
-            return createPortal();
-        }
-        
-        int size = Settings.BorderBlocks.size();
-        
-        for (int i : extraBorderBlocks)
-        {
-            Settings.BorderBlocks.add(i);
-        }    
-        
-        boolean status = createPortal();
-        
-        for (int i = size; i < Settings.BorderBlocks.size(); i++)
-        {
-            Settings.BorderBlocks.remove(i);
-        }
-        
-        return status;
-    }
-    
     public boolean createPortal()
     {
         World world = getWorld();
@@ -249,6 +225,30 @@ public class Portal
         }
 
         return validatePortal(addedBlocks);
+    }
+
+    public boolean createPortal(int[] extraBorderBlocks)
+    {
+        if (extraBorderBlocks == null || extraBorderBlocks.length == 0)
+        {
+            return createPortal();
+        }
+
+        int size = Settings.BorderBlocks.size();
+
+        for (int i : extraBorderBlocks)
+        {
+            Settings.BorderBlocks.add(i);
+        }
+
+        boolean status = createPortal();
+
+        for (int i = size; i < Settings.BorderBlocks.size(); i++)
+        {
+            Settings.BorderBlocks.remove(i);
+        }
+
+        return status;
     }
 
     private boolean findPortalShape()
@@ -525,17 +525,18 @@ public class Portal
             else
             {
                 List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
-                boolean missingUpgrade = false, teleport = false;;
-                
+                boolean missingUpgrade = false, teleport = false;
+                ;
+
                 while (!validLocations.isEmpty())
                 {
-                    WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));                    
-                    
-                    if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && (!modifier.hasUpgrade(2) && !modifier.hasUpgrade(3)))
+                    WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
+
+                    if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.hasUpgrade(2) && !modifier.hasUpgrade(3))
                     {
                         // Vanilla dimension but we don't have the upgrade
-                        
-                        if ((randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0) || (randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1))
+
+                        if (randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0 || randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1)
                         {
                             // Allow overworld <--> nether travel
                         }
@@ -545,28 +546,28 @@ public class Portal
                             continue;
                         }
                     }
-                    
+
                     if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.hasUpgrade(3))
                     {
                         // Same dimension but we don't have the upgrade
                         missingUpgrade = true;
                         continue;
                     }
-                    
+
                     if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.hasUpgrade(3))
                     {
                         // Modded dimension but no upgrade
                         missingUpgrade = true;
                         continue;
                     }
-                    
+
                     if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() == 1))
                     {
                         teleport = true;
                         validLocations.clear();
                     }
                 }
-                
+
                 if (missingUpgrade && !teleport)
                 {
                     if (entity instanceof EntityPlayer)
@@ -576,7 +577,7 @@ public class Portal
                 }
             }
         }
-        
+
         entity.timeUntilPortal = entity.getPortalCooldown();
     }
 
@@ -628,7 +629,7 @@ public class Portal
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -641,7 +642,7 @@ public class Portal
                 return true;
             }
         }
-        
+
         return false;
     }
 

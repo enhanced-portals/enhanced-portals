@@ -22,13 +22,13 @@ public class NetworkManager
     public Map<String, List<WorldLocation>> networkData;
     private String saveFile;
     private MinecraftServer serverInstance;
-    
+
     public NetworkManager(MinecraftServer server)
     {
         serverInstance = server;
         networkData = new HashMap<String, List<WorldLocation>>();
         WorldServer world = serverInstance.worldServerForDimension(0);
-        
+
         if (FMLCommonHandler.instance().getSide() == Side.SERVER)
         {
             saveFile = serverInstance.getFile(world.getSaveHandler().getWorldDirectoryName() + File.separator + getSaveFileName()).getAbsolutePath();
@@ -45,10 +45,102 @@ public class NetworkManager
 
         loadData();
     }
-    
+
+    public void addNetwork(String key)
+    {
+        if (hasNetwork(key))
+        {
+            return;
+        }
+
+        networkData.put(key, new ArrayList<WorldLocation>());
+    }
+
+    public void addToNetwork(String key, WorldLocation data)
+    {
+        if (!hasNetwork(key))
+        {
+            addNetwork(key);
+        }
+
+        if (networkContains(key, data))
+        {
+            return;
+        }
+
+        getNetwork(key).add(data);
+    }
+
+    public List<WorldLocation> getNetwork(String key)
+    {
+        if (!hasNetwork(key))
+        {
+            return null;
+        }
+
+        return networkData.get(key);
+    }
+
+    public String getNetwork(WorldLocation data)
+    {
+        for (String key : networkData.keySet())
+        {
+            if (isInNetwork(key, data))
+            {
+                return key;
+            }
+        }
+
+        return "";
+    }
+
+    public List<WorldLocation> getNetworkExcluding(String network, WorldLocation worldLocation)
+    {
+        List<WorldLocation> list = getNetwork(network);
+        List<WorldLocation> newList = new ArrayList<WorldLocation>();
+
+        if (list == null)
+        {
+            return new ArrayList<WorldLocation>();
+        }
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            if (!list.get(i).equals(worldLocation))
+            {
+                newList.add(list.get(i));
+            }
+        }
+
+        return newList;
+    }
+
     public String getSaveFileName()
     {
         return Reference.MOD_ID + ".dat";
+    }
+
+    public boolean hasNetwork(String key)
+    {
+        for (String key2 : networkData.keySet())
+        {
+            if (key.equals(key2))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isInNetwork(String key, WorldLocation data)
+    {
+        if (!hasNetwork(key))
+        {
+            return false;
+        }
+
+        return networkContains(key, data);
     }
 
     public void loadData()
@@ -107,147 +199,6 @@ public class NetworkManager
             e.printStackTrace();
         }
     }
-    
-    public void saveData()
-    {
-        BufferedWriter writer;
-        boolean isFirst = true;
-
-        if (networkData.keySet() == null)
-        {
-            return;
-        }
-
-        try
-        {
-            writer = new BufferedWriter(new FileWriter(saveFile));
-
-            for (String key : networkData.keySet())
-            {
-                List<WorldLocation> items = getNetwork(key);
-
-                if (items.isEmpty())
-                {
-                    continue;
-                }
-                
-                if (!isFirst)
-                {
-                    writer.newLine();
-                }
-                else
-                {
-                    isFirst = false;
-                }
-                
-                writer.write(">" + key);                
-
-                for (WorldLocation item : items)
-                {
-                    writer.newLine();
-                    writer.write("#" + item.xCoord + "," + item.yCoord + "," + item.zCoord + "," + item.dimension);
-                }
-            }
-
-            writer.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    public void addNetwork(String key)
-    {
-        if (hasNetwork(key))
-        {
-            return;
-        }
-
-        networkData.put(key, new ArrayList<WorldLocation>());
-    }
-
-    public void addToNetwork(String key, WorldLocation data)
-    {
-        if (!hasNetwork(key))
-        {
-            addNetwork(key);
-        }
-
-        if (networkContains(key, data))
-        {
-            return;
-        }
-
-        getNetwork(key).add(data);
-    }
-    
-    public List<WorldLocation> getNetworkExcluding(String network, WorldLocation worldLocation)
-    {
-        List<WorldLocation> list = getNetwork(network);
-        List<WorldLocation> newList = new ArrayList<WorldLocation>();
-        
-        if (list == null)
-        {
-            return new ArrayList<WorldLocation>();
-        }
-        
-        for (int i = 0; i < list.size(); i++)
-        {
-            if (!list.get(i).equals(worldLocation))
-            {
-                newList.add(list.get(i));
-            }
-        }
-        
-        return newList;
-    }
-
-    public List<WorldLocation> getNetwork(String key)
-    {
-        if (!hasNetwork(key))
-        {
-            return null;
-        }
-
-        return networkData.get(key);
-    }
-
-    public String getNetwork(WorldLocation data)
-    {
-        for (String key : networkData.keySet())
-        {
-            if (isInNetwork(key, data))
-            {
-                return key;
-            }
-        }
-
-        return "";
-    }
-
-    public boolean hasNetwork(String key)
-    {
-        for (String key2 : networkData.keySet())
-        {
-            if (key.equals(key2))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isInNetwork(String key, WorldLocation data)
-    {
-        if (!hasNetwork(key))
-        {
-            return false;
-        }
-
-        return networkContains(key, data);
-    }
 
     public boolean networkContains(String key, WorldLocation data)
     {
@@ -265,6 +216,17 @@ public class NetworkManager
         }
 
         return false;
+    }
+
+    public void removeFromAllNetworks(WorldLocation worldLocation)
+    {
+        for (String str : networkData.keySet())
+        {
+            if (isInNetwork(str, worldLocation))
+            {
+                removeFromNetwork(str, worldLocation);
+            }
+        }
     }
 
     public void removeFromNetwork(String key, WorldLocation data)
@@ -297,15 +259,53 @@ public class NetworkManager
 
         networkData.remove(key);
     }
-    
-    public void removeFromAllNetworks(WorldLocation worldLocation)
+
+    public void saveData()
     {
-        for (String str : networkData.keySet())
+        BufferedWriter writer;
+        boolean isFirst = true;
+
+        if (networkData.keySet() == null)
         {
-            if (isInNetwork(str, worldLocation))
+            return;
+        }
+
+        try
+        {
+            writer = new BufferedWriter(new FileWriter(saveFile));
+
+            for (String key : networkData.keySet())
             {
-                removeFromNetwork(str, worldLocation);
+                List<WorldLocation> items = getNetwork(key);
+
+                if (items.isEmpty())
+                {
+                    continue;
+                }
+
+                if (!isFirst)
+                {
+                    writer.newLine();
+                }
+                else
+                {
+                    isFirst = false;
+                }
+
+                writer.write(">" + key);
+
+                for (WorldLocation item : items)
+                {
+                    writer.newLine();
+                    writer.write("#" + item.xCoord + "," + item.yCoord + "," + item.zCoord + "," + item.dimension);
+                }
             }
+
+            writer.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

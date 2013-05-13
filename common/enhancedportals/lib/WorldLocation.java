@@ -36,20 +36,20 @@ public class WorldLocation
         dimension = 0; // TODO
     }
 
-    public WorldLocation(int x, int y, int z, World world)
-    {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
-        dimension = world.provider.dimensionId;
-    }
-    
     public WorldLocation(int x, int y, int z, int dim)
     {
         xCoord = x;
         yCoord = y;
         zCoord = z;
         dimension = dim;
+    }
+
+    public WorldLocation(int x, int y, int z, World world)
+    {
+        xCoord = x;
+        yCoord = y;
+        zCoord = z;
+        dimension = world.provider.dimensionId;
     }
 
     public WorldLocation(WorldLocation item)

@@ -77,51 +77,6 @@ public class ServerPacketHandler implements IPacketHandler
         }
     }
 
-    private void parseUpgrade(PacketUpgrade upgrade, Player player)
-    {
-        WorldServer world = getWorldForDimension(upgrade.dimension);
-
-        if (world.blockHasTileEntity(upgrade.xCoord, upgrade.yCoord, upgrade.zCoord))
-        {
-            TileEntity tileEntity = world.getBlockTileEntity(upgrade.xCoord, upgrade.yCoord, upgrade.zCoord);
-
-            if (tileEntity instanceof TileEntityPortalModifier)
-            {
-                TileEntityPortalModifier modifier = ((TileEntityPortalModifier) tileEntity);                
-                                
-                if (upgrade.packetData.integerData[1] == 0 && modifier.upgrades[upgrade.packetData.integerData[0]])
-                {
-                    modifier.upgrades[upgrade.packetData.integerData[0]] = false;
-                    ItemStack stack = new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, upgrade.packetData.integerData[0]);
-                    EntityItem item = new EntityItem(modifier.worldObj, upgrade.xCoord + 0.5, upgrade.yCoord + 0.5, upgrade.zCoord + 0.5, stack);                
-                    modifier.worldObj.spawnEntityInWorld(item);
-                    
-                    // Reset the upgrades, so we don't have people putting it in, changing the settings then popping them back out.
-                    if (upgrade.packetData.integerData[0] == 0)
-                    {
-                        modifier.setParticles(true);
-                    }
-                    else if (upgrade.packetData.integerData[0] == 1)
-                    {
-                        modifier.setSounds(true);
-                    }
-                }
-                else if (upgrade.packetData.integerData[1] == 1 && !modifier.upgrades[upgrade.packetData.integerData[0]])
-                {
-                    EntityPlayer play = (EntityPlayer) player;
-                    
-                    if (play.inventory.hasItem(ItemIds.PortalModifierUpgrade))
-                    {
-                        modifier.upgrades[upgrade.packetData.integerData[0]] = true;                        
-                        play.inventory.consumeInventoryItem(ItemIds.PortalModifierUpgrade);
-                    }
-                }
-                
-                PacketDispatcher.sendPacketToAllAround(upgrade.xCoord + 0.5, upgrade.yCoord + 0.5, upgrade.zCoord + 0.5, 256, upgrade.dimension, new PacketTEUpdate(modifier).getPacket());
-            }
-        }
-    }
-
     private void parseGui(PacketGui packetGui, Player player)
     {
         if (packetGui.packetData.integerData[0] == 1 && packetGui.packetData.integerData[1] == 0)
@@ -145,10 +100,10 @@ public class ServerPacketHandler implements IPacketHandler
             if (tileEntity instanceof TileEntityPortalModifier)
             {
                 ((TileEntityPortalModifier) tileEntity).network = update.packetData.stringData[0];
-                
+
                 EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(update.xCoord, update.yCoord, update.zCoord, update.dimension));
                 EnhancedPortals.proxy.ModifierNetwork.addToNetwork(update.packetData.stringData[0], new WorldLocation(update.xCoord, update.yCoord, update.zCoord, update.dimension));
-                
+
                 PacketDispatcher.sendPacketToAllAround(update.xCoord + 0.5, update.yCoord + 0.5, update.zCoord + 0.5, 256, update.dimension, update.getPacket());
             }
         }
@@ -180,6 +135,51 @@ public class ServerPacketHandler implements IPacketHandler
         else
         {
             System.out.println(String.format("Could not find enhanced portals tile entity at %s, %s, %s", update.xCoord, update.yCoord, update.zCoord));
+        }
+    }
+
+    private void parseUpgrade(PacketUpgrade upgrade, Player player)
+    {
+        WorldServer world = getWorldForDimension(upgrade.dimension);
+
+        if (world.blockHasTileEntity(upgrade.xCoord, upgrade.yCoord, upgrade.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(upgrade.xCoord, upgrade.yCoord, upgrade.zCoord);
+
+            if (tileEntity instanceof TileEntityPortalModifier)
+            {
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+
+                if (upgrade.packetData.integerData[1] == 0 && modifier.upgrades[upgrade.packetData.integerData[0]])
+                {
+                    modifier.upgrades[upgrade.packetData.integerData[0]] = false;
+                    ItemStack stack = new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, upgrade.packetData.integerData[0]);
+                    EntityItem item = new EntityItem(modifier.worldObj, upgrade.xCoord + 0.5, upgrade.yCoord + 0.5, upgrade.zCoord + 0.5, stack);
+                    modifier.worldObj.spawnEntityInWorld(item);
+
+                    // Reset the upgrades, so we don't have people putting it in, changing the settings then popping them back out.
+                    if (upgrade.packetData.integerData[0] == 0)
+                    {
+                        modifier.setParticles(true);
+                    }
+                    else if (upgrade.packetData.integerData[0] == 1)
+                    {
+                        modifier.setSounds(true);
+                    }
+                }
+                else if (upgrade.packetData.integerData[1] == 1 && !modifier.upgrades[upgrade.packetData.integerData[0]])
+                {
+                    EntityPlayer play = (EntityPlayer) player;
+
+                    if (play.inventory.hasItem(ItemIds.PortalModifierUpgrade))
+                    {
+                        modifier.upgrades[upgrade.packetData.integerData[0]] = true;
+                        play.inventory.consumeInventoryItem(ItemIds.PortalModifierUpgrade);
+                    }
+                }
+
+                PacketDispatcher.sendPacketToAllAround(upgrade.xCoord + 0.5, upgrade.yCoord + 0.5, upgrade.zCoord + 0.5, 256, upgrade.dimension, new PacketTEUpdate(modifier).getPacket());
+            }
         }
     }
 }

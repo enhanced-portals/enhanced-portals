@@ -1,8 +1,8 @@
 package enhancedportals.network;
 
-import enhancedportals.EnhancedPortals;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
+import enhancedportals.EnhancedPortals;
 
 public class EventHooks
 {

@@ -25,7 +25,7 @@ public class ItemPortalModifierUpgrade extends Item
 {
     Icon[] textures;
     public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "quartz" };
-    
+
     public ItemPortalModifierUpgrade()
     {
         super(ItemIds.PortalModifierUpgrade);
@@ -35,21 +35,14 @@ public class ItemPortalModifierUpgrade extends Item
         setUnlocalizedName(Localization.PortalModifierUpgrade_Name);
         maxStackSize = 1;
     }
-    
-    @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        int i = MathHelper.clamp_int(par1ItemStack.getItemDamage(), 0, 15);
-        return super.getUnlocalizedName() + "." + names[i];
-    }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
     {
         list.add("Portal Modifier Upgrade");
-        
+
         if (itemStack.getItemDamage() == 2)
         {
             list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between vanilla dimensions.");
@@ -70,7 +63,7 @@ public class ItemPortalModifierUpgrade extends Item
             list.add(EnumChatFormatting.DARK_GRAY + "for the Portal frame.");
         }
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int par1)
@@ -79,36 +72,18 @@ public class ItemPortalModifierUpgrade extends Item
         {
             return textures[0];
         }
-        
+
         return textures[par1];
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        textures = new Icon[names.length];
-        
-        for (int i = 0; i < textures.length; i++)
-        {
-            textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + i);
-        }
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean hasEffect(ItemStack par1ItemStack)
-    {
-        return true;
-    }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack itemStack)
     {
         return EnumRarity.rare;
     }
-    
+
+    @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
@@ -118,11 +93,25 @@ public class ItemPortalModifierUpgrade extends Item
             {
                 continue;
             }
-            
+
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
-    
+
+    @Override
+    public String getUnlocalizedName(ItemStack par1ItemStack)
+    {
+        int i = MathHelper.clamp_int(par1ItemStack.getItemDamage(), 0, 15);
+        return super.getUnlocalizedName() + "." + names[i];
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack par1ItemStack)
+    {
+        return true;
+    }
+
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
@@ -130,11 +119,11 @@ public class ItemPortalModifierUpgrade extends Item
         {
             return false;
         }
-        
+
         if (world.getBlockId(x, y, z) == BlockIds.PortalModifier)
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
-            
+
             if (!modifier.hasUpgrade(stack.getItemDamage()))
             {
                 if (stack.getItemDamage() == 3 && modifier.hasUpgradeNoCheck(2))
@@ -147,14 +136,26 @@ public class ItemPortalModifierUpgrade extends Item
                     player.sendChatToPlayer("You must remove the advanced dimensional upgrade first.");
                     return false;
                 }
-                
+
                 modifier.installUpgrade(stack.getItemDamage());
                 player.inventory.mainInventory[player.inventory.currentItem] = null;
-                
-                ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
+
+                ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
             }
         }
-        
+
         return false;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        textures = new Icon[names.length];
+
+        for (int i = 0; i < textures.length; i++)
+        {
+            textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + i);
+        }
     }
 }

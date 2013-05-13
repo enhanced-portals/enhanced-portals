@@ -32,17 +32,17 @@ public class GuiPortalModifier extends GuiContainer
     public boolean hasInteractedWith = false, isActive = false;
     GuiButton okayButton;
     List<GuiItemStackButton> elementList;
-    
+
     Upgrade upgrade;
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
         super(new ContainerPortalModifier(player, modifier));
         portalModifier = modifier;
-        isActive = portalModifier.isActive();        
+        isActive = portalModifier.isActive();
         upgrade = new Upgrade(this, modifier);
         elementList = new ArrayList<GuiItemStackButton>();
-        
+
         List<String> strList = new ArrayList<String>();
         strList.add("Redstone Control");
         strList.add(EnumChatFormatting.GRAY + "Normal");
@@ -147,16 +147,16 @@ public class GuiPortalModifier extends GuiContainer
             else
             {
                 String str = "Click here to set a network";
-                fontRenderer.drawStringWithShadow(str, guiLeft + ((xSize / 2) - (fontRenderer.getStringWidth(str) / 2)), guiTop + 51, 0xFF00FF00);
+                fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
             }
-            
+
             for (int i = 0; i < elementList.size(); i++)
             {
                 elementList.get(i).drawElement(guiLeft, guiTop, x, y, fontRenderer, itemRenderer, mc.renderEngine);
-            }        
-            
+            }
+
             upgrade.drawElements(x, y, fontRenderer, itemRenderer, mc.renderEngine);
-            
+
             if (isPointInRegion(134, 15, 16, 16, x, y))
             {
                 String thickness = "Unknown";
@@ -268,6 +268,16 @@ public class GuiPortalModifier extends GuiContainer
         hasInteractedWith = true;
     }
 
+    public int getGuiLeft()
+    {
+        return guiLeft;
+    }
+
+    public int getGuiTop()
+    {
+        return guiTop;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void initGui()
@@ -288,7 +298,7 @@ public class GuiPortalModifier extends GuiContainer
         {
             elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked, i);
         }
-        
+
         upgrade.mouseClicked(x, y, buttonClicked);
 
         if (isPointInRegion(134, 15, 16, 16, x, y))
@@ -299,7 +309,7 @@ public class GuiPortalModifier extends GuiContainer
             {
                 portalModifier.thickness = 0;
             }
-            
+
             hasInteractedWith = true;
         }
         else if (isPointInRegion(7, 46, 162, 18, x, y))
@@ -317,15 +327,5 @@ public class GuiPortalModifier extends GuiContainer
         {
             PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
         }
-    }
-
-    public int getGuiLeft()
-    {
-        return guiLeft;
-    }
-    
-    public int getGuiTop()
-    {
-        return guiTop;
     }
 }

@@ -20,18 +20,6 @@ public class GuiItemStackButton extends Gui
     public String value;
     GuiPortalModifier parent;
 
-    public GuiItemStackButton(int x, int y, ItemStack stack, List<String> list, String val, GuiPortalModifier par)
-    {
-        this.x = x;
-        this.y = y;
-        itemStack = stack;
-        active = false;
-        textList = list;
-        value = val;
-        colourInside = false;
-        parent = par;
-    }
-
     public GuiItemStackButton(int x, int y, ItemStack stack, List<String> list, String val, boolean colourinside, GuiPortalModifier par)
     {
         this.x = x;
@@ -41,6 +29,18 @@ public class GuiItemStackButton extends Gui
         textList = list;
         value = val;
         colourInside = colourinside;
+        parent = par;
+    }
+
+    public GuiItemStackButton(int x, int y, ItemStack stack, List<String> list, String val, GuiPortalModifier par)
+    {
+        this.x = x;
+        this.y = y;
+        itemStack = stack;
+        active = false;
+        textList = list;
+        value = val;
+        colourInside = false;
         parent = par;
     }
 
@@ -105,11 +105,16 @@ public class GuiItemStackButton extends Gui
         GL11.glEnable(GL11.GL_LIGHTING);
     }
 
+    public void drawElement(int guiLeft, int guiTop, int x2, int y2, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine, int i)
+    {
+        drawElement(guiLeft + 8 + i * 18, guiTop + 15, x2, y2, fontRenderer, itemRenderer, renderEngine);
+    }
+
     public void handleMouseClick(int offsetX, int offsetY, int x, int y, int button, int i)
     {
         if (this.x == 0 && this.y == 0)
         {
-            if (isPointInRegion(this.x + offsetX + 1 + ((i - 2) * 18) + 8, this.y + offsetY + 1 + 15, 14, 14, x, y))
+            if (isPointInRegion(this.x + offsetX + 1 + (i - 2) * 18 + 8, this.y + offsetY + 1 + 15, 14, 14, x, y))
             {
                 parent.elementClicked(this, button);
             }
@@ -126,10 +131,5 @@ public class GuiItemStackButton extends Gui
     boolean isPointInRegion(int par1, int par2, int par3, int par4, int par5, int par6)
     {
         return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
-    }
-
-    public void drawElement(int guiLeft, int guiTop, int x2, int y2, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine, int i)
-    {
-        drawElement(guiLeft + 8 + (i * 18), guiTop + 15, x2, y2, fontRenderer, itemRenderer, renderEngine);
     }
 }

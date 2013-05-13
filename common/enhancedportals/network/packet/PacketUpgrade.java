@@ -15,7 +15,7 @@ public class PacketUpgrade extends PacketUpdate
     {
         super(stream);
     }
-    
+
     public PacketUpgrade(int x, int y, int z, int dim, PacketData data)
     {
         super(x, y, z, dim, data);
@@ -24,20 +24,20 @@ public class PacketUpgrade extends PacketUpdate
     public PacketUpgrade(TileEntity tileEntity, int upgrade, boolean state)
     {
         super(tileEntity, null);
-        
+
         packetData = new PacketData();
         packetData.integerData = new int[] { upgrade, state ? 1 : 0 };
+    }
+
+    @Override
+    public int getPacketID()
+    {
+        return PacketIds.PortalModifierUpgrade;
     }
 
     public void setData(int upgrade, boolean state)
     {
         packetData = new PacketData();
         packetData.integerData = new int[] { upgrade, state ? 1 : 0 };
-    }
-    
-    @Override
-    public int getPacketID()
-    {
-        return PacketIds.PortalModifierUpgrade;
     }
 }

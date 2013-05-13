@@ -25,19 +25,19 @@ public class Upgrade
     List<GuiUpgradeButton> elementList;
     public GuiPortalModifier parent;
     TileEntityPortalModifier modifier;
-    
+
     public Upgrade(GuiPortalModifier parentGui, TileEntityPortalModifier portalModifier)
     {
         parent = parentGui;
-        modifier = portalModifier;        
+        modifier = portalModifier;
         elementList = new ArrayList<GuiUpgradeButton>();
-        
+
         for (int i = 0; i < modifier.upgrades.length; i++)
         {
             if (modifier.upgrades[i])
             {
                 boolean active = true;
-                
+
                 if (i == 0)
                 {
                     active = modifier.getParticles();
@@ -46,50 +46,25 @@ public class Upgrade
                 {
                     active = modifier.getSounds();
                 }
-                
+
                 elementList.add(new GuiUpgradeButton(i, this, active));
             }
         }
     }
-    
-    public void onElementClicked(GuiUpgradeButton element, int button)
-    {
-        if (button == 0)
-        {
-            if (element.ID == 0)
-            {
-                modifier.setParticles(!modifier.getParticles());
-                element.active = modifier.getParticles();
-            }
-            else if (element.ID == 1)
-            {
-                modifier.setSounds(!modifier.getSounds());
-                element.active = modifier.getSounds();
-            }
-            
-            parent.hasInteractedWith = true;
-        }
-        else if (button == 1 && GuiScreen.isShiftKeyDown())
-        {
-            modifier.upgrades[element.ID] = false;
-            elementList.remove(element);
-            PacketDispatcher.sendPacketToServer(new PacketUpgrade(modifier, element.ID, false).getPacket());   
-        }
-    }
-    
+
     public void drawElements(int mouseX, int mouseY, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine)
     {
-        for (int i = elementList.size() - 1; i >= 0 ; i--)
+        for (int i = elementList.size() - 1; i >= 0; i--)
         {
-            elementList.get(i).drawButton(parent.getGuiLeft() + 8 + (i * 18), parent.getGuiTop() + 15, mouseX, mouseY, fontRenderer, itemRenderer, renderEngine);
+            elementList.get(i).drawButton(parent.getGuiLeft() + 8 + i * 18, parent.getGuiTop() + 15, mouseX, mouseY, fontRenderer, itemRenderer, renderEngine);
         }
     }
-    
+
     public List<String> getHoverText(int ID)
     {
-        List<String> theList = new ArrayList<String>();        
+        List<String> theList = new ArrayList<String>();
         theList.add(Localization.getLocalizedString("item." + Localization.PortalModifierUpgrade_Name + "." + ItemPortalModifierUpgrade.names[ID] + ".name"));
-        
+
         if (ID == 0)
         {
             theList.add(EnumChatFormatting.GRAY + (modifier.getParticles() ? "Creating particles" : "Not creating particles"));
@@ -117,16 +92,16 @@ public class Upgrade
             theList.add(EnumChatFormatting.GRAY + "Allows you to use Nether Quartz");
             theList.add(EnumChatFormatting.GRAY + "for the Portal frame.");
         }
-        
+
         theList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
-        
+
         return theList;
     }
-    
+
     public ItemStack getItemStack(int ID)
     {
         ItemStack stack = null;
-        
+
         switch (ID)
         {
             case 0:
@@ -142,7 +117,7 @@ public class Upgrade
             case 5:
                 return new ItemStack(Block.blockNetherQuartz, 1, 2);
         }
-        
+
         return stack;
     }
 
@@ -150,7 +125,32 @@ public class Upgrade
     {
         for (int i = 0; i < elementList.size(); i++)
         {
-            elementList.get(i).mouseClicked(parent.getGuiLeft() + 8 + (i * 18), parent.getGuiTop() + 15, mouseX, mouseY, buttonClicked);
+            elementList.get(i).mouseClicked(parent.getGuiLeft() + 8 + i * 18, parent.getGuiTop() + 15, mouseX, mouseY, buttonClicked);
+        }
+    }
+
+    public void onElementClicked(GuiUpgradeButton element, int button)
+    {
+        if (button == 0)
+        {
+            if (element.ID == 0)
+            {
+                modifier.setParticles(!modifier.getParticles());
+                element.active = modifier.getParticles();
+            }
+            else if (element.ID == 1)
+            {
+                modifier.setSounds(!modifier.getSounds());
+                element.active = modifier.getSounds();
+            }
+
+            parent.hasInteractedWith = true;
+        }
+        else if (button == 1 && GuiScreen.isShiftKeyDown())
+        {
+            modifier.upgrades[element.ID] = false;
+            elementList.remove(element);
+            PacketDispatcher.sendPacketToServer(new PacketUpgrade(modifier, element.ID, false).getPacket());
         }
     }
 }
