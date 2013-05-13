@@ -2,10 +2,16 @@
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
 
 **Latest Beta**: [1.0 Beta 1](http://goo.gl/6pg5T).
+
 **Release Notes**:
-* No crafting recipes.
-* No Dial Device.
-* All currently released aspects of this mod need extensive testing, as the entire mod has been rewritten from scratch.
+* Portal Modifiers and their new Networking system using Glyphs.
+* Overhauled portal systems.
+* Ability to change the texture of the portal modifiers to blocks.(Using a Portal Modifier)
+* Ability to change the thickness of the portal blocks. (Using a Portal Modifier)
+* New upgrades for the Portal Modifier.
+* - Particle Control.Allows you to toggle the particles of the portal.
+* - Sound Control. Allows you to toggle the sound of the portal.
+* - Quartz Upgrade. (Name is a WIP) Allows you to use Nether Quartz (all variations) as a portal frame.
 
 ###Setting up the development environment
 The build scripts are set up in the exact same way as the Equivalent Exchange 3 scripts.
