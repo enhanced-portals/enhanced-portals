@@ -501,14 +501,53 @@ public class Portal
             else
             {
                 List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
+                boolean missingUpgrade = false, teleport = false;;
                 
                 while (!validLocations.isEmpty())
                 {
                     WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));                    
                     
+                    if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && (!modifier.hasUpgrade(2) && !modifier.hasUpgrade(3)))
+                    {
+                        // Vanilla dimension but we don't have the upgrade
+                        
+                        if ((randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0) || (randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1))
+                        {
+                            
+                        }
+                        else
+                        {
+                            missingUpgrade = true;
+                            continue;
+                        }
+                    }
+                    
+                    if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.hasUpgrade(3))
+                    {
+                        // Same dimension but we don't have the upgrade
+                        missingUpgrade = true;
+                        continue;
+                    }
+                    
+                    if (randomLocation.dimension > 1 && !modifier.hasUpgrade(3))
+                    {
+                        // Modded dimension but no upgrade
+                        missingUpgrade = true;
+                        continue;
+                    }
+                    
                     if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() == 1))
                     {
+                        teleport = true;
                         validLocations.clear();
+                    }
+                }
+                
+                if (missingUpgrade && !teleport)
+                {
+                    if (entity instanceof EntityPlayer)
+                    {
+                        ((EntityPlayer) entity).sendChatToPlayer("The Portal Modifier is missing an upgrade.");
                     }
                 }
             }

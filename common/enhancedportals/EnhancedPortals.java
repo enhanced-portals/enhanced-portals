@@ -3,6 +3,7 @@ package enhancedportals;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,6 +25,7 @@ import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.ClientPacketHandler;
 import enhancedportals.network.CommonProxy;
+import enhancedportals.network.EventHooks;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.ServerPacketHandler;
 import enhancedportals.portal.PortalTexture;
@@ -43,6 +45,7 @@ public class EnhancedPortals
     private void init(FMLInitializationEvent event)
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+        MinecraftForge.EVENT_BUS.register(new EventHooks());
 
         // Map items to textures
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0", new PortalTexture(10, 0));
