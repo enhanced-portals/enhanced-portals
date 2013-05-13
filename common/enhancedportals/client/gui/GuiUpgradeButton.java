@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 
 import org.lwjgl.opengl.GL11;
 
-import enhancedportals.lib.Upgrade;
+import enhancedportals.portal.Upgrade;
 
 public class GuiUpgradeButton extends Gui
 {

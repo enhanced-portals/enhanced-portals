@@ -1,5 +1,6 @@
 package enhancedportals.portal;
 
+import enhancedportals.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
@@ -33,8 +34,8 @@ public class PortalTexture
 
         for (int i = 0; i < 16; i++)
         {
-            TEXTURE_ICONS[i] = iconRegister.registerIcon("enhancedportals:netherPortal_" + i);
-            PORTAL_MODIFIER_ICONS[i] = iconRegister.registerIcon("enhancedportals:portalModifier_Active_" + i);
+            TEXTURE_ICONS[i] = iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i);
+            PORTAL_MODIFIER_ICONS[i] = iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_Active_" + i);
         }
     }
 

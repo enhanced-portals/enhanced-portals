@@ -1,5 +1,6 @@
 package enhancedportals;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -20,6 +21,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
@@ -52,7 +54,17 @@ public class EnhancedPortals
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0_", new PortalTexture(11, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0_", new PortalTexture(9, 0));
+        Settings.ItemPortalTextureMap.put(Item.snowball.itemID + ":0", new PortalTexture(Block.snow.blockID, 0));
 
+        // Add blocks to border list
+        Settings.BorderBlocks.add(BlockIds.Obsidian);
+        Settings.BorderBlocks.add(BlockIds.ObsidianStairs);
+        Settings.BorderBlocks.add(BlockIds.PortalModifier);
+        
+        // Add blocks to destroy list
+        Settings.DestroyBlocks.add(0);
+        Settings.DestroyBlocks.add(Block.fire.blockID);
+        
         // Row 1
         Reference.glyphItems.add(new ItemStack(Item.diamond));
         Reference.glyphItems.add(new ItemStack(Item.emerald));

@@ -1,5 +1,6 @@
 package enhancedportals.tileentity;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -37,9 +38,9 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         oldRedstoneState = false;
         inventory = new ItemStack[1];
         
-        upgrades = new boolean[5];
+        upgrades = new boolean[6];
         
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = false;
         }
@@ -83,6 +84,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         }
         
         return sounds;
+    }
+    
+    public int[] customBorderBlocks()
+    {
+        if (hasUpgrade(5))
+        {
+            return new int[] { Block.blockNetherQuartz.blockID };
+        }
+        
+        return null;
     }
 
     public void setParticles(boolean state)
@@ -177,7 +188,8 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                         upgrades[1] == true ? 1 : 0,
                         upgrades[2] == true ? 1 : 0,
                         upgrades[3] == true ? 1 : 0,
-                        upgrades[4] == true ? 1 : 0 };
+                        upgrades[4] == true ? 1 : 0,
+                        upgrades[5] == true ? 1 : 0};
         data.stringData = new String[] { network };
         
         return data;
@@ -209,7 +221,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         {
             if (!oldRedstoneState && currentRedstoneState && !isAnyActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
+                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
             }
             else if (oldRedstoneState && !currentRedstoneState && isActive())
             {
@@ -220,7 +232,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         {
             if (oldRedstoneState && !currentRedstoneState && !isAnyActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal();
+                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
             }
             else if (!oldRedstoneState && currentRedstoneState && isActive())
             {
@@ -336,7 +348,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
          * 0 - network
          */
         
-        if (data == null || data.integerData == null || data.integerData.length != 12 || data.stringData.length != 1)
+        if (data == null || data.integerData == null || data.integerData.length != 13 || data.stringData.length != 1)
         {
             System.out.println("Unexpected packet recieved. " + data);
             return;
@@ -363,7 +375,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         redstoneSetting = (byte) data.integerData[6];
         network = data.stringData[0];
         
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = data.integerData[7 + i] == 1;
         }
@@ -393,11 +405,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
        
-        upgrades[0] = tagCompound.getBoolean("Upgrade0");
-        upgrades[1] = tagCompound.getBoolean("Upgrade1");
-        upgrades[2] = tagCompound.getBoolean("Upgrade2");
-        upgrades[3] = tagCompound.getBoolean("Upgrade3");
-        upgrades[4] = tagCompound.getBoolean("Upgrade4");
+        for (int i = 0; i < upgrades.length; i++)
+        {
+            upgrades[i] = tagCompound.getBoolean("Upgrade" + i);
+        }
     }
 
     @Override
@@ -464,11 +475,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
         
-        tagCompound.setBoolean("Upgrade0", upgrades[0]);
-        tagCompound.setBoolean("Upgrade1", upgrades[1]);
-        tagCompound.setBoolean("Upgrade2", upgrades[2]);
-        tagCompound.setBoolean("Upgrade3", upgrades[3]);
-        tagCompound.setBoolean("Upgrade4", upgrades[4]);
+        for (int i = 0; i < upgrades.length; i++)
+        {
+            tagCompound.setBoolean("Upgrade" + i, upgrades[i]);
+        }
     }
 
     public void installUpgrade(int id)

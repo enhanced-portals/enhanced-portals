@@ -203,14 +203,16 @@ public class TeleportManager
                 rotationYaw = 0F;
             }
         }
-
-        if (entity.riddenByEntity != null)
+        else
         {
-            entity.riddenByEntity.mountEntity(null);
+            rotationYaw = entity.rotationYaw;
         }
 
+        Entity mountedEntity = null;
+        
         if (entity.ridingEntity != null)
         {
+            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
             entity.mountEntity(null);
         }
 
@@ -265,6 +267,11 @@ public class TeleportManager
 
         entity.setLocationAndAngles(teleportDataOffset.xCoord + 0.5, teleportDataOffset.yCoord, teleportDataOffset.zCoord + 0.5, rotationYaw, entity.rotationPitch);
 
+        if (mountedEntity != null)
+        {
+            entity.mountEntity(mountedEntity);
+        }
+        
         setCanEntityTravel(entity, false);
         return entity;
     }

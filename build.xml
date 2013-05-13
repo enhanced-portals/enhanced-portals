@@ -1,12 +1,12 @@
 <?xml version="1.0" ?> 
-<project name="Enhanced Portals">
+<project name="EnhancedPortals 2">
 	<!-- Based upon the EE3 build.xml https://github.com/pahimar/Equivalent-Exchange-3/blob/master/build.xml -->
 	<!-- TODO: Filter out ComputerCraft addon files and add to seperate jar file -->
 	<property file="build.properties" />
 	
 	<target name="clean">
 		<delete file="${dir.development}\mcp\src\minecraft\mcmod.info" />
-		<delete dir="${dir.development}\mcp\src\minecraft\alz" />
+		<delete dir="${dir.development}\mcp\src\minecraft\enhancedportals" />
 		<delete dir="${dir.development}\mcp\src\minecraft\dan200" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft" />
 	</target>
@@ -62,7 +62,7 @@
 		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\paulscode" />
 		<mkdir dir="${dir.share}\${release.minecraft.version}\${release.mod.version}" />
-		<jar destfile="${dir.share}\${release.minecraft.version}\${release.mod.version}\enhanced-portals_${release.mod.version}.jar">
+		<jar destfile="${dir.share}\${release.minecraft.version}\${release.mod.version}\EnhancedPortals-2_${release.mod.version}.jar">
 			<fileset dir="${dir.development}\mcp\src\common\"	includes="mcmod.info" />
 			<fileset dir="${dir.development}\mcp\reobf\minecraft\" />
 			<fileset dir="${dir.development}\source\enhanced-portals\resources" />
@@ -85,7 +85,7 @@
 		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\paulscode" />
 		<mkdir dir="${dir.release}\${release.minecraft.version}\${release.mod.version}" />
-		<jar destfile="${dir.release}\${release.minecraft.version}\${release.mod.version}\enhanced-portals_${release.mod.version}.jar">
+		<jar destfile="${dir.release}\${release.minecraft.version}\${release.mod.version}\EnhancedPortals-2_${release.mod.version}.jar">
 			<fileset dir="${dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${dir.development}\mcp\reobf\minecraft\" />
 			<fileset dir="${dir.development}\source\enhanced-portals\resources" />

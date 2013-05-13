@@ -1,4 +1,4 @@
-package enhancedportals.lib;
+package enhancedportals.portal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.GuiPortalModifier;
 import enhancedportals.client.gui.GuiUpgradeButton;
 import enhancedportals.item.ItemPortalModifierUpgrade;
+import enhancedportals.lib.Localization;
 import enhancedportals.network.packet.PacketUpgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -111,6 +112,11 @@ public class Upgrade
         {
             theList.add(EnumChatFormatting.GRAY + "Allows interaction with ComputerCraft.");
         }
+        else if (ID == 5)
+        {
+            theList.add(EnumChatFormatting.GRAY + "Allows you to use Nether Quartz");
+            theList.add(EnumChatFormatting.GRAY + "for the Portal frame.");
+        }
         
         theList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
         
@@ -133,6 +139,8 @@ public class Upgrade
                 return new ItemStack(EnhancedPortals.proxy.blockDummyPortal, 1, 14);
             case 4:
                 return new ItemStack(Item.blazePowder);
+            case 5:
+                return new ItemStack(Block.blockNetherQuartz, 1, 2);
         }
         
         return stack;

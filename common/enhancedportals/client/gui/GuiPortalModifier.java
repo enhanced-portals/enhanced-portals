@@ -20,10 +20,10 @@ import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Reference;
-import enhancedportals.lib.Upgrade;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.portal.PortalTexture;
+import enhancedportals.portal.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifier extends GuiContainer

@@ -1,7 +1,7 @@
 [
 {
-  "modid" : "enhancedportals",
-  "name" : "Enhanced Portals",
+  "modid" : "ep2",
+  "name" : "EnhancedPortals 2",
   "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",
@@ -16,8 +16,8 @@
   ]
 },
 {
-  "modid" : "enhancedportals_world",
-  "name" : "EP World",
+  "modid" : "ep2_world",
+  "name" : "EP2 World",
   "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",
@@ -32,8 +32,8 @@
   ]
 },
 {
-  "modid" : "enhancedportals_cc",
-  "name" : "EP ComputerCraft",
+  "modid" : "ep2_cc",
+  "name" : "EP2 ComputerCraft",
   "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",
   "credits" : "",

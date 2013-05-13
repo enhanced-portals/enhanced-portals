@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
-	<!-- Contributors: Alz454. Version: 2.2 -->
+	<!-- Contributors: Alz454. Version: 1.0 -->
 	<comment>English (US) Localization File</comment>
 	<entry key="tile.portalModifier.name">Portal Modifier</entry>
 	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
@@ -11,5 +11,6 @@
 	<entry key="item.portalModifierUpgrade.dimension.name">Dimensional Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.advancedDimension.name">Advanced Dimensional Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.computer.name">Technological Upgrade</entry>
-	<entry key="itemGroup.enhancedportals">Enhanced Portals</entry>
+	<entry key="item.portalModifierUpgrade.quartz.name">Quartz Upgrade</entry>
+	<entry key="itemGroup.ep2">EnhancedPortals 2</entry>
 </properties>

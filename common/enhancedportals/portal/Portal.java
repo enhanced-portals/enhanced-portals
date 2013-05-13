@@ -164,6 +164,30 @@ public class Portal
         portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
     }
 
+    public boolean createPortal(int[] extraBorderBlocks)
+    {
+        if (extraBorderBlocks == null || extraBorderBlocks.length == 0)
+        {
+            return createPortal();
+        }
+        
+        int size = Settings.BorderBlocks.size();
+        
+        for (int i : extraBorderBlocks)
+        {
+            Settings.BorderBlocks.add(i);
+        }    
+        
+        boolean status = createPortal();
+        
+        for (int i = size; i < Settings.BorderBlocks.size(); i++)
+        {
+            Settings.BorderBlocks.remove(i);
+        }
+        
+        return status;
+    }
+    
     public boolean createPortal()
     {
         World world = getWorld();
@@ -513,7 +537,7 @@ public class Portal
                         
                         if ((randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0) || (randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1))
                         {
-                            
+                            // Allow overworld <--> nether travel
                         }
                         else
                         {
@@ -529,7 +553,7 @@ public class Portal
                         continue;
                     }
                     
-                    if (randomLocation.dimension > 1 && !modifier.hasUpgrade(3))
+                    if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.hasUpgrade(3))
                     {
                         // Modded dimension but no upgrade
                         missingUpgrade = true;
@@ -590,19 +614,35 @@ public class Portal
         }
     }
 
-    private boolean isBlockFrame(int val, boolean b)
+    private boolean isBlockFrame(int val, boolean includeSelf)
     {
-        if (b && val == BlockIds.NetherPortal)
+        if (includeSelf && val == BlockIds.NetherPortal)
         {
             return true;
         }
 
-        return val == 49 || val == BlockIds.PortalModifier; // TODO CONFIG
+        for (int i : Settings.BorderBlocks)
+        {
+            if (i == val)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
-    private boolean isBlockRemovable(int currentBlockID)
+    private boolean isBlockRemovable(int val)
     {
-        return currentBlockID == 0 || currentBlockID == 51; // TODO CONFIG
+        for (int i : Settings.DestroyBlocks)
+        {
+            if (i == val)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private boolean preChecks()
