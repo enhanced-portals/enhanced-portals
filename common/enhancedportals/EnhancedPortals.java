@@ -55,7 +55,23 @@ public class EnhancedPortals
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0_", new PortalTexture(9, 0));
         Settings.ItemPortalTextureMap.put(Item.snowball.itemID + ":0", new PortalTexture(Block.snow.blockID, 0));
-
+        
+        for (int i = 0; i < 16; i++)
+        {
+            int j = i;
+            
+            if (i == 0)
+            {
+                j = 5;
+            }
+            else if (i == 5)
+            {
+                j = 0;
+            }
+            
+            Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture(j));
+        }
+        
         // Add blocks to border list
         Settings.BorderBlocks.add(BlockIds.Obsidian);
         Settings.BorderBlocks.add(BlockIds.ObsidianStairs);

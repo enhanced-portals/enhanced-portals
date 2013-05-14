@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.GuiPortalModifierSlot;
 import enhancedportals.lib.Settings;
@@ -18,7 +17,6 @@ public class ContainerPortalModifier extends Container
     public ContainerPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
         portalModifier = modifier;
-
         addSlotToContainer(new GuiPortalModifierSlot(portalModifier, 0, 152, 15));
 
         for (int i = 0; i < 3; i++)
@@ -38,7 +36,7 @@ public class ContainerPortalModifier extends Container
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return true; // TODO
+        return true;
     }
 
     @Override
@@ -61,15 +59,9 @@ public class ContainerPortalModifier extends Container
         if (slotObject != null && slotObject.getHasStack())
         {
             ItemStack stackInSlot = slotObject.getStack();
-
-            if (stackInSlot.itemID == Item.dyePowder.itemID)
-            {
-                if (new PortalTexture(stackInSlot.getItemDamage()).isEqualTo(portalModifier.texture))
-                {
-                    return null;
-                }
-            }
-            else if (Settings.isValidItem(stackInSlot.itemID))
+            stack = stackInSlot.copy();
+            
+            if (Settings.isValidItem(stackInSlot.itemID))
             {
                 if (Settings.getPortalTextureFromItem(stackInSlot, portalModifier.texture).isEqualTo(portalModifier.texture))
                 {
@@ -88,15 +80,13 @@ public class ContainerPortalModifier extends Container
                 return null;
             }
 
-            stack = stackInSlot.copy();
-
             ItemStack newStack = stackInSlot.copy();
             newStack.stackSize = 1;
 
             stack.stackSize--;
             stackInSlot.stackSize--;
 
-            if (slot < 9)
+            if (slot == 0)
             {
                 if (!mergeItemStack(newStack, 1, 37, true))
                 {

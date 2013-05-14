@@ -1,6 +1,7 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -269,11 +270,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             ItemStack stack = getStackInSlot(0);
             PortalTexture text = null;
 
-            if (stack.itemID == Item.dyePowder.itemID)
-            {
-                text = new PortalTexture(stack.getItemDamage());
-            }
-            else if (Settings.isValidItem(stack.itemID))
+            if (Settings.isValidItem(stack.itemID))
             {
                 text = Settings.getPortalTextureFromItem(stack, texture);
             }
@@ -286,6 +283,13 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             {
                 updateTexture(text);
                 setInventorySlotContents(0, null);
+                
+                if (Settings.isLiquid(text) && !worldObj.isRemote)
+                {
+                    ItemStack itemStack = new ItemStack(Item.bucketEmpty);
+                    EntityItem item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, itemStack);
+                    worldObj.spawnEntityInWorld(item);
+                }
             }
         }
     }
