@@ -11,6 +11,7 @@
 	<entry key="item.portalModifierUpgrade.dimension.name">Dimensional Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.advancedDimension.name">Advanced Dimensional Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.computer.name">Technological Upgrade</entry>
-	<entry key="item.portalModifierUpgrade.quartz.name">Quartz Upgrade</entry>
+	<entry key="item.portalModifierUpgrade.nether.name">Nether Frame Upgrade</entry>
+	<entry key="item.portalModifierUpgrade.overworld.name">Resourceful Frame Upgrade</entry>
 	<entry key="itemGroup.ep2">EnhancedPortals 2</entry>
 </properties>

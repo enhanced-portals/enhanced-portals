@@ -24,7 +24,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class ItemPortalModifierUpgrade extends Item
 {
     Icon[] textures;
-    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "quartz" };
+    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld" };
 
     public ItemPortalModifierUpgrade()
     {
@@ -50,8 +50,8 @@ public class ItemPortalModifierUpgrade extends Item
         else if (itemStack.getItemDamage() == 3)
         {
             list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between vanilla dimensions.");
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between the same dimension.");
             list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between modded dimensions.");
+            list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between the same dimension.");
         }
         else if (itemStack.getItemDamage() == 4)
         {
@@ -59,8 +59,19 @@ public class ItemPortalModifierUpgrade extends Item
         }
         else if (itemStack.getItemDamage() == 5)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows you to use Nether Quartz");
-            list.add(EnumChatFormatting.DARK_GRAY + "for the Portal frame.");
+            list.add(EnumChatFormatting.DARK_GRAY + "Allows you to use the following");
+            list.add(EnumChatFormatting.DARK_GRAY + "blocks for the Portal frame.");
+            list.add(EnumChatFormatting.DARK_AQUA + "Glowstone");
+            list.add(EnumChatFormatting.DARK_AQUA + "Nether Brick");
+            list.add(EnumChatFormatting.DARK_AQUA + "Nether Quartz");
+        }
+        else if (itemStack.getItemDamage() == 6)
+        {
+            list.add(EnumChatFormatting.DARK_GRAY + "Allows you to use the following");
+            list.add(EnumChatFormatting.DARK_GRAY + "blocks for the Portal frame.");
+            list.add(EnumChatFormatting.DARK_AQUA + "Iron Block");
+            list.add(EnumChatFormatting.DARK_AQUA + "Gold Block");
+            list.add(EnumChatFormatting.DARK_AQUA + "Diamond Block");
         }
     }
 

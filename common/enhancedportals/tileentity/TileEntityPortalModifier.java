@@ -38,7 +38,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         oldRedstoneState = false;
         inventory = new ItemStack[1];
 
-        upgrades = new boolean[6];
+        upgrades = new boolean[7];
 
         for (int i = 0; i < upgrades.length; i++)
         {
@@ -54,9 +54,17 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
     public int[] customBorderBlocks()
     {
-        if (hasUpgrade(5))
+        if (hasUpgrade(5) && hasUpgrade(6))
         {
-            return new int[] { Block.blockNetherQuartz.blockID };
+            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+        }
+        else if (hasUpgrade(5))
+        {
+            return new int[] { Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+        }
+        else if (hasUpgrade(6))
+        {
+            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID };
         }
 
         return null;
@@ -106,26 +114,8 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     @Override
     public PacketData getPacketData()
     {
-        /* PACKET DATA
-         * INTEGER
-         * 1 - colour
-         * 2 - blockid
-         * 3 - metadata
-         * 4 - sounds active/inactive
-         * 5 - particles active/inactive
-         * 6 - thickness
-         * 7 - redstoneSetting
-         * 8 - upgrade 01
-         * 9 - upgrade 02
-         * 10 - upgrade 03
-         * 11 - upgrade 04
-         * 12 - upgrade 05
-         * STRING
-         * 0 - network
-         */
-
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting, upgrades[0] == true ? 1 : 0, upgrades[1] == true ? 1 : 0, upgrades[2] == true ? 1 : 0, upgrades[3] == true ? 1 : 0, upgrades[4] == true ? 1 : 0, upgrades[5] == true ? 1 : 0 };
+        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting, upgrades[0] == true ? 1 : 0, upgrades[1] == true ? 1 : 0, upgrades[2] == true ? 1 : 0, upgrades[3] == true ? 1 : 0, upgrades[4] == true ? 1 : 0, upgrades[5] == true ? 1 : 0, upgrades[6] == true ? 1 : 0 };
         data.stringData = new String[] { network };
 
         return data;
@@ -309,25 +299,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     @Override
     public void parsePacketData(PacketData data)
     {
-        /* PACKET DATA
-         * INTEGER
-         * 0 - colour
-         * 1 - blockid
-         * 2 - metadata
-         * 3 - sounds active/inactive
-         * 4 - particles active/inactive
-         * 5 - thickness
-         * 6 - redstoneSetting
-         * 7 - upgrade 01
-         * 8 - upgrade 02
-         * 9 - upgrade 03
-         * 10 - upgrade 04
-         * 11 - upgrade 05
-         * STRING
-         * 0 - network
-         */
-
-        if (data == null || data.integerData == null || data.integerData.length != 13 || data.stringData.length != 1)
+        if (data == null || data.integerData == null || data.integerData.length != 14 || data.stringData.length != 1)
         {
             System.out.println("Unexpected packet recieved. " + data);
             return;

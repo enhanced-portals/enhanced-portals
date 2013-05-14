@@ -531,7 +531,17 @@ public class Portal
             {
                 List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
                 boolean missingUpgrade = false, teleport = false;
-                ;
+                
+                if (validLocations.isEmpty())
+                {
+                    if (entity instanceof EntityPlayer)
+                    {
+                        ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked Portal Modifiers.");
+                    }
+                    
+                    entity.timeUntilPortal = entity.getPortalCooldown();
+                    return;
+                }
 
                 while (!validLocations.isEmpty())
                 {
@@ -566,7 +576,7 @@ public class Portal
                         continue;
                     }
 
-                    if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() == 1))
+                    if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
                     {
                         teleport = true;
                         validLocations.clear();

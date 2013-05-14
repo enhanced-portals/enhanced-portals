@@ -63,7 +63,7 @@ public class Upgrade
     public List<String> getHoverText(int ID)
     {
         List<String> theList = new ArrayList<String>();
-        theList.add(Localization.getLocalizedString("item." + Localization.PortalModifierUpgrade_Name + "." + ItemPortalModifierUpgrade.names[ID] + ".name"));
+        theList.add(EnumChatFormatting.AQUA + Localization.getLocalizedString("item." + Localization.PortalModifierUpgrade_Name + "." + ItemPortalModifierUpgrade.names[ID] + ".name"));
 
         if (ID == 0)
         {
@@ -89,8 +89,19 @@ public class Upgrade
         }
         else if (ID == 5)
         {
-            theList.add(EnumChatFormatting.GRAY + "Allows you to use Nether Quartz");
-            theList.add(EnumChatFormatting.GRAY + "for the Portal frame.");
+            theList.add(EnumChatFormatting.GRAY + "Allows you to use the following");
+            theList.add(EnumChatFormatting.GRAY + "blocks for the Portal frame.");
+            theList.add(EnumChatFormatting.DARK_AQUA + "Glowstone");
+            theList.add(EnumChatFormatting.DARK_AQUA + "Nether Brick");
+            theList.add(EnumChatFormatting.DARK_AQUA + "Nether Quartz");
+        }
+        else if (ID == 6)
+        {
+            theList.add(EnumChatFormatting.GRAY + "Allows you to use the following");
+            theList.add(EnumChatFormatting.GRAY + "blocks for the Portal frame.");
+            theList.add(EnumChatFormatting.DARK_AQUA + "Iron Block");
+            theList.add(EnumChatFormatting.DARK_AQUA + "Gold Block");
+            theList.add(EnumChatFormatting.DARK_AQUA + "Diamond Block");
         }
 
         theList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
@@ -116,6 +127,8 @@ public class Upgrade
                 return new ItemStack(Item.blazePowder);
             case 5:
                 return new ItemStack(Block.blockNetherQuartz, 1, 2);
+            case 6:
+                return new ItemStack(Block.blockDiamond);
         }
 
         return stack;
