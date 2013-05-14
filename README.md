@@ -4,7 +4,7 @@
 **Latest Beta**: [1.0 Beta 1b](http://goo.gl/VVjDa).
 
 **Release Notes**:
-* Changed Quarts upgrade to Nether Frame Upgrade. Now allows you to use Quartz, Nether Brick and Glowstone.
+* Changed Quartz upgrade to Nether Frame Upgrade. Now allows you to use Quartz, Nether Brick and Glowstone.
 * Added Resourceful frame upgrade. Allows you to use Iron, Gold and Diamond blocks.
 * You can now shift-click upgrades into the portal modifier from the GUI.
 * Fixed issue where you could get stuck in the ground or appear on the wrong face of the portal modifier.
