@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.WorldLocation;
@@ -277,6 +278,27 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             else if (stack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(stack.itemID))
             {
                 text = new PortalTexture(stack.itemID, stack.getItemDamage());
+            }
+            else if (stack.itemID == ItemIds.PortalModifierUpgrade + 256 && !hasUpgrade(stack.getItemDamage()))
+            {
+                if (hasUpgrade(2) && stack.getItemDamage() == 3)
+                {
+                    return;
+                }
+                else if (hasUpgrade(3) && stack.getItemDamage() == 2)
+                {
+                    return;
+                }
+                
+                installUpgrade(stack.getItemDamage());
+                setInventorySlotContents(0, null);
+                
+                if (!worldObj.isRemote)
+                {
+                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+                }
+                
+                return;
             }
 
             if (text != null)

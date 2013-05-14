@@ -1,11 +1,13 @@
 package enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.GuiPortalModifierSlot;
+import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Settings;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
@@ -75,6 +77,17 @@ public class ContainerPortalModifier extends Container
                     return null;
                 }
             }
+            else if (stackInSlot.itemID == ItemIds.PortalModifierUpgrade + 256 && !portalModifier.hasUpgrade(stackInSlot.getItemDamage()))
+            {
+                if (portalModifier.hasUpgrade(2) && stackInSlot.getItemDamage() == 3)
+                {
+                    return null;
+                }
+                else if (portalModifier.hasUpgrade(3) && stackInSlot.getItemDamage() == 2)
+                {
+                    return null;
+                }
+            }
             else
             {
                 return null;
@@ -116,6 +129,11 @@ public class ContainerPortalModifier extends Container
             slotObject.onPickupFromSlot(player, stackInSlot);
         }
 
+        if (player instanceof EntityPlayerMP)
+        {
+            ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
+        }
+        
         return stack;
     }
 }

@@ -68,7 +68,7 @@ public class NetworkManager
             return;
         }
 
-        getNetwork(key).add(data);
+        networkData.get(key).add(data);
     }
 
     public List<WorldLocation> getNetwork(String key)
@@ -78,7 +78,20 @@ public class NetworkManager
             return null;
         }
 
-        return networkData.get(key);
+        List<WorldLocation> list = networkData.get(key);
+        List<WorldLocation> newList = new ArrayList<WorldLocation>();
+
+        if (list == null)
+        {
+            return new ArrayList<WorldLocation>();
+        }
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            newList.add(list.get(i));
+        }
+
+        return newList;
     }
 
     public String getNetwork(WorldLocation data)
@@ -96,7 +109,7 @@ public class NetworkManager
 
     public List<WorldLocation> getNetworkExcluding(String network, WorldLocation worldLocation)
     {
-        List<WorldLocation> list = getNetwork(network);
+        List<WorldLocation> list = networkData.get(network);
         List<WorldLocation> newList = new ArrayList<WorldLocation>();
 
         if (list == null)
@@ -241,11 +254,11 @@ public class NetworkManager
             return;
         }
 
-        for (int i = 0; i < getNetwork(key).size(); i++)
+        for (int i = 0; i < networkData.get(key).size(); i++)
         {
-            if (getNetwork(key).get(i).equals(data))
+            if (networkData.get(key).get(i).equals(data))
             {
-                getNetwork(key).remove(i);
+                networkData.get(key).remove(i);
             }
         }
     }
@@ -276,7 +289,7 @@ public class NetworkManager
 
             for (String key : networkData.keySet())
             {
-                List<WorldLocation> items = getNetwork(key);
+                List<WorldLocation> items = networkData.get(key);
 
                 if (items.isEmpty())
                 {
