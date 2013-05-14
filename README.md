@@ -1,17 +1,15 @@
 ##EnhancedPortals 2
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
 
-**Latest Beta**: [1.0 Beta 1](http://goo.gl/6pg5T).
+**Latest Beta**: [1.0 Beta 1b](http://goo.gl/VVjDa).
 
 **Release Notes**:
-* Portal Modifiers and their new Networking system using Glyphs.
-* Overhauled portal systems.
-* Ability to change the texture of the portal modifiers to blocks.(Using a Portal Modifier)
-* Ability to change the thickness of the portal blocks. (Using a Portal Modifier)
-* New upgrades for the Portal Modifier.
-* - Particle Control.Allows you to toggle the particles of the portal.
-* - Sound Control. Allows you to toggle the sound of the portal.
-* - Quartz Upgrade. (Name is a WIP) Allows you to use Nether Quartz (all variations) as a portal frame.
+* Changed Quarts upgrade to Nether Frame Upgrade. Now allows you to use Quartz, Nether Brick and Glowstone.
+* Added Resourceful frame upgrade. Allows you to use Iron, Gold and Diamond blocks.
+* You can now shift-click upgrades into the portal modifier from the GUI.
+* Fixed issue where you could get stuck in the ground or appear on the wrong face of the portal modifier.
+* Attempted fix for the issue where it can't find an exit modifier. Added some debug code that will print extra information if this happens to you, please report it back.
+* Fixed crash when shift-clicking on the top left most 8 inventory slots.
 
 ###Setting up the development environment
 The build scripts are set up in the exact same way as the Equivalent Exchange 3 scripts.
