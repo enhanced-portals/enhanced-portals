@@ -140,8 +140,8 @@ public class TeleportManager
         ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
 
         TileEntityPortalModifier outModifier = (TileEntityPortalModifier) teleportData.getTileEntity();
-        WorldLocation outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifier.getBlockMetadata()));
-
+        int outModifierMeta = world.getBlockMetadata(outModifier.xCoord, outModifier.yCoord, outModifier.zCoord);
+        WorldLocation outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifierMeta));
         boolean teleportEntity = false;
 
         if (outModifierOffset.getBlockId() == 0)
@@ -165,7 +165,7 @@ public class TeleportManager
 
         if (teleportEntity)
         {
-            teleportEntity((WorldServer) world, entity, teleportData, teleportData.getOffset(ForgeDirection.getOrientation(originModifier.getBlockMetadata())), outModifierOffset.getMetadata());
+            teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, outModifierMeta);
         }
 
         return teleportEntity;
@@ -181,7 +181,7 @@ public class TeleportManager
         boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
         float rotationYaw = 0f;
 
-        if (metaDirection == 4 || metaDirection == 5)
+        if (teleportDataOffset.getMetadata() == 4 || teleportDataOffset.getMetadata() == 5)
         {
             if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
             {
@@ -192,7 +192,7 @@ public class TeleportManager
                 rotationYaw = -90F;
             }
         }
-        else if (metaDirection == 2 || metaDirection == 3)
+        else if (teleportDataOffset.getMetadata() == 2 || teleportDataOffset.getMetadata() == 3)
         {
             if (teleportDataOffset.getOffset(ForgeDirection.NORTH).isBlockAir())
             {
@@ -206,6 +206,11 @@ public class TeleportManager
         else
         {
             rotationYaw = entity.rotationYaw;
+        }
+        
+        if (metaDirection == 0)
+        {
+            teleportDataOffset.yCoord -= 1;
         }
 
         Entity mountedEntity = null;
