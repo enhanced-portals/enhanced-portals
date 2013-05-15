@@ -2,6 +2,7 @@
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
 
 **Latest Beta**: [1.0 Beta 1b](http://goo.gl/VVjDa)
+
 **Release Notes**: [Changelog](https://github.com/ShadedDimension/enhanced-portals/blob/development/CHANGELOG.md#beta-1b)
 
 ###Setting up the development environment
