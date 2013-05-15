@@ -1,5 +1,11 @@
 ##EnhancedPortals 2
 
+###Upcoming
+* Decided to test how modular the system currently is.
+ * Added BuildCraft addon, requires BuildCraft Energy.
+  * Allows you to use Oil and Fuel as a portal texture.
+* Networking improvements
+
 ###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.
 * Added language support.
