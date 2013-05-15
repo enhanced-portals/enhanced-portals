@@ -6,6 +6,7 @@
 * You can now right-click on the Portal Modifier with a Flint & Steel to create a portal.
 * You can now right-click on Obsidian Stairs with a Flint & Steel to create a portal.
 * Fixed issue where invalid data would appear in the data files.
+* Added new item: Network Card. Allows you to copy the network in a Portal Modifier and transfer it to another.
 
 ###Beta 1b
 * Changed Quartz upgrade to Nether Frame Upgrade. Now allows you to use Quartz, Nether Brick and Glowstone.
