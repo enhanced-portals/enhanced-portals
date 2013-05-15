@@ -85,7 +85,7 @@ public class ItemNetworkCard extends Item
         }
         else
         {
-            list.add("Network is not set");
+            list.add(Localization.localizeString("gui.networkNotSet"));
         }
     }
     
