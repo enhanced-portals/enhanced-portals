@@ -16,7 +16,7 @@ import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
 import enhancedportals.portal.PortalTexture;
 
-@Mod(modid=Reference.MOD_ID + "_BC", name="EP2 BuildCraft", version=Reference.MOD_VERSION, dependencies="required-after:BuildCraft|Core;required-after:" + Reference.MOD_ID)
+@Mod(modid=Reference.MOD_ID + "_BC", name="EP2 BuildCraft", version=Reference.MOD_VERSION, dependencies="required-after:BuildCraft|Energy;required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_BuildCraft implements IIconRegister
 {    
     Icon fuelTexture;
