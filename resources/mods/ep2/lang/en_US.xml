@@ -3,7 +3,7 @@
 <properties version="1.0">
 	<!-- Contributors: Alz454. Version: 1.0 -->
 	<comment>English (US) Localization File</comment>
-	<entry key="itemGroup.ep2">EnhancedPortals 2</entry>
+	<entry key="itemGroup.EP2">EnhancedPortals 2</entry>
 	<entry key="tile.portalModifier.name">Portal Modifier</entry>
 	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
 	<entry key="tile.dialDevice.name">Dial Device</entry>

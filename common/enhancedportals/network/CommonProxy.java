@@ -14,8 +14,10 @@ import enhancedportals.block.BlockPortalModifier;
 import enhancedportals.item.ItemNetworkCard;
 import enhancedportals.item.ItemPortalModifierUpgrade;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
+import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
@@ -32,6 +34,7 @@ public class CommonProxy
     public ItemNetworkCard networkCard;
 
     public ModifierNetwork ModifierNetwork;
+    public DialDeviceNetwork DialDeviceNetwork;
 
     public World getWorld(int dimension)
     {
@@ -52,7 +55,7 @@ public class CommonProxy
         GameRegistry.registerBlock(blockPortalModifier, Localization.PortalModifier_Name);
         GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
         GameRegistry.registerBlock(blockObsidianStairs, Localization.ObsidianStairs_Name);
-        GameRegistry.registerBlock(blockDummyPortal, "Dummy Portal");
+        GameRegistry.registerBlock(blockDummyPortal, "Fake Portal");
     }
 
     public void loadItems()
@@ -80,6 +83,8 @@ public class CommonProxy
         BlockIds.DialHomeDevice = config.getBlock("DialDevice", BlockIds.DialHomeDevice).getInt();
 
         // Item IDs
+        ItemIds.PortalModifierUpgrade = config.getItem("PortalModifierUpgrade", ItemIds.PortalModifierUpgrade).getInt();
+        ItemIds.NetworkCard = config.getItem("NetworkCard", ItemIds.NetworkCard).getInt();
 
         // Boolean configs
         Settings.AllowDialHomeDevices = config.get("Settings", "AllowDialDevices", Settings.AllowDialHomeDevices).getBoolean(Settings.AllowDialHomeDevices);

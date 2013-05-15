@@ -1,5 +1,7 @@
 package enhancedportals;
 
+import java.io.File;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,6 +33,7 @@ import enhancedportals.network.EventHooks;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.ServerPacketHandler;
 import enhancedportals.portal.PortalTexture;
+import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
@@ -154,7 +157,7 @@ public class EnhancedPortals
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
-        proxy.loadSettings(new Configuration(event.getSuggestedConfigurationFile()));
+        proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         proxy.loadBlocks();
         proxy.loadItems();
         proxy.loadTileEntities();
@@ -167,11 +170,13 @@ public class EnhancedPortals
     private void serverStarting(FMLServerStartingEvent event)
     {
         proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
+        proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
     }
 
     @ServerStopping
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();
+        proxy.DialDeviceNetwork.saveData();
     }
 }

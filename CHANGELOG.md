@@ -1,12 +1,17 @@
 ##EnhancedPortals 2
 
-###Upcoming
+###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.
 * Added language support.
 * You can now right-click on the Portal Modifier with a Flint & Steel to create a portal.
 * You can now right-click on Obsidian Stairs with a Flint & Steel to create a portal.
 * Fixed issue where invalid data would appear in the data files.
 * Added new item: Network Card. Allows you to copy the network in a Portal Modifier and transfer it to another.
+* A few system changes:
+ * Mod ID has been slightly changed.
+ * Configuration file is now 'EnhancedPortals 2.cfg'.
+ * If you're upgrading you will get 'mismatched ID' errors, that's normal.
+* Fixed crashing issue with TMI & NEI.
 
 ###Beta 1b
 * Changed Quartz upgrade to Nether Frame Upgrade. Now allows you to use Quartz, Nether Brick and Glowstone.

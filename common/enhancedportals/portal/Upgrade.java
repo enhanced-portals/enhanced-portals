@@ -93,7 +93,7 @@ public class Upgrade
             theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.textA"));
             theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
             theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
-            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".name"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".default.name"));
         }
         else if (ID == 6)
         {

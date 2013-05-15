@@ -64,7 +64,7 @@ public class ItemPortalModifierUpgrade extends Item
             list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.textA"));
             list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
             list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".default.name"));
         }
         else if (itemStack.getItemDamage() == 6)
         {

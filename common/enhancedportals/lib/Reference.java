@@ -9,15 +9,15 @@ import enhancedportals.creativetab.CreativeTabEP;
 
 public class Reference
 {
-    public static final String MOD_ID = "ep2";
+    public static final String MOD_ID = "EP2";
     public static final String MOD_NAME = "EnhancedPortals 2";
     public static final String MOD_VERSION = "@VERSION@";
 
-    public static final String MOD_ID_CC = "ep2_cc";
+    public static final String MOD_ID_CC = MOD_ID + "_cc";
     public static final String MOD_NAME_CC = "EP2 ComputerCraft";
     public static final String MOD_DEP_CC = "";
 
-    public static final String MOD_ID_WORLD = "ep2_world";
+    public static final String MOD_ID_WORLD = MOD_ID + "_world";
     public static final String MOD_NAME_WORLD = "EP2 World";
     public static final String MOD_DEP_WORLD = "";
 

@@ -12,6 +12,7 @@ public class EventHooks
         if (!event.world.isRemote)
         {
             EnhancedPortals.proxy.ModifierNetwork.saveData();
+            EnhancedPortals.proxy.DialDeviceNetwork.saveData();
         }
     }
 }
