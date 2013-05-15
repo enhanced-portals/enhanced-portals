@@ -32,6 +32,7 @@ public class Settings
     public static int[] LiquidList = new int[] { Block.lavaStill.blockID, Block.lavaMoving.blockID, Block.waterStill.blockID, Block.waterMoving.blockID };
     public static int[] ExcludedBlockList = new int[] { Block.torchWood.blockID, Block.leaves.blockID, Block.sapling.blockID, Block.web.blockID, Block.rail.blockID, Block.railActivator.blockID, Block.railDetector.blockID, Block.railPowered.blockID, Block.deadBush.blockID, Block.mushroomBrown.blockID, Block.mushroomRed.blockID, Block.fire.blockID, Block.redstoneComparatorActive.blockID, Block.redstoneComparatorIdle.blockID, Block.redstoneRepeaterActive.blockID, Block.redstoneRepeaterIdle.blockID, Block.redstoneWire.blockID, Block.crops.blockID, Block.lever.blockID, Block.doorIron.blockID, Block.doorWood.blockID, Block.torchRedstoneActive.blockID, Block.torchRedstoneIdle.blockID, Block.cake.blockID, Block.tripWire.blockID, Block.tripWireSource.blockID, Block.melonStem.blockID, Block.waterlily.blockID, Block.vine.blockID, Block.tallGrass.blockID, Block.skull.blockID, Block.potato.blockID, Block.netherStalk.blockID, Block.plantYellow.blockID, Block.plantRed.blockID };
     public static int[] ValidItemsList = new int[] { Item.bucketLava.itemID, Item.bucketWater.itemID, Item.dyePowder.itemID, Item.snowball.itemID };
+    
     public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();
 
     public static List<Integer> BorderBlocks = new ArrayList<Integer>();

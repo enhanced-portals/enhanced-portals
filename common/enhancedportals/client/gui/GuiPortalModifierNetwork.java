@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.GuiIds;
+import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketNetworkUpdate;
@@ -255,16 +256,14 @@ public class GuiPortalModifierNetwork extends GuiScreen
         int x2 = (width - xSize) / 2;
         int y2 = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);
-
-        String name = "Network Selection"; // TODO LANGUAGE
-        fontRenderer.drawString(name, guiLeft + xSize / 2 - fontRenderer.getStringWidth(name) / 2, guiTop - 15, 0xFFCCCCCC);
+        fontRenderer.drawString(Localization.localizeString("gui.selectNetwork.title"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.selectNetwork.title")) / 2, guiTop - 15, 0xFFCCCCCC);
 
         super.drawScreen(x, y, par3);
 
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        fontRenderer.drawString("Glyphs", guiLeft + 7, guiTop + 3, 0xFF444444);
-        fontRenderer.drawString("Network", guiLeft + 7, guiTop + 71, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("gui.glyphs.title"), guiLeft + 7, guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 7, guiTop + 71, 0xFF444444);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -308,11 +307,11 @@ public class GuiPortalModifierNetwork extends GuiScreen
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-            ((GuiButton) buttonList.get(1)).displayString = "Clear";
+            ((GuiButton) buttonList.get(1)).displayString = Localization.localizeString("gui.clear");
         }
         else
         {
-            ((GuiButton) buttonList.get(1)).displayString = "Random";
+            ((GuiButton) buttonList.get(1)).displayString = Localization.localizeString("gui.random");
         }
     }
 
@@ -387,9 +386,9 @@ public class GuiPortalModifierNetwork extends GuiScreen
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
 
-        buttonList.add(new GuiButton(1, guiLeft + 7, guiTop + 108, 50, 20, "Cancel"));
-        buttonList.add(new GuiButton(2, guiLeft + 63, guiTop + 108, 50, 20, "Random"));
-        buttonList.add(new GuiButton(3, guiLeft + 119, guiTop + 108, 50, 20, "Accept"));
+        buttonList.add(new GuiButton(1, guiLeft + 7, guiTop + 108, 50, 20, Localization.localizeString("gui.cancel")));
+        buttonList.add(new GuiButton(2, guiLeft + 63, guiTop + 108, 50, 20, Localization.localizeString("gui.random")));
+        buttonList.add(new GuiButton(3, guiLeft + 119, guiTop + 108, 50, 20, Localization.localizeString("gui.accept")));
     }
 
     @Override

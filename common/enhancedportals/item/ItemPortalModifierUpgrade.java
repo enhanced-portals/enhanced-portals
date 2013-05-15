@@ -2,6 +2,7 @@ package enhancedportals.item;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,37 +42,37 @@ public class ItemPortalModifierUpgrade extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
     {
-        list.add("Portal Modifier Upgrade");
+        list.add(Localization.localizeString("upgrade.portalModifier"));
 
         if (itemStack.getItemDamage() == 2)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between vanilla dimensions.");
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.portalModifier.dimensional.text"));
         }
         else if (itemStack.getItemDamage() == 3)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between vanilla dimensions.");
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between modded dimensions.");
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows travel between the same dimension.");
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.advancedDimensional.text"));
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.advancedDimensional.textB"));
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.advancedDimensional.textC"));
         }
         else if (itemStack.getItemDamage() == 4)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows interaction with ComputerCraft.");
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.computer.text"));
         }
         else if (itemStack.getItemDamage() == 5)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows you to use the following");
-            list.add(EnumChatFormatting.DARK_GRAY + "blocks for the Portal frame.");
-            list.add(EnumChatFormatting.DARK_AQUA + "Glowstone");
-            list.add(EnumChatFormatting.DARK_AQUA + "Nether Brick");
-            list.add(EnumChatFormatting.DARK_AQUA + "Nether Quartz");
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.text"));
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.textA"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".name"));
         }
         else if (itemStack.getItemDamage() == 6)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "Allows you to use the following");
-            list.add(EnumChatFormatting.DARK_GRAY + "blocks for the Portal frame.");
-            list.add(EnumChatFormatting.DARK_AQUA + "Iron Block");
-            list.add(EnumChatFormatting.DARK_AQUA + "Gold Block");
-            list.add(EnumChatFormatting.DARK_AQUA + "Diamond Block");
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.text"));
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.textA"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockIron.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockGold.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockDiamond.getUnlocalizedName() + ".name"));
         }
     }
 

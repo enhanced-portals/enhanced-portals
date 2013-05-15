@@ -62,7 +62,7 @@ public class GuiGlyphElement
         }
 
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, renderEngine, itemStack, x + xOffset, y + yOffset);
-
+        
         if (itemStack.stackSize >= 1)
         {
             String s1 = String.valueOf(stackSize);

@@ -29,7 +29,7 @@ public class BlockEnhancedPortals extends BlockContainer
     @Override
     public String getLocalizedName()
     {
-        return Localization.getLocalizedString(getUnlocalizedName() + ".name");
+        return Localization.localizeString(getUnlocalizedName() + ".name");
     }
 
     private ForgeDirection getNextRotation(World worldObj, int x, int y, int z)

@@ -11,7 +11,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,6 +18,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
+import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTEUpdate;
@@ -44,14 +44,14 @@ public class GuiPortalModifier extends GuiContainer
         elementList = new ArrayList<GuiItemStackButton>();
 
         List<String> strList = new ArrayList<String>();
-        strList.add("Redstone Control");
-        strList.add(EnumChatFormatting.GRAY + "Normal");
+        strList.add(Localization.localizeString("gui.redstoneControl.title"));
+        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.normal"));
         elementList.add(new GuiItemStackButton(xSize + 4, 4, new ItemStack(Block.torchRedstoneActive), strList, "redstoneHigh", this));
         elementList.get(0).active = portalModifier.redstoneSetting == 0;
 
         strList = new ArrayList<String>();
-        strList.add("Redstone Control");
-        strList.add(EnumChatFormatting.GRAY + "Inverted");
+        strList.add(Localization.localizeString("gui.redstoneControl.title"));
+        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
         elementList.add(new GuiItemStackButton(xSize + 4, 24, new ItemStack(Block.torchRedstoneIdle), strList, "redstoneLow", this));
         elementList.get(1).active = portalModifier.redstoneSetting == 1;
     }
@@ -114,12 +114,10 @@ public class GuiPortalModifier extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        String pModifier = "Portal Modifier"; // TODO LANGUAGE
-
-        fontRenderer.drawString(pModifier, xSize / 2 - fontRenderer.getStringWidth(pModifier) / 2, -15, 0xFFFFFF);
-        fontRenderer.drawString("Upgrades", 8, 3, 0xFF444444);
-        fontRenderer.drawString("Modifications", xSize - 8 - fontRenderer.getStringWidth("Modifications"), 3, 0xFF444444);
-        fontRenderer.drawString("Network", 8, 35, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("tile.portalModifier.name"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.portalModifier.name")) / 2, -15, 0xFFFFFF);
+        fontRenderer.drawString(Localization.localizeString("gui.upgrades.title"), 8, 3, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("gui.modifications.title"), xSize - 8 - fontRenderer.getStringWidth(Localization.localizeString("gui.modifications.title")), 3, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("gui.network.title"), 8, 35, 0xFF444444);
     }
 
     @Override
@@ -146,8 +144,7 @@ public class GuiPortalModifier extends GuiContainer
             }
             else
             {
-                String str = "Click here to set a network";
-                fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
+                fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
             }
 
             for (int i = 0; i < elementList.size(); i++)
@@ -159,44 +156,44 @@ public class GuiPortalModifier extends GuiContainer
 
             if (isPointInRegion(134, 15, 16, 16, x, y))
             {
-                String thickness = "Unknown";
+                String thickness = "";
 
                 switch (portalModifier.thickness)
                 // TODO LANGUAGE
                 {
                     case 0:
-                        thickness = "Normal";
+                        thickness = Localization.localizeString("gui.thickness.normal");
                         break;
 
                     case 1:
-                        thickness = "Thick";
+                        thickness = Localization.localizeString("gui.thickness.thick");
                         break;
 
                     case 2:
-                        thickness = "Thicker";
+                        thickness = Localization.localizeString("gui.thickness.thicker");
                         break;
 
                     case 3:
-                        thickness = "Full Block";
+                        thickness = Localization.localizeString("gui.thickness.fullblock");
                         break;
                 }
 
                 List<String> list = new ArrayList<String>();
-                list.add("Thickness");
+                list.add(Localization.localizeString("gui.thickness.title"));
                 list.add(EnumChatFormatting.GRAY + thickness);
-                drawHoveringText(list, x, y, fontRenderer);
+                drawText(list, x, y);
             }
             else if (isPointInRegion(152, 15, 16, 16, x, y))
             {
-                String txt = "Unknown";
+                String txt = "";
 
-                if (portalModifier.texture.blockID == -1) // TODO BETTER LANGUAGE
+                if (portalModifier.texture.blockID == -1)
                 {
-                    txt = StatCollector.translateToLocal("item.fireworksCharge." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour.ordinal())]) + " Portal";
+                    txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour.ordinal())]);
                 }
                 else
                 {
-                    txt = Block.blocksList[portalModifier.texture.blockID].getLocalizedName();
+                    txt = Localization.localizeString(Block.blocksList[portalModifier.texture.blockID].getUnlocalizedName() + ".name");
 
                     if (portalModifier.texture.blockID == 9 || portalModifier.texture.blockID == 11)
                     {
@@ -209,22 +206,21 @@ public class GuiPortalModifier extends GuiContainer
                 }
 
                 List<String> list = new ArrayList<String>();
-                list.add("Facade");
+                list.add(Localization.localizeString("gui.facade.title"));
                 list.add(EnumChatFormatting.GRAY + txt);
-                drawHoveringText(list, x, y, fontRenderer);
+                drawText(list, x, y);
             }
             else if (isPointInRegion(7, 46, 162, 18, x, y))
             {
                 List<String> str = new ArrayList<String>();
-                str.add("Network");
-                str.add(EnumChatFormatting.GRAY + "Click to change the network");
-                drawHoveringText(str, x, y, fontRenderer);
-
+                str.add(Localization.localizeString("gui.network.title"));
+                str.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.network.info"));
+                drawText(str, x, y);
             }
         }
         else
         {
-            String txt = "You cannot change any settings while the Portal Modifier is active."; // TODO LANGUAGE
+            String txt = Localization.localizeString("gui.activeModifier"); // TODO LANGUAGE
 
             drawDefaultBackground();
             fontRenderer.drawString(txt, width / 2 - fontRenderer.getStringWidth(txt) / 2, guiTop, 0xFFFFFF);
@@ -234,7 +230,7 @@ public class GuiPortalModifier extends GuiContainer
 
     public void drawText(List<String> list, int x2, int y2)
     {
-        drawHoveringText(list, x2, y2, fontRenderer);
+        super.drawHoveringText(list, x2, y2, fontRenderer);
     }
 
     public void drawTexturedRect(int par1, int par2, int par3, int par4, int par5, int par6)

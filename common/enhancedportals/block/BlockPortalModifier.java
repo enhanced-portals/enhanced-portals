@@ -3,6 +3,7 @@ package enhancedportals.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -87,6 +88,17 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == ItemIds.PortalModifierUpgrade + 256)
             {
                 return false;
+            }
+            else if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == Item.flintAndSteel.itemID)
+            {
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+                
+                if (modifier.createPortal())
+                {
+                    player.inventory.getCurrentItem().damageItem(1, player);
+                }
+                
+                return true;
             }
 
             player.openGui(EnhancedPortals.instance, GuiIds.PortalModifier, world, x, y, z);

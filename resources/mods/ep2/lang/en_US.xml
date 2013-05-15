@@ -3,6 +3,7 @@
 <properties version="1.0">
 	<!-- Contributors: Alz454. Version: 1.0 -->
 	<comment>English (US) Localization File</comment>
+	<entry key="itemGroup.ep2">EnhancedPortals 2</entry>
 	<entry key="tile.portalModifier.name">Portal Modifier</entry>
 	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
 	<entry key="tile.dialDevice.name">Dial Device</entry>
@@ -12,6 +13,44 @@
 	<entry key="item.portalModifierUpgrade.advancedDimension.name">Advanced Dimensional Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.computer.name">Technological Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.nether.name">Nether Frame Upgrade</entry>
-	<entry key="item.portalModifierUpgrade.overworld.name">Resourceful Frame Upgrade</entry>
-	<entry key="itemGroup.ep2">EnhancedPortals 2</entry>
+	<entry key="item.portalModifierUpgrade.overworld.name">Resourceful Frame Upgrade</entry>	
+	<entry key="gui.random">Random</entry>
+	<entry key="gui.clear">Clear</entry>
+	<entry key="gui.accept">Accept</entry>
+	<entry key="gui.portalColour.black">Black Portal</entry>
+	<entry key="gui.portalColour.red">Red Portal</entry>
+	<entry key="gui.portalColour.green">Green Portal</entry>
+	<entry key="gui.portalColour.brown">Brown Portal</entry>
+	<entry key="gui.portalColour.blue">Blue Portal</entry>
+	<entry key="gui.portalColour.purple">Purple Portal</entry>
+	<entry key="gui.portalColour.cyan">Cyan Portal</entry>
+	<entry key="gui.portalColour.silver">Light Gray Portal</entry>
+	<entry key="gui.portalColour.gray">Gray Portal</entry>
+	<entry key="gui.portalColour.pink">Pink Portal</entry>
+	<entry key="gui.portalColour.lime">Lime Portal</entry>
+	<entry key="gui.portalColour.yellow">Yellow Portal</entry>
+	<entry key="gui.portalColour.lightBlue">Light Blue Portal</entry>
+	<entry key="gui.portalColour.magenta">Magenta Portal</entry>
+	<entry key="gui.portalColour.orange">Orange Portal</entry>
+	<entry key="gui.portalColour.white">White Portal</entry>
+	<entry key="gui.facade.title">Facade</entry>
+	<entry key="gui.upgrades.title">Upgrades</entry>
+	<entry key="gui.modifications.title">Modifications</entry>
+	<entry key="gui.network.title">Network</entry>
+	<entry key="gui.network.info">Click to set a network</entry>
+	<entry key="gui.thickness.title">Thickness</entry>
+	<entry key="gui.thickness.normal">Normal</entry>
+	<entry key="gui.thickness.thick">Thick</entry>
+	<entry key="gui.thickness.thicker">Thicker</entry>
+	<entry key="gui.thickness.fullblock">Full Block</entry>
+	<entry key="gui.glyphs.title">Glyphs</entry>
+	<entry key="gui.selectNetwork.title">Network Selection</entry>
+	<entry key="gui.redstoneControl.title">Redstone Control</entry>
+	<entry key="gui.redstoneControl.normal">Normal</entry>
+	<entry key="gui.redstoneControl.inverted">Inverted</entry>
+	<entry key="upgrade.remove">Shift-Right Click to Remove</entry>
+	<entry key="upgrade.particles.active">Creating particles</entry>
+	<entry key="upgrade.particles.inactive">Not creating particles</entry>
+	<entry key="upgrade.sounds.active">Playing sounds</entry>
+	<entry key="upgrade.sounds.inactive">Not playing sounds</entry>
 </properties>

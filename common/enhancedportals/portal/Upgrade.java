@@ -87,48 +87,48 @@ public class Upgrade
     public List<String> getHoverText(int ID)
     {
         List<String> theList = new ArrayList<String>();
-        theList.add(EnumChatFormatting.AQUA + Localization.getLocalizedString("item." + Localization.PortalModifierUpgrade_Name + "." + ItemPortalModifierUpgrade.names[ID] + ".name"));
+        theList.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + ItemPortalModifierUpgrade.names[ID] + ".name"));
 
         if (ID == 0)
         {
-            theList.add(EnumChatFormatting.GRAY + (modifier.getParticles() ? "Creating particles" : "Not creating particles"));
+            theList.add(EnumChatFormatting.GRAY + (modifier.getParticles() ? Localization.localizeString("upgrade.particles.active") : Localization.localizeString("upgrade.particles.inactive")));
         }
         else if (ID == 1)
         {
-            theList.add(EnumChatFormatting.GRAY + (modifier.getSounds() ? "Playing sounds" : "Not playing sounds"));
+            theList.add(EnumChatFormatting.GRAY + (modifier.getSounds() ? Localization.localizeString("upgrade.sounds.active") : Localization.localizeString("upgrade.sounds.inactive")));
         }
         else if (ID == 2)
         {
-            theList.add(EnumChatFormatting.GRAY + "Allows travel between vanilla dimensions.");
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.portalModifier.dimensional.text"));
         }
         else if (ID == 3)
         {
-            theList.add(EnumChatFormatting.GRAY + "Allows travel between vanilla dimensions.");
-            theList.add(EnumChatFormatting.GRAY + "Allows travel between modded dimensions.");
-            theList.add(EnumChatFormatting.GRAY + "Allows travel between the same dimension.");
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.advancedDimensional.text"));
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.advancedDimensional.textB"));
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.advancedDimensional.textC"));
         }
         else if (ID == 4)
         {
-            theList.add(EnumChatFormatting.GRAY + "Allows interaction with ComputerCraft.");
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.computer.text"));
         }
         else if (ID == 5)
         {
-            theList.add(EnumChatFormatting.GRAY + "Allows you to use the following");
-            theList.add(EnumChatFormatting.GRAY + "blocks for the Portal frame.");
-            theList.add(EnumChatFormatting.DARK_AQUA + "Glowstone");
-            theList.add(EnumChatFormatting.DARK_AQUA + "Nether Brick");
-            theList.add(EnumChatFormatting.DARK_AQUA + "Nether Quartz");
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.text"));
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.textA"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".name"));
         }
         else if (ID == 6)
         {
-            theList.add(EnumChatFormatting.GRAY + "Allows you to use the following");
-            theList.add(EnumChatFormatting.GRAY + "blocks for the Portal frame.");
-            theList.add(EnumChatFormatting.DARK_AQUA + "Iron Block");
-            theList.add(EnumChatFormatting.DARK_AQUA + "Gold Block");
-            theList.add(EnumChatFormatting.DARK_AQUA + "Diamond Block");
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.text"));
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.textA"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockIron.getUnlocalizedName() + ".name"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockGold.getUnlocalizedName() + ".name"));
+            theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockDiamond.getUnlocalizedName() + ".name"));
         }
 
-        theList.add(EnumChatFormatting.DARK_GRAY + "Shift-Right Click to Remove");
+        theList.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.remove"));
 
         return theList;
     }

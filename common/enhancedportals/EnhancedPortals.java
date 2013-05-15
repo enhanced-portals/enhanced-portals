@@ -131,7 +131,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.gunpowder));
         Reference.glyphItems.add(new ItemStack(Item.pocketSundial));
         Reference.glyphItems.add(new ItemStack(Item.writableBook));
-        Reference.glyphItems.add(new ItemStack(Item.potion));
+        Reference.glyphItems.add(new ItemStack(Item.potion, 1, 5));
         Reference.glyphItems.add(new ItemStack(Item.cake));
 
         Reference.glyphValues.add("eyeOfEnder");

@@ -289,6 +289,11 @@ public class NetworkManager
 
             for (String key : networkData.keySet())
             {
+                if (key.equals(""))
+                {
+                    continue;
+                }
+                
                 List<WorldLocation> items = networkData.get(key);
 
                 if (items.isEmpty())

@@ -1,7 +1,13 @@
 ##EnhancedPortals 2
 
-###Beta 1b
+###Upcoming
+* Fixed potion Glyph - now is Potion of Healing.
+* Added language support.
+* You can now right-click on the Portal Modifier with a Flint & Steel to create a portal.
+* You can now right-click on Obsidian Stairs with a Flint & Steel to create a portal.
+* Fixed issue where invalid data would appear in the data files.
 
+###Beta 1b
 * Changed Quartz upgrade to Nether Frame Upgrade. Now allows you to use Quartz, Nether Brick and Glowstone.
 * Added Resourceful frame upgrade. Allows you to use Iron, Gold and Diamond blocks.
 * You can now shift-click upgrades into the portal modifier from the GUI.
@@ -10,7 +16,6 @@
 * Fixed crash when shift-clicking on the top left most 8 inventory slots.
 
 ###Beta 1a
-
 * Portal Modifiers and their new Networking system using Glyphs.
 * Overhauled portal systems.
 * Ability to change the texture of the portal modifiers to blocks.(Using a Portal Modifier)

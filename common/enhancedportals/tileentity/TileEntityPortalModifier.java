@@ -473,4 +473,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             tagCompound.setBoolean("Upgrade" + i, upgrades[i]);
         }
     }
+
+    public boolean createPortal()
+    {
+        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+    }
 }
