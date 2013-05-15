@@ -23,6 +23,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import enhancedportals.command.CommandEP;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
@@ -72,7 +73,7 @@ public class EnhancedPortals
                 j = 0;
             }
 
-            Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture(j));
+            Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture((byte) j));
         }
 
         // Add blocks to border list
@@ -93,7 +94,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.lightStoneDust));
         Reference.glyphItems.add(new ItemStack(Item.netherQuartz));
         Reference.glyphItems.add(new ItemStack(Item.bucketLava));
-        Reference.glyphItems.add(new ItemStack(Item.dyePowder, 1, PortalTexture.Colour.BLUE.ordinal()));
+        Reference.glyphItems.add(new ItemStack(Item.dyePowder, 1, 4));
 
         Reference.glyphValues.add("diamond");
         Reference.glyphValues.add("emerald");
@@ -169,6 +170,8 @@ public class EnhancedPortals
     @ServerStarting
     private void serverStarting(FMLServerStartingEvent event)
     {
+        event.registerServerCommand(new CommandEP());
+        
         proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
         proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
     }

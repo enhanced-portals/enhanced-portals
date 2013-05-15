@@ -63,7 +63,7 @@ public class Portal
             }
             else
             {
-                portalTexture = new PortalTexture(0);
+                portalTexture = new PortalTexture((byte) 0);
                 producesParticles = true;
                 producesSound = true;
                 portalThickness = 0;
@@ -71,7 +71,7 @@ public class Portal
         }
         else
         {
-            portalTexture = new PortalTexture(0);
+            portalTexture = new PortalTexture((byte) 0);
             producesParticles = true;
             producesSound = true;
             portalThickness = 0;
@@ -428,7 +428,7 @@ public class Portal
 
             if (item.itemID == Item.dyePowder.itemID)
             {
-                if (updateTexture(new PortalTexture(PortalTexture.swapColours(item.getItemDamage()))) && !player.capabilities.isCreativeMode)
+                if (updateTexture(new PortalTexture((byte) PortalTexture.swapColours(item.getItemDamage()))) && !player.capabilities.isCreativeMode)
                 {
                     item.stackSize--;
                 }

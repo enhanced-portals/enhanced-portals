@@ -31,7 +31,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
     public TileEntityPortalModifier()
     {
-        texture = new PortalTexture(0);
+        texture = new PortalTexture((byte) 0);
         thickness = 0;
         redstoneSetting = 0;
         network = "";
@@ -123,9 +123,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting, upgrades[0] == true ? 1 : 0, upgrades[1] == true ? 1 : 0, upgrades[2] == true ? 1 : 0, upgrades[3] == true ? 1 : 0, upgrades[4] == true ? 1 : 0, upgrades[5] == true ? 1 : 0, upgrades[6] == true ? 1 : 0 };
-        data.stringData = new String[] { network };
+        data.integerData = new int[] { texture.colour, texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting};
+        data.stringData = new String[] { texture.liquidID, network };
 
+        byte[] byteData = new byte[upgrades.length];
+        for (int i = 0; i < upgrades.length; i++)
+        {
+            byteData[i] = (byte)(upgrades[i] ? 1 : 0);
+        }        
+        data.byteData = byteData;
+        
         return data;
     }
 
@@ -277,13 +284,14 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             ItemStack stack = getStackInSlot(0);
             PortalTexture text = null;
 
-            if (Settings.isValidItem(stack.itemID))
+            if (PortalTexture.getPortalTexture(stack) != null)
             {
-                text = Settings.getPortalTextureFromItem(stack, texture);
-            }
-            else if (stack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(stack.itemID))
-            {
-                text = new PortalTexture(stack.itemID, stack.getItemDamage());
+                text = PortalTexture.getPortalTexture(stack);
+                
+                if (text.isEqualTo(texture))
+                {
+                    text = PortalTexture.getPortalTexture(stack, texture);
+                }
             }
             else if (stack.itemID == ItemIds.PortalModifierUpgrade + 256 && !hasUpgrade(stack.getItemDamage()))
             {
@@ -331,9 +339,9 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 14 || data.stringData.length != 1)
+        if (data == null || data.integerData == null || data.integerData.length != 7 || data.byteData.length != upgrades.length || data.stringData.length != 2)
         {
-            System.out.println("Unexpected packet recieved. " + data);
+            System.out.println("Unexpected packet recieved. " + data.integerData.length + " " + data.byteData.length + " " + data.stringData.length);
             return;
         }
 
@@ -343,11 +351,15 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         if (data.integerData[0] != -1)
         {
-            newTexture = new PortalTexture(data.integerData[0]);
+            newTexture = new PortalTexture((byte) data.integerData[0]);
+        }
+        else if (data.integerData[1] != -1)
+        {
+            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
         }
         else
         {
-            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
+            newTexture = new PortalTexture(data.stringData[0]);
         }
 
         sound = data.integerData[3] == 1;
@@ -355,12 +367,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         portalThickness = (byte) data.integerData[5];
         updateTexture(newTexture);
         updateData(sound, particles, portalThickness);
-        redstoneSetting = (byte) data.integerData[6];
-        network = data.stringData[0];
+        redstoneSetting = (byte) data.integerData[6];        
+        network = data.stringData[1];
 
         for (int i = 0; i < upgrades.length; i++)
         {
-            upgrades[i] = data.integerData[7 + i] == 1;
+            upgrades[i] = data.byteData[i] == 1;
         }
     }
 
@@ -369,15 +381,21 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     {
         super.readFromNBT(tagCompound);
 
-        int colour = tagCompound.getInteger("Colour"), blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
-
+        byte colour = tagCompound.getByte("Colour");
+        int blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
+        String liquid = tagCompound.getString("LiquidID");
+        
         if (colour != -1)
         {
             texture = new PortalTexture(colour);
         }
-        else
+        else if (blockID != -1)
         {
             texture = new PortalTexture(blockID, metadata);
+        }
+        else
+        {
+            texture = new PortalTexture(liquid);
         }
 
         thickness = tagCompound.getByte("Thickness");
@@ -463,9 +481,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     {
         super.writeToNBT(tagCompound);
 
-        tagCompound.setInteger("Colour", texture.colour == null ? -1 : texture.colour.ordinal());
+        tagCompound.setByte("Colour", texture.colour);
         tagCompound.setInteger("BlockID", texture.blockID);
         tagCompound.setInteger("Metadata", texture.metaData);
+        tagCompound.setString("LiquidID", texture.liquidID);
         tagCompound.setByte("Thickness", thickness);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
         tagCompound.setString("Frequency", network);

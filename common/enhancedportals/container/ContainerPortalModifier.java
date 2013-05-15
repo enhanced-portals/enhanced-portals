@@ -8,7 +8,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.GuiPortalModifierSlot;
 import enhancedportals.lib.ItemIds;
-import enhancedportals.lib.Settings;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -62,19 +61,22 @@ public class ContainerPortalModifier extends Container
         {
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
-
-            if (Settings.isValidItem(stackInSlot.itemID))
-            {
-                if (Settings.getPortalTextureFromItem(stackInSlot, portalModifier.texture).isEqualTo(portalModifier.texture))
+            PortalTexture tempText = PortalTexture.getPortalTexture(stackInSlot);
+            
+            if (tempText != null)
+            {                
+                if (tempText.isEqualTo(portalModifier.texture))
                 {
-                    return null;
-                }
-            }
-            else if (stackInSlot.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(stackInSlot.itemID))
-            {
-                if (new PortalTexture(stackInSlot.itemID, stackInSlot.getItemDamage()).isEqualTo(portalModifier.texture))
-                {
-                    return null;
+                    tempText = PortalTexture.getPortalTexture(stackInSlot, portalModifier.texture);
+                    
+                    if (tempText != null && tempText.isEqualTo(portalModifier.texture))
+                    {
+                        return null;
+                    }
+                    else if (tempText == null)
+                    {
+                        return null;
+                    }
                 }
             }
             else if (stackInSlot.itemID == ItemIds.PortalModifierUpgrade + 256 && !portalModifier.hasUpgrade(stackInSlot.getItemDamage()))

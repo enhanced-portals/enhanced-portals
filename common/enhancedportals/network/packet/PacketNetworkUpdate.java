@@ -25,7 +25,7 @@ public class PacketNetworkUpdate extends PacketTEUpdate
         yCoord = tileEntity.yCoord;
         zCoord = tileEntity.zCoord;
         dimension = tileEntity.worldObj.provider.dimensionId;
-        packetData = new PacketData(new int[] {}, new String[] { tileEntity.network });
+        packetData = new PacketData(new int[] {}, new byte[] {}, new String[] { tileEntity.network });
         isChunkPacket = true;
     }
 

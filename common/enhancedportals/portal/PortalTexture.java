@@ -1,53 +1,20 @@
 package enhancedportals.portal;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import enhancedportals.lib.Reference;
+import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.liquids.LiquidStack;
+import enhancedportals.lib.Settings;
+import enhancedportals.lib.Textures;
 
 public class PortalTexture
 {
-    public enum Colour
-    {
-        PURPLE, RED, GREEN, BROWN, BLUE, BLACK, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE;
-
-        public static Colour getColour(int id)
-        {
-            if (id < 0 || id > 15)
-            {
-                return Colour.PURPLE;
-            }
-
-            return values()[id];
-        }
-    }
-
-    public enum Type
-    {
-        COLOUR, BLOCK, UNKNOWN;
-    }
-
-    public static void registerTextures(IconRegister iconRegister)
-    {
-        TEXTURE_ICONS = new Icon[Colour.values().length];
-        PORTAL_MODIFIER_ICONS = new Icon[Colour.values().length];
-
-        for (int i = 0; i < 16; i++)
-        {
-            TEXTURE_ICONS[i] = iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i);
-            PORTAL_MODIFIER_ICONS[i] = iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i);
-        }
-    }
-
     public int blockID = -1, metaData = -1;
-    public Colour colour;
-
-    public Type type;
-    private static int[] PARTICLE_COLOURS = { 1973019, 11743532, 3887386, 5320730, 2437522, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522, 15435844, 2437522, 0 };
-    private static Icon[] TEXTURE_ICONS = new Icon[Colour.values().length];
-
-    private static Icon[] PORTAL_MODIFIER_ICONS = new Icon[Colour.values().length];
-
+    public byte colour = -1;
+    public String liquidID = "NULL";
+    
     public static int swapColours(int integer)
     {
         if (integer == 0)
@@ -62,37 +29,129 @@ public class PortalTexture
         return integer;
     }
 
-    public PortalTexture(Colour color)
+    public static PortalTexture getPortalTexture(Object... arguments)
     {
-        blockID = -1;
-        metaData = -1;
-        colour = color;
-        type = Type.COLOUR;
+        PortalTexture texture = new PortalTexture();
+        
+        if (arguments.length == 1)
+        {
+            if (arguments[0] instanceof Byte) // Colour ID
+            {
+                byte par1 = (byte) arguments[0];
+                
+                if (par1 >= 0 && par1 <= 15)
+                {
+                    texture.colour = par1;
+                    return texture;
+                }
+            }
+            else if (arguments[0] instanceof String) // Liquid ID
+            {
+                texture.liquidID = (String) arguments[0];
+                return texture;
+            }
+            else if (arguments[0] instanceof ItemStack) // ItemStack
+            {
+                ItemStack stack = (ItemStack) arguments[0];
+                
+                if (stack.getItemName().startsWith("tile.")) // Block
+                {
+                    return getPortalTexture(stack.itemID, stack.getItemDamage());
+                }
+                else if (stack.itemID == Item.dyePowder.itemID) // Colour
+                {
+                    return getPortalTexture((byte) stack.getItemDamage());
+                }
+                else if (LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, stack.getItemDamage())) != null) // Liquid
+                {
+                    return getPortalTexture(LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, stack.getItemDamage())));
+                }
+                else if (Settings.isValidItem(stack.itemID)) // Item Map
+                {
+                    if (Settings.ItemPortalTextureMap.containsKey(stack.itemID + ":" + stack.getItemDamage()))
+                    {                        
+                        return Settings.ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage());
+                    }
+                }
+            }
+        }
+        else if (arguments.length == 2)
+        {
+            if (arguments[0] instanceof Integer && arguments[1] instanceof Integer) // Block ID & Metadata
+            {
+                int par1 = (int) arguments[0], par2 = (int) arguments[1];
+                
+                if (Settings.isBlockExcluded(par1))
+                {
+                    return null;
+                }
+                
+                texture.blockID = par1;
+                texture.metaData = par2;
+                return texture;
+            }
+            else if (arguments[0] instanceof ItemStack && arguments[1] instanceof PortalTexture)
+            {
+                ItemStack stack = (ItemStack) arguments[0];
+                PortalTexture secondTexture = (PortalTexture) arguments[1];
+                
+                if (Settings.isValidItem(stack.itemID)) // Item Map
+                {
+                    PortalTexture text = Settings.ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage());
+                    
+                    if (text.isEqualTo(secondTexture))
+                    {
+                        PortalTexture text2 = Settings.ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage() + "_");
+                        
+                        if (text2 != null)
+                        {
+                            return text2;
+                        }
+                        else
+                        {
+                            return text;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
-
-    public PortalTexture(int colourID)
+    
+    public PortalTexture()
     {
-        blockID = -1;
-        metaData = -1;
-        colour = Colour.getColour(colourID);
-        type = Type.COLOUR;
+        
     }
-
-    public PortalTexture(int blockID, int meta)
+    
+    public PortalTexture(byte colour)
     {
-        colour = null;
-        type = Type.BLOCK;
-        this.blockID = blockID;
+        this.colour = colour;
+    }
+    
+    public PortalTexture(int id, int meta)
+    {
+        blockID = id;
         metaData = meta;
     }
+    
+    public PortalTexture(String str)
+    {
+        liquidID = str;
+    }
 
+    public byte getType()
+    {
+        return (byte) (colour != -1 ? 0 : (blockID != -1 ? 1 : 2));
+    }
+    
     public Icon getIcon(int side)
     {
-        if (type == Type.COLOUR)
-        {
-            return TEXTURE_ICONS[colour.ordinal()];
+        if (getType() == 0) // Colours
+        {            
+            return Textures.TEXTURE_ICONS[colour];
         }
-        else if (type == Type.BLOCK)
+        else if (getType() == 1) // Blocks
         {
             if (blockID == 9 || blockID == 11) // We want to display the still versions of these.
             {
@@ -105,70 +164,85 @@ public class PortalTexture
 
             return Block.blocksList[blockID].getIcon(side, metaData);
         }
+        else if (getType() == 2) // Liquid
+        {            
+            return LiquidDictionary.getLiquid(liquidID, 1).getRenderingIcon();
+        }
 
         return null;
     }
 
     public Icon getModifierIcon()
     {
-        if (type == Type.COLOUR)
-        {
-            return PORTAL_MODIFIER_ICONS[colour.ordinal()];
+        if (getType() == 0) // Colours
+        {            
+            return Textures.PORTAL_MODIFIER_ICONS[colour];
         }
-        else if (type == Type.BLOCK)
+        else if (getType() == 1) // Blocks
         {
             if (blockID == 8 || blockID == 9)
             {
-                return PORTAL_MODIFIER_ICONS[Colour.BLUE.ordinal()];
+                return Textures.PORTAL_MODIFIER_ICONS[4];
             }
             else if (blockID == 10 || blockID == 11)
             {
-                return PORTAL_MODIFIER_ICONS[Colour.ORANGE.ordinal()];
+                return Textures.PORTAL_MODIFIER_ICONS[14];
             }
-
-            return PORTAL_MODIFIER_ICONS[5];
+        }
+        else if (getType() == 2) // Liquids
+        {
+            
         }
 
-        return null;
+        return Textures.PORTAL_MODIFIER_ICONS[5];
     }
 
     public int getParticleColour()
     {
-        if (type == Type.COLOUR)
+        if (getType() == 0) // Colours
         {
-            return PARTICLE_COLOURS[swapColours(colour.ordinal())];
+            return Textures.PARTICLE_COLOURS[swapColours(colour)];
         }
-        else if (type == Type.BLOCK)
+        else if (getType() == 1) // Blocks
         {
             if (blockID == 8 || blockID == 9)
             {
-                return PARTICLE_COLOURS[Colour.BLUE.ordinal()];
+                return Textures.PARTICLE_COLOURS[4];
             }
             else if (blockID == 10 || blockID == 11)
             {
-                return PARTICLE_COLOURS[Colour.ORANGE.ordinal()];
+                return Textures.PARTICLE_COLOURS[14];
             }
-
-            return PARTICLE_COLOURS[5];
+        }
+        else if (getType() == 2) // Liquids
+        {
+            
         }
 
-        return 0;
+        return Textures.PARTICLE_COLOURS[5];
     }
 
     public boolean isEqualTo(PortalTexture texture)
     {
-        if (type.ordinal() == texture.type.ordinal())
+        if (getType() == texture.getType())
         {
-            if (type == Type.BLOCK)
+            if (getType() == 0)
+            {
+                if (colour == texture.colour)
+                {
+                    return true;
+                }
+            }
+            else if (getType() == 1)
             {
                 if (blockID == texture.blockID && metaData == texture.metaData)
                 {
                     return true;
                 }
             }
-            else if (type == Type.COLOUR)
+            else if (getType() == 2)
             {
-                if (colour.ordinal() == texture.colour.ordinal())
+                if (liquidID.equals(texture.liquidID))
                 {
                     return true;
                 }

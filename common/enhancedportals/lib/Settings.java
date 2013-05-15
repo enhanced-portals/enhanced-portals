@@ -7,7 +7,6 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import enhancedportals.portal.PortalTexture;
 
@@ -38,28 +37,6 @@ public class Settings
     public static List<Integer> BorderBlocks = new ArrayList<Integer>();
     public static List<Integer> DestroyBlocks = new ArrayList<Integer>();
 
-    public static PortalTexture getPortalTextureFromItem(ItemStack stack, PortalTexture texture)
-    {
-        PortalTexture text = null;
-        text = ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage());
-
-        if (texture.isEqualTo(text))
-        {
-            PortalTexture secondTexture = ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage() + "_");
-
-            if (secondTexture != null)
-            {
-                return secondTexture;
-            }
-            else
-            {
-                return text;
-            }
-        }
-
-        return text;
-    }
-
     public static boolean isBlockExcluded(int id)
     {
         for (int i : ExcludedBlockList)
@@ -75,7 +52,7 @@ public class Settings
 
     public static boolean isLiquid(PortalTexture text)
     {
-        if (text.colour != null)
+        if (text.colour != -1)
         {
             return false;
         }

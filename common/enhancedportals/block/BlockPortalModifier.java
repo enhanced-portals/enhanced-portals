@@ -71,7 +71,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return side == 1 ? new PortalTexture(0).getModifierIcon() : texture;
+        return side == 1 ? new PortalTexture((byte) 0).getModifierIcon() : texture;
     }
 
     @Override

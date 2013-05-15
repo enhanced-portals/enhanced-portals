@@ -103,9 +103,9 @@ public class GuiPortalModifier extends GuiContainer
         {
             itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
         }
-        else if (portalModifier.texture.colour != null)
+        else if (portalModifier.texture.colour != -1)
         {
-            itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour.ordinal());
+            itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour);
         }
 
         if (itemstack != null)
@@ -191,7 +191,7 @@ public class GuiPortalModifier extends GuiContainer
 
                 if (portalModifier.texture.blockID == -1)
                 {
-                    txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour.ordinal())]);
+                    txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour)]);
                 }
                 else
                 {

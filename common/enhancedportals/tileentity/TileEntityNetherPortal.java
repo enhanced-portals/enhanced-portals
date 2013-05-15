@@ -18,7 +18,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 
     public TileEntityNetherPortal()
     {
-        texture = new PortalTexture(0);
+        texture = new PortalTexture((byte) 0);
         producesSound = true;
         producesParticles = true;
         thickness = 0;
@@ -29,15 +29,16 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour == null ? -1 : texture.colour.ordinal(), texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
-
+        data.integerData = new int[] { texture.colour, texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
+        data.stringData = new String[] { texture.liquidID };
+        
         return data;
     }
 
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 7)
+        if (data == null || data.integerData == null || data.integerData.length != 7 || data.stringData.length != 1)
         {
             System.out.println("Unexpected packet recieved." + data);
             return;
@@ -49,11 +50,15 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 
         if (data.integerData[0] != -1)
         {
-            newTexture = new PortalTexture(data.integerData[0]);
+            newTexture = new PortalTexture((byte) data.integerData[0]);
+        }
+        else if (data.integerData[1] != -1)
+        {
+            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
         }
         else
         {
-            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
+            newTexture = new PortalTexture(data.stringData[0]);
         }
 
         sound = data.integerData[3] == 1;
@@ -75,15 +80,21 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     {
         super.readFromNBT(tagCompound);
 
-        int colour = tagCompound.getInteger("Colour"), blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
-
+        byte colour = tagCompound.getByte("Colour");
+        int blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
+        String liquid = tagCompound.getString("LiquidID");
+        
         if (colour != -1)
         {
             texture = new PortalTexture(colour);
         }
-        else
+        else if (blockID != -1)
         {
             texture = new PortalTexture(blockID, metadata);
+        }
+        else
+        {
+            texture = new PortalTexture(liquid);
         }
 
         producesSound = tagCompound.getBoolean("Sound");
@@ -116,8 +127,9 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     {
         super.writeToNBT(tagCompound);
 
-        tagCompound.setInteger("Colour", texture.colour == null ? -1 : texture.colour.ordinal());
+        tagCompound.setByte("Colour", texture.colour);
         tagCompound.setInteger("BlockID", texture.blockID);
+        tagCompound.setString("LiquidID", texture.liquidID);
         tagCompound.setInteger("Metadata", texture.metaData);
         tagCompound.setBoolean("Sound", producesSound);
         tagCompound.setBoolean("Particles", producesParticles);

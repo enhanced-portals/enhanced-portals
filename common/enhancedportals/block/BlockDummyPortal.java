@@ -23,7 +23,7 @@ public class BlockDummyPortal extends Block
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return new PortalTexture(meta).getIcon(side);
+        return new PortalTexture((byte) meta).getIcon(side);
     }
 
     @Override

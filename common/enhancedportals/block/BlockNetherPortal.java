@@ -21,6 +21,7 @@ import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
+import enhancedportals.lib.Textures;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.portal.Portal;
 import enhancedportals.portal.PortalTexture;
@@ -62,7 +63,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return new PortalTexture(0).getIcon(side);
+        return new PortalTexture((byte) 0).getIcon(side);
     }
 
     @Override
@@ -162,7 +163,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        PortalTexture.registerTextures(iconRegister);
+        Textures.registerTextures(iconRegister);
     }
 
     @Override

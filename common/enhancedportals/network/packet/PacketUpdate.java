@@ -26,11 +26,16 @@ public class PacketUpdate extends PacketEP
             zCoord = stream.readInt();
             dimension = stream.readInt();
 
-            packetData = new PacketData(stream.readInt(), stream.readInt());
+            packetData = new PacketData(stream.readInt(), stream.readInt(), stream.readInt());
 
             for (int i = 0; i < packetData.integerData.length; i++)
             {
                 packetData.integerData[i] = stream.readInt();
+            }
+            
+            for (int i = 0; i < packetData.byteData.length; i++)
+            {
+                packetData.byteData[i] = stream.readByte();
             }
 
             for (int i = 0; i < packetData.stringData.length; i++)
@@ -74,11 +79,16 @@ public class PacketUpdate extends PacketEP
         zCoord = stream.readInt();
         dimension = stream.readInt();
 
-        packetData = new PacketData(stream.readInt(), stream.readInt());
+        packetData = new PacketData(stream.readInt(), stream.readInt(), stream.readInt());
 
         for (int i = 0; i < packetData.integerData.length; i++)
         {
             packetData.integerData[i] = stream.readInt();
+        }
+        
+        for (int i = 0; i < packetData.byteData.length; i++)
+        {
+            packetData.byteData[i] = stream.readByte();
         }
 
         for (int i = 0; i < packetData.stringData.length; i++)
@@ -99,15 +109,22 @@ public class PacketUpdate extends PacketEP
         {
             stream.writeInt(0);
             stream.writeInt(0);
+            stream.writeInt(0);
         }
         else
         {
             stream.writeInt(packetData.integerData.length);
+            stream.writeInt(packetData.byteData.length);
             stream.writeInt(packetData.stringData.length);
 
             for (int i : packetData.integerData)
             {
                 stream.writeInt(i);
+            }
+            
+            for (byte b : packetData.byteData)
+            {
+                stream.writeByte(b);
             }
 
             for (String s : packetData.stringData)
