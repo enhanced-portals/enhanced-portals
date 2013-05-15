@@ -2,6 +2,7 @@ package enhancedportals.lib;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -32,4 +33,6 @@ public class Reference
     public static final List<ItemStack> glyphItems = new ArrayList<ItemStack>();
     public static final List<String> glyphValues = new ArrayList<String>();
     public static final String glyphSeperator = " ";
+    
+    public static Logger log = Logger.getLogger("EnhancedPortals 2");
 }

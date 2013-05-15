@@ -37,7 +37,7 @@ public class PortalTexture
         {
             if (arguments[0] instanceof Byte) // Colour ID
             {
-                byte par1 = (byte) arguments[0];
+                byte par1 = Byte.parseByte(arguments[0].toString());
                 
                 if (par1 >= 0 && par1 <= 15)
                 {
@@ -47,7 +47,7 @@ public class PortalTexture
             }
             else if (arguments[0] instanceof String) // Liquid ID
             {
-                texture.liquidID = (String) arguments[0];
+                texture.liquidID = arguments[0].toString();
                 return texture;
             }
             else if (arguments[0] instanceof ItemStack) // ItemStack
@@ -69,7 +69,7 @@ public class PortalTexture
                 else if (Settings.isValidItem(stack.itemID)) // Item Map
                 {
                     if (Settings.ItemPortalTextureMap.containsKey(stack.itemID + ":" + stack.getItemDamage()))
-                    {                        
+                    {
                         return Settings.ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage());
                     }
                 }
@@ -79,7 +79,7 @@ public class PortalTexture
         {
             if (arguments[0] instanceof Integer && arguments[1] instanceof Integer) // Block ID & Metadata
             {
-                int par1 = (int) arguments[0], par2 = (int) arguments[1];
+                int par1 = Integer.parseInt(arguments[0].toString()), par2 = Integer.parseInt(arguments[1].toString());
                 
                 if (Settings.isBlockExcluded(par1))
                 {
@@ -165,8 +165,20 @@ public class PortalTexture
             return Block.blocksList[blockID].getIcon(side, metaData);
         }
         else if (getType() == 2) // Liquid
-        {            
-            return LiquidDictionary.getLiquid(liquidID, 1).getRenderingIcon();
+        {
+            if (Settings.CustomIconMap.containsKey(liquidID))
+            {
+                return Settings.CustomIconMap.get(liquidID);
+            }
+            
+            Icon test = LiquidDictionary.getLiquid(liquidID, 1).getRenderingIcon();
+            
+            if (test != null)
+            {
+                return test;
+            }
+            
+            return LiquidDictionary.getLiquid(liquidID, 1).asItemStack().getIconIndex();
         }
 
         return null;

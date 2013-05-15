@@ -31,6 +31,8 @@ public class GuiPortalModifierSlot extends Slot
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        return itemStack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(itemStack.itemID) || Settings.isValidItem(itemStack.itemID);
+        System.out.println(itemStack.itemID);
+        
+        return (itemStack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(itemStack.itemID)) || Settings.isValidItem(itemStack.itemID);
     }
 }

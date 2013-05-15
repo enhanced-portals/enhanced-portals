@@ -13,6 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.liquids.LiquidDictionary;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -107,6 +108,10 @@ public class GuiPortalModifier extends GuiContainer
         {
             itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour);
         }
+        else
+        {
+            itemstack = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack();
+        }
 
         if (itemstack != null)
         {
@@ -189,11 +194,11 @@ public class GuiPortalModifier extends GuiContainer
             {
                 String txt = "";
 
-                if (portalModifier.texture.blockID == -1)
+                if (portalModifier.texture.colour != -1)
                 {
                     txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour)]);
                 }
-                else
+                else if (portalModifier.texture.blockID != -1)
                 {
                     txt = Localization.localizeString(Block.blocksList[portalModifier.texture.blockID].getUnlocalizedName() + ".name");
 
@@ -205,6 +210,10 @@ public class GuiPortalModifier extends GuiContainer
                     {
                         txt = "Flowing " + txt;
                     }
+                }
+                else
+                {
+                    txt = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack().getDisplayName();
                 }
 
                 List<String> list = new ArrayList<String>();

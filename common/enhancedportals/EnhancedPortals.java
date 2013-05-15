@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -75,6 +76,12 @@ public class EnhancedPortals
 
             Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture((byte) j));
         }
+        
+        // Add items to valid items list
+        Settings.ValidItemsList.add(Item.bucketLava.itemID);
+        Settings.ValidItemsList.add(Item.bucketWater.itemID);
+        Settings.ValidItemsList.add(Item.dyePowder.itemID);
+        Settings.ValidItemsList.add(Item.snowball.itemID);
 
         // Add blocks to border list
         Settings.BorderBlocks.add(BlockIds.Obsidian);
@@ -158,6 +165,8 @@ public class EnhancedPortals
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
+        Reference.log.setParent(FMLLog.getLogger());
+        
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         proxy.loadBlocks();
         proxy.loadItems();
