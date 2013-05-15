@@ -35,13 +35,6 @@ public class BlockObsidianStairs extends BlockStairs
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        // Stops from registering NULL.
-    }
-    
-    @Override
     public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
         ItemStack current = player.inventory.mainInventory[player.inventory.currentItem];
@@ -57,5 +50,12 @@ public class BlockObsidianStairs extends BlockStairs
         }
 
         return false;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        // Stops from registering NULL.
     }
 }

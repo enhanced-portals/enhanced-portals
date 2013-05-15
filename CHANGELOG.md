@@ -21,6 +21,6 @@
 * Ability to change the texture of the portal modifiers to blocks.(Using a Portal Modifier)
 * Ability to change the thickness of the portal blocks. (Using a Portal Modifier)
 * New upgrades for the Portal Modifier.
- * Particle Control.Allows you to toggle the particles of the portal.
+ * Particle Control. Allows you to toggle the particles of the portal.
  * Sound Control. Allows you to toggle the sound of the portal.
- * Quartz Upgrade. (Name is a WIP) Allows you to use Nether Quartz (all variations) as a portal frame.
+ * Quartz Upgrade. Allows you to use Nether Quartz (all variations) as a portal frame.

@@ -62,7 +62,7 @@ public class ContainerPortalModifier extends Container
         {
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
-            
+
             if (Settings.isValidItem(stackInSlot.itemID))
             {
                 if (Settings.getPortalTextureFromItem(stackInSlot, portalModifier.texture).isEqualTo(portalModifier.texture))
@@ -131,9 +131,9 @@ public class ContainerPortalModifier extends Container
 
         if (player instanceof EntityPlayerMP)
         {
-            ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
+            ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
         }
-        
+
         return stack;
     }
 }

@@ -24,12 +24,12 @@ public class Localization
     public static String localizeString(String str)
     {
         String str2 = LanguageRegistry.instance().getStringLocalization(str);
-        
+
         if (str2.length() == 0)
         {
             str2 = StatCollector.translateToLocal(str);
         }
-        
+
         return str2;
     }
 }

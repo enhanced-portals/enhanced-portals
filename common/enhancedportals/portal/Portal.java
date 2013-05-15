@@ -501,7 +501,7 @@ public class Portal
 
             return;
         }
-        
+
         if (!(world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal))
         {
             return;
@@ -531,20 +531,20 @@ public class Portal
             {
                 List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
                 boolean missingUpgrade = false, teleport = false;
-                
+
                 if (validLocations.isEmpty())
                 {
                     if (entity instanceof EntityPlayer)
                     {
                         ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked Portal Modifiers.");
                         System.out.println(String.format("Network: %s. validLocations: %s. %s", modifier.network, validLocations.size(), EnhancedPortals.proxy.ModifierNetwork.getNetwork(modifier.network)));
-                        
+
                         for (String str : EnhancedPortals.proxy.ModifierNetwork.networkData.keySet())
                         {
                             System.out.println(" - " + str + " : " + EnhancedPortals.proxy.ModifierNetwork.getNetwork(str).size());
                         }
                     }
-                    
+
                     entity.timeUntilPortal = entity.getPortalCooldown();
                     return;
                 }

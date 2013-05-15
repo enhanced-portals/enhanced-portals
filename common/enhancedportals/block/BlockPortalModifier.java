@@ -92,12 +92,12 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             else if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == Item.flintAndSteel.itemID)
             {
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
-                
+
                 if (modifier.createPortal())
                 {
                     player.inventory.getCurrentItem().damageItem(1, player);
                 }
-                
+
                 return true;
             }
 

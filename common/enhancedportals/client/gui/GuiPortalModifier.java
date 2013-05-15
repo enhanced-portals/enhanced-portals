@@ -324,7 +324,7 @@ public class GuiPortalModifier extends GuiContainer
             PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
         }
     }
-    
+
     @Override
     public void updateScreen()
     {

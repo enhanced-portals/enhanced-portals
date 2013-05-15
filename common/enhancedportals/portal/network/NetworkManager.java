@@ -293,7 +293,7 @@ public class NetworkManager
                 {
                     continue;
                 }
-                
+
                 List<WorldLocation> items = networkData.get(key);
 
                 if (items.isEmpty())

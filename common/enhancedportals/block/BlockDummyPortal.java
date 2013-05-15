@@ -28,13 +28,6 @@ public class BlockDummyPortal extends Block
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        // Stops from trying to register NULL
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
     public int getRenderBlockPass()
     {
         return 1;
@@ -45,23 +38,30 @@ public class BlockDummyPortal extends Block
     {
         return false;
     }
-    
+
     @Override
     public int quantityDropped(Random par1Random)
     {
         return 0;
     }
-    
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        // Stops from trying to register NULL
+    }
+
     @Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return blockAccess.getBlockMaterial(x, y, z) != this.blockMaterial;
+        return blockAccess.getBlockMaterial(x, y, z) != blockMaterial;
     }
 }

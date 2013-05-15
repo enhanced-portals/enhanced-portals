@@ -52,30 +52,6 @@ public class Upgrade
         }
     }
 
-    public void updateUpgradesList()
-    {
-        elementList.clear();
-        
-        for (int i = 0; i < modifier.upgrades.length; i++)
-        {
-            if (modifier.upgrades[i])
-            {
-                boolean active = true;
-
-                if (i == 0)
-                {
-                    active = modifier.getParticles();
-                }
-                else if (i == 1)
-                {
-                    active = modifier.getSounds();
-                }
-
-                elementList.add(new GuiUpgradeButton(i, this, active));
-            }
-        }
-    }
-    
     public void drawElements(int mouseX, int mouseY, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine)
     {
         for (int i = elementList.size() - 1; i >= 0; i--)
@@ -188,6 +164,30 @@ public class Upgrade
             modifier.upgrades[element.ID] = false;
             elementList.remove(element);
             PacketDispatcher.sendPacketToServer(new PacketUpgrade(modifier, element.ID, false).getPacket());
+        }
+    }
+
+    public void updateUpgradesList()
+    {
+        elementList.clear();
+
+        for (int i = 0; i < modifier.upgrades.length; i++)
+        {
+            if (modifier.upgrades[i])
+            {
+                boolean active = true;
+
+                if (i == 0)
+                {
+                    active = modifier.getParticles();
+                }
+                else if (i == 1)
+                {
+                    active = modifier.getSounds();
+                }
+
+                elementList.add(new GuiUpgradeButton(i, this, active));
+            }
         }
     }
 }

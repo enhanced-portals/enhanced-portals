@@ -54,6 +54,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
     }
 
+    public boolean createPortal()
+    {
+        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+    }
+
     public int[] customBorderBlocks()
     {
         if (hasUpgrade(5) && hasUpgrade(6))
@@ -289,15 +295,15 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                 {
                     return;
                 }
-                
+
                 installUpgrade(stack.getItemDamage());
                 setInventorySlotContents(0, null);
-                
+
                 if (!worldObj.isRemote)
                 {
                     PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
                 }
-                
+
                 return;
             }
 
@@ -305,7 +311,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             {
                 updateTexture(text);
                 setInventorySlotContents(0, null);
-                
+
                 if (Settings.isLiquid(text) && !worldObj.isRemote)
                 {
                     ItemStack itemStack = new ItemStack(Item.bucketEmpty);
@@ -472,11 +478,5 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         {
             tagCompound.setBoolean("Upgrade" + i, upgrades[i]);
         }
-    }
-
-    public boolean createPortal()
-    {
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
     }
 }

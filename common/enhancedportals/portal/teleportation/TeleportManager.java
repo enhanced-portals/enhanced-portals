@@ -207,7 +207,7 @@ public class TeleportManager
         {
             rotationYaw = entity.rotationYaw;
         }
-        
+
         if (metaDirection == 0)
         {
             teleportDataOffset.yCoord -= 1;
