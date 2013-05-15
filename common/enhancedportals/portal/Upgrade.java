@@ -75,7 +75,7 @@ public class Upgrade
         }
         else if (ID == 2)
         {
-            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.portalModifier.dimensional.text"));
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.dimensional.text"));
         }
         else if (ID == 3)
         {

@@ -280,7 +280,7 @@ public class GuiPortalModifier extends GuiContainer
     {
         super.initGui();
 
-        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, "Close");
+        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, Localization.localizeString("gui.close"));
         buttonList.add(okayButton);
         okayButton.drawButton = isActive;
     }

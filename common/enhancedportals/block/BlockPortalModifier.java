@@ -85,7 +85,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     {
         if (!player.isSneaking())
         {
-            if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == ItemIds.PortalModifierUpgrade + 256)
+            if (player.inventory.getCurrentItem() != null && (player.inventory.getCurrentItem().itemID == ItemIds.PortalModifierUpgrade + 256 || player.inventory.getCurrentItem().itemID == ItemIds.NetworkCard + 256))
             {
                 return false;
             }

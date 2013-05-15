@@ -10,6 +10,7 @@ public class Localization
     public static final String PortalModifier_Name = "portalModifier";
     public static final String ObsidianStairs_Name = "stairsObsidian";
     public static final String PortalModifierUpgrade_Name = PortalModifier_Name + "Upgrade";
+    public static final String NetworkCard_Name = "networkCard";
 
     public static String[] Locales = new String[] { "en_GB", "en_US", "it_IT" };
 

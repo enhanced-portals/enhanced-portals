@@ -46,7 +46,7 @@ public class ItemPortalModifierUpgrade extends Item
 
         if (itemStack.getItemDamage() == 2)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.portalModifier.dimensional.text"));
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.dimensional.text"));
         }
         else if (itemStack.getItemDamage() == 3)
         {

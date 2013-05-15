@@ -11,6 +11,7 @@ import enhancedportals.block.BlockNetherPortal;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.block.BlockObsidianStairs;
 import enhancedportals.block.BlockPortalModifier;
+import enhancedportals.item.ItemNetworkCard;
 import enhancedportals.item.ItemPortalModifierUpgrade;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
@@ -28,6 +29,7 @@ public class CommonProxy
     public BlockDummyPortal blockDummyPortal;
 
     public ItemPortalModifierUpgrade portalModifierUpgrade;
+    public ItemNetworkCard networkCard;
 
     public ModifierNetwork ModifierNetwork;
 
@@ -56,8 +58,10 @@ public class CommonProxy
     public void loadItems()
     {
         portalModifierUpgrade = new ItemPortalModifierUpgrade();
+        networkCard = new ItemNetworkCard();
 
         GameRegistry.registerItem(portalModifierUpgrade, Localization.PortalModifierUpgrade_Name);
+        GameRegistry.registerItem(networkCard, Localization.NetworkCard_Name);
     }
 
     public void loadRecipes()
