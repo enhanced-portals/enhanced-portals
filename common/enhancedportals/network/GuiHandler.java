@@ -6,11 +6,13 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import enhancedportals.client.gui.GuiDialDeviceBasic;
 import enhancedportals.client.gui.GuiPortalModifier;
 import enhancedportals.client.gui.GuiPortalModifierNetwork;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiHandler implements IGuiHandler
@@ -38,6 +40,13 @@ public class GuiHandler implements IGuiHandler
         {
 
         }
+        else if (ID == GuiIds.DialDeviceBasic)
+        {
+            if (tileEntity instanceof TileEntityDialDeviceBasic)
+            {
+                return new GuiDialDeviceBasic((TileEntityDialDeviceBasic) tileEntity);
+            }
+        }
 
         return null;
     }
@@ -61,6 +70,10 @@ public class GuiHandler implements IGuiHandler
 
         }
         else if (ID == GuiIds.DialDevice)
+        {
+
+        }
+        else if (ID == GuiIds.DialDeviceBasic)
         {
 
         }

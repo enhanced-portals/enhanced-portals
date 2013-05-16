@@ -20,11 +20,13 @@ import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.PacketIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.WorldLocation;
+import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.network.packet.PacketUpgrade;
+import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -70,10 +72,29 @@ public class ServerPacketHandler implements IPacketHandler
             {
                 parseUpgrade(new PacketUpgrade(stream), player);
             }
+            else if (packetID == PacketIds.DialDeviceRequest)
+            {
+                parseDialRequest(new PacketDialRequest(stream), player);
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    private void parseDialRequest(PacketDialRequest dialRequest, Player player)
+    {
+        WorldServer world = getWorldForDimension(dialRequest.dimension);
+
+        if (world.blockHasTileEntity(dialRequest.xCoord, dialRequest.yCoord, dialRequest.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(dialRequest.xCoord, dialRequest.yCoord, dialRequest.zCoord);
+
+            if (tileEntity instanceof TileEntityDialDeviceBasic)
+            {
+                ((TileEntityDialDeviceBasic) tileEntity).processDiallingRequest(dialRequest.packetData.stringData[0], (EntityPlayer) player);
+            }
         }
     }
 

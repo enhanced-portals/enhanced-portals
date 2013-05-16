@@ -13,12 +13,12 @@ public class GuiGlyphElement
     public int x, y;
     public String value;
     public ItemStack itemStack;
-    GuiPortalModifierNetwork parent;
+    GuiNetwork parent;
 
     public int stackSize;
     public boolean isStack;
 
-    public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiPortalModifierNetwork p)
+    public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiNetwork p)
     {
         this.x = x;
         this.y = y;
@@ -29,7 +29,7 @@ public class GuiGlyphElement
         isStack = false;
     }
 
-    public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiPortalModifierNetwork p, boolean isstack)
+    public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiNetwork p, boolean isstack)
     {
         this.x = x;
         this.y = y;
