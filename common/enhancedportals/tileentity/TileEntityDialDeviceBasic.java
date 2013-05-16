@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
@@ -20,24 +21,45 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         
     }
     
+    String oldModifierNetwork;
+    boolean oldParticles, oldSounds, active = false;
+    WorldLocation modifierLocation;
+    
     public void processDiallingRequest(String network, EntityPlayer player)
     {
-        if (worldObj.isRemote)
+        if (worldObj.isRemote || active)
         {
             return;
         }
-        
-        // TODO
-        // - Add wireless connection to portal modifier
-        // - Localization
-        // - Check for modifier upgrades
+                
+        outerloop:
+        for (int x = -5; x < 5; x++)
+        {
+            for (int z = -5; z < 5; z++)
+            {
+                for (int y = -5; y < 5; y++)
+                {
+                    if (worldObj.getBlockId(xCoord + x, yCoord + y, zCoord + z) == BlockIds.PortalModifier)
+                    {
+                        modifierLocation = new WorldLocation(xCoord + x, yCoord + y, zCoord + z, worldObj);
+                        break outerloop;
+                    }
+                }
+            }
+        }
         
         if (EnhancedPortals.proxy.ModifierNetwork.hasNetwork(network))
         {
-            if (worldObj.getBlockId(xCoord, yCoord, zCoord - 1) == BlockIds.PortalModifier)
+            if (modifierLocation.getBlockId() == BlockIds.PortalModifier)
             {
-                TileEntityPortalModifier modifier = (TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord - 1);
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
                 
+                oldModifierNetwork = modifier.network;
+                oldParticles = modifier.getParticles();
+                oldSounds = modifier.getSounds();
+                
+                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(modifierLocation);
+                EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, modifierLocation);
                 modifier.network = network;
                 
                 if (modifier.isAnyActive())
@@ -47,11 +69,13 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 
                 if (modifier.createPortal())
                 {
-                    player.sendChatToPlayer(EnumChatFormatting.GREEN + "Connection established.");
+                    player.sendChatToPlayer(EnumChatFormatting.GREEN + "Connection established. 38 seconds remain.");
+                    worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
+                    active = true;
                 }
                 else
                 {
-                    player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection to the network.");
+                    player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
                 }
             }
             else
@@ -61,7 +85,39 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         }
         else
         {
-            player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection to the network.");
+            player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
+        }
+    }
+    
+    public void scheduledBlockUpdate()
+    {
+        if (modifierLocation == null)
+        {
+            active = false;
+            return;
+        }
+        
+        if (modifierLocation.getBlockId() == BlockIds.PortalModifier)
+        {
+            TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
+            
+            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, modifierLocation);
+            
+            if (!oldModifierNetwork.equals(""))
+            {
+                EnhancedPortals.proxy.ModifierNetwork.addToNetwork(oldModifierNetwork, modifierLocation);
+            }
+            
+            modifier.removePortal();
+            modifier.network = oldModifierNetwork;
+            modifier.setSounds(oldSounds);
+            modifier.setParticles(oldParticles);
+            
+            oldModifierNetwork = "";
+            oldSounds = true;
+            oldParticles = true;
+            modifierLocation = null;
+            active = false;
         }
     }
 }
