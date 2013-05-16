@@ -2,8 +2,10 @@ package enhancedportals.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -49,6 +51,17 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         if (modifier.network != "" && modifier.network != "undefined")
         {
             EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
+        }
+        
+        for (int i = 0; i < modifier.upgrades.length; i++)
+        {
+            if (modifier.upgrades[i])
+            {
+                ItemStack stack = new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, i);
+                EntityItem entity = new EntityItem(modifier.worldObj, modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, stack);
+                modifier.worldObj.spawnEntityInWorld(entity);                
+                modifier.upgrades[i] = false;
+            }
         }
     }
 
