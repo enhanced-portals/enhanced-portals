@@ -6,6 +6,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import enhancedportals.block.BlockDialDevice;
+import enhancedportals.block.BlockDialDeviceBasic;
 import enhancedportals.block.BlockDummyPortal;
 import enhancedportals.block.BlockNetherPortal;
 import enhancedportals.block.BlockObsidian;
@@ -19,6 +21,8 @@ import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
 import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
+import enhancedportals.tileentity.TileEntityDialDevice;
+import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -29,6 +33,8 @@ public class CommonProxy
     public BlockObsidianStairs blockObsidianStairs;
     public BlockPortalModifier blockPortalModifier;
     public BlockDummyPortal blockDummyPortal;
+    public BlockDialDevice blockDialDevice;
+    public BlockDialDeviceBasic blockDialDeviceBasic;
 
     public ItemPortalModifierUpgrade portalModifierUpgrade;
     public ItemNetworkCard networkCard;
@@ -50,12 +56,16 @@ public class CommonProxy
         blockObsidian = new BlockObsidian();
         blockObsidianStairs = new BlockObsidianStairs();
         blockDummyPortal = new BlockDummyPortal();
+        blockDialDevice = new BlockDialDevice();
+        blockDialDeviceBasic = new BlockDialDeviceBasic();
 
         GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
         GameRegistry.registerBlock(blockPortalModifier, Localization.PortalModifier_Name);
         GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
         GameRegistry.registerBlock(blockObsidianStairs, Localization.ObsidianStairs_Name);
         GameRegistry.registerBlock(blockDummyPortal, "Fake Portal");
+        GameRegistry.registerBlock(blockDialDevice, Localization.DialDevice_Name);
+        GameRegistry.registerBlock(blockDialDeviceBasic, Localization.DialDeviceBasic_Name);
     }
 
     public void loadItems()
@@ -106,5 +116,7 @@ public class CommonProxy
     {
         GameRegistry.registerTileEntity(TileEntityNetherPortal.class, "EPNPortal");
         GameRegistry.registerTileEntity(TileEntityPortalModifier.class, "EPPModifier");
+        GameRegistry.registerTileEntity(TileEntityDialDevice.class, "EPDDevice");
+        GameRegistry.registerTileEntity(TileEntityDialDeviceBasic.class, "EPDDBasic");
     }
 }
