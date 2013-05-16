@@ -28,7 +28,6 @@ public class CommandEP extends CommandBase
         if (args.length > 0)
         {
             String commandName = args[0];
-            System.arraycopy(args, 1, args, 0, args.length - 1);
             
             if (commandName.equalsIgnoreCase(Commands.EFFECTS))
             {
