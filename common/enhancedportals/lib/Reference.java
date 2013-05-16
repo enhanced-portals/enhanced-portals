@@ -14,14 +14,6 @@ public class Reference
     public static final String MOD_NAME = "EnhancedPortals 2";
     public static final String MOD_VERSION = "@VERSION@";
 
-    public static final String MOD_ID_CC = MOD_ID + "_cc";
-    public static final String MOD_NAME_CC = "EP2 ComputerCraft";
-    public static final String MOD_DEP_CC = "";
-
-    public static final String MOD_ID_WORLD = MOD_ID + "_world";
-    public static final String MOD_NAME_WORLD = "EP2 World";
-    public static final String MOD_DEP_WORLD = "";
-
     public static final String PROXY_CLIENT = "enhancedportals.network.ClientProxy";
     public static final String PROXY_COMMON = "enhancedportals.network.CommonProxy";
 

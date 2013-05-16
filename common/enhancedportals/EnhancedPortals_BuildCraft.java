@@ -11,6 +11,7 @@ import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import enhancedportals.lib.IIconRegister;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
@@ -33,17 +34,25 @@ public class EnhancedPortals_BuildCraft implements IIconRegister
     @PostInit
     public void postInit(FMLPostInitializationEvent event)
     {
-        Settings.CustomIconMap.put("Fuel", fuelTexture);
-        
         try
         {
             Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);
             Item bucketFuel = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketFuel").get(null);
             
+            // Add buckets to valid item lists
             Settings.ValidItemsList.add(bucketFuel.itemID);
             Settings.ValidItemsList.add(bucketOil.itemID);
+            
+            // Add the fuel texture
+            Settings.CustomIconMap.put("Fuel", fuelTexture);
+            
+            // Add the mapping for items -> PortalTextures
             Settings.ItemPortalTextureMap.put(bucketFuel.itemID + ":0", new PortalTexture("Fuel"));
             Settings.ItemPortalTextureMap.put(bucketOil.itemID + ":0", new PortalTexture("Oil"));
+            
+            // Add the mapping for custom particle effects
+            Settings.CustomParticleMap.put("Fuel", 0xFFFF00);
+            Settings.CustomParticleMap.put("Oil", 0x000000);
         }
         catch (Exception e)
         {

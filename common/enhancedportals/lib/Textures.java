@@ -3,7 +3,6 @@ package enhancedportals.lib;
 import java.util.ArrayList;
 import java.util.List;
 
-import enhancedportals.IIconRegister;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 

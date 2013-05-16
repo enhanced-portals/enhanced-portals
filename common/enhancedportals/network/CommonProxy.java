@@ -92,11 +92,11 @@ public class CommonProxy
         Settings.AllowPortalModifiers = config.get("Settings", "AllowPortalModifiers", Settings.AllowPortalModifiers).getBoolean(Settings.AllowPortalModifiers);
         Settings.DisableDHDRecipe = config.get("Settings", "DisableDialDeviceRecipe", Settings.DisableDHDRecipe).getBoolean(Settings.DisableDHDRecipe);
         Settings.DisableModifierRecipe = config.get("Settings", "DisableModifierRecipe", Settings.DisableModifierRecipe).getBoolean(Settings.DisableModifierRecipe);
-        Settings.RenderPortalEffect = config.get("Settings", "RenderPortalEffect", Settings.RenderPortalEffect).getBoolean(Settings.RenderPortalEffect);
+        Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect).getBoolean(Settings.RenderPortalEffect);
 
         // Integer configs
-        Settings.SoundLevel = MathHelper.clamp_int(config.get("Settings", "SoundLevel", 100).getInt(), 0, 100);
-        Settings.ParticleLevel = MathHelper.clamp_int(config.get("Settings", "ParticleLevel", 100).getInt(), 0, 100);
+        Settings.SoundLevel = MathHelper.clamp_int(config.get("Effects", "SoundLevel", 100).getInt(), 0, 100);
+        Settings.ParticleLevel = MathHelper.clamp_int(config.get("Effects", "ParticleLevel", 100).getInt(), 0, 100);
         Settings.PigmenLevel = MathHelper.clamp_int(config.get("Settings", "PigmenLevel", 100).getInt(), 0, 100);
 
         config.save();

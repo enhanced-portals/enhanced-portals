@@ -1,4 +1,4 @@
-package enhancedportals;
+package enhancedportals.lib;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 

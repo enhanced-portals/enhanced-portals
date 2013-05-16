@@ -153,6 +153,11 @@ public class PortalTexture
         }
         else if (getType() == 1) // Blocks
         {
+            if (Settings.CustomIconMap.containsKey(blockID + ":" + metaData))
+            {
+                return Settings.CustomIconMap.get(blockID + ":" + metaData);
+            }
+            
             if (blockID == 9 || blockID == 11) // We want to display the still versions of these.
             {
                 return Block.blocksList[blockID].getIcon(0, 0);
@@ -217,6 +222,11 @@ public class PortalTexture
         }
         else if (getType() == 1) // Blocks
         {
+            if (Settings.CustomParticleMap.containsKey(blockID + ":" + metaData))
+            {
+                return Settings.CustomParticleMap.get(blockID + ":" + metaData);
+            }
+            
             if (blockID == 8 || blockID == 9)
             {
                 return Textures.PARTICLE_COLOURS[4];
@@ -228,7 +238,10 @@ public class PortalTexture
         }
         else if (getType() == 2) // Liquids
         {
-            
+            if (Settings.CustomParticleMap.containsKey(liquidID))
+            {
+                return Settings.CustomParticleMap.get(liquidID);
+            }
         }
 
         return Textures.PARTICLE_COLOURS[5];
