@@ -93,12 +93,15 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 }
                 else
                 {
-                    player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
+                    modifier.network = oldModifierNetwork;
+                    modifier.setSounds(oldSounds);
+                    modifier.setParticles(oldParticles);
+                    player.sendChatToPlayer(EnumChatFormatting.RED + "Could not create a portal.");
                 }
             }
             else
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + "Could not create a portal.");
+                player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
             }
         }
         else
