@@ -6,14 +6,14 @@
 * Networking improvements
 * Added Modifier Camouflage upgrade.
 * Added two types of Dialling Devices.
- * Basic Dial Device
-   * Requires manual selection of the Glyphs every time you want to open a portal.
-   * Stays open for 38 seconds.
-   * Unable to modify the portals textures or effects via the device. It will use all the data currently stored within the Portal Modifier.
-  * Dial Device
-   * Stores a list of network destinations.
-   * Stays on until you turn it off/set a timeout time.
-   * Able to modify the portals texture, effects seperately for each destination.
+ * **Basic Dial Device**
+  * Requires manual selection of the Glyphs every time you want to open a portal.
+  * Stays open for 38 seconds.
+  * Unable to modify the portals textures or effects via the device. It will use all the data currently stored within the Portal Modifier.
+  * **Dial Device**
+  * Stores a list of network destinations.
+  * Stays on until you turn it off/set a timeout time.
+  * Able to modify the portals texture/effects, seperately for each destination.
 
 ###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.
