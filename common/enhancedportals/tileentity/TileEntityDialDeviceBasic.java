@@ -1,28 +1,39 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
+import enhancedportals.network.packet.PacketRequestSync;
+import enhancedportals.network.packet.PacketTEUpdate;
 
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
     @Override
     public PacketData getPacketData()
     {
-        return null;
+        return new PacketData(new int[0], new byte[] { (byte) (active ? 1 : 0) }, new String[0]);
     }
 
     @Override
     public void parsePacketData(PacketData data)
     {
+        if (data.byteData.length != 1)
+        {
+            System.out.println("Unexpected packet recieved!");
+            return;
+        }
         
+        active = data.byteData[0] == 1;
     }
     
     String oldModifierNetwork;
-    boolean oldParticles, oldSounds, active = false;
+    boolean oldParticles, oldSounds;
+    public boolean active = false;
     WorldLocation modifierLocation;
     
     public void processDiallingRequest(String network, EntityPlayer player)
@@ -46,6 +57,12 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                     }
                 }
             }
+        }
+        
+        if (modifierLocation == null)
+        {
+            player.sendChatToPlayer(EnumChatFormatting.RED + "Could not find a Portal Modifier.");
+            return;
         }
         
         if (EnhancedPortals.proxy.ModifierNetwork.hasNetwork(network))
@@ -72,6 +89,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + "Connection established. 38 seconds remain.");
                     worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
                     active = true;
+                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
                 }
                 else
                 {
@@ -90,10 +108,11 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     }
     
     public void scheduledBlockUpdate()
-    {
+    {        
         if (modifierLocation == null)
         {
             active = false;
+            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
             return;
         }
         
@@ -103,7 +122,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             
             EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, modifierLocation);
             
-            if (!oldModifierNetwork.equals(""))
+            if (oldModifierNetwork != null && !oldModifierNetwork.equals(""))
             {
                 EnhancedPortals.proxy.ModifierNetwork.addToNetwork(oldModifierNetwork, modifierLocation);
             }
@@ -118,6 +137,53 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             oldParticles = true;
             modifierLocation = null;
             active = false;
+            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+        }
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+        
+        active = tagCompound.getBoolean("Active");
+        
+        if (active)
+        {
+            modifierLocation = new WorldLocation(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
+            oldParticles = tagCompound.getBoolean("ModifierParticles");
+            oldSounds = tagCompound.getBoolean("ModifierSounds");
+            oldModifierNetwork = tagCompound.getString("ModifierNetwork");        
+        }
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+        
+        tagCompound.setBoolean("Active", active);
+        
+        if (active)
+        {
+            tagCompound.setInteger("ModifierX", modifierLocation.xCoord);
+            tagCompound.setInteger("ModifierY", modifierLocation.yCoord);
+            tagCompound.setInteger("ModifierZ", modifierLocation.zCoord);
+            tagCompound.setInteger("ModifierD", modifierLocation.dimension);
+            tagCompound.setBoolean("ModifierParticles", oldParticles);
+            tagCompound.setBoolean("ModifierSounds", oldSounds);
+            tagCompound.setString("ModifierNetwork", oldModifierNetwork);
+        }
+    }
+    
+    @Override
+    public void validate()
+    {
+        super.validate();
+        
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
         }
     }
 }

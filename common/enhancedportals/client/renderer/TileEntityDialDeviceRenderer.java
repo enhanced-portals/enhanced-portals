@@ -24,21 +24,22 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         GL11.glRotatef(180, 0F, 0F, 1F);
 
-        switch (tile.blockMetadata)
+        if (tile.blockMetadata == 2)
         {
-            case 2:
-                GL11.glRotatef(180, 0F, 1F, 0F);
-                break;
-            case 3:
-                GL11.glRotatef(0, 0F, 1F, 0F);
-                break;
-            case 4:
-                GL11.glRotatef(90, 0F, 1F, 0F);
-                break;
-            case 5:
-                GL11.glRotatef(-90, 0F, 1F, 0F);
-                break;
+            GL11.glRotatef(180, 0F, 1F, 0F);
         }
+        else if (tile.blockMetadata == 3)
+        {
+            GL11.glRotatef(0, 0F, 1F, 0F);
+        }
+        else if (tile.blockMetadata == 4)
+        {
+            GL11.glRotatef(90, 0F, 1F, 0F);
+        }
+        else if (tile.blockMetadata == 5)
+        {
+            GL11.glRotatef(-90, 0F, 1F, 0F);
+        }        
 
         bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/dialDevice.png");
         model.renderAll();

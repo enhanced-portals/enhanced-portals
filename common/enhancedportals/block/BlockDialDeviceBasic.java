@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.EnhancedPortals;
@@ -29,6 +30,12 @@ public class BlockDialDeviceBasic extends BlockEnhancedPortals
         setUnlocalizedName(Localization.DialDeviceBasic_Name);
     }
 
+    @Override
+    public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
+    {
+        return new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST };
+    }
+    
     @Override
     public TileEntity createNewTileEntity(World world)
     {

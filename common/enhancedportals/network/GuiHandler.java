@@ -75,7 +75,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == GuiIds.DialDeviceBasic)
         {
-
+            PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityDialDeviceBasic) tileEntity).getPacket(), (Player) player);
         }
 
         return null;

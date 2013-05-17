@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
@@ -77,6 +78,11 @@ public class GuiDialDeviceBasic extends GuiNetwork
         fontRenderer.drawString(Localization.localizeString("gui.glyphs.title"), guiLeft + 7, guiTop + 3, 0xFF444444);
         fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 7, guiTop + 71, 0xFF444444);
         
+        if (dialDevice.active)
+        {
+            fontRenderer.drawString(EnumChatFormatting.RED + Localization.localizeString("gui.dialDevice.active"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.dialDevice.active")) / 2, guiTop + 150, 0xFF444444);
+        }
+        
         super.drawScreen(x, y, par3); // Draw buttons
         
         // Draw glyphs
@@ -112,7 +118,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
         }
         else
         {
-            ((GuiButton) buttonList.get(0)).enabled = true;
+            ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
         }
     }
     
