@@ -81,6 +81,7 @@ public class BlockDialDeviceBasic extends BlockEnhancedPortals
         if (!player.isSneaking())
         {
             player.openGui(EnhancedPortals.instance, GuiIds.DialDeviceBasic, worldObj, x, y, z);
+            return true;
         }
         
         return super.onBlockActivated(worldObj, x, y, z, player, par6, par7, par8, par9);

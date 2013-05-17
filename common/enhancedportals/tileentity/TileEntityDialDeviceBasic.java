@@ -60,7 +60,11 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         
         if (modifierLocation == null)
         {
-            player.sendChatToPlayer(EnumChatFormatting.RED + "Could not find a Portal Modifier.");
+            if (player != null)
+            {
+                player.sendChatToPlayer(EnumChatFormatting.RED + "Could not find a Portal Modifier.");
+            }
+            
             return;
         }
         
@@ -82,7 +86,11 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 
                 if (modifier.createPortal())
                 {
-                    player.sendChatToPlayer(EnumChatFormatting.GREEN + "Connection established. 38 seconds remain.");
+                    if (player != null)
+                    {
+                        player.sendChatToPlayer(EnumChatFormatting.GREEN + "Connection established. 38 seconds remain.");
+                    }
+                    
                     worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
                     active = true;
                     PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
@@ -90,15 +98,19 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 else
                 {
                     modifier.network = oldModifierNetwork;
-                    player.sendChatToPlayer(EnumChatFormatting.RED + "Could not create a portal.");
+                    
+                    if (player != null)
+                    {
+                        player.sendChatToPlayer(EnumChatFormatting.RED + "Could not create a portal.");
+                    }
                 }
             }
-            else
+            else if (player != null)
             {
                 player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
             }
         }
-        else
+        else if (player != null)
         {
             player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
         }

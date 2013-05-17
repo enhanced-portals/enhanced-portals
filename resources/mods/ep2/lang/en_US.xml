@@ -8,6 +8,7 @@
 	<entry key="tile.stairsObsidian.name">Obsidian Stairs</entry>
 	<entry key="tile.dialDevice.name">Dial Device</entry>
 	<entry key="tile.dialDeviceBasic.name">Basic Dial Device</entry>
+	<entry key="tile.automaticDialler.name">Automatic Dialler</entry>
 	<entry key="item.portalModifierUpgrade.particles.name">Particle Control Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.sounds.name">Sound Control Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.dimension.name">Dimensional Upgrade</entry>
@@ -54,6 +55,7 @@
 	<entry key="gui.redstoneControl.title">Redstone Control</entry>
 	<entry key="gui.redstoneControl.normal">Normal</entry>
 	<entry key="gui.redstoneControl.inverted">Inverted</entry>
+	<entry key="gui.dialDevice.active">You cannot change the network while the Dial Device is active.</entry>
 	<entry key="upgrade.remove">Shift-Right Click to Remove</entry>
 	<entry key="upgrade.portalModifier">Portal Modifier Upgrade</entry>
 	<entry key="upgrade.particles.active">Creating particles</entry>

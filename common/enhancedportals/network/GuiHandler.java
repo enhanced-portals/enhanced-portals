@@ -6,12 +6,14 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import enhancedportals.client.gui.GuiAutomaticDiallerSimple;
 import enhancedportals.client.gui.GuiDialDeviceBasic;
 import enhancedportals.client.gui.GuiPortalModifier;
 import enhancedportals.client.gui.GuiPortalModifierNetwork;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -47,6 +49,13 @@ public class GuiHandler implements IGuiHandler
                 return new GuiDialDeviceBasic((TileEntityDialDeviceBasic) tileEntity);
             }
         }
+        else if (ID == GuiIds.AutoDiallerBasic)
+        {
+            if (tileEntity instanceof TileEntityAutomaticDialler)
+            {
+                return new GuiAutomaticDiallerSimple((TileEntityAutomaticDialler) tileEntity);
+            }
+        }
 
         return null;
     }
@@ -78,6 +87,13 @@ public class GuiHandler implements IGuiHandler
             if (tileEntity instanceof TileEntityDialDeviceBasic)
             {
                 PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityDialDeviceBasic) tileEntity).getPacket(), (Player) player);
+            }
+        }
+        else if (ID == GuiIds.AutoDiallerBasic)
+        {
+            if (tileEntity instanceof TileEntityAutomaticDialler)
+            {
+                PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityAutomaticDialler) tileEntity).getPacket(), (Player) player);
             }
         }
 

@@ -14,6 +14,10 @@
   * Stores a list of network destinations.
   * Stays on until you turn it off/set a timeout time.
   * Able to modify the portals texture/effects, seperately for each destination.
+* Added Automatic Dialler.
+ * Must be directly attached to a dial device.
+ * Able to store one network.
+ * When recieving a redstone signal, will dial the selected network.
 
 ###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.

@@ -13,6 +13,7 @@ public class Localization
     public static final String NetworkCard_Name = "networkCard";
     public static final String DialDevice_Name = "dialDevice";
     public static final String DialDeviceBasic_Name = "dialDeviceBasic";
+    public static final String AutomaticDialler_Name = "automaticDialler";
 
     public static String[] Locales = new String[] { "en_US" };
 

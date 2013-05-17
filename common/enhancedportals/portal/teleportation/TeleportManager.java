@@ -140,6 +140,13 @@ public class TeleportManager
         ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
 
         TileEntityPortalModifier outModifier = (TileEntityPortalModifier) teleportData.getTileEntity();
+        
+        if (outModifier == null)
+        {
+            System.out.println("The secondary modifier doesn't exist?");
+            return false;
+        }
+        
         int outModifierMeta = world.getBlockMetadata(outModifier.xCoord, outModifier.yCoord, outModifier.zCoord);
         WorldLocation outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifierMeta));
         boolean teleportEntity = false;

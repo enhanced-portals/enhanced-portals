@@ -2,6 +2,7 @@ package enhancedportals.lib;
 
 public class BlockIds
 {
+    public static int AutomaticDialler = 1351;
     public static int Obsidian = 49;
     public static int NetherPortal = 1348;
     public static int ObsidianStairs = 1345;
