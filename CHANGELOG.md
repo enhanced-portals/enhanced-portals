@@ -18,6 +18,7 @@
  * Must be directly attached to a dial device.
  * Able to store one network.
  * When recieving a redstone signal, will dial the selected network.
+* Network Cards can now be used on the Automatic Dialler.
 
 ###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.

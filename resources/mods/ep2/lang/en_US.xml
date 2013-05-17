@@ -55,7 +55,7 @@
 	<entry key="gui.redstoneControl.title">Redstone Control</entry>
 	<entry key="gui.redstoneControl.normal">Normal</entry>
 	<entry key="gui.redstoneControl.inverted">Inverted</entry>
-	<entry key="gui.dialDevice.active">You cannot change the network while the Dial Device is active.</entry>
+	<entry key="gui.dialDevice.active">You cannot dial while the Dial Device is active.</entry>
 	<entry key="upgrade.remove">Shift-Right Click to Remove</entry>
 	<entry key="upgrade.portalModifier">Portal Modifier Upgrade</entry>
 	<entry key="upgrade.particles.active">Creating particles</entry>
@@ -72,4 +72,9 @@
 	<entry key="upgrade.camouflage.textB">look like neighboring blocks</entry>
 	<entry key="chat.networkSuccessful">Successfully changed the network.</entry>
 	<entry key="chat.modifierActive">You cannot change the network when the modifier is active.</entry>
+	<entry key="chat.notLinked">The network card is not linked.</entry>
+	<entry key="chat.noModifier">Could not find a Portal Modifier.</entry>
+	<entry key="chat.dialSuccess">Connection established - 38 seconds remain.</entry>
+	<entry key="chat.noPortal">Could not create a portal.</entry>
+	<entry key="chat.noConnection">Could not establish a connection.</entry>
 </properties>

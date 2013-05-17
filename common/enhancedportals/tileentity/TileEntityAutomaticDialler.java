@@ -8,104 +8,88 @@ import enhancedportals.network.packet.PacketData;
 
 public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 {
-    /**
-     * Redstone setting - 0 = default, -1 = activate on no signal, 1+ = activate on that level of redstone signal
-     */
-    public byte redstoneSetting, previousRedstoneSetting;
+    public boolean previousRedstone;
     public String activeNetwork;
     public WorldLocation connectedModifier;
     
     public TileEntityAutomaticDialler()
     {
-        redstoneSetting = 0;
+        previousRedstone = false;
         activeNetwork = "";
-    }
-    
-    public boolean getSimple()
-    {
-        return getBlockMetadata() == 0;
     }
 
     @Override
     public PacketData getPacketData()
     {
-        return new PacketData(new int[0], new byte[] { redstoneSetting }, new String[] { activeNetwork });
+        return new PacketData(new int[0], new byte[0], new String[] { activeNetwork });
     }
 
     @Override
     public void parsePacketData(PacketData data)
     {
-        redstoneSetting = data.byteData[0];
         activeNetwork = data.stringData[0];
     }
     
-    public void getConnectedModifier()
+    public boolean getConnectedModifier()
     {
+        if (connectedModifier != null)
+        {
+            return true;
+        }
+        
         WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, worldObj);
-        int lookingForBlock = blockMetadata == 0 ? BlockIds.DialHomeDeviceBasic : BlockIds.DialHomeDevice;
 
-        if (location.getOffset(ForgeDirection.UP).getBlockId() == lookingForBlock)
+        if (location.getOffset(ForgeDirection.UP).getBlockId() == BlockIds.DialHomeDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.UP);
         }
-        else if (location.getOffset(ForgeDirection.DOWN).getBlockId() == lookingForBlock)
+        else if (location.getOffset(ForgeDirection.DOWN).getBlockId() == BlockIds.DialHomeDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.DOWN);
         }
-        else if (location.getOffset(ForgeDirection.NORTH).getBlockId() == lookingForBlock)
+        else if (location.getOffset(ForgeDirection.NORTH).getBlockId() == BlockIds.DialHomeDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.NORTH);
         }
-        else if (location.getOffset(ForgeDirection.SOUTH).getBlockId() == lookingForBlock)
+        else if (location.getOffset(ForgeDirection.SOUTH).getBlockId() == BlockIds.DialHomeDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.SOUTH);
         }
-        else if (location.getOffset(ForgeDirection.EAST).getBlockId() == lookingForBlock)
+        else if (location.getOffset(ForgeDirection.EAST).getBlockId() == BlockIds.DialHomeDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.EAST);
         }
-        else if (location.getOffset(ForgeDirection.WEST).getBlockId() == lookingForBlock)
+        else if (location.getOffset(ForgeDirection.WEST).getBlockId() == BlockIds.DialHomeDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.WEST);
         }
+        else
+        {
+            return false;
+        }
+        
+        return true;
     }
-    
-    @Override
-    public void validate()
-    {
-        super.validate();
-    }    
     
     public void handleNeighborUpdate()
     {
-        int redstoneSignal = worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord);
+        boolean redstoneSignal = worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0;
         
-        if (previousRedstoneSetting > 0)
+        if (redstoneSignal && !previousRedstone)
         {
-            return;
-        }
-        
-        if ((16 - redstoneSetting) - redstoneSignal > 0)
-        {            
-            if (getSimple())
+            if (!getConnectedModifier())
             {
-                getConnectedModifier();
-                
-                if (connectedModifier == null)
-                {
-                    return;
-                }
-                
-                if (connectedModifier.getTileEntity() != null && connectedModifier.getTileEntity() instanceof TileEntityDialDeviceBasic)
-                {
-                    TileEntityDialDeviceBasic dialDevice = (TileEntityDialDeviceBasic) connectedModifier.getTileEntity();
-                    
-                    dialDevice.processDiallingRequest(activeNetwork, null);
-                }
+                return;
+            }
+            
+            if (connectedModifier.getTileEntity() != null && connectedModifier.getTileEntity() instanceof TileEntityDialDeviceBasic)
+            {
+                TileEntityDialDeviceBasic dialDevice = (TileEntityDialDeviceBasic) connectedModifier.getTileEntity();
+                dialDevice.processDiallingRequest(activeNetwork, null);
             }
         }
         
-        previousRedstoneSetting = (byte) redstoneSignal;
+        previousRedstone = redstoneSignal;
     }
     
     @Override
@@ -114,8 +98,7 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
         super.writeToNBT(tagCompound);
         
         tagCompound.setString("Network", activeNetwork);
-        tagCompound.setByte("Redstone", redstoneSetting);
-        tagCompound.setByte("PreviousRedstone", previousRedstoneSetting);
+        tagCompound.setBoolean("Redstone", previousRedstone);
     }
     
     @Override
@@ -124,7 +107,6 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
         super.readFromNBT(tagCompound);
         
         activeNetwork = tagCompound.getString("Network");
-        redstoneSetting = tagCompound.getByte("Redstone");
-        previousRedstoneSetting = tagCompound.getByte("PreviousRedstone");
+        previousRedstone = tagCompound.getBoolean("Redstone");
     }
 }

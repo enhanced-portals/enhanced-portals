@@ -6,6 +6,7 @@ import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.Localization;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
@@ -24,7 +25,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     {
         if (data.byteData.length != 1)
         {
-            System.out.println("Unexpected packet recieved!");
             return;
         }
         
@@ -62,7 +62,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         {
             if (player != null)
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + "Could not find a Portal Modifier.");
+                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noModifier"));
             }
             
             return;
@@ -88,7 +88,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 {
                     if (player != null)
                     {
-                        player.sendChatToPlayer(EnumChatFormatting.GREEN + "Connection established. 38 seconds remain.");
+                        player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.dialSuccess"));
                     }
                     
                     worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
@@ -101,18 +101,18 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                     
                     if (player != null)
                     {
-                        player.sendChatToPlayer(EnumChatFormatting.RED + "Could not create a portal.");
+                        player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noPortal"));
                     }
                 }
             }
             else if (player != null)
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
+                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"));
             }
         }
         else if (player != null)
         {
-            player.sendChatToPlayer(EnumChatFormatting.RED + "Could not establish a connection.");
+            player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"));
         }
     }
     

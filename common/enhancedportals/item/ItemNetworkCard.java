@@ -9,6 +9,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -19,6 +20,7 @@ import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.WorldLocation;
+import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ItemNetworkCard extends Item
@@ -125,41 +127,63 @@ public class ItemNetworkCard extends Item
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-        if (world.getBlockId(x, y, z) != BlockIds.PortalModifier)
+        if (world.isRemote)
         {
-            return false;
+            return true;
         }
         
-        TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
-        
-        if (!isSet(itemStack))
+        if (world.getBlockId(x, y, z) == BlockIds.PortalModifier)
         {
-            addData(itemStack, modifier);
+            TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
+            
+            if (!isSet(itemStack))
+            {
+                addData(itemStack, modifier);
+            }
+            else
+            {
+                NBTTagCompound tagCompound = itemStack.getTagCompound();   
+                String network = tagCompound.getString("Network");
+                
+                if (!modifier.network.equals(network) && !modifier.isActive())
+                {
+                    modifier.network = network;
+                    EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world));
+                    EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldLocation(x, y, z, world));
+                    
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
+                    ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
+                    
+                    player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
+                }
+                else if (modifier.isActive())
+                {
+                    player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.modifierActive"));
+                }
+            }
         }
-        else
+        else if (world.getBlockId(x, y, z) == BlockIds.AutomaticDialler)
         {
-            if (world.isRemote)
-            {
-                return true;
-            }
+            TileEntityAutomaticDialler dial = (TileEntityAutomaticDialler) world.getBlockTileEntity(x, y, z);
             
-            NBTTagCompound tagCompound = itemStack.getTagCompound();   
-            String network = tagCompound.getString("Network");
-            
-            if (!modifier.network.equals(network) && !modifier.isActive())
+            if (!isSet(itemStack))
             {
-                modifier.network = network;
-                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world));
-                EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldLocation(x, y, z, world));
-                
-                player.inventory.mainInventory[player.inventory.currentItem] = null;
-                ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
-                
-                player.sendChatToPlayer(Localization.localizeString("chat.networkSuccessful"));
+                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.notLinked"));
             }
-            else if (modifier.isActive())
-            {
-                player.sendChatToPlayer(Localization.localizeString("chat.modifierActive"));
+            else
+            {                
+                NBTTagCompound tagCompound = itemStack.getTagCompound();   
+                String network = tagCompound.getString("Network");
+                
+                if (!dial.activeNetwork.equals(network))
+                {
+                    dial.activeNetwork = network;
+                    
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
+                    ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
+                    
+                    player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
+                }
             }
         }
         
