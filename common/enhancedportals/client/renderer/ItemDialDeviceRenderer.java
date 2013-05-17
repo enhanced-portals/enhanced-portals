@@ -26,7 +26,7 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         return true;
     }
 
-    private void render(float x, float y, float z, boolean inventory, boolean basic)
+    private void render(float x, float y, float z, int type, boolean basic)
     {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (basic ? "basicDial" : "dial") + "Device.png");
 
@@ -34,7 +34,7 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         GL11.glTranslatef(x + 0.5F, y + 1.5F, z + 0.5F);
         GL11.glRotatef(180, 90, 0, -90);
 
-        if (inventory)
+        if (type == 0)
         {
             GL11.glRotatef(180, 0, 1.0F, 0);
         }
@@ -55,15 +55,15 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         
         if (type == ItemRenderType.ENTITY)
         {
-            render(-0.5F, 0F, -0.5F, false, basic);
+            render(-0.5F, 0F, -0.5F, 1, basic);
         }
         else if (type == ItemRenderType.EQUIPPED)
         {
-            render(0F, 0.4F, 0F, false, basic);
+            render(0F, 0.4F, 0F, 2, basic);
         }
         else if (type == ItemRenderType.INVENTORY)
         {
-            render(1F, 0.65F, 1F, true, basic);
+            render(1F, 0.7F, 1F, 0, basic);
         }
     }
 

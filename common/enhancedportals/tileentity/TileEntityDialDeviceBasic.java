@@ -32,7 +32,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     }
     
     String oldModifierNetwork;
-    boolean oldParticles, oldSounds;
     public boolean active = false;
     WorldLocation modifierLocation;
     
@@ -71,10 +70,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             {
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
                 
-                oldModifierNetwork = modifier.network;
-                oldParticles = modifier.getParticles();
-                oldSounds = modifier.getSounds();
-                
+                oldModifierNetwork = modifier.network;                
                 EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(modifierLocation);
                 EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, modifierLocation);
                 modifier.network = network;
@@ -94,8 +90,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 else
                 {
                     modifier.network = oldModifierNetwork;
-                    modifier.setSounds(oldSounds);
-                    modifier.setParticles(oldParticles);
                     player.sendChatToPlayer(EnumChatFormatting.RED + "Could not create a portal.");
                 }
             }
@@ -132,12 +126,8 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             
             modifier.removePortal();
             modifier.network = oldModifierNetwork;
-            modifier.setSounds(oldSounds);
-            modifier.setParticles(oldParticles);
             
             oldModifierNetwork = "";
-            oldSounds = true;
-            oldParticles = true;
             modifierLocation = null;
             active = false;
             PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
@@ -154,8 +144,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         if (active)
         {
             modifierLocation = new WorldLocation(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
-            oldParticles = tagCompound.getBoolean("ModifierParticles");
-            oldSounds = tagCompound.getBoolean("ModifierSounds");
             oldModifierNetwork = tagCompound.getString("ModifierNetwork");        
         }
     }
@@ -173,8 +161,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             tagCompound.setInteger("ModifierY", modifierLocation.yCoord);
             tagCompound.setInteger("ModifierZ", modifierLocation.zCoord);
             tagCompound.setInteger("ModifierD", modifierLocation.dimension);
-            tagCompound.setBoolean("ModifierParticles", oldParticles);
-            tagCompound.setBoolean("ModifierSounds", oldSounds);
             tagCompound.setString("ModifierNetwork", oldModifierNetwork);
         }
     }
