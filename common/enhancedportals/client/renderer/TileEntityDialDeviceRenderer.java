@@ -24,19 +24,19 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         GL11.glRotatef(180, 0F, 0F, 1F);
 
-        if (tile.blockMetadata == 2)
+        if (tile.getBlockMetadata() == 2)
         {
             GL11.glRotatef(180, 0F, 1F, 0F);
         }
-        else if (tile.blockMetadata == 3)
+        else if (tile.getBlockMetadata() == 3)
         {
             GL11.glRotatef(0, 0F, 1F, 0F);
         }
-        else if (tile.blockMetadata == 4)
+        else if (tile.getBlockMetadata() == 4)
         {
             GL11.glRotatef(90, 0F, 1F, 0F);
         }
-        else if (tile.blockMetadata == 5)
+        else if (tile.getBlockMetadata() == 5)
         {
             GL11.glRotatef(-90, 0F, 1F, 0F);
         }        

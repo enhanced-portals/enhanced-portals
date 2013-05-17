@@ -13,7 +13,7 @@ import enhancedportals.lib.Localization;
 
 public class BlockEnhancedPortals extends BlockContainer
 {
-    private boolean canRotate = false;
+    private boolean canRotate = false, canRotateVertically = false;
 
     protected BlockEnhancedPortals(int id, Material material)
     {
@@ -112,13 +112,16 @@ public class BlockEnhancedPortals extends BlockContainer
                 direction = ForgeDirection.WEST.ordinal();
             }
 
-            if (entityLiving.rotationPitch > 65 && entityLiving.rotationPitch <= 90)
+            if (canRotateVertically)
             {
-                direction = ForgeDirection.UP.ordinal();
-            }
-            else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
-            {
-                direction = ForgeDirection.DOWN.ordinal();
+                if (entityLiving.rotationPitch > 65 && entityLiving.rotationPitch <= 90)
+                {
+                    direction = ForgeDirection.UP.ordinal();
+                }
+                else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
+                {
+                    direction = ForgeDirection.DOWN.ordinal();
+                }
             }
 
             world.setBlockMetadataWithNotify(x, y, z, direction, 0);
@@ -139,5 +142,10 @@ public class BlockEnhancedPortals extends BlockContainer
     public void setCanRotate()
     {
         canRotate = true;
+    }
+    
+    public void setCanRotateVertically()
+    {
+        canRotateVertically = true;
     }
 }

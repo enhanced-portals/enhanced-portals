@@ -32,6 +32,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         super(BlockIds.PortalModifier, Material.rock);
         setCreativeTab(Reference.CREATIVE_TAB);
         setCanRotate();
+        setCanRotateVertically();
         setHardness(25.0F);
         setResistance(2000.0F);
         setStepSound(soundStoneFootstep);
