@@ -1,5 +1,6 @@
 package enhancedportals.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
@@ -20,6 +21,8 @@ import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.WorldLocation;
+import enhancedportals.lib.WorldLocationBA;
+import enhancedportals.portal.Portal;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -78,6 +81,28 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) blockAccess.getBlockTileEntity(x, y, z);
 
+        if (modifier.hasUpgrade(7))
+        {
+            WorldLocationBA location = new WorldLocationBA(x, y, z, blockAccess);
+            
+            if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.NORTH).getBlockId(), modifier.customBorderBlocks()))
+            {
+                return Block.blocksList[location.getOffset(ForgeDirection.NORTH).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.NORTH).getMetadata());
+            }
+            else if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.SOUTH).getBlockId(), modifier.customBorderBlocks()))
+            {
+                return Block.blocksList[location.getOffset(ForgeDirection.SOUTH).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.SOUTH).getMetadata());
+            }
+            else if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.EAST).getBlockId(), modifier.customBorderBlocks()))
+            {
+                return Block.blocksList[location.getOffset(ForgeDirection.EAST).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.EAST).getMetadata());
+            }
+            else if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.WEST).getBlockId(), modifier.customBorderBlocks()))
+            {
+                return Block.blocksList[location.getOffset(ForgeDirection.WEST).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.WEST).getMetadata());
+            }
+        }
+        
         return side == blockAccess.getBlockMetadata(x, y, z) ? modifier.texture.getModifierIcon() : texture;
     }
 

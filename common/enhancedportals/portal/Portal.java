@@ -636,7 +636,7 @@ public class Portal
         }
     }
 
-    private boolean isBlockFrame(int val, boolean includeSelf)
+    public boolean isBlockFrame(int val, boolean includeSelf)
     {
         if (includeSelf && val == BlockIds.NetherPortal)
         {
@@ -653,8 +653,31 @@ public class Portal
 
         return false;
     }
+    
+    public boolean isBlockFrame(int val, int[] extraIds)
+    {
+        if (!isBlockFrame(val, false))
+        {
+            if (extraIds == null || extraIds.length == 0)
+            {
+                return false;
+            }
+            
+            for (int i : extraIds)
+            {
+                if (i == val)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        return true;
+    }
 
-    private boolean isBlockRemovable(int val)
+    public boolean isBlockRemovable(int val)
     {
         for (int i : Settings.DestroyBlocks)
         {

@@ -103,6 +103,11 @@ public class Upgrade
             theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockGold.getUnlocalizedName() + ".name"));
             theList.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockDiamond.getUnlocalizedName() + ".name"));
         }
+        else if (ID == 7)
+        {
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.camouflage.textA"));
+            theList.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.camouflage.textB"));
+        }
 
         theList.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.remove"));
 
@@ -129,6 +134,8 @@ public class Upgrade
                 return new ItemStack(Block.blockNetherQuartz, 1, 2);
             case 6:
                 return new ItemStack(Block.blockDiamond);
+            case 7:
+                return new ItemStack(Block.stone);
         }
 
         return stack;

@@ -14,18 +14,20 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ItemPortalModifierUpgrade extends Item
 {
     Icon[] textures;
-    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld" };
+    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld", "camouflage" };
 
     public ItemPortalModifierUpgrade()
     {
@@ -73,6 +75,11 @@ public class ItemPortalModifierUpgrade extends Item
             list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockIron.getUnlocalizedName() + ".name"));
             list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockGold.getUnlocalizedName() + ".name"));
             list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockDiamond.getUnlocalizedName() + ".name"));
+        }
+        else if (itemStack.getItemDamage() == 7)
+        {
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.camouflage.textA"));
+            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.camouflage.textB"));
         }
     }
 
@@ -153,6 +160,7 @@ public class ItemPortalModifierUpgrade extends Item
                 player.inventory.mainInventory[player.inventory.currentItem] = null;
 
                 ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
             }
         }
 

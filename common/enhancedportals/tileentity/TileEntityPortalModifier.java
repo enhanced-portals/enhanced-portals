@@ -40,7 +40,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         oldRedstoneState = false;
         inventory = new ItemStack[1];
 
-        upgrades = new boolean[7];
+        upgrades = new boolean[8];
 
         for (int i = 0; i < upgrades.length; i++)
         {
@@ -373,6 +373,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = data.byteData[i] == 1;
+        }
+        
+        if (worldObj.isRemote)
+        {
+            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         }
     }
 

@@ -15,6 +15,7 @@
 	<entry key="item.portalModifierUpgrade.computer.name">Technological Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.nether.name">Nether Frame Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.overworld.name">Resourceful Frame Upgrade</entry>
+	<entry key="item.portalModifierUpgrade.camouflage.name">Modifier Camouflage</entry>
 	<entry key="item.networkCard.name">Network Card</entry>
 	<entry key="gui.networkNotSet">Network is not set</entry>
 	<entry key="gui.activeModifier">You cannot modify the Portal Modifier while it is active</entry>
@@ -65,6 +66,8 @@
 	<entry key="upgrade.advancedDimensional.textC">Allows travel to the same dimension</entry>
 	<entry key="upgrade.blocks.text">Allows the use of the following</entry>
 	<entry key="upgrade.blocks.textA">blocks in the portal frame</entry>
+	<entry key="upgrade.camouflage.textA">Makes the Portal Modifier</entry>
+	<entry key="upgrade.camouflage.textB">look like neighboring blocks</entry>
 	<entry key="chat.networkSuccessful">Successfully changed the network.</entry>
 	<entry key="chat.modifierActive">You cannot change the network when the modifier is active.</entry>
 </properties>
