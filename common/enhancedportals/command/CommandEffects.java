@@ -11,10 +11,24 @@ import enhancedportals.lib.Settings;
 
 public class CommandEffects
 {
+    @SuppressWarnings("rawtypes")
+    public static List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
+    {
+        if (args.length == 3)
+        {
+            if (args[1].equalsIgnoreCase(Commands.PARTICLES) || args[1].equalsIgnoreCase(Commands.SOUNDS) || args[1].equalsIgnoreCase(Commands.PORTAL_EFFECTS))
+            {
+                return CommandBase.getListOfStringsMatchingLastWord(args, new String[] { Commands.ON, Commands.OFF });
+            }
+        }
+
+        return null;
+    }
+
     public static void processCommand(ICommandSender sender, String[] args)
     {
         if (args[1].equalsIgnoreCase(Commands.PARTICLES))
-        {            
+        {
             if (args[2].equalsIgnoreCase(Commands.ON))
             {
                 Settings.ParticleLevel = 100;
@@ -74,19 +88,5 @@ public class CommandEffects
         {
             throw new WrongUsageException(Commands.EFFECTS_USAGE, new Object[0]);
         }
-    }
-    
-    @SuppressWarnings("rawtypes")
-    public static List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
-    {
-        if (args.length == 3)
-        {
-            if (args[1].equalsIgnoreCase(Commands.PARTICLES) || args[1].equalsIgnoreCase(Commands.SOUNDS) || args[1].equalsIgnoreCase(Commands.PORTAL_EFFECTS))
-            {
-                return CommandBase.getListOfStringsMatchingLastWord(args, new String[] { Commands.ON, Commands.OFF });
-            }
-        }
-        
-        return null;
     }
 }

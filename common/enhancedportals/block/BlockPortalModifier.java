@@ -56,14 +56,14 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         {
             EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
         }
-        
+
         for (int i = 0; i < modifier.upgrades.length; i++)
         {
             if (modifier.upgrades[i])
             {
                 ItemStack stack = new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, i);
                 EntityItem entity = new EntityItem(modifier.worldObj, modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, stack);
-                modifier.worldObj.spawnEntityInWorld(entity);                
+                modifier.worldObj.spawnEntityInWorld(entity);
                 modifier.upgrades[i] = false;
             }
         }
@@ -84,7 +84,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         if (modifier.hasUpgrade(7))
         {
             WorldLocationBA location = new WorldLocationBA(x, y, z, blockAccess);
-            
+
             if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.NORTH).getBlockId(), modifier.customBorderBlocks()))
             {
                 return Block.blocksList[location.getOffset(ForgeDirection.NORTH).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.NORTH).getMetadata());
@@ -102,7 +102,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
                 return Block.blocksList[location.getOffset(ForgeDirection.WEST).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.WEST).getMetadata());
             }
         }
-        
+
         return side == blockAccess.getBlockMetadata(x, y, z) ? modifier.texture.getModifierIcon() : texture;
     }
 

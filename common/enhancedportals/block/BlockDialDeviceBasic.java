@@ -33,48 +33,35 @@ public class BlockDialDeviceBasic extends BlockEnhancedPortals
     }
 
     @Override
-    public Icon getIcon(int par1, int par2)
-    {
-        return Block.blocksList[BlockIds.Obsidian].getIcon(par1, par2);
-    }
-    
-    @Override
-    public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
-    {
-        return new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST };
-    }
-    
-    @Override
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntityDialDeviceBasic();
     }
-    
+
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
+    public Icon getIcon(int par1, int par2)
     {
-        
+        return Block.blocksList[BlockIds.Obsidian].getIcon(par1, par2);
     }
-    
+
     @Override
     public int getRenderType()
     {
         return -1;
     }
-    
+
+    @Override
+    public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
+    {
+        return new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST };
+    }
+
     @Override
     public boolean isOpaqueCube()
     {
         return false;
     }
-    
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-    
+
     @Override
     public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
@@ -83,10 +70,23 @@ public class BlockDialDeviceBasic extends BlockEnhancedPortals
             player.openGui(EnhancedPortals.instance, GuiIds.DialDeviceBasic, worldObj, x, y, z);
             return true;
         }
-        
+
         return super.onBlockActivated(worldObj, x, y, z, player, par6, par7, par8, par9);
     }
-    
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+
+    }
+
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+
     @Override
     public void updateTick(World world, int x, int y, int z, Random random)
     {

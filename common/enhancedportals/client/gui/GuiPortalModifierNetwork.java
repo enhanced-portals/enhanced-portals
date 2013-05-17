@@ -139,8 +139,6 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         return false;
     }
 
-    
-
     @Override
     public void drawScreen(int x, int y, float par3)
     {

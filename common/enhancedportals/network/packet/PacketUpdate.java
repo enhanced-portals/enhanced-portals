@@ -32,7 +32,7 @@ public class PacketUpdate extends PacketEP
             {
                 packetData.integerData[i] = stream.readInt();
             }
-            
+
             for (int i = 0; i < packetData.byteData.length; i++)
             {
                 packetData.byteData[i] = stream.readByte();
@@ -85,7 +85,7 @@ public class PacketUpdate extends PacketEP
         {
             packetData.integerData[i] = stream.readInt();
         }
-        
+
         for (int i = 0; i < packetData.byteData.length; i++)
         {
             packetData.byteData[i] = stream.readByte();
@@ -121,7 +121,7 @@ public class PacketUpdate extends PacketEP
             {
                 stream.writeInt(i);
             }
-            
+
             for (byte b : packetData.byteData)
             {
                 stream.writeByte(b);

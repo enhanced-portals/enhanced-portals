@@ -4,10 +4,10 @@ import enhancedportals.network.packet.PacketData;
 
 public class TileEntityDialDevice extends TileEntityEnhancedPortals
 {
-    
+
     public TileEntityDialDevice()
     {
-        
+
     }
 
     @Override
@@ -19,6 +19,6 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
     @Override
     public void parsePacketData(PacketData data)
     {
-        
+
     }
 }

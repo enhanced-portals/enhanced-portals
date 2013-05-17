@@ -76,7 +76,7 @@ public class EnhancedPortals
 
             Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture((byte) j));
         }
-        
+
         // Add items to valid items list
         Settings.ValidItemsList.add(Item.bucketLava.itemID);
         Settings.ValidItemsList.add(Item.bucketWater.itemID);
@@ -166,7 +166,7 @@ public class EnhancedPortals
     private void preInit(FMLPreInitializationEvent event)
     {
         Reference.log.setParent(FMLLog.getLogger());
-        
+
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         proxy.loadBlocks();
         proxy.loadItems();
@@ -180,7 +180,7 @@ public class EnhancedPortals
     private void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandEP());
-        
+
         proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
         proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
     }

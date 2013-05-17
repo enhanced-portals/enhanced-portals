@@ -17,7 +17,7 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
     {
         model = new ModelDialDevice();
     }
-    
+
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
@@ -40,9 +40,9 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
         else if (tile.getBlockMetadata() == 5)
         {
             GL11.glRotatef(-90, 0F, 1F, 0F);
-        }        
+        }
 
-        bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/" + ((tile instanceof TileEntityDialDeviceBasic) ? "basicDial" : "dial") + "Device.png");
+        bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (tile instanceof TileEntityDialDeviceBasic ? "basicDial" : "dial") + "Device.png");
         model.renderAll();
         GL11.glPopMatrix();
     }

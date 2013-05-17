@@ -241,7 +241,7 @@ public class GuiPortalModifier extends GuiContainer
 
     @SuppressWarnings("rawtypes")
     public void drawText(List<String> list, int x, int y)
-    {        
+    {
         if (!list.isEmpty())
         {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -253,8 +253,8 @@ public class GuiPortalModifier extends GuiContainer
 
             while (iterator.hasNext())
             {
-                String s = (String)iterator.next();
-                int l = this.fontRenderer.getStringWidth(s);
+                String s = (String) iterator.next();
+                int l = fontRenderer.getStringWidth(s);
 
                 if (l > k)
                 {
@@ -271,35 +271,35 @@ public class GuiPortalModifier extends GuiContainer
                 k1 += 2 + (list.size() - 1) * 10;
             }
 
-            if (i1 + k > this.width)
+            if (i1 + k > width)
             {
                 i1 -= 28 + k;
             }
 
-            if (j1 + k1 + 6 > this.height)
+            if (j1 + k1 + 6 > height)
             {
-                j1 = this.height - k1 - 6;
+                j1 = height - k1 - 6;
             }
 
-            this.zLevel = 300.0F;
+            zLevel = 300.0F;
             itemRenderer.zLevel = 300.0F;
             int l1 = -267386864;
-            this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
             int i2 = 1347420415;
             int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
-            this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
+            drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
+            drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
+            drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
 
             for (int k2 = 0; k2 < list.size(); ++k2)
             {
-                String s1 = (String)list.get(k2);
-                this.fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
+                String s1 = list.get(k2);
+                fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
 
                 if (k2 == 0)
                 {
@@ -309,7 +309,7 @@ public class GuiPortalModifier extends GuiContainer
                 j1 += 10;
             }
 
-            this.zLevel = 0.0F;
+            zLevel = 0.0F;
             itemRenderer.zLevel = 0.0F;
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_DEPTH_TEST);

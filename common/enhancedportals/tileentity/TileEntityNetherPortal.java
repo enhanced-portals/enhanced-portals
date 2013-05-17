@@ -31,7 +31,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         PacketData data = new PacketData();
         data.integerData = new int[] { texture.colour, texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
         data.stringData = new String[] { texture.liquidID };
-        
+
         return data;
     }
 
@@ -83,7 +83,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         byte colour = tagCompound.getByte("Colour");
         int blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
         String liquid = tagCompound.getString("LiquidID");
-        
+
         if (colour != -1)
         {
             texture = new PortalTexture(colour);

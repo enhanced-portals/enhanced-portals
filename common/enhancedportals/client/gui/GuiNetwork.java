@@ -16,12 +16,7 @@ import org.lwjgl.opengl.GL12;
 public class GuiNetwork extends GuiScreen
 {
     public RenderItem itemRenderer = new RenderItem();
-    
-    public void elementClicked(GuiGlyphElement element, int button)
-    {
-        
-    }
-    
+
     @SuppressWarnings("rawtypes")
     protected void drawHoveringText(List par1List, int par2, int par3, FontRenderer font)
     {
@@ -120,5 +115,10 @@ public class GuiNetwork extends GuiScreen
 
         FontRenderer font = par1ItemStack.getItem().getFontRenderer(par1ItemStack);
         drawHoveringText(list, par2, par3, font == null ? fontRenderer : font);
+    }
+
+    public void elementClicked(GuiGlyphElement element, int button)
+    {
+
     }
 }

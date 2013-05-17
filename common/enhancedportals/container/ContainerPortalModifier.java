@@ -62,13 +62,13 @@ public class ContainerPortalModifier extends Container
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
             PortalTexture tempText = PortalTexture.getPortalTexture(stackInSlot);
-            
+
             if (tempText != null)
-            {                
+            {
                 if (tempText.isEqualTo(portalModifier.texture))
                 {
                     tempText = PortalTexture.getPortalTexture(stackInSlot, portalModifier.texture);
-                    
+
                     if (tempText != null && tempText.isEqualTo(portalModifier.texture))
                     {
                         return null;

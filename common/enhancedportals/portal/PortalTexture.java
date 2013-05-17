@@ -11,34 +11,16 @@ import enhancedportals.lib.Textures;
 
 public class PortalTexture
 {
-    public int blockID = -1, metaData = -1;
-    public byte colour = -1;
-    public String liquidID = "NULL";
-    
-    public static int swapColours(int integer)
-    {
-        if (integer == 0)
-        {
-            integer = 5;
-        }
-        else if (integer == 5)
-        {
-            integer = 0;
-        }
-
-        return integer;
-    }
-
     public static PortalTexture getPortalTexture(Object... arguments)
     {
         PortalTexture texture = new PortalTexture();
-        
+
         if (arguments.length == 1)
         {
             if (arguments[0] instanceof Byte) // Colour ID
             {
                 byte par1 = Byte.parseByte(arguments[0].toString());
-                
+
                 if (par1 >= 0 && par1 <= 15)
                 {
                     texture.colour = par1;
@@ -53,7 +35,7 @@ public class PortalTexture
             else if (arguments[0] instanceof ItemStack) // ItemStack
             {
                 ItemStack stack = (ItemStack) arguments[0];
-                
+
                 if (stack.getItemName().startsWith("tile.")) // Block
                 {
                     return getPortalTexture(stack.itemID, stack.getItemDamage());
@@ -80,12 +62,12 @@ public class PortalTexture
             if (arguments[0] instanceof Integer && arguments[1] instanceof Integer) // Block ID & Metadata
             {
                 int par1 = Integer.parseInt(arguments[0].toString()), par2 = Integer.parseInt(arguments[1].toString());
-                
+
                 if (Settings.isBlockExcluded(par1))
                 {
                     return null;
                 }
-                
+
                 texture.blockID = par1;
                 texture.metaData = par2;
                 return texture;
@@ -94,15 +76,15 @@ public class PortalTexture
             {
                 ItemStack stack = (ItemStack) arguments[0];
                 PortalTexture secondTexture = (PortalTexture) arguments[1];
-                
+
                 if (Settings.isValidItem(stack.itemID)) // Item Map
                 {
                     PortalTexture text = Settings.ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage());
-                    
+
                     if (text.isEqualTo(secondTexture))
                     {
                         PortalTexture text2 = Settings.ItemPortalTextureMap.get(stack.itemID + ":" + stack.getItemDamage() + "_");
-                        
+
                         if (text2 != null)
                         {
                             return text2;
@@ -115,40 +97,55 @@ public class PortalTexture
                 }
             }
         }
-        
+
         return null;
     }
-    
+
+    public static int swapColours(int integer)
+    {
+        if (integer == 0)
+        {
+            integer = 5;
+        }
+        else if (integer == 5)
+        {
+            integer = 0;
+        }
+
+        return integer;
+    }
+
+    public int blockID = -1, metaData = -1;
+
+    public byte colour = -1;
+
+    public String liquidID = "NULL";
+
     public PortalTexture()
     {
-        
+
     }
-    
+
     public PortalTexture(byte colour)
     {
         this.colour = colour;
     }
-    
+
     public PortalTexture(int id, int meta)
     {
         blockID = id;
         metaData = meta;
     }
-    
+
     public PortalTexture(String str)
     {
         liquidID = str;
     }
 
-    public byte getType()
-    {
-        return (byte) (colour != -1 ? 0 : (blockID != -1 ? 1 : 2));
-    }
-    
     public Icon getIcon(int side)
     {
         if (getType() == 0) // Colours
-        {            
+        {
             return Textures.TEXTURE_ICONS[colour];
         }
         else if (getType() == 1) // Blocks
@@ -157,7 +154,7 @@ public class PortalTexture
             {
                 return Settings.CustomIconMap.get(blockID + ":" + metaData);
             }
-            
+
             if (blockID == 9 || blockID == 11) // We want to display the still versions of these.
             {
                 return Block.blocksList[blockID].getIcon(0, 0);
@@ -175,14 +172,14 @@ public class PortalTexture
             {
                 return Settings.CustomIconMap.get(liquidID);
             }
-            
+
             Icon test = LiquidDictionary.getLiquid(liquidID, 1).getRenderingIcon();
-            
+
             if (test != null)
             {
                 return test;
             }
-            
+
             return LiquidDictionary.getLiquid(liquidID, 1).asItemStack().getIconIndex();
         }
 
@@ -192,7 +189,7 @@ public class PortalTexture
     public Icon getModifierIcon()
     {
         if (getType() == 0) // Colours
-        {            
+        {
             return Textures.PORTAL_MODIFIER_ICONS[colour];
         }
         else if (getType() == 1) // Blocks
@@ -208,7 +205,7 @@ public class PortalTexture
         }
         else if (getType() == 2) // Liquids
         {
-            
+
         }
 
         return Textures.PORTAL_MODIFIER_ICONS[5];
@@ -226,7 +223,7 @@ public class PortalTexture
             {
                 return Settings.CustomParticleMap.get(blockID + ":" + metaData);
             }
-            
+
             if (blockID == 8 || blockID == 9)
             {
                 return Textures.PARTICLE_COLOURS[4];
@@ -245,6 +242,11 @@ public class PortalTexture
         }
 
         return Textures.PARTICLE_COLOURS[5];
+    }
+
+    public byte getType()
+    {
+        return (byte) (colour != -1 ? 0 : blockID != -1 ? 1 : 2);
     }
 
     public boolean isEqualTo(PortalTexture texture)

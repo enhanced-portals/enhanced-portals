@@ -1,7 +1,7 @@
 package enhancedportals.portal.network;
 
-import enhancedportals.lib.Reference;
 import net.minecraft.server.MinecraftServer;
+import enhancedportals.lib.Reference;
 
 public class DialDeviceNetwork extends NetworkManager
 {
@@ -10,6 +10,7 @@ public class DialDeviceNetwork extends NetworkManager
         super(server);
     }
 
+    @Override
     public String getSaveFileName()
     {
         return Reference.MOD_ID + "_DialDevices.dat";

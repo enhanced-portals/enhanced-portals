@@ -25,6 +25,6 @@ public class Reference
     public static final List<ItemStack> glyphItems = new ArrayList<ItemStack>();
     public static final List<String> glyphValues = new ArrayList<String>();
     public static final String glyphSeperator = " ";
-    
+
     public static Logger log = Logger.getLogger("EnhancedPortals 2");
 }

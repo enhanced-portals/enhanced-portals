@@ -5,11 +5,10 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import enhancedportals.client.model.ModelDialDevice;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
-
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class ItemDialDeviceRenderer implements IItemRenderer
 {
@@ -47,12 +46,12 @@ public class ItemDialDeviceRenderer implements IItemRenderer
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
         boolean basic = false;
-        
+
         if (item.itemID == BlockIds.DialHomeDeviceBasic)
         {
             basic = true;
         }
-        
+
         if (type == ItemRenderType.ENTITY)
         {
             render(-0.5F, 0F, -0.5F, 1, basic);

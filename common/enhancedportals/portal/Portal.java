@@ -653,7 +653,7 @@ public class Portal
 
         return false;
     }
-    
+
     public boolean isBlockFrame(int val, int[] extraIds)
     {
         if (!isBlockFrame(val, false))
@@ -662,7 +662,7 @@ public class Portal
             {
                 return false;
             }
-            
+
             for (int i : extraIds)
             {
                 if (i == val)
@@ -670,10 +670,10 @@ public class Portal
                     return true;
                 }
             }
-            
+
             return false;
         }
-        
+
         return true;
     }
 

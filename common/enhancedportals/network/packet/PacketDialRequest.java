@@ -10,22 +10,23 @@ public class PacketDialRequest extends PacketUpdate
     {
         super();
     }
+
     public PacketDialRequest(DataInputStream stream)
     {
         super(stream);
     }
-    
+
     public PacketDialRequest(int x, int y, int z, int d, String network)
     {
         super();
-        
+
         xCoord = x;
         yCoord = y;
         zCoord = z;
         dimension = d;
         packetData = new PacketData(new int[0], new byte[0], new String[] { network });
     }
-    
+
     @Override
     public int getPacketID()
     {

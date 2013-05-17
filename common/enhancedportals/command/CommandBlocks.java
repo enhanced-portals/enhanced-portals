@@ -13,10 +13,26 @@ import enhancedportals.lib.Settings;
 
 public class CommandBlocks
 {
+    @SuppressWarnings("rawtypes")
+    public static List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
+    {
+        System.out.println(args.length);
+
+        if (args.length == 3)
+        {
+            if (args[1].equalsIgnoreCase(Commands.BORDER_BLOCKS) || args[1].equalsIgnoreCase(Commands.DESTROY_BLOCKS))
+            {
+                return CommandBase.getListOfStringsMatchingLastWord(args, new String[] { Commands.ADD, Commands.REMOVE, Commands.RESET, Commands.CLEAR, Commands.LIST });
+            }
+        }
+
+        return null;
+    }
+
     public static void processCommand(ICommandSender sender, String[] args)
     {
         if (args[1].equalsIgnoreCase(Commands.BORDER_BLOCKS))
-        {            
+        {
             if (args[2].equalsIgnoreCase(Commands.ADD))
             {
                 if (args.length == 4)
@@ -24,15 +40,15 @@ public class CommandBlocks
                     try
                     {
                         int blockid = Integer.parseInt(args[3]);
-                        
+
                         if (Settings.BorderBlocks.contains(blockid))
                         {
                             sender.sendChatToPlayer(EnumChatFormatting.RED + "Block ID already exists.");
                             return;
                         }
-                        
+
                         Settings.BorderBlocks.add(blockid);
-                        
+
                         sender.sendChatToPlayer(String.format(Localization.localizeString(Commands.BORDER_BLOCKS_ADD_SUCCESS), blockid));
                     }
                     catch (Exception e)
@@ -51,16 +67,16 @@ public class CommandBlocks
                 {
                     try
                     {
-                        int blockid = Integer.parseInt(args[3]);    
-                        
+                        int blockid = Integer.parseInt(args[3]);
+
                         if (!Settings.BorderBlocks.contains(blockid))
                         {
                             sender.sendChatToPlayer(EnumChatFormatting.RED + "Block isn't in the list.");
                             return;
                         }
-                        
-                        Settings.BorderBlocks.remove((Object)blockid);
-                        
+
+                        Settings.BorderBlocks.remove((Object) blockid);
+
                         sender.sendChatToPlayer(String.format(Localization.localizeString(Commands.BORDER_BLOCKS_REMOVE_SUCCESS), blockid));
                     }
                     catch (Exception e)
@@ -79,7 +95,7 @@ public class CommandBlocks
                 Settings.BorderBlocks.clear();
                 Settings.BorderBlocks.add(BlockIds.Obsidian);
                 Settings.BorderBlocks.add(BlockIds.PortalModifier);
-                
+
                 sender.sendChatToPlayer(Localization.localizeString(Commands.BORDER_BLOCKS_CLEAR));
             }
             else if (args[2].equalsIgnoreCase(Commands.RESET))
@@ -88,7 +104,7 @@ public class CommandBlocks
                 Settings.BorderBlocks.add(BlockIds.Obsidian);
                 Settings.BorderBlocks.add(BlockIds.PortalModifier);
                 Settings.BorderBlocks.add(BlockIds.ObsidianStairs);
-                
+
                 sender.sendChatToPlayer(Localization.localizeString(Commands.BORDER_BLOCKS_RESET));
             }
             else if (args[2].equalsIgnoreCase(Commands.LIST))
@@ -98,21 +114,21 @@ public class CommandBlocks
                     sender.sendChatToPlayer(EnumChatFormatting.RED + "There are no custom block IDs.");
                     return;
                 }
-                
+
                 String str = "";
-                
+
                 for (int i : Settings.BorderBlocks)
                 {
                     if (i == BlockIds.Obsidian || i == BlockIds.PortalModifier)
                     {
                         continue;
                     }
-                    
+
                     str = str + ", " + i;
                 }
-                
+
                 str = str.substring(2);
-                
+
                 sender.sendChatToPlayer("Block IDs: " + str);
             }
             else
@@ -124,23 +140,23 @@ public class CommandBlocks
         {
             if (args[2].equalsIgnoreCase(Commands.ADD))
             {
-                
+
             }
             else if (args[2].equalsIgnoreCase(Commands.REMOVE))
             {
-                
+
             }
             else if (args[2].equalsIgnoreCase(Commands.CLEAR))
             {
-                
+
             }
             else if (args[2].equalsIgnoreCase(Commands.RESET))
             {
-                
+
             }
             else if (args[2].equalsIgnoreCase(Commands.LIST))
             {
-                
+
             }
             else
             {
@@ -151,21 +167,5 @@ public class CommandBlocks
         {
             throw new WrongUsageException(Commands.BLOCKS_USAGE, new Object[0]);
         }
-    }
-    
-    @SuppressWarnings("rawtypes")
-    public static List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
-    {
-        System.out.println(args.length);
-        
-        if (args.length == 3)
-        {
-            if (args[1].equalsIgnoreCase(Commands.BORDER_BLOCKS) || args[1].equalsIgnoreCase(Commands.DESTROY_BLOCKS))
-            {
-                return CommandBase.getListOfStringsMatchingLastWord(args, new String[] { Commands.ADD, Commands.REMOVE, Commands.RESET, Commands.CLEAR, Commands.LIST });
-            }
-        }
-        
-        return null;
     }
 }

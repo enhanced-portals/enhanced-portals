@@ -10,48 +10,6 @@ import enhancedportals.lib.Commands;
 
 public class CommandEP extends CommandBase
 {
-    @Override
-    public String getCommandName()
-    {
-        return "ep";
-    }
-    
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender)
-    {
-        return super.canCommandSenderUseCommand(par1iCommandSender);
-    }
-
-    @Override
-    public void processCommand(ICommandSender icommandsender, String[] args)
-    {
-        if (args.length > 0)
-        {
-            String commandName = args[0];
-            
-            if (commandName.equalsIgnoreCase(Commands.EFFECTS))
-            {
-                CommandEffects.processCommand(icommandsender, args);
-            }
-            else if (commandName.equalsIgnoreCase(Commands.BLOCKS))
-            {
-                CommandBlocks.processCommand(icommandsender, args);
-            }
-            else if (commandName.equalsIgnoreCase(Commands.CONTROL))
-            {
-                
-            }
-            else
-            {
-                throw new WrongUsageException(Commands.USAGE, new Object[0]);
-            }
-        }
-        else
-        {
-            throw new WrongUsageException(Commands.USAGE, new Object[0]);
-        }
-    }
-    
     @SuppressWarnings("rawtypes")
     @Override
     public List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
@@ -72,7 +30,7 @@ public class CommandEP extends CommandBase
             }
             else if (args[0].equalsIgnoreCase(Commands.CONTROL))
             {
-                return getListOfStringsMatchingLastWord(args, new String[] { });
+                return getListOfStringsMatchingLastWord(args, new String[] {});
             }
         }
         else if (args.length >= 3)
@@ -86,10 +44,16 @@ public class CommandEP extends CommandBase
                 return CommandBlocks.addTabCompletionOptions(par1iCommandSender, args);
             }
         }
-        
+
         return null;
     }
-        
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender)
+    {
+        return super.canCommandSenderUseCommand(par1iCommandSender);
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public List getCommandAliases()
@@ -97,5 +61,41 @@ public class CommandEP extends CommandBase
         List list = new ArrayList();
         list.add("enhancedportals");
         return list;
+    }
+
+    @Override
+    public String getCommandName()
+    {
+        return "ep";
+    }
+
+    @Override
+    public void processCommand(ICommandSender icommandsender, String[] args)
+    {
+        if (args.length > 0)
+        {
+            String commandName = args[0];
+
+            if (commandName.equalsIgnoreCase(Commands.EFFECTS))
+            {
+                CommandEffects.processCommand(icommandsender, args);
+            }
+            else if (commandName.equalsIgnoreCase(Commands.BLOCKS))
+            {
+                CommandBlocks.processCommand(icommandsender, args);
+            }
+            else if (commandName.equalsIgnoreCase(Commands.CONTROL))
+            {
+
+            }
+            else
+            {
+                throw new WrongUsageException(Commands.USAGE, new Object[0]);
+            }
+        }
+        else
+        {
+            throw new WrongUsageException(Commands.USAGE, new Object[0]);
+        }
     }
 }

@@ -21,14 +21,14 @@ public class GuiDialDeviceBasic extends GuiNetwork
     int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
     RenderItem itemRenderer = new RenderItem();
     TileEntityDialDeviceBasic dialDevice;
-    
+
     List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
     List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
-    
+
     public GuiDialDeviceBasic(TileEntityDialDeviceBasic dialdevice)
     {
         dialDevice = dialdevice;
-        
+
         for (int i = 0; i < 9; i++)
         {
             elementList.add(new GuiGlyphElement(guiLeft + 8 + i * 18, guiTop + 15, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
@@ -45,25 +45,34 @@ public class GuiDialDeviceBasic extends GuiNetwork
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initGui()
+    protected void actionPerformed(GuiButton button)
     {
-        super.initGui();
+        if (button.id == 1)
+        {
+            String str = "";
 
-        guiLeft = (width - xSize) / 2;
-        guiTop = (height - ySize) / 2;
-        
-        buttonList.add(new GuiButton(1, guiLeft + 13, guiTop + 107, 150, 20, "Dial"));
-        ((GuiButton) buttonList.get(0)).enabled = false;
+            for (int i = 0; i < stackList.size(); i++)
+            {
+                str = str + Reference.glyphSeperator + stackList.get(i).value;
+            }
+
+            if (str.length() > 0)
+            {
+                str = str.substring(Reference.glyphSeperator.length());
+            }
+
+            FMLClientHandler.instance().getClient().thePlayer.closeScreen();
+            PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
+        }
     }
-    
+
     @Override
     public boolean doesGuiPauseGame()
     {
         return false;
     }
-    
+
     @Override
     public void drawScreen(int x, int y, float par3)
     {
@@ -74,17 +83,17 @@ public class GuiDialDeviceBasic extends GuiNetwork
         int y2 = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);
         fontRenderer.drawString(Localization.localizeString("tile.dialDeviceBasic.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDeviceBasic.name")) / 2, guiTop - 15, 0xFFCCCCCC);
-        
+
         fontRenderer.drawString(Localization.localizeString("gui.glyphs.title"), guiLeft + 7, guiTop + 3, 0xFF444444);
         fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 7, guiTop + 71, 0xFF444444);
-        
+
         if (dialDevice.active)
         {
             fontRenderer.drawString(EnumChatFormatting.RED + Localization.localizeString("gui.dialDevice.active"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.dialDevice.active")) / 2, guiTop + 150, 0xFF444444);
         }
-        
+
         super.drawScreen(x, y, par3); // Draw buttons
-        
+
         // Draw glyphs
         for (int i = stackList.size() - 1; i >= 0; i--)
         {
@@ -106,22 +115,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
             elementList.get(i).drawElement(guiLeft, guiTop, x, y, fontRenderer, itemRenderer, mc.renderEngine);
         }
     }
-    
-    @Override
-    public void updateScreen()
-    {
-        super.updateScreen();
-        
-        if (stackList.size() == 0)
-        {
-            ((GuiButton) buttonList.get(0)).enabled = false;
-        }
-        else
-        {
-            ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
-        }
-    }
-    
+
     @Override
     public void elementClicked(GuiGlyphElement element, int button)
     {
@@ -184,34 +178,25 @@ public class GuiDialDeviceBasic extends GuiNetwork
             }
         }
     }
-    
-    @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        if (button.id == 1)
-        {
-            String str = "";
-            
-            for (int i = 0; i < stackList.size(); i++)
-            {
-                str = str + Reference.glyphSeperator + stackList.get(i).value;
-            }
 
-            if (str.length() > 0)
-            {
-                str = str.substring(Reference.glyphSeperator.length());
-            }
-            
-            FMLClientHandler.instance().getClient().thePlayer.closeScreen();
-            PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
-        }
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+
+        guiLeft = (width - xSize) / 2;
+        guiTop = (height - ySize) / 2;
+
+        buttonList.add(new GuiButton(1, guiLeft + 13, guiTop + 107, 150, 20, "Dial"));
+        ((GuiButton) buttonList.get(0)).enabled = false;
     }
-    
+
     @Override
     protected void mouseClicked(int x, int y, int buttonClicked)
     {
         super.mouseClicked(x, y, buttonClicked);
-        
+
         for (int i = 0; i < elementList.size(); i++)
         {
             elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked);
@@ -220,6 +205,21 @@ public class GuiDialDeviceBasic extends GuiNetwork
         for (int i = 0; i < stackList.size(); i++)
         {
             stackList.get(i).handleMouseClick(guiLeft + 8 + i * 18, guiTop + 83, x, y, buttonClicked);
+        }
+    }
+
+    @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+
+        if (stackList.size() == 0)
+        {
+            ((GuiButton) buttonList.get(0)).enabled = false;
+        }
+        else
+        {
+            ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
         }
     }
 }

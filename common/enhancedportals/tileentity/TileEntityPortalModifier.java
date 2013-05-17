@@ -123,16 +123,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour, texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting};
+        data.integerData = new int[] { texture.colour, texture.blockID, texture.metaData, sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting };
         data.stringData = new String[] { texture.liquidID, network };
 
         byte[] byteData = new byte[upgrades.length];
         for (int i = 0; i < upgrades.length; i++)
         {
-            byteData[i] = (byte)(upgrades[i] ? 1 : 0);
-        }        
+            byteData[i] = (byte) (upgrades[i] ? 1 : 0);
+        }
         data.byteData = byteData;
-        
+
         return data;
     }
 
@@ -287,7 +287,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             if (PortalTexture.getPortalTexture(stack) != null)
             {
                 text = PortalTexture.getPortalTexture(stack);
-                
+
                 if (text.isEqualTo(texture))
                 {
                     text = PortalTexture.getPortalTexture(stack, texture);
@@ -367,14 +367,14 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         portalThickness = (byte) data.integerData[5];
         updateTexture(newTexture);
         updateData(sound, particles, portalThickness);
-        redstoneSetting = (byte) data.integerData[6];        
+        redstoneSetting = (byte) data.integerData[6];
         network = data.stringData[1];
 
         for (int i = 0; i < upgrades.length; i++)
         {
             upgrades[i] = data.byteData[i] == 1;
         }
-        
+
         if (worldObj.isRemote)
         {
             worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
@@ -389,7 +389,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         byte colour = tagCompound.getByte("Colour");
         int blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
         String liquid = tagCompound.getString("LiquidID");
-        
+
         if (colour != -1)
         {
             texture = new PortalTexture(colour);
@@ -415,6 +415,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         {
             upgrades[i] = tagCompound.getBoolean("Upgrade" + i);
         }
+    }
+
+    public void removePortal()
+    {
+        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
     }
 
     @Override
@@ -502,11 +508,5 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         {
             tagCompound.setBoolean("Upgrade" + i, upgrades[i]);
         }
-    }
-
-    public void removePortal()
-    {
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
     }
 }

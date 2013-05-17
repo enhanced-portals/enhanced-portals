@@ -143,7 +143,7 @@ public class BlockEnhancedPortals extends BlockContainer
     {
         canRotate = true;
     }
-    
+
     public void setCanRotateVertically()
     {
         canRotateVertically = true;

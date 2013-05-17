@@ -26,7 +26,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class ItemNetworkCard extends Item
 {
     Icon texture;
-    
+
     public ItemNetworkCard()
     {
         super(ItemIds.NetworkCard);
@@ -36,21 +36,21 @@ public class ItemNetworkCard extends Item
         setUnlocalizedName(Localization.NetworkCard_Name);
         maxStackSize = 1;
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
+
+    public boolean addData(ItemStack stack, TileEntityPortalModifier modifier)
     {
-        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.NetworkCard_Name);
+        if (isSet(stack))
+        {
+            return false;
+        }
+
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        tagCompound.setString("Network", modifier.network);
+        stack.setTagCompound(tagCompound);
+
+        return true;
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIconFromDamage(int par1)
-    {
-        return texture;
-    }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
@@ -60,7 +60,7 @@ public class ItemNetworkCard extends Item
         {
             String[] network = itemStack.getTagCompound().getString("Network").split(" ");
             String[] net = new String[9];
-            
+
             for (int i = 0; i < 9; i++)
             {
                 if (network.length > i)
@@ -72,14 +72,14 @@ public class ItemNetworkCard extends Item
                     net[i] = "";
                 }
             }
-            
+
             list.add(net[0] + " " + net[1] + " " + net[2]);
-            
+
             if (network.length > 3)
             {
                 list.add(net[3] + " " + net[4] + " " + net[5]);
             }
-            
+
             if (network.length > 6)
             {
                 list.add(net[6] + " " + net[7] + " " + net[8]);
@@ -90,40 +90,33 @@ public class ItemNetworkCard extends Item
             list.add(Localization.localizeString("gui.networkNotSet"));
         }
     }
-    
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public EnumRarity getRarity(ItemStack itemStack)
     {
         return EnumRarity.rare;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack itemStack)
     {
         return isSet(itemStack);
     }
-    
-    public boolean addData(ItemStack stack, TileEntityPortalModifier modifier)
-    {
-        if (isSet(stack))
-        {
-            return false;
-        }
-        
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setString("Network", modifier.network);
-        stack.setTagCompound(tagCompound);
-        
-        return true;
-    }
-    
+
     public boolean isSet(ItemStack stack)
     {
         return stack.hasTagCompound();
     }
-    
+
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
@@ -131,29 +124,29 @@ public class ItemNetworkCard extends Item
         {
             return true;
         }
-        
+
         if (world.getBlockId(x, y, z) == BlockIds.PortalModifier)
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
-            
+
             if (!isSet(itemStack))
             {
                 addData(itemStack, modifier);
             }
             else
             {
-                NBTTagCompound tagCompound = itemStack.getTagCompound();   
+                NBTTagCompound tagCompound = itemStack.getTagCompound();
                 String network = tagCompound.getString("Network");
-                
+
                 if (!modifier.network.equals(network) && !modifier.isActive())
                 {
                     modifier.network = network;
                     EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world));
                     EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldLocation(x, y, z, world));
-                    
+
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
-                    ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
-                    
+                    ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
                 }
                 else if (modifier.isActive())
@@ -165,28 +158,35 @@ public class ItemNetworkCard extends Item
         else if (world.getBlockId(x, y, z) == BlockIds.AutomaticDialler)
         {
             TileEntityAutomaticDialler dial = (TileEntityAutomaticDialler) world.getBlockTileEntity(x, y, z);
-            
+
             if (!isSet(itemStack))
             {
                 player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.notLinked"));
             }
             else
-            {                
-                NBTTagCompound tagCompound = itemStack.getTagCompound();   
+            {
+                NBTTagCompound tagCompound = itemStack.getTagCompound();
                 String network = tagCompound.getString("Network");
-                
+
                 if (!dial.activeNetwork.equals(network))
                 {
                     dial.activeNetwork = network;
-                    
+
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
-                    ((EntityPlayerMP)player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP)player);
-                    
+                    ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
                 }
             }
         }
-        
+
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.NetworkCard_Name);
     }
 }

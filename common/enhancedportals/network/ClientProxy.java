@@ -26,12 +26,12 @@ public class ClientProxy extends CommonProxy
             return FMLClientHandler.instance().getClient().theWorld;
         }
     }
-    
+
     @Override
     public void loadTileEntities()
     {
         super.loadTileEntities();
-        
+
         MinecraftForgeClient.registerItemRenderer(BlockIds.DialHomeDevice, new ItemDialDeviceRenderer());
         MinecraftForgeClient.registerItemRenderer(BlockIds.DialHomeDeviceBasic, new ItemDialDeviceRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDialDeviceBasic.class, new TileEntityDialDeviceRenderer());
