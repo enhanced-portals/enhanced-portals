@@ -20,6 +20,12 @@
  * When recieving a redstone signal, will dial the selected network.
 * Network Cards can now be used on the Automatic Dialler.
 
+####To Finish:
+* Normal Dial Device
+* Client-side commands
+* Server op commands
+* Rename en_US language to en_GB and create US version, spellings etc.
+
 ###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.
 * Added language support.

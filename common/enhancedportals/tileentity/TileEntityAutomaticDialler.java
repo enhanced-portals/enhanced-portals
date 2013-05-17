@@ -2,9 +2,11 @@ package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
+import enhancedportals.network.packet.PacketRequestSync;
 
 public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 {
@@ -99,6 +101,17 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 
         activeNetwork = tagCompound.getString("Network");
         previousRedstone = tagCompound.getBoolean("Redstone");
+    }
+
+    @Override
+    public void validate()
+    {
+        super.validate();
+
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+        }
     }
 
     @Override
