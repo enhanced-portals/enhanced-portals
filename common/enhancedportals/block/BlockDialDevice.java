@@ -6,10 +6,13 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.tileentity.TileEntityDialDevice;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public class BlockDialDevice extends BlockEnhancedPortals
 {
@@ -35,6 +38,18 @@ public class BlockDialDevice extends BlockEnhancedPortals
     public void registerIcons(IconRegister iconRegister)
     {
         
+    }
+    
+    @Override
+    public Icon getIcon(int par1, int par2)
+    {
+        return Block.blocksList[BlockIds.Obsidian].getIcon(par1, par2);
+    }
+    
+    @Override
+    public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
+    {
+        return new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST };
     }
     
     @Override

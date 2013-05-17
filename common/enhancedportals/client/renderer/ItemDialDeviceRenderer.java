@@ -6,6 +6,7 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import enhancedportals.client.model.ModelDialDevice;
+import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -25,9 +26,9 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         return true;
     }
 
-    private void render(float x, float y, float z, boolean inventory)
+    private void render(float x, float y, float z, boolean inventory, boolean basic)
     {
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/" + Reference.MOD_ID + "/textures/blocks/dialDevice.png");
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (basic ? "basicDial" : "dial") + "Device.png");
 
         GL11.glPushMatrix();
         GL11.glTranslatef(x + 0.5F, y + 1.5F, z + 0.5F);
@@ -45,17 +46,24 @@ public class ItemDialDeviceRenderer implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
+        boolean basic = false;
+        
+        if (item.itemID == BlockIds.DialHomeDeviceBasic)
+        {
+            basic = true;
+        }
+        
         if (type == ItemRenderType.ENTITY)
         {
-            render(-0.5F, 0F, -0.5F, false);
+            render(-0.5F, 0F, -0.5F, false, basic);
         }
         else if (type == ItemRenderType.EQUIPPED)
         {
-            render(0F, 0.4F, 0F, false);
+            render(0F, 0.4F, 0F, false, basic);
         }
         else if (type == ItemRenderType.INVENTORY)
         {
-            render(1F, 0.65F, 1F, true);
+            render(1F, 0.65F, 1F, true, basic);
         }
     }
 

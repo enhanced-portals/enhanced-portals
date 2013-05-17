@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import enhancedportals.client.model.ModelDialDevice;
 import enhancedportals.lib.Reference;
+import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
 {
@@ -41,7 +42,7 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
             GL11.glRotatef(-90, 0F, 1F, 0F);
         }        
 
-        bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/dialDevice.png");
+        bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/" + ((tile instanceof TileEntityDialDeviceBasic) ? "basicDial" : "dial") + "Device.png");
         model.renderAll();
         GL11.glPopMatrix();
     }
