@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.EnhancedPortals;
@@ -20,6 +21,7 @@ import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.WorldLocation;
+import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -146,7 +148,8 @@ public class ItemNetworkCard extends Item
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-
+                    PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+                    
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
                 }
                 else if (modifier.isActive())
@@ -174,7 +177,8 @@ public class ItemNetworkCard extends Item
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-
+                    PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(dial).getPacket());
+                    
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
                 }
             }
