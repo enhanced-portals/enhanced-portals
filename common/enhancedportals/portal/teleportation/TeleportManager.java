@@ -143,7 +143,12 @@ public class TeleportManager
 
         if (outModifier == null)
         {
-            System.out.println("The secondary modifier doesn't exist?");
+            if (entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).sendChatToPlayer("A portal could not be created at the exit location - this location has been removed from the network.");
+            }
+            
+            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(teleportData);
             return false;
         }
 
