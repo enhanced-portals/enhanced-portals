@@ -24,11 +24,11 @@ public class Commands
 
     // BLOCKS
     public static final String BLOCKS = "blocks";
-    public static final String BLOCKS_USAGE = "ep blocks [borderBlocks/destroyBlocks]";
-    public static final String BORDER_BLOCKS = "borderBlocks";
-    public static final String BORDER_BLOCKS_USAGE = "ep blocks borderBlocks [add/remove/reset/clear/list]";
-    public static final String DESTROY_BLOCKS = "destroyBlocks";
-    public static final String DESTROY_BLOCKS_USAGE = "ep blocks destroyBlocks [add/remove/reset/clear/list]";
+    public static final String BLOCKS_USAGE = "ep blocks [border/destroy]";
+    public static final String BORDER_BLOCKS = "border";
+    public static final String BORDER_BLOCKS_USAGE = "ep blocks border [add/remove/reset/clear/list]";
+    public static final String DESTROY_BLOCKS = "destroy";
+    public static final String DESTROY_BLOCKS_USAGE = "ep blocks destroy [add/remove/reset/clear/list]";
 
     // CONTROL
     public static final String CONTROL = "control";

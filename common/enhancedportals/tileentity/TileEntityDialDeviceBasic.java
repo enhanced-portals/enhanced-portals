@@ -15,9 +15,7 @@ import enhancedportals.network.packet.PacketTEUpdate;
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
     String oldModifierNetwork;
-
     public boolean active = false;
-
     WorldLocation modifierLocation;
 
     @Override

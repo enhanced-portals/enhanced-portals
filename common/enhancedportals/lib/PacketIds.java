@@ -8,4 +8,5 @@ public class PacketIds
     public static final int NetworkUpdate = 4;
     public static final int PortalModifierUpgrade = 5;
     public static final int DialDeviceRequest = 6;
+    public static final int NetworkData = 7;
 }

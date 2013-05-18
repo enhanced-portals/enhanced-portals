@@ -26,6 +26,8 @@ import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.network.packet.PacketUpgrade;
+import enhancedportals.portal.PortalTexture;
+import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityPortalModifier;
@@ -91,9 +93,28 @@ public class ServerPacketHandler implements IPacketHandler
         {
             TileEntity tileEntity = world.getBlockTileEntity(dialRequest.xCoord, dialRequest.yCoord, dialRequest.zCoord);
 
-            if (tileEntity instanceof TileEntityDialDeviceBasic)
+            if (tileEntity instanceof TileEntityDialDeviceBasic && dialRequest.packetData.integerData[0] == 0)
             {
                 ((TileEntityDialDeviceBasic) tileEntity).processDiallingRequest(dialRequest.packetData.stringData[0], (EntityPlayer) player);
+            }
+            else if (tileEntity instanceof TileEntityDialDevice && dialRequest.packetData.integerData[0] == 1)
+            {
+                PortalTexture text = null;
+                
+                if (dialRequest.packetData.integerData[1] != -1)
+                {
+                    text = new PortalTexture((byte)dialRequest.packetData.integerData[1]);
+                }
+                else if (dialRequest.packetData.integerData[2] != -1)
+                {
+                    text = new PortalTexture(dialRequest.packetData.integerData[2], dialRequest.packetData.integerData[3]);
+                }
+                else
+                {
+                    text = new PortalTexture(dialRequest.packetData.stringData[1]);
+                }
+
+                ((TileEntityDialDevice) tileEntity).processDiallingRequest(dialRequest.packetData.stringData[0], (EntityPlayer) player, text, dialRequest.packetData.byteData[0], dialRequest.packetData.byteData[2] == 1, dialRequest.packetData.byteData[1] == 1);
             }
         }
     }
