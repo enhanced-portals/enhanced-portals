@@ -147,7 +147,7 @@ public class TeleportManager
             {
                 ((EntityPlayer) entity).sendChatToPlayer("A portal could not be created at the exit location - this location has been removed from the network.");
             }
-            
+
             EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(teleportData);
             return false;
         }

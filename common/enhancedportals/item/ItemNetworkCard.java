@@ -149,7 +149,7 @@ public class ItemNetworkCard extends Item
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
                     PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
-                    
+
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
                 }
                 else if (modifier.isActive())
@@ -178,7 +178,7 @@ public class ItemNetworkCard extends Item
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
                     PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(dial).getPacket());
-                    
+
                     player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
                 }
             }

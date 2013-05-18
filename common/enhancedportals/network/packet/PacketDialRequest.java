@@ -27,7 +27,7 @@ public class PacketDialRequest extends PacketUpdate
         dimension = d;
         packetData = new PacketData(new int[] { 0 }, new byte[0], new String[] { network });
     }
-    
+
     public PacketDialRequest(int x, int y, int z, int d, String network, PortalTexture text, byte thick, boolean sounds, boolean particles)
     {
         super();

@@ -22,11 +22,13 @@ import enhancedportals.lib.Reference;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.network.packet.PacketGui;
+import enhancedportals.network.packet.PacketNetworkData;
 import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.network.packet.PacketUpgrade;
 import enhancedportals.portal.PortalTexture;
+import enhancedportals.portal.network.DialDeviceNetworkObject;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
@@ -78,6 +80,10 @@ public class ServerPacketHandler implements IPacketHandler
             {
                 parseDialRequest(new PacketDialRequest(stream), player);
             }
+            else if (packetID == PacketIds.NetworkData)
+            {
+                parseNetworkData(new PacketNetworkData(stream));
+            }
         }
         catch (Exception e)
         {
@@ -100,10 +106,10 @@ public class ServerPacketHandler implements IPacketHandler
             else if (tileEntity instanceof TileEntityDialDevice && dialRequest.packetData.integerData[0] == 1)
             {
                 PortalTexture text = null;
-                
+
                 if (dialRequest.packetData.integerData[1] != -1)
                 {
-                    text = new PortalTexture((byte)dialRequest.packetData.integerData[1]);
+                    text = new PortalTexture((byte) dialRequest.packetData.integerData[1]);
                 }
                 else if (dialRequest.packetData.integerData[2] != -1)
                 {
@@ -147,6 +153,52 @@ public class ServerPacketHandler implements IPacketHandler
                 EnhancedPortals.proxy.ModifierNetwork.addToNetwork(update.packetData.stringData[0], new WorldLocation(update.xCoord, update.yCoord, update.zCoord, update.dimension));
 
                 PacketDispatcher.sendPacketToAllAround(update.xCoord + 0.5, update.yCoord + 0.5, update.zCoord + 0.5, 256, update.dimension, update.getPacket());
+            }
+        }
+    }
+
+    private void parseNetworkData(PacketNetworkData networkData)
+    {
+        WorldServer world = getWorldForDimension(networkData.dimension);
+
+        if (world.blockHasTileEntity(networkData.xCoord, networkData.yCoord, networkData.zCoord))
+        {
+            TileEntity tileEntity = world.getBlockTileEntity(networkData.xCoord, networkData.yCoord, networkData.zCoord);
+
+            if (tileEntity instanceof TileEntityDialDevice)
+            {
+                TileEntityDialDevice dialDevice = (TileEntityDialDevice) tileEntity;
+
+                if (networkData.packetData.integerData[0] == 0)
+                {
+                    int id = networkData.packetData.integerData[1];
+                    
+                    dialDevice.destinationList.remove(id);
+                }
+                else if (networkData.packetData.integerData[0] == 1)
+                {
+                    String name = networkData.packetData.stringData[0],
+                           network = networkData.packetData.stringData[1];
+                    byte thick = networkData.packetData.byteData[0];
+                    boolean particles = networkData.packetData.byteData[1] == 1,
+                            sounds = networkData.packetData.byteData[2] == 1;
+                    PortalTexture text = null;
+                    
+                    if (networkData.packetData.integerData[1] != -1)
+                    {
+                        text = new PortalTexture((byte) networkData.packetData.integerData[1]);
+                    }
+                    else if (networkData.packetData.integerData[2] != -1)
+                    {
+                        text = new PortalTexture(networkData.packetData.integerData[2], networkData.packetData.integerData[3]);
+                    }
+                    else
+                    {
+                        text = new PortalTexture(networkData.packetData.stringData[1]);
+                    }
+                    
+                    dialDevice.destinationList.add(new DialDeviceNetworkObject(name, network, text, thick, sounds, particles));
+                }
             }
         }
     }

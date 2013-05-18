@@ -8,7 +8,7 @@ public class DialDeviceNetworkObject
     public PortalTexture texture;
     public byte thickness;
     public boolean sounds, particles;
-    
+
     public DialDeviceNetworkObject(String displayname, String net, PortalTexture tex, byte thick, boolean sound, boolean particle)
     {
         displayName = displayname;

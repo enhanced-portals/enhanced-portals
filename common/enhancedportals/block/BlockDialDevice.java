@@ -63,6 +63,18 @@ public class BlockDialDevice extends BlockEnhancedPortals
     }
 
     @Override
+    public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        if (!player.isSneaking())
+        {
+            player.openGui(EnhancedPortals.instance, GuiIds.DialDevice, worldObj, x, y, z);
+            return true;
+        }
+
+        return super.onBlockActivated(worldObj, x, y, z, player, par6, par7, par8, par9);
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
@@ -74,19 +86,7 @@ public class BlockDialDevice extends BlockEnhancedPortals
     {
         return false;
     }
-    
-    @Override
-    public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-    {
-        if (!player.isSneaking())
-        {
-            player.openGui(EnhancedPortals.instance, GuiIds.DialDevice, worldObj, x, y, z);
-            return true;
-        }
-        
-        return super.onBlockActivated(worldObj, x, y, z, player, par6, par7, par8, par9);
-    }
-    
+
     @Override
     public void updateTick(World world, int x, int y, int z, Random random)
     {

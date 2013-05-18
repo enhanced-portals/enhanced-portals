@@ -42,7 +42,7 @@ public class PortalTexture
                 }
                 else if (stack.itemID == Item.dyePowder.itemID) // Colour
                 {
-                    return getPortalTexture((byte) stack.getItemDamage());
+                    return getPortalTexture((byte) swapColours(stack.getItemDamage()));
                 }
                 else if (LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, stack.getItemDamage())) != null) // Liquid
                 {
@@ -173,17 +173,13 @@ public class PortalTexture
                 return Settings.CustomIconMap.get(liquidID);
             }
 
-            Icon test = LiquidDictionary.getLiquid(liquidID, 1).getRenderingIcon();
-
-            if (test != null)
+            if (LiquidDictionary.getLiquid(liquidID, 1) != null)
             {
-                return test;
+                return LiquidDictionary.getLiquid(liquidID, 1).getRenderingIcon();
             }
-
-            return LiquidDictionary.getLiquid(liquidID, 1).asItemStack().getIconIndex();
         }
 
-        return null;
+        return Textures.TEXTURE_ICONS[0];
     }
 
     public Icon getModifierIcon()

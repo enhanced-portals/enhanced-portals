@@ -8,9 +8,11 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import enhancedportals.client.gui.GuiAutomaticDiallerSimple;
 import enhancedportals.client.gui.GuiDialDevice;
+import enhancedportals.client.gui.GuiDialDeviceAddNetwork;
 import enhancedportals.client.gui.GuiDialDeviceBasic;
 import enhancedportals.client.gui.GuiPortalModifier;
 import enhancedportals.client.gui.GuiPortalModifierNetwork;
+import enhancedportals.container.ContainerDialDeviceAddNetwork;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.network.packet.PacketTEUpdate;
@@ -61,6 +63,13 @@ public class GuiHandler implements IGuiHandler
                 return new GuiAutomaticDiallerSimple((TileEntityAutomaticDialler) tileEntity);
             }
         }
+        else if (ID == GuiIds.DialDeviceAdd)
+        {
+            if (tileEntity instanceof TileEntityDialDevice)
+            {
+                return new GuiDialDeviceAddNetwork(player.inventory, (TileEntityDialDevice) tileEntity);
+            }
+        }
 
         return null;
     }
@@ -102,6 +111,13 @@ public class GuiHandler implements IGuiHandler
             if (tileEntity instanceof TileEntityAutomaticDialler)
             {
                 PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityAutomaticDialler) tileEntity).getPacket(), (Player) player);
+            }
+        }
+        else if (ID == GuiIds.DialDeviceAdd)
+        {
+            if (tileEntity instanceof TileEntityDialDevice)
+            {
+                return new ContainerDialDeviceAddNetwork(player.inventory);
             }
         }
 

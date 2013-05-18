@@ -33,7 +33,7 @@ class GuiDialDeviceNetworkList extends GuiSlot
         DialDeviceNetworkObject obj = (DialDeviceNetworkObject) parent.getSize().get(par1);
 
         parent.drawString(parent.fontRenderer, obj.displayName, par2 + 2, par3 + 2, 16777215);
-        
+
         if (obj.network != null && !obj.network.equals(""))
         {
             String[] split = obj.network.split(Reference.glyphSeperator);
@@ -50,7 +50,7 @@ class GuiDialDeviceNetworkList extends GuiSlot
                     }
                 }
             }
-            
+
             GL11.glDisable(GL11.GL_LIGHTING);
         }
     }

@@ -14,9 +14,32 @@ public class GuiGlyphElement
     public String value;
     public ItemStack itemStack;
     GuiNetwork parent;
+    GuiDialDeviceAddNetwork parent2;
 
     public int stackSize;
     public boolean isStack;
+
+    public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiDialDeviceAddNetwork p)
+    {
+        this.x = x;
+        this.y = y;
+        this.value = value;
+        itemStack = stack;
+        stackSize = 0;
+        parent2 = p;
+        isStack = false;
+    }
+    
+    public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiDialDeviceAddNetwork p, boolean isstack)
+    {
+        this.x = x;
+        this.y = y;
+        this.value = value;
+        itemStack = stack;
+        stackSize = 0;
+        parent2 = p;
+        isStack = isstack;
+    }
 
     public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiNetwork p)
     {
@@ -75,7 +98,14 @@ public class GuiGlyphElement
 
         if (isPointInRegion(x + xOffset + 1, y + yOffset + 1, 14, 14, x2, y2))
         {
-            parent.drawItemStackTooltip(itemStack, x2, y2);
+            if (parent != null)
+            {
+                parent.drawItemStackTooltip(itemStack, x2, y2);
+            }
+            else
+            {
+                parent2.drawItemTooltip(itemStack, x2, y2);
+            }
         }
 
         GL11.glEnable(GL11.GL_LIGHTING);
@@ -122,7 +152,14 @@ public class GuiGlyphElement
     {
         if (isPointInRegion(this.x + offsetX + 1, this.y + offsetY + 1, 14, 14, x, y))
         {
-            parent.elementClicked(this, button);
+            if (parent != null)
+            {
+                parent.elementClicked(this, button);
+            }
+            else
+            {
+                parent2.elementClicked(this, button);
+            }
         }
     }
 
