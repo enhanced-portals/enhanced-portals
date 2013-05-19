@@ -7,9 +7,7 @@
 * Rename en_US language to en_GB and create US version, spellings etc.
 * Beta 3 stuff. [EP2 World, addons, customization]
 
-###Upcoming
-* Added BuildCraft addon, requires BuildCraft Energy.
- * Allows you to use Oil and Fuel as a portal texture.
+###Beta 2a
 * Networking improvements
 * Added Modifier Camouflage upgrade.
 * Added two types of Dialling Devices.
