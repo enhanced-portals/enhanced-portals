@@ -1,6 +1,8 @@
 package enhancedportals;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -24,6 +26,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import enhancedportals.block.BlockObsidian;
 import enhancedportals.command.CommandEP;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
@@ -169,6 +172,7 @@ public class EnhancedPortals
 
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         proxy.loadBlocks();
+        reflectObsidian();
         proxy.loadItems();
         proxy.loadTileEntities();
         proxy.loadRecipes();
@@ -190,5 +194,24 @@ public class EnhancedPortals
     {
         proxy.ModifierNetwork.saveData();
         proxy.DialDeviceNetwork.saveData();
+    }
+    
+    private void reflectObsidian()
+    {
+        try
+        {            
+            Field obsidianField = Class.forName("net.minecraft.block.Block").getDeclaredField("obsidian");            
+            obsidianField.setAccessible(true);
+            
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(obsidianField, obsidianField.getModifiers() & ~Modifier.FINAL);
+            
+            obsidianField.set(null, new BlockObsidian());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
