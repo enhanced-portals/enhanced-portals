@@ -1,5 +1,12 @@
 ##EnhancedPortals 2
 
+####To Finish Before Final Release:
+* Client-side commands.
+* Server op commands.
+* Localization.
+* Rename en_US language to en_GB and create US version, spellings etc.
+* Beta 3 stuff. [EP2 World, addons, customization]
+
 ###Upcoming
 * Added BuildCraft addon, requires BuildCraft Energy.
  * Allows you to use Oil and Fuel as a portal texture.
@@ -12,19 +19,12 @@
   * Unable to modify the portals textures or effects via the device. It will use all the data currently stored within the Portal Modifier.
   * **Dial Device**
   * Stores a list of network destinations.
-  * Stays on until you turn it off/set a timeout time.
   * Able to modify the portals texture/effects, seperately for each destination.
 * Added Automatic Dialler.
- * Must be directly attached to a dial device.
+ * Must be directly attached to a basic dial device.
  * Able to store one network.
  * When recieving a redstone signal, will dial the selected network.
 * Network Cards can now be used on the Automatic Dialler.
-
-####To Finish:
-* Normal Dial Device
-* Client-side commands
-* Server op commands
-* Rename en_US language to en_GB and create US version, spellings etc.
 
 ###Beta 1c
 * Fixed potion Glyph - now is Potion of Healing.
