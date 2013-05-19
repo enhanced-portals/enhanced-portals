@@ -12,6 +12,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.liquids.LiquidDictionary;
@@ -176,6 +177,16 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         fontRenderer.drawString(Localization.localizeString("tile.dialDevice.name"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDevice.name")) / 2, -20, 0xFFCCCCCC);
+    
+        if (!popUpState)
+        {
+            if (stackList.isEmpty())
+            {
+                fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, 66, 0xFF00FF00);
+            }
+            
+            fontRenderer.drawString("Modifiers", xSize / 2 - fontRenderer.getStringWidth("Modifiers") / 2, 44, 0xFF444444);
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -328,22 +339,52 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         {
             super.drawScreen(par1, par2, par3);
             nameField.drawTextBox();
-
+            List<String> theList = new ArrayList<String>();
+            
             if (isPointInRegion(8, 40, 16, 16, par1, par2))
             {
-                drawCreativeTabHoveringText("Particles", par1, par2);
+                theList.add("Particles");
+                theList.add(EnumChatFormatting.GRAY + (particles ? "Active" : "Inactive"));
+                theList.add(EnumChatFormatting.DARK_GRAY + "The modifier must have");
+                theList.add(EnumChatFormatting.DARK_GRAY + "the upgrade installed");
+                drawHText(theList, par1, par2, fontRenderer);
             }
             else if (isPointInRegion(8 + 18, 40, 16, 16, par1, par2))
             {
-                drawCreativeTabHoveringText("Sounds", par1, par2);
+                theList.clear();
+                theList.add("Sounds");
+                theList.add(EnumChatFormatting.GRAY + (sounds ? "Active" : "Inactive"));
+                theList.add(EnumChatFormatting.DARK_GRAY + "The modifier must have");
+                theList.add(EnumChatFormatting.DARK_GRAY + "the upgrade installed");
+                drawHText(theList, par1, par2, fontRenderer);
             }
             else if (isPointInRegion(134, 40, 16, 16, par1, par2))
             {
-                drawCreativeTabHoveringText("Thickness", par1, par2);
+                theList.clear();
+                theList.add("Thickness");
+                theList.add(EnumChatFormatting.GRAY + (thickness == 0 ? "Normal" : thickness == 1 ? "Thick" : thickness == 2 ? "Thicker" : thickness == 3 ? "Full Block" : "Unknown"));
+                drawHText(theList, par1, par2, fontRenderer);
             }
             else if (isPointInRegion(134 + 18, 40, 16, 16, par1, par2))
             {
-                drawCreativeTabHoveringText("Facade", par1, par2);
+                theList.clear();
+                theList.add("Facade");
+                
+                if (texture.blockID != -1)
+                {
+                    theList.add(EnumChatFormatting.GRAY + (texture.blockID == 9 || texture.blockID == 11 ? "Still " : "") + Localization.localizeString(Block.blocksList[texture.blockID].getUnlocalizedName() + ".name"));
+                }
+                else if (texture.colour != -1)
+                {
+                    theList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(texture.colour)]));
+                }
+                else
+                {
+                    theList.add(EnumChatFormatting.GRAY + texture.liquidID);
+                }
+                
+                theList.add(EnumChatFormatting.DARK_GRAY + "Shift-click on a block to change");
+                drawHText(theList, par1, par2, fontRenderer);
             }
         }
     }

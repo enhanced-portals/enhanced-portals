@@ -110,7 +110,10 @@ public class GuiPortalModifier extends GuiContainer
         }
         else
         {
-            itemstack = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack();
+            if (LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1) != null)
+            {
+                itemstack = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack();
+            }
         }
 
         if (itemstack != null)
@@ -213,7 +216,14 @@ public class GuiPortalModifier extends GuiContainer
                 }
                 else
                 {
-                    txt = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack().getDisplayName();
+                    if (LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1) != null)
+                    {
+                        txt = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack().getDisplayName();
+                    }
+                    else
+                    {
+                        txt = "Unknown";
+                    }
                 }
 
                 List<String> list = new ArrayList<String>();
