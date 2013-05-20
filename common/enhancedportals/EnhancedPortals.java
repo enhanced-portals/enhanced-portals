@@ -3,6 +3,7 @@ package enhancedportals;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.logging.Level;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -38,7 +39,6 @@ import enhancedportals.network.EventHooks;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.ServerPacketHandler;
 import enhancedportals.portal.PortalTexture;
-import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
@@ -186,14 +186,12 @@ public class EnhancedPortals
         event.registerServerCommand(new CommandEP());
 
         proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
-        proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
     }
 
     @ServerStopping
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();
-        proxy.DialDeviceNetwork.saveData();
     }
     
     private void reflectObsidian()
@@ -211,7 +209,7 @@ public class EnhancedPortals
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Reference.log.log(Level.SEVERE, "Could not replace the default Obsidian block.");
         }
     }
 }

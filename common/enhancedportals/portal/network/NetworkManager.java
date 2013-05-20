@@ -1,15 +1,20 @@
 package enhancedportals.portal.network;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -40,7 +45,14 @@ public class NetworkManager
 
         if (!new File(saveFile).exists())
         {
-            return;
+            try
+            {
+                new File(saveFile).createNewFile();
+            }
+            catch (IOException e)
+            {
+                return;
+            }
         }
 
         loadData();
@@ -127,7 +139,7 @@ public class NetworkManager
 
         return newList;
     }
-
+    
     public String getSaveFileName()
     {
         return Reference.MOD_ID + ".dat";
@@ -157,59 +169,29 @@ public class NetworkManager
     }
 
     public void loadData()
-    {
-        BufferedReader reader = null;
-        String network = "undefined";
-        List<WorldLocation> items = new ArrayList<WorldLocation>();
-
+    {        
         try
         {
-            reader = new BufferedReader(new FileReader(saveFile));
-            String line = null;
+            NBTTagCompound tagCompound = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(saveFile)));
 
-            while ((line = reader.readLine()) != null)
+            for (Object obj : tagCompound.getTags())
             {
-                if (line.startsWith(">"))
+                if (obj instanceof NBTTagList)
                 {
-                    if (network != "undefined")
+                    NBTTagList tag = (NBTTagList) obj;
+                    
+                    for (int i = 0; i < tag.tagList.size(); i++)
                     {
-                        addNetwork(network);
-
-                        for (WorldLocation item : items)
-                        {
-                            addToNetwork(network, item);
-                        }
-                    }
-
-                    network = line.substring(1);
-                    items = new ArrayList<WorldLocation>();
-                }
-                else if (line.startsWith("#"))
-                {
-                    String theLine[] = line.substring(1).split(",");
-
-                    if (theLine.length == 4)
-                    {
-                        items.add(new WorldLocation(Integer.parseInt(theLine[0]), Integer.parseInt(theLine[1]), Integer.parseInt(theLine[2]), Integer.parseInt(theLine[3])));
+                        NBTTagCompound comp = (NBTTagCompound) tag.tagAt(i);
+                        
+                        addToNetwork(tag.getName(), new WorldLocation(comp.getInteger("xCoord"), comp.getInteger("yCoord"), comp.getInteger("zCoord"), comp.getInteger("dimension")));
                     }
                 }
             }
-
-            if (network != "undefined")
-            {
-                addNetwork(network);
-
-                for (WorldLocation item : items)
-                {
-                    addToNetwork(network, item);
-                }
-            }
-
-            reader.close();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            return;
         }
     }
 
@@ -272,56 +254,34 @@ public class NetworkManager
 
         networkData.remove(key);
     }
-
+    
     public void saveData()
     {
-        BufferedWriter writer;
-        boolean isFirst = true;
-
-        if (networkData.keySet() == null)
+        NBTTagCompound tagCompound = new NBTTagCompound();
+                
+        for (Entry<String, List<WorldLocation>> set : networkData.entrySet())
         {
-            return;
+            NBTTagList list2 = new NBTTagList();
+            
+            for (WorldLocation loc : set.getValue())
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger("xCoord", loc.xCoord);
+                compound.setInteger("yCoord", loc.yCoord);
+                compound.setInteger("zCoord", loc.zCoord);
+                compound.setInteger("dimension", loc.dimension);
+                                
+                list2.appendTag(compound);
+            }
+            
+            tagCompound.setTag(set.getKey(), list2);
         }
-
+        
         try
         {
-            writer = new BufferedWriter(new FileWriter(saveFile));
-
-            for (String key : networkData.keySet())
-            {
-                if (key.equals(""))
-                {
-                    continue;
-                }
-
-                List<WorldLocation> items = networkData.get(key);
-
-                if (items.isEmpty())
-                {
-                    continue;
-                }
-
-                if (!isFirst)
-                {
-                    writer.newLine();
-                }
-                else
-                {
-                    isFirst = false;
-                }
-
-                writer.write(">" + key);
-
-                for (WorldLocation item : items)
-                {
-                    writer.newLine();
-                    writer.write("#" + item.xCoord + "," + item.yCoord + "," + item.zCoord + "," + item.dimension);
-                }
-            }
-
-            writer.close();
+            NBTBase.writeNamedTag(tagCompound, new DataOutputStream(new FileOutputStream(saveFile)));
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             e.printStackTrace();
         }
