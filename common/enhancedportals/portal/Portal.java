@@ -510,10 +510,11 @@ public class Portal
         TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
         if (portal.parentModifier == null)
-        {
+        {            
             if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
             {
                 entity.setInPortal();
+                return;
             }
         }
         else if (portal.parentModifier != null && entity.timeUntilPortal == 0)
@@ -525,6 +526,7 @@ public class Portal
                 if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
                 {
                     entity.setInPortal();
+                    return;
                 }
             }
             else
@@ -536,13 +538,7 @@ public class Portal
                 {
                     if (entity instanceof EntityPlayer)
                     {
-                        ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked Portal Modifiers.");
-                        System.out.println(String.format("Network: %s. validLocations: %s. %s", modifier.network, validLocations.size(), EnhancedPortals.proxy.ModifierNetwork.getNetwork(modifier.network)));
-
-                        for (String str : EnhancedPortals.proxy.ModifierNetwork.networkData.keySet())
-                        {
-                            System.out.println(" - " + str + " : " + EnhancedPortals.proxy.ModifierNetwork.getNetwork(str).size());
-                        }
+                        ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked portals.");
                     }
 
                     entity.timeUntilPortal = entity.getPortalCooldown();
