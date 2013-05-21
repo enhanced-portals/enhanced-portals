@@ -42,10 +42,10 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDialDeviceBasic.class, new TileEntityDialDeviceRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDialDevice.class, new TileEntityDialDeviceRenderer());
     }
-    
+
     @Override
     public void registerIcons(TextureStitchEvent.Pre event)
-    {        
+    {
         if (event.map == FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks)
         {
             for (int i = 0; i < 16; i++)

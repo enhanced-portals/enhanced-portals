@@ -13,11 +13,6 @@ public class Textures
 {
     public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
 
-    public static ItemStack getItemStackFromTexture(String texture)
-    {
-        return getItemStackFromTexture(getTexture(texture));
-    }
-
     public static ItemStack getItemStackFromTexture(PortalTexture texture)
     {
         ItemStack stack = null;
@@ -36,6 +31,11 @@ public class Textures
         }
 
         return stack;
+    }
+
+    public static ItemStack getItemStackFromTexture(String texture)
+    {
+        return getItemStackFromTexture(getTexture(texture));
     }
 
     public static PortalTexture getTexture(String string)

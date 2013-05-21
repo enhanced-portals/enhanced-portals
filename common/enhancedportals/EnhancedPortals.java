@@ -14,13 +14,11 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.Mod.ServerStopping;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
@@ -53,6 +51,12 @@ public class EnhancedPortals
     @Init
     private void init(FMLInitializationEvent event)
     {
+        proxy.loadBlocks();
+        reflectObsidian();
+        proxy.loadItems();
+        proxy.loadTileEntities();
+        proxy.loadRecipes();
+
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(new EventHooks());
 
@@ -129,24 +133,12 @@ public class EnhancedPortals
         Reference.glyphValues.add("cake");
     }
 
-    @PostInit
-    private void postInit(FMLPostInitializationEvent event)
-    {
-
-    }
-
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
         Reference.log.setParent(FMLLog.getLogger());
 
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
-        proxy.loadBlocks();
-        reflectObsidian();
-        proxy.loadItems();
-        proxy.loadTileEntities();
-        proxy.loadRecipes();
-
         Localization.loadLocales();
     }
 

@@ -10,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.Localization;
 import enhancedportals.lib.Textures;
 
 public class BlockDummyPortal extends Block
@@ -17,6 +18,10 @@ public class BlockDummyPortal extends Block
     public BlockDummyPortal()
     {
         super(BlockIds.DummyPortal, Material.portal);
+        setHardness(0F);
+        setStepSound(soundGlassFootstep);
+        setLightValue(0.75F);
+        setUnlocalizedName(Localization.NetherPortal_Name);
     }
 
     @Override

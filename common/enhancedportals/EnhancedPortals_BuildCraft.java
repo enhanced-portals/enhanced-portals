@@ -45,7 +45,7 @@ public class EnhancedPortals_BuildCraft
             fuelTexture = event.map.registerIcon("buildcraft:../items/Fuel");
         }
     }
-    
+
     @ServerStarting
     public void serverStarting(FMLServerStartingEvent event)
     {
@@ -53,7 +53,7 @@ public class EnhancedPortals_BuildCraft
         {
             return;
         }
-        
+
         try
         {
             Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);
@@ -70,7 +70,7 @@ public class EnhancedPortals_BuildCraft
         {
             Reference.log.log(Level.WARNING, "Couldn't load BuildCraft items: " + e.getMessage());
         }
-        
+
         added = true;
     }
 }

@@ -41,7 +41,7 @@ public class BlockDialDeviceBasic extends BlockEnhancedPortals
     @Override
     public Icon getIcon(int par1, int par2)
     {
-        return Block.blocksList[BlockIds.Obsidian].getIcon(par1, par2);
+        return Block.obsidian.getIcon(par1, par2);
     }
 
     @Override

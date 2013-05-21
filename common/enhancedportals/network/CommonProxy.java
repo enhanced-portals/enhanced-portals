@@ -125,6 +125,6 @@ public class CommonProxy
 
     public void registerIcons(TextureStitchEvent.Pre event)
     {
-        
+
     }
 }
