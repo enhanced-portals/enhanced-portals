@@ -1,4 +1,4 @@
-##EnhancedPortals 2
+##EnhancedPortals 2 - Changelog
 
 ####To Finish Before Final Release:
 * Client-side commands.

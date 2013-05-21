@@ -44,7 +44,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         {
             DialDeviceNetworkObject obj = destinationList.get(i);
 
-            packetData.stringData[i] = obj.displayName + ";" + obj.network + ";" + obj.thickness + ";" + (obj.particles ? 1 : 0) + ";" + (obj.sounds ? 1 : 0) + ";" + obj.texture;
+            packetData.stringData[i] = obj.displayName + ";" + obj.network + ";" + obj.thickness + ";" + (obj.particles ? 1 : 0) + ";" + (obj.sounds ? 1 : 0) + ";" + obj.texture + ";null";
         }
 
         return packetData;
@@ -64,7 +64,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             }
 
             String[] split = element.split(";");
-
+            System.out.println(split.length);
             destinationList.add(new DialDeviceNetworkObject(split[0], split[1], split[5], Byte.parseByte(split[2]), split[3].equals("1"), split[4].equals("1")));
         }
     }

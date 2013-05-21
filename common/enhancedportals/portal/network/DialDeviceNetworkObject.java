@@ -15,5 +15,10 @@ public class DialDeviceNetworkObject
         thickness = thick;
         sounds = sound;
         particles = particle;
+        
+        if (texture == null || texture.equals(""))
+        {
+            texture = "C:5";
+        }
     }
 }
