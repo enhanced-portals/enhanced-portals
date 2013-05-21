@@ -12,23 +12,20 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.liquids.LiquidDictionary;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
-import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketNetworkData;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDeviceAddNetwork extends GuiContainer
@@ -38,7 +35,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
 
     byte thickness;
     boolean sounds, particles, popUpState;
-    PortalTexture texture;
+    String texture;
     String network, name;
 
     List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
@@ -51,7 +48,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         super(new ContainerDialDeviceAddNetwork(inventory));
 
         dialDevice = dialdevice;
-        texture = new PortalTexture((byte) 0);
+        texture = "";
         name = "Name";
         thickness = 0;
         sounds = true;
@@ -83,7 +80,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
             {
                 return;
             }
-            
+
             PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, name, network, texture, thickness, particles, sounds).getPacket());
             PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
         }
@@ -111,7 +108,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
         int padding = 5, width = 10, colourA = 0xFFFF0000, colourB = 0xFF00FF00;
-        ItemStack itemstack = null;
+        ItemStack itemstack = Textures.getItemStackFromTexture(texture);
 
         if (thickness == 1)
         {
@@ -127,19 +124,6 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         {
             padding = 0;
             width = 0;
-        }
-
-        if (texture.blockID != -1)
-        {
-            itemstack = new ItemStack(Block.blocksList[texture.blockID], 1, texture.metaData);
-        }
-        else if (texture.colour != -1)
-        {
-            itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, texture.colour);
-        }
-        else
-        {
-            itemstack = LiquidDictionary.getLiquid(texture.liquidID, 1).asItemStack();
         }
 
         if (itemstack != null)
@@ -162,12 +146,12 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
             for (int i2 = 0; i2 < stackList.size(); i2++)
             {
                 int x2 = guiLeft + 8, y2 = guiTop + 62;
-    
+
                 if (stackList.get(i2).itemStack == null)
                 {
                     continue;
                 }
-                
+
                 itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stackList.get(i2).itemStack, x2 + i2 * 18, y2);
             }
         }
@@ -177,14 +161,14 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         fontRenderer.drawString(Localization.localizeString("tile.dialDevice.name"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDevice.name")) / 2, -20, 0xFFCCCCCC);
-    
+
         if (!popUpState)
         {
             if (stackList.isEmpty())
             {
                 fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, 66, 0xFF00FF00);
             }
-            
+
             fontRenderer.drawString("Modifiers", xSize / 2 - fontRenderer.getStringWidth("Modifiers") / 2, 44, 0xFF444444);
         }
     }
@@ -311,10 +295,10 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
 
             ((GuiButton) buttonList.get(2)).drawButton(mc, par1, par2);
             ((GuiButton) buttonList.get(3)).drawButton(mc, par1, par2);
-            
+
             x = par1;
             y = par2;
-            
+
             for (int i = stackList.size() - 1; i >= 0; i--)
             {
                 stackList.get(i).drawElement(guiLeft + 8 + i * 18, guiTop + 86, x, y, fontRenderer, itemRenderer, mc.renderEngine);
@@ -340,7 +324,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
             super.drawScreen(par1, par2, par3);
             nameField.drawTextBox();
             List<String> theList = new ArrayList<String>();
-            
+
             if (isPointInRegion(8, 40, 16, 16, par1, par2))
             {
                 theList.add("Particles");
@@ -369,20 +353,16 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
             {
                 theList.clear();
                 theList.add("Facade");
-                
-                if (texture.blockID != -1)
+
+                if (Textures.getItemStackFromTexture(texture) != null)
                 {
-                    theList.add(EnumChatFormatting.GRAY + (texture.blockID == 9 || texture.blockID == 11 ? "Still " : "") + Localization.localizeString(Block.blocksList[texture.blockID].getUnlocalizedName() + ".name"));
-                }
-                else if (texture.colour != -1)
-                {
-                    theList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(texture.colour)]));
+                    theList.add(EnumChatFormatting.GRAY + Localization.localizeString(Textures.getItemStackFromTexture(texture).getItemName() + ".name"));
                 }
                 else
                 {
-                    theList.add(EnumChatFormatting.GRAY + texture.liquidID);
+                    theList.add(EnumChatFormatting.GRAY + "Unknown");
                 }
-                
+
                 theList.add(EnumChatFormatting.DARK_GRAY + "Shift-click on a block to change");
                 drawHText(theList, par1, par2, fontRenderer);
             }
@@ -508,15 +488,15 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         {
             if (isShiftKeyDown() && getSlotAtPosition(par1, par2) != null)
             {
-                PortalTexture text = PortalTexture.getPortalTexture(getSlotAtPosition(par1, par2).decrStackSize(0));
+                String text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0)).getID();
 
                 if (text != null)
                 {
-                    if (texture.isEqualTo(text))
+                    if (texture.equals(text))
                     {
-                        text = PortalTexture.getPortalTexture(getSlotAtPosition(par1, par2).decrStackSize(0), texture);
+                        text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0), texture).getID();
                     }
-                    
+
                     texture = text;
                 }
             }
@@ -565,11 +545,11 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
                 {
                     str = str.substring(Reference.glyphSeperator.length());
                 }
-                
+
                 network = str;
                 popUpState = false;
             }
-            
+
             for (int i = 0; i < elementList.size(); i++)
             {
                 elementList.get(i).handleMouseClick(guiLeft, guiTop, par1, par2, par3);

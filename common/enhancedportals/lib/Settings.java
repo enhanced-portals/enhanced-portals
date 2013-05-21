@@ -8,7 +8,6 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
-import enhancedportals.portal.PortalTexture;
 
 public class Settings
 {
@@ -33,7 +32,7 @@ public class Settings
 
     public static Map<String, Icon> CustomIconMap = new HashMap<String, Icon>();
     public static Map<String, Integer> CustomParticleMap = new HashMap<String, Integer>();
-    public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();
+    //public static Map<String, PortalTexture> ItemPortalTextureMap = new HashMap<String, PortalTexture>();
 
     public static List<Integer> ValidItemsList = new ArrayList<Integer>();
     public static List<Integer> BorderBlocks = new ArrayList<Integer>();
@@ -44,24 +43,6 @@ public class Settings
         for (int i : ExcludedBlockList)
         {
             if (i == id)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean isLiquid(PortalTexture text)
-    {
-        if (text.colour != -1)
-        {
-            return false;
-        }
-
-        for (int i : LiquidList)
-        {
-            if (i == text.blockID)
             {
                 return true;
             }

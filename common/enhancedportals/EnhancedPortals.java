@@ -38,7 +38,6 @@ import enhancedportals.network.CommonProxy;
 import enhancedportals.network.EventHooks;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.ServerPacketHandler;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.network.ModifierNetwork;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION)
@@ -58,7 +57,7 @@ public class EnhancedPortals
         MinecraftForge.EVENT_BUS.register(new EventHooks());
 
         // Map items to textures
-        Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0", new PortalTexture(10, 0));
+        /*Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0", new PortalTexture(10, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0_", new PortalTexture(11, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
         Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0_", new PortalTexture(9, 0));
@@ -78,7 +77,7 @@ public class EnhancedPortals
             }
 
             Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture((byte) j));
-        }
+        }*/
 
         // Add items to valid items list
         Settings.ValidItemsList.add(Item.bucketLava.itemID);
@@ -180,6 +179,25 @@ public class EnhancedPortals
         Localization.loadLocales();
     }
 
+    private void reflectObsidian()
+    {
+        try
+        {
+            Field obsidianField = Class.forName("net.minecraft.block.Block").getDeclaredField("obsidian");
+            obsidianField.setAccessible(true);
+
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(obsidianField, obsidianField.getModifiers() & ~Modifier.FINAL);
+
+            obsidianField.set(null, new BlockObsidian());
+        }
+        catch (Exception e)
+        {
+            Reference.log.log(Level.SEVERE, "Could not replace the default Obsidian block.");
+        }
+    }
+
     @ServerStarting
     private void serverStarting(FMLServerStartingEvent event)
     {
@@ -192,24 +210,5 @@ public class EnhancedPortals
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();
-    }
-    
-    private void reflectObsidian()
-    {
-        try
-        {            
-            Field obsidianField = Class.forName("net.minecraft.block.Block").getDeclaredField("obsidian");            
-            obsidianField.setAccessible(true);
-            
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(obsidianField, obsidianField.getModifiers() & ~Modifier.FINAL);
-            
-            obsidianField.set(null, new BlockObsidian());
-        }
-        catch (Exception e)
-        {
-            Reference.log.log(Level.SEVERE, "Could not replace the default Obsidian block.");
-        }
     }
 }

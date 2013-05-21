@@ -8,7 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.GuiPortalModifierSlot;
 import enhancedportals.lib.ItemIds;
-import enhancedportals.portal.PortalTexture;
+import enhancedportals.lib.Textures;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ContainerPortalModifier extends Container
@@ -61,15 +61,15 @@ public class ContainerPortalModifier extends Container
         {
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
-            PortalTexture tempText = PortalTexture.getPortalTexture(stackInSlot);
+            String tempText = Textures.getTextureFromItemStack(stackInSlot).getID();
 
             if (tempText != null)
             {
-                if (tempText.isEqualTo(portalModifier.texture))
+                if (tempText.equals(portalModifier.texture))
                 {
-                    tempText = PortalTexture.getPortalTexture(stackInSlot, portalModifier.texture);
+                    tempText = Textures.getTextureFromItemStack(stackInSlot, portalModifier.texture).getID();
 
-                    if (tempText != null && tempText.isEqualTo(portalModifier.texture))
+                    if (tempText != null && tempText.equals(portalModifier.texture))
                     {
                         return null;
                     }

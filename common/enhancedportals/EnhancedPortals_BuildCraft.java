@@ -2,6 +2,7 @@ package enhancedportals;
 
 import java.util.logging.Level;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.util.Icon;
@@ -15,7 +16,7 @@ import enhancedportals.lib.IIconRegister;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
-import enhancedportals.portal.PortalTexture;
+import enhancedportals.portal.Texture;
 
 @Mod(modid = Reference.MOD_ID + "_BC", name = "EP2 BuildCraft", version = Reference.MOD_VERSION, dependencies = "required-after:BuildCraft|Energy;required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_BuildCraft implements IIconRegister
@@ -32,21 +33,17 @@ public class EnhancedPortals_BuildCraft implements IIconRegister
         {
             Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);
             Item bucketFuel = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketFuel").get(null);
+            Block blockOil = (Block) Class.forName("buildcraft.BuildCraftEnergy").getField("oilMoving").get(null);
+
+            Texture fuelText = new Texture("L:Fuel", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00);
+
+            Textures.textureMap.put("L:Fuel", fuelText);
+            Textures.textureMap.put("I:" + bucketFuel.itemID + ":0", fuelText);
+            Textures.textureMap.put("I:" + bucketOil.itemID + ":0", new Texture("B:" + blockOil.blockID + ":0", null, Textures.getTexture("C:0").getModifierTexture(), 0x000000));
 
             // Add buckets to valid item lists
             Settings.ValidItemsList.add(bucketFuel.itemID);
             Settings.ValidItemsList.add(bucketOil.itemID);
-
-            // Add the fuel texture
-            Settings.CustomIconMap.put("Fuel", fuelTexture);
-
-            // Add the mapping for items -> PortalTextures
-            Settings.ItemPortalTextureMap.put(bucketFuel.itemID + ":0", new PortalTexture("Fuel"));
-            Settings.ItemPortalTextureMap.put(bucketOil.itemID + ":0", new PortalTexture("Oil"));
-
-            // Add the mapping for custom particle effects
-            Settings.CustomParticleMap.put("Fuel", 0xFFFF00);
-            Settings.CustomParticleMap.put("Oil", 0x000000);
         }
         catch (Exception e)
         {
@@ -63,6 +60,6 @@ public class EnhancedPortals_BuildCraft implements IIconRegister
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        fuelTexture = iconRegister.registerIcon("buildcraft:../items/fuel");
+        fuelTexture = iconRegister.registerIcon("buildcraft:../items/Fuel");
     }
 }

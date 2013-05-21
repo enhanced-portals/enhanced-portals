@@ -6,11 +6,10 @@ import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.portal.Portal;
-import enhancedportals.portal.PortalTexture;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {
-    public PortalTexture texture;
+    public String texture;
     public boolean producesSound, producesParticles;
     public byte thickness;
     public WorldLocation parentModifier;
@@ -18,7 +17,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 
     public TileEntityNetherPortal()
     {
-        texture = new PortalTexture((byte) 0);
+        texture = "";
         producesSound = true;
         producesParticles = true;
         thickness = 0;
@@ -29,8 +28,8 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     public PacketData getPacketData()
     {
         PacketData data = new PacketData();
-        data.integerData = new int[] { texture.colour, texture.blockID, texture.metaData, producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
-        data.stringData = new String[] { texture.liquidID };
+        data.integerData = new int[] { producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
+        data.stringData = new String[] { texture };
 
         return data;
     }
@@ -38,40 +37,19 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     @Override
     public void parsePacketData(PacketData data)
     {
-        if (data == null || data.integerData == null || data.integerData.length != 7 || data.stringData.length != 1)
+        if (data == null || data.integerData == null || data.integerData.length != 4 || data.stringData.length != 1)
         {
             System.out.println("Unexpected packet recieved." + data);
             return;
         }
 
-        PortalTexture newTexture;
-        boolean sound, particles;
-        byte portalThickness;
-
-        if (data.integerData[0] != -1)
-        {
-            newTexture = new PortalTexture((byte) data.integerData[0]);
-        }
-        else if (data.integerData[1] != -1)
-        {
-            newTexture = new PortalTexture(data.integerData[1], data.integerData[2]);
-        }
-        else
-        {
-            newTexture = new PortalTexture(data.stringData[0]);
-        }
-
-        sound = data.integerData[3] == 1;
-        particles = data.integerData[4] == 1;
-        portalThickness = (byte) data.integerData[5];
-
         Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
-        portal.updateTexture(newTexture);
-        portal.updateData(sound, particles, portalThickness);
+        portal.updateTexture(data.stringData[0]);
+        portal.updateData(data.integerData[0] == 1, data.integerData[1] == 1, (byte) data.integerData[2]);
 
         if (worldObj.isRemote)
         {
-            hasParent = data.integerData[6] == 1;
+            hasParent = data.integerData[3] == 1;
         }
     }
 
@@ -80,23 +58,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     {
         super.readFromNBT(tagCompound);
 
-        byte colour = tagCompound.getByte("Colour");
-        int blockID = tagCompound.getInteger("BlockID"), metadata = tagCompound.getInteger("Metadata");
-        String liquid = tagCompound.getString("LiquidID");
-
-        if (colour != -1)
-        {
-            texture = new PortalTexture(colour);
-        }
-        else if (blockID != -1)
-        {
-            texture = new PortalTexture(blockID, metadata);
-        }
-        else
-        {
-            texture = new PortalTexture(liquid);
-        }
-
+        texture = tagCompound.getString("Texture");
         producesSound = tagCompound.getBoolean("Sound");
         producesParticles = tagCompound.getBoolean("Particles");
         thickness = tagCompound.getByte("Thickness");
@@ -127,10 +89,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     {
         super.writeToNBT(tagCompound);
 
-        tagCompound.setByte("Colour", texture.colour);
-        tagCompound.setInteger("BlockID", texture.blockID);
-        tagCompound.setString("LiquidID", texture.liquidID);
-        tagCompound.setInteger("Metadata", texture.metaData);
+        tagCompound.setString("Texture", texture);
         tagCompound.setBoolean("Sound", producesSound);
         tagCompound.setBoolean("Particles", producesParticles);
         tagCompound.setByte("Thickness", thickness);

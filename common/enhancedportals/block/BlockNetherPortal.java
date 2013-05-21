@@ -24,7 +24,6 @@ import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.portal.Portal;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class BlockNetherPortal extends BlockEnhancedPortals
@@ -50,7 +49,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z);
-        return netherPortal.texture.getIcon(side);
+        return Textures.getTexture(netherPortal.texture).getPortalTexture();
     }
 
     @Override
@@ -63,7 +62,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return new PortalTexture((byte) 0).getIcon(side);
+        return Textures.getTexture("").getPortalTexture();
     }
 
     @Override

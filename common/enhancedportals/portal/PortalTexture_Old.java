@@ -1,17 +1,8 @@
 package enhancedportals.portal;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
-import enhancedportals.lib.Settings;
-import enhancedportals.lib.Textures;
-
-public class PortalTexture
+public class PortalTexture_Old
 {
-    public static PortalTexture getPortalTexture(Object... arguments)
+    /*public static PortalTexture getPortalTexture(Object... arguments)
     {
         PortalTexture texture = new PortalTexture();
 
@@ -121,23 +112,23 @@ public class PortalTexture
 
     public String liquidID = "NULL";
 
-    public PortalTexture()
+    public PortalTexture_Old()
     {
 
     }
 
-    public PortalTexture(byte colour)
+    public PortalTexture_Old(byte colour)
     {
         this.colour = colour;
     }
 
-    public PortalTexture(int id, int meta)
+    public PortalTexture_Old(int id, int meta)
     {
         blockID = id;
         metaData = meta;
     }
 
-    public PortalTexture(String str)
+    public PortalTexture_Old(String str)
     {
         liquidID = str;
     }
@@ -273,5 +264,5 @@ public class PortalTexture
         }
 
         return false;
-    }
+    }*/
 }

@@ -27,7 +27,6 @@ import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.network.packet.PacketUpgrade;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
@@ -105,22 +104,7 @@ public class ServerPacketHandler implements IPacketHandler
             }
             else if (tileEntity instanceof TileEntityDialDevice && dialRequest.packetData.integerData[0] == 1)
             {
-                PortalTexture text = null;
-
-                if (dialRequest.packetData.integerData[1] != -1)
-                {
-                    text = new PortalTexture((byte) dialRequest.packetData.integerData[1]);
-                }
-                else if (dialRequest.packetData.integerData[2] != -1)
-                {
-                    text = new PortalTexture(dialRequest.packetData.integerData[2], dialRequest.packetData.integerData[3]);
-                }
-                else
-                {
-                    text = new PortalTexture(dialRequest.packetData.stringData[1]);
-                }
-
-                ((TileEntityDialDevice) tileEntity).processDiallingRequest(dialRequest.packetData.stringData[0], (EntityPlayer) player, text, dialRequest.packetData.byteData[0], dialRequest.packetData.byteData[2] == 1, dialRequest.packetData.byteData[1] == 1);
+                ((TileEntityDialDevice) tileEntity).processDiallingRequest(dialRequest.packetData.stringData[0], (EntityPlayer) player, dialRequest.packetData.stringData[1], dialRequest.packetData.byteData[0], dialRequest.packetData.byteData[2] == 1, dialRequest.packetData.byteData[1] == 1);
             }
         }
     }
@@ -172,32 +156,16 @@ public class ServerPacketHandler implements IPacketHandler
                 if (networkData.packetData.integerData[0] == 0)
                 {
                     int id = networkData.packetData.integerData[1];
-                    
+
                     dialDevice.destinationList.remove(id);
                 }
                 else if (networkData.packetData.integerData[0] == 1)
                 {
-                    String name = networkData.packetData.stringData[0],
-                           network = networkData.packetData.stringData[1];
+                    String name = networkData.packetData.stringData[0], network = networkData.packetData.stringData[1];
                     byte thick = networkData.packetData.byteData[0];
-                    boolean particles = networkData.packetData.byteData[1] == 1,
-                            sounds = networkData.packetData.byteData[2] == 1;
-                    PortalTexture text = null;
-                    
-                    if (networkData.packetData.integerData[1] != -1)
-                    {
-                        text = new PortalTexture((byte) networkData.packetData.integerData[1]);
-                    }
-                    else if (networkData.packetData.integerData[2] != -1)
-                    {
-                        text = new PortalTexture(networkData.packetData.integerData[2], networkData.packetData.integerData[3]);
-                    }
-                    else
-                    {
-                        text = new PortalTexture(networkData.packetData.stringData[1]);
-                    }
-                    
-                    dialDevice.destinationList.add(new DialDeviceNetworkObject(name, network, text, thick, sounds, particles));
+                    boolean particles = networkData.packetData.byteData[1] == 1, sounds = networkData.packetData.byteData[2] == 1;
+
+                    dialDevice.destinationList.add(new DialDeviceNetworkObject(name, network, networkData.packetData.stringData[2], thick, sounds, particles));
                 }
             }
         }

@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 
 import net.minecraft.tileentity.TileEntity;
 import enhancedportals.lib.PacketIds;
-import enhancedportals.portal.PortalTexture;
 
 public class PacketNetworkData extends PacketUpdate
 {
@@ -28,14 +27,14 @@ public class PacketNetworkData extends PacketUpdate
         packetData = new PacketData(new int[] { 0, id }, new byte[0], new String[] { name, network });
     }
 
-    public PacketNetworkData(TileEntity entity, String name, String network, PortalTexture text, byte thick, boolean particles, boolean sound)
+    public PacketNetworkData(TileEntity entity, String name, String network, String text, byte thick, boolean particles, boolean sound)
     {
         xCoord = entity.xCoord;
         yCoord = entity.yCoord;
         zCoord = entity.zCoord;
         dimension = entity.worldObj.provider.dimensionId;
 
-        packetData = new PacketData(new int[] { 1, text.colour, text.blockID, text.metaData }, new byte[] { thick, (byte) (particles ? 1 : 0), (byte) (sound ? 1 : 0) }, new String[] { name, network, text.liquidID });
+        packetData = new PacketData(new int[] { 1 }, new byte[] { thick, (byte) (particles ? 1 : 0), (byte) (sound ? 1 : 0) }, new String[] { name, network, text });
     }
 
     @Override

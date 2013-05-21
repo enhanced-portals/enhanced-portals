@@ -29,7 +29,7 @@ public class GuiGlyphElement
         parent2 = p;
         isStack = false;
     }
-    
+
     public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiDialDeviceAddNetwork p, boolean isstack)
     {
         this.x = x;

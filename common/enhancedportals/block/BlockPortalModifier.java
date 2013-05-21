@@ -20,10 +20,10 @@ import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Textures;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.lib.WorldLocationBA;
 import enhancedportals.portal.Portal;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class BlockPortalModifier extends BlockEnhancedPortals
@@ -103,14 +103,14 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             }
         }
 
-        return side == blockAccess.getBlockMetadata(x, y, z) ? modifier.texture.getModifierIcon() : texture;
+        return side == blockAccess.getBlockMetadata(x, y, z) ? Textures.getTexture(modifier.texture).getModifierTexture() : texture;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return side == 1 ? new PortalTexture((byte) 0).getModifierIcon() : texture;
+        return side == 1 ? Textures.getTexture("").getModifierTexture() : texture;
     }
 
     @Override

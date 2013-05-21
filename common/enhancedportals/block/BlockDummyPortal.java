@@ -10,7 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.portal.PortalTexture;
+import enhancedportals.lib.Textures;
 
 public class BlockDummyPortal extends Block
 {
@@ -23,7 +23,7 @@ public class BlockDummyPortal extends Block
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return new PortalTexture((byte) meta).getIcon(side);
+        return Textures.getTexture("C:" + meta).getPortalTexture();
     }
 
     @Override

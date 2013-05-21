@@ -10,23 +10,20 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.liquids.LiquidDictionary;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
-import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTEUpdate;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -98,23 +95,7 @@ public class GuiPortalModifier extends GuiContainer
 
         drawTexturedModalRect(0, 0, 0, 0, 0, 0);
         drawRect(guiLeft + 134 + padding, guiTop + 15, guiLeft + 16 - width + 134 + padding, guiTop + 15 + 16, 0xFF555555);
-        ItemStack itemstack = null;
-
-        if (portalModifier.texture.blockID != -1)
-        {
-            itemstack = new ItemStack(Block.blocksList[portalModifier.texture.blockID], 1, portalModifier.texture.metaData);
-        }
-        else if (portalModifier.texture.colour != -1)
-        {
-            itemstack = new ItemStack(Block.blocksList[BlockIds.DummyPortal], 1, portalModifier.texture.colour);
-        }
-        else
-        {
-            if (LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1) != null)
-            {
-                itemstack = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack();
-            }
-        }
+        ItemStack itemstack = Textures.getItemStackFromTexture(portalModifier.texture);
 
         if (itemstack != null)
         {
@@ -197,33 +178,13 @@ public class GuiPortalModifier extends GuiContainer
             {
                 String txt = "";
 
-                if (portalModifier.texture.colour != -1)
+                if (Textures.getItemStackFromTexture(portalModifier.texture) != null)
                 {
-                    txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[PortalTexture.swapColours(portalModifier.texture.colour)]);
-                }
-                else if (portalModifier.texture.blockID != -1)
-                {
-                    txt = Localization.localizeString(Block.blocksList[portalModifier.texture.blockID].getUnlocalizedName() + ".name");
-
-                    if (portalModifier.texture.blockID == 9 || portalModifier.texture.blockID == 11)
-                    {
-                        txt = "Still " + txt;
-                    }
-                    else if (portalModifier.texture.blockID == 8 || portalModifier.texture.blockID == 10)
-                    {
-                        txt = "Flowing " + txt;
-                    }
+                    txt = Localization.localizeString(Textures.getItemStackFromTexture(portalModifier.texture).getItemName() + ".name");
                 }
                 else
                 {
-                    if (LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1) != null)
-                    {
-                        txt = LiquidDictionary.getLiquid(portalModifier.texture.liquidID, 1).asItemStack().getDisplayName();
-                    }
-                    else
-                    {
-                        txt = "Unknown";
-                    }
+                    txt = "Unknown";
                 }
 
                 List<String> list = new ArrayList<String>();

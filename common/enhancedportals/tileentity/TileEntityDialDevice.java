@@ -13,7 +13,6 @@ import enhancedportals.lib.Localization;
 import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketTEUpdate;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
 
 public class TileEntityDialDevice extends TileEntityEnhancedPortals
@@ -23,7 +22,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
     public boolean active;
 
     String oldModifierNetwork;
-    PortalTexture oldModifierTexture;
+    String oldModifierTexture;
     byte oldModifierThickness;
     boolean oldModifierParticles, oldModifierSounds;
     WorldLocation modifierLocation;
@@ -44,22 +43,8 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         for (int i = 0; i < destinationList.size(); i++)
         {
             DialDeviceNetworkObject obj = destinationList.get(i);
-            String str = obj.displayName + ";" + obj.network + ";" + obj.thickness + ";" + (obj.particles ? 1 : 0) + ";" + (obj.sounds ? 1 : 0);
 
-            if (obj.texture.colour != -1)
-            {
-                str = str + ";" + obj.texture.colour;
-            }
-            else if (obj.texture.blockID != -1)
-            {
-                str = str + ";" + obj.texture.blockID + ";" + obj.texture.metaData;
-            }
-            else
-            {
-                str = str + ";" + obj.texture.liquidID;
-            }
-
-            packetData.stringData[i] = str;
+            packetData.stringData[i] = obj.displayName + ";" + obj.network + ";" + obj.thickness + ";" + (obj.particles ? 1 : 0) + ";" + (obj.sounds ? 1 : 0) + ";" + obj.texture;
         }
 
         return packetData;
@@ -79,29 +64,12 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             }
 
             String[] split = element.split(";");
-            PortalTexture tex = null;
 
-            if (split.length == 6)
-            {
-                if (split[5].equals("0") || split[5].equals("1") || split[5].equals("2") || split[5].equals("3") || split[5].equals("4"))
-                {
-                    tex = new PortalTexture(Byte.parseByte(split[5]));
-                }
-                else
-                {
-                    tex = new PortalTexture(split[5]);
-                }
-            }
-            else if (split.length == 7)
-            {
-                tex = new PortalTexture(Integer.parseInt(split[5]), Integer.parseInt(split[6]));
-            }
-
-            destinationList.add(new DialDeviceNetworkObject(split[0], split[1], tex, Byte.parseByte(split[2]), split[3].equals("1"), split[4].equals("1")));
+            destinationList.add(new DialDeviceNetworkObject(split[0], split[1], split[5], Byte.parseByte(split[2]), split[3].equals("1"), split[4].equals("1")));
         }
     }
 
-    public void processDiallingRequest(String network, EntityPlayer player, PortalTexture texture, byte thickness, boolean particles, boolean sound)
+    public void processDiallingRequest(String network, EntityPlayer player, String texture, byte thickness, boolean particles, boolean sound)
     {
         if (worldObj.isRemote || active)
         {
@@ -206,19 +174,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             oldModifierParticles = tagCompound.getBoolean("OldParticles");
             oldModifierSounds = tagCompound.getBoolean("OldSounds");
             modifierLocation = new WorldLocation(tagCompound.getInteger("mX"), tagCompound.getInteger("mY"), tagCompound.getInteger("mZ"), tagCompound.getInteger("mD"));
-
-            if (tagCompound.hasKey("OldTextureColour"))
-            {
-                oldModifierTexture = new PortalTexture(tagCompound.getByte("OldTextureColour"));
-            }
-            else if (tagCompound.hasKey("OldTextureBlock"))
-            {
-                oldModifierTexture = new PortalTexture(tagCompound.getInteger("OldTextureBlock"), tagCompound.getInteger("OldTextureMeta"));
-            }
-            else if (tagCompound.hasKey("OldTextureLiquid"))
-            {
-                oldModifierTexture = new PortalTexture(tagCompound.getString("OldTextureLiquid"));
-            }
+            oldModifierTexture = tagCompound.getString("OldTexture");
         }
 
         NBTTagList list = tagCompound.getTagList("Entries");
@@ -230,20 +186,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             String name = tag.getString("Name"), network = tag.getString("Network");
             byte thickness = tag.getByte("Thickness");
             boolean particle = tag.getBoolean("Particles"), sound = tag.getBoolean("Sounds");
-            PortalTexture texture = null;
-
-            if (tag.hasKey("TextureColour"))
-            {
-                texture = new PortalTexture(tag.getByte("TextureColour"));
-            }
-            else if (tag.hasKey("TextureBlock"))
-            {
-                texture = new PortalTexture(tag.getInteger("TextureBlock"), tag.getInteger("TextureMeta"));
-            }
-            else if (tag.hasKey("TextureLiquid"))
-            {
-                texture = new PortalTexture(tag.getString("TextureLiquid"));
-            }
+            String texture = tag.getString("Texture");
 
             destinationList.add(new DialDeviceNetworkObject(name, network, texture, thickness, sound, particle));
         }
@@ -303,20 +246,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             tagCompound.setInteger("mY", modifierLocation.yCoord);
             tagCompound.setInteger("mZ", modifierLocation.zCoord);
             tagCompound.setInteger("mD", modifierLocation.dimension);
-
-            if (oldModifierTexture.colour != -1)
-            {
-                tagCompound.setByte("OldTextureColour", oldModifierTexture.colour);
-            }
-            else if (oldModifierTexture.blockID != -1)
-            {
-                tagCompound.setInteger("OldTextureBlock", oldModifierTexture.blockID);
-                tagCompound.setInteger("OldTextureMeta", oldModifierTexture.metaData);
-            }
-            else
-            {
-                tagCompound.setString("OldTextureLiquid", oldModifierTexture.liquidID);
-            }
+            tagCompound.setString("OldTexture", oldModifierTexture);
         }
 
         NBTTagList list = new NBTTagList();
@@ -336,20 +266,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             tag.setByte("Thickness", obj.thickness);
             tag.setBoolean("Particles", obj.particles);
             tag.setBoolean("Sounds", obj.sounds);
-
-            if (obj.texture.colour != -1)
-            {
-                tag.setByte("TextureColour", obj.texture.colour);
-            }
-            else if (obj.texture.blockID != -1)
-            {
-                tag.setInteger("TextureBlock", obj.texture.blockID);
-                tag.setInteger("TextureMeta", obj.texture.metaData);
-            }
-            else
-            {
-                tag.setString("TextureLiquid", obj.texture.liquidID);
-            }
+            tag.setString("Texture", obj.texture);
 
             list.appendTag(tag);
         }

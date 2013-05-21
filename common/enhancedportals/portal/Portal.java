@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +28,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class Portal
 {
     public int xCoord, yCoord, zCoord, dimension;
-    public PortalTexture portalTexture;
+    public String portalTexture;
     public byte portalShape, portalThickness;
     public boolean producesParticles, producesSound;
     public WorldLocation portalModifier;
@@ -63,7 +61,7 @@ public class Portal
             }
             else
             {
-                portalTexture = new PortalTexture((byte) 0);
+                portalTexture = "";
                 producesParticles = true;
                 producesSound = true;
                 portalThickness = 0;
@@ -71,14 +69,14 @@ public class Portal
         }
         else
         {
-            portalTexture = new PortalTexture((byte) 0);
+            portalTexture = "";
             producesParticles = true;
             producesSound = true;
             portalThickness = 0;
         }
     }
 
-    public Portal(int x, int y, int z, World world, PortalTexture portaltexture)
+    public Portal(int x, int y, int z, World world, String portaltexture)
     {
         xCoord = x;
         yCoord = y;
@@ -114,7 +112,7 @@ public class Portal
         }
     }
 
-    public Portal(int x, int y, int z, World world, PortalTexture portaltexture, byte portalshape)
+    public Portal(int x, int y, int z, World world, String portaltexture, byte portalshape)
     {
         xCoord = x;
         yCoord = y;
@@ -411,8 +409,6 @@ public class Portal
         }
 
         ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
-        EntityPlayerMP playerMP = (EntityPlayerMP) player;
-
         if (item != null)
         {
             TileEntityNetherPortal portal = (TileEntityNetherPortal) getWorld().getBlockTileEntity(xCoord, yCoord, zCoord);
@@ -428,7 +424,7 @@ public class Portal
 
             if (item.itemID == Item.dyePowder.itemID)
             {
-                if (updateTexture(new PortalTexture((byte) PortalTexture.swapColours(item.getItemDamage()))) && !player.capabilities.isCreativeMode)
+                if (updateTexture("C:" + item.getItemDamage()) && !player.capabilities.isCreativeMode)
                 {
                     item.stackSize--;
                 }
@@ -437,7 +433,7 @@ public class Portal
             }
             else if (item.itemID == Item.bucketLava.itemID)
             {
-                PortalTexture pTexture = new PortalTexture(Block.lavaMoving.blockID, 0);
+                /*PortalTexture pTexture = new PortalTexture(Block.lavaMoving.blockID, 0);
                 boolean consumeLiquid = true;
 
                 if (portalTexture.isEqualTo(pTexture))
@@ -455,13 +451,13 @@ public class Portal
                     item.stackSize--;
                     player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty, 1));
                     playerMP.mcServer.getConfigurationManager().syncPlayerInventory(playerMP);
-                }
+                }*/
 
                 return true;
             }
             else if (item.itemID == Item.bucketWater.itemID)
             {
-                PortalTexture pTexture = new PortalTexture(Block.waterMoving.blockID, 0);
+                /*PortalTexture pTexture = new PortalTexture(Block.waterMoving.blockID, 0);
                 boolean consumeLiquid = true;
 
                 if (portalTexture.isEqualTo(pTexture))
@@ -479,7 +475,7 @@ public class Portal
                     item.stackSize--;
                     player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty, 1));
                     playerMP.mcServer.getConfigurationManager().syncPlayerInventory(playerMP);
-                }
+                }*/
 
                 return true;
             }
@@ -510,7 +506,7 @@ public class Portal
         TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
         if (portal.parentModifier == null)
-        {            
+        {
             if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
             {
                 entity.setInPortal();
@@ -824,11 +820,11 @@ public class Portal
         return queue;
     }
 
-    public boolean updateTexture(PortalTexture newTexture)
+    public boolean updateTexture(String newTexture)
     {
         World world = getWorld();
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || portalTexture.isEqualTo(newTexture))
+        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || portalTexture.equals(newTexture))
         {
             return false;
         }

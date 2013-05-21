@@ -139,7 +139,7 @@ public class NetworkManager
 
         return newList;
     }
-    
+
     public String getSaveFileName()
     {
         return Reference.MOD_ID + ".dat";
@@ -169,7 +169,7 @@ public class NetworkManager
     }
 
     public void loadData()
-    {        
+    {
         try
         {
             NBTTagCompound tagCompound = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(saveFile)));
@@ -179,11 +179,11 @@ public class NetworkManager
                 if (obj instanceof NBTTagList)
                 {
                     NBTTagList tag = (NBTTagList) obj;
-                    
+
                     for (int i = 0; i < tag.tagList.size(); i++)
                     {
                         NBTTagCompound comp = (NBTTagCompound) tag.tagAt(i);
-                        
+
                         addToNetwork(tag.getName(), new WorldLocation(comp.getInteger("xCoord"), comp.getInteger("yCoord"), comp.getInteger("zCoord"), comp.getInteger("dimension")));
                     }
                 }
@@ -254,15 +254,15 @@ public class NetworkManager
 
         networkData.remove(key);
     }
-    
+
     public void saveData()
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
-                
+
         for (Entry<String, List<WorldLocation>> set : networkData.entrySet())
         {
             NBTTagList list2 = new NBTTagList();
-            
+
             for (WorldLocation loc : set.getValue())
             {
                 NBTTagCompound compound = new NBTTagCompound();
@@ -270,13 +270,13 @@ public class NetworkManager
                 compound.setInteger("yCoord", loc.yCoord);
                 compound.setInteger("zCoord", loc.zCoord);
                 compound.setInteger("dimension", loc.dimension);
-                                
+
                 list2.appendTag(compound);
             }
-            
+
             tagCompound.setTag(set.getKey(), list2);
         }
-        
+
         try
         {
             NBTBase.writeNamedTag(tagCompound, new DataOutputStream(new FileOutputStream(saveFile)));

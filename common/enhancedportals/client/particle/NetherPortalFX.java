@@ -5,7 +5,7 @@ import java.awt.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
-import enhancedportals.portal.PortalTexture;
+import enhancedportals.lib.Textures;
 
 public class NetherPortalFX extends EntityFX
 {
@@ -14,7 +14,7 @@ public class NetherPortalFX extends EntityFX
     private double portalPosY;
     private double portalPosZ;
 
-    public NetherPortalFX(World par1World, PortalTexture texture, double par2, double par4, double par6, double par8, double par10, double par12)
+    public NetherPortalFX(World par1World, String texture, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
         motionX = par8;
@@ -23,7 +23,7 @@ public class NetherPortalFX extends EntityFX
         portalPosX = posX = par2;
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
-        Color color = Color.decode(String.valueOf(texture.getParticleColour()));
+        Color color = Color.decode(String.valueOf(Textures.getTexture(texture).getParticleColour()));
         particleRed = color.getRed() / 255.0F;
         particleGreen = color.getGreen() / 255.0F;
         particleBlue = color.getBlue() / 255.0F;
