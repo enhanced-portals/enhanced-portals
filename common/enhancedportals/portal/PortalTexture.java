@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.Icon;
 import enhancedportals.lib.Textures;
 
-public class Texture
+public class PortalTexture
 {
     public static Icon getDefaultModifierTexture()
     {
@@ -29,7 +29,7 @@ public class Texture
 
     private int particleColour;
 
-    public Texture(String id)
+    public PortalTexture(String id)
     {
         ID = id;
         portalTexture = null;
@@ -37,7 +37,7 @@ public class Texture
         particleColour = -1;
     }
 
-    public Texture(String id, Icon portaltexture)
+    public PortalTexture(String id, Icon portaltexture)
     {
         ID = id;
         portalTexture = portaltexture;
@@ -45,7 +45,7 @@ public class Texture
         particleColour = -1;
     }
 
-    public Texture(String id, Icon portaltexture, Icon modifiertexture)
+    public PortalTexture(String id, Icon portaltexture, Icon modifiertexture)
     {
         ID = id;
         portalTexture = portaltexture;
@@ -53,7 +53,7 @@ public class Texture
         particleColour = -1;
     }
 
-    public Texture(String id, Icon portaltexture, Icon modifiertexture, int particlecolour)
+    public PortalTexture(String id, Icon portaltexture, Icon modifiertexture, int particlecolour)
     {
         ID = id;
         portalTexture = portaltexture;
@@ -61,7 +61,7 @@ public class Texture
         particleColour = particlecolour;
     }
 
-    public Texture(String id, Icon portaltexture, int particlecolour)
+    public PortalTexture(String id, Icon portaltexture, int particlecolour)
     {
         ID = id;
         portalTexture = portaltexture;

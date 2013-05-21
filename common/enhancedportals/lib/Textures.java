@@ -11,23 +11,19 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
-import enhancedportals.portal.Texture;
+import enhancedportals.portal.PortalTexture;
 
 public class Textures
 {
     public static List<IIconRegister> IconsToRegister = new ArrayList<IIconRegister>();
-    //public static final int[] PARTICLE_COLOURS = { 2437522, 11743532, 3887386, 5320730, 1973019, 8073150, 2651799, 11250603, 4408131, 14188952, 4312372, 14602026, 6719955, 12801229, 15435844, 15790320, 15435844, 2437522, 15435844, 2437522, 0 };
-    // public static Icon[] TEXTURE_ICONS = new Icon[16];
-    //public static Icon[] PORTAL_MODIFIER_ICONS = new Icon[16];
-
-    public static Map<String, Texture> textureMap = new HashMap<String, Texture>();
+        public static Map<String, PortalTexture> textureMap = new HashMap<String, PortalTexture>();
 
     public static ItemStack getItemStackFromTexture(String texture)
     {
         return getItemStackFromTexture(getTexture(texture));
     }
 
-    public static ItemStack getItemStackFromTexture(Texture texture)
+    public static ItemStack getItemStackFromTexture(PortalTexture texture)
     {
         ItemStack stack = null;
 
@@ -47,7 +43,7 @@ public class Textures
         return stack;
     }
 
-    public static Texture getTexture(String string)
+    public static PortalTexture getTexture(String string)
     {
         if (textureMap.containsKey(string))
         {
@@ -55,7 +51,7 @@ public class Textures
         }
         else if (string.startsWith("B:"))
         {
-            return new Texture(string);
+            return new PortalTexture(string);
         }
         else
         {
@@ -63,7 +59,7 @@ public class Textures
         }
     }
 
-    public static Texture getTextureFromItemStack(ItemStack stack)
+    public static PortalTexture getTextureFromItemStack(ItemStack stack)
     {
         if (stack.getItemName().startsWith("tile."))
         {
@@ -91,7 +87,7 @@ public class Textures
         return getTexture("");
     }
 
-    public static Texture getTextureFromItemStack(ItemStack stack, String oldTexture)
+    public static PortalTexture getTextureFromItemStack(ItemStack stack, String oldTexture)
     {
         return getTextureFromItemStack(stack);
     }
@@ -100,7 +96,7 @@ public class Textures
     {
         for (int i = 0; i < 16; i++)
         {
-            textureMap.put("C:" + i, new Texture("C:" + i, iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
+            textureMap.put("C:" + i, new PortalTexture("C:" + i, iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
         }
 
         for (IIconRegister icon : IconsToRegister)

@@ -16,7 +16,7 @@ import enhancedportals.lib.IIconRegister;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
-import enhancedportals.portal.Texture;
+import enhancedportals.portal.PortalTexture;
 
 @Mod(modid = Reference.MOD_ID + "_BC", name = "EP2 BuildCraft", version = Reference.MOD_VERSION, dependencies = "required-after:BuildCraft|Energy;required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_BuildCraft implements IIconRegister
@@ -35,11 +35,11 @@ public class EnhancedPortals_BuildCraft implements IIconRegister
             Item bucketFuel = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketFuel").get(null);
             Block blockOil = (Block) Class.forName("buildcraft.BuildCraftEnergy").getField("oilMoving").get(null);
 
-            Texture fuelText = new Texture("L:Fuel", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00);
+            PortalTexture fuelText = new PortalTexture("L:Fuel", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00);
 
             Textures.textureMap.put("L:Fuel", fuelText);
             Textures.textureMap.put("I:" + bucketFuel.itemID + ":0", fuelText);
-            Textures.textureMap.put("I:" + bucketOil.itemID + ":0", new Texture("B:" + blockOil.blockID + ":0", null, Textures.getTexture("C:0").getModifierTexture(), 0x000000));
+            Textures.textureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("B:" + blockOil.blockID + ":0", null, Textures.getTexture("C:0").getModifierTexture(), 0x000000));
 
             // Add buckets to valid item lists
             Settings.ValidItemsList.add(bucketFuel.itemID);

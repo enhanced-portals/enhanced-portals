@@ -7,6 +7,12 @@
 * Rename en_US language to en_GB and create US version, spellings etc.
 * Beta 3 stuff. [EP2 World, addons, customization]
 
+###Beta 2b (Upcoming)
+* Fixed not being able to teleport without a Portal Modifier.
+* Overhauled portal texture system.
+ * Old saves are incompatible, you will either have to break and replace all existing modifiers and dial devices, or create a new world to continue testing.
+* Now uses reflection to change the Obsidian block - increasing compatibility with other mods.
+
 ###Beta 2a
 * Networking improvements
 * Added Modifier Camouflage upgrade.
