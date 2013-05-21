@@ -14,7 +14,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import enhancedportals.lib.IIconRegister;
 import enhancedportals.lib.Reference;
-import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
 import enhancedportals.portal.PortalTexture;
 
@@ -37,13 +36,9 @@ public class EnhancedPortals_BuildCraft implements IIconRegister
 
             PortalTexture fuelText = new PortalTexture("L:Fuel", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00);
 
-            Textures.textureMap.put("L:Fuel", fuelText);
-            Textures.textureMap.put("I:" + bucketFuel.itemID + ":0", fuelText);
-            Textures.textureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("B:" + blockOil.blockID + ":0", null, Textures.getTexture("C:0").getModifierTexture(), 0x000000));
-
-            // Add buckets to valid item lists
-            Settings.ValidItemsList.add(bucketFuel.itemID);
-            Settings.ValidItemsList.add(bucketOil.itemID);
+            Textures.portalTextureMap.put("L:Fuel", fuelText);
+            Textures.portalTextureMap.put("I:" + bucketFuel.itemID + ":0", fuelText);
+            Textures.portalTextureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("B:" + blockOil.blockID + ":0", null, Textures.getTexture("C:0").getModifierTexture(), 0));
         }
         catch (Exception e)
         {

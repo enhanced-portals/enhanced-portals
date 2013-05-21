@@ -3,7 +3,6 @@ package enhancedportals.client.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import enhancedportals.lib.Settings;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifierSlot extends Slot
@@ -31,8 +30,6 @@ public class GuiPortalModifierSlot extends Slot
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        System.out.println(itemStack.itemID);
-
-        return itemStack.getItemName().startsWith("tile.") && !Settings.isBlockExcluded(itemStack.itemID) || Settings.isValidItem(itemStack.itemID);
+        return true;
     }
 }

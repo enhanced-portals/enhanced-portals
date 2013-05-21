@@ -16,7 +16,7 @@ import enhancedportals.portal.PortalTexture;
 public class Textures
 {
     public static List<IIconRegister> IconsToRegister = new ArrayList<IIconRegister>();
-        public static Map<String, PortalTexture> textureMap = new HashMap<String, PortalTexture>();
+    public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
 
     public static ItemStack getItemStackFromTexture(String texture)
     {
@@ -45,9 +45,9 @@ public class Textures
 
     public static PortalTexture getTexture(String string)
     {
-        if (textureMap.containsKey(string))
+        if (portalTextureMap.containsKey(string))
         {
-            return textureMap.get(string);
+            return portalTextureMap.get(string);
         }
         else if (string.startsWith("B:"))
         {
@@ -55,7 +55,7 @@ public class Textures
         }
         else
         {
-            return textureMap.get("C:5");
+            return portalTextureMap.get("C:5");
         }
     }
 
@@ -71,7 +71,7 @@ public class Textures
             {
                 return getTexture("C:" + stack.getItemDamage());
             }
-            else if (textureMap.containsKey("I:" + stack.itemID + ":" + stack.getItemDamage()))
+            else if (portalTextureMap.containsKey("I:" + stack.itemID + ":" + stack.getItemDamage()))
             {
                 return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage());
             }
@@ -96,7 +96,7 @@ public class Textures
     {
         for (int i = 0; i < 16; i++)
         {
-            textureMap.put("C:" + i, new PortalTexture("C:" + i, iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
+            portalTextureMap.put("C:" + i, new PortalTexture("C:" + i, iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
         }
 
         for (IIconRegister icon : IconsToRegister)

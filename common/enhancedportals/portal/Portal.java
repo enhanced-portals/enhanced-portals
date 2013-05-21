@@ -411,16 +411,7 @@ public class Portal
         ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
         if (item != null)
         {
-            TileEntityNetherPortal portal = (TileEntityNetherPortal) getWorld().getBlockTileEntity(xCoord, yCoord, zCoord);
-
-            if (Settings.isValidItem(item.itemID) && portal.parentModifier != null)
-            {
-                if (((TileEntityPortalModifier) portal.parentModifier.getTileEntity()).isActive())
-                {
-                    player.sendChatToPlayer("You must modify this portal through its Portal Modifier.");
-                    return false;
-                }
-            }
+            //TileEntityNetherPortal portal = (TileEntityNetherPortal) getWorld().getBlockTileEntity(xCoord, yCoord, zCoord);
 
             if (item.itemID == Item.dyePowder.itemID)
             {

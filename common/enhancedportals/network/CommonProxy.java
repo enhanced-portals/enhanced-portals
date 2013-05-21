@@ -54,16 +54,14 @@ public class CommonProxy
 
         blockNetherPortal = new BlockNetherPortal();
         blockPortalModifier = new BlockPortalModifier();
-        //blockObsidian = new BlockObsidian();
         blockObsidianStairs = new BlockObsidianStairs();
-        blockDummyPortal = new BlockDummyPortal();
         blockDialDevice = new BlockDialDevice();
         blockDialDeviceBasic = new BlockDialDeviceBasic();
         blockAutomaticDialler = new BlockAutomaticDialler();
+        blockDummyPortal = new BlockDummyPortal();
 
         GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
         GameRegistry.registerBlock(blockPortalModifier, Localization.PortalModifier_Name);
-        //GameRegistry.registerBlock(blockObsidian, Localization.Obsidian_Name);
         GameRegistry.registerBlock(blockObsidianStairs, Localization.ObsidianStairs_Name);
         GameRegistry.registerBlock(blockDummyPortal, "Fake Portal");
         GameRegistry.registerBlock(blockDialDevice, Localization.DialDevice_Name);

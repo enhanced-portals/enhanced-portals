@@ -56,35 +56,6 @@ public class EnhancedPortals
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(new EventHooks());
 
-        // Map items to textures
-        /*Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0", new PortalTexture(10, 0));
-        Settings.ItemPortalTextureMap.put(Item.bucketLava.itemID + ":0_", new PortalTexture(11, 0));
-        Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0", new PortalTexture(8, 0));
-        Settings.ItemPortalTextureMap.put(Item.bucketWater.itemID + ":0_", new PortalTexture(9, 0));
-        Settings.ItemPortalTextureMap.put(Item.snowball.itemID + ":0", new PortalTexture(Block.snow.blockID, 0));
-
-        for (int i = 0; i < 16; i++)
-        {
-            int j = i;
-
-            if (i == 0)
-            {
-                j = 5;
-            }
-            else if (i == 5)
-            {
-                j = 0;
-            }
-
-            Settings.ItemPortalTextureMap.put(Item.dyePowder.itemID + ":" + i, new PortalTexture((byte) j));
-        }*/
-
-        // Add items to valid items list
-        Settings.ValidItemsList.add(Item.bucketLava.itemID);
-        Settings.ValidItemsList.add(Item.bucketWater.itemID);
-        Settings.ValidItemsList.add(Item.dyePowder.itemID);
-        Settings.ValidItemsList.add(Item.snowball.itemID);
-
         // Add blocks to border list
         Settings.BorderBlocks.add(BlockIds.Obsidian);
         Settings.BorderBlocks.add(BlockIds.ObsidianStairs);
@@ -194,7 +165,7 @@ public class EnhancedPortals
         }
         catch (Exception e)
         {
-            Reference.log.log(Level.SEVERE, "Could not replace the default Obsidian block.");
+            Reference.log.log(Level.SEVERE, "Could not replace the default Obsidian block: " + e.getMessage());
         }
     }
 
