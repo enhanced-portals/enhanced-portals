@@ -68,7 +68,7 @@ public class EnhancedPortals_BuildCraft
         }
         catch (Exception e)
         {
-            Reference.log.log(Level.WARNING, "Couldn't load BuildCraft items: " + e.getMessage());
+            Reference.log.log(Level.WARNING, "Couldn't load BuildCraft addon.");
         }
 
         added = true;
