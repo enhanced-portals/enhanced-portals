@@ -3,6 +3,7 @@ package enhancedportals.network;
 import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -120,5 +121,10 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileEntityDialDevice.class, "EPDDevice");
         GameRegistry.registerTileEntity(TileEntityDialDeviceBasic.class, "EPDDBasic");
         GameRegistry.registerTileEntity(TileEntityAutomaticDialler.class, "EPADialler");
+    }
+
+    public void registerIcons(TextureStitchEvent.Pre event)
+    {
+        
     }
 }

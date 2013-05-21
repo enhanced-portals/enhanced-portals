@@ -162,7 +162,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        Textures.registerTextures(iconRegister);
+        
     }
 
     @Override

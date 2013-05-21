@@ -1,13 +1,9 @@
 package enhancedportals.lib;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
@@ -15,7 +11,6 @@ import enhancedportals.portal.PortalTexture;
 
 public class Textures
 {
-    public static List<IIconRegister> IconsToRegister = new ArrayList<IIconRegister>();
     public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
 
     public static ItemStack getItemStackFromTexture(String texture)
@@ -90,18 +85,5 @@ public class Textures
     public static PortalTexture getTextureFromItemStack(ItemStack stack, String oldTexture)
     {
         return getTextureFromItemStack(stack);
-    }
-
-    public static void registerTextures(IconRegister iconRegister)
-    {
-        for (int i = 0; i < 16; i++)
-        {
-            portalTextureMap.put("C:" + i, new PortalTexture("C:" + i, iconRegister.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), iconRegister.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
-        }
-
-        for (IIconRegister icon : IconsToRegister)
-        {
-            icon.registerIcons(iconRegister);
-        }
     }
 }

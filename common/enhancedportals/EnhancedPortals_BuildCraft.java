@@ -3,31 +3,57 @@ package enhancedportals;
 import java.util.logging.Level;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.util.Icon;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import enhancedportals.lib.IIconRegister;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
 import enhancedportals.portal.PortalTexture;
 
 @Mod(modid = Reference.MOD_ID + "_BC", name = "EP2 BuildCraft", version = Reference.MOD_VERSION, dependencies = "required-after:BuildCraft|Energy;required-after:" + Reference.MOD_ID)
-public class EnhancedPortals_BuildCraft implements IIconRegister
+public class EnhancedPortals_BuildCraft
 {
     Icon fuelTexture;
+    boolean added = false;
 
     @Instance(Reference.MOD_ID + "_BC")
     public static EnhancedPortals_BuildCraft instance;
 
-    @PostInit
-    public void postInit(FMLPostInitializationEvent event)
+    @PreInit
+    public void preInit(FMLPreInitializationEvent event)
     {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @ForgeSubscribe
+    public void registerIcons(TextureStitchEvent.Pre event)
+    {
+        if (event.map == FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks)
+        {
+            fuelTexture = event.map.registerIcon("buildcraft:../items/Fuel");
+        }
+    }
+    
+    @ServerStarting
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        if (added)
+        {
+            return;
+        }
+        
         try
         {
             Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);
@@ -38,23 +64,13 @@ public class EnhancedPortals_BuildCraft implements IIconRegister
 
             Textures.portalTextureMap.put("L:Fuel", fuelText);
             Textures.portalTextureMap.put("I:" + bucketFuel.itemID + ":0", fuelText);
-            Textures.portalTextureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("B:" + blockOil.blockID + ":0", null, Textures.getTexture("C:0").getModifierTexture(), 0));
+            Textures.portalTextureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("I:" + bucketOil.itemID + ":0", Block.blocksList[blockOil.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0));
         }
         catch (Exception e)
         {
-            Reference.log.log(Level.WARNING, "Couldn't load BuildCraft items.");
+            Reference.log.log(Level.WARNING, "Couldn't load BuildCraft items: " + e.getMessage());
         }
-    }
-
-    @PreInit
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        Textures.IconsToRegister.add(this);
-    }
-
-    @Override
-    public void registerIcons(IconRegister iconRegister)
-    {
-        fuelTexture = iconRegister.registerIcon("buildcraft:../items/Fuel");
+        
+        added = true;
     }
 }
