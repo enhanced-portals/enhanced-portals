@@ -1,13 +1,15 @@
-##Enhanced Portals
-**Latest Release**: [2.1 for Minecraft 1.5/1.5.1](http://www.minecraftforum.net/topic/1301217-)
-
+##EnhancedPortals 2
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
+
+**Latest Beta**: [1.0 Beta 2a](http://goo.gl/q1y21)
+
+**Release Notes**: [Changelog](https://github.com/ShadedDimension/enhanced-portals/blob/development/CHANGELOG.md#beta-2a)
 
 ###Setting up the development environment
 The build scripts are set up in the exact same way as the Equivalent Exchange 3 scripts.
 
 When setting up your development environment, follow the guide in [Equivalent Exchange 3's readme file](https://github.com/pahimar/Equivalent-Exchange-3/blob/master/README.md), but obviously replace ee3 with enhanced-portals.
-When done, your directory structure should look like this:
+When done, your directory structure should look like this. (Add the computercraft API into the directory listed)
 
 ***
 	development
@@ -21,7 +23,6 @@ When done, your directory structure should look like this:
 			\resources\
 			\README.md
 			\other files
+		\computercraft-api\
+			\*
 ***
-
-###Translation
-Currently I am in need of people that can translate Enhanced Portals into many different languages. If you are fluent in another language, feel free to head over to the [lang directory](https://github.com/ShadedDimension/enhanced-portals/tree/master/resources/mods/enhancedportals/lang), see what needs to be done and copy and edit the en_US.xml file.
