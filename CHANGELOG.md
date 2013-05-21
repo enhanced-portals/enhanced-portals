@@ -5,13 +5,24 @@
 * Server op commands.
 * Localization.
 * Rename en_US language to en_GB and create US version, spellings etc.
-* Beta 3 stuff. [EP2 World, addons, customization]
+
+####Post-Release
+* EnhancedPortals 2 - World
+ * Naturally spawning ruins containing loot and portals
+ * Portals will have a chance of being connected to others
+ * Extremely rare 'portal hubs' will spawn, they will be connected to up to five different smaller areas via portals
+ * Not all Overworld portals will link to the Overworld...
+* Forestry, Thermal Expansion addons
+ * Ability to use their liquids as a portal texture
+ * Restrictions on stupid-looking blocks for portal textures
 
 ###Beta 2b (Upcoming)
+**Old saves are incompatible, you will either have to break and replace all existing modifiers and dial devices, or create a new world to continue testing.**
 * Fixed not being able to teleport without a Portal Modifier.
 * Overhauled portal texture system.
- * Old saves are incompatible, you will either have to break and replace all existing modifiers and dial devices, or create a new world to continue testing.
+* Changed how the network data is saved to disk. (Now uses NBT for those interested)
 * Now uses reflection to change the Obsidian block - increasing compatibility with other mods.
+* Changes to texture registering.
 
 ###Beta 2a
 * Networking improvements

@@ -1,6 +1,5 @@
 package enhancedportals.network;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -51,8 +50,6 @@ public class CommonProxy
 
     public void loadBlocks()
     {
-        Block.blocksList[BlockIds.Obsidian] = null;
-
         blockNetherPortal = new BlockNetherPortal();
         blockPortalModifier = new BlockPortalModifier();
         blockObsidianStairs = new BlockObsidianStairs();
@@ -64,7 +61,7 @@ public class CommonProxy
         GameRegistry.registerBlock(blockNetherPortal, Localization.NetherPortal_Name);
         GameRegistry.registerBlock(blockPortalModifier, Localization.PortalModifier_Name);
         GameRegistry.registerBlock(blockObsidianStairs, Localization.ObsidianStairs_Name);
-        GameRegistry.registerBlock(blockDummyPortal, "Fake Portal");
+        GameRegistry.registerBlock(blockDummyPortal, "dummyPortal");
         GameRegistry.registerBlock(blockDialDevice, Localization.DialDevice_Name);
         GameRegistry.registerBlock(blockDialDeviceBasic, Localization.DialDeviceBasic_Name);
         GameRegistry.registerBlock(blockAutomaticDialler, Localization.AutomaticDialler_Name);
