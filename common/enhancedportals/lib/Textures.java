@@ -56,9 +56,38 @@ public class Textures
 
     public static PortalTexture getTextureFromItemStack(ItemStack stack)
     {
+        return getTextureFromItemStack(stack, "NOTSET");
+    }
+
+    public static PortalTexture getTextureFromItemStack(ItemStack stack, String oldTexture)
+    {
+        if (stack == null)
+        {
+            return null;
+        }
+        
         if (stack.getItemName().startsWith("tile."))
         {
-            return getTexture("B:" + stack.itemID + ":" + stack.getItemDamage());
+            if (Settings.isBlockExcluded(stack.itemID))
+            {
+                return null;
+            }
+            
+            if (getTexture("B:" + stack.itemID + ":" + stack.getItemDamage()).getID().equals(oldTexture))
+            {
+                if (getTexture("B:" + stack.itemID + ":" + stack.getItemDamage() + "_") != null)
+                {
+                    return getTexture("B:" + stack.itemID + ":" + stack.getItemDamage() + "_");
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return getTexture("B:" + stack.itemID + ":" + stack.getItemDamage());
+            }
         }
         else
         {
@@ -68,7 +97,21 @@ public class Textures
             }
             else if (portalTextureMap.containsKey("I:" + stack.itemID + ":" + stack.getItemDamage()))
             {
-                return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage());
+                if (getTexture("I:" + stack.itemID + ":" + stack.getItemDamage()).getID().equals(oldTexture))
+                {
+                    if (getTexture("I:" + stack.itemID + ":" + stack.getItemDamage() + "_") != null)
+                    {
+                        return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage() + "_");
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage());
+                }
             }
             else
             {
@@ -79,11 +122,6 @@ public class Textures
             }
         }
 
-        return getTexture("");
-    }
-
-    public static PortalTexture getTextureFromItemStack(ItemStack stack, String oldTexture)
-    {
-        return getTextureFromItemStack(stack);
+        return null;
     }
 }

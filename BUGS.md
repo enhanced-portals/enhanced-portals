@@ -1,7 +1,6 @@
 ##EnhancedPortals 2 - Known Bugs
 
+This file is for tracking bugs that come up in the development process - they don't usually stay around for long so there's not much point creating an issue for each of them.
+
 ###Beta 2b
 * Both Dial Devices fail to render when held.
-* Portal Modifier will consume all items regardless of if they can be used as a texture or not.
-* You can activate a secondary Dial Device on the same Portal when that portal is still active.
-* Some blocks do not have their names properly displayed in the Portal Modifier/Dial Device GUI.

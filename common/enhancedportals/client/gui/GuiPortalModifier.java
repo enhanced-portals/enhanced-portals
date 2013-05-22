@@ -10,6 +10,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -18,6 +19,7 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
+import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
@@ -180,7 +182,16 @@ public class GuiPortalModifier extends GuiContainer
 
                 if (Textures.getItemStackFromTexture(portalModifier.texture) != null)
                 {
-                    txt = Localization.localizeString(Textures.getItemStackFromTexture(portalModifier.texture).getItemName() + ".name");
+                    ItemStack stack = Textures.getItemStackFromTexture(portalModifier.texture);
+                    
+                    if (stack.itemID == BlockIds.DummyPortal)
+                    {
+                        txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[stack.getItemDamage()]);
+                    }
+                    else
+                    {
+                        txt = Localization.localizeString(stack.getItemName() + ".name");
+                    }
                 }
                 else
                 {

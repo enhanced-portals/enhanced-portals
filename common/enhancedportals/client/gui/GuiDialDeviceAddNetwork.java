@@ -12,6 +12,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -20,12 +21,14 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
+import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketNetworkData;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDeviceAddNetwork extends GuiContainer
@@ -169,7 +172,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
                 fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, 66, 0xFF00FF00);
             }
 
-            fontRenderer.drawString("Modifiers", xSize / 2 - fontRenderer.getStringWidth("Modifiers") / 2, 44, 0xFF444444);
+            fontRenderer.drawString(Localization.localizeString("Modifications"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("Modifications")) / 2, 44, 0xFF444444);
         }
     }
 
@@ -356,7 +359,16 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
 
                 if (Textures.getItemStackFromTexture(texture) != null)
                 {
-                    theList.add(EnumChatFormatting.GRAY + Localization.localizeString(Textures.getItemStackFromTexture(texture).getItemName() + ".name"));
+                    ItemStack stack = Textures.getItemStackFromTexture(texture);
+                    
+                    if (stack.itemID == BlockIds.DummyPortal)
+                    {
+                        theList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[stack.getItemDamage()]));
+                    }
+                    else
+                    {
+                        theList.add(EnumChatFormatting.GRAY + Localization.localizeString(stack.getItemName() + ".name"));
+                    }
                 }
                 else
                 {
@@ -488,10 +500,12 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         {
             if (isShiftKeyDown() && getSlotAtPosition(par1, par2) != null)
             {
-                String text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0)).getID();
+                PortalTexture Text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0));
 
-                if (text != null)
+                if (Text != null)
                 {
+                    String text = Text.getID();
+                    
                     if (texture.equals(text))
                     {
                         text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0), texture).getID();
@@ -524,6 +538,13 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
             else if (isPointInRegion(7, 40 + 21, xSize - 15, 17, par1, par2))
             {
                 popUpState = true;
+            }
+            else if (isPointInRegion(134 + 18, 40, 16, 16, par1, par2))
+            {
+                if (par3 == 1)
+                {
+                    texture = Textures.getTexture("").getID();
+                }
             }
         }
         else

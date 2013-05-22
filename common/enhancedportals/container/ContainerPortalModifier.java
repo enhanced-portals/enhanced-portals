@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.GuiPortalModifierSlot;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Textures;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ContainerPortalModifier extends Container
@@ -61,10 +62,16 @@ public class ContainerPortalModifier extends Container
         {
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
-            String tempText = Textures.getTextureFromItemStack(stackInSlot).getID();
-
-            if (tempText != null)
+            PortalTexture text = Textures.getTextureFromItemStack(stackInSlot);
+            
+            if (text == null && stackInSlot.itemID != ItemIds.PortalModifierUpgrade + 256)
             {
+                return null;
+            }
+            else if (text != null)
+            {
+                String tempText = text.getID();
+                
                 if (tempText.equals(portalModifier.texture))
                 {
                     tempText = Textures.getTextureFromItemStack(stackInSlot, portalModifier.texture).getID();

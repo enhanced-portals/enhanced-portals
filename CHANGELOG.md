@@ -27,6 +27,12 @@
 * Changed how the network data is saved to disk. (Now uses NBT for those interested)
 * Now uses reflection to change the Obsidian block - increasing compatibility with other mods.
 * Changes to texture registering.
+* You can not activate a dialling device on an active portal.
+* Portal Modifiers will no longer consume items they cannot use.
+* Shift-Clicking on an unusable texture block in the dial device menu will no longer reset the texture.
+* You can now right-click on the texture area in the dial device menu to reset the texture.
+* All blocks should have their names properly displayed in the Dial Device/Portal Modifier.
+* Fixed crashing issue in the dial device menu.
 
 ###Beta 2a
 * Networking improvements

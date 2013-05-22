@@ -50,8 +50,11 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 {
                     if (worldObj.getBlockId(xCoord + x, yCoord + y, zCoord + z) == BlockIds.PortalModifier)
                     {
-                        modifierLocation = new WorldLocation(xCoord + x, yCoord + y, zCoord + z, worldObj);
-                        break outerloop;
+                        if (!((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord + x, yCoord + y, zCoord + z)).isAnyActive())
+                        {
+                            modifierLocation = new WorldLocation(xCoord + x, yCoord + y, zCoord + z, worldObj);
+                            break outerloop;
+                        }
                     }
                 }
             }

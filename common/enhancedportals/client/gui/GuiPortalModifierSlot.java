@@ -3,6 +3,8 @@ package enhancedportals.client.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import enhancedportals.lib.ItemIds;
+import enhancedportals.lib.Textures;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifierSlot extends Slot
@@ -30,6 +32,6 @@ public class GuiPortalModifierSlot extends Slot
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        return true;
+        return itemStack.itemID == ItemIds.PortalModifierUpgrade + 256 || Textures.getTextureFromItemStack(itemStack) != null;
     }
 }

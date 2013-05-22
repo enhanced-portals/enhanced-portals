@@ -289,6 +289,9 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                 {
                     text = Textures.getTextureFromItemStack(stack, texture).getID();
                 }
+                
+                updateTexture(text);
+                setInventorySlotContents(0, null);
             }
             else if (stack.itemID == ItemIds.PortalModifierUpgrade + 256 && !hasUpgrade(stack.getItemDamage()))
             {
@@ -310,19 +313,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                 }
 
                 return;
-            }
-
-            if (text != null)
-            {
-                updateTexture(text);
-                setInventorySlotContents(0, null);
-
-                //if (Settings.isLiquid(text) && !worldObj.isRemote)
-                //{
-                //    ItemStack itemStack = new ItemStack(Item.bucketEmpty);
-                //    EntityItem item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, itemStack);
-                //    worldObj.spawnEntityInWorld(item);
-                //}
             }
         }
     }
