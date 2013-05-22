@@ -65,14 +65,14 @@ public class Textures
         {
             return null;
         }
-        
+
         if (stack.getItemName().startsWith("tile."))
         {
             if (Settings.isBlockExcluded(stack.itemID))
             {
                 return null;
             }
-            
+
             if (getTexture("B:" + stack.itemID + ":" + stack.getItemDamage()).getID().equals(oldTexture))
             {
                 if (getTexture("B:" + stack.itemID + ":" + stack.getItemDamage() + "_") != null)

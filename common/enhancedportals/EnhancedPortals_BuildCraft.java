@@ -40,7 +40,7 @@ public class EnhancedPortals_BuildCraft
     @ForgeSubscribe
     public void registerIcons(TextureStitchEvent.Pre event)
     {
-        if (event.map == FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks)        
+        if (event.map == FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks)
         {
             fuelTexture = event.map.registerIcon("EP2_BC:fuel");
         }

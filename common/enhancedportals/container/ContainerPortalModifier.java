@@ -63,7 +63,7 @@ public class ContainerPortalModifier extends Container
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
             PortalTexture text = Textures.getTextureFromItemStack(stackInSlot);
-            
+
             if (text == null && stackInSlot.itemID != ItemIds.PortalModifierUpgrade + 256)
             {
                 return null;
@@ -71,7 +71,7 @@ public class ContainerPortalModifier extends Container
             else if (text != null)
             {
                 String tempText = text.getID();
-                
+
                 if (tempText.equals(portalModifier.texture))
                 {
                     tempText = Textures.getTextureFromItemStack(stackInSlot, portalModifier.texture).getID();

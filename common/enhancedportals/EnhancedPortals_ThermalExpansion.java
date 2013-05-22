@@ -38,7 +38,7 @@ public class EnhancedPortals_ThermalExpansion
             Block blockRedstone = (Block) Class.forName("thermalexpansion.liquid.TELiquids").getField("blockRedstone").get(null);
             Block blockGlowstone = (Block) Class.forName("thermalexpansion.liquid.TELiquids").getField("blockGlowstone").get(null);
             Block blockEnder = (Block) Class.forName("thermalexpansion.liquid.TELiquids").getField("blockEnder").get(null);
-            
+
             Textures.portalTextureMap.put("I:" + bucketRedstone.itemID + ":0", new PortalTexture("I:" + bucketRedstone.itemID + ":0", Block.blocksList[blockRedstone.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0xFF0000));
             Textures.portalTextureMap.put("I:" + bucketGlowstone.itemID + ":0", new PortalTexture("I:" + bucketGlowstone.itemID + ":0", Block.blocksList[blockGlowstone.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0xFFFF00));
             Textures.portalTextureMap.put("I:" + bucketEnder.itemID + ":0", new PortalTexture("I:" + bucketEnder.itemID + ":0", Block.blocksList[blockEnder.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0x00FF00));

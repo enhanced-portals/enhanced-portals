@@ -360,7 +360,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
                 if (Textures.getItemStackFromTexture(texture) != null)
                 {
                     ItemStack stack = Textures.getItemStackFromTexture(texture);
-                    
+
                     if (stack.itemID == BlockIds.DummyPortal)
                     {
                         theList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[stack.getItemDamage()]));
@@ -505,7 +505,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
                 if (Text != null)
                 {
                     String text = Text.getID();
-                    
+
                     if (texture.equals(text))
                     {
                         text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0), texture).getID();

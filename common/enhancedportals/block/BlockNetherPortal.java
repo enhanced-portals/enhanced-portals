@@ -49,7 +49,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z);
-        
+
         return Textures.getTexture(netherPortal.texture).getPortalTexture();
     }
 

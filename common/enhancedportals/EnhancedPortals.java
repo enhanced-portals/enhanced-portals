@@ -38,7 +38,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.ServerPacketHandler;
 import enhancedportals.portal.network.ModifierNetwork;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, acceptedMinecraftVersions=Reference.MC_VERSION)
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, acceptedMinecraftVersions = Reference.MC_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
 public class EnhancedPortals
 {
@@ -53,7 +53,7 @@ public class EnhancedPortals
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(new EventHooks());
-        
+
         proxy.loadBlocks();
         proxy.loadItems();
         proxy.loadTileEntities();
@@ -135,76 +135,18 @@ public class EnhancedPortals
     @PreInit
     private void preInit(FMLPreInitializationEvent event)
     {
-        Reference.log.setParent(FMLLog.getLogger());        
-        Block.blocksList[BlockIds.Obsidian] = null; 
-        
+        Reference.log.setParent(FMLLog.getLogger());
+        Block.blocksList[BlockIds.Obsidian] = null;
+
         if (!setField(Block.class, new BlockObsidian(), net.minecraft.block.BlockObsidian.class))
         {
             Block.blocksList[BlockIds.Obsidian] = null;
             Block.blocksList[BlockIds.Obsidian] = new net.minecraft.block.BlockObsidian(49).setHardness(50.0F).setResistance(2000.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("obsidian");
             Reference.log.log(Level.SEVERE, "Unable to modify the Obsidian block.");
         }
-        
+
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         Localization.loadLocales();
-    }
-
-    private boolean setField(Class<?> cls, Object value, Class<?> clas)
-    {
-        Field field = null;
-                
-        for (Field f : cls.getDeclaredFields())
-        {
-            if (f.getType() == net.minecraft.block.Block.class)
-            {
-                try
-                {
-                    if (((Block) f.get(null)) instanceof net.minecraft.block.BlockObsidian)
-                    {
-                        field = f;
-                    }
-                    
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-        }
-        
-        if (field == null)
-        {
-            return false;
-        }
-        
-        field.setAccessible(true);
-        
-        if ((field.getModifiers() & Modifier.FINAL) != 0)
-        {
-            try
-            {
-                Field modifiers = Field.class.getDeclaredField("modifiers");
-                modifiers.setAccessible(true);
-                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        
-        try
-        {
-            field.set(cls, value);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-        
-        return true;
     }
 
     @ServerStarting
@@ -219,5 +161,63 @@ public class EnhancedPortals
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();
+    }
+
+    private boolean setField(Class<?> cls, Object value, Class<?> clas)
+    {
+        Field field = null;
+
+        for (Field f : cls.getDeclaredFields())
+        {
+            if (f.getType() == net.minecraft.block.Block.class)
+            {
+                try
+                {
+                    if ((Block) f.get(null) instanceof net.minecraft.block.BlockObsidian)
+                    {
+                        field = f;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+        }
+
+        if (field == null)
+        {
+            return false;
+        }
+
+        field.setAccessible(true);
+
+        if ((field.getModifiers() & Modifier.FINAL) != 0)
+        {
+            try
+            {
+                Field modifiers = Field.class.getDeclaredField("modifiers");
+                modifiers.setAccessible(true);
+                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        try
+        {
+            field.set(cls, value);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

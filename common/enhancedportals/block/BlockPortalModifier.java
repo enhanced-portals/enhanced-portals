@@ -111,7 +111,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     public Icon getIcon(int side, int meta)
     {
         Icon tex = Textures.getTexture("").getModifierTexture();
-                
+
         return side == 1 ? tex != null ? tex : texture : texture;
     }
 

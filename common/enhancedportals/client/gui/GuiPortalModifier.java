@@ -183,7 +183,7 @@ public class GuiPortalModifier extends GuiContainer
                 if (Textures.getItemStackFromTexture(portalModifier.texture) != null)
                 {
                     ItemStack stack = Textures.getItemStackFromTexture(portalModifier.texture);
-                    
+
                     if (stack.itemID == BlockIds.DummyPortal)
                     {
                         txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[stack.getItemDamage()]);

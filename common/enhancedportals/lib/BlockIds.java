@@ -10,4 +10,5 @@ public class BlockIds
     public static int DialHomeDeviceBasic = 1350;
     public static int PortalModifier = 1346;
     public static int DummyPortal = 1349;
+    public static int ObsidianSlab = 1352;
 }

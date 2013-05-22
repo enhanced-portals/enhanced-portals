@@ -289,7 +289,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                 {
                     text = Textures.getTextureFromItemStack(stack, texture).getID();
                 }
-                
+
                 updateTexture(text);
                 setInventorySlotContents(0, null);
             }
