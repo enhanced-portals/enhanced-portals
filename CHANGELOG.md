@@ -20,7 +20,7 @@
  * Ability to use their liquids as a portal texture
  * Restrictions on stupid-looking blocks for portal textures
 
-###Beta 2b (Upcoming)
+###Beta 2b
 **Old saves are incompatible, you will either have to break and replace all existing modifiers and dial devices, or create a new world to continue testing.**
 * Fixed not being able to teleport without a Portal Modifier.
 * Overhauled portal texture system.

@@ -1,9 +1,9 @@
 ##EnhancedPortals 2
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
 
-**Latest Beta**: [1.0 Beta 2a](http://goo.gl/q1y21)
+**Latest Beta**: [1.0 Beta 2b](http://goo.gl/ZEXe5)
 
-**Release Notes**: [Changelog](https://github.com/ShadedDimension/enhanced-portals/blob/development/CHANGELOG.md#beta-2a)
+**Release Notes**: [Changelog](https://github.com/ShadedDimension/enhanced-portals/blob/development/CHANGELOG.md#beta-2b)
 
 ###Setting up the development environment
 The build scripts are set up in the exact same way as the Equivalent Exchange 3 scripts.

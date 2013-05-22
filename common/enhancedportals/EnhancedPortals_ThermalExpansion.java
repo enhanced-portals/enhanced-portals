@@ -46,6 +46,7 @@ public class EnhancedPortals_ThermalExpansion
         catch (Exception e)
         {
             Reference.log.log(Level.WARNING, "Couldn't load ThermalExpansion addon.");
+            e.printStackTrace();
         }
 
         added = true;

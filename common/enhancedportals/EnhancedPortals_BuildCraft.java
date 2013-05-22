@@ -60,10 +60,7 @@ public class EnhancedPortals_BuildCraft
             Item bucketFuel = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketFuel").get(null);
             Block blockOil = (Block) Class.forName("buildcraft.BuildCraftEnergy").getField("oilMoving").get(null);
 
-            PortalTexture fuelText = new PortalTexture("L:Fuel", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00);
-
-            Textures.portalTextureMap.put("L:Fuel", fuelText);
-            Textures.portalTextureMap.put("I:" + bucketFuel.itemID + ":0", fuelText);
+            Textures.portalTextureMap.put("I:" + bucketFuel.itemID + ":0", new PortalTexture("I:" + bucketFuel.itemID + ":0", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00));
             Textures.portalTextureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("I:" + bucketOil.itemID + ":0", Block.blocksList[blockOil.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0));
         }
         catch (Exception e)
