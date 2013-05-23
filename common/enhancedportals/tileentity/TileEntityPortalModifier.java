@@ -6,12 +6,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Textures;
-import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
@@ -242,7 +242,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         }
         else
         {
-            return portal != null && portal.parentModifier != null && portal.parentModifier.equals(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
+            return portal != null && portal.parentModifier != null && portal.parentModifier.isEqual(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
         }
     }
 

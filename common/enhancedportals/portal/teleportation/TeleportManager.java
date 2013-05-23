@@ -14,11 +14,11 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.WorldLocation;
 import enhancedportals.portal.Portal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 

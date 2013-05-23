@@ -17,6 +17,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
@@ -34,7 +35,6 @@ public class GuiPortalModifier extends GuiContainer
     TileEntityPortalModifier portalModifier;
     public boolean hasInteractedWith = false, isActive = false;
     GuiButton okayButton;
-    List<GuiItemStackButton> elementList;
 
     Upgrade upgrade;
 
@@ -44,19 +44,6 @@ public class GuiPortalModifier extends GuiContainer
         portalModifier = modifier;
         isActive = portalModifier.isActive();
         upgrade = new Upgrade(this, modifier);
-        elementList = new ArrayList<GuiItemStackButton>();
-
-        List<String> strList = new ArrayList<String>();
-        strList.add(Localization.localizeString("gui.redstoneControl.title"));
-        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.normal"));
-        elementList.add(new GuiItemStackButton(xSize + 4, 4, new ItemStack(Block.torchRedstoneActive), strList, "redstoneHigh", this));
-        elementList.get(0).active = portalModifier.redstoneSetting == 0;
-
-        strList = new ArrayList<String>();
-        strList.add(Localization.localizeString("gui.redstoneControl.title"));
-        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
-        elementList.add(new GuiItemStackButton(xSize + 4, 24, new ItemStack(Block.torchRedstoneIdle), strList, "redstoneLow", this));
-        elementList.get(1).active = portalModifier.redstoneSetting == 1;
     }
 
     @Override
@@ -65,6 +52,20 @@ public class GuiPortalModifier extends GuiContainer
         if (button.id == 100)
         {
             mc.thePlayer.closeScreen();
+        }
+        else if (button.id == 10)
+        {
+            portalModifier.redstoneSetting = 0;
+            ((GuiItemStackButton) buttonList.get(2)).isActive = false;
+            hasInteractedWith = true;
+            ((GuiItemStackButton) button).isActive = true;
+        }
+        else if (button.id == 11)
+        {
+            portalModifier.redstoneSetting = 1;
+            ((GuiItemStackButton) buttonList.get(1)).isActive = false;
+            hasInteractedWith = true;
+            ((GuiItemStackButton) button).isActive = true;
         }
     }
 
@@ -139,11 +140,6 @@ public class GuiPortalModifier extends GuiContainer
             else
             {
                 fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
-            }
-
-            for (int i = 0; i < elementList.size(); i++)
-            {
-                elementList.get(i).drawElement(guiLeft, guiTop, x, y, fontRenderer, itemRenderer, mc.renderEngine);
             }
 
             upgrade.drawElements(x, y, fontRenderer, itemRenderer, mc.renderEngine);
@@ -313,24 +309,6 @@ public class GuiPortalModifier extends GuiContainer
         tessellator.draw();
     }
 
-    public void elementClicked(GuiItemStackButton itemStackButton, int button)
-    {
-        if (itemStackButton.value.equalsIgnoreCase("redstoneHigh"))
-        {
-            portalModifier.redstoneSetting = 0;
-            itemStackButton.active = true;
-            elementList.get(1).active = false;
-        }
-        else if (itemStackButton.value.equalsIgnoreCase("redstoneLow"))
-        {
-            portalModifier.redstoneSetting = 1;
-            itemStackButton.active = true;
-            elementList.get(0).active = false;
-        }
-
-        hasInteractedWith = true;
-    }
-
     public int getGuiLeft()
     {
         return guiLeft;
@@ -350,18 +328,22 @@ public class GuiPortalModifier extends GuiContainer
         okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, Localization.localizeString("gui.close"));
         buttonList.add(okayButton);
         okayButton.drawButton = isActive;
+
+        List<String> strList = new ArrayList<String>();
+        strList.add(Localization.localizeString("gui.redstoneControl.title"));
+        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.normal"));
+        buttonList.add(new GuiItemStackButton(10, guiLeft + xSize + 4, guiTop + 4, new ItemStack(Block.torchRedstoneActive), portalModifier.redstoneSetting == 0, strList));
+
+        strList = new ArrayList<String>();
+        strList.add(Localization.localizeString("gui.redstoneControl.title"));
+        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
+        buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList));
     }
 
     @Override
     protected void mouseClicked(int x, int y, int buttonClicked)
     {
         super.mouseClicked(x, y, buttonClicked);
-
-        for (int i = 0; i < elementList.size(); i++)
-        {
-            elementList.get(i).handleMouseClick(guiLeft, guiTop, x, y, buttonClicked, i);
-        }
-
         upgrade.mouseClicked(x, y, buttonClicked);
 
         if (isPointInRegion(134, 15, 16, 16, x, y))

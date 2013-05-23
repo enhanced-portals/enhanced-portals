@@ -14,6 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocationBlockAccess;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,7 +23,6 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
-import enhancedportals.lib.WorldLocation;
 import enhancedportals.portal.Portal;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
@@ -197,7 +197,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        int meta = new WorldLocation(x, y, z, blockAccess).getOffset(ForgeDirection.getOrientation(side).getOpposite()).getMetadata();
+        int meta = new WorldLocationBlockAccess(x, y, z, blockAccess).getOffset(ForgeDirection.getOrientation(side).getOpposite()).getMetadata();
 
         if (meta == 2 || meta == 3) // XY
         {

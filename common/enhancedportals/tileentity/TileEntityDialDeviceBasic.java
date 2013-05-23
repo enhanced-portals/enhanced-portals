@@ -3,20 +3,67 @@ package enhancedportals.tileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
 import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.portal.Portal;
 
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
     String oldModifierNetwork;
     public boolean active = false;
     WorldLocation modifierLocation;
+
+    private void findPortalFrame()
+    {
+        if (modifierLocation != null)
+        {
+            return;
+        }
+
+        ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
+        WorldLocation currentLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj);
+
+        if (currentLocation.getOffset(direction.getOpposite()).getBlockId() == BlockIds.Obsidian)
+        {
+            modifierLocation = currentLocation.getOffset(direction.getOpposite());
+        }
+        else if (currentLocation.getOffset(ForgeDirection.DOWN).getBlockId() == BlockIds.Obsidian)
+        {
+            modifierLocation = currentLocation.getOffset(ForgeDirection.DOWN);
+        }
+        else
+        {
+            if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) // Facing SOUTH / NORTH
+            {
+                if (currentLocation.getOffset(ForgeDirection.EAST).getBlockId() == BlockIds.Obsidian)
+                {
+                    modifierLocation = currentLocation.getOffset(ForgeDirection.EAST);
+                }
+                else if (currentLocation.getOffset(ForgeDirection.WEST).getBlockId() == BlockIds.Obsidian)
+                {
+                    modifierLocation = currentLocation.getOffset(ForgeDirection.WEST);
+                }
+            }
+            else if (direction == ForgeDirection.WEST || direction == ForgeDirection.EAST) // Facing EAST / WEST (Opposite)
+            {
+                if (currentLocation.getOffset(ForgeDirection.NORTH).getBlockId() == BlockIds.Obsidian)
+                {
+                    modifierLocation = currentLocation.getOffset(ForgeDirection.NORTH);
+                }
+                else if (currentLocation.getOffset(ForgeDirection.SOUTH).getBlockId() == BlockIds.Obsidian)
+                {
+                    modifierLocation = currentLocation.getOffset(ForgeDirection.SOUTH);
+                }
+            }
+        }
+    }
 
     @Override
     public PacketData getPacketData()
@@ -42,23 +89,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             return;
         }
 
-        outerloop: for (int x = -5; x < 5; x++)
-        {
-            for (int z = -5; z < 5; z++)
-            {
-                for (int y = -5; y < 5; y++)
-                {
-                    if (worldObj.getBlockId(xCoord + x, yCoord + y, zCoord + z) == BlockIds.PortalModifier)
-                    {
-                        if (!((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord + x, yCoord + y, zCoord + z)).isAnyActive())
-                        {
-                            modifierLocation = new WorldLocation(xCoord + x, yCoord + y, zCoord + z, worldObj);
-                            break outerloop;
-                        }
-                    }
-                }
-            }
-        }
+        findPortalFrame();
 
         if (modifierLocation == null)
         {
@@ -72,45 +103,54 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (EnhancedPortals.proxy.ModifierNetwork.hasNetwork(network))
         {
-            if (modifierLocation.getBlockId() == BlockIds.PortalModifier)
+            boolean createdPortal = false;
+
+            for (int i = 0; i < 6; i++)
             {
-                TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
-
-                oldModifierNetwork = modifier.network;
-                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(modifierLocation);
-                EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, modifierLocation);
-                modifier.network = network;
-
-                if (modifier.isAnyActive())
+                if (new Portal(modifierLocation.getOffset(ForgeDirection.getOrientation(i)), "", true, true, (byte) 0).createPortal())
                 {
-                    modifier.removePortal();
-                }
-
-                if (modifier.createPortal())
-                {
-                    if (player != null)
-                    {
-                        player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.dialSuccess"));
-                    }
-
-                    worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
-                    active = true;
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
-                }
-                else
-                {
-                    modifier.network = oldModifierNetwork;
-
-                    if (player != null)
-                    {
-                        player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noPortal"));
-                    }
+                    createdPortal = true;
+                    break;
                 }
             }
-            else if (player != null)
+
+            if (!createdPortal)
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"));
+                player.sendChatToPlayer("Can't make portal.");
             }
+
+            /*TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
+
+            oldModifierNetwork = modifier.network;
+            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(modifierLocation);
+            EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, modifierLocation);
+            modifier.network = network;
+
+            if (modifier.isAnyActive())
+            {
+                modifier.removePortal();
+            }
+
+            if (modifier.createPortal())
+            {
+                if (player != null)
+                {
+                    player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.dialSuccess"));
+                }
+
+                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
+                active = true;
+                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            }
+            else
+            {
+                modifier.network = oldModifierNetwork;
+
+                if (player != null)
+                {
+                    player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noPortal"));
+                }
+            }*/
         }
         else if (player != null)
         {

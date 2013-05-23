@@ -12,6 +12,8 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocation;
+import alz.core.lib.WorldLocationBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.EnhancedPortals;
@@ -21,8 +23,6 @@ import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
-import enhancedportals.lib.WorldLocation;
-import enhancedportals.lib.WorldLocationBA;
 import enhancedportals.portal.Portal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -83,7 +83,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
 
         if (modifier.hasUpgrade(7))
         {
-            WorldLocationBA location = new WorldLocationBA(x, y, z, blockAccess);
+            WorldLocationBlockAccess location = new WorldLocationBlockAccess(x, y, z, blockAccess);
 
             if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.NORTH).getBlockId(), modifier.customBorderBlocks()))
             {

@@ -2,9 +2,9 @@ package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketData;
 import enhancedportals.network.packet.PacketRequestSync;
 

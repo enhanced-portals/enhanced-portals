@@ -1,15 +1,14 @@
-package enhancedportals.lib;
+package alz.core.lib;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import enhancedportals.EnhancedPortals;
 
 public class WorldLocation
 {
-    public static boolean equals(WorldLocation location, WorldLocation location2)
+    public static boolean isEqual(WorldLocation location, WorldLocation location2)
     {
         return location2.xCoord == location.xCoord && location2.yCoord == location.yCoord && location2.zCoord == location.zCoord && location2.dimension == location.dimension;
     }
@@ -26,14 +25,6 @@ public class WorldLocation
         xCoord = x;
         yCoord = y;
         zCoord = z;
-    }
-
-    public WorldLocation(int x, int y, int z, IBlockAccess blockAccess)
-    {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
-        dimension = 0; // TODO
     }
 
     public WorldLocation(int x, int y, int z, int dim)
@@ -58,11 +49,6 @@ public class WorldLocation
         yCoord = item.yCoord;
         zCoord = item.zCoord;
         dimension = item.dimension;
-    }
-
-    public boolean equals(WorldLocation loc)
-    {
-        return equals(this, loc);
     }
 
     public int getBlockId()
@@ -104,6 +90,11 @@ public class WorldLocation
     public boolean isBlockAir()
     {
         return getBlockId() == 0;
+    }
+
+    public boolean isEqual(WorldLocation loc)
+    {
+        return isEqual(this, loc);
     }
 
     public void markBlockForUpdate()

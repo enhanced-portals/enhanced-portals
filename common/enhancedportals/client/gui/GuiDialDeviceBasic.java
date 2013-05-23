@@ -5,12 +5,15 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
+import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketDialRequest;
@@ -189,6 +192,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
         guiTop = (height - ySize) / 2;
 
         buttonList.add(new GuiButton(1, guiLeft + 13, guiTop + 107, 150, 20, "Dial"));
+        buttonList.add(new GuiItemStackButton(2, guiLeft - 20, guiTop, new ItemStack(BlockIds.DummyPortal, 1, 5)));
         ((GuiButton) buttonList.get(0)).enabled = false;
     }
 

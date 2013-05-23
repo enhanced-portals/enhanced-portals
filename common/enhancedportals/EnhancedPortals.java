@@ -138,7 +138,7 @@ public class EnhancedPortals
         Reference.log.setParent(FMLLog.getLogger());
         Block.blocksList[BlockIds.Obsidian] = null;
 
-        if (!setField(Block.class, new BlockObsidian(), net.minecraft.block.BlockObsidian.class))
+        if (!replaceBlock(new BlockObsidian(), net.minecraft.block.BlockObsidian.class))
         {
             Block.blocksList[BlockIds.Obsidian] = null;
             Block.blocksList[BlockIds.Obsidian] = new net.minecraft.block.BlockObsidian(49).setHardness(50.0F).setResistance(2000.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("obsidian");
@@ -149,25 +149,11 @@ public class EnhancedPortals
         Localization.loadLocales();
     }
 
-    @ServerStarting
-    private void serverStarting(FMLServerStartingEvent event)
-    {
-        event.registerServerCommand(new CommandEP());
-
-        proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
-    }
-
-    @ServerStopping
-    private void serverStopping(FMLServerStoppingEvent event)
-    {
-        proxy.ModifierNetwork.saveData();
-    }
-
-    private boolean setField(Class<?> cls, Object value, Class<?> clas)
+    private boolean replaceBlock(Object value, Class<?> clas)
     {
         Field field = null;
 
-        for (Field f : cls.getDeclaredFields())
+        for (Field f : net.minecraft.block.Block.class.getDeclaredFields())
         {
             if (f.getType() == net.minecraft.block.Block.class)
             {
@@ -177,11 +163,10 @@ public class EnhancedPortals
                     {
                         field = f;
                     }
-
                 }
                 catch (Exception e)
                 {
-                    return false;
+
                 }
             }
         }
@@ -210,7 +195,7 @@ public class EnhancedPortals
 
         try
         {
-            field.set(cls, value);
+            field.set(net.minecraft.block.Block.class, value);
         }
         catch (Exception e)
         {
@@ -219,5 +204,19 @@ public class EnhancedPortals
         }
 
         return true;
+    }
+
+    @ServerStarting
+    private void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandEP());
+
+        proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
+    }
+
+    @ServerStopping
+    private void serverStopping(FMLServerStoppingEvent event)
+    {
+        proxy.ModifierNetwork.saveData();
     }
 }

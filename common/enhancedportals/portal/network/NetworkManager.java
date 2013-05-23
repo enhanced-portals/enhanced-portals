@@ -17,10 +17,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
+import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import enhancedportals.lib.Reference;
-import enhancedportals.lib.WorldLocation;
 
 public class NetworkManager
 {
@@ -131,7 +131,7 @@ public class NetworkManager
 
         for (int i = 0; i < list.size(); i++)
         {
-            if (!list.get(i).equals(worldLocation))
+            if (!list.get(i).isEqual(worldLocation))
             {
                 newList.add(list.get(i));
             }
@@ -238,7 +238,7 @@ public class NetworkManager
 
         for (int i = 0; i < networkData.get(key).size(); i++)
         {
-            if (networkData.get(key).get(i).equals(data))
+            if (networkData.get(key).get(i).isEqual(data))
             {
                 networkData.get(key).remove(i);
             }

@@ -12,13 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.WorldLocation;
 import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
@@ -160,6 +160,18 @@ public class Portal
         producesParticles = portalmodifier.getParticles();
         portalThickness = portalmodifier.thickness;
         portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
+    }
+
+    public Portal(WorldLocation loc, String texture, boolean sound, boolean particles, byte thickness)
+    {
+        xCoord = loc.xCoord;
+        yCoord = loc.yCoord;
+        zCoord = loc.zCoord;
+        dimension = loc.dimension;
+        portalTexture = texture;
+        producesSound = sound;
+        producesParticles = particles;
+        portalThickness = thickness;
     }
 
     public boolean createPortal()
@@ -699,7 +711,7 @@ public class Portal
     {
         for (WorldLocation queueLoc : queue)
         {
-            if (queueLoc.equals(loc))
+            if (queueLoc.isEqual(loc))
             {
                 return true;
             }
