@@ -15,7 +15,8 @@ import enhancedportals.client.gui.GuiPortalModifierNetwork;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
-import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
@@ -83,7 +84,8 @@ public class GuiHandler implements IGuiHandler
         {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
-                PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityPortalModifier) tileEntity).getPacket(), (Player) player);
+                PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) tileEntity)), (Player) player);
+                //PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityPortalModifier) tileEntity).getPacket(), (Player) player);
 
                 return new ContainerPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
             }
@@ -96,21 +98,21 @@ public class GuiHandler implements IGuiHandler
         {
             if (tileEntity instanceof TileEntityDialDevice)
             {
-                PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityDialDevice) tileEntity).getPacket(), (Player) player);
+             // TODO PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityDialDevice) tileEntity).getPacket(), (Player) player);
             }
         }
         else if (ID == GuiIds.DialDeviceBasic)
         {
             if (tileEntity instanceof TileEntityDialDeviceBasic)
             {
-                PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityDialDeviceBasic) tileEntity).getPacket(), (Player) player);
+             // TODO PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityDialDeviceBasic) tileEntity).getPacket(), (Player) player);
             }
         }
         else if (ID == GuiIds.AutoDiallerBasic)
         {
             if (tileEntity instanceof TileEntityAutomaticDialler)
             {
-                PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityAutomaticDialler) tileEntity).getPacket(), (Player) player);
+             // TODO PacketDispatcher.sendPacketToPlayer(new PacketTEUpdate((TileEntityAutomaticDialler) tileEntity).getPacket(), (Player) player);
             }
         }
         else if (ID == GuiIds.DialDeviceAdd)

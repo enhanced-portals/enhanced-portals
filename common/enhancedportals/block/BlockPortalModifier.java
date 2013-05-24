@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -24,6 +23,8 @@ import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
 import enhancedportals.portal.Portal;
+import enhancedportals.portal.upgrades.Upgrade;
+import enhancedportals.portal.upgrades.modifier.UpgradeCamouflage;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class BlockPortalModifier extends BlockEnhancedPortals
@@ -57,14 +58,12 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
         }
 
-        for (int i = 0; i < modifier.upgrades.length; i++)
+        for (Upgrade u : modifier.upgradeHandler.getUpgrades())
         {
-            if (modifier.upgrades[i])
+            if (u.getItemStack() != null)
             {
-                ItemStack stack = new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, i);
-                EntityItem entity = new EntityItem(modifier.worldObj, modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, stack);
+                EntityItem entity = new EntityItem(modifier.worldObj, modifier.xCoord + 0.5, modifier.yCoord + 0.5, modifier.zCoord + 0.5, u.getItemStack());
                 modifier.worldObj.spawnEntityInWorld(entity);
-                modifier.upgrades[i] = false;
             }
         }
     }
@@ -81,7 +80,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) blockAccess.getBlockTileEntity(x, y, z);
 
-        if (modifier.hasUpgrade(7))
+        if (modifier.upgradeHandler.hasUpgrade(new UpgradeCamouflage()))
         {
             WorldLocationBlockAccess location = new WorldLocationBlockAccess(x, y, z, blockAccess);
 

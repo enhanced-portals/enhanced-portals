@@ -9,20 +9,18 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 
 public class GuiAutomaticDiallerSimple extends GuiNetwork
 {
-    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
-    RenderItem itemRenderer = new RenderItem();
+    int                        guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
+    RenderItem                 itemRenderer = new RenderItem();
     TileEntityAutomaticDialler dialler;
 
-    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement>      elementList  = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement>      stackList    = new ArrayList<GuiGlyphElement>();
 
     public GuiAutomaticDiallerSimple(TileEntityAutomaticDialler autoDial)
     {
@@ -83,7 +81,7 @@ public class GuiAutomaticDiallerSimple extends GuiNetwork
 
             dialler.activeNetwork = str;
             FMLClientHandler.instance().getClient().thePlayer.closeScreen();
-            PacketDispatcher.sendPacketToServer(new PacketTEUpdate(dialler).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketTEUpdate(dialler).getPacket());
         }
     }
 

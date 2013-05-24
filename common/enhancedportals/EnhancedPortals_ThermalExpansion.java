@@ -16,7 +16,7 @@ import enhancedportals.portal.PortalTexture;
 @Mod(modid = Reference.MOD_ID + "_TE", name = "EP2 ThermalExpansion", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_ThermalExpansion
 {
-    boolean added = false;
+    boolean                                        added = false;
 
     @Instance(Reference.MOD_ID + "_TE")
     public static EnhancedPortals_ThermalExpansion instance;

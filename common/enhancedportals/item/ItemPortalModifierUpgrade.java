@@ -14,19 +14,20 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.portal.upgrades.Upgrade;
+import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ItemPortalModifierUpgrade extends Item
 {
-    Icon[] textures;
+    Icon[]                 textures;
     public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld", "camouflage" };
 
     public ItemPortalModifierUpgrade()
@@ -143,24 +144,30 @@ public class ItemPortalModifierUpgrade extends Item
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
 
-            if (!modifier.hasUpgrade(stack.getItemDamage()))
+            if (!modifier.upgradeHandler.hasUpgrade(Upgrade.getUpgrade(stack.getItemDamage())))
             {
-                if (stack.getItemDamage() == 3 && modifier.hasUpgradeNoCheck(2))
+                if (stack.getItemDamage() == 3 && modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()))
                 {
                     player.sendChatToPlayer("You must remove the dimensional upgrade first.");
                     return false;
                 }
-                else if (stack.getItemDamage() == 2 && modifier.hasUpgradeNoCheck(3))
+                else if (stack.getItemDamage() == 2 && modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
                 {
                     player.sendChatToPlayer("You must remove the advanced dimensional upgrade first.");
                     return false;
                 }
 
-                modifier.installUpgrade(stack.getItemDamage());
-                player.inventory.mainInventory[player.inventory.currentItem] = null;
+                if (modifier.upgradeHandler.addUpgrade(Upgrade.getUpgrade(stack.getItemDamage()), modifier))
+                {
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
 
-                ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+                    ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                 // TODO PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+                }
+            }
+            else
+            {
+                player.sendChatToPlayer("This upgrade is already installed");
             }
         }
 

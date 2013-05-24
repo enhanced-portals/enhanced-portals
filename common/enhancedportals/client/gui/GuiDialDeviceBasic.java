@@ -12,21 +12,19 @@ import org.lwjgl.opengl.GL11;
 
 import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class GuiDialDeviceBasic extends GuiNetwork
 {
-    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
-    RenderItem itemRenderer = new RenderItem();
+    int                       guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
+    RenderItem                itemRenderer = new RenderItem();
     TileEntityDialDeviceBasic dialDevice;
 
-    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement>     elementList  = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement>     stackList    = new ArrayList<GuiGlyphElement>();
 
     public GuiDialDeviceBasic(TileEntityDialDeviceBasic dialdevice)
     {
@@ -66,7 +64,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
             }
 
             FMLClientHandler.instance().getClient().thePlayer.closeScreen();
-            PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
         }
     }
 

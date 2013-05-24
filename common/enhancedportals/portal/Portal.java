@@ -19,18 +19,20 @@ import cpw.mods.fml.relauncher.Side;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
-import enhancedportals.network.packet.PacketTEUpdate;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketNetherPortalUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
-import enhancedportals.tileentity.TileEntityEnhancedPortals;
+import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class Portal
 {
-    public int xCoord, yCoord, zCoord, dimension;
-    public String portalTexture;
-    public byte portalShape, portalThickness;
-    public boolean producesParticles, producesSound;
+    public int           xCoord, yCoord, zCoord, dimension;
+    public String        portalTexture;
+    public byte          portalShape, portalThickness;
+    public boolean       producesParticles, producesSound;
     public WorldLocation portalModifier;
 
     public Portal()
@@ -156,8 +158,6 @@ public class Portal
         dimension = world.provider.dimensionId;
         portalTexture = portalmodifier.texture;
         portalShape = 0;
-        producesSound = portalmodifier.getSounds();
-        producesParticles = portalmodifier.getParticles();
         portalThickness = portalmodifier.thickness;
         portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
     }
@@ -548,7 +548,7 @@ public class Portal
                 {
                     WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
 
-                    if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.hasUpgrade(2) && !modifier.hasUpgrade(3))
+                    if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
                     {
                         // Vanilla dimension but we don't have the upgrade
 
@@ -563,14 +563,14 @@ public class Portal
                         }
                     }
 
-                    if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.hasUpgrade(3))
+                    if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
                     {
                         // Same dimension but we don't have the upgrade
                         missingUpgrade = true;
                         continue;
                     }
 
-                    if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.hasUpgrade(3))
+                    if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
                     {
                         // Modded dimension but no upgrade
                         missingUpgrade = true;
@@ -788,7 +788,7 @@ public class Portal
 
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
+                 // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
                 }
             }
         }
@@ -851,7 +851,8 @@ public class Portal
 
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
+                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
+                 // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
                 }
             }
         }

@@ -3,17 +3,16 @@ package enhancedportals.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedportals.network.packet.PacketData;
-import enhancedportals.network.packet.PacketRequestSync;
-import enhancedportals.portal.Portal;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketNetherPortalUpdate;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {
-    public String texture;
-    public boolean producesSound, producesParticles;
-    public byte thickness;
+    public String        texture;
+    public boolean       producesSound, producesParticles;
+    public byte          thickness;
     public WorldLocation parentModifier;
-    public boolean hasParent;
+    public boolean       hasParent;
 
     public TileEntityNetherPortal()
     {
@@ -22,35 +21,6 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         producesParticles = true;
         thickness = 0;
         hasParent = false;
-    }
-
-    @Override
-    public PacketData getPacketData()
-    {
-        PacketData data = new PacketData();
-        data.integerData = new int[] { producesSound ? 1 : 0, producesParticles ? 1 : 0, thickness, parentModifier != null ? 1 : 0 };
-        data.stringData = new String[] { texture };
-
-        return data;
-    }
-
-    @Override
-    public void parsePacketData(PacketData data)
-    {
-        if (data == null || data.integerData == null || data.integerData.length != 4 || data.stringData.length != 1)
-        {
-            System.out.println("Unexpected packet recieved." + data);
-            return;
-        }
-
-        Portal portal = new Portal(xCoord, yCoord, zCoord, worldObj);
-        portal.updateTexture(data.stringData[0]);
-        portal.updateData(data.integerData[0] == 1, data.integerData[1] == 1, (byte) data.integerData[2]);
-
-        if (worldObj.isRemote)
-        {
-            hasParent = data.integerData[3] == 1;
-        }
     }
 
     @Override
@@ -79,7 +49,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         {
             if (getBlockMetadata() == 3 || getBlockMetadata() == 5 || getBlockMetadata() == 7)
             {
-                PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+                PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate(this)));
             }
         }
     }

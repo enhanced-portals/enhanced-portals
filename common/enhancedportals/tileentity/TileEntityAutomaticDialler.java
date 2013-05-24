@@ -3,15 +3,12 @@ package enhancedportals.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import alz.core.lib.WorldLocation;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.network.packet.PacketData;
-import enhancedportals.network.packet.PacketRequestSync;
 
 public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 {
-    public boolean previousRedstone;
-    public String activeNetwork;
+    public boolean       previousRedstone;
+    public String        activeNetwork;
     public WorldLocation connectedModifier;
 
     public TileEntityAutomaticDialler()
@@ -61,12 +58,6 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
         return true;
     }
 
-    @Override
-    public PacketData getPacketData()
-    {
-        return new PacketData(new int[0], new byte[0], new String[] { activeNetwork });
-    }
-
     public void handleNeighborUpdate()
     {
         boolean redstoneSignal = worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0;
@@ -89,12 +80,6 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
     }
 
     @Override
-    public void parsePacketData(PacketData data)
-    {
-        activeNetwork = data.stringData[0];
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound tagCompound)
     {
         super.readFromNBT(tagCompound);
@@ -110,7 +95,7 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 
         if (worldObj.isRemote)
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
         }
     }
 

@@ -9,7 +9,7 @@ import enhancedportals.lib.Textures;
 
 public class NetherPortalFX extends EntityFX
 {
-    private float portalParticleScale;
+    private float  portalParticleScale;
     private double portalPosX;
     private double portalPosY;
     private double portalPosZ;

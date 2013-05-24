@@ -19,32 +19,28 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
-import enhancedportals.network.packet.PacketGui;
-import enhancedportals.network.packet.PacketNetworkData;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDeviceAddNetwork extends GuiContainer
 {
-    TileEntityDialDevice dialDevice;
-    GuiTextField nameField;
+    TileEntityDialDevice  dialDevice;
+    GuiTextField          nameField;
 
-    byte thickness;
-    boolean sounds, particles, popUpState;
-    String texture;
-    String network, name;
+    byte                  thickness;
+    boolean               sounds, particles, popUpState;
+    String                texture;
+    String                network, name;
 
-    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
-    int elementCount = 0;
-    String elementString = "";
+    List<GuiGlyphElement> elementList   = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement> stackList     = new ArrayList<GuiGlyphElement>();
+    int                   elementCount  = 0;
+    String                elementString = "";
 
     public GuiDialDeviceAddNetwork(InventoryPlayer inventory, TileEntityDialDevice dialdevice)
     {
@@ -84,12 +80,12 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
                 return;
             }
 
-            PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, name, network, texture, thickness, particles, sounds).getPacket());
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, name, network, texture, thickness, particles, sounds).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
         }
         else if (button.id == 2)
         {
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
         }
     }
 

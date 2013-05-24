@@ -10,6 +10,9 @@ import enhancedportals.client.gui.GuiPortalModifierSlot;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Textures;
 import enhancedportals.portal.PortalTexture;
+import enhancedportals.portal.upgrades.Upgrade;
+import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ContainerPortalModifier extends Container
@@ -86,13 +89,13 @@ public class ContainerPortalModifier extends Container
                     }
                 }
             }
-            else if (stackInSlot.itemID == ItemIds.PortalModifierUpgrade + 256 && !portalModifier.hasUpgrade(stackInSlot.getItemDamage()))
+            else if (stackInSlot.itemID == ItemIds.PortalModifierUpgrade + 256 && !portalModifier.upgradeHandler.hasUpgrade(Upgrade.getUpgrade(stackInSlot.getItemDamage())))
             {
-                if (portalModifier.hasUpgrade(2) && stackInSlot.getItemDamage() == 3)
+                if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && stackInSlot.getItemDamage() == 3)
                 {
                     return null;
                 }
-                else if (portalModifier.hasUpgrade(3) && stackInSlot.getItemDamage() == 2)
+                else if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()) && stackInSlot.getItemDamage() == 2)
                 {
                     return null;
                 }

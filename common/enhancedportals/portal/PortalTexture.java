@@ -23,11 +23,11 @@ public class PortalTexture
 
     private String ID;
 
-    private Icon portalTexture;
+    private Icon   portalTexture;
 
-    private Icon modifierTexture;
+    private Icon   modifierTexture;
 
-    private int particleColour;
+    private int    particleColour;
 
     public PortalTexture(String id)
     {

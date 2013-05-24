@@ -7,66 +7,27 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import alz.core.lib.WorldLocation;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.network.packet.PacketData;
-import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
 
 public class TileEntityDialDevice extends TileEntityEnhancedPortals
 {
     public ArrayList<DialDeviceNetworkObject> destinationList;
-    public int selectedDestination;
-    public boolean active;
+    public int                                selectedDestination;
+    public boolean                            active;
 
-    String oldModifierNetwork;
-    String oldModifierTexture;
-    byte oldModifierThickness;
-    boolean oldModifierParticles, oldModifierSounds;
-    WorldLocation modifierLocation;
+    String                                    oldModifierNetwork;
+    String                                    oldModifierTexture;
+    byte                                      oldModifierThickness;
+    WorldLocation                             modifierLocation;
 
     public TileEntityDialDevice()
     {
         destinationList = new ArrayList<DialDeviceNetworkObject>();
         selectedDestination = -1;
         active = false;
-    }
-
-    @Override
-    public PacketData getPacketData()
-    {
-        PacketData packetData = new PacketData(0, 1, destinationList.size());
-        packetData.byteData[0] = (byte) (active ? 1 : 0);
-
-        for (int i = 0; i < destinationList.size(); i++)
-        {
-            DialDeviceNetworkObject obj = destinationList.get(i);
-
-            packetData.stringData[i] = obj.displayName + ";" + obj.network + ";" + obj.thickness + ";" + (obj.particles ? 1 : 0) + ";" + (obj.sounds ? 1 : 0) + ";" + obj.texture + ";null";
-        }
-
-        return packetData;
-    }
-
-    @Override
-    public void parsePacketData(PacketData data)
-    {
-        destinationList.clear();
-        active = data.byteData[0] == 1;
-
-        for (String element : data.stringData)
-        {
-            if (element == null)
-            {
-                continue;
-            }
-
-            String[] split = element.split(";");
-            System.out.println(split.length);
-            destinationList.add(new DialDeviceNetworkObject(split[0], split[1], split[5], Byte.parseByte(split[2]), split[3].equals("1"), split[4].equals("1")));
-        }
     }
 
     public void processDiallingRequest(String network, EntityPlayer player, String texture, byte thickness, boolean particles, boolean sound)
@@ -111,8 +72,6 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
 
                 oldModifierNetwork = modifier.network;
-                oldModifierParticles = modifier.getParticles();
-                oldModifierSounds = modifier.getSounds();
                 oldModifierTexture = modifier.texture;
                 oldModifierThickness = modifier.thickness;
 
@@ -122,10 +81,8 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 modifier.network = network;
                 modifier.texture = texture;
                 modifier.thickness = thickness;
-                modifier.setSounds(sound);
-                modifier.setParticles(particles);
 
-                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+             // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
 
                 if (modifier.isAnyActive())
                 {
@@ -141,7 +98,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
                     worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, 760);
                     active = true;
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+                 // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
                 }
                 else
                 {
@@ -174,8 +131,6 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             active = true;
             oldModifierNetwork = tagCompound.getString("OldNetwork");
             oldModifierThickness = tagCompound.getByte("OldThickness");
-            oldModifierParticles = tagCompound.getBoolean("OldParticles");
-            oldModifierSounds = tagCompound.getBoolean("OldSounds");
             modifierLocation = new WorldLocation(tagCompound.getInteger("mX"), tagCompound.getInteger("mY"), tagCompound.getInteger("mZ"), tagCompound.getInteger("mD"));
             oldModifierTexture = tagCompound.getString("OldTexture");
         }
@@ -200,7 +155,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         if (modifierLocation == null)
         {
             active = false;
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
             return;
         }
 
@@ -217,20 +172,16 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
             modifier.removePortal();
             modifier.network = oldModifierNetwork;
-            modifier.setParticles(oldModifierParticles);
-            modifier.setSounds(oldModifierSounds);
             modifier.texture = oldModifierTexture;
             modifier.thickness = oldModifierThickness;
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
 
             oldModifierNetwork = "";
             modifierLocation = null;
-            oldModifierParticles = false;
-            oldModifierSounds = false;
             oldModifierTexture = null;
             oldModifierThickness = 0;
             active = false;
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
         }
     }
 
@@ -243,8 +194,6 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         {
             tagCompound.setString("OldNetwork", oldModifierNetwork);
             tagCompound.setByte("OldThickness", oldModifierThickness);
-            tagCompound.setBoolean("OldParticles", oldModifierParticles);
-            tagCompound.setBoolean("OldSounds", oldModifierSounds);
             tagCompound.setInteger("mX", modifierLocation.xCoord);
             tagCompound.setInteger("mY", modifierLocation.yCoord);
             tagCompound.setInteger("mZ", modifierLocation.zCoord);

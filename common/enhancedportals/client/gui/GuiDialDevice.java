@@ -6,21 +6,16 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.network.packet.PacketDialRequest;
-import enhancedportals.network.packet.PacketGui;
-import enhancedportals.network.packet.PacketNetworkData;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDevice extends GuiScreen
 {
-    TileEntityDialDevice dialDevice;
-    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166;
+    TileEntityDialDevice     dialDevice;
+    int                      guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166;
     GuiDialDeviceNetworkList networkList;
-    public RenderItem itemRenderer = new RenderItem();
+    public RenderItem        itemRenderer = new RenderItem();
 
     public GuiDialDevice(TileEntityDialDevice dialdevice)
     {
@@ -32,7 +27,7 @@ public class GuiDialDevice extends GuiScreen
     {
         if (button.id == 1)
         {
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDeviceAdd, dialDevice).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDeviceAdd, dialDevice).getPacket());
         }
         else if (button.id == 2)
         {
@@ -40,7 +35,7 @@ public class GuiDialDevice extends GuiScreen
             {
                 DialDeviceNetworkObject obj = (DialDeviceNetworkObject) getSize().get(getSelected());
 
-                PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, obj.network, obj.texture, obj.thickness, obj.sounds, obj.particles).getPacket());
+                // TODO PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, obj.network, obj.texture, obj.thickness, obj.sounds, obj.particles).getPacket());
                 FMLClientHandler.instance().getClient().thePlayer.closeScreen();
             }
         }
@@ -50,7 +45,7 @@ public class GuiDialDevice extends GuiScreen
             {
                 DialDeviceNetworkObject obj = (DialDeviceNetworkObject) getSize().get(getSelected());
 
-                PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, getSelected(), obj.displayName, obj.network).getPacket());
+                // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, getSelected(), obj.displayName, obj.network).getPacket());
                 getSize().remove(getSelected());
             }
         }

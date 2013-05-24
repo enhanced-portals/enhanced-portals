@@ -24,8 +24,8 @@ import enhancedportals.portal.PortalTexture;
 @Mod(modid = Reference.MOD_ID + "_BC", name = "EP2 BuildCraft", version = Reference.MOD_VERSION, dependencies = "required-after:BuildCraft|Energy;required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_BuildCraft
 {
-    Icon fuelTexture;
-    boolean added = false;
+    Icon                                     fuelTexture;
+    boolean                                  added = false;
 
     @Instance(Reference.MOD_ID + "_BC")
     public static EnhancedPortals_BuildCraft instance;

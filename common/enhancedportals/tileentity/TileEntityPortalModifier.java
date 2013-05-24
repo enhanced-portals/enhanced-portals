@@ -7,24 +7,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import alz.core.lib.WorldLocation;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Textures;
-import enhancedportals.network.packet.PacketData;
-import enhancedportals.network.packet.PacketRequestSync;
-import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.portal.Portal;
+import enhancedportals.portal.upgrades.Upgrade;
+import enhancedportals.portal.upgrades.UpgradeHandler;
+import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeNetherFrame;
+import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
 
 public class TileEntityPortalModifier extends TileEntityEnhancedPortals implements IInventory
 {
-    public String texture;
-    public byte thickness, redstoneSetting;
-    public String network;
-    private boolean particles, sounds, oldRedstoneState;
-    public ItemStack[] inventory;
-    public boolean[] upgrades;
+    public String         texture;
+    public byte           thickness, redstoneSetting;
+    public String         network;
+    private boolean       oldRedstoneState;
+    public ItemStack[]    inventory;
+
+    public UpgradeHandler upgradeHandler;
 
     public TileEntityPortalModifier()
     {
@@ -32,17 +35,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         thickness = 0;
         redstoneSetting = 0;
         network = "";
-        particles = true;
-        sounds = true;
         oldRedstoneState = false;
         inventory = new ItemStack[1];
 
-        upgrades = new boolean[8];
-
-        for (int i = 0; i < upgrades.length; i++)
-        {
-            upgrades[i] = false;
-        }
+        upgradeHandler = new UpgradeHandler(5);
     }
 
     @Override
@@ -59,15 +55,15 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
     public int[] customBorderBlocks()
     {
-        if (hasUpgrade(5) && hasUpgrade(6))
+        if (upgradeHandler.hasUpgrade(new UpgradeNetherFrame()) && upgradeHandler.hasUpgrade(new UpgradeResourceFrame()))
         {
             return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
         }
-        else if (hasUpgrade(5))
+        else if (upgradeHandler.hasUpgrade(new UpgradeNetherFrame()))
         {
             return new int[] { Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
         }
-        else if (hasUpgrade(6))
+        else if (upgradeHandler.hasUpgrade(new UpgradeResourceFrame()))
         {
             return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID };
         }
@@ -84,21 +80,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         return stack;
     }
 
-    public int getInstalledUpgradeCount()
-    {
-        int count = 0;
-
-        for (boolean upgrade : upgrades)
-        {
-            if (upgrade)
-            {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
     @Override
     public int getInventoryStackLimit()
     {
@@ -111,52 +92,10 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         return Localization.PortalModifier_Name;
     }
 
-    public int getMaxInstalledUpgrades()
-    {
-        return 5;
-    }
-
-    @Override
-    public PacketData getPacketData()
-    {
-        PacketData data = new PacketData();
-        data.integerData = new int[] { sounds ? 1 : 0, particles ? 1 : 0, thickness, redstoneSetting };
-        data.stringData = new String[] { texture, network };
-
-        byte[] byteData = new byte[upgrades.length];
-        for (int i = 0; i < upgrades.length; i++)
-        {
-            byteData[i] = (byte) (upgrades[i] ? 1 : 0);
-        }
-        data.byteData = byteData;
-
-        return data;
-    }
-
-    public boolean getParticles()
-    {
-        if (!hasUpgrade(0))
-        {
-            particles = true;
-        }
-
-        return particles;
-    }
-
     @Override
     public int getSizeInventory()
     {
         return inventory.length;
-    }
-
-    public boolean getSounds()
-    {
-        if (!hasUpgrade(1))
-        {
-            sounds = true;
-        }
-
-        return sounds;
     }
 
     @Override
@@ -199,29 +138,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         }
 
         oldRedstoneState = currentRedstoneState;
-    }
-
-    public boolean hasUpgrade(int id)
-    {
-        if (getInstalledUpgradeCount() >= getMaxInstalledUpgrades())
-        {
-            return true;
-        }
-
-        return upgrades.length > id && upgrades[id];
-    }
-
-    public boolean hasUpgradeNoCheck(int id)
-    {
-        return upgrades.length > id && upgrades[id];
-    }
-
-    public void installUpgrade(int id)
-    {
-        if (id < upgrades.length && !hasUpgrade(id))
-        {
-            upgrades[id] = true;
-        }
     }
 
     public boolean isActive()
@@ -293,23 +209,23 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                 updateTexture(text);
                 setInventorySlotContents(0, null);
             }
-            else if (stack.itemID == ItemIds.PortalModifierUpgrade + 256 && !hasUpgrade(stack.getItemDamage()))
+            else if (stack.itemID == ItemIds.PortalModifierUpgrade + 256 && !upgradeHandler.hasUpgrade(Upgrade.getUpgrade(stack.getItemDamage())))
             {
-                if (hasUpgrade(2) && stack.getItemDamage() == 3)
+                if (upgradeHandler.hasUpgrade(new UpgradeDimensional()) && stack.getItemDamage() == 3)
                 {
                     return;
                 }
-                else if (hasUpgrade(3) && stack.getItemDamage() == 2)
+                else if (upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()) && stack.getItemDamage() == 2)
                 {
                     return;
                 }
 
-                installUpgrade(stack.getItemDamage());
+                upgradeHandler.addUpgrade(Upgrade.getUpgrade(stack.getItemDamage()), this);
                 setInventorySlotContents(0, null);
 
                 if (!worldObj.isRemote)
                 {
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+                 // TODO  PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
                 }
 
                 return;
@@ -324,31 +240,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     }
 
     @Override
-    public void parsePacketData(PacketData data)
-    {
-        if (data == null || data.integerData == null || data.integerData.length != 4 || data.byteData.length != upgrades.length || data.stringData.length != 2)
-        {
-            System.out.println("Unexpected packet recieved. " + data.integerData.length + " " + data.byteData.length + " " + data.stringData.length);
-            return;
-        }
-
-        updateTexture(data.stringData[0]);
-        updateData(data.integerData[0] == 1, data.integerData[1] == 1, (byte) data.integerData[2]);
-        redstoneSetting = (byte) data.integerData[3];
-        network = data.stringData[1];
-
-        for (int i = 0; i < upgrades.length; i++)
-        {
-            upgrades[i] = data.byteData[i] == 1;
-        }
-
-        if (worldObj.isRemote)
-        {
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-        }
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound tagCompound)
     {
         super.readFromNBT(tagCompound);
@@ -357,14 +248,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         thickness = tagCompound.getByte("Thickness");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
         network = tagCompound.getString("Frequency");
-        particles = tagCompound.getBoolean("Particles");
-        sounds = tagCompound.getBoolean("Sounds");
         oldRedstoneState = tagCompound.getBoolean("OldRedstoneState");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
 
-        for (int i = 0; i < upgrades.length; i++)
+        for (int i = 0; i < upgradeHandler.getMaximumUpgrades(); i++)
         {
-            upgrades[i] = tagCompound.getBoolean("Upgrade" + i);
+            if (tagCompound.hasKey("Upgrade" + i))
+            {
+                System.out.println("Found Upgrade" + i + ": " + tagCompound.getByte("Upgrade" + i));
+                upgradeHandler.addUpgrade(tagCompound.getByte("Upgrade" + i), this);
+            }
         }
     }
 
@@ -380,31 +273,13 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         inventory[i] = itemstack;
     }
 
-    public void setParticles(boolean state)
+    public boolean updateData(byte thick)
     {
-        if (hasUpgrade(0))
-        {
-            particles = state;
-        }
-    }
-
-    public void setSounds(boolean state)
-    {
-        if (hasUpgrade(1))
-        {
-            sounds = state;
-        }
-    }
-
-    public boolean updateData(boolean sound, boolean part, byte thick)
-    {
-        if (sound == sounds && part == particles && thick == thickness)
+        if (thick == thickness)
         {
             return false;
         }
 
-        sounds = sound;
-        particles = part;
         thickness = thick;
         return true;
     }
@@ -421,7 +296,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         if (!worldObj.isRemote)
         {
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
         }
 
         return true;
@@ -434,7 +309,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         if (worldObj.isRemote)
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
         }
     }
 
@@ -447,14 +322,15 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         tagCompound.setByte("Thickness", thickness);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
         tagCompound.setString("Frequency", network);
-        tagCompound.setBoolean("Particles", particles);
-        tagCompound.setBoolean("Sounds", sounds);
         tagCompound.setBoolean("OldRedstoneState", oldRedstoneState);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
 
-        for (int i = 0; i < upgrades.length; i++)
+        int i = 0;
+        for (byte b : upgradeHandler.getInstalledUpgrades())
         {
-            tagCompound.setBoolean("Upgrade" + i, upgrades[i]);
+            System.out.println("Saved Upgrade" + i + ": " + b);
+            tagCompound.setByte("Upgrade" + i, b);
+            i++;
         }
     }
 }

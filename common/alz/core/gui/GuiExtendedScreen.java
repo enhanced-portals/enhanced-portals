@@ -3,18 +3,18 @@ package alz.core.gui;
 import java.util.Iterator;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 public class GuiExtendedScreen extends GuiScreen
 {
     public RenderItem itemRenderer = new RenderItem();
-    
+
     @SuppressWarnings("rawtypes")
     public void drawHoverText(List par1List, int par2, int par3, FontRenderer font)
     {
@@ -46,7 +46,7 @@ public class GuiExtendedScreen extends GuiScreen
             {
                 k1 += 2 + (par1List.size() - 1) * 10;
             }
-         
+
             if (i1 + k > width)
             {
                 i1 -= 28 + k;

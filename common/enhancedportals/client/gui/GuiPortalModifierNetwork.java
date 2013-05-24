@@ -10,22 +10,18 @@ import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import enhancedportals.network.packet.PacketGui;
-import enhancedportals.network.packet.PacketNetworkUpdate;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifierNetwork extends GuiNetwork
 {
-    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
-    int elementCount = 0;
-    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166;
-    String elementString = "";
-    RenderItem itemRenderer = new RenderItem();
+    List<GuiGlyphElement>    elementList   = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement>    stackList     = new ArrayList<GuiGlyphElement>();
+    int                      elementCount  = 0;
+    int                      guiTop        = 0, guiLeft = 0, xSize = 176, ySize = 166;
+    String                   elementString = "";
+    RenderItem               itemRenderer  = new RenderItem();
 
     TileEntityPortalModifier portalModifier;
 
@@ -77,7 +73,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
 
         if (button.id == 1)
         {
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
         }
         else if (button.id == 2)
         {
@@ -128,8 +124,8 @@ public class GuiPortalModifierNetwork extends GuiNetwork
             }
 
             portalModifier.network = str;
-            PacketDispatcher.sendPacketToServer(new PacketNetworkUpdate(portalModifier).getPacket());
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkUpdate(portalModifier).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
         }
     }
 

@@ -5,20 +5,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.ForgeDirection;
 import alz.core.lib.WorldLocation;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.network.packet.PacketData;
-import enhancedportals.network.packet.PacketRequestSync;
-import enhancedportals.network.packet.PacketTEUpdate;
 import enhancedportals.portal.Portal;
 
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
-    String oldModifierNetwork;
+    String         oldModifierNetwork;
     public boolean active = false;
-    WorldLocation modifierLocation;
+    WorldLocation  modifierLocation;
 
     private void findPortalFrame()
     {
@@ -63,23 +59,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 }
             }
         }
-    }
-
-    @Override
-    public PacketData getPacketData()
-    {
-        return new PacketData(new int[0], new byte[] { (byte) (active ? 1 : 0) }, new String[0]);
-    }
-
-    @Override
-    public void parsePacketData(PacketData data)
-    {
-        if (data.byteData.length != 1)
-        {
-            return;
-        }
-
-        active = data.byteData[0] == 1;
     }
 
     public void processDiallingRequest(String network, EntityPlayer player)
@@ -177,7 +156,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         if (modifierLocation == null)
         {
             active = false;
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
             return;
         }
 
@@ -198,7 +177,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             oldModifierNetwork = "";
             modifierLocation = null;
             active = false;
-            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
         }
     }
 
@@ -209,7 +188,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (worldObj.isRemote)
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
         }
     }
 

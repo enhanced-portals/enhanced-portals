@@ -21,29 +21,25 @@ import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
-import enhancedportals.network.packet.PacketGui;
-import enhancedportals.network.packet.PacketTEUpdate;
-import enhancedportals.portal.Upgrade;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketPortalModifierUpdate;
+import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifier extends GuiContainer
 {
     TileEntityPortalModifier portalModifier;
-    public boolean hasInteractedWith = false, isActive = false;
-    GuiButton okayButton;
-
-    Upgrade upgrade;
+    public boolean           hasInteractedWith = false, isActive = false;
+    GuiButton                okayButton;
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
         super(new ContainerPortalModifier(player, modifier));
         portalModifier = modifier;
         isActive = portalModifier.isActive();
-        upgrade = new Upgrade(this, modifier);
     }
 
     @Override
@@ -141,8 +137,6 @@ public class GuiPortalModifier extends GuiContainer
             {
                 fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
             }
-
-            upgrade.drawElements(x, y, fontRenderer, itemRenderer, mc.renderEngine);
 
             if (isPointInRegion(134, 15, 16, 16, x, y))
             {
@@ -338,13 +332,19 @@ public class GuiPortalModifier extends GuiContainer
         strList.add(Localization.localizeString("gui.redstoneControl.title"));
         strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
         buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList));
+
+        int i = 0;
+        for (Upgrade u : portalModifier.upgradeHandler.getUpgrades())
+        {
+            buttonList.add(new GuiItemStackButton(50 + i, guiLeft + 8 + i * 18, guiTop + 15, u.getDisplayItemStack(), false, u.getText(true), true));
+            i++;
+        }
     }
 
     @Override
     protected void mouseClicked(int x, int y, int buttonClicked)
     {
         super.mouseClicked(x, y, buttonClicked);
-        upgrade.mouseClicked(x, y, buttonClicked);
 
         if (isPointInRegion(134, 15, 16, 16, x, y))
         {
@@ -359,7 +359,7 @@ public class GuiPortalModifier extends GuiContainer
         }
         else if (isPointInRegion(7, 46, 162, 18, x, y))
         {
-            PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
+         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
         }
     }
 
@@ -370,7 +370,8 @@ public class GuiPortalModifier extends GuiContainer
 
         if (hasInteractedWith)
         {
-            PacketDispatcher.sendPacketToServer(new PacketTEUpdate(portalModifier).getPacket());
+            System.out.println("Sending packet to server:");
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
         }
     }
 
@@ -378,6 +379,5 @@ public class GuiPortalModifier extends GuiContainer
     public void updateScreen()
     {
         super.updateScreen();
-        upgrade.updateUpgradesList();
     }
 }

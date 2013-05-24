@@ -29,19 +29,19 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class CommonProxy
 {
-    public BlockNetherPortal blockNetherPortal;
-    public BlockObsidian blockObsidian;
-    public BlockObsidianStairs blockObsidianStairs;
-    public BlockPortalModifier blockPortalModifier;
-    public BlockDummyPortal blockDummyPortal;
-    public BlockDialDevice blockDialDevice;
-    public BlockDialDeviceBasic blockDialDeviceBasic;
-    public BlockAutomaticDialler blockAutomaticDialler;
+    public BlockNetherPortal         blockNetherPortal;
+    public BlockObsidian             blockObsidian;
+    public BlockObsidianStairs       blockObsidianStairs;
+    public BlockPortalModifier       blockPortalModifier;
+    public BlockDummyPortal          blockDummyPortal;
+    public BlockDialDevice           blockDialDevice;
+    public BlockDialDeviceBasic      blockDialDeviceBasic;
+    public BlockAutomaticDialler     blockAutomaticDialler;
 
     public ItemPortalModifierUpgrade portalModifierUpgrade;
-    public ItemNetworkCard networkCard;
+    public ItemNetworkCard           networkCard;
 
-    public ModifierNetwork ModifierNetwork;
+    public ModifierNetwork           ModifierNetwork;
 
     public World getWorld(int dimension)
     {
