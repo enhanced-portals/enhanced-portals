@@ -37,6 +37,10 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         {
             GL11.glRotatef(180, 0, 1.0F, 0);
         }
+        else if (type == 2)
+        {
+            GL11.glRotatef(270, 0, 1.0F, 0);
+        }
 
         model.renderAll();
         GL11.glPopMatrix();
@@ -59,6 +63,10 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         else if (type == ItemRenderType.EQUIPPED)
         {
             render(0F, 0.4F, 0F, 2, basic);
+        }
+        else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
+        {
+            render(0F, 0.4F, 0F, 3, basic);
         }
         else if (type == ItemRenderType.INVENTORY)
         {
