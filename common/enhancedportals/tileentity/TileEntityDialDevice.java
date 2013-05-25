@@ -82,7 +82,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 modifier.texture = texture;
                 modifier.thickness = thickness;
 
-             // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+                // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
 
                 if (modifier.isAnyActive())
                 {
@@ -98,7 +98,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
                     worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, 760);
                     active = true;
-                 // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+                    // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
                 }
                 else
                 {
@@ -155,7 +155,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         if (modifierLocation == null)
         {
             active = false;
-         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
             return;
         }
 
@@ -174,14 +174,14 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             modifier.network = oldModifierNetwork;
             modifier.texture = oldModifierTexture;
             modifier.thickness = oldModifierThickness;
-         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
 
             oldModifierNetwork = "";
             modifierLocation = null;
             oldModifierTexture = null;
             oldModifierThickness = 0;
             active = false;
-         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
         }
     }
 

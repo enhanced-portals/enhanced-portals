@@ -788,7 +788,7 @@ public class Portal
 
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
-                 // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
+                    // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
                 }
             }
         }
@@ -852,7 +852,7 @@ public class Portal
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
                     PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
-                 // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
+                    // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
                 }
             }
         }

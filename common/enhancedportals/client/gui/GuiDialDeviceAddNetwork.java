@@ -80,8 +80,8 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
                 return;
             }
 
-         // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, name, network, texture, thickness, particles, sounds).getPacket());
-         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, name, network, texture, thickness, particles, sounds).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
         }
         else if (button.id == 2)
         {

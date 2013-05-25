@@ -117,15 +117,32 @@ public class UpgradeHandler
         if (tileEntity != null)
         {
             if (upgrade.onDeactivated(tileEntity))
-            {
-                upgradeList.remove(upgrade);
+            {                
+                for (int i = 0; i < upgradeList.size(); i++)
+                {
+                    if (upgradeList.get(i).getUpgradeID() == upgrade.getUpgradeID())
+                    {
+                        upgradeList.remove(i);
+                    }
+                }
             }
         }
         else
         {
-            upgradeList.remove(upgrade);
+            for (int i = 0; i < upgradeList.size(); i++)
+            {
+                if (upgradeList.get(i).getUpgradeID() == upgrade.getUpgradeID())
+                {
+                    upgradeList.remove(i);
+                }
+            }
         }
 
         return !hasUpgrade(upgrade);
+    }
+
+    public Upgrade getUpgrade(int i)
+    {
+        return upgradeList.get(i);
     }
 }

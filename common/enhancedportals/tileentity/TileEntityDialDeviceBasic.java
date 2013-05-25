@@ -156,7 +156,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         if (modifierLocation == null)
         {
             active = false;
-         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
             return;
         }
 
@@ -177,7 +177,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             oldModifierNetwork = "";
             modifierLocation = null;
             active = false;
-         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
         }
     }
 
@@ -188,7 +188,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (worldObj.isRemote)
         {
-         // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
         }
     }
 

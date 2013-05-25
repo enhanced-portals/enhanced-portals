@@ -26,6 +26,7 @@ import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
+import enhancedportals.network.packet.PacketPortalModifierUpgrade;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -62,6 +63,22 @@ public class GuiPortalModifier extends GuiContainer
             ((GuiItemStackButton) buttonList.get(1)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
+        }
+        else if (button.id == 50)
+        {
+            GuiItemStackButton guiButton = (GuiItemStackButton) button;
+            
+            for (Upgrade u : Upgrade.getAllUpgrades())
+            {
+                if (u.getDisplayItemStack().isItemEqual(guiButton.itemStack))
+                {
+                    if (portalModifier.upgradeHandler.removeUpgrade(u.getUpgradeID(), portalModifier))
+                    {
+                        buttonList.remove(button);
+                        hasInteractedWith = true;
+                    }
+                }
+            }
         }
     }
 
@@ -100,15 +117,22 @@ public class GuiPortalModifier extends GuiContainer
         {
             itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 24, guiTop + 15);
         }
+        
+        fontRenderer.drawString(Localization.localizeString("tile.portalModifier.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.portalModifier.name")) / 2, guiTop + -15, 0xFFFFFF);
+        fontRenderer.drawString(Localization.localizeString("gui.upgrades.title"), guiLeft + 8, guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("gui.modifications.title"), guiLeft + xSize - 8 - fontRenderer.getStringWidth(Localization.localizeString("gui.modifications.title")), guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 8, guiTop + 35, 0xFF444444);
+        
+        if (portalModifier.network.equals(""))
+        {
+            fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
+        }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        fontRenderer.drawString(Localization.localizeString("tile.portalModifier.name"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.portalModifier.name")) / 2, -15, 0xFFFFFF);
-        fontRenderer.drawString(Localization.localizeString("gui.upgrades.title"), 8, 3, 0xFF444444);
-        fontRenderer.drawString(Localization.localizeString("gui.modifications.title"), xSize - 8 - fontRenderer.getStringWidth(Localization.localizeString("gui.modifications.title")), 3, 0xFF444444);
-        fontRenderer.drawString(Localization.localizeString("gui.network.title"), 8, 35, 0xFF444444);
+        
     }
 
     @Override
@@ -117,7 +141,7 @@ public class GuiPortalModifier extends GuiContainer
         if (!isActive)
         {
             super.drawScreen(x, y, par3);
-
+            
             if (!portalModifier.network.equals(""))
             {
                 String[] split = portalModifier.network.split(Reference.glyphSeperator);
@@ -132,10 +156,6 @@ public class GuiPortalModifier extends GuiContainer
                         }
                     }
                 }
-            }
-            else
-            {
-                fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
             }
 
             if (isPointInRegion(134, 15, 16, 16, x, y))
@@ -332,12 +352,10 @@ public class GuiPortalModifier extends GuiContainer
         strList.add(Localization.localizeString("gui.redstoneControl.title"));
         strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
         buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList));
-
-        int i = 0;
-        for (Upgrade u : portalModifier.upgradeHandler.getUpgrades())
+        
+        for (int i = portalModifier.upgradeHandler.getUpgrades().size() - 1; i >= 0; i--)
         {
-            buttonList.add(new GuiItemStackButton(50 + i, guiLeft + 8 + i * 18, guiTop + 15, u.getDisplayItemStack(), false, u.getText(true), true));
-            i++;
+            buttonList.add(new GuiItemStackButton(50, guiLeft + 8 + i * 18, guiTop + 15, portalModifier.upgradeHandler.getUpgrade(i).getDisplayItemStack(), false, portalModifier.upgradeHandler.getUpgrade(i).getText(true), true));
         }
     }
 
@@ -359,7 +377,7 @@ public class GuiPortalModifier extends GuiContainer
         }
         else if (isPointInRegion(7, 46, 162, 18, x, y))
         {
-         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
         }
     }
 
@@ -370,8 +388,8 @@ public class GuiPortalModifier extends GuiContainer
 
         if (hasInteractedWith)
         {
-            System.out.println("Sending packet to server:");
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade(portalModifier)));
         }
     }
 

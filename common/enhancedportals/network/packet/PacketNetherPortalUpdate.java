@@ -11,16 +11,16 @@ import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class PacketNetherPortalUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;    
+    int    xCoord, yCoord, zCoord, dimension;
     String texture;
-    byte thickness;
+    byte   thickness;
     boolean particles, sound;
-    
+
     public PacketNetherPortalUpdate()
     {
-        
+
     }
-    
+
     public PacketNetherPortalUpdate(TileEntityNetherPortal portal)
     {
         xCoord = portal.xCoord;
@@ -50,7 +50,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
                 particles = (boolean) objArray[5];
                 sound = (boolean) objArray[6];
                 texture = (String) objArray[7];
-            
+
                 return this;
             }
             else
@@ -69,13 +69,13 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     public void execute(INetworkManager network, EntityPlayer player)
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
-        
+
         if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.NetherPortal)
         {
             if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal)
             {
                 Portal portal = new Portal(xCoord, yCoord, zCoord, world);
-                
+
                 portal.updateData(sound, particles, thickness);
                 portal.updateTexture(texture);
             }

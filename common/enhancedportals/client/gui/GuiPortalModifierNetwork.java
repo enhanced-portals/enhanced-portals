@@ -73,7 +73,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
 
         if (button.id == 1)
         {
-         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
         }
         else if (button.id == 2)
         {
@@ -124,8 +124,8 @@ public class GuiPortalModifierNetwork extends GuiNetwork
             }
 
             portalModifier.network = str;
-         // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkUpdate(portalModifier).getPacket());
-         // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkUpdate(portalModifier).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
         }
     }
 

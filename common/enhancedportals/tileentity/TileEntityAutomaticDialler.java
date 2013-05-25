@@ -95,7 +95,7 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 
         if (worldObj.isRemote)
         {
-         // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
         }
     }
 

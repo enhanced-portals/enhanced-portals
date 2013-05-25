@@ -4,14 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import org.bouncycastle.util.Arrays;
-
 import alz.core.lib.Misc;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
@@ -38,12 +34,28 @@ public class PacketRequestData extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(byte[] data)
     {
-        xCoord = Misc.byteArrayToInteger(Arrays.copyOfRange(data, 0, 4));
-        yCoord = Misc.byteArrayToInteger(Arrays.copyOfRange(data, 4, 8));
-        zCoord = Misc.byteArrayToInteger(Arrays.copyOfRange(data, 8, 12));
-        dimension = data[12];
+        try
+        {
+            Object[] objArray = Misc.getObjects(data, "I", "I", "I", "I");
 
-        return this;
+            if (objArray != null && objArray.length == 4)
+            {
+                xCoord = (int) objArray[0];
+                yCoord = (int) objArray[1];
+                zCoord = (int) objArray[2];
+                dimension = (int) objArray[3];
+
+                return this;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     @Override
@@ -51,39 +63,32 @@ public class PacketRequestData extends PacketEnhancedPortals
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.PortalModifier)
+        if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityPortalModifier)
         {
-            if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityPortalModifier)
-            {
-                PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
-            }
-            else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal)
-            {
-                PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
-            }
-            else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
-            {
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade((TileEntityPortalModifier) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
+        }
+        else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal)
+        {
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
+        }
+        else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
+        {
 
-            }
-            else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDeviceBasic)
-            {
+        }
+        else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDeviceBasic)
+        {
 
-            }
-            else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityAutomaticDialler)
-            {
+        }
+        else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityAutomaticDialler)
+        {
 
-            }
         }
     }
 
     @Override
     public byte[] generatePacket(Object... data)
     {
-        byte[] byteData = Misc.integerToByteArray(xCoord);
-        Misc.concatByteArray(byteData, Misc.integerToByteArray(yCoord));
-        Misc.concatByteArray(byteData, Misc.integerToByteArray(zCoord));
-        Misc.concatByteArray(byteData, new byte[] { (byte) dimension });
-
-        return byteData;
+        return Misc.getByteArray(xCoord, yCoord, zCoord, dimension);
     }
 }

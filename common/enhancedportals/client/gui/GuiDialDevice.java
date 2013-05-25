@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import cpw.mods.fml.client.FMLClientHandler;
 import enhancedportals.lib.Localization;
-import enhancedportals.portal.network.DialDeviceNetworkObject;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDevice extends GuiScreen
@@ -33,7 +32,7 @@ public class GuiDialDevice extends GuiScreen
         {
             if (getSelected() >= 0 && !getSize().isEmpty() && getSelected() < getSize().size())
             {
-                DialDeviceNetworkObject obj = (DialDeviceNetworkObject) getSize().get(getSelected());
+                getSize().get(getSelected());
 
                 // TODO PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, obj.network, obj.texture, obj.thickness, obj.sounds, obj.particles).getPacket());
                 FMLClientHandler.instance().getClient().thePlayer.closeScreen();
@@ -43,7 +42,7 @@ public class GuiDialDevice extends GuiScreen
         {
             if (getSelected() >= 0 && !getSize().isEmpty() && getSelected() < getSize().size())
             {
-                DialDeviceNetworkObject obj = (DialDeviceNetworkObject) getSize().get(getSelected());
+                getSize().get(getSelected());
 
                 // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, getSelected(), obj.displayName, obj.network).getPacket());
                 getSize().remove(getSelected());

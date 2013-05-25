@@ -64,7 +64,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
             }
 
             FMLClientHandler.instance().getClient().thePlayer.closeScreen();
-         // TODO PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
+            // TODO PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
         }
     }
 

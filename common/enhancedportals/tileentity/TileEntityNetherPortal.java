@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.network.packet.PacketEnhancedPortals;
-import enhancedportals.network.packet.PacketNetherPortalUpdate;
+import enhancedportals.network.packet.PacketRequestData;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {
@@ -49,7 +49,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         {
             if (getBlockMetadata() == 3 || getBlockMetadata() == 5 || getBlockMetadata() == 7)
             {
-                PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate(this)));
+                PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRequestData(this)));
             }
         }
     }

@@ -7,10 +7,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import alz.core.lib.WorldLocation;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Textures;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketRequestData;
 import enhancedportals.portal.Portal;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.UpgradeHandler;
@@ -225,7 +228,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
                 if (!worldObj.isRemote)
                 {
-                 // TODO  PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+                    // TODO  PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
                 }
 
                 return;
@@ -296,7 +299,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         if (!worldObj.isRemote)
         {
-         // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
         }
 
         return true;
@@ -309,7 +312,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
 
         if (worldObj.isRemote)
         {
-         // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRequestData(this)));
         }
     }
 
