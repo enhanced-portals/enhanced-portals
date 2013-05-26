@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.bouncycastle.util.Arrays;
 
-public class Misc
+public class PacketHelper
 {
     public static int byteArrayToInteger(byte[] bytes)
     {

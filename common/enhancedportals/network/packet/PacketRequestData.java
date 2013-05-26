@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import alz.core.lib.Misc;
+import alz.core.lib.PacketHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import enhancedportals.EnhancedPortals;
@@ -36,7 +36,7 @@ public class PacketRequestData extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = Misc.getObjects(data, "I", "I", "I", "I");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I");
 
             if (objArray != null && objArray.length == 4)
             {
@@ -89,6 +89,6 @@ public class PacketRequestData extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return Misc.getByteArray(xCoord, yCoord, zCoord, dimension);
+        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension);
     }
 }

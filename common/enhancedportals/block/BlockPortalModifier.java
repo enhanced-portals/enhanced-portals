@@ -151,9 +151,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
     {
-        boolean currentRedstoneState = world.getStrongestIndirectPower(x, y, z) > 0;
-
-        ((TileEntityPortalModifier) world.getBlockTileEntity(x, y, z)).handleRedstoneChanges(currentRedstoneState);
+        ((TileEntityPortalModifier) world.getBlockTileEntity(x, y, z)).handleRedstoneChanges(world.getStrongestIndirectPower(x, y, z));
     }
 
     @Override

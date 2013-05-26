@@ -24,6 +24,8 @@ import enhancedportals.network.packet.PacketNetherPortalUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
 import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeParticles;
+import enhancedportals.portal.upgrades.modifier.UpgradeSounds;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -160,6 +162,8 @@ public class Portal
         portalShape = 0;
         portalThickness = portalmodifier.thickness;
         portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
+        producesParticles = !portalmodifier.upgradeHandler.hasUpgrade(new UpgradeParticles());
+        producesSound = !portalmodifier.upgradeHandler.hasUpgrade(new UpgradeSounds());
     }
 
     public Portal(WorldLocation loc, String texture, boolean sound, boolean particles, byte thickness)

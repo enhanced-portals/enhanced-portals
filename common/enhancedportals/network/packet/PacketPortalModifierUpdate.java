@@ -3,7 +3,7 @@ package enhancedportals.network.packet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
-import alz.core.lib.Misc;
+import alz.core.lib.PacketHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityPortalModifier;
@@ -36,7 +36,7 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = Misc.getObjects(data, "I", "I", "I", "I", "b", "b", "S", "S");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "b", "S", "S");
 
             if (objArray != null && objArray.length == 8)
             {
@@ -79,10 +79,7 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                 modifier.redstoneSetting = redstoneSetting;
                 modifier.thickness = thickness;
 
-                if (world.isRemote)
-                {
-                    world.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-                }
+                world.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
             }
         }
     }
@@ -90,6 +87,6 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return Misc.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, redstoneSetting, texture, network);
+        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, redstoneSetting, texture, network);
     }
 }

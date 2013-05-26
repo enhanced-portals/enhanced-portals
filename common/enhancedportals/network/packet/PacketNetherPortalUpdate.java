@@ -3,7 +3,7 @@ package enhancedportals.network.packet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
-import alz.core.lib.Misc;
+import alz.core.lib.PacketHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.portal.Portal;
@@ -38,7 +38,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = Misc.getObjects(data, "I", "I", "I", "I", "b", "B", "B", "S");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "B", "B", "S");
 
             if (objArray != null && objArray.length == 8)
             {
@@ -85,6 +85,6 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return Misc.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, particles, sound, texture);
+        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, particles, sound, texture);
     }
 }

@@ -23,7 +23,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.command.CommandEP;
@@ -31,15 +30,14 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
-import enhancedportals.network.ClientPacketHandler;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.EventHooks;
 import enhancedportals.network.GuiHandler;
-import enhancedportals.network.ServerPacketHandler;
+import enhancedportals.network.PacketHandler;
 import enhancedportals.portal.network.ModifierNetwork;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, acceptedMinecraftVersions = Reference.MC_VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, clientPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = { Reference.MOD_ID }, packetHandler = ServerPacketHandler.class))
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler=PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
 {
     @Instance(Reference.MOD_ID)

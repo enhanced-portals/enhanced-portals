@@ -10,6 +10,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -27,6 +28,7 @@ import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.network.packet.PacketPortalModifierUpgrade;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -54,6 +56,8 @@ public class GuiPortalModifier extends GuiContainer
         {
             portalModifier.redstoneSetting = 0;
             ((GuiItemStackButton) buttonList.get(2)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(3)).displayString = "0";
+            ((GuiItemStackButton) buttonList.get(3)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
         }
@@ -61,6 +65,34 @@ public class GuiPortalModifier extends GuiContainer
         {
             portalModifier.redstoneSetting = 1;
             ((GuiItemStackButton) buttonList.get(1)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(3)).displayString = "0";
+            ((GuiItemStackButton) buttonList.get(3)).isActive = false;
+            hasInteractedWith = true;
+            ((GuiItemStackButton) button).isActive = true;
+        }
+        else if (button.id == 12)
+        {
+            int num = 0;
+            
+            if (button.displayString != null && button.displayString != "")
+            {
+                num = Integer.parseInt(button.displayString);
+            }
+            
+            if (num + 1 < 16)
+            {
+                button.displayString = "" + (num + 1);
+                num++;
+            }
+            else
+            {
+                button.displayString = "1";
+                num = 1;
+            }
+            
+            portalModifier.redstoneSetting = (byte) (2 + num);
+            ((GuiItemStackButton) buttonList.get(1)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(2)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
         }
@@ -184,6 +216,7 @@ public class GuiPortalModifier extends GuiContainer
                 List<String> list = new ArrayList<String>();
                 list.add(Localization.localizeString("gui.thickness.title"));
                 list.add(EnumChatFormatting.GRAY + thickness);
+                list.add(EnumChatFormatting.DARK_GRAY + "Click to change");
                 drawText(list, x, y);
             }
             else if (isPointInRegion(152, 15, 16, 16, x, y))
@@ -211,6 +244,8 @@ public class GuiPortalModifier extends GuiContainer
                 List<String> list = new ArrayList<String>();
                 list.add(Localization.localizeString("gui.facade.title"));
                 list.add(EnumChatFormatting.GRAY + txt);
+                list.add(EnumChatFormatting.DARK_GRAY + "Shift-click on a block to change");
+                list.add(EnumChatFormatting.DARK_GRAY + "Right-click to reset");
                 drawText(list, x, y);
             }
             else if (isPointInRegion(7, 46, 162, 18, x, y))
@@ -353,6 +388,11 @@ public class GuiPortalModifier extends GuiContainer
         strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
         buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList));
         
+        strList = new ArrayList<String>();
+        strList.add(Localization.localizeString("gui.redstoneControl.title"));
+        strList.add(EnumChatFormatting.GRAY + "Precise");
+        buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? (portalModifier.redstoneSetting - 2) : 0)));
+        
         for (int i = portalModifier.upgradeHandler.getUpgrades().size() - 1; i >= 0; i--)
         {
             buttonList.add(new GuiItemStackButton(50, guiLeft + 8 + i * 18, guiTop + 15, portalModifier.upgradeHandler.getUpgrade(i).getDisplayItemStack(), false, portalModifier.upgradeHandler.getUpgrade(i).getText(true), true));
@@ -379,6 +419,24 @@ public class GuiPortalModifier extends GuiContainer
         {
             // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
         }
+        else if (isShiftKeyDown() && getSlotAtPosition(x, y) != null)
+        {
+            PortalTexture Text = Textures.getTextureFromItemStack(getSlotAtPosition(x, y).decrStackSize(0));
+
+            if (Text != null)
+            {
+                String text = Text.getID();
+
+                if (portalModifier.texture.equals(text))
+                {
+                    text = Textures.getTextureFromItemStack(getSlotAtPosition(x, y).decrStackSize(0), portalModifier.texture).getID();
+                }
+
+                portalModifier.texture = text;
+            }
+            
+            hasInteractedWith = true;
+        }
     }
 
     @Override
@@ -390,6 +448,8 @@ public class GuiPortalModifier extends GuiContainer
         {
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade(portalModifier)));
+            
+            portalModifier.worldObj.markBlockForRenderUpdate(portalModifier.xCoord, portalModifier.yCoord, portalModifier.zCoord);
         }
     }
 

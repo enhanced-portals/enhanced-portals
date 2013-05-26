@@ -7,7 +7,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
-import alz.core.lib.Misc;
+import alz.core.lib.PacketHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.portal.upgrades.Upgrade;
@@ -37,7 +37,7 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = Misc.getObjects(data, "I", "I", "I", "I", "b[]");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b[]");
 
             if (objArray != null)
             {
@@ -121,6 +121,6 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return Misc.getByteArray(xCoord, yCoord, zCoord, dimension, upgrades);
+        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, upgrades);
     }
 }
