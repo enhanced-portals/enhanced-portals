@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,6 +17,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import alz.core.gui.GuiExtendedScreen;
 import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.container.ContainerPortalModifier;
@@ -32,7 +32,7 @@ import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
-public class GuiPortalModifier extends GuiContainer
+public class GuiPortalModifier extends GuiExtendedScreen
 {
     TileEntityPortalModifier portalModifier;
     public boolean           hasInteractedWith = false, isActive = false;
@@ -40,7 +40,7 @@ public class GuiPortalModifier extends GuiContainer
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
-        super(new ContainerPortalModifier(player, modifier));
+        super(new ContainerPortalModifier(player, modifier), null);
         portalModifier = modifier;
         isActive = portalModifier.isActive();
     }
