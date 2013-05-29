@@ -86,7 +86,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         else if (redstoneSetting > 2)
         {
             byte rsLevel = (byte) (redstoneSetting - 2);
-            
+
             if (redstoneLevel == rsLevel && !isAnyActive())
             {
                 new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
@@ -163,7 +163,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         thickness = thick;
         return true;
     }
-
 
     @Override
     public void validate()

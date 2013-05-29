@@ -10,18 +10,16 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import alz.core.gui.GuiExtendedScreen;
 import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerPortalModifier;
-import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
@@ -32,7 +30,7 @@ import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
-public class GuiPortalModifier extends GuiExtendedScreen
+public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 {
     TileEntityPortalModifier portalModifier;
     public boolean           hasInteractedWith = false, isActive = false;
@@ -43,6 +41,8 @@ public class GuiPortalModifier extends GuiExtendedScreen
         super(new ContainerPortalModifier(player, modifier), null);
         portalModifier = modifier;
         isActive = portalModifier.isActive();
+
+        extendedSlots.add(new GuiTextureSlot(xSize - 24, 15, Textures.getItemStackFromTexture(portalModifier.texture), this));
     }
 
     @Override
@@ -73,12 +73,12 @@ public class GuiPortalModifier extends GuiExtendedScreen
         else if (button.id == 12)
         {
             int num = 0;
-            
+
             if (button.displayString != null && button.displayString != "")
             {
                 num = Integer.parseInt(button.displayString);
             }
-            
+
             if (num + 1 < 16)
             {
                 button.displayString = "" + (num + 1);
@@ -89,17 +89,41 @@ public class GuiPortalModifier extends GuiExtendedScreen
                 button.displayString = "1";
                 num = 1;
             }
-            
+
             portalModifier.redstoneSetting = (byte) (2 + num);
             ((GuiItemStackButton) buttonList.get(1)).isActive = false;
             ((GuiItemStackButton) buttonList.get(2)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
         }
+        else if (button.id == 13)
+        {
+            int num = 0;
+
+            if (button.displayString != null && button.displayString != "")
+            {
+                num = Integer.parseInt(button.displayString);
+            }
+
+            if (num + 1 < 5)
+            {
+                button.displayString = "" + (num + 1);
+                num++;
+            }
+            else
+            {
+                button.displayString = "1";
+                num = 1;
+            }
+                        
+            portalModifier.thickness = (byte) (num - 1);
+            ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : (portalModifier.thickness == 1 ? "Thick" : (portalModifier.thickness == 2 ? "Thicker" : "Full Block"))));
+            hasInteractedWith = true;
+        }
         else if (button.id == 50)
         {
             GuiItemStackButton guiButton = (GuiItemStackButton) button;
-            
+
             for (Upgrade u : Upgrade.getAllUpgrades())
             {
                 if (u.getDisplayItemStack().isItemEqual(guiButton.itemStack))
@@ -117,44 +141,19 @@ public class GuiPortalModifier extends GuiExtendedScreen
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
+        super.drawGuiContainerBackgroundLayer(f, i, j);
+
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png");
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-        int padding = 5, width = 10;
-
-        if (portalModifier.thickness == 1)
-        {
-            padding = 4;
-            width = 8;
-        }
-        else if (portalModifier.thickness == 2)
-        {
-            padding = 2;
-            width = 4;
-        }
-        else if (portalModifier.thickness == 3)
-        {
-            padding = 0;
-            width = 0;
-        }
-
-        drawTexturedModalRect(0, 0, 0, 0, 0, 0);
-        drawRect(guiLeft + 134 + padding, guiTop + 15, guiLeft + 16 - width + 134 + padding, guiTop + 15 + 16, 0xFF555555);
-        ItemStack itemstack = Textures.getItemStackFromTexture(portalModifier.texture);
-
-        if (itemstack != null)
-        {
-            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 24, guiTop + 15);
-        }
-        
         fontRenderer.drawString(Localization.localizeString("tile.portalModifier.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.portalModifier.name")) / 2, guiTop + -15, 0xFFFFFF);
         fontRenderer.drawString(Localization.localizeString("gui.upgrades.title"), guiLeft + 8, guiTop + 3, 0xFF444444);
         fontRenderer.drawString(Localization.localizeString("gui.modifications.title"), guiLeft + xSize - 8 - fontRenderer.getStringWidth(Localization.localizeString("gui.modifications.title")), guiTop + 3, 0xFF444444);
         fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 8, guiTop + 35, 0xFF444444);
-        
+
         if (portalModifier.network.equals(""))
         {
             fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
@@ -164,7 +163,7 @@ public class GuiPortalModifier extends GuiExtendedScreen
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        
+        super.drawGuiContainerForegroundLayer(par1, par2);
     }
 
     @Override
@@ -173,7 +172,7 @@ public class GuiPortalModifier extends GuiExtendedScreen
         if (!isActive)
         {
             super.drawScreen(x, y, par3);
-            
+
             if (!portalModifier.network.equals(""))
             {
                 String[] split = portalModifier.network.split(Reference.glyphSeperator);
@@ -189,66 +188,8 @@ public class GuiPortalModifier extends GuiExtendedScreen
                     }
                 }
             }
-
-            if (isPointInRegion(134, 15, 16, 16, x, y))
-            {
-                String thickness = "";
-
-                switch (portalModifier.thickness)
-                {
-                    case 0:
-                        thickness = Localization.localizeString("gui.thickness.normal");
-                        break;
-
-                    case 1:
-                        thickness = Localization.localizeString("gui.thickness.thick");
-                        break;
-
-                    case 2:
-                        thickness = Localization.localizeString("gui.thickness.thicker");
-                        break;
-
-                    case 3:
-                        thickness = Localization.localizeString("gui.thickness.fullblock");
-                        break;
-                }
-
-                List<String> list = new ArrayList<String>();
-                list.add(Localization.localizeString("gui.thickness.title"));
-                list.add(EnumChatFormatting.GRAY + thickness);
-                list.add(EnumChatFormatting.DARK_GRAY + "Click to change");
-                drawText(list, x, y);
-            }
-            else if (isPointInRegion(152, 15, 16, 16, x, y))
-            {
-                String txt = "";
-
-                if (Textures.getItemStackFromTexture(portalModifier.texture) != null)
-                {
-                    ItemStack stack = Textures.getItemStackFromTexture(portalModifier.texture);
-
-                    if (stack.itemID == BlockIds.DummyPortal)
-                    {
-                        txt = Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[stack.getItemDamage()]);
-                    }
-                    else
-                    {
-                        txt = Localization.localizeString(stack.getItemName() + ".name");
-                    }
-                }
-                else
-                {
-                    txt = "Unknown";
-                }
-
-                List<String> list = new ArrayList<String>();
-                list.add(Localization.localizeString("gui.facade.title"));
-                list.add(EnumChatFormatting.GRAY + txt);
-                list.add(EnumChatFormatting.DARK_GRAY + "Shift-click on a block to change");
-                list.add(EnumChatFormatting.DARK_GRAY + "Right-click to reset");
-                drawText(list, x, y);
-            }
-            else if (isPointInRegion(7, 46, 162, 18, x, y))
+            
+            if (isPointInRegion(7, 46, 162, 18, x, y))
             {
                 List<String> str = new ArrayList<String>();
                 str.add(Localization.localizeString("gui.network.title"));
@@ -387,11 +328,18 @@ public class GuiPortalModifier extends GuiExtendedScreen
         strList.add(Localization.localizeString("gui.redstoneControl.title"));
         strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
         buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList));
-        
+
         strList = new ArrayList<String>();
         strList.add(Localization.localizeString("gui.redstoneControl.title"));
         strList.add(EnumChatFormatting.GRAY + "Precise");
-        buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? (portalModifier.redstoneSetting - 2) : 0)));
+        buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? portalModifier.redstoneSetting - 2 : 0)));
+
+        strList = new ArrayList<String>();
+        strList.add("Thickness");
+        strList.add("size");
+        buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 15, new ItemStack(EnhancedPortals.proxy.blockNetherPortal, 1, 2), true, strList, true));
+        ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (portalModifier.thickness + 1);
+        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : (portalModifier.thickness == 1 ? "Thick" : (portalModifier.thickness == 2 ? "Thicker" : "Full Block"))));
         
         for (int i = portalModifier.upgradeHandler.getUpgrades().size() - 1; i >= 0; i--)
         {
@@ -406,14 +354,14 @@ public class GuiPortalModifier extends GuiExtendedScreen
 
         if (isPointInRegion(134, 15, 16, 16, x, y))
         {
-            portalModifier.thickness++;
+            /*portalModifier.thickness++;
 
             if (portalModifier.thickness >= 4)
             {
                 portalModifier.thickness = 0;
             }
 
-            hasInteractedWith = true;
+            hasInteractedWith = true;*/
         }
         else if (isPointInRegion(7, 46, 162, 18, x, y))
         {
@@ -425,17 +373,8 @@ public class GuiPortalModifier extends GuiExtendedScreen
 
             if (Text != null)
             {
-                String text = Text.getID();
-
-                if (portalModifier.texture.equals(text))
-                {
-                    text = Textures.getTextureFromItemStack(getSlotAtPosition(x, y).decrStackSize(0), portalModifier.texture).getID();
-                }
-
-                portalModifier.texture = text;
+                extendedSlots.get(0).setSlot(getSlotAtPosition(x, y).decrStackSize(0));
             }
-            
-            hasInteractedWith = true;
         }
     }
 
@@ -448,7 +387,7 @@ public class GuiPortalModifier extends GuiExtendedScreen
         {
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade(portalModifier)));
-            
+
             portalModifier.worldObj.markBlockForRenderUpdate(portalModifier.xCoord, portalModifier.yCoord, portalModifier.zCoord);
         }
     }
@@ -457,5 +396,29 @@ public class GuiPortalModifier extends GuiExtendedScreen
     public void updateScreen()
     {
         super.updateScreen();
+    }
+    
+    @Override
+    public void extendedSlotChanged(GuiExtendedItemSlot slot)
+    {
+        ItemStack stack = slot.getItemStack();
+        
+        if (stack.itemID == EnhancedPortals.proxy.blockDummyPortal.blockID)
+        {
+            stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
+        }
+        
+         PortalTexture text = Textures.getTextureFromItemStack(stack);
+         
+         if (text != null)
+         {
+             portalModifier.texture = text.getID();
+         }
+         else
+         {
+             portalModifier.texture = "C:5";
+         }
+         
+         hasInteractedWith = true;
     }
 }

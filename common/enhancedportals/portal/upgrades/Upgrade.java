@@ -41,6 +41,18 @@ public abstract class Upgrade
         }
     }
 
+    public static Upgrade[] getAllUpgrades()
+    {
+        Upgrade[] upgrades = new Upgrade[Type.values().length];
+
+        for (int i = 0; i < upgrades.length; i++)
+        {
+            upgrades[i] = getUpgrade(i);
+        }
+
+        return upgrades;
+    }
+
     public static Upgrade getUpgrade(int ID)
     {
         if (ID >= 0 && ID < Type.values().length)
@@ -104,17 +116,5 @@ public abstract class Upgrade
     public boolean onDeactivated(TileEntity tileEntity)
     {
         return false;
-    }
-
-    public static Upgrade[] getAllUpgrades()
-    {
-        Upgrade[] upgrades = new Upgrade[Type.values().length];
-        
-        for (int i = 0; i < upgrades.length; i++)
-        {
-            upgrades[i] = getUpgrade(i);
-        }
-        
-        return upgrades;
     }
 }

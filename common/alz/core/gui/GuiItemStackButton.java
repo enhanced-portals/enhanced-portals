@@ -47,16 +47,6 @@ public class GuiItemStackButton extends GuiButton
         alternateDrawing = false;
         displayString = "0";
     }
-    
-    public GuiItemStackButton(int ID, int X, int Y, ItemStack stack, boolean active, List<String> text, String displayText)
-    {
-        super(ID, X, Y, 16, 16, "");
-        isActive = active;
-        itemStack = stack;
-        hoverText = text;
-        alternateDrawing = false;
-        displayString = displayText;
-    }
 
     public GuiItemStackButton(int ID, int X, int Y, ItemStack stack, boolean active, List<String> text, boolean alternatedrawing)
     {
@@ -66,6 +56,16 @@ public class GuiItemStackButton extends GuiButton
         hoverText = text;
         alternateDrawing = alternatedrawing;
         displayString = "0";
+    }
+
+    public GuiItemStackButton(int ID, int X, int Y, ItemStack stack, boolean active, List<String> text, String displayText)
+    {
+        super(ID, X, Y, 16, 16, "");
+        isActive = active;
+        itemStack = stack;
+        hoverText = text;
+        alternateDrawing = false;
+        displayString = displayText;
     }
 
     @Override
@@ -83,12 +83,12 @@ public class GuiItemStackButton extends GuiButton
             }
 
             itemRenderer.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, xPosition, yPosition);
-            
+
             if (!displayString.equals("0"))
             {
                 itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.renderEngine, itemStack, xPosition, yPosition, displayString);
             }
-            
+
             if (field_82253_i && hoverText != null && !hoverText.isEmpty())
             {
                 drawHoverText(hoverText, x, y, mc.fontRenderer);

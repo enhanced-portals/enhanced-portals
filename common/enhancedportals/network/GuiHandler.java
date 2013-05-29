@@ -87,7 +87,7 @@ public class GuiHandler implements IGuiHandler
             {
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) tileEntity)), (Player) player);
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade((TileEntityPortalModifier) tileEntity)), (Player) player);
-                
+
                 return new ContainerPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
             }
         }

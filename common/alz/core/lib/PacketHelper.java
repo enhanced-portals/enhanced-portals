@@ -132,7 +132,7 @@ public class PacketHelper
                     if (length != 0)
                     {
                         byte[] bytes = Arrays.copyOfRange(byteArray, byteArrayPosition, byteArrayPosition + length);
-                        
+
                         returnArray = concatObjectArray(returnArray, new Object[] { bytes });
                         byteArrayPosition += length;
                     }

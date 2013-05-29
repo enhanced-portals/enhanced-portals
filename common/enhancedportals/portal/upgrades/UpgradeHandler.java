@@ -74,6 +74,11 @@ public class UpgradeHandler
         return maximumUpgrades;
     }
 
+    public Upgrade getUpgrade(int i)
+    {
+        return upgradeList.get(i);
+    }
+
     public List<Upgrade> getUpgrades()
     {
         return upgradeList;
@@ -117,7 +122,7 @@ public class UpgradeHandler
         if (tileEntity != null)
         {
             if (upgrade.onDeactivated(tileEntity))
-            {                
+            {
                 for (int i = 0; i < upgradeList.size(); i++)
                 {
                     if (upgradeList.get(i).getUpgradeID() == upgrade.getUpgradeID())
@@ -139,10 +144,5 @@ public class UpgradeHandler
         }
 
         return !hasUpgrade(upgrade);
-    }
-
-    public Upgrade getUpgrade(int i)
-    {
-        return upgradeList.get(i);
     }
 }

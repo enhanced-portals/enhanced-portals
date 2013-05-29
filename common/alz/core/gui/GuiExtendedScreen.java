@@ -20,43 +20,87 @@ public class GuiExtendedScreen extends GuiContainer
 {
     public class GuiExtendedItemSlot
     {
-        public int xCoord, yCoord, width, height;
-        
+        public int      xCoord, yCoord;
+        GuiExtendedScreen parent;
+
         List<ItemStack> requiredItems;
         List<ItemStack> excludedItems;
-        
-        ItemStack itemStack;
-        IInventory tileEntity;
-        int slot;
-        
-        public GuiExtendedItemSlot(int x, int y, IInventory tileentity, int Slot)
+
+        ItemStack       itemStack;
+        IInventory      tileEntity;
+        int             slot;
+
+        public GuiExtendedItemSlot(int x, int y, IInventory tileentity, int Slot, GuiExtendedScreen par)
         {
             xCoord = x;
             yCoord = y;
-            width = height = 16;
             tileEntity = tileentity;
             slot = Slot;
-            
+            parent = par;
+
             excludedItems = new ArrayList<ItemStack>();
             requiredItems = new ArrayList<ItemStack>();
         }
-        
-        public GuiExtendedItemSlot(int x, int y, ItemStack stack)
+
+        public GuiExtendedItemSlot(int x, int y, ItemStack stack, GuiExtendedScreen par)
         {
             xCoord = x;
             yCoord = y;
-            width = height = 16;
             itemStack = stack;
-            
+            parent = par;
+
             excludedItems = new ArrayList<ItemStack>();
             requiredItems = new ArrayList<ItemStack>();
         }
-        
+
+        public void drawSlot()
+        {
+            drawSlot(0, 0);
+        }
+
+        public void drawSlot(int bumpX, int bumpY)
+        {
+            if (getItemStack() != null)
+            {
+                itemRenderer.zLevel = 200F;
+                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, getItemStack(), xCoord + bumpX, yCoord + bumpY);
+                //itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, getItemStack(), xCoord + bumpX, yCoord + bumpY);
+                itemRenderer.zLevel = 0F;
+            }
+
+            GL11.glDisable(GL11.GL_LIGHTING);
+        }
+
         public ItemStack getItemStack()
         {
-            return itemStack != null ? itemStack : (tileEntity != null ? tileEntity.getStackInSlot(slot) : null);
+            return itemStack != null ? itemStack : tileEntity != null ? tileEntity.getStackInSlot(slot) : null;
         }
-        
+
+        public boolean isOnSelf(int x, int y)
+        {
+            return isOnSelf(x, y, 0, 0);
+        }
+
+        public boolean isOnSelf(int x, int y, int bumpX, int bumpY)
+        {
+            return x >= xCoord + bumpX && x <= xCoord + bumpX + 16 && y >= yCoord + bumpY && y <= yCoord + bumpY + 16;
+        }
+
+        public void onClick(int x, int y, int button, ItemStack stack)
+        {
+
+        }
+
+        public void setExcludeList(List<ItemStack> stackList)
+        {
+
+        }
+
+        public void setRequireList(List<ItemStack> stackList)
+        {
+
+        }
+
         public boolean setSlot(ItemStack stack)
         {
             if (itemStack != null)
@@ -68,78 +112,40 @@ public class GuiExtendedScreen extends GuiContainer
                 tileEntity.setInventorySlotContents(slot, stack);
             }
             
+            parent.extendedSlotChanged(this);
+
             return false;
         }
-        
-        public void drawSlot()
-        {
-            if (getItemStack() != null)
-            {
-                itemRenderer.zLevel = 300F;
-                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, getItemStack(), xCoord, yCoord);
-                itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, getItemStack(), xCoord, yCoord);
-                itemRenderer.zLevel = 0F;
-            }
-        }
-        
-        public void drawSlot(int bumpX, int bumpY)
-        {
-            if (getItemStack() != null)
-            {
-                itemRenderer.zLevel = 300F;
-                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, getItemStack(), xCoord + bumpX, yCoord + bumpY);
-                itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, getItemStack(), xCoord + bumpX, yCoord + bumpY);
-                itemRenderer.zLevel = 0F;
-            }
-        }
-        
-        public void setExcludeList(List<ItemStack> stackList)
-        {
-            
-        }
-        
-        public void setRequireList(List<ItemStack> stackList)
-        {
-            
-        }
-        
-        public void onClick(int x, int y, int button, ItemStack stack)
-        {
-            
-        }
-        
-        public boolean isOnSelf(int x, int y)
-        {
-            return x >= xCoord && x <= xCoord + 16 && y >= yCoord && y <= yCoord + 16;
-        }
-        
-        public boolean isOnSelf(int x, int y, int bumpX, int bumpY)
-        {
-            return x >= xCoord + bumpX && x <= xCoord + bumpX + 16 && y >= yCoord + bumpY && y <= yCoord + bumpY + 16;
-        }
     }
-    
+
     public class GuiFakeItemSlot extends GuiExtendedItemSlot
     {
-        public GuiFakeItemSlot(int x, int y, ItemStack stack)
+        public GuiFakeItemSlot(int x, int y, IInventory inv, int slot, GuiExtendedScreen par)
         {
-            super(x, y, stack);
+            super(x, y, inv, slot, par);
         }
-        
-        public GuiFakeItemSlot(int x, int y, IInventory inv, int slot)
+
+        public GuiFakeItemSlot(int x, int y, ItemStack stack, GuiExtendedScreen par)
         {
-            super(x, y, inv, slot);
+            super(x, y, stack, par);
         }
-                
+
         @Override
-        public void onClick(int x, int y, int button, ItemStack stack)
+        public void onClick(int x, int y, int button, ItemStack originalStack)
         {
+            ItemStack stack = null;
+
             if (!isOnSelf(x, y))
             {
                 return;
             }
-            
-            if (button == 0 && stack != null)
+
+            if (originalStack != null)
+            {
+                stack = originalStack.copy();
+            }
+
+            if ((button == 0 || button == 1) && stack != null)
             {
                 itemStack = stack;
             }
@@ -149,63 +155,28 @@ public class GuiExtendedScreen extends GuiContainer
             }
         }
     }
-    
+
     public List<GuiFakeItemSlot> extendedSlots;
-    protected TileEntity tileEntity;
-    protected Container container;
-    
+    protected TileEntity         tileEntity;
+    protected Container          container;
+
     public GuiExtendedScreen(Container par1Container, IInventory inventory)
     {
         super(par1Container);
-        
+
         if (inventory instanceof TileEntity)
         {
             tileEntity = (TileEntity) inventory;
         }
-        
+
         container = par1Container;
         extendedSlots = new ArrayList<GuiFakeItemSlot>();
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    public void drawExtendedSlots()
     {
-        drawExtendedSlots();
-    }
-    
-    public GuiFakeItemSlot getSlotAt(int x, int y)
-    {
-        for (GuiFakeItemSlot slot : extendedSlots)
-        {
-            if (slot.xCoord < x && slot.xCoord + width > x && slot.yCoord < y && slot.yCoord + height > y)
-            {
-                return slot;
-            }
-        }
-        
-        return null;
-    }
-    
-    public int getSlotIDAt(int x, int y)
-    {
-        for (int i = 0; i < extendedSlots.size(); i++)
-        {
-            GuiFakeItemSlot slot = extendedSlots.get(i);
-            
-            if (slot.xCoord <= x && slot.xCoord + width >= x && slot.yCoord <= y && slot.yCoord + height >= y)
-            {
-                return i;
-            }
-        }
-        
-        return -1;
-    }
-    
-    private void drawExtendedSlots()
-    {
-        int bX = (width - xSize) / 2,
-            bY = (height - ySize) / 2;
-        
+        int bX = (width - xSize) / 2, bY = (height - ySize) / 2;
+
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glPushMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -214,46 +185,51 @@ public class GuiExtendedScreen extends GuiContainer
         int k1 = 240;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, i1 / 1.0F, k1 / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        
+
         for (GuiFakeItemSlot slot : extendedSlots)
         {
             slot.drawSlot(bX, bY);
         }
-        
+
         GL11.glPopMatrix();
     }
-    
-    private void drawExtendedSlotsForeground(int mX, int mY)
+
+    public void drawExtendedSlotsForeground(int mX, int mY)
     {
-        int bX = (width - xSize) / 2,
-            bY = (height - ySize) / 2;
+        int bX = (width - xSize) / 2, bY = (height - ySize) / 2;
         String str = "";
-        
+
         GuiFakeItemSlot slot = getSlotAt(mX - bX, mY - bY);
-        
-        if (slot != null)
+
+        if (slot != null && slot.getItemStack() != null)
         {
             str = slot.getItemStack().getDisplayName();
-        }
-        
-        if (str.length() > 0)
-        {
-            List<String> strList = new ArrayList<String>();
-            strList.add(str);     
-            
-            drawHoveringText(strList, mX - bX, mY - bY, fontRenderer);
-            RenderHelper.enableGUIStandardItemLighting();
+
+            if (str.length() > 0)
+            {
+                List<String> strList = new ArrayList<String>();
+                strList.add(str);
+
+                drawHoveringText(strList, mX - bX, mY - bY, fontRenderer);
+                RenderHelper.enableGUIStandardItemLighting();
+            }
         }
     }
-    
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    {
+        drawExtendedSlots();
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        
+
         drawExtendedSlotsForeground(par1, par2);
     }
-    
+
     @SuppressWarnings("rawtypes")
     public void drawHoverText(List par1List, int par2, int par3, FontRenderer font)
     {
@@ -332,15 +308,50 @@ public class GuiExtendedScreen extends GuiContainer
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         }
     }
-    
+
+    public GuiFakeItemSlot getSlotAt(int x, int y)
+    {
+        for (GuiFakeItemSlot slot : extendedSlots)
+        {
+            if (x >= slot.xCoord && x <= slot.xCoord + 16 && y >= slot.yCoord && y <= slot.yCoord + 16)
+            {
+                return slot;
+            }
+        }
+
+        return null;
+    }
+
+    public int getSlotIDAt(int x, int y)
+    {
+        for (int i = 0; i < extendedSlots.size(); i++)
+        {
+            GuiFakeItemSlot slot = extendedSlots.get(i);
+
+            if (x >= slot.xCoord && x <= slot.xCoord + 16 && y >= slot.yCoord && y <= slot.yCoord + 16)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     protected void mouseClicked(int par1, int par2, int par3)
     {
         super.mouseClicked(par1, par2, par3);
-        
+
+        int bX = (width - xSize) / 2, bY = (height - ySize) / 2;
+
         for (GuiFakeItemSlot slot : extendedSlots)
         {
-            slot.onClick(par1, par2, par3, null);
+            slot.onClick(par1 - bX, par2 - bY, par3, mc.thePlayer.inventory.getItemStack());
         }
+    }
+    
+    public void extendedSlotChanged(GuiExtendedItemSlot slot)
+    {
+        
     }
 }

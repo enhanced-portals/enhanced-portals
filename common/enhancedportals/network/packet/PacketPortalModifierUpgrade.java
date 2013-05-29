@@ -15,14 +15,14 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int    xCoord, yCoord, zCoord, dimension;
     byte[] upgrades;
-    
+
     public PacketPortalModifierUpgrade()
     {
-        
+
     }
-    
+
     public PacketPortalModifierUpgrade(TileEntityPortalModifier modifier)
     {
         xCoord = modifier.xCoord;
@@ -46,7 +46,7 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
                 zCoord = (int) objArray[2];
                 dimension = (int) objArray[3];
                 upgrades = (byte[]) objArray[4];
-                
+
                 return this;
             }
             else
@@ -80,31 +80,31 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
                 else
                 {
                     Queue<Byte> upgradeList = new LinkedList<Byte>();
-                    
+
                     for (byte b : modifier.upgradeHandler.getInstalledUpgrades())
                     {
                         upgradeList.add(b);
                     }
-                    
+
                     for (byte b : upgrades)
                     {
                         if (modifier.upgradeHandler.hasUpgrade(b))
                         {
-                            upgradeList.remove((Object) b);
+                            upgradeList.remove(b);
                         }
                         else
                         {
                             modifier.upgradeHandler.addUpgrade(b, modifier);
                         }
                     }
-                    
+
                     while (!upgradeList.isEmpty())
                     {
                         byte upgradeID = upgradeList.remove();
-                        
-                        EntityItem entity = new EntityItem(world, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, Upgrade.getUpgrade(upgradeID).getItemStack());                        
+
+                        EntityItem entity = new EntityItem(world, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, Upgrade.getUpgrade(upgradeID).getItemStack());
                         world.spawnEntityInWorld(entity);
-                        
+
                         for (int i = 0; i < modifier.upgradeHandler.getUpgrades().size(); i++)
                         {
                             if (modifier.upgradeHandler.getUpgrades().get(i).getUpgradeID() == upgradeID)
