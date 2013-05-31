@@ -14,7 +14,7 @@ public abstract class PacketEnhancedPortals
 {
     enum Type
     {
-        PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class), REQUEST_DATA(PacketRequestData.class), NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class), PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class);
+        REQUEST_DATA(PacketRequestData.class), GUI(PacketGui.class), PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class), NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class), PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 

@@ -225,8 +225,6 @@ public class GuiExtendedScreen extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        super.drawGuiContainerForegroundLayer(par1, par2);
-
         drawExtendedSlotsForeground(par1, par2);
     }
 

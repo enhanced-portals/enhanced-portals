@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import enhancedportals.lib.Reference;
 import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeCamouflage;
+import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeNetherFrame;
 import enhancedportals.portal.upgrades.modifier.UpgradeParticles;
@@ -18,7 +19,7 @@ public abstract class Upgrade
 {
     enum Type
     {
-        PARTICLES(UpgradeParticles.class), SOUNDS(UpgradeSounds.class), DIMENSIONAL(UpgradeDimensional.class), ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class), COMPUTER(UpgradeParticles.class), NETHER_FRAME(UpgradeNetherFrame.class), RESOURCE_FRAME(UpgradeResourceFrame.class), CAMOUFLAGE(UpgradeCamouflage.class);
+        PARTICLES(UpgradeParticles.class), SOUNDS(UpgradeSounds.class), DIMENSIONAL(UpgradeDimensional.class), ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class), COMPUTER(UpgradeParticles.class), NETHER_FRAME(UpgradeNetherFrame.class), RESOURCE_FRAME(UpgradeResourceFrame.class), CAMOUFLAGE(UpgradeCamouflage.class), DIAL_DEVICE(UpgradeDialDevice.class);
 
         private Class<? extends Upgrade> upgradeType;
 

@@ -20,14 +20,17 @@ import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerPortalModifier;
+import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.network.packet.PacketPortalModifierUpgrade;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.upgrades.Upgrade;
+import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifier extends GuiEnhancedPortalsScreen
@@ -152,7 +155,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         fontRenderer.drawString(Localization.localizeString("tile.portalModifier.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.portalModifier.name")) / 2, guiTop + -15, 0xFFFFFF);
         fontRenderer.drawString(Localization.localizeString("gui.upgrades.title"), guiLeft + 8, guiTop + 3, 0xFF444444);
         fontRenderer.drawString(Localization.localizeString("gui.modifications.title"), guiLeft + xSize - 8 - fontRenderer.getStringWidth(Localization.localizeString("gui.modifications.title")), guiTop + 3, 0xFF444444);
-        fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 8, guiTop + 35, 0xFF444444);
+        fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? "Unique Identifier" : Localization.localizeString("gui.network.title"), guiLeft + 8, guiTop + 35, 0xFF444444);
 
         if (portalModifier.network.equals(""))
         {
@@ -352,20 +355,9 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
     {
         super.mouseClicked(x, y, buttonClicked);
 
-        if (isPointInRegion(134, 15, 16, 16, x, y))
+        if (isPointInRegion(7, 46, 162, 18, x, y))
         {
-            /*portalModifier.thickness++;
-
-            if (portalModifier.thickness >= 4)
-            {
-                portalModifier.thickness = 0;
-            }
-
-            hasInteractedWith = true;*/
-        }
-        else if (isPointInRegion(7, 46, 162, 18, x, y))
-        {
-            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifierNetwork, portalModifier).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifierNetwork)));
         }
         else if (isShiftKeyDown() && getSlotAtPosition(x, y) != null)
         {

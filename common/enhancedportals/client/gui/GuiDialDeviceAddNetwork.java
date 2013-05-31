@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -27,7 +26,7 @@ import enhancedportals.lib.Textures;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
-public class GuiDialDeviceAddNetwork extends GuiContainer
+public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
 {
     TileEntityDialDevice  dialDevice;
     GuiTextField          nameField;
@@ -44,7 +43,7 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
 
     public GuiDialDeviceAddNetwork(InventoryPlayer inventory, TileEntityDialDevice dialdevice)
     {
-        super(new ContainerDialDeviceAddNetwork(inventory));
+        super(new ContainerDialDeviceAddNetwork(inventory), null);
 
         dialDevice = dialdevice;
         texture = "";
@@ -68,6 +67,8 @@ public class GuiDialDeviceAddNetwork extends GuiContainer
         {
             elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
         }
+        
+        
     }
 
     @Override

@@ -10,8 +10,15 @@ import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+
+import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketGui;
+import enhancedportals.network.packet.PacketPortalModifierUpdate;
+import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiPortalModifierNetwork extends GuiNetwork
@@ -73,7 +80,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
 
         if (button.id == 1)
         {
-            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
         }
         else if (button.id == 2)
         {
@@ -124,8 +131,8 @@ public class GuiPortalModifierNetwork extends GuiNetwork
             }
 
             portalModifier.network = str;
-            // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkUpdate(portalModifier).getPacket());
-            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.PortalModifier, portalModifier).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
         }
     }
 
@@ -145,7 +152,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         int x2 = (width - xSize) / 2;
         int y2 = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);
-        fontRenderer.drawString(Localization.localizeString("gui.selectNetwork.title"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.selectNetwork.title")) / 2, guiTop - 15, 0xFFCCCCCC);
+        fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? "Unique Identifier Selection" : Localization.localizeString("gui.selectNetwork.title"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? "Unique Identifier Selection" : Localization.localizeString("gui.selectNetwork.title")) / 2, guiTop - 15, 0xFFCCCCCC);
 
         super.drawScreen(x, y, par3);
 
@@ -295,5 +302,17 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         {
             stackList.get(i).handleMouseClick(guiLeft + 8 + i * 18, guiTop + 83, x, y, buttonClicked);
         }
+    }
+    
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        if (par2 == 1)
+        {
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
+            return;
+        }
+        
+        super.keyTyped(par1, par2);
     }
 }

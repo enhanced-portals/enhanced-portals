@@ -60,7 +60,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                 }
                 else
                 {
-                    if (stack.itemID == Item.dyePowder.itemID)
+                    if (stack.itemID == Item.dyePowder.itemID) // Display a coloured portal instead of the dye item
                     {
                         stack = new ItemStack(EnhancedPortals.proxy.blockDummyPortal, 1, stack.getItemDamage());
                     }
@@ -91,8 +91,16 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
             if (str.length() > 0)
             {
                 List<String> strList = new ArrayList<String>();
-                strList.add("Facade");
-                strList.add(EnumChatFormatting.GRAY + str);
+                
+                if (slot instanceof GuiTextureSlot)
+                {
+                    strList.add("Facade");
+                    strList.add(EnumChatFormatting.GRAY + str);
+                }
+                else
+                {
+                    strList.add(str);
+                }
 
                 drawHoveringText(strList, mX - bX, mY - bY, fontRenderer);
                 RenderHelper.enableGUIStandardItemLighting();

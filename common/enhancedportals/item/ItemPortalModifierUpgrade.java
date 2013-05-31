@@ -28,7 +28,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class ItemPortalModifierUpgrade extends Item
 {
     Icon[]                 textures;
-    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld", "camouflage" };
+    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld", "camouflage", "dialDevice" };
 
     public ItemPortalModifierUpgrade()
     {
