@@ -82,7 +82,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
         int bX = (width - xSize) / 2, bY = (height - ySize) / 2;
         String str = "";
 
-        GuiFakeItemSlot slot = getSlotAt(mX - bX, mY - bY);
+        GuiExtendedItemSlot slot = getSlotAt(mX - bX, mY - bY);
 
         if (slot != null && slot.getItemStack() != null)
         {
