@@ -4,22 +4,22 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import alz.core.lib.PacketHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
+import enhancedcore.packet.PacketHelper;
 import enhancedportals.EnhancedPortals;
 
 public class PacketGui extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension, guiID;    
-    
+    int xCoord, yCoord, zCoord, dimension, guiID;
+
     public PacketGui()
     {
-        
+
     }
-    
+
     public PacketGui(int x, int y, int z, int d, int gui)
     {
         xCoord = x;
@@ -28,7 +28,7 @@ public class PacketGui extends PacketEnhancedPortals
         dimension = d;
         guiID = gui;
     }
-    
+
     public PacketGui(int x, int y, int z, World world, int gui)
     {
         xCoord = x;
@@ -46,12 +46,12 @@ public class PacketGui extends PacketEnhancedPortals
         dimension = tileEntity.worldObj.provider.dimensionId;
         guiID = gui;
     }
-    
+
     @Override
     public PacketEnhancedPortals consumePacket(byte[] data)
     {
         Object[] packetData = PacketHelper.getObjects(data, "I", "I", "I", "I", "I");
-        
+
         if (packetData != null)
         {
             xCoord = (int) packetData[0];
@@ -64,7 +64,7 @@ public class PacketGui extends PacketEnhancedPortals
         {
             return null;
         }
-        
+
         return this;
     }
 
@@ -72,7 +72,7 @@ public class PacketGui extends PacketEnhancedPortals
     public void execute(INetworkManager network, EntityPlayer player)
     {
         player.openGui(EnhancedPortals.instance, guiID, EnhancedPortals.proxy.getWorld(dimension), xCoord, yCoord, zCoord);
-        
+
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
             PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(this), (Player) player); // Send it back to the player to open it clientside, TODO : validate

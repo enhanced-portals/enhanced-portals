@@ -16,8 +16,8 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedcore.gui.GuiItemStackButton;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
@@ -118,9 +118,9 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                 button.displayString = "1";
                 num = 1;
             }
-                        
+
             portalModifier.thickness = (byte) (num - 1);
-            ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : (portalModifier.thickness == 1 ? "Thick" : (portalModifier.thickness == 2 ? "Thicker" : "Full Block"))));
+            ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : portalModifier.thickness == 1 ? "Thick" : portalModifier.thickness == 2 ? "Thicker" : "Full Block"));
             hasInteractedWith = true;
         }
         else if (button.id == 50)
@@ -191,7 +191,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                     }
                 }
             }
-            
+
             if (isPointInRegion(7, 46, 162, 18, x, y))
             {
                 List<String> str = new ArrayList<String>();
@@ -302,6 +302,30 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         tessellator.draw();
     }
 
+    @Override
+    public void extendedSlotChanged(GuiExtendedItemSlot slot)
+    {
+        ItemStack stack = slot.getItemStack();
+
+        if (stack.itemID == EnhancedPortals.proxy.blockDummyPortal.blockID)
+        {
+            stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
+        }
+
+        PortalTexture text = Textures.getTextureFromItemStack(stack);
+
+        if (text != null)
+        {
+            portalModifier.texture = text.getID();
+        }
+        else
+        {
+            portalModifier.texture = "C:5";
+        }
+
+        hasInteractedWith = true;
+    }
+
     public int getGuiLeft()
     {
         return guiLeft;
@@ -342,8 +366,8 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         strList.add("size");
         buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 15, new ItemStack(EnhancedPortals.proxy.blockNetherPortal, 1, 2), true, strList, true));
         ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (portalModifier.thickness + 1);
-        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : (portalModifier.thickness == 1 ? "Thick" : (portalModifier.thickness == 2 ? "Thicker" : "Full Block"))));
-        
+        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : portalModifier.thickness == 1 ? "Thick" : portalModifier.thickness == 2 ? "Thicker" : "Full Block"));
+
         for (int i = portalModifier.upgradeHandler.getUpgrades().size() - 1; i >= 0; i--)
         {
             buttonList.add(new GuiItemStackButton(50, guiLeft + 8 + i * 18, guiTop + 15, portalModifier.upgradeHandler.getUpgrade(i).getDisplayItemStack(), false, portalModifier.upgradeHandler.getUpgrade(i).getText(true), true));
@@ -388,29 +412,5 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
     public void updateScreen()
     {
         super.updateScreen();
-    }
-    
-    @Override
-    public void extendedSlotChanged(GuiExtendedItemSlot slot)
-    {
-        ItemStack stack = slot.getItemStack();
-        
-        if (stack.itemID == EnhancedPortals.proxy.blockDummyPortal.blockID)
-        {
-            stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
-        }
-        
-         PortalTexture text = Textures.getTextureFromItemStack(stack);
-         
-         if (text != null)
-         {
-             portalModifier.texture = text.getID();
-         }
-         else
-         {
-             portalModifier.texture = "C:5";
-         }
-         
-         hasInteractedWith = true;
     }
 }

@@ -1,8 +1,8 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
-import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedcore.world.WorldLocation;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
 

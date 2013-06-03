@@ -9,7 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import alz.core.gui.GuiExtendedScreen;
+import enhancedcore.gui.GuiExtendedScreen;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Textures;
 
@@ -44,12 +44,12 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                 setSlot(new ItemStack(Item.dyePowder, 1, 5));
             }
         }
-        
+
         @Override
         public boolean setSlot(ItemStack originalStack)
         {
             ItemStack stack = null;
-            
+
             if (originalStack != null)
             {
                 stack = originalStack.copy();
@@ -66,7 +66,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                     }
                 }
             }
-            
+
             return super.setSlot(stack);
         }
     }
@@ -91,7 +91,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
             if (str.length() > 0)
             {
                 List<String> strList = new ArrayList<String>();
-                
+
                 if (slot instanceof GuiTextureSlot)
                 {
                     strList.add("Facade");

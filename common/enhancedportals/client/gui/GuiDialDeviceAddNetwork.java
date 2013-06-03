@@ -67,8 +67,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         {
             elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
         }
-        
-        
+
     }
 
     @Override

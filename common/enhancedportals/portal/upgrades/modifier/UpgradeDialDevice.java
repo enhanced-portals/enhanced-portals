@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
-import alz.core.lib.WorldLocation;
+import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Localization;
 import enhancedportals.portal.upgrades.Upgrade;
@@ -32,13 +32,19 @@ public class UpgradeDialDevice extends Upgrade
     }
 
     @Override
+    public String getName()
+    {
+        return "dialDevice";
+    }
+
+    @Override
     public List<String> getText(boolean includeTitle)
     {
         List<String> list = new ArrayList<String>();
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + ".dialDevice.name"));
+            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
         list.add(EnumChatFormatting.GRAY + "Allows use with a dial device.");
@@ -55,12 +61,12 @@ public class UpgradeDialDevice extends Upgrade
     public boolean onActivated(TileEntity tileEntity)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-        
+
         if (!tileEntity.worldObj.isRemote)
         {
             EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
         }
-        
+
         modifier.network = "";
         return true;
     }
@@ -69,9 +75,9 @@ public class UpgradeDialDevice extends Upgrade
     public boolean onDeactivated(TileEntity tileEntity)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-        
+
         // TODO : Remove from DHD network
-        
+
         modifier.network = "";
         return true;
     }

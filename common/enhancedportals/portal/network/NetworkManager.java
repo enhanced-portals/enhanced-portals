@@ -17,9 +17,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
-import alz.core.lib.WorldLocation;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import enhancedcore.world.WorldLocation;
 import enhancedportals.lib.Reference;
 
 public class NetworkManager

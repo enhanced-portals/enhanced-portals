@@ -14,7 +14,14 @@ public abstract class PacketEnhancedPortals
 {
     enum Type
     {
-        REQUEST_DATA(PacketRequestData.class), GUI(PacketGui.class), PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class), NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class), PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class);
+        REQUEST_DATA(PacketRequestData.class),
+        GUI(PacketGui.class),
+        PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class),
+        NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class),
+        PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
+        AUTOMATIC_DIALLER_UPDATE(PacketAutomaticDiallerUpdate.class),
+        DIAL_DEVICE_UPDATE(PacketDialDeviceUpdate.class),
+        BASIC_DIAL_DEVICE_UPDATE(PacketBasicDialDeviceUpdate.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 
@@ -36,13 +43,11 @@ public abstract class PacketEnhancedPortals
         }
     }
 
-    public static final String CHANNEL_ID = Reference.MOD_ID;
-
     public static Packet250CustomPayload makePacket(PacketEnhancedPortals packet)
     {
         byte[] packetData = packet.generatePacket();
 
-        return new Packet250CustomPayload(CHANNEL_ID, Bytes.concat(new byte[] { packet.getID() }, packetData));
+        return new Packet250CustomPayload(Reference.MOD_ID, Bytes.concat(new byte[] { packet.getID() }, packetData));
     }
 
     public static PacketEnhancedPortals readPacket(INetworkManager network, byte[] payload)

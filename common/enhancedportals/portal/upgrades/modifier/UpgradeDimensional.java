@@ -30,16 +30,22 @@ public class UpgradeDimensional extends Upgrade
     }
 
     @Override
+    public String getName()
+    {
+        return "dimension";
+    }
+
+    @Override
     public List<String> getText(boolean includeTitle)
     {
         List<String> list = new ArrayList<String>();
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + ".dimension.name"));
+            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.dimensional.text"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".text"));
 
         if (includeTitle)
         {

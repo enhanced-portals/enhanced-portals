@@ -11,7 +11,6 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
-
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
@@ -289,6 +288,18 @@ public class GuiPortalModifierNetwork extends GuiNetwork
     }
 
     @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        if (par2 == 1)
+        {
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
+            return;
+        }
+
+        super.keyTyped(par1, par2);
+    }
+
+    @Override
     protected void mouseClicked(int x, int y, int buttonClicked)
     {
         super.mouseClicked(x, y, buttonClicked);
@@ -302,17 +313,5 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         {
             stackList.get(i).handleMouseClick(guiLeft + 8 + i * 18, guiTop + 83, x, y, buttonClicked);
         }
-    }
-    
-    @Override
-    protected void keyTyped(char par1, int par2)
-    {
-        if (par2 == 1)
-        {
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
-            return;
-        }
-        
-        super.keyTyped(par1, par2);
     }
 }

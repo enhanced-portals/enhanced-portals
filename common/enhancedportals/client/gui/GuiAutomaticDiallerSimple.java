@@ -9,8 +9,11 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.network.packet.PacketAutomaticDiallerUpdate;
+import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 
 public class GuiAutomaticDiallerSimple extends GuiNetwork
@@ -81,7 +84,7 @@ public class GuiAutomaticDiallerSimple extends GuiNetwork
 
             dialler.activeNetwork = str;
             FMLClientHandler.instance().getClient().thePlayer.closeScreen();
-            // TODO PacketDispatcher.sendPacketToServer(new PacketTEUpdate(dialler).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketAutomaticDiallerUpdate(dialler)));
         }
     }
 

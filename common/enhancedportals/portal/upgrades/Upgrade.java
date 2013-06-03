@@ -19,7 +19,15 @@ public abstract class Upgrade
 {
     enum Type
     {
-        PARTICLES(UpgradeParticles.class), SOUNDS(UpgradeSounds.class), DIMENSIONAL(UpgradeDimensional.class), ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class), COMPUTER(UpgradeParticles.class), NETHER_FRAME(UpgradeNetherFrame.class), RESOURCE_FRAME(UpgradeResourceFrame.class), CAMOUFLAGE(UpgradeCamouflage.class), DIAL_DEVICE(UpgradeDialDevice.class);
+        PARTICLES(UpgradeParticles.class),
+        SOUNDS(UpgradeSounds.class),
+        DIMENSIONAL(UpgradeDimensional.class),
+        ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class),
+        COMPUTER(UpgradeParticles.class),
+        NETHER_FRAME(UpgradeNetherFrame.class),
+        RESOURCE_FRAME(UpgradeResourceFrame.class),
+        CAMOUFLAGE(UpgradeCamouflage.class),
+        DIAL_DEVICE(UpgradeDialDevice.class);
 
         private Class<? extends Upgrade> upgradeType;
 
@@ -64,6 +72,18 @@ public abstract class Upgrade
         return null;
     }
 
+    public static String[] getUpgradeNames()
+    {
+        String[] str = new String[Type.values().length];
+
+        for (int i = 0; i < str.length; i++)
+        {
+            str[i] = getUpgrade(i).getName();
+        }
+
+        return str;
+    }
+
     private Type type;
 
     public Upgrade()
@@ -90,6 +110,11 @@ public abstract class Upgrade
     }
 
     public ItemStack getItemStack()
+    {
+        return null;
+    }
+
+    public String getName()
     {
         return null;
     }

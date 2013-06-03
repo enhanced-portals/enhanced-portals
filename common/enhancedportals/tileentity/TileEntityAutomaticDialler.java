@@ -2,7 +2,7 @@ package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import alz.core.lib.WorldLocation;
+import enhancedcore.world.WorldLocation;
 import enhancedportals.lib.BlockIds;
 
 public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals

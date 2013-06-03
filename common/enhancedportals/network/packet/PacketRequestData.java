@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import alz.core.lib.PacketHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import enhancedcore.packet.PacketHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityDialDevice;
@@ -78,11 +78,11 @@ public class PacketRequestData extends PacketEnhancedPortals
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDeviceBasic)
         {
-
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate((TileEntityDialDeviceBasic) world.getBlockTileEntity(xCoord, yCoord, zCoord))));
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityAutomaticDialler)
         {
-
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketAutomaticDiallerUpdate((TileEntityAutomaticDialler) world.getBlockTileEntity(xCoord, yCoord, zCoord))));
         }
     }
 

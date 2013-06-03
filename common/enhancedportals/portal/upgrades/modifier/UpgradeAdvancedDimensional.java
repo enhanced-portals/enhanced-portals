@@ -30,18 +30,24 @@ public class UpgradeAdvancedDimensional extends Upgrade
     }
 
     @Override
+    public String getName()
+    {
+        return "advancedDimension";
+    }
+
+    @Override
     public List<String> getText(boolean includeTitle)
     {
         List<String> list = new ArrayList<String>();
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + ".advancedDimension.name"));
+            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.advancedDimensional.text"));
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.advancedDimensional.textB"));
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.advancedDimensional.textC"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".text"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".textB"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".textC"));
 
         if (includeTitle)
         {

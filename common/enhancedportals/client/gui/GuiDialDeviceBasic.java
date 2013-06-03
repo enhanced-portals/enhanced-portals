@@ -10,8 +10,8 @@ import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 
-import alz.core.gui.GuiItemStackButton;
 import cpw.mods.fml.client.FMLClientHandler;
+import enhancedcore.gui.GuiItemStackButton;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;

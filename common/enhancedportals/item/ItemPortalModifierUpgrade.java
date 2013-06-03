@@ -2,7 +2,6 @@ package enhancedportals.item;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,16 +9,19 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
@@ -27,8 +29,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ItemPortalModifierUpgrade extends Item
 {
-    Icon[]                 textures;
-    public static String[] names = { "particles", "sounds", "dimension", "advancedDimension", "computer", "nether", "overworld", "camouflage", "dialDevice" };
+    Icon[] textures;
 
     public ItemPortalModifierUpgrade()
     {
@@ -45,43 +46,8 @@ public class ItemPortalModifierUpgrade extends Item
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
     {
-        list.add(Localization.localizeString("upgrade.portalModifier"));
-
-        if (itemStack.getItemDamage() == 2)
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.dimensional.text"));
-        }
-        else if (itemStack.getItemDamage() == 3)
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.advancedDimensional.text"));
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.advancedDimensional.textB"));
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.advancedDimensional.textC"));
-        }
-        else if (itemStack.getItemDamage() == 4)
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.computer.text"));
-        }
-        else if (itemStack.getItemDamage() == 5)
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.text"));
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.textA"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".default.name"));
-        }
-        else if (itemStack.getItemDamage() == 6)
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.text"));
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.blocks.textA"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockIron.getUnlocalizedName() + ".name"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockGold.getUnlocalizedName() + ".name"));
-            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockDiamond.getUnlocalizedName() + ".name"));
-        }
-        else if (itemStack.getItemDamage() == 7)
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.camouflage.textA"));
-            list.add(EnumChatFormatting.DARK_GRAY + Localization.localizeString("upgrade.camouflage.textB"));
-        }
+        list.add(Strings.PortalModifierUpgrade.toString());
+        list.addAll(Upgrade.getUpgrade(itemStack.getItemDamage()).getText(false));
     }
 
     @Override
@@ -109,11 +75,6 @@ public class ItemPortalModifierUpgrade extends Item
     {
         for (int var4 = 0; var4 < textures.length; var4++)
         {
-            if (names[var4].equals("computer"))
-            {
-                continue;
-            }
-
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
@@ -122,7 +83,7 @@ public class ItemPortalModifierUpgrade extends Item
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
         int i = MathHelper.clamp_int(par1ItemStack.getItemDamage(), 0, 15);
-        return super.getUnlocalizedName() + "." + names[i];
+        return super.getUnlocalizedName() + "." + Upgrade.getUpgradeNames()[i];
     }
 
     @Override
@@ -148,12 +109,12 @@ public class ItemPortalModifierUpgrade extends Item
             {
                 if (stack.getItemDamage() == 3 && modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()))
                 {
-                    player.sendChatToPlayer("You must remove the dimensional upgrade first.");
+                    player.sendChatToPlayer(Strings.ChatDimAlreadyInstalled.toString());
                     return false;
                 }
                 else if (stack.getItemDamage() == 2 && modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
                 {
-                    player.sendChatToPlayer("You must remove the advanced dimensional upgrade first.");
+                    player.sendChatToPlayer(Strings.ChatAdvDimAlreadyInstalled.toString());
                     return false;
                 }
 
@@ -162,12 +123,16 @@ public class ItemPortalModifierUpgrade extends Item
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
 
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                    // TODO PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
+                    PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(modifier)));
+                }
+                else
+                {
+                    player.sendChatToPlayer(Strings.ChatMaxUpgradesInstalled.toString());
                 }
             }
             else
             {
-                player.sendChatToPlayer("This upgrade is already installed");
+                player.sendChatToPlayer(Strings.ChatUpgradeInstalled.toString());
             }
         }
 
@@ -178,7 +143,7 @@ public class ItemPortalModifierUpgrade extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        textures = new Icon[names.length];
+        textures = new Icon[Upgrade.getUpgradeNames().length];
 
         for (int i = 0; i < textures.length; i++)
         {

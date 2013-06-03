@@ -1,15 +1,16 @@
 package enhancedportals;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.logging.Level;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -24,6 +25,9 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import enhancedcore.reflection.ReflectionHelper;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.command.CommandEP;
 import enhancedportals.lib.BlockIds;
@@ -31,12 +35,11 @@ import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.CommonProxy;
-import enhancedportals.network.EventHooks;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
 import enhancedportals.portal.network.ModifierNetwork;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, acceptedMinecraftVersions = Reference.MC_VERSION)
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies="required-after:EnhancedCore")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
 {
@@ -50,7 +53,7 @@ public class EnhancedPortals
     private void init(FMLInitializationEvent event)
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-        MinecraftForge.EVENT_BUS.register(new EventHooks());
+        MinecraftForge.EVENT_BUS.register(this);
 
         proxy.loadBlocks();
         proxy.loadItems();
@@ -136,72 +139,22 @@ public class EnhancedPortals
         Reference.log.setParent(FMLLog.getLogger());
         Block.blocksList[BlockIds.Obsidian] = null;
 
-        if (!replaceBlock(new BlockObsidian(), net.minecraft.block.BlockObsidian.class))
+        if (!ReflectionHelper.replaceBlock(new BlockObsidian(), net.minecraft.block.BlockObsidian.class))
         {
             Block.blocksList[BlockIds.Obsidian] = null;
             Block.blocksList[BlockIds.Obsidian] = new net.minecraft.block.BlockObsidian(49).setHardness(50.0F).setResistance(2000.0F).setStepSound(Block.soundStoneFootstep).setUnlocalizedName("obsidian");
-            Reference.log.log(Level.SEVERE, "Unable to modify the Obsidian block.");
+            Reference.log.log(Level.SEVERE, "Unable to modify the Obsidian block. A lot of functionality will be lost.");
         }
 
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         Localization.loadLocales();
     }
 
-    private boolean replaceBlock(Object value, Class<?> clas)
+    @SideOnly(Side.CLIENT)
+    @ForgeSubscribe
+    public void registerIcons(TextureStitchEvent.Pre event)
     {
-        Field field = null;
-
-        for (Field f : net.minecraft.block.Block.class.getDeclaredFields())
-        {
-            if (f.getType() == net.minecraft.block.Block.class)
-            {
-                try
-                {
-                    if ((Block) f.get(null) instanceof net.minecraft.block.BlockObsidian)
-                    {
-                        field = f;
-                    }
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-        }
-
-        if (field == null)
-        {
-            return false;
-        }
-
-        field.setAccessible(true);
-
-        if ((field.getModifiers() & Modifier.FINAL) != 0)
-        {
-            try
-            {
-                Field modifiers = Field.class.getDeclaredField("modifiers");
-                modifiers.setAccessible(true);
-                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        try
-        {
-            field.set(net.minecraft.block.Block.class, value);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
+        EnhancedPortals.proxy.registerIcons(event);
     }
 
     @ServerStarting
@@ -216,5 +169,14 @@ public class EnhancedPortals
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();
+    }
+
+    @ForgeSubscribe
+    public void worldSave(WorldEvent.Save event)
+    {
+        if (!event.world.isRemote)
+        {
+            EnhancedPortals.proxy.ModifierNetwork.saveData();
+        }
     }
 }

@@ -31,16 +31,22 @@ public class UpgradeParticles extends Upgrade
     }
 
     @Override
+    public String getName()
+    {
+        return "particles";
+    }
+
+    @Override
     public List<String> getText(boolean includeTitle)
     {
         List<String> list = new ArrayList<String>();
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + ".particles.name"));
+            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.particles.text"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".text"));
 
         if (includeTitle)
         {

@@ -30,13 +30,19 @@ public class UpgradeNetherFrame extends Upgrade
     }
 
     @Override
+    public String getName()
+    {
+        return "netherFrame";
+    }
+
+    @Override
     public List<String> getText(boolean includeTitle)
     {
         List<String> list = new ArrayList<String>();
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + ".netherFrame.name"));
+            list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
         list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.text"));

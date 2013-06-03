@@ -7,7 +7,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
-import alz.core.lib.PacketHelper;
+import enhancedcore.packet.PacketHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.portal.upgrades.Upgrade;
