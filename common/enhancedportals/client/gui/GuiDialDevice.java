@@ -6,7 +6,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketGui;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDevice extends GuiScreen
@@ -26,7 +30,7 @@ public class GuiDialDevice extends GuiScreen
     {
         if (button.id == 1)
         {
-            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDeviceAdd, dialDevice).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(dialDevice, GuiIds.DialDeviceAdd)));
         }
         else if (button.id == 2)
         {

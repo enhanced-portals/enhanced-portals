@@ -41,9 +41,9 @@ class GuiDialDeviceNetworkList extends GuiSlot
 
             for (String element2 : split)
             {
-                for (int j = 0; j < Reference.glyphValues.size(); j++)
+                for (int j = 0; j < Reference.glyphItems.size(); j++)
                 {
-                    if (Reference.glyphValues.get(j).equalsIgnoreCase(element2))
+                    if (Reference.glyphItems.get(j).getItemName().replace("item.", "").equalsIgnoreCase(element2))
                     {
                         parent.itemRenderer.renderItemIntoGUI(parent.fontRenderer, parent.mc.renderEngine, Reference.glyphItems.get(j), x + count * 18, y);
                         count++;

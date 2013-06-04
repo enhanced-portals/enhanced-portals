@@ -23,7 +23,7 @@ public class UpgradeCamouflage extends Upgrade
     @Override
     public ItemStack getDisplayItemStack()
     {
-        return new ItemStack(Block.stone);
+        return new ItemStack(Block.blockEmerald);
     }
 
     @Override

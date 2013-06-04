@@ -55,17 +55,17 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
 
         for (int i = 0; i < 9; i++)
         {
-            elementList.add(new GuiGlyphElement(guiLeft + 8 + i * 18, guiTop + 15, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
+            elementList.add(new GuiGlyphElement(guiLeft + 8 + i * 18, guiTop + 15, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
         for (int i = 9; i < 18; i++)
         {
-            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 9) * 18, guiTop + 33, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
+            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 9) * 18, guiTop + 33, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
         for (int i = 18; i < 27; i++)
         {
-            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
+            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
     }

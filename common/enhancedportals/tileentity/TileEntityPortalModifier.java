@@ -57,7 +57,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     {
         if (upgradeHandler.hasUpgrade(new UpgradeNetherFrame()) && upgradeHandler.hasUpgrade(new UpgradeResourceFrame()))
         {
-            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID, Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
         }
         else if (upgradeHandler.hasUpgrade(new UpgradeNetherFrame()))
         {
@@ -65,7 +65,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         }
         else if (upgradeHandler.hasUpgrade(new UpgradeResourceFrame()))
         {
-            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID };
+            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID };
         }
 
         return null;
@@ -73,6 +73,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public void handleRedstoneChanges(int redstoneLevel)
     {
+        if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+        {
+            return;
+        }
+        
         WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
 
         if (redstoneSetting == 0)

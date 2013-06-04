@@ -52,6 +52,7 @@ public class UpgradeResourceFrame extends Upgrade
         list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockIron.getUnlocalizedName() + ".name"));
         list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockGold.getUnlocalizedName() + ".name"));
         list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockDiamond.getUnlocalizedName() + ".name"));
+        list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockEmerald.getUnlocalizedName() + ".name"));
 
         if (includeTitle)
         {

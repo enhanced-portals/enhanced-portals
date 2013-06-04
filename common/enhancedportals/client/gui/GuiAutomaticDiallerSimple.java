@@ -31,17 +31,17 @@ public class GuiAutomaticDiallerSimple extends GuiNetwork
 
         for (int i = 0; i < 9; i++)
         {
-            elementList.add(new GuiGlyphElement(guiLeft + 8 + i * 18, guiTop + 15, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
+            elementList.add(new GuiGlyphElement(guiLeft + 8 + i * 18, guiTop + 15, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
         for (int i = 9; i < 18; i++)
         {
-            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 9) * 18, guiTop + 33, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
+            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 9) * 18, guiTop + 33, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
         for (int i = 18; i < 27; i++)
         {
-            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphValues.get(i), Reference.glyphItems.get(i), this));
+            elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
         if (!dialler.activeNetwork.equals(""))
@@ -50,13 +50,13 @@ public class GuiAutomaticDiallerSimple extends GuiNetwork
 
             for (String element2 : split)
             {
-                for (int j = 0; j < Reference.glyphValues.size(); j++)
+                for (int j = 0; j < Reference.glyphItems.size(); j++)
                 {
-                    if (Reference.glyphValues.get(j).equalsIgnoreCase(element2))
+                    if (Reference.glyphItems.get(j).getItemName().replace("item.", "").equalsIgnoreCase(element2))
                     {
                         GuiGlyphElement element = elementList.get(j);
 
-                        stackList.add(new GuiGlyphElement(0, 0, Reference.glyphValues.get(j), Reference.glyphItems.get(j), this, true));
+                        stackList.add(new GuiGlyphElement(0, 0, Reference.glyphItems.get(j).getItemName().replace("item.", ""), Reference.glyphItems.get(j), this, true));
                         element.stackSize++;
                         elementCount++;
                     }

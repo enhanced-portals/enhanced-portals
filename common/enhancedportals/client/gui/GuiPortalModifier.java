@@ -171,7 +171,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                 str = Strings.ClickToSetNetwork.toString();
             }
 
-            drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x77000000);
+            drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x55000000);
             fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
         }
     }
@@ -195,9 +195,9 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 
                 for (int i = 0; i < split.length; i++)
                 {
-                    for (int j = 0; j < Reference.glyphValues.size(); j++)
+                    for (int j = 0; j < Reference.glyphItems.size(); j++)
                     {
-                        if (Reference.glyphValues.get(j).equalsIgnoreCase(split[i]))
+                        if (Reference.glyphItems.get(j).getItemName().replace("item.", "").equalsIgnoreCase(split[i]))
                         {
                             itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j), guiLeft + 8 + i * 18, guiTop + 47);
                         }
