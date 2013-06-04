@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import enhancedcore.gui.GuiExtendedScreen;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.lib.Strings;
 import enhancedportals.lib.Textures;
 
 public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
@@ -94,8 +95,9 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
 
                 if (slot instanceof GuiTextureSlot)
                 {
-                    strList.add("Facade");
+                    strList.add(Strings.Facade.toString());
                     strList.add(EnumChatFormatting.GRAY + str);
+                    strList.add(EnumChatFormatting.DARK_GRAY + Strings.RightClickToReset.toString());
                 }
                 else
                 {

@@ -14,6 +14,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
@@ -151,14 +152,15 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         int x2 = (width - xSize) / 2;
         int y2 = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);
-        fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? "Unique Identifier Selection" : Localization.localizeString("gui.selectNetwork.title"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? "Unique Identifier Selection" : Localization.localizeString("gui.selectNetwork.title")) / 2, guiTop - 15, 0xFFCCCCCC);
+        String stri = portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? Strings.IdentifierSelection.toString() : Strings.NetworkSelection.toString();
+        fontRenderer.drawString(stri, guiLeft + xSize / 2 - fontRenderer.getStringWidth(stri) / 2, guiTop - 15, 0xFFCCCCCC);
 
         super.drawScreen(x, y, par3);
 
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        fontRenderer.drawString(Localization.localizeString("gui.glyphs.title"), guiLeft + 7, guiTop + 3, 0xFF444444);
-        fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 7, guiTop + 71, 0xFF444444);
+        fontRenderer.drawString(Strings.Glyphs.toString(), guiLeft + 7, guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? Strings.UniqueIdentifier.toString() : Strings.Network.toString(), guiLeft + 7, guiTop + 71, 0xFF444444);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -202,11 +204,11 @@ public class GuiPortalModifierNetwork extends GuiNetwork
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-            ((GuiButton) buttonList.get(1)).displayString = Localization.localizeString("gui.clear");
+            ((GuiButton) buttonList.get(1)).displayString = Strings.Clear.toString();
         }
         else
         {
-            ((GuiButton) buttonList.get(1)).displayString = Localization.localizeString("gui.random");
+            ((GuiButton) buttonList.get(1)).displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : "") + Strings.Random.toString();
         }
     }
 
@@ -282,9 +284,9 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
 
-        buttonList.add(new GuiButton(1, guiLeft + 7, guiTop + 108, 50, 20, Localization.localizeString("gui.cancel")));
-        buttonList.add(new GuiButton(2, guiLeft + 63, guiTop + 108, 50, 20, Localization.localizeString("gui.random")));
-        buttonList.add(new GuiButton(3, guiLeft + 119, guiTop + 108, 50, 20, Localization.localizeString("gui.accept")));
+        buttonList.add(new GuiButton(1, guiLeft + 7, guiTop + 108, 50, 20, Strings.Cancel.toString()));
+        buttonList.add(new GuiButton(2, guiLeft + 63, guiTop + 108, 50, 20, Strings.Random.toString()));
+        buttonList.add(new GuiButton(3, guiLeft + 119, guiTop + 108, 50, 20, Strings.Accept.toString()));
     }
 
     @Override

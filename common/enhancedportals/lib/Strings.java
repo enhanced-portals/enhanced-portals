@@ -22,7 +22,18 @@ public enum Strings
     ChatMaxUpgradesInstalled("chat.maxUpgradesInstalled", EnumChatFormatting.RED),
     ChatUpgradeInstalled("chat.upgradeAlreadyInstalled", EnumChatFormatting.RED),
     ChatDimAlreadyInstalled("chat.dimUpgradeAlreadyInstalled", EnumChatFormatting.RED),
-    ChatAdvDimAlreadyInstalled("chat.advDimUpgradeAlreadyInstalled", EnumChatFormatting.RED);
+    ChatAdvDimAlreadyInstalled("chat.advDimUpgradeAlreadyInstalled", EnumChatFormatting.RED),
+    ClickToSetIdentifier("gui.setIdentifier"),
+    ClickToSetNetwork("gui.setNetwork"),
+    UniqueIdentifier("gui.uniqueIdentifier"),
+    ModifierActive("gui.activeModifier"),
+    Facade("gui.facade"),
+    RightClickToReset("gui.rightClickToReset"),
+    Cancel("gui.cancel"),
+    Random("gui.random"),
+    Clear("gui.clear"),
+    Accept("gui.accept"),
+    IdentifierSelection("gui.selectIdentifier");
 
     private EnumChatFormatting chatFormatting;
     private String             text;

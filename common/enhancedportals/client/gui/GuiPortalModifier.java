@@ -23,6 +23,7 @@ import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
 import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketGui;
@@ -120,7 +121,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             }
 
             portalModifier.thickness = (byte) (num - 1);
-            ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : portalModifier.thickness == 1 ? "Thick" : portalModifier.thickness == 2 ? "Thicker" : "Full Block"));
+            ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? Strings.Normal.toString() : portalModifier.thickness == 1 ? Strings.Thick.toString() : portalModifier.thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
             hasInteractedWith = true;
         }
         else if (button.id == 50)
@@ -153,13 +154,24 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
         fontRenderer.drawString(Localization.localizeString("tile.portalModifier.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.portalModifier.name")) / 2, guiTop + -15, 0xFFFFFF);
-        fontRenderer.drawString(Localization.localizeString("gui.upgrades.title"), guiLeft + 8, guiTop + 3, 0xFF444444);
-        fontRenderer.drawString(Localization.localizeString("gui.modifications.title"), guiLeft + xSize - 8 - fontRenderer.getStringWidth(Localization.localizeString("gui.modifications.title")), guiTop + 3, 0xFF444444);
-        fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? "Unique Identifier" : Localization.localizeString("gui.network.title"), guiLeft + 8, guiTop + 35, 0xFF444444);
+        fontRenderer.drawString(Strings.Upgrades.toString(), guiLeft + 8, guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(Strings.Modifications.toString(), guiLeft + xSize - 8 - fontRenderer.getStringWidth(Strings.Modifications.toString()), guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? Strings.UniqueIdentifier.toString() : Strings.Network.toString(), guiLeft + 8, guiTop + 35, 0xFF444444);
 
         if (portalModifier.network.equals(""))
         {
-            fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, guiTop + 51, 0xFF00FF00);
+            String str = "";
+            
+            if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+            {
+                str = Strings.ClickToSetIdentifier.toString();
+            }
+            else
+            {
+                str = Strings.ClickToSetNetwork.toString();
+            }
+            
+            fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
         }
     }
 
@@ -195,17 +207,15 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             if (isPointInRegion(7, 46, 162, 18, x, y))
             {
                 List<String> str = new ArrayList<String>();
-                str.add(Localization.localizeString("gui.network.title"));
-                str.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.network.info"));
+                str.add(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? Strings.UniqueIdentifier.toString() : Strings.Network.toString());
+                str.add(EnumChatFormatting.GRAY + (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? Strings.ClickToSetIdentifier.toString() : Strings.ClickToSetNetwork.toString()));
                 drawText(str, x, y);
             }
         }
         else
         {
-            String txt = Localization.localizeString("gui.activeModifier");
-
             drawDefaultBackground();
-            fontRenderer.drawString(txt, width / 2 - fontRenderer.getStringWidth(txt) / 2, guiTop, 0xFFFFFF);
+            fontRenderer.drawString(Strings.ModifierActive.toString(), width / 2 - fontRenderer.getStringWidth(Strings.ModifierActive.toString()) / 2, guiTop, 0xFFFFFF);
             okayButton.drawButton(mc, 0, 0);
         }
     }
@@ -347,26 +357,26 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         okayButton.drawButton = isActive;
 
         List<String> strList = new ArrayList<String>();
-        strList.add(Localization.localizeString("gui.redstoneControl.title"));
-        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.normal"));
-        buttonList.add(new GuiItemStackButton(10, guiLeft + xSize + 4, guiTop + 4, new ItemStack(Block.torchRedstoneActive), portalModifier.redstoneSetting == 0, strList));
+        strList.add(Strings.RedstoneControl.toString());
+        strList.add(EnumChatFormatting.GRAY + Strings.Normal.toString());
+        buttonList.add(new GuiItemStackButton(10, guiLeft + xSize + 4, guiTop + 4, new ItemStack(Block.torchRedstoneActive), portalModifier.redstoneSetting == 0, strList, false, !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
 
         strList = new ArrayList<String>();
-        strList.add(Localization.localizeString("gui.redstoneControl.title"));
-        strList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.redstoneControl.inverted"));
-        buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList));
+        strList.add(Strings.RedstoneControl.toString());
+        strList.add(EnumChatFormatting.GRAY + Strings.Inverted.toString());
+        buttonList.add(new GuiItemStackButton(11, guiLeft + xSize + 4, guiTop + 24, new ItemStack(Block.torchRedstoneIdle), portalModifier.redstoneSetting == 1, strList, false, !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
 
         strList = new ArrayList<String>();
-        strList.add(Localization.localizeString("gui.redstoneControl.title"));
-        strList.add(EnumChatFormatting.GRAY + "Precise");
-        buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? portalModifier.redstoneSetting - 2 : 0)));
-
+        strList.add(Strings.RedstoneControl.toString());
+        strList.add(EnumChatFormatting.GRAY + Strings.Precise.toString());
+        buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? portalModifier.redstoneSetting - 2 : 0), !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
+        
         strList = new ArrayList<String>();
-        strList.add("Thickness");
-        strList.add("size");
+        strList.add(Strings.Thickness.toString());
+        strList.add("");
         buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 15, new ItemStack(EnhancedPortals.proxy.blockNetherPortal, 1, 2), true, strList, true));
         ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (portalModifier.thickness + 1);
-        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? "Normal" : portalModifier.thickness == 1 ? "Thick" : portalModifier.thickness == 2 ? "Thicker" : "Full Block"));
+        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? Strings.Normal.toString() : portalModifier.thickness == 1 ? Strings.Thick.toString() : portalModifier.thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
 
         for (int i = portalModifier.upgradeHandler.getUpgrades().size() - 1; i >= 0; i--)
         {
@@ -412,5 +422,20 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
     public void updateScreen()
     {
         super.updateScreen();
+        
+        if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+        {
+            if (((GuiItemStackButton) buttonList.get(1)).enabled)
+            {
+                ((GuiItemStackButton) buttonList.get(1)).enabled = ((GuiItemStackButton) buttonList.get(2)).enabled = ((GuiItemStackButton) buttonList.get(3)).enabled = false;
+            }
+        }
+        else
+        {
+            if (!((GuiItemStackButton) buttonList.get(1)).enabled)
+            {
+                ((GuiItemStackButton) buttonList.get(1)).enabled = ((GuiItemStackButton) buttonList.get(2)).enabled = ((GuiItemStackButton) buttonList.get(3)).enabled = true;
+            }
+        }
     }
 }
