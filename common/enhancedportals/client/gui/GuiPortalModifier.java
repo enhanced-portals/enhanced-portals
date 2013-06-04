@@ -161,7 +161,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         if (portalModifier.network.equals(""))
         {
             String str = "";
-            
+
             if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
             {
                 str = Strings.ClickToSetIdentifier.toString();
@@ -170,7 +170,8 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             {
                 str = Strings.ClickToSetNetwork.toString();
             }
-            
+
+            drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x77000000);
             fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
         }
     }
@@ -370,7 +371,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         strList.add(Strings.RedstoneControl.toString());
         strList.add(EnumChatFormatting.GRAY + Strings.Precise.toString());
         buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? portalModifier.redstoneSetting - 2 : 0), !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
-        
+
         strList = new ArrayList<String>();
         strList.add(Strings.Thickness.toString());
         strList.add("");
@@ -422,7 +423,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
     public void updateScreen()
     {
         super.updateScreen();
-        
+
         if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
         {
             if (((GuiItemStackButton) buttonList.get(1)).enabled)

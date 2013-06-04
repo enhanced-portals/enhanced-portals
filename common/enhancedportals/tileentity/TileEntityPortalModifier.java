@@ -11,6 +11,7 @@ import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
 import enhancedportals.portal.Portal;
 import enhancedportals.portal.upgrades.UpgradeHandler;
+import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.portal.upgrades.modifier.UpgradeNetherFrame;
 import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
 
@@ -35,6 +36,19 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public boolean createPortal()
     {
+        if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+        {
+            return false;
+        }
+
+        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+    }
+
+    public boolean createPortalFromDialDevice()
+    {
+        // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF
+
         WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
         return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
     }
@@ -142,7 +156,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         {
             if (tagCompound.hasKey("Upgrade" + i))
             {
-                upgradeHandler.addUpgrade(tagCompound.getByte("Upgrade" + i), this);
+                upgradeHandler.addUpgradeNoActivate(tagCompound.getByte("Upgrade" + i), this);
             }
         }
     }

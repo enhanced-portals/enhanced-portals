@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.GuiIds;
-import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketEnhancedPortals;

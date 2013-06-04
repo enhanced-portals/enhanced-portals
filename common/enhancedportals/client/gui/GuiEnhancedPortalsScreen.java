@@ -93,6 +93,11 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
             {
                 List<String> strList = new ArrayList<String>();
 
+                if (slot != null)
+                {
+                    drawRect(slot.xCoord, slot.yCoord, slot.xCoord + 16, slot.yCoord + 16, 0xAAFFFFFF);
+                }
+
                 if (slot instanceof GuiTextureSlot)
                 {
                     strList.add(Strings.Facade.toString());

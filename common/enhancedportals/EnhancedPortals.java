@@ -39,7 +39,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
 import enhancedportals.portal.network.ModifierNetwork;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies="required-after:EnhancedCore")
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
 {

@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Localization;
+import enhancedportals.lib.Strings;
 import enhancedportals.portal.upgrades.Upgrade;
 
 public class UpgradeResourceFrame extends Upgrade
@@ -54,7 +55,7 @@ public class UpgradeResourceFrame extends Upgrade
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "gui.upgrade.remove");
+            list.add(Strings.RemoveUpgrade.toString());
         }
 
         return list;

@@ -49,6 +49,20 @@ public class UpgradeHandler
         return false;
     }
 
+    public boolean addUpgradeNoActivate(byte ID, TileEntity tileEntity)
+    {
+        Upgrade upgrade = Upgrade.getUpgrade(ID);
+
+        if (!hasUpgrade(upgrade) && !isUpgradeLimitReached())
+        {
+            upgradeList.add(upgrade);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public void addUpgradesFromByteArray(byte[] upgrades, TileEntity tileEntity)
     {
         for (byte b : upgrades)

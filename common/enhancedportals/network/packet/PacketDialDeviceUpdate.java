@@ -6,7 +6,7 @@ import net.minecraft.network.INetworkManager;
 public class PacketDialDeviceUpdate extends PacketEnhancedPortals
 {
     int xCoord, yCoord, zCoord, dimension;
-    
+
     public PacketDialDeviceUpdate()
     {
         // TODO Auto-generated constructor stub

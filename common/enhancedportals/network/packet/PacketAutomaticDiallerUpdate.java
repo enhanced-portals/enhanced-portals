@@ -10,14 +10,14 @@ import enhancedportals.tileentity.TileEntityAutomaticDialler;
 
 public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int    xCoord, yCoord, zCoord, dimension;
     String theNetwork;
-    
+
     public PacketAutomaticDiallerUpdate()
     {
-        
+
     }
-    
+
     public PacketAutomaticDiallerUpdate(TileEntityAutomaticDialler dialler)
     {
         xCoord = dialler.xCoord;
@@ -65,7 +65,7 @@ public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
         {
             if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityAutomaticDialler)
             {
-                TileEntityAutomaticDialler dialler = (TileEntityAutomaticDialler) world.getBlockTileEntity(xCoord, yCoord, zCoord);                
+                TileEntityAutomaticDialler dialler = (TileEntityAutomaticDialler) world.getBlockTileEntity(xCoord, yCoord, zCoord);
                 dialler.activeNetwork = theNetwork;
             }
         }

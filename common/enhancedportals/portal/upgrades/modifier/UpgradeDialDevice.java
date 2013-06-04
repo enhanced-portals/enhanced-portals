@@ -9,6 +9,7 @@ import net.minecraft.util.EnumChatFormatting;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Localization;
+import enhancedportals.lib.Strings;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -47,11 +48,11 @@ public class UpgradeDialDevice extends Upgrade
             list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
-        list.add(EnumChatFormatting.GRAY + "Allows use with a dial device.");
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".text"));
 
         if (includeTitle)
         {
-            list.add(EnumChatFormatting.DARK_GRAY + "gui.upgrade.remove");
+            list.add(Strings.RemoveUpgrade.toString());
         }
 
         return list;
@@ -61,10 +62,11 @@ public class UpgradeDialDevice extends Upgrade
     public boolean onActivated(TileEntity tileEntity)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+        WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
-        if (!tileEntity.worldObj.isRemote)
+        if (!tileEntity.worldObj.isRemote && EnhancedPortals.proxy.ModifierNetwork.isInNetwork(modifier.network, loc))
         {
-            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
+            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, loc);
         }
 
         modifier.network = "";
