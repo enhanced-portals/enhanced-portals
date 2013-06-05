@@ -204,7 +204,7 @@ public class NetworkManager
 
         for (WorldLocation keyData : getNetwork(key))
         {
-            if (keyData.equals(data))
+            if (keyData.isEqual(data))
             {
                 return true;
             }

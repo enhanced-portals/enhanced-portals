@@ -122,7 +122,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
         TileEntityNetherPortal portal = null;
 
-        if (block.getBlockId() != BlockIds.NetherPortal)
+        if (!(block.getTileEntity() instanceof TileEntityNetherPortal))
         {
             return false;
         }

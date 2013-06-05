@@ -37,6 +37,7 @@ import enhancedportals.lib.Settings;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
+import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore")
@@ -124,7 +125,7 @@ public class EnhancedPortals
     @ForgeSubscribe
     public void registerIcons(TextureStitchEvent.Pre event)
     {
-        EnhancedPortals.proxy.registerIcons(event);
+        proxy.registerIcons(event);
     }
 
     @ServerStarting
@@ -133,12 +134,14 @@ public class EnhancedPortals
         event.registerServerCommand(new CommandEP());
 
         proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
+        proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
     }
 
     @ServerStopping
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();
+        proxy.DialDeviceNetwork.saveData();
     }
 
     @ForgeSubscribe
@@ -146,7 +149,8 @@ public class EnhancedPortals
     {
         if (!event.world.isRemote)
         {
-            EnhancedPortals.proxy.ModifierNetwork.saveData();
+            proxy.ModifierNetwork.saveData();
+            proxy.DialDeviceNetwork.saveData();
         }
     }
 }

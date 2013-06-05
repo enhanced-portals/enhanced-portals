@@ -4,8 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
+import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketPortalModifierUpdate extends PacketEnhancedPortals
@@ -67,17 +69,32 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     public void execute(INetworkManager network, EntityPlayer player)
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
+        WorldLocation loc = new WorldLocation(xCoord, yCoord, zCoord, world);
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.PortalModifier)
+        if (loc.getBlockId() == BlockIds.PortalModifier)
         {
-            if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityPortalModifier)
+            if (loc.getTileEntity() instanceof TileEntityPortalModifier)
             {
-                TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(xCoord, yCoord, zCoord);
-
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) loc.getTileEntity();
+                
                 modifier.network = this.network;
                 modifier.texture = texture;
                 modifier.redstoneSetting = redstoneSetting;
                 modifier.thickness = thickness;
+                
+                if (!world.isRemote)
+                {
+                    if (modifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+                    {
+                        EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(loc);
+                        EnhancedPortals.proxy.DialDeviceNetwork.addToNetwork(modifier.network, loc);
+                    }
+                    else
+                    {
+                        EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(loc);
+                        EnhancedPortals.proxy.ModifierNetwork.addToNetwork(modifier.network, loc);
+                    }
+                }
 
                 world.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
             }

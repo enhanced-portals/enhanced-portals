@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.logging.Level;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketNetherPortalUpdate;
@@ -34,8 +36,9 @@ public class Portal
     public int           xCoord, yCoord, zCoord, dimension;
     public String        portalTexture;
     public byte          portalShape, portalThickness;
-    public boolean       producesParticles, producesSound;
+    public boolean       producesParticles, producesSound, dialDevice;
     public WorldLocation portalModifier;
+    public String diallingTo;
 
     public Portal()
     {
@@ -524,75 +527,89 @@ public class Portal
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
 
-            if (modifier == null || modifier.network == null || modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
+            if (dialDevice)
             {
-                if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
+                if (modifier == null || diallingTo == null || diallingTo.equals(""))
                 {
-                    entity.setInPortal();
-                    return;
+                    Reference.log.log(Level.WARNING, "Created a portal from a Dialling Device, yet no parent modifier was found/modifier doesn't have a network?");
+                }
+                else
+                {
+                    // TODO DIALLING DEVICE TELEPORT
                 }
             }
             else
             {
-                List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
-                boolean missingUpgrade = false, teleport = false;
-
-                if (validLocations.isEmpty())
+                if (modifier == null || modifier.network == null || modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
                 {
-                    if (entity instanceof EntityPlayer)
+                    if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
                     {
-                        ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked portals.");
+                        entity.setInPortal();
+                        return;
                     }
-
-                    entity.timeUntilPortal = entity.getPortalCooldown();
-                    return;
                 }
-
-                while (!validLocations.isEmpty())
+                else
                 {
-                    WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
-
-                    if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+                    List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
+                    boolean missingUpgrade = false, teleport = false;
+    
+                    if (validLocations.isEmpty())
                     {
-                        // Vanilla dimension but we don't have the upgrade
-
-                        if (randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0 || randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1)
+                        if (entity instanceof EntityPlayer)
                         {
-                            // Allow overworld <--> nether travel
+                            ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked portals.");
                         }
-                        else
+    
+                        entity.timeUntilPortal = entity.getPortalCooldown();
+                        return;
+                    }
+    
+                    while (!validLocations.isEmpty())
+                    {
+                        WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
+    
+                        if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
                         {
+                            // Vanilla dimension but we don't have the upgrade
+    
+                            if (randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0 || randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1)
+                            {
+                                // Allow overworld <--> nether travel
+                            }
+                            else
+                            {
+                                missingUpgrade = true;
+                                continue;
+                            }
+                        }
+    
+                        if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+                        {
+                            // Same dimension but we don't have the upgrade
                             missingUpgrade = true;
                             continue;
                         }
+    
+                        if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+                        {
+                            // Modded dimension but no upgrade
+                            missingUpgrade = true;
+                            continue;
+                        }
+    
+                        if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
+                        {
+                            teleport = true;
+                            validLocations.clear();
+                        }
                     }
-
-                    if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+    
+                    if (missingUpgrade && !teleport)
                     {
-                        // Same dimension but we don't have the upgrade
-                        missingUpgrade = true;
-                        continue;
-                    }
-
-                    if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-                    {
-                        // Modded dimension but no upgrade
-                        missingUpgrade = true;
-                        continue;
-                    }
-
-                    if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
-                    {
-                        teleport = true;
-                        validLocations.clear();
-                    }
-                }
-
-                if (missingUpgrade && !teleport)
-                {
-                    if (entity instanceof EntityPlayer)
-                    {
-                        ((EntityPlayer) entity).sendChatToPlayer("The Portal Modifier is missing an upgrade.");
+                        if (entity instanceof EntityPlayer)
+                        {
+                            ((EntityPlayer) entity).sendChatToPlayer("The Portal Modifier is missing an upgrade.");
+                        }
                     }
                 }
             }
@@ -792,7 +809,7 @@ public class Portal
 
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
-                    // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
+                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
                 }
             }
         }
@@ -856,7 +873,6 @@ public class Portal
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
                     PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
-                    // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, new PacketTEUpdate((TileEntityEnhancedPortals) te).getPacket());
                 }
             }
         }

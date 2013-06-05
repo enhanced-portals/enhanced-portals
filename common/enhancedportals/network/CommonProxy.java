@@ -20,6 +20,7 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
+import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityDialDevice;
@@ -42,6 +43,7 @@ public class CommonProxy
     public ItemNetworkCard           networkCard;
 
     public ModifierNetwork           ModifierNetwork;
+    public DialDeviceNetwork         DialDeviceNetwork;
 
     public World getWorld(int dimension)
     {
