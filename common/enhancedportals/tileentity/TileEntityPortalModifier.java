@@ -38,7 +38,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     {
         if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
         {
-           // return false;
+            return false;
         }
 
         return new Portal(this).createPortal(customBorderBlocks());
@@ -46,7 +46,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public boolean createPortalFromDialDevice()
     {
-        // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF
+        // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF FOR ADVANCED DD
 
         return new Portal(this).createPortal(customBorderBlocks());
     }
@@ -157,6 +157,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
         modifierNetwork = tagCompound.getString("mNetwork");
         dialDeviceNetwork = tagCompound.getString("dNetwork");
+        tempDialDeviceNetwork = tagCompound.getString("dNetworkTemp");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
 
         for (int i = 0; i < upgradeHandler.getMaximumUpgrades(); i++)
@@ -205,6 +206,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
         tagCompound.setString("mNetwork", modifierNetwork);
         tagCompound.setString("dNetwork", dialDeviceNetwork);
+        tagCompound.setString("dNetworkTemp", tempDialDeviceNetwork);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
 
         int i = 0;

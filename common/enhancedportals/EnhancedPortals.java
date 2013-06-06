@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
@@ -15,11 +16,13 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.Mod.ServerStopping;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
@@ -39,6 +42,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
 import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
+import enhancedportals.world.DialDeviceChunkCallback;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
@@ -51,7 +55,7 @@ public class EnhancedPortals
     public static CommonProxy     proxy;
 
     @Init
-    private void init(FMLInitializationEvent event)
+    public void init(FMLInitializationEvent event)
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(this);
@@ -105,7 +109,7 @@ public class EnhancedPortals
     }
 
     @PreInit
-    private void preInit(FMLPreInitializationEvent event)
+    public void preInit(FMLPreInitializationEvent event)
     {
         Reference.log.setParent(FMLLog.getLogger());
         Block.blocksList[BlockIds.Obsidian] = null;
@@ -119,6 +123,12 @@ public class EnhancedPortals
 
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         Localization.loadLocales();
+    }
+    
+    @PostInit
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new DialDeviceChunkCallback());
     }
 
     @SideOnly(Side.CLIENT)

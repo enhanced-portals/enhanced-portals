@@ -1,13 +1,20 @@
 package enhancedportals.tileentity;
 
+import java.util.logging.Level;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
+import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketBasicDialDeviceUpdate;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
@@ -16,6 +23,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
     public boolean active;
     WorldLocation  modifierLocation;
+    Ticket chunkTicket;
 
     public TileEntityDialDeviceBasic()
     {
@@ -46,8 +54,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
     public void processDiallingRequest(String network, EntityPlayer player)
     {
-        System.out.println("Recieved dialling request for: " + network + ". From: " + player.getEntityName());
-        
         if (worldObj.isRemote || active)
         {
             return;
@@ -103,6 +109,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 
                 worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
                 PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
+                loadChunk();
             }
         }
         else if (player != null)
@@ -124,22 +131,84 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         }
     }
 
+    public void loadChunk(Ticket ticket)
+    {
+        if (chunkTicket == null)
+        {
+            chunkTicket = ticket;
+        }
+        
+        ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
+    }
+    
+    private void loadChunk()
+    {
+        if (chunkTicket == null)
+        {
+            chunkTicket = ForgeChunkManager.requestTicket(EnhancedPortals.instance, worldObj, Type.NORMAL);
+        }
+        
+        if (chunkTicket == null)
+        {
+            Reference.log.log(Level.WARNING, String.format("The Basic Dialling Device at %s, %s, %s may not automatically close the portals due to no chunkloaders available."));
+            return;
+        }
+        
+        chunkTicket.getModData().setInteger("basicDialX", xCoord);
+        chunkTicket.getModData().setInteger("basicDialY", yCoord);
+        chunkTicket.getModData().setInteger("basicDialZ", zCoord);
+        
+        loadChunk(chunkTicket);
+    }
+    
+    private void unloadChunk()
+    {
+        ForgeChunkManager.unforceChunk(chunkTicket, new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
+    }
+    
+    @Override
+    public void invalidate()
+    {
+        ForgeChunkManager.releaseTicket(chunkTicket);
+        
+        super.invalidate();
+    }
+    
     public void scheduledBlockUpdate()
     {
         if (modifierLocation == null || !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
         {
             active = false;
+            unloadChunk();
             PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
             return;
         }
-
-        TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity(),
-                                 exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();;
+        
+        TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
+        
+        if (EnhancedPortals.proxy.DialDeviceNetwork == null)
+        {
+            System.out.println("It's the DialDeviceNetwork!");
+            return;
+        }
+        else if (modifier.tempDialDeviceNetwork == null)
+        {
+            System.out.println("Modifier's network!");
+            return;
+        }
+        else if (EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork) == null)
+        {
+            System.out.println("Network!");
+            return;
+        }
+        
+        TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();
         modifier.removePortal();
         exitModifier.removePortal();
         modifier.tempDialDeviceNetwork = "";
         exitModifier.tempDialDeviceNetwork = "";
         active = false;
+        unloadChunk();
     }
 
     @Override
