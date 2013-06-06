@@ -31,6 +31,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     
     public WorldLocation getParentModifier()
     {
+        hasParent = parentModifier != null;
         return parentModifier;
     }
 
@@ -47,7 +48,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         if (tagCompound.getBoolean("HasModifier"))
         {
             int x = tagCompound.getInteger("ParentX"), y = tagCompound.getInteger("ParentY"), z = tagCompound.getInteger("ParentZ"), d = tagCompound.getInteger("ParentD");
-            parentModifier = new WorldLocation(x, y, z, d);
+            setParentModifier(new WorldLocation(x, y, z, d));
         }
     }
 

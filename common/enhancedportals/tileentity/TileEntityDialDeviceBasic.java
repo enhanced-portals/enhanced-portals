@@ -106,7 +106,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noModifier"));
             }
 
-            System.out.println("Couldn't find a portal modifier!");
             return;
         }
 
