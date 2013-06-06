@@ -11,12 +11,12 @@ import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class PacketBasicDialRequest extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int    xCoord, yCoord, zCoord, dimension;
     String network;
-    
+
     public PacketBasicDialRequest()
     {
-        
+
     }
 
     public PacketBasicDialRequest(TileEntityDialDeviceBasic dialDevice, String diallingNetwork)
@@ -27,7 +27,7 @@ public class PacketBasicDialRequest extends PacketEnhancedPortals
         dimension = dialDevice.worldObj.provider.dimensionId;
         network = diallingNetwork;
     }
-    
+
     @Override
     public PacketEnhancedPortals consumePacket(byte[] data)
     {
@@ -61,17 +61,17 @@ public class PacketBasicDialRequest extends PacketEnhancedPortals
     public void execute(INetworkManager network, EntityPlayer player)
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
-        
+
         if (!world.isRemote)
         {
             WorldLocation loc = new WorldLocation(xCoord, yCoord, zCoord, world);
-    
+
             if (loc.getBlockId() == BlockIds.DialHomeDeviceBasic)
             {
                 if (loc.getTileEntity() instanceof TileEntityDialDeviceBasic)
                 {
                     TileEntityDialDeviceBasic device = (TileEntityDialDeviceBasic) loc.getTileEntity();
-                    
+
                     device.processDiallingRequest(this.network, player);
                 }
             }

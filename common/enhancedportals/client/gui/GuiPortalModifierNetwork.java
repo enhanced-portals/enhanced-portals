@@ -138,7 +138,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
             {
                 portalModifier.modifierNetwork = str;
             }
-            
+
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
         }

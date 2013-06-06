@@ -94,7 +94,7 @@ public class BlockDialDeviceBasic extends BlockEnhancedPortals
         {
             return;
         }
-        
+
         ((TileEntityDialDeviceBasic) world.getBlockTileEntity(x, y, z)).scheduledBlockUpdate();
     }
 }

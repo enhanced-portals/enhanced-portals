@@ -71,7 +71,7 @@ public class Portal
         texture = "";
         thickness = 0;
         producesSound = producesParticles = true;
-        
+
         findPortalShape();
     }
 
@@ -79,7 +79,7 @@ public class Portal
     {
         WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
         WorldLocation offset = loc.getOffset(ForgeDirection.getOrientation(loc.getMetadata()));
-                
+
         xCoord = offset.xCoord;
         yCoord = offset.yCoord;
         zCoord = offset.zCoord;
@@ -90,7 +90,7 @@ public class Portal
         producesSound = !modifier.upgradeHandler.hasUpgrade(new UpgradeSounds());
         portalModifier = loc;
         thickness = modifier.thickness;
-        
+
         findPortalShape();
     }
 
@@ -359,7 +359,7 @@ public class Portal
     {
         WorldLocation exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
         boolean missingUpgrade = false;
-        
+
         if (exitLocation == null || exitLocation.isEqual(new WorldLocation(xCoord, yCoord, zCoord, dimension)))
         {
             return;
@@ -382,7 +382,7 @@ public class Portal
             // Modded dimension but no upgrade
             missingUpgrade = true;
         }
-        
+
         if (!missingUpgrade)
         {
             TeleportManager.teleportEntity(entity, exitLocation, modifier, false);

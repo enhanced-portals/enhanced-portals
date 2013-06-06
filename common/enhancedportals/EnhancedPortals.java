@@ -108,6 +108,12 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.cake));
     }
 
+    @PostInit
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new DialDeviceChunkCallback());
+    }
+
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -123,12 +129,6 @@ public class EnhancedPortals
 
         proxy.loadSettings(new Configuration(new File(event.getModConfigurationDirectory(), "EnhancedPortals 2.cfg")));
         Localization.loadLocales();
-    }
-    
-    @PostInit
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new DialDeviceChunkCallback());
     }
 
     @SideOnly(Side.CLIENT)
