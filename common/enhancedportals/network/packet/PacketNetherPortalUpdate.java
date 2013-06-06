@@ -14,7 +14,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     int    xCoord, yCoord, zCoord, dimension;
     String texture;
     byte   thickness;
-    boolean particles, sound;
+    boolean particles, sound, hasParent;
 
     public PacketNetherPortalUpdate()
     {
@@ -31,6 +31,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
         sound = portal.producesSound;
         texture = portal.texture;
         thickness = portal.thickness;
+        hasParent = portal.hasParent;
     }
 
     @Override
@@ -38,9 +39,9 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "B", "B", "S");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "B", "B", "S", "B");
 
-            if (objArray != null && objArray.length == 8)
+            if (objArray != null)
             {
                 xCoord = (int) objArray[0];
                 yCoord = (int) objArray[1];
@@ -50,6 +51,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
                 particles = (boolean) objArray[5];
                 sound = (boolean) objArray[6];
                 texture = (String) objArray[7];
+                hasParent = (boolean) objArray[8];
 
                 return this;
             }
@@ -78,6 +80,8 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
 
                 portal.updateData(sound, particles, thickness);
                 portal.updateTexture(texture);
+                
+                ((TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord)).hasParent = hasParent;
             }
         }
     }
@@ -85,6 +89,6 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, particles, sound, texture);
+        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, particles, sound, texture, hasParent);
     }
 }

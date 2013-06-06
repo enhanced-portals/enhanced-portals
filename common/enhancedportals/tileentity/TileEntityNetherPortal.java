@@ -11,7 +11,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     public String        texture;
     public boolean       producesSound, producesParticles;
     public byte          thickness;
-    public WorldLocation parentModifier;
+    private WorldLocation parentModifier;
     public boolean       hasParent;
 
     public TileEntityNetherPortal()
@@ -21,6 +21,17 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         producesParticles = true;
         thickness = 0;
         hasParent = false;
+    }
+    
+    public void setParentModifier(WorldLocation loc)
+    {
+        parentModifier = loc;
+        hasParent = parentModifier != null;
+    }
+    
+    public WorldLocation getParentModifier()
+    {
+        return parentModifier;
     }
 
     @Override

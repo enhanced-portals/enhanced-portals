@@ -147,7 +147,7 @@ public class Portal
 
                         if (portalModifier != null)
                         {
-                            portal.parentModifier = portalModifier;
+                            portal.setParentModifier(portalModifier);
                         }
                     }
                 }
@@ -418,13 +418,13 @@ public class Portal
 
         TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
-        if (portal.parentModifier == null)
+        if (portal.getParentModifier() == null)
         {
             handleVanillaTeleportation(entity, world);
         }
-        else if (portal.parentModifier != null && entity.timeUntilPortal == 0)
+        else if (portal.getParentModifier() != null && entity.timeUntilPortal == 0)
         {
-            TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
+            TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.getParentModifier().getTileEntity();
 
             if (modifier.isRemotelyControlled())
             {
@@ -559,8 +559,7 @@ public class Portal
             return;
         }
 
-        // TODO UNCOMMENT
-        //entity.setInPortal();
+        entity.setInPortal();
     }
 
     public boolean isBlockFrame(int val, boolean includeSelf)

@@ -19,7 +19,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     public String         texture;
     public byte           thickness, redstoneSetting;
     public String         modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
-
     public UpgradeHandler upgradeHandler;
 
     public TileEntityPortalModifier()
@@ -46,8 +45,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public boolean createPortalFromDialDevice()
     {
+        return new Portal(this).createPortal(customBorderBlocks());
+    }
+    
+    public boolean createPortalFromDialDevice(String texture, byte thickness)
+    {
         // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF FOR ADVANCED DD
-
         return new Portal(this).createPortal(customBorderBlocks());
     }
 
@@ -117,7 +120,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     {
         WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
         TileEntityNetherPortal portal = null;
-
+        
         if (!(block.getTileEntity() instanceof TileEntityNetherPortal))
         {
             return false;
@@ -131,7 +134,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         }
         else
         {
-            return portal != null && portal.parentModifier != null && portal.parentModifier.isEqual(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
+            return portal != null && portal.getParentModifier() != null && portal.getParentModifier().isEqual(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
         }
     }
 

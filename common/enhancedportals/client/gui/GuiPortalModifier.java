@@ -37,13 +37,14 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 {
     TileEntityPortalModifier portalModifier;
-    public boolean           hasInteractedWith = false, isActive = false;
+    public boolean           hasInteractedWith, isActive;
     GuiButton                okayButton;
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {
         super(new ContainerPortalModifier(player, modifier), null);
         portalModifier = modifier;
+        hasInteractedWith = false;
         isActive = portalModifier.isActive();
 
         extendedSlots.add(new GuiTextureSlot(xSize - 24, 15, Textures.getItemStackFromTexture(portalModifier.texture), this));
@@ -348,7 +349,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
     {
         super.initGui();
 
-        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, Localization.localizeString("gui.close"));
+        okayButton = new GuiButton(100, width / 2 - 50, height / 2 - 10, 100, 20, Strings.Accept.toString());
         buttonList.add(okayButton);
         okayButton.drawButton = isActive;
 
