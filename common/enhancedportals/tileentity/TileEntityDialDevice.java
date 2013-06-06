@@ -71,14 +71,14 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             {
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
 
-                oldModifierNetwork = modifier.network;
+                //oldModifierNetwork = modifier.network;
                 oldModifierTexture = modifier.texture;
                 oldModifierThickness = modifier.thickness;
 
                 EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(modifierLocation);
                 EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, modifierLocation);
 
-                modifier.network = network;
+                // modifier.network = network;
                 modifier.texture = texture;
                 modifier.thickness = thickness;
 
@@ -102,7 +102,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 }
                 else
                 {
-                    modifier.network = oldModifierNetwork;
+                    //modifier.network = oldModifierNetwork;
 
                     if (player != null)
                     {
@@ -163,7 +163,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
 
-            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, modifierLocation);
+            //EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, modifierLocation);
 
             if (oldModifierNetwork != null && !oldModifierNetwork.equals(""))
             {
@@ -171,7 +171,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             }
 
             modifier.removePortal();
-            modifier.network = oldModifierNetwork;
+            //modifier.network = oldModifierNetwork;
             modifier.texture = oldModifierTexture;
             modifier.thickness = oldModifierThickness;
             // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());

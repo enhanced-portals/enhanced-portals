@@ -158,19 +158,12 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         fontRenderer.drawString(Strings.Modifications.toString(), guiLeft + xSize - 8 - fontRenderer.getStringWidth(Strings.Modifications.toString()), guiTop + 3, 0xFF444444);
         fontRenderer.drawString(portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()) ? Strings.UniqueIdentifier.toString() : Strings.Network.toString(), guiLeft + 8, guiTop + 35, 0xFF444444);
 
-        if (portalModifier.network.equals(""))
+        boolean draw = portalModifier.isRemotelyControlled() ? portalModifier.dialDeviceNetwork.equals("") : portalModifier.modifierNetwork.equals("");
+
+        if (draw)
         {
-            String str = "";
-
-            if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
-            {
-                str = Strings.ClickToSetIdentifier.toString();
-            }
-            else
-            {
-                str = Strings.ClickToSetNetwork.toString();
-            }
-
+            String str = portalModifier.isRemotelyControlled() ? Strings.ClickToSetIdentifier.toString() : Strings.ClickToSetNetwork.toString();
+            
             drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x55000000);
             fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
         }
@@ -189,9 +182,11 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         {
             super.drawScreen(x, y, par3);
 
-            if (!portalModifier.network.equals(""))
+            String network = portalModifier.isRemotelyControlled() ? portalModifier.dialDeviceNetwork : portalModifier.modifierNetwork;
+
+            if (!network.equals(""))
             {
-                String[] split = portalModifier.network.split(Reference.glyphSeperator);
+                String[] split = network.split(Reference.glyphSeperator);
 
                 for (int i = 0; i < split.length; i++)
                 {

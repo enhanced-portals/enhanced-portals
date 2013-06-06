@@ -1,7 +1,7 @@
 package enhancedportals.portal.network;
 
-import enhancedportals.lib.Reference;
 import net.minecraft.server.MinecraftServer;
+import enhancedportals.lib.Reference;
 
 public class ModifierNetwork extends NetworkManager
 {
@@ -9,7 +9,7 @@ public class ModifierNetwork extends NetworkManager
     {
         super(server);
     }
-    
+
     @Override
     public String getSaveFileName()
     {

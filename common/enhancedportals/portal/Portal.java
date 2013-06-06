@@ -33,12 +33,11 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class Portal
 {
-    public int           xCoord, yCoord, zCoord, dimension;
-    public String        portalTexture;
-    public byte          portalShape, portalThickness;
-    public boolean       producesParticles, producesSound, dialDevice;
     public WorldLocation portalModifier;
-    public String diallingTo;
+    public int           xCoord, yCoord, zCoord, dimension;
+    public byte          shape, thickness;
+    public boolean       producesSound, producesParticles;
+    public String        texture;
 
     public Portal()
     {
@@ -51,7 +50,7 @@ public class Portal
         yCoord = y;
         zCoord = z;
         dimension = world.provider.dimensionId;
-        portalShape = 0;
+        shape = 0;
 
         if (world.getBlockId(x, y, z) == BlockIds.NetherPortal)
         {
@@ -61,124 +60,38 @@ public class Portal
             {
                 TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
 
-                portalTexture = portal.texture;
-                producesSound = portal.producesSound;
+                texture = portal.texture;
                 producesParticles = portal.producesParticles;
-                portalThickness = portal.thickness;
-            }
-            else
-            {
-                portalTexture = "";
-                producesParticles = true;
-                producesSound = true;
-                portalThickness = 0;
-            }
-        }
-        else
-        {
-            portalTexture = "";
-            producesParticles = true;
-            producesSound = true;
-            portalThickness = 0;
-        }
-    }
-
-    public Portal(int x, int y, int z, World world, String portaltexture)
-    {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
-        dimension = world.provider.dimensionId;
-        portalTexture = portaltexture;
-        portalShape = 0;
-
-        if (world.getBlockId(x, y, z) == BlockIds.NetherPortal)
-        {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
-
-            if (te instanceof TileEntityNetherPortal)
-            {
-                TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
-
                 producesSound = portal.producesSound;
-                producesParticles = portal.producesParticles;
-                portalThickness = portal.thickness;
-            }
-            else
-            {
-                producesParticles = true;
-                producesSound = true;
-                portalThickness = 0;
+                thickness = portal.thickness;
+                return;
             }
         }
-        else
-        {
-            producesParticles = true;
-            producesSound = true;
-            portalThickness = 0;
-        }
+
+        texture = "";
+        thickness = 0;
+        producesSound = producesParticles = true;
+        
+        findPortalShape();
     }
 
-    public Portal(int x, int y, int z, World world, String portaltexture, byte portalshape)
+    public Portal(TileEntityPortalModifier modifier)
     {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
-        dimension = world.provider.dimensionId;
-        portalTexture = portaltexture;
-        portalShape = portalshape;
-
-        if (world.getBlockId(x, y, z) == BlockIds.NetherPortal)
-        {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
-
-            if (te instanceof TileEntityNetherPortal)
-            {
-                TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
-
-                producesSound = portal.producesSound;
-                producesParticles = portal.producesParticles;
-                portalThickness = portal.thickness;
-            }
-            else
-            {
-                producesParticles = true;
-                producesSound = true;
-                portalThickness = 0;
-            }
-        }
-        else
-        {
-            producesParticles = true;
-            producesSound = true;
-            portalThickness = 0;
-        }
-    }
-
-    public Portal(int x, int y, int z, World world, TileEntityPortalModifier portalmodifier)
-    {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
-        dimension = world.provider.dimensionId;
-        portalTexture = portalmodifier.texture;
-        portalShape = 0;
-        portalThickness = portalmodifier.thickness;
-        portalModifier = new WorldLocation(portalmodifier.xCoord, portalmodifier.yCoord, portalmodifier.zCoord, world);
-        producesParticles = !portalmodifier.upgradeHandler.hasUpgrade(new UpgradeParticles());
-        producesSound = !portalmodifier.upgradeHandler.hasUpgrade(new UpgradeSounds());
-    }
-
-    public Portal(WorldLocation loc, String texture, boolean sound, boolean particles, byte thickness)
-    {
-        xCoord = loc.xCoord;
-        yCoord = loc.yCoord;
-        zCoord = loc.zCoord;
-        dimension = loc.dimension;
-        portalTexture = texture;
-        producesSound = sound;
-        producesParticles = particles;
-        portalThickness = thickness;
+        WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
+        WorldLocation offset = loc.getOffset(ForgeDirection.getOrientation(loc.getMetadata()));
+                
+        xCoord = offset.xCoord;
+        yCoord = offset.yCoord;
+        zCoord = offset.zCoord;
+        dimension = modifier.worldObj.provider.dimensionId;
+        shape = 0;
+        texture = modifier.texture;
+        producesParticles = !modifier.upgradeHandler.hasUpgrade(new UpgradeParticles());
+        producesSound = !modifier.upgradeHandler.hasUpgrade(new UpgradeSounds());
+        portalModifier = loc;
+        thickness = modifier.thickness;
+        
+        findPortalShape();
     }
 
     public boolean createPortal()
@@ -218,7 +131,7 @@ public class Portal
                 if (sides >= 2)
                 {
                     addedBlocks.add(current);
-                    current.setBlockAndMeta(BlockIds.NetherPortal, addedBlocks.size() == 1 ? portalShape + 1 : portalShape, 3);
+                    current.setBlockAndMeta(BlockIds.NetherPortal, addedBlocks.size() == 1 ? shape + 1 : shape, 3);
                     queue = updateQueue(queue, current);
 
                     TileEntity te = current.getTileEntity();
@@ -227,10 +140,10 @@ public class Portal
                     {
                         TileEntityNetherPortal portal = (TileEntityNetherPortal) te;
 
-                        portal.texture = portalTexture;
+                        portal.texture = texture;
                         portal.producesParticles = producesParticles;
                         portal.producesSound = producesSound;
-                        portal.thickness = portalThickness;
+                        portal.thickness = thickness;
 
                         if (portalModifier != null)
                         {
@@ -270,7 +183,7 @@ public class Portal
 
     private boolean findPortalShape()
     {
-        if (portalShape >= 2 && portalShape <= 7)
+        if (shape >= 2 && shape <= 7)
         {
             return true;
         }
@@ -279,25 +192,25 @@ public class Portal
 
         if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.NetherPortal)
         {
-            portalShape = (byte) world.getBlockMetadata(xCoord, yCoord, zCoord);
+            shape = (byte) world.getBlockMetadata(xCoord, yCoord, zCoord);
 
-            if (portalShape == 3 || portalShape == 5 || portalShape == 7)
+            if (shape == 3 || shape == 5 || shape == 7)
             {
-                portalShape--;
+                shape--;
                 return true;
             }
-            else if (portalShape == 2 || portalShape == 4 || portalShape == 6)
+            else if (shape == 2 || shape == 4 || shape == 6)
             {
                 return true;
             }
         }
         else
         {
-            portalShape = ghostPortal();
+            shape = ghostPortal();
 
-            if (portalShape == -1)
+            if (shape == -1)
             {
-                portalShape = 0;
+                shape = 0;
                 return false;
             }
             else
@@ -314,21 +227,21 @@ public class Portal
         int totalSides = 0;
         int[] allBlocks = new int[4];
 
-        if (portalShape == 6)
+        if (shape == 6)
         {
             allBlocks[0] = location.getOffset(ForgeDirection.NORTH).getBlockId();
             allBlocks[1] = location.getOffset(ForgeDirection.SOUTH).getBlockId();
             allBlocks[2] = location.getOffset(ForgeDirection.EAST).getBlockId();
             allBlocks[3] = location.getOffset(ForgeDirection.WEST).getBlockId();
         }
-        else if (portalShape == 2)
+        else if (shape == 2)
         {
             allBlocks[0] = location.getOffset(ForgeDirection.WEST).getBlockId();
             allBlocks[1] = location.getOffset(ForgeDirection.EAST).getBlockId();
             allBlocks[2] = location.getOffset(ForgeDirection.UP).getBlockId();
             allBlocks[3] = location.getOffset(ForgeDirection.DOWN).getBlockId();
         }
-        else if (portalShape == 4)
+        else if (shape == 4)
         {
             allBlocks[0] = location.getOffset(ForgeDirection.NORTH).getBlockId();
             allBlocks[1] = location.getOffset(ForgeDirection.SOUTH).getBlockId();
@@ -374,10 +287,10 @@ public class Portal
         return -1;
     }
 
-    private boolean ghostPortal(int shape)
+    private boolean ghostPortal(int theShape)
     {
         World world = getWorld();
-        portalShape = (byte) shape;
+        shape = (byte) theShape;
 
         if (world.isRemote || !preChecks())
         {
@@ -428,70 +341,60 @@ public class Portal
         }
 
         ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
-        if (item != null)
+
+        if (item != null && item.itemID == Item.dyePowder.itemID)
         {
-            //TileEntityNetherPortal portal = (TileEntityNetherPortal) getWorld().getBlockTileEntity(xCoord, yCoord, zCoord);
-
-            if (item.itemID == Item.dyePowder.itemID)
+            if (updateTexture("C:" + item.getItemDamage()) && !player.capabilities.isCreativeMode)
             {
-                if (updateTexture("C:" + item.getItemDamage()) && !player.capabilities.isCreativeMode)
-                {
-                    item.stackSize--;
-                }
-
-                return true;
+                item.stackSize--;
             }
-            else if (item.itemID == Item.bucketLava.itemID)
-            {
-                /*PortalTexture pTexture = new PortalTexture(Block.lavaMoving.blockID, 0);
-                boolean consumeLiquid = true;
 
-                if (portalTexture.isEqualTo(pTexture))
-                {
-                    pTexture = new PortalTexture(Block.lavaStill.blockID, 0);
-                    consumeLiquid = false;
-                }
-                else if (portalTexture.isEqualTo(new PortalTexture(Block.lavaStill.blockID, 0)))
-                {
-                    consumeLiquid = false;
-                }
-
-                if (updateTexture(pTexture) && !player.capabilities.isCreativeMode && consumeLiquid)
-                {
-                    item.stackSize--;
-                    player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty, 1));
-                    playerMP.mcServer.getConfigurationManager().syncPlayerInventory(playerMP);
-                }*/
-
-                return true;
-            }
-            else if (item.itemID == Item.bucketWater.itemID)
-            {
-                /*PortalTexture pTexture = new PortalTexture(Block.waterMoving.blockID, 0);
-                boolean consumeLiquid = true;
-
-                if (portalTexture.isEqualTo(pTexture))
-                {
-                    pTexture = new PortalTexture(Block.waterStill.blockID, 0);
-                    consumeLiquid = false;
-                }
-                else if (portalTexture.isEqualTo(new PortalTexture(Block.waterStill.blockID, 0)))
-                {
-                    consumeLiquid = false;
-                }
-
-                if (updateTexture(pTexture) && !player.capabilities.isCreativeMode && consumeLiquid)
-                {
-                    item.stackSize--;
-                    player.inventory.addItemStackToInventory(new ItemStack(Item.bucketEmpty, 1));
-                    playerMP.mcServer.getConfigurationManager().syncPlayerInventory(playerMP);
-                }*/
-
-                return true;
-            }
+            return true;
         }
 
         return false;
+    }
+
+    private void handleDialDeviceTeleportation(Entity entity, TileEntityPortalModifier modifier)
+    {
+        WorldLocation exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
+        boolean missingUpgrade = false;
+        
+        if (exitLocation == null || exitLocation.isEqual(new WorldLocation(xCoord, yCoord, zCoord, dimension)))
+        {
+            return;
+        }
+
+        if ((exitLocation.dimension == -1 || exitLocation.dimension == 0 || exitLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+        {
+            // Vanilla dimension but we don't have the upgrade
+            missingUpgrade = true;
+        }
+
+        if (exitLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+        {
+            // Same dimension but we don't have the upgrade
+            missingUpgrade = true;
+        }
+
+        if ((exitLocation.dimension > 1 || exitLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+        {
+            // Modded dimension but no upgrade
+            missingUpgrade = true;
+        }
+        
+        if (!missingUpgrade)
+        {
+            TeleportManager.teleportEntity(entity, exitLocation, modifier, false);
+            entity.timeUntilPortal = entity.getPortalCooldown();
+        }
+        else
+        {
+            if (entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).sendChatToPlayer("missingUpgrade");
+            }
+        }
     }
 
     public void handleEntityCollide(Entity entity)
@@ -517,105 +420,102 @@ public class Portal
 
         if (portal.parentModifier == null)
         {
-            if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
-            {
-                entity.setInPortal();
-                return;
-            }
+            handleVanillaTeleportation(entity, world);
         }
         else if (portal.parentModifier != null && entity.timeUntilPortal == 0)
         {
             TileEntityPortalModifier modifier = (TileEntityPortalModifier) portal.parentModifier.getTileEntity();
 
-            if (dialDevice)
+            if (modifier.isRemotelyControlled())
             {
-                if (modifier == null || diallingTo == null || diallingTo.equals(""))
+                if (modifier.tempDialDeviceNetwork.equals(""))
                 {
-                    Reference.log.log(Level.WARNING, "Created a portal from a Dialling Device, yet no parent modifier was found/modifier doesn't have a network?");
+                    Reference.log.log(Level.WARNING, "Created a portal from a Dialling Device, but modifier doesn't have a network?");
                 }
                 else
                 {
-                    // TODO DIALLING DEVICE TELEPORT
+                    handleDialDeviceTeleportation(entity, modifier);
                 }
             }
             else
             {
-                if (modifier == null || modifier.network == null || modifier.network.equalsIgnoreCase("0") || modifier.network.equalsIgnoreCase(""))
+                if (modifier == null || modifier.modifierNetwork.equals(""))
                 {
-                    if (world.provider.dimensionId == 0 || world.provider.dimensionId == -1)
-                    {
-                        entity.setInPortal();
-                        return;
-                    }
+                    handleVanillaTeleportation(entity, world);
                 }
                 else
                 {
-                    List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.network, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
-                    boolean missingUpgrade = false, teleport = false;
-    
-                    if (validLocations.isEmpty())
-                    {
-                        if (entity instanceof EntityPlayer)
-                        {
-                            ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked portals.");
-                        }
-    
-                        entity.timeUntilPortal = entity.getPortalCooldown();
-                        return;
-                    }
-    
-                    while (!validLocations.isEmpty())
-                    {
-                        WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
-    
-                        if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-                        {
-                            // Vanilla dimension but we don't have the upgrade
-    
-                            if (randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0 || randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1)
-                            {
-                                // Allow overworld <--> nether travel
-                            }
-                            else
-                            {
-                                missingUpgrade = true;
-                                continue;
-                            }
-                        }
-    
-                        if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-                        {
-                            // Same dimension but we don't have the upgrade
-                            missingUpgrade = true;
-                            continue;
-                        }
-    
-                        if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-                        {
-                            // Modded dimension but no upgrade
-                            missingUpgrade = true;
-                            continue;
-                        }
-    
-                        if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
-                        {
-                            teleport = true;
-                            validLocations.clear();
-                        }
-                    }
-    
-                    if (missingUpgrade && !teleport)
-                    {
-                        if (entity instanceof EntityPlayer)
-                        {
-                            ((EntityPlayer) entity).sendChatToPlayer("The Portal Modifier is missing an upgrade.");
-                        }
-                    }
+                    handleModifierTeleportation(entity, modifier);
                 }
             }
         }
 
         entity.timeUntilPortal = entity.getPortalCooldown();
+    }
+
+    private void handleModifierTeleportation(Entity entity, TileEntityPortalModifier modifier)
+    {
+        List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.modifierNetwork, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
+        boolean missingUpgrade = false, teleport = false;
+
+        if (validLocations.isEmpty())
+        {
+            if (entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked portals.");
+            }
+
+            entity.timeUntilPortal = entity.getPortalCooldown();
+            return;
+        }
+
+        while (!validLocations.isEmpty())
+        {
+            WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
+
+            if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+            {
+                // Vanilla dimension but we don't have the upgrade
+
+                if (randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0 || randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1)
+                {
+                    // Allow overworld <--> nether travel
+                }
+                else
+                {
+                    missingUpgrade = true;
+                    continue;
+                }
+            }
+
+            if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+            {
+                // Same dimension but we don't have the upgrade
+                missingUpgrade = true;
+                continue;
+            }
+
+            if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+            {
+                // Modded dimension but no upgrade
+                missingUpgrade = true;
+                continue;
+            }
+
+            if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
+            {
+                teleport = true;
+                validLocations.clear();
+            }
+        }
+
+        if (missingUpgrade && !teleport)
+        {
+            if (entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).sendChatToPlayer("The Portal Modifier is missing an upgrade.");
+            }
+        }
     }
 
     public void handleNeighborChange(int id)
@@ -629,27 +529,38 @@ public class Portal
 
         WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, world);
 
-        if (portalShape == 2 || portalShape == 3) // XY
+        if (shape == 2 || shape == 3) // XY
         {
             if (location.getOffset(ForgeDirection.EAST).isBlockAir() || location.getOffset(ForgeDirection.WEST).isBlockAir() || location.getOffset(ForgeDirection.UP).isBlockAir() || location.getOffset(ForgeDirection.DOWN).isBlockAir())
             {
                 removePortal();
             }
         }
-        else if (portalShape == 4 || portalShape == 5) // ZY
+        else if (shape == 4 || shape == 5) // ZY
         {
             if (location.getOffset(ForgeDirection.NORTH).isBlockAir() || location.getOffset(ForgeDirection.SOUTH).isBlockAir() || location.getOffset(ForgeDirection.UP).isBlockAir() || location.getOffset(ForgeDirection.DOWN).isBlockAir())
             {
                 removePortal();
             }
         }
-        else if (portalShape == 6 || portalShape == 7) // ZX
+        else if (shape == 6 || shape == 7) // ZX
         {
             if (location.getOffset(ForgeDirection.EAST).isBlockAir() || location.getOffset(ForgeDirection.WEST).isBlockAir() || location.getOffset(ForgeDirection.NORTH).isBlockAir() || location.getOffset(ForgeDirection.SOUTH).isBlockAir())
             {
                 removePortal();
             }
         }
+    }
+
+    private void handleVanillaTeleportation(Entity entity, World world)
+    {
+        if (world.provider.dimensionId > 0 || world.provider.dimensionId < -1)
+        {
+            return;
+        }
+
+        // TODO UNCOMMENT
+        //entity.setInPortal();
     }
 
     public boolean isBlockFrame(int val, boolean includeSelf)
@@ -717,7 +628,7 @@ public class Portal
 
         if (world.isAirBlock(xCoord, yCoord, zCoord))
         {
-            if ((portalShape == 2 || portalShape == 4) && world.canBlockSeeTheSky(xCoord, yCoord, zCoord))
+            if ((shape == 2 || shape == 4) && world.canBlockSeeTheSky(xCoord, yCoord, zCoord))
             {
                 return false;
             }
@@ -782,7 +693,7 @@ public class Portal
     {
         World world = getWorld();
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || producesSound == sound && producesParticles == particles && portalThickness == thickness)
+        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || producesSound == sound && producesParticles == particles && this.thickness == thickness)
         {
             return false;
         }
@@ -819,21 +730,21 @@ public class Portal
 
     private Queue<WorldLocation> updateQueue(Queue<WorldLocation> queue, WorldLocation location)
     {
-        if (portalShape == 2)
+        if (shape == 2)
         {
             queue.add(location.getOffset(ForgeDirection.UP));
             queue.add(location.getOffset(ForgeDirection.DOWN));
             queue.add(location.getOffset(ForgeDirection.EAST));
             queue.add(location.getOffset(ForgeDirection.WEST));
         }
-        else if (portalShape == 4)
+        else if (shape == 4)
         {
             queue.add(location.getOffset(ForgeDirection.UP));
             queue.add(location.getOffset(ForgeDirection.DOWN));
             queue.add(location.getOffset(ForgeDirection.NORTH));
             queue.add(location.getOffset(ForgeDirection.SOUTH));
         }
-        else if (portalShape == 6)
+        else if (shape == 6)
         {
             queue.add(location.getOffset(ForgeDirection.NORTH));
             queue.add(location.getOffset(ForgeDirection.SOUTH));
@@ -848,7 +759,7 @@ public class Portal
     {
         World world = getWorld();
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || portalTexture.equals(newTexture))
+        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || texture.equals(newTexture))
         {
             return false;
         }
@@ -856,7 +767,7 @@ public class Portal
         Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
         Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
         queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
-        portalTexture = newTexture;
+        texture = newTexture;
 
         while (!queue.isEmpty())
         {
@@ -865,7 +776,7 @@ public class Portal
 
             if (te != null && te instanceof TileEntityNetherPortal && !queueContains(addedBlocks, current))
             {
-                ((TileEntityNetherPortal) te).texture = portalTexture;
+                ((TileEntityNetherPortal) te).texture = texture;
                 current.markBlockForUpdate();
                 addedBlocks.add(current);
                 updateQueue(queue, current);

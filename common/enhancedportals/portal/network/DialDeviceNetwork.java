@@ -1,8 +1,8 @@
 package enhancedportals.portal.network;
 
+import net.minecraft.server.MinecraftServer;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.lib.Reference;
-import net.minecraft.server.MinecraftServer;
 
 public class DialDeviceNetwork extends NetworkManager
 {
@@ -19,7 +19,7 @@ public class DialDeviceNetwork extends NetworkManager
             super.addToNetwork(key, data);
         }
     }
-    
+
     @Override
     public String getSaveFileName()
     {

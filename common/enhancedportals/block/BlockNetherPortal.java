@@ -149,7 +149,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
 
                 if (Settings.AllowPortalColours && portal.producesParticles)
                 {
-                    FMLClientHandler.instance().getClient().effectRenderer.addEffect(new NetherPortalFX(world, portal.portalTexture, d0, d1, d2, d3, d4, d5));
+                    FMLClientHandler.instance().getClient().effectRenderer.addEffect(new NetherPortalFX(world, portal.texture, d0, d1, d2, d3, d4, d5));
                 }
                 else if (!Settings.AllowPortalColours && portal.producesParticles)
                 {

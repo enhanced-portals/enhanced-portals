@@ -1,7 +1,6 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -19,8 +18,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 {
     public String         texture;
     public byte           thickness, redstoneSetting;
-    public String         network;
-    public ItemStack[]    inventory;
+    public String         modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
 
     public UpgradeHandler upgradeHandler;
 
@@ -29,7 +27,9 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         texture = "";
         thickness = 0;
         redstoneSetting = 0;
-        network = "";
+        modifierNetwork = "";
+        dialDeviceNetwork = "";
+        tempDialDeviceNetwork = "";
 
         upgradeHandler = new UpgradeHandler(5);
     }
@@ -38,19 +38,17 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     {
         if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
         {
-            return false;
+           // return false;
         }
 
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+        return new Portal(this).createPortal(customBorderBlocks());
     }
 
     public boolean createPortalFromDialDevice()
     {
         // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF
 
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        return new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+        return new Portal(this).createPortal(customBorderBlocks());
     }
 
     public int[] customBorderBlocks()
@@ -73,33 +71,31 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public void handleRedstoneChanges(int redstoneLevel)
     {
-        if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+        if (isRemotelyControlled())
         {
             return;
         }
-        
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
 
         if (redstoneSetting == 0)
         {
             if (redstoneLevel >= 1 && !isAnyActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+                new Portal(this).createPortal(customBorderBlocks());
             }
             else if (redstoneLevel == 0 && isActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+                new Portal(this).removePortal();
             }
         }
         else if (redstoneSetting == 1)
         {
             if (redstoneLevel == 0 && !isAnyActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+                new Portal(this).createPortal(customBorderBlocks());
             }
             else if (redstoneLevel >= 1 && isActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+                new Portal(this).removePortal();
             }
         }
         else if (redstoneSetting > 2)
@@ -108,11 +104,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
             if (redstoneLevel == rsLevel && !isAnyActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).createPortal(customBorderBlocks());
+                new Portal(this).createPortal(customBorderBlocks());
             }
             else if (redstoneLevel != rsLevel && isActive())
             {
-                new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+                new Portal(this).removePortal();
             }
         }
     }
@@ -146,6 +142,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         return block.getBlockId() == BlockIds.NetherPortal;
     }
 
+    public boolean isRemotelyControlled()
+    {
+        return upgradeHandler.hasUpgrade(new UpgradeDialDevice());
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound tagCompound)
     {
@@ -154,7 +155,8 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         texture = tagCompound.getString("Texture");
         thickness = tagCompound.getByte("Thickness");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
-        network = tagCompound.getString("Frequency");
+        modifierNetwork = tagCompound.getString("mNetwork");
+        dialDeviceNetwork = tagCompound.getString("dNetwork");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
 
         for (int i = 0; i < upgradeHandler.getMaximumUpgrades(); i++)
@@ -168,8 +170,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public void removePortal()
     {
-        WorldLocation portalLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
-        new Portal(portalLocation.xCoord, portalLocation.yCoord, portalLocation.zCoord, worldObj, this).removePortal();
+        new Portal(this).removePortal();
     }
 
     public boolean updateData(byte thick)
@@ -202,7 +203,8 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         tagCompound.setString("Texture", texture);
         tagCompound.setByte("Thickness", thickness);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
-        tagCompound.setString("Frequency", network);
+        tagCompound.setString("mNetwork", modifierNetwork);
+        tagCompound.setString("dNetwork", dialDeviceNetwork);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
 
         int i = 0;

@@ -3,72 +3,57 @@ package enhancedportals.tileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
-import enhancedportals.portal.Portal;
+import enhancedportals.network.packet.PacketBasicDialDeviceUpdate;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketRequestData;
 
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
-    String         oldModifierNetwork;
-    public boolean active = false;
+    public boolean active;
     WorldLocation  modifierLocation;
 
-    private void findPortalFrame()
+    public TileEntityDialDeviceBasic()
+    {
+        active = false;
+    }
+    
+    private void findPortalModifier()
     {
         if (modifierLocation != null)
         {
-            return;
-        }
-
-        ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
-        WorldLocation currentLocation = new WorldLocation(xCoord, yCoord, zCoord, worldObj);
-
-        if (currentLocation.getOffset(direction.getOpposite()).getBlockId() == BlockIds.Obsidian)
-        {
-            modifierLocation = currentLocation.getOffset(direction.getOpposite());
-        }
-        else if (currentLocation.getOffset(ForgeDirection.DOWN).getBlockId() == BlockIds.Obsidian)
-        {
-            modifierLocation = currentLocation.getOffset(ForgeDirection.DOWN);
-        }
-        else
-        {
-            if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) // Facing SOUTH / NORTH
+            if (modifierLocation.getTileEntity() instanceof TileEntityPortalModifier)
             {
-                if (currentLocation.getOffset(ForgeDirection.EAST).getBlockId() == BlockIds.Obsidian)
-                {
-                    modifierLocation = currentLocation.getOffset(ForgeDirection.EAST);
-                }
-                else if (currentLocation.getOffset(ForgeDirection.WEST).getBlockId() == BlockIds.Obsidian)
-                {
-                    modifierLocation = currentLocation.getOffset(ForgeDirection.WEST);
-                }
+                return;
             }
-            else if (direction == ForgeDirection.WEST || direction == ForgeDirection.EAST) // Facing EAST / WEST (Opposite)
+            else
             {
-                if (currentLocation.getOffset(ForgeDirection.NORTH).getBlockId() == BlockIds.Obsidian)
-                {
-                    modifierLocation = currentLocation.getOffset(ForgeDirection.NORTH);
-                }
-                else if (currentLocation.getOffset(ForgeDirection.SOUTH).getBlockId() == BlockIds.Obsidian)
-                {
-                    modifierLocation = currentLocation.getOffset(ForgeDirection.SOUTH);
-                }
+                modifierLocation = null;
             }
         }
+
+                        TileEntityPortalModifier modifier = (TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord - 1, yCoord, zCoord);
+                        
+                        if (modifier != null && modifier.isRemotelyControlled())
+                        {
+                            modifierLocation = new WorldLocation(xCoord - 1, yCoord, zCoord, worldObj);
+                        }
     }
 
     public void processDiallingRequest(String network, EntityPlayer player)
     {
+        System.out.println("Recieved dialling request for: " + network + ". From: " + player.getEntityName());
+        
         if (worldObj.isRemote || active)
         {
             return;
         }
 
-        findPortalFrame();
+        findPortalModifier();
 
         if (modifierLocation == null)
         {
@@ -76,60 +61,42 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             {
                 player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noModifier"));
             }
-
+            
+            System.out.println("Couldn't find a portal modifier!");
+            return;
+        }
+        
+        TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity(), exitModifier = null;
+        
+        if (modifier.dialDeviceNetwork.equals(network))
+        {
+            if (player != null)
+            {
+                player.sendChatToPlayer("Can't dial itself");
+            }
+            
             return;
         }
 
-        if (EnhancedPortals.proxy.ModifierNetwork.hasNetwork(network))
+        if (EnhancedPortals.proxy.DialDeviceNetwork.hasNetwork(network))
         {
-            boolean createdPortal = false;
-
-            for (int i = 0; i < 6; i++)
+            exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(network).get(0).getTileEntity();
+            
+            if (!modifier.createPortalFromDialDevice() || !exitModifier.createPortalFromDialDevice())
             {
-                if (new Portal(modifierLocation.getOffset(ForgeDirection.getOrientation(i)), "", true, true, (byte) 0).createPortal())
-                {
-                    createdPortal = true;
-                    break;
-                }
-            }
-
-            if (!createdPortal)
-            {
-                player.sendChatToPlayer("Can't make portal.");
-            }
-
-            /*TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
-
-            oldModifierNetwork = modifier.network;
-            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(modifierLocation);
-            EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, modifierLocation);
-            modifier.network = network;
-
-            if (modifier.isAnyActive())
-            {
-                modifier.removePortal();
-            }
-
-            if (modifier.createPortal())
-            {
-                if (player != null)
-                {
-                    player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.dialSuccess"));
-                }
-
-                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
-                active = true;
-                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+                player.sendChatToPlayer("dialFail");
             }
             else
             {
-                modifier.network = oldModifierNetwork;
+                player.sendChatToPlayer("dialSuccess");
 
-                if (player != null)
-                {
-                    player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noPortal"));
-                }
-            }*/
+                modifier.tempDialDeviceNetwork = network;
+                exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
+                active = true;
+                
+                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
+                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
+            }
         }
         else if (player != null)
         {
@@ -147,38 +114,25 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         if (active)
         {
             modifierLocation = new WorldLocation(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
-            oldModifierNetwork = tagCompound.getString("ModifierNetwork");
         }
     }
 
     public void scheduledBlockUpdate()
     {
-        if (modifierLocation == null)
+        if (modifierLocation == null || !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
         {
             active = false;
-            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
+            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
             return;
         }
 
-        if (modifierLocation.getBlockId() == BlockIds.PortalModifier)
-        {
-            TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
-
-            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, modifierLocation);
-
-            if (oldModifierNetwork != null && !oldModifierNetwork.equals(""))
-            {
-                EnhancedPortals.proxy.ModifierNetwork.addToNetwork(oldModifierNetwork, modifierLocation);
-            }
-
-            modifier.removePortal();
-            modifier.network = oldModifierNetwork;
-
-            oldModifierNetwork = "";
-            modifierLocation = null;
-            active = false;
-            // TODO PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, new PacketTEUpdate(this).getPacket());
-        }
+        TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity(),
+                                 exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();;
+        modifier.removePortal();
+        exitModifier.removePortal();
+        modifier.tempDialDeviceNetwork = "";
+        exitModifier.tempDialDeviceNetwork = "";
+        active = false;
     }
 
     @Override
@@ -188,7 +142,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (worldObj.isRemote)
         {
-            // TODO PacketDispatcher.sendPacketToServer(new PacketRequestSync(this).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRequestData(this)));
         }
     }
 
@@ -205,7 +159,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             tagCompound.setInteger("ModifierY", modifierLocation.yCoord);
             tagCompound.setInteger("ModifierZ", modifierLocation.zCoord);
             tagCompound.setInteger("ModifierD", modifierLocation.dimension);
-            tagCompound.setString("ModifierNetwork", oldModifierNetwork);
         }
     }
 }

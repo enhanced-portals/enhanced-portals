@@ -45,7 +45,7 @@ public class ItemNetworkCard extends Item
         }
 
         NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setString("Network", modifier.network);
+        tagCompound.setString("Network", modifier.modifierNetwork);
         stack.setTagCompound(tagCompound);
 
         return true;
@@ -138,9 +138,9 @@ public class ItemNetworkCard extends Item
                 NBTTagCompound tagCompound = itemStack.getTagCompound();
                 String network = tagCompound.getString("Network");
 
-                if (!modifier.network.equals(network) && !modifier.isActive())
+                if (!modifier.modifierNetwork.equals(network) && !modifier.isActive())
                 {
-                    modifier.network = network;
+                    modifier.modifierNetwork = network;
                     EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world));
                     EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldLocation(x, y, z, world));
 

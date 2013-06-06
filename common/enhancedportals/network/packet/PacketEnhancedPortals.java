@@ -21,7 +21,8 @@ public abstract class PacketEnhancedPortals
         PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
         AUTOMATIC_DIALLER_UPDATE(PacketAutomaticDiallerUpdate.class),
         DIAL_DEVICE_UPDATE(PacketDialDeviceUpdate.class),
-        BASIC_DIAL_DEVICE_UPDATE(PacketBasicDialDeviceUpdate.class);
+        BASIC_DIAL_DEVICE_UPDATE(PacketBasicDialDeviceUpdate.class),
+        BASIC_DIAL_REQUEST(PacketBasicDialRequest.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 

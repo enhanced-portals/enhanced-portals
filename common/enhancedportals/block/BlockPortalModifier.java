@@ -25,7 +25,6 @@ import enhancedportals.lib.Textures;
 import enhancedportals.portal.Portal;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.modifier.UpgradeCamouflage;
-import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class BlockPortalModifier extends BlockEnhancedPortals
@@ -54,13 +53,16 @@ public class BlockPortalModifier extends BlockEnhancedPortals
 
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
 
-        if (modifier.network != null && !modifier.network.equals(""))
+        if (modifier.isRemotelyControlled())
         {
-            if (modifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+            if (!modifier.dialDeviceNetwork.equals(""))
             {
                 EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
             }
-            else
+        }
+        else
+        {
+            if (!modifier.modifierNetwork.equals(""))
             {
                 EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
             }
@@ -74,7 +76,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
                 modifier.worldObj.spawnEntityInWorld(entity);
             }
         }
-        
+
         super.breakBlock(world, x, y, z, par5, par6);
     }
 

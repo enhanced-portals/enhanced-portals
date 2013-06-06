@@ -10,8 +10,11 @@ import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.network.packet.PacketBasicDialRequest;
+import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class GuiDialDeviceBasic extends GuiNetwork
@@ -60,8 +63,8 @@ public class GuiDialDeviceBasic extends GuiNetwork
                 str = str.substring(Reference.glyphSeperator.length());
             }
 
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketBasicDialRequest(dialDevice, str)));
             FMLClientHandler.instance().getClient().thePlayer.closeScreen();
-            // TODO PacketDispatcher.sendPacketToServer(new PacketDialRequest(dialDevice.xCoord, dialDevice.yCoord, dialDevice.zCoord, dialDevice.worldObj.provider.dimensionId, str).getPacket());
         }
     }
 

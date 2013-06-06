@@ -49,10 +49,11 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         }
 
         portalModifier = modifier;
+        String network = portalModifier.isRemotelyControlled() ? portalModifier.dialDeviceNetwork : portalModifier.modifierNetwork;
 
-        if (portalModifier.network != "")
+        if (!network.equals(""))
         {
-            String[] split = portalModifier.network.split(Reference.glyphSeperator);
+            String[] split = network.split(Reference.glyphSeperator);
 
             for (String element2 : split)
             {
@@ -129,7 +130,15 @@ public class GuiPortalModifierNetwork extends GuiNetwork
                 str = str.substring(Reference.glyphSeperator.length());
             }
 
-            portalModifier.network = str;
+            if (portalModifier.isRemotelyControlled())
+            {
+                portalModifier.dialDeviceNetwork = str;
+            }
+            else
+            {
+                portalModifier.modifierNetwork = str;
+            }
+            
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(portalModifier, GuiIds.PortalModifier)));
         }

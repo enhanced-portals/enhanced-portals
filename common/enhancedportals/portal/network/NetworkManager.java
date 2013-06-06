@@ -261,6 +261,11 @@ public class NetworkManager
 
         for (Entry<String, List<WorldLocation>> set : networkData.entrySet())
         {
+            if (set.getValue().isEmpty())
+            {
+                continue;
+            }
+
             NBTTagList list2 = new NBTTagList();
 
             for (WorldLocation loc : set.getValue())

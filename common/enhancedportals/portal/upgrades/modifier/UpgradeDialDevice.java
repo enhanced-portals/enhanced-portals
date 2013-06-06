@@ -64,12 +64,12 @@ public class UpgradeDialDevice extends Upgrade
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
         WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
-        if (!tileEntity.worldObj.isRemote && EnhancedPortals.proxy.ModifierNetwork.isInNetwork(modifier.network, loc))
+        if (!tileEntity.worldObj.isRemote)
         {
-            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.network, loc);
+            EnhancedPortals.proxy.ModifierNetwork.removeFromNetwork(modifier.modifierNetwork, loc);
         }
 
-        modifier.network = "";
+        modifier.modifierNetwork = "";
         return true;
     }
 
@@ -77,10 +77,14 @@ public class UpgradeDialDevice extends Upgrade
     public boolean onDeactivated(TileEntity tileEntity)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
+        WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
-        // TODO : Remove from DHD network
+        if (!tileEntity.worldObj.isRemote)
+        {
+            EnhancedPortals.proxy.DialDeviceNetwork.removeFromNetwork(modifier.dialDeviceNetwork, loc);
+        }
 
-        modifier.network = "";
+        modifier.dialDeviceNetwork = "";
         return true;
     }
 }

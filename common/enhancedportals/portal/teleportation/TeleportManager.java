@@ -143,11 +143,6 @@ public class TeleportManager
 
         if (outModifier == null)
         {
-            if (entity instanceof EntityPlayer)
-            {
-                ((EntityPlayer) entity).sendChatToPlayer("A portal could not be created at the exit location - this location has been removed from the network.");
-            }
-
             EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(teleportData);
             return false;
         }
@@ -158,7 +153,7 @@ public class TeleportManager
 
         if (outModifierOffset.getBlockId() == 0)
         {
-            if (new Portal(outModifierOffset.xCoord, outModifierOffset.yCoord, outModifierOffset.zCoord, world, outModifier).createPortal())
+            if (new Portal(outModifier).createPortal())
             {
                 teleportEntity = true;
             }

@@ -7,14 +7,13 @@ import enhancedcore.packet.PacketHelper;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketPortalModifierUpdate extends PacketEnhancedPortals
 {
     int xCoord, yCoord, zCoord, dimension;
     byte thickness, redstoneSetting;
-    String texture, network;
+    String texture, modifierNetwork, dialDeviceNetwork;
 
     public PacketPortalModifierUpdate()
     {
@@ -30,7 +29,9 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
         redstoneSetting = modifier.redstoneSetting;
         dimension = modifier.worldObj.provider.dimensionId;
         texture = modifier.texture;
-        network = modifier.network;
+        modifierNetwork = modifier.modifierNetwork;
+        dialDeviceNetwork = modifier.dialDeviceNetwork;
+
     }
 
     @Override
@@ -38,9 +39,9 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "b", "S", "S");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "b", "S", "S", "S");
 
-            if (objArray != null && objArray.length == 8)
+            if (objArray != null)
             {
                 xCoord = (int) objArray[0];
                 yCoord = (int) objArray[1];
@@ -49,7 +50,8 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                 thickness = (byte) objArray[4];
                 redstoneSetting = (byte) objArray[5];
                 texture = (String) objArray[6];
-                network = (String) objArray[7];
+                modifierNetwork = (String) objArray[7];
+                dialDeviceNetwork = (String) objArray[8];
 
                 return this;
             }
@@ -76,23 +78,33 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
             if (loc.getTileEntity() instanceof TileEntityPortalModifier)
             {
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) loc.getTileEntity();
-                
-                modifier.network = this.network;
+
                 modifier.texture = texture;
                 modifier.redstoneSetting = redstoneSetting;
                 modifier.thickness = thickness;
-                
+
                 if (!world.isRemote)
                 {
-                    if (modifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+                    if (modifier.isRemotelyControlled())
                     {
                         EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(loc);
-                        EnhancedPortals.proxy.DialDeviceNetwork.addToNetwork(modifier.network, loc);
+                        EnhancedPortals.proxy.DialDeviceNetwork.addToNetwork(dialDeviceNetwork, loc);
+
+                        if (EnhancedPortals.proxy.DialDeviceNetwork.isInNetwork(dialDeviceNetwork, loc))
+                        {
+                            modifier.dialDeviceNetwork = dialDeviceNetwork;
+                        }
+                        else
+                        {
+                            modifier.dialDeviceNetwork = "";
+                        }
                     }
                     else
                     {
                         EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(loc);
-                        EnhancedPortals.proxy.ModifierNetwork.addToNetwork(modifier.network, loc);
+                        EnhancedPortals.proxy.ModifierNetwork.addToNetwork(modifierNetwork, loc);
+
+                        modifier.modifierNetwork = modifierNetwork;
                     }
                 }
 
@@ -104,6 +116,6 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, redstoneSetting, texture, network);
+        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, redstoneSetting, texture, modifierNetwork, dialDeviceNetwork);
     }
 }
