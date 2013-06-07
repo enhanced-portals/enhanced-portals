@@ -59,5 +59,9 @@
 	<entry key="gui.save">Save</entry>
 	<entry key="gui.terminate">Terminate</entry>
 	<entry key="gui.networkNotSet">No network set</entry>
-	<entry key="gui.identifierInUse">The identifier is in use</entry>
+	<entry key="gui.identifierInUse">This identifier is in use</entry>
+	<entry key="chat.advDimUpgradeAlreadyInstalled">Remove the Advanced Dimensional upgrade first</entry>
+	<entry key="chat.dimUpgradeAlreadyInstalled">Remove the Dimensional upgrade first</entry>
+	<entry key="chat.maxUpgradesInstalled">The maximum amount of upgrades have been installed</entry>
+	<entry key="chat.upgradeAlreadyInstalled">This upgrade has already been installed</entry>
 </properties>
