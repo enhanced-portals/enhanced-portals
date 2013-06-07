@@ -64,4 +64,10 @@
 	<entry key="chat.dimUpgradeAlreadyInstalled">Remove the Dimensional upgrade first</entry>
 	<entry key="chat.maxUpgradesInstalled">The maximum amount of upgrades have been installed</entry>
 	<entry key="chat.upgradeAlreadyInstalled">This upgrade has already been installed</entry>
+	<entry key="chat.noDialActivePortal">You cannot dial an active portal</entry>
+	<entry key="chat.dialSuccessA">Established a successful connection</entry>
+	<entry key="chat.dialSuccessB">38 seconds remain until automatic shutdown</entry>
+	<entry key="chat.invalidDestination">You cannot dial the same portal you're dialling from</entry>
+	<entry key="chat.noConnection">Cannot establish a connection to the portal</entry>
+	<entry key="chat.noModifiers">Cannot establish a connection to a nearby Portal Modifier</entry>
 </properties>

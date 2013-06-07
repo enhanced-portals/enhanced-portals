@@ -7,8 +7,14 @@ public enum Strings
     Accept("gui.accept"),
     Cancel("gui.cancel"),
     ChatAdvDimAlreadyInstalled("chat.advDimUpgradeAlreadyInstalled", EnumChatFormatting.RED),
+    ChatDialActivePortal("chat.noDialActivePortal", EnumChatFormatting.RED),
+    ChatDialSuccess("chat.dialSuccessA", EnumChatFormatting.GREEN),
+    ChatDialSuccess2("chat.dialSuccessB", EnumChatFormatting.GREEN),
     ChatDimAlreadyInstalled("chat.dimUpgradeAlreadyInstalled", EnumChatFormatting.RED),
+    ChatInvalidDestination("chat.invalidDestination", EnumChatFormatting.RED),
     ChatMaxUpgradesInstalled("chat.maxUpgradesInstalled", EnumChatFormatting.RED),
+    ChatNoConnection("chat.noConnection", EnumChatFormatting.RED),
+    ChatNoModifiers("chat.noModifiers", EnumChatFormatting.RED),
     ChatUpgradeInstalled("chat.upgradeAlreadyInstalled", EnumChatFormatting.RED),
     Clear("gui.clear"),
     ClickToSetIdentifier("gui.setIdentifier"),
@@ -17,6 +23,7 @@ public enum Strings
     Facade("gui.facade"),
     FullBlock("gui.fullBlock"),
     Glyphs("gui.glyphs"),
+    IdentifierInUse("gui.identifierInUse"),
     IdentifierSelection("gui.selectIdentifier"),
     Inverted("gui.inverted"),
     Modifications("gui.modifications"),
@@ -30,13 +37,12 @@ public enum Strings
     RedstoneControl("gui.redstoneControl"),
     RemoveUpgrade("gui.upgrade.remove", EnumChatFormatting.DARK_GRAY),
     RightClickToReset("gui.rightClickToReset"),
+    Save("gui.save"),
     Thick("gui.thick"),
     Thicker("gui.thicker"),
     Thickness("gui.thickness"),
     UniqueIdentifier("gui.uniqueIdentifier"),
-    Upgrades("gui.upgrades"),
-    Save("gui.save"),
-    IdentifierInUse("gui.identifierInUse");
+    Upgrades("gui.upgrades");
 
     private EnumChatFormatting chatFormatting;
     private String             text;

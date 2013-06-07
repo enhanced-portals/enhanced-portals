@@ -4,7 +4,6 @@ import java.util.logging.Level;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -13,8 +12,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
-import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketBasicDialDeviceUpdate;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
@@ -113,7 +112,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (modifierLocation == null)
         {
-            sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noModifier"), player);
+            sendChatToPlayer(Strings.ChatNoModifiers.toString(), player);
             return;
         }
 
@@ -121,7 +120,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (modifier.dialDeviceNetwork.equals(network))
         {
-            sendChatToPlayer(EnumChatFormatting.RED + "Invalid destination", player);
+            sendChatToPlayer(Strings.ChatInvalidDestination.toString(), player);
             return;
         }
 
@@ -131,18 +130,21 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
             if (exitModifier.isActive())
             {
-                sendChatToPlayer(EnumChatFormatting.RED + "Cannot dial an active portal", player);
+                sendChatToPlayer(Strings.ChatDialActivePortal.toString(), player);
                 return;
             }
 
             if (!modifier.createPortalFromDialDevice() || !exitModifier.createPortalFromDialDevice())
             {
-                sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"), player);
+                modifier.removePortal();
+                exitModifier.removePortal();
+                
+                sendChatToPlayer(Strings.ChatNoConnection.toString(), player);
             }
             else
             {
-                sendChatToPlayer(EnumChatFormatting.GREEN + "Successfully dialled the portal", player);
-                sendChatToPlayer(EnumChatFormatting.GREEN + "38 seconds remain until automatic shutdown", player);
+                sendChatToPlayer(Strings.ChatDialSuccess.toString(), player);
+                sendChatToPlayer(Strings.ChatDialSuccess2.toString(), player);
 
                 modifier.tempDialDeviceNetwork = network;
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
@@ -155,7 +157,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         }
         else
         {
-            sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"), player);
+            sendChatToPlayer(Strings.ChatNoConnection.toString(), player);
         }
     }
 
