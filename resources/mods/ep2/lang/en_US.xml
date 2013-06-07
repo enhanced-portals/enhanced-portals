@@ -34,7 +34,7 @@
 	<entry key="upgrade.dialDevice.text">Allows use with a Dial Device</entry>
 	<entry key="gui.upgrades">Upgrades</entry>
 	<entry key="gui.modifications">Modifications</entry>
-	<entry key="gui.uniqueIdentifier">Unique Identifier</entry>
+	<entry key="gui.uniqueIdentifier">Identifier</entry>
 	<entry key="gui.setIdentifier">Click to set an identifier</entry>
 	<entry key="gui.network">Network</entry>
 	<entry key="gui.setNetwork">Click to set a network</entry>
@@ -50,10 +50,14 @@
 	<entry key="gui.rightClickToReset">Right-Click to reset</entry>
 	<entry key="gui.glyphs">Glyphs</entry>
 	<entry key="gui.networkSelection">Network Selection</entry>
-	<entry key="gui.selectIdentifier">Unique Identifier Selection</entry>
+	<entry key="gui.selectIdentifier">Identifier Selection</entry>
 	<entry key="gui.cancel">Cancel</entry>
 	<entry key="gui.accept">Accept</entry>
 	<entry key="gui.random">Random</entry>
 	<entry key="gui.clear">Clear</entry>
+	<entry key="gui.dial">Dial</entry>
+	<entry key="gui.save">Save</entry>
+	<entry key="gui.terminate">Terminate</entry>
 	<entry key="gui.networkNotSet">No network set</entry>
+	<entry key="gui.identifierInUse">The identifier is in use</entry>
 </properties>

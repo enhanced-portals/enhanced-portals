@@ -3,6 +3,8 @@ package enhancedportals.network.packet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import enhancedcore.packet.PacketHelper;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
@@ -97,6 +99,7 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                         else
                         {
                             modifier.dialDeviceNetwork = "";
+                            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketMisc((byte) 1, 0)), (Player) player);
                         }
                     }
                     else

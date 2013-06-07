@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -196,6 +195,17 @@ public class GuiDialDeviceBasic extends GuiNetwork
     }
 
     @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        super.keyTyped(par1, par2);
+
+        if (par2 == mc.gameSettings.keyBindInventory.keyCode)
+        {
+            mc.thePlayer.closeScreen();
+        }
+    }
+
+    @Override
     protected void mouseClicked(int x, int y, int buttonClicked)
     {
         super.mouseClicked(x, y, buttonClicked);
@@ -223,18 +233,6 @@ public class GuiDialDeviceBasic extends GuiNetwork
         else
         {
             ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
-        }
-    }
-    
-    @Override
-    protected void keyTyped(char par1, int par2)
-    {
-        super.keyTyped(par1, par2);
-        
-        if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode)
-        {
-            this.mc.displayGuiScreen((GuiScreen) null);
-            this.mc.setIngameFocus();
         }
     }
 }

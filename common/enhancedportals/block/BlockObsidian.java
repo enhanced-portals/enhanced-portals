@@ -29,9 +29,9 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
         {
             if (new Portal(x, y + 1, z, worldObj).createPortal(current) || new Portal(x, y - 1, z, worldObj).createPortal(current) || new Portal(x + 1, y, z, worldObj).createPortal(current) || new Portal(x - 1, y, z, worldObj).createPortal(current) || new Portal(x, y, z + 1, worldObj).createPortal(current) || new Portal(x, y, z - 1, worldObj).createPortal(current))
             {
-                current.damageItem(1, player);                
+                current.damageItem(1, player);
             }
-            
+
             return true;
         }
 

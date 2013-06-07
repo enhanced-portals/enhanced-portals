@@ -46,6 +46,7 @@ public class CommonProxy
 
     public ModifierNetwork           ModifierNetwork;
     public DialDeviceNetwork         DialDeviceNetwork;
+    public boolean                   isIdentifierTaken = false;
 
     public World getWorld(int dimension)
     {

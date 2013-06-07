@@ -34,16 +34,6 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
         upgradeHandler = new UpgradeHandler(5);
     }
-    
-    public boolean createPortal(ItemStack stack)
-    {
-        if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
-        {
-            return false;
-        }
-
-        return new Portal(this).createPortal(customBorderBlocks(), stack);
-    }
 
     public boolean createPortal()
     {
@@ -55,11 +45,21 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         return new Portal(this).createPortal(customBorderBlocks());
     }
 
+    public boolean createPortal(ItemStack stack)
+    {
+        if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+        {
+            return false;
+        }
+
+        return new Portal(this).createPortal(customBorderBlocks(), stack);
+    }
+
     public boolean createPortalFromDialDevice()
     {
         return new Portal(this).createPortal(customBorderBlocks());
     }
-    
+
     public boolean createPortalFromDialDevice(String texture, byte thickness)
     {
         // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF FOR ADVANCED DD
@@ -126,15 +126,15 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
                 new Portal(this).removePortal();
             }
         }
-        
+
         redstoneState = (byte) redstoneLevel;
-    }    
+    }
 
     public boolean isActive()
     {
         WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
         TileEntityNetherPortal portal = null;
-        
+
         if (!(block.getTileEntity() instanceof TileEntityNetherPortal))
         {
             return false;

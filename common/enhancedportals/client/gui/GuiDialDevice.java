@@ -112,6 +112,17 @@ public class GuiDialDevice extends GuiScreen
         }
     }
 
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        super.keyTyped(par1, par2);
+
+        if (par2 == mc.gameSettings.keyBindInventory.keyCode)
+        {
+            mc.thePlayer.closeScreen();
+        }
+    }
+
     public void onElementSelected(int par1)
     {
         dialDevice.selectedDestination = par1;
@@ -126,17 +137,5 @@ public class GuiDialDevice extends GuiScreen
     public void updateScreen()
     {
         super.updateScreen();
-    }
-    
-    @Override
-    protected void keyTyped(char par1, int par2)
-    {
-        super.keyTyped(par1, par2);
-        
-        if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode)
-        {
-            this.mc.displayGuiScreen((GuiScreen) null);
-            this.mc.setIngameFocus();
-        }
     }
 }

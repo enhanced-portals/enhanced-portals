@@ -51,9 +51,9 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 for (int k = -5; k < 6; k++)
                 {
                     if (worldObj.blockHasTileEntity(xCoord + i, yCoord + k, zCoord + j) && worldObj.getBlockTileEntity(xCoord + i, yCoord + k, zCoord + j) instanceof TileEntityPortalModifier)
-                    {                
+                    {
                         TileEntityPortalModifier modifier = (TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord + i, yCoord + k, zCoord + j);
-        
+
                         if (modifier != null && modifier.isRemotelyControlled())
                         {
                             modifierLocation = new WorldLocation(xCoord + i, yCoord + k, zCoord + j, worldObj);
@@ -158,18 +158,6 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"), player);
         }
     }
-    
-    private void sendChatToPlayer(String str, EntityPlayer player)
-    {
-        if (player != null)
-        {
-            player.sendChatToPlayer(str);
-        }
-        else
-        {
-            Reference.log.log(Level.INFO, str);
-        }
-    }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound)
@@ -203,6 +191,18 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         exitModifier.tempDialDeviceNetwork = "";
         active = false;
         unloadChunk();
+    }
+
+    private void sendChatToPlayer(String str, EntityPlayer player)
+    {
+        if (player != null)
+        {
+            player.sendChatToPlayer(str);
+        }
+        else
+        {
+            Reference.log.log(Level.INFO, str);
+        }
     }
 
     private void unloadChunk()

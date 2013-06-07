@@ -27,7 +27,7 @@ public class DialDeviceChunkCallback implements ForgeChunkManager.OrderedLoading
                 if (world.getBlockId(x, y, z) == BlockIds.DialHomeDeviceBasic)
                 {
                     TileEntityDialDeviceBasic dialDevice = (TileEntityDialDeviceBasic) world.getBlockTileEntity(x, y, z);
-                    
+
                     if (dialDevice != null)
                     {
                         dialDevice.loadChunk(ticket);
@@ -42,7 +42,7 @@ public class DialDeviceChunkCallback implements ForgeChunkManager.OrderedLoading
 
                 if (world.getBlockId(x, y, z) == BlockIds.DialHomeDevice)
                 {
-                    
+
                 }
             }
         }

@@ -80,7 +80,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
 
                 portal.updateData(sound, particles, thickness);
                 portal.updateTexture(texture);
-                
+
                 ((TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord)).hasParent = hasParent;
             }
         }

@@ -8,11 +8,11 @@ import enhancedportals.network.packet.PacketRequestData;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {
-    public String        texture;
-    public boolean       producesSound, producesParticles;
-    public byte          thickness;
+    public String         texture;
+    public boolean        producesSound, producesParticles;
+    public byte           thickness;
     private WorldLocation parentModifier;
-    public boolean       hasParent;
+    public boolean        hasParent;
 
     public TileEntityNetherPortal()
     {
@@ -22,13 +22,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         thickness = 0;
         hasParent = false;
     }
-    
-    public void setParentModifier(WorldLocation loc)
-    {
-        parentModifier = loc;
-        hasParent = parentModifier != null;
-    }
-    
+
     public WorldLocation getParentModifier()
     {
         hasParent = parentModifier != null;
@@ -50,6 +44,12 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
             int x = tagCompound.getInteger("ParentX"), y = tagCompound.getInteger("ParentY"), z = tagCompound.getInteger("ParentZ"), d = tagCompound.getInteger("ParentD");
             setParentModifier(new WorldLocation(x, y, z, d));
         }
+    }
+
+    public void setParentModifier(WorldLocation loc)
+    {
+        parentModifier = loc;
+        hasParent = parentModifier != null;
     }
 
     @Override

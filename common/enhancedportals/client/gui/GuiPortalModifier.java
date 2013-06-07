@@ -166,7 +166,15 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             String str = portalModifier.isRemotelyControlled() ? Strings.ClickToSetIdentifier.toString() : Strings.ClickToSetNetwork.toString();
 
             drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x55000000);
-            fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
+            
+            if (!EnhancedPortals.proxy.isIdentifierTaken)
+            {
+                fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
+            }
+            else
+            {
+                fontRenderer.drawStringWithShadow(Strings.IdentifierInUse.toString(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Strings.IdentifierInUse.toString()) / 2, guiTop + 51, 0xEE0000);
+            }
         }
     }
 
@@ -379,6 +387,18 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         {
             buttonList.add(new GuiItemStackButton(50, guiLeft + 8 + i * 18, guiTop + 15, portalModifier.upgradeHandler.getUpgrade(i).getDisplayItemStack(), false, portalModifier.upgradeHandler.getUpgrade(i).getText(true), true));
         }
+    }
+
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        if (par2 == 1 || par2 == mc.gameSettings.keyBindInventory.keyCode)
+        {
+            mc.thePlayer.closeScreen();
+            EnhancedPortals.proxy.isIdentifierTaken = false;
+        }
+
+        super.keyTyped(par1, par2);
     }
 
     @Override
