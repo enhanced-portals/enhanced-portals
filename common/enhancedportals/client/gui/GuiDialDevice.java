@@ -127,4 +127,16 @@ public class GuiDialDevice extends GuiScreen
     {
         super.updateScreen();
     }
+    
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        super.keyTyped(par1, par2);
+        
+        if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode)
+        {
+            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.setIngameFocus();
+        }
+    }
 }

@@ -44,11 +44,23 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             }
         }
 
-        TileEntityPortalModifier modifier = (TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord - 1, yCoord, zCoord);
-
-        if (modifier != null && modifier.isRemotelyControlled())
+        for (int i = -5; i < 6; i++)
         {
-            modifierLocation = new WorldLocation(xCoord - 1, yCoord, zCoord, worldObj);
+            for (int j = -5; j < 6; j++)
+            {
+                for (int k = -5; k < 6; k++)
+                {
+                    if (worldObj.blockHasTileEntity(xCoord + i, yCoord + k, zCoord + j) && worldObj.getBlockTileEntity(xCoord + i, yCoord + k, zCoord + j) instanceof TileEntityPortalModifier)
+                    {                
+                        TileEntityPortalModifier modifier = (TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord + i, yCoord + k, zCoord + j);
+        
+                        if (modifier != null && modifier.isRemotelyControlled())
+                        {
+                            modifierLocation = new WorldLocation(xCoord + i, yCoord + k, zCoord + j, worldObj);
+                        }
+                    }
+                }
+            }
         }
     }
 

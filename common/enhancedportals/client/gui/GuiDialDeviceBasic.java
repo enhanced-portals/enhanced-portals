@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -13,6 +14,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketBasicDialRequest;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
@@ -85,8 +87,8 @@ public class GuiDialDeviceBasic extends GuiNetwork
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);
         fontRenderer.drawString(Localization.localizeString("tile.dialDeviceBasic.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDeviceBasic.name")) / 2, guiTop - 15, 0xFFCCCCCC);
 
-        fontRenderer.drawString(Localization.localizeString("gui.glyphs.title"), guiLeft + 7, guiTop + 3, 0xFF444444);
-        fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 7, guiTop + 71, 0xFF444444);
+        fontRenderer.drawString(Strings.Glyphs.toString(), guiLeft + 7, guiTop + 3, 0xFF444444);
+        fontRenderer.drawString(Strings.UniqueIdentifier.toString(), guiLeft + 7, guiTop + 71, 0xFF444444);
 
         if (dialDevice.active)
         {
@@ -189,7 +191,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
 
-        buttonList.add(new GuiButton(1, guiLeft + 13, guiTop + 107, 150, 20, "Dial"));
+        buttonList.add(new GuiButton(1, guiLeft + 13, guiTop + 107, 150, 20, Strings.Dial.toString()));
         ((GuiButton) buttonList.get(0)).enabled = false;
     }
 
@@ -221,6 +223,18 @@ public class GuiDialDeviceBasic extends GuiNetwork
         else
         {
             ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
+        }
+    }
+    
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        super.keyTyped(par1, par2);
+        
+        if (par2 == FMLClientHandler.instance().getClient().gameSettings.keyBindInventory.keyCode)
+        {
+            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.setIngameFocus();
         }
     }
 }
