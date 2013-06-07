@@ -14,53 +14,5 @@
   "parent" : "",
   "screenshots": [
   ]
-},
-{
-  "modid" : "EP2_world",
-  "name" : "EP2 World",
-  "version" : "@VERSION@",
-  "url" : "http://www.minecraftforum.net/topic/1301217-/",
-  "credits" : "",
-  "authors": [
-    "Alz454"
-  ],
-  "description": "An addon that allows Enhanced Portals to interact with the world, adding loot to dungeons and creating new dungeons and random ruins.",
-  "logoFile" : "",
-  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
-  "parent" : "EP2",
-  "screenshots": [
-  ]
-},
-{
-  "modid" : "EP2_cc",
-  "name" : "EP2 ComputerCraft",
-  "version" : "@VERSION@",
-  "url" : "http://www.minecraftforum.net/topic/1301217-/",
-  "credits" : "",
-  "authors": [
-    "Alz454"
-  ],
-  "description": "An addon that allows ComputerCraft to interact with the Dial Device and Portal Modifier.",
-  "logoFile" : "",
-  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
-  "parent" : "EP2",
-  "screenshots": [
-  ]
-},
-{
-  "modid" : "EP2_BC",
-  "name" : "EP2 BuildCraft",
-  "version" : "@VERSION@",
-  "url" : "http://www.minecraftforum.net/topic/1301217-/",
-  "credits" : "",
-  "authors": [
-    "Alz454"
-  ],
-  "description": "An addon that allows you to use Fuel and Oil as Portal Textures.",
-  "logoFile" : "",
-  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
-  "parent" : "EP2",
-  "screenshots": [
-  ]
 }
 ]
