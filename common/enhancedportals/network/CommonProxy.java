@@ -145,10 +145,15 @@ public class CommonProxy
         BlockIds.NetherPortal = config.getBlock("NetherPortal", BlockIds.NetherPortal).getInt();
         BlockIds.PortalModifier = config.getBlock("PortalModifier", BlockIds.PortalModifier).getInt();
         BlockIds.DialHomeDevice = config.getBlock("DialDevice", BlockIds.DialHomeDevice).getInt();
+        BlockIds.DialHomeDeviceBasic = config.getBlock("BasicDialDevice", BlockIds.DialHomeDeviceBasic).getInt();
+        BlockIds.AutomaticDialler = config.getBlock("AutomaticDialler", BlockIds.AutomaticDialler).getInt();
+        BlockIds.DummyPortal = config.getBlock("DummyPortal", BlockIds.DummyPortal).getInt();
 
         // Item IDs
         ItemIds.PortalModifierUpgrade = config.getItem("PortalModifierUpgrade", ItemIds.PortalModifierUpgrade).getInt();
         ItemIds.NetworkCard = config.getItem("NetworkCard", ItemIds.NetworkCard).getInt();
+        ItemIds.MiscellaneousItems = config.getItem("MiscItems", ItemIds.MiscellaneousItems).getInt();
+        ItemIds.EnhancedFlintAndSteel = config.getItem("UpgradedFlintAndSteel", ItemIds.EnhancedFlintAndSteel).getInt();
 
         // Boolean configs
         Settings.AllowDialHomeDevices = config.get("Settings", "AllowDialDevices", Settings.AllowDialHomeDevices).getBoolean(Settings.AllowDialHomeDevices);
