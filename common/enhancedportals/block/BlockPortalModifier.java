@@ -141,11 +141,11 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             {
                 return false;
             }
-            else if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == Item.flintAndSteel.itemID)
+            else if (player.inventory.getCurrentItem() != null && (player.inventory.getCurrentItem().itemID == Item.flintAndSteel.itemID || player.inventory.getCurrentItem().itemID == ItemIds.EnhancedFlintAndSteel + 256))
             {
                 TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(x, y, z);
 
-                if (modifier.createPortal())
+                if (modifier.createPortal(player.inventory.getCurrentItem()))
                 {
                     player.inventory.getCurrentItem().damageItem(1, player);
                 }

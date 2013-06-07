@@ -14,6 +14,7 @@ import enhancedportals.block.BlockNetherPortal;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.block.BlockObsidianStairs;
 import enhancedportals.block.BlockPortalModifier;
+import enhancedportals.item.ItemEnhancedFlintSteel;
 import enhancedportals.item.ItemNetworkCard;
 import enhancedportals.item.ItemPortalModifierUpgrade;
 import enhancedportals.lib.BlockIds;
@@ -41,6 +42,7 @@ public class CommonProxy
 
     public ItemPortalModifierUpgrade portalModifierUpgrade;
     public ItemNetworkCard           networkCard;
+    public ItemEnhancedFlintSteel    enhancedFlintSteel;
 
     public ModifierNetwork           ModifierNetwork;
     public DialDeviceNetwork         DialDeviceNetwork;
@@ -73,9 +75,11 @@ public class CommonProxy
     {
         portalModifierUpgrade = new ItemPortalModifierUpgrade();
         networkCard = new ItemNetworkCard();
+        enhancedFlintSteel = new ItemEnhancedFlintSteel();
 
         GameRegistry.registerItem(portalModifierUpgrade, Localization.PortalModifierUpgrade_Name);
         GameRegistry.registerItem(networkCard, Localization.NetworkCard_Name);
+        GameRegistry.registerItem(enhancedFlintSteel, Localization.EnhancedFlintSteel_Name);
     }
 
     public void loadRecipes()

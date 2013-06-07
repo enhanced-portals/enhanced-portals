@@ -96,6 +96,49 @@ public class Portal
 
     public boolean createPortal()
     {
+        return createPortal(1, 0);        
+    }
+    
+    public boolean createPortal(ItemStack stack)
+    {
+        if (stack.itemID == Item.flintAndSteel.itemID)
+        {
+            return createPortal(6, 6);
+        }
+        else if (stack.itemID == EnhancedPortals.proxy.enhancedFlintSteel.itemID)
+        {
+            return createPortal(1, 0);
+        }
+        
+        return false;
+    }
+    
+    public boolean createPortal(int[] extraBorderBlocks, ItemStack stack)
+    {
+        if (extraBorderBlocks == null || extraBorderBlocks.length == 0)
+        {
+            return createPortal(stack);
+        }
+
+        int size = Settings.BorderBlocks.size();
+
+        for (int i : extraBorderBlocks)
+        {
+            Settings.BorderBlocks.add(i);
+        }
+
+        boolean status = createPortal(stack);
+
+        for (int i = size; i < Settings.BorderBlocks.size(); i++)
+        {
+            Settings.BorderBlocks.remove(i);
+        }
+
+        return status;
+    }
+    
+    public boolean createPortal(int minLimit, int maxLimit)
+    {
         World world = getWorld();
 
         if (world.isRemote || !preChecks() || !findPortalShape())
@@ -154,7 +197,23 @@ public class Portal
             }
         }
 
-        return validatePortal(addedBlocks);
+        if (!validatePortal(addedBlocks))
+        {
+            return false;
+        }
+        
+        if (addedBlocks.size() < minLimit)
+        {
+            removePortal(addedBlocks);
+            return false;
+        }
+        else if (maxLimit != 0 && addedBlocks.size() > maxLimit)
+        {
+            removePortal(addedBlocks);
+            return false;
+        }
+        
+        return true;
     }
 
     public boolean createPortal(int[] extraBorderBlocks)

@@ -101,11 +101,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (modifierLocation == null)
         {
-            if (player != null)
-            {
-                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noModifier"));
-            }
-
+            sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noModifier"), player);
             return;
         }
 
@@ -113,11 +109,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (modifier.dialDeviceNetwork.equals(network))
         {
-            if (player != null)
-            {
-                player.sendChatToPlayer(EnumChatFormatting.RED + "Invalid destination");
-            }
-
+            sendChatToPlayer(EnumChatFormatting.RED + "Invalid destination", player);
             return;
         }
 
@@ -127,18 +119,18 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
             if (exitModifier.isActive())
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + "Cannot dial an active portal");
+                sendChatToPlayer(EnumChatFormatting.RED + "Cannot dial an active portal", player);
                 return;
             }
 
             if (!modifier.createPortalFromDialDevice() || !exitModifier.createPortalFromDialDevice())
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"));
+                sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"), player);
             }
             else
             {
-                player.sendChatToPlayer(EnumChatFormatting.GREEN + "Successfully dialled the portal");
-                player.sendChatToPlayer(EnumChatFormatting.GREEN + "38 seconds remain until automatic shutdown");
+                sendChatToPlayer(EnumChatFormatting.GREEN + "Successfully dialled the portal", player);
+                sendChatToPlayer(EnumChatFormatting.GREEN + "38 seconds remain until automatic shutdown", player);
 
                 modifier.tempDialDeviceNetwork = network;
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
@@ -149,9 +141,21 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 loadChunk();
             }
         }
-        else if (player != null)
+        else
         {
-            player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"));
+            sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.noConnection"), player);
+        }
+    }
+    
+    private void sendChatToPlayer(String str, EntityPlayer player)
+    {
+        if (player != null)
+        {
+            player.sendChatToPlayer(str);
+        }
+        else
+        {
+            Reference.log.log(Level.INFO, str);
         }
     }
 

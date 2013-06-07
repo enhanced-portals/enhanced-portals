@@ -1,6 +1,7 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -31,6 +32,16 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         tempDialDeviceNetwork = "";
 
         upgradeHandler = new UpgradeHandler(5);
+    }
+    
+    public boolean createPortal(ItemStack stack)
+    {
+        if (upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+        {
+            return false;
+        }
+
+        return new Portal(this).createPortal(customBorderBlocks(), stack);
     }
 
     public boolean createPortal()

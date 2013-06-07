@@ -107,6 +107,11 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                         modifier.modifierNetwork = modifierNetwork;
                     }
                 }
+                else
+                {
+                    modifier.modifierNetwork = modifierNetwork;
+                    modifier.dialDeviceNetwork = dialDeviceNetwork;
+                }
 
                 world.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
             }
