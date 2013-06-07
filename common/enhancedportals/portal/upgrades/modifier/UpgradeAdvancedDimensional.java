@@ -27,7 +27,7 @@ public class UpgradeAdvancedDimensional extends Upgrade
     @Override
     public ItemStack getItemStack()
     {
-        return new ItemStack(EnhancedPortals.proxy.portalModifierUpgrade, 1, getUpgradeID());
+        return new ItemStack(EnhancedPortals.proxy.itemPortalModifierUpgrade, 1, getUpgradeID());
     }
 
     @Override

@@ -16,6 +16,7 @@ public class Localization
     public static final String AutomaticDialler_Name      = "automaticDialler";
     public static final String ObsidianSlab_Name          = "slabObsidian";
     public static final String EnhancedFlintSteel_Name    = "flintAndSteel";
+    public static final String MiscellaneousItems_Name = "miscItems";
 
     public static String[]     Locales                    = new String[] { "en_US" };
 

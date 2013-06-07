@@ -232,7 +232,7 @@ public class Portal
         {
             return createPortal(6, 6);
         }
-        else if (stack.itemID == EnhancedPortals.proxy.enhancedFlintSteel.itemID)
+        else if (stack.itemID == EnhancedPortals.proxy.itemEnhancedFlintSteel.itemID)
         {
             return createPortal(1, 0);
         }

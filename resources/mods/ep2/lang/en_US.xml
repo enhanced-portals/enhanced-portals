@@ -19,6 +19,7 @@
 	<entry key="item.portalModifierUpgrade.camouflage.name">Modifier Camouflage</entry>
 	<entry key="item.portalModifierUpgrade.dialDevice.name">Dialling Upgrade</entry>
 	<entry key="item.networkCard.name">Network Card</entry>
+	<entry key="item.miscItems.upgradeCard.name">Upgrade Card</entry>
 	<entry key="gui.upgrade.remove">Click to remove</entry>
 	<entry key="upgrade.portalModifier">Portal Modifier Upgrade</entry>
 	<entry key="upgrade.particles.text">Stops particles</entry>

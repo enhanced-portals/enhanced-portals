@@ -1,5 +1,8 @@
 package enhancedportals.network;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -15,6 +18,7 @@ import enhancedportals.block.BlockObsidian;
 import enhancedportals.block.BlockObsidianStairs;
 import enhancedportals.block.BlockPortalModifier;
 import enhancedportals.item.ItemEnhancedFlintSteel;
+import enhancedportals.item.ItemMiscellaneous;
 import enhancedportals.item.ItemNetworkCard;
 import enhancedportals.item.ItemPortalModifierUpgrade;
 import enhancedportals.lib.BlockIds;
@@ -40,9 +44,10 @@ public class CommonProxy
     public BlockDialDeviceBasic      blockDialDeviceBasic;
     public BlockAutomaticDialler     blockAutomaticDialler;
 
-    public ItemPortalModifierUpgrade portalModifierUpgrade;
-    public ItemNetworkCard           networkCard;
-    public ItemEnhancedFlintSteel    enhancedFlintSteel;
+    public ItemPortalModifierUpgrade itemPortalModifierUpgrade;
+    public ItemNetworkCard           itemNetworkCard;
+    public ItemEnhancedFlintSteel    itemEnhancedFlintSteel;
+    public ItemMiscellaneous         itemMisc;
 
     public ModifierNetwork           ModifierNetwork;
     public DialDeviceNetwork         DialDeviceNetwork;
@@ -74,18 +79,61 @@ public class CommonProxy
 
     public void loadItems()
     {
-        portalModifierUpgrade = new ItemPortalModifierUpgrade();
-        networkCard = new ItemNetworkCard();
-        enhancedFlintSteel = new ItemEnhancedFlintSteel();
+        itemPortalModifierUpgrade = new ItemPortalModifierUpgrade();
+        itemNetworkCard = new ItemNetworkCard();
+        itemEnhancedFlintSteel = new ItemEnhancedFlintSteel();
+        itemMisc = new ItemMiscellaneous();
 
-        GameRegistry.registerItem(portalModifierUpgrade, Localization.PortalModifierUpgrade_Name);
-        GameRegistry.registerItem(networkCard, Localization.NetworkCard_Name);
-        GameRegistry.registerItem(enhancedFlintSteel, Localization.EnhancedFlintSteel_Name);
+        GameRegistry.registerItem(itemPortalModifierUpgrade, Localization.PortalModifierUpgrade_Name);
+        GameRegistry.registerItem(itemNetworkCard, Localization.NetworkCard_Name);
+        GameRegistry.registerItem(itemEnhancedFlintSteel, Localization.EnhancedFlintSteel_Name);
+        GameRegistry.registerItem(itemMisc, Localization.MiscellaneousItems_Name);
     }
 
     public void loadRecipes()
     {
-
+        // --- ITEMS
+        // Upgrade Card
+        GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "NDN", " P ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
+        GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", " P ", "NDN", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
+        GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", "DP ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
+        GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", " PD", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
+        
+        // Network Card
+        GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "IDI", " P ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
+        GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", "DP ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
+        GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", " PD", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
+        GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", " P ", "IDI", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
+        
+        // Flint & Steel
+        GameRegistry.addShapelessRecipe(new ItemStack(itemEnhancedFlintSteel), Item.flintAndSteel, Item.lightStoneDust, Item.lightStoneDust);
+        
+        // Particle Upgrade
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 0), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.blazePowder);
+        
+        // Sound Upgrade
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 1), new ItemStack(itemMisc, 1, 0), Item.redstone, Block.music);
+        
+        // Dimensional Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), "IEI", "GUG", "IRI", Character.valueOf('U'), new ItemStack(itemMisc, 1, 0), Character.valueOf('R'), Item.redstone, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
+        
+        // Advanced Dimensional Upgrade
+        GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
+        
+        // Nether Frame Upgrade
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 5), new ItemStack(itemMisc, 1, 0), Block.glowStone, Block.netherBrick, Block.blockNetherQuartz);
+        
+        // Resourceful Frame Upgrade
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 6), new ItemStack(itemMisc, 1, 0), Block.blockIron, Block.blockGold, Item.diamond, Item.diamond, Item.emerald, Item.emerald);
+        
+        // Modifier Camouflage
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 7), new ItemStack(itemMisc, 1, 0), Item.diamond, Item.redstone, Item.enderPearl);
+        
+        // Dialling Upgrade
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 8), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.redstone, Item.enderPearl);
+        
+        // --- BLOCKS
+        
     }
 
     public void loadSettings(Configuration config)
