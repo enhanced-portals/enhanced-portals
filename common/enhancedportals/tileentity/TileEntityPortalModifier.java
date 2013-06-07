@@ -18,7 +18,7 @@ import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
 public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 {
     public String         texture;
-    public byte           thickness, redstoneSetting;
+    public byte           thickness, redstoneSetting, redstoneState;
     public String         modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
     public UpgradeHandler upgradeHandler;
 
@@ -27,6 +27,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         texture = "";
         thickness = 0;
         redstoneSetting = 0;
+        redstoneState = 0;
         modifierNetwork = "";
         dialDeviceNetwork = "";
         tempDialDeviceNetwork = "";
@@ -92,22 +93,22 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
         if (redstoneSetting == 0)
         {
-            if (redstoneLevel >= 1 && !isAnyActive())
+            if (redstoneLevel >= 1 && redstoneState == 0 && !isAnyActive())
             {
                 new Portal(this).createPortal(customBorderBlocks());
             }
-            else if (redstoneLevel == 0 && isActive())
+            else if (redstoneLevel == 0 && redstoneState > 0 && isActive())
             {
                 new Portal(this).removePortal();
             }
         }
         else if (redstoneSetting == 1)
         {
-            if (redstoneLevel == 0 && !isAnyActive())
+            if (redstoneLevel == 0 && redstoneState > 0 && !isAnyActive())
             {
                 new Portal(this).createPortal(customBorderBlocks());
             }
-            else if (redstoneLevel >= 1 && isActive())
+            else if (redstoneLevel >= 1 && redstoneState == 0 && isActive())
             {
                 new Portal(this).removePortal();
             }
@@ -116,16 +117,18 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         {
             byte rsLevel = (byte) (redstoneSetting - 2);
 
-            if (redstoneLevel == rsLevel && !isAnyActive())
+            if (redstoneLevel == rsLevel && redstoneState != rsLevel && !isAnyActive())
             {
                 new Portal(this).createPortal(customBorderBlocks());
             }
-            else if (redstoneLevel != rsLevel && isActive())
+            else if (redstoneLevel != rsLevel && redstoneState == rsLevel && isActive())
             {
                 new Portal(this).removePortal();
             }
         }
-    }
+        
+        redstoneState = (byte) redstoneLevel;
+    }    
 
     public boolean isActive()
     {
@@ -169,6 +172,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         texture = tagCompound.getString("Texture");
         thickness = tagCompound.getByte("Thickness");
         redstoneSetting = tagCompound.getByte("RedstoneSetting");
+        redstoneState = tagCompound.getByte("RedstoneState");
         modifierNetwork = tagCompound.getString("mNetwork");
         dialDeviceNetwork = tagCompound.getString("dNetwork");
         tempDialDeviceNetwork = tagCompound.getString("dNetworkTemp");
@@ -218,6 +222,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         tagCompound.setString("Texture", texture);
         tagCompound.setByte("Thickness", thickness);
         tagCompound.setByte("RedstoneSetting", redstoneSetting);
+        tagCompound.setByte("RedstoneState", redstoneState);
         tagCompound.setString("mNetwork", modifierNetwork);
         tagCompound.setString("dNetwork", dialDeviceNetwork);
         tagCompound.setString("dNetworkTemp", tempDialDeviceNetwork);
