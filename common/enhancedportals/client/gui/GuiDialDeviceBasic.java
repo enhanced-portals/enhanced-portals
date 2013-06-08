@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Strings;
-import enhancedportals.network.packet.PacketBasicDialRequest;
+import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
@@ -64,7 +64,7 @@ public class GuiDialDeviceBasic extends GuiNetwork
                 str = str.substring(Reference.glyphSeperator.length());
             }
 
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketBasicDialRequest(dialDevice, str)));
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(dialDevice, str)));
             FMLClientHandler.instance().getClient().thePlayer.closeScreen();
         }
     }

@@ -4,25 +4,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedcore.gui.GuiItemStackButton;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
-import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
 import enhancedportals.lib.Textures;
+import enhancedportals.network.packet.PacketDialEntry;
+import enhancedportals.network.packet.PacketEnhancedPortals;
+import enhancedportals.network.packet.PacketGui;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
@@ -32,7 +37,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
     GuiTextField          nameField;
 
     byte                  thickness;
-    boolean               sounds, particles, popUpState;
+    boolean               popUpState;
     String                texture;
     String                network, name;
 
@@ -49,8 +54,6 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         texture = "";
         name = "Name";
         thickness = 0;
-        sounds = true;
-        particles = true;
         popUpState = false;
 
         for (int i = 0; i < 9; i++)
@@ -68,6 +71,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
             elementList.add(new GuiGlyphElement(guiLeft + 8 + (i - 18) * 18, guiTop + 51, Reference.glyphItems.get(i).getItemName().replace("item.", ""), Reference.glyphItems.get(i), this));
         }
 
+        extendedSlots.add(new GuiTextureSlot(xSize - 24, 40, Textures.getItemStackFromTexture(texture), this));
     }
 
     @Override
@@ -80,12 +84,35 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
                 return;
             }
 
-            // TODO PacketDispatcher.sendPacketToServer(new PacketNetworkData(dialDevice, name, network, texture, thickness, particles, sounds).getPacket());
-            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialEntry(dialDevice, (byte) 0, name, texture, network, thickness)));
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(dialDevice, GuiIds.DialDevice)));
         }
         else if (button.id == 2)
         {
-            // TODO PacketDispatcher.sendPacketToServer(new PacketGui(true, false, GuiIds.DialDevice, dialDevice).getPacket());
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketGui(dialDevice, GuiIds.DialDevice)));
+        }
+        else if (button.id == 13)
+        {
+            int num = 0;
+
+            if (button.displayString != null && button.displayString != "")
+            {
+                num = Integer.parseInt(button.displayString);
+            }
+
+            if (num + 1 < 5)
+            {
+                button.displayString = "" + (num + 1);
+                num++;
+            }
+            else
+            {
+                button.displayString = "1";
+                num = 1;
+            }
+
+            thickness = (byte) (num - 1);
+            ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (thickness == 0 ? Strings.Normal.toString() : thickness == 1 ? Strings.Thick.toString() : thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
         }
     }
 
@@ -106,40 +133,6 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-        int padding = 5, width = 10, colourA = 0xFFFF0000, colourB = 0xFF00FF00;
-        ItemStack itemstack = Textures.getItemStackFromTexture(texture);
-
-        if (thickness == 1)
-        {
-            padding = 4;
-            width = 8;
-        }
-        else if (thickness == 2)
-        {
-            padding = 2;
-            width = 4;
-        }
-        else if (thickness == 3)
-        {
-            padding = 0;
-            width = 0;
-        }
-
-        if (itemstack != null)
-        {
-            itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, itemstack, guiLeft + xSize - 24, guiTop + 40);
-            GL11.glDisable(GL11.GL_LIGHTING);
-        }
-
-        drawRect(guiLeft + 8, guiTop + 40, guiLeft + 24, guiTop + 56, particles ? colourB : colourA);
-        drawRect(guiLeft + 8 + 18, guiTop + 40, guiLeft + 24 + 18, guiTop + 56, sounds ? colourB : colourA);
-        drawRect(guiLeft + 134 + padding, guiTop + 40, guiLeft + 16 - width + 134 + padding, guiTop + 40 + 16, 0xFF555555);
-
-        itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, new ItemStack(Item.blazePowder), guiLeft + 8, guiTop + 40);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        itemRenderer.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.renderEngine, new ItemStack(Block.jukebox), guiLeft + 8 + 18, guiTop + 40);
-        GL11.glDisable(GL11.GL_LIGHTING);
-
         if (stackList != null)
         {
             for (int i2 = 0; i2 < stackList.size(); i2++)
@@ -154,6 +147,8 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
                 itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stackList.get(i2).itemStack, x2 + i2 * 18, y2);
             }
         }
+
+        drawExtendedSlots(i, j);
     }
 
     @Override
@@ -165,10 +160,12 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         {
             if (stackList.isEmpty())
             {
-                fontRenderer.drawStringWithShadow(Localization.localizeString("gui.network.info"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("gui.network.info")) / 2, 66, 0xFF00FF00);
+                drawRect(7, 61, xSize - 7, 79, 0x55000000);
+                fontRenderer.drawStringWithShadow(Strings.ClickToSetIdentifier.toString(), xSize / 2 - fontRenderer.getStringWidth(Strings.ClickToSetIdentifier.toString()) / 2, 66, 0x00FF00);
             }
 
-            fontRenderer.drawString(Localization.localizeString("Modifications"), xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("Modifications")) / 2, 44, 0xFF444444);
+            fontRenderer.drawString(Strings.Modifications.toString(), xSize / 2 - fontRenderer.getStringWidth(Strings.Modifications.toString()) / 2, 44, 0xFF444444);
+            drawExtendedSlotsForeground(par1, par2);
         }
     }
 
@@ -289,8 +286,8 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
             drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
             fontRenderer.drawString(Localization.localizeString("tile.dialDevice.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDevice.name")) / 2, 20, 0xFFCCCCCC);
-            fontRenderer.drawString(Localization.localizeString("gui.glyphs.title"), guiLeft + 7, guiTop + 6, 0xFF444444);
-            fontRenderer.drawString(Localization.localizeString("gui.network.title"), guiLeft + 7, guiTop + 74, 0xFF444444);
+            fontRenderer.drawString(Strings.Glyphs.toString(), guiLeft + 7, guiTop + 6, 0xFF444444);
+            fontRenderer.drawString(Strings.UniqueIdentifier.toString(), guiLeft + 7, guiTop + 74, 0xFF444444);
 
             ((GuiButton) buttonList.get(2)).drawButton(mc, par1, par2);
             ((GuiButton) buttonList.get(3)).drawButton(mc, par1, par2);
@@ -322,58 +319,6 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         {
             super.drawScreen(par1, par2, par3);
             nameField.drawTextBox();
-            List<String> theList = new ArrayList<String>();
-
-            if (isPointInRegion(8, 40, 16, 16, par1, par2))
-            {
-                theList.add("Particles");
-                theList.add(EnumChatFormatting.GRAY + (particles ? "Active" : "Inactive"));
-                theList.add(EnumChatFormatting.DARK_GRAY + "The modifier must have");
-                theList.add(EnumChatFormatting.DARK_GRAY + "the upgrade installed");
-                drawHText(theList, par1, par2, fontRenderer);
-            }
-            else if (isPointInRegion(8 + 18, 40, 16, 16, par1, par2))
-            {
-                theList.clear();
-                theList.add("Sounds");
-                theList.add(EnumChatFormatting.GRAY + (sounds ? "Active" : "Inactive"));
-                theList.add(EnumChatFormatting.DARK_GRAY + "The modifier must have");
-                theList.add(EnumChatFormatting.DARK_GRAY + "the upgrade installed");
-                drawHText(theList, par1, par2, fontRenderer);
-            }
-            else if (isPointInRegion(134, 40, 16, 16, par1, par2))
-            {
-                theList.clear();
-                theList.add("Thickness");
-                theList.add(EnumChatFormatting.GRAY + (thickness == 0 ? "Normal" : thickness == 1 ? "Thick" : thickness == 2 ? "Thicker" : thickness == 3 ? "Full Block" : "Unknown"));
-                drawHText(theList, par1, par2, fontRenderer);
-            }
-            else if (isPointInRegion(134 + 18, 40, 16, 16, par1, par2))
-            {
-                theList.clear();
-                theList.add("Facade");
-
-                if (Textures.getItemStackFromTexture(texture) != null)
-                {
-                    ItemStack stack = Textures.getItemStackFromTexture(texture);
-
-                    if (stack.itemID == BlockIds.DummyPortal)
-                    {
-                        theList.add(EnumChatFormatting.GRAY + Localization.localizeString("gui.portalColour." + ItemDye.dyeColorNames[stack.getItemDamage()]));
-                    }
-                    else
-                    {
-                        theList.add(EnumChatFormatting.GRAY + Localization.localizeString(stack.getItemName() + ".name"));
-                    }
-                }
-                else
-                {
-                    theList.add(EnumChatFormatting.GRAY + "Unknown");
-                }
-
-                theList.add(EnumChatFormatting.DARK_GRAY + "Shift-click on a block to change");
-                drawHText(theList, par1, par2, fontRenderer);
-            }
         }
     }
 
@@ -439,17 +384,39 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         }
     }
 
+    @Override
+    public void extendedSlotChanged(GuiExtendedItemSlot slot)
+    {
+        ItemStack stack = slot.getItemStack();
+
+        if (stack.itemID == EnhancedPortals.proxy.blockDummyPortal.blockID)
+        {
+            stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
+        }
+
+        PortalTexture text = Textures.getTextureFromItemStack(stack);
+
+        if (text != null)
+        {
+            texture = text.getID();
+        }
+        else
+        {
+            texture = "C:5";
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
         super.initGui();
 
-        buttonList.add(new GuiButton(1, guiLeft + xSize - 82, guiTop + ySize + 5, 75, 20, "Save"));
-        buttonList.add(new GuiButton(2, guiLeft + 7, guiTop + ySize + 5, 75, 20, "Cancel"));
+        buttonList.add(new GuiButton(1, guiLeft + xSize - 82, guiTop + ySize + 5, 75, 20, Strings.Save.toString()));
+        buttonList.add(new GuiButton(2, guiLeft + 7, guiTop + ySize + 5, 75, 20, Strings.Cancel.toString()));
 
-        buttonList.add(new GuiButton(3, guiLeft + 7 + 3, guiTop + ySize - 55, 75, 20, "Cancel"));
-        buttonList.add(new GuiButton(4, guiLeft + 87 + 3, guiTop + ySize - 55, 75, 20, "Save"));
+        buttonList.add(new GuiButton(3, guiLeft + 7 + 3, guiTop + ySize - 55, 75, 20, Strings.Cancel.toString()));
+        buttonList.add(new GuiButton(4, guiLeft + 87 + 3, guiTop + ySize - 55, 75, 20, Strings.Save.toString()));
 
         nameField = new GuiTextField(fontRenderer, guiLeft, guiTop, xSize, 16);
 
@@ -461,6 +428,13 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         {
             nameField.setText(name);
         }
+
+        List<String> strList = new ArrayList<String>();
+        strList.add(Strings.Thickness.toString());
+        strList.add("");
+        buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 40, new ItemStack(EnhancedPortals.proxy.blockNetherPortal, 1, 2), true, strList, true));
+        ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (thickness + 1);
+        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (thickness == 0 ? Strings.Normal.toString() : thickness == 1 ? Strings.Thick.toString() : thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
     }
 
     @Override
@@ -485,8 +459,6 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
                 return;
             }
         }
-
-        super.keyTyped(par1, par2);
     }
 
     @Override
@@ -496,51 +468,15 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         {
             if (isShiftKeyDown() && getSlotAtPosition(par1, par2) != null)
             {
-                PortalTexture Text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0));
-
-                if (Text != null)
-                {
-                    String text = Text.getID();
-
-                    if (texture.equals(text))
-                    {
-                        text = Textures.getTextureFromItemStack(getSlotAtPosition(par1, par2).decrStackSize(0), texture).getID();
-                    }
-
-                    texture = text;
-                }
+                extendedSlots.get(0).setSlot(getSlotAtPosition(par1, par2).getStack());
             }
 
             super.mouseClicked(par1, par2, par3);
             nameField.mouseClicked(par1, par2, par3);
 
-            if (isPointInRegion(8, 40, 16, 16, par1, par2))
-            {
-                particles = !particles;
-            }
-            else if (isPointInRegion(8 + 18, 40, 16, 16, par1, par2))
-            {
-                sounds = !sounds;
-            }
-            else if (isPointInRegion(134, 40, 16, 16, par1, par2))
-            {
-                thickness++;
-
-                if (thickness > 3)
-                {
-                    thickness = 0;
-                }
-            }
-            else if (isPointInRegion(7, 40 + 21, xSize - 15, 17, par1, par2))
+            if (isPointInRegion(7, 40 + 21, xSize - 15, 17, par1, par2))
             {
                 popUpState = true;
-            }
-            else if (isPointInRegion(134 + 18, 40, 16, 16, par1, par2))
-            {
-                if (par3 == 1)
-                {
-                    texture = Textures.getTexture("").getID();
-                }
             }
         }
         else

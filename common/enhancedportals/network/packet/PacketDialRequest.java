@@ -2,24 +2,26 @@ package enhancedportals.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
-public class PacketBasicDialRequest extends PacketEnhancedPortals
+public class PacketDialRequest extends PacketEnhancedPortals
 {
     int    xCoord, yCoord, zCoord, dimension;
     String network;
 
-    public PacketBasicDialRequest()
+    public PacketDialRequest()
     {
 
     }
 
-    public PacketBasicDialRequest(TileEntityDialDeviceBasic dialDevice, String diallingNetwork)
+    public PacketDialRequest(TileEntity dialDevice, String diallingNetwork)
     {
         xCoord = dialDevice.xCoord;
         yCoord = dialDevice.yCoord;
@@ -73,6 +75,15 @@ public class PacketBasicDialRequest extends PacketEnhancedPortals
                     TileEntityDialDeviceBasic device = (TileEntityDialDeviceBasic) loc.getTileEntity();
 
                     device.processDiallingRequest(this.network, player);
+                }
+            }
+            else if (loc.getBlockId() == BlockIds.DialHomeDevice)
+            {
+                if (loc.getTileEntity() instanceof TileEntityDialDevice)
+                {
+                    TileEntityDialDevice device = (TileEntityDialDevice) loc.getTileEntity();
+
+                    device.processDiallingRequest(Integer.parseInt(this.network), player);
                 }
             }
         }

@@ -98,59 +98,59 @@ public class CommonProxy
         GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", " P ", "NDN", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
         GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", "DP ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
         GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", " PD", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 5), Character.valueOf('P'), Item.paper);
-        
+
         // Network Card
         GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "IDI", " P ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
         GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", "DP ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
         GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", " PD", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
         GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", " P ", "IDI", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('P'), Item.paper);
-        
+
         // Flint & Steel
         GameRegistry.addShapelessRecipe(new ItemStack(itemEnhancedFlintSteel), Item.flintAndSteel, Item.lightStoneDust, Item.lightStoneDust);
-        
+
         // Particle Upgrade
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 0), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.blazePowder);
-        
+
         // Sound Upgrade
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 1), new ItemStack(itemMisc, 1, 0), Item.redstone, Block.music);
-        
+
         // Dimensional Upgrade
         GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), "IEI", "GUG", "IRI", Character.valueOf('U'), new ItemStack(itemMisc, 1, 0), Character.valueOf('R'), Item.redstone, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
-        
+
         // Advanced Dimensional Upgrade
         GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
-        
+
         // Nether Frame Upgrade
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 5), new ItemStack(itemMisc, 1, 0), Block.glowStone, Block.netherBrick, Block.blockNetherQuartz);
-        
+
         // Resourceful Frame Upgrade
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 6), new ItemStack(itemMisc, 1, 0), Block.blockIron, Block.blockGold, Item.diamond, Item.diamond, Item.emerald, Item.emerald);
-        
+
         // Modifier Camouflage
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 7), new ItemStack(itemMisc, 1, 0), Item.diamond, Item.redstone, Item.enderPearl);
-        
+
         // Dialling Upgrade
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 8), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.redstone, Item.enderPearl);
-        
+
         // --- BLOCKS
         // Obsidian Stairs
         GameRegistry.addShapedRecipe(new ItemStack(blockObsidianStairs, 4), "O  ", "OO ", "OOO", Character.valueOf('O'), Block.obsidian);
         GameRegistry.addShapedRecipe(new ItemStack(blockObsidianStairs, 4), "OOO", " OO", "  O", Character.valueOf('O'), Block.obsidian);
-        
+
         // Portal Modifier
         GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "DIE", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
         GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "EID", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
         GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "DIE", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
         GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "EID", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
-        
+
         // Basic Dialling Device
         GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SES", "IDI", "SRS", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
         GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SRS", "IDI", "SES", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
-        
+
         // Dialling Device
         GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "OMO", "DED", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
         GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "ORO", "DED", "OMO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
-        
+
         // Automatic Dialler
         GameRegistry.addShapedRecipe(new ItemStack(blockAutomaticDialler), "SOS", "IRI", "SOS", Character.valueOf('S'), Block.stone, Character.valueOf('O'), Block.obsidian, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
     }

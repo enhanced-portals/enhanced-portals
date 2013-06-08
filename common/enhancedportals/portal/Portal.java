@@ -178,6 +178,13 @@ public class Portal
         return true;
     }
 
+    public boolean createPortal(String texture, byte thickness, int[] extraBorderBlocks)
+    {
+        this.texture = texture;
+        this.thickness = thickness;        
+        return createPortal(extraBorderBlocks);
+    }
+    
     public boolean createPortal(int[] extraBorderBlocks)
     {
         if (extraBorderBlocks == null || extraBorderBlocks.length == 0)

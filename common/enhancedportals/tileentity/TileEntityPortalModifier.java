@@ -62,8 +62,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public boolean createPortalFromDialDevice(String texture, byte thickness)
     {
-        // TODO CHANGE TO ARGUMENTS INSTEAD OF USING SELF FOR ADVANCED DD
-        return new Portal(this).createPortal(customBorderBlocks());
+        return new Portal(this).createPortal(texture, thickness, customBorderBlocks());
     }
 
     public int[] customBorderBlocks()

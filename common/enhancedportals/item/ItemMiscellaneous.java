@@ -16,9 +16,9 @@ import enhancedportals.lib.Reference;
 
 public class ItemMiscellaneous extends Item
 {
-    Icon[] textures;
+    Icon[]   textures;
     String[] names = { "upgradeCard" };
-    
+
     public ItemMiscellaneous()
     {
         super(ItemIds.MiscellaneousItems);
@@ -40,19 +40,7 @@ public class ItemMiscellaneous extends Item
 
         return textures[par1];
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
-    {
-        textures = new Icon[names.length];
-        
-        for (int i = 0; i < names.length; i++)
-        {
-            textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + names[i]);
-        }
-    }
-    
+
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
@@ -62,11 +50,23 @@ public class ItemMiscellaneous extends Item
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
-    
+
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
         int i = MathHelper.clamp_int(par1ItemStack.getItemDamage(), 0, 15);
         return super.getUnlocalizedName() + "." + names[i];
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        textures = new Icon[names.length];
+
+        for (int i = 0; i < names.length; i++)
+        {
+            textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + names[i]);
+        }
     }
 }

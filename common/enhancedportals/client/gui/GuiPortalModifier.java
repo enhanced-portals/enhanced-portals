@@ -166,7 +166,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             String str = portalModifier.isRemotelyControlled() ? Strings.ClickToSetIdentifier.toString() : Strings.ClickToSetNetwork.toString();
 
             drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x55000000);
-            
+
             if (!EnhancedPortals.proxy.isIdentifierTaken)
             {
                 fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
