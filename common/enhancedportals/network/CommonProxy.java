@@ -133,7 +133,26 @@ public class CommonProxy
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 8), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.redstone, Item.enderPearl);
         
         // --- BLOCKS
+        // Obsidian Stairs
+        GameRegistry.addShapedRecipe(new ItemStack(blockObsidianStairs, 4), "O  ", "OO ", "OOO", Character.valueOf('O'), Block.obsidian);
+        GameRegistry.addShapedRecipe(new ItemStack(blockObsidianStairs, 4), "OOO", " OO", "  O", Character.valueOf('O'), Block.obsidian);
         
+        // Portal Modifier
+        GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "DIE", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
+        GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "EID", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
+        GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "DIE", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
+        GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "EID", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), itemEnhancedFlintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
+        
+        // Basic Dialling Device
+        GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SES", "IDI", "SRS", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
+        GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SRS", "IDI", "SES", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
+        
+        // Dialling Device
+        GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "OMO", "DED", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
+        GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "ORO", "DED", "OMO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
+        
+        // Automatic Dialler
+        GameRegistry.addShapedRecipe(new ItemStack(blockAutomaticDialler), "SOS", "IRI", "SOS", Character.valueOf('S'), Block.stone, Character.valueOf('O'), Block.obsidian, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
     }
 
     public void loadSettings(Configuration config)
