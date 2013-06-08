@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet41EntityEffect;
 import net.minecraft.network.packet.Packet43Experience;
@@ -172,6 +173,11 @@ public class TeleportManager
 
         if (teleportEntity)
         {
+            if (entity instanceof EntityArrow)
+            {
+                outModifierOffset = outModifierOffset.getOffset(ForgeDirection.getOrientation(outModifierMeta));
+            }
+            
             teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, outModifierMeta);
         }
 
@@ -187,7 +193,8 @@ public class TeleportManager
 
         boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
         float rotationYaw = 0f;
-
+        double velocityX = 0f, velocityY = 0f, velocityZ = 0f, mountedVelocityX = 0f, mountedVelocityY = 0f, mountedVelocityZ = 0f;
+        
         if (teleportDataOffset.getMetadata() == 4 || teleportDataOffset.getMetadata() == 5)
         {
             if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
@@ -220,10 +227,17 @@ public class TeleportManager
             teleportDataOffset.yCoord -= 1;
         }
 
+        velocityX = entity.motionX;
+        velocityY = entity.motionY;
+        velocityZ = entity.motionZ;
         Entity mountedEntity = null;
 
         if (entity.ridingEntity != null)
         {
+            mountedVelocityX = entity.ridingEntity.motionX;
+            mountedVelocityY = entity.ridingEntity.motionY;
+            mountedVelocityZ = entity.ridingEntity.motionZ;
+            
             mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
             entity.mountEntity(null);
         }
@@ -282,8 +296,10 @@ public class TeleportManager
         if (mountedEntity != null)
         {
             entity.mountEntity(mountedEntity);
+            mountedEntity.setVelocity(mountedVelocityX, mountedVelocityY, mountedVelocityZ);
         }
 
+        entity.setVelocity(velocityX, velocityY, velocityZ);
         setCanEntityTravel(entity, false);
         return entity;
     }
