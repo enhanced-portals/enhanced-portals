@@ -55,4 +55,9 @@ I will be working on a number of different addons that integerate EnhancedPortal
 
 Finally there are three buttons to the right of the GUI which control the state of the redstone, which act as you would expect them to.
 
-// to finish
+##The Dialling Devices
+###Basic Dial Device
+info
+
+###Dial Device
+info
