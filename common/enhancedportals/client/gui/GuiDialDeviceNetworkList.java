@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Textures;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
 
 @SideOnly(Side.CLIENT)
@@ -50,7 +51,8 @@ class GuiDialDeviceNetworkList extends GuiSlot
                     }
                 }
             }
-
+            
+            parent.itemRenderer.renderItemIntoGUI(parent.fontRenderer, parent.mc.renderEngine, Textures.getItemStackFromTexture(obj.texture), par2 + 200, par3);
             GL11.glDisable(GL11.GL_LIGHTING);
         }
     }

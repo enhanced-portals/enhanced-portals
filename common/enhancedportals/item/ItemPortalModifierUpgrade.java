@@ -120,9 +120,12 @@ public class ItemPortalModifierUpgrade extends Item
 
                 if (modifier.upgradeHandler.addUpgrade(Upgrade.getUpgrade(stack.getItemDamage()), modifier))
                 {
-                    player.inventory.mainInventory[player.inventory.currentItem] = null;
-
-                    ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                    if (!player.capabilities.isCreativeMode)
+                    {
+                        player.inventory.mainInventory[player.inventory.currentItem] = null;
+                        ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                    }
+                    
                     PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(modifier)));
                 }
                 else
