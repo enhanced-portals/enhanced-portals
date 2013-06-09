@@ -37,11 +37,9 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.Textures;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
-import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.world.DialDeviceChunkCallback;
@@ -49,9 +47,7 @@ import enhancedportals.world.DialDeviceChunkCallback;
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
-{
-    private boolean addedTextures = false;
-    
+{    
     @Instance(Reference.MOD_ID)
     public static EnhancedPortals instance;
 
@@ -148,15 +144,6 @@ public class EnhancedPortals
 
         proxy.ModifierNetwork = new ModifierNetwork(event.getServer());
         proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
-        
-        if (!addedTextures)
-        {
-            Textures.portalTextureMap.put("I:" + Item.bucketWater.itemID + ":0", new PortalTexture("I:" + Item.bucketWater.itemID + ":0", Block.waterStill.getBlockTextureFromSide(0), Textures.getTexture("C:4").getModifierTexture(), Textures.getTexture("C:4").getParticleColour()));
-            Textures.portalTextureMap.put("I:" + Item.bucketLava.itemID + ":0", new PortalTexture("I:" + Item.bucketLava.itemID + ":0", Block.lavaStill.getBlockTextureFromSide(0), Textures.getTexture("C:14").getModifierTexture(), Textures.getTexture("C:14").getParticleColour()));
-            Textures.portalTextureMap.put("I:" + Item.snowball.itemID + ":0", new PortalTexture("I:" + Item.snowball.itemID + ":0", Block.snow.getBlockTextureFromSide(0), Textures.getTexture("C:15").getModifierTexture(), Textures.getTexture("C:15").getParticleColour()));
-            
-            addedTextures = true;
-        }
     }
 
     @ServerStopping
@@ -165,7 +152,7 @@ public class EnhancedPortals
         proxy.ModifierNetwork.saveData();
         proxy.DialDeviceNetwork.saveData();
     }
-
+    
     @ForgeSubscribe
     public void worldSave(WorldEvent.Save event)
     {
