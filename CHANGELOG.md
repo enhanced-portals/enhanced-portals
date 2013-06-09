@@ -1,15 +1,5 @@
 ##EnhancedPortals 2 - Changelog
 
-####To Finish Before Final Release:
-* Client-side commands.
-* Server op commands.
-* Localization.
-* Rename en_US language to en_GB and create US version, spellings etc.
-* Add more customisation.
-* Add server control options.
- * Limit the maximum size of portals.
- * Set a delay on Portal Modifiers/Dial Devices between portal creation.
-
 ####Post-Release
 * EnhancedPortals 2 - World
  * Naturally spawning ruins containing loot and portals
