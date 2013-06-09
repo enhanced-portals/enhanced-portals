@@ -14,17 +14,17 @@ public abstract class PacketEnhancedPortals
 {
     enum Type
     {
-        REQUEST_DATA(PacketRequestData.class),
-        GUI(PacketGui.class),
-        PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class),
-        NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class),
-        PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
         AUTOMATIC_DIALLER_UPDATE(PacketAutomaticDiallerUpdate.class),
-        DIAL_DEVICE_UPDATE(PacketDialDeviceUpdate.class),
         BASIC_DIAL_DEVICE_UPDATE(PacketBasicDialDeviceUpdate.class),
         BASIC_DIAL_REQUEST(PacketDialRequest.class),
+        DIAL_DEVICE_UPDATE(PacketDialDeviceUpdate.class),
+        DIAL_ENTRY_ADD(PacketDialEntry.class),
+        GUI(PacketGui.class),
         MISC(PacketMisc.class),
-        DIAL_ENTRY_ADD(PacketDialEntry.class);
+        NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class),
+        PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class),
+        PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
+        REQUEST_DATA(PacketRequestData.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 

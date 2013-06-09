@@ -55,15 +55,15 @@ public class PacketDialEntry extends PacketEnhancedPortals
 
             if (objArray != null)
             {
-                xCoord = (int) objArray[0];
-                yCoord = (int) objArray[1];
-                zCoord = (int) objArray[2];
-                dimension = (int) objArray[3];
-                Name = (String) objArray[4];
-                Texture = (String) objArray[5];
-                Identifier = (String) objArray[6];
-                Thickness = (byte) objArray[7];
-                Type = (byte) objArray[8];
+                xCoord = Integer.parseInt(objArray[0].toString());
+                yCoord = Integer.parseInt(objArray[1].toString());
+                zCoord = Integer.parseInt(objArray[2].toString());
+                dimension = Integer.parseInt(objArray[3].toString());
+                Name = objArray[4].toString();
+                Texture = objArray[5].toString();
+                Identifier = objArray[6].toString();
+                Thickness = Byte.parseByte(objArray[7].toString());
+                Type = Byte.parseByte(objArray[8].toString());
 
                 return this;
             }

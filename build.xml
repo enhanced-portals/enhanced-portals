@@ -7,6 +7,7 @@
 	<target name="clean">
 		<delete file="${dir.development}\mcp\src\minecraft\mcmod.info" />
 		<delete dir="${dir.development}\mcp\src\minecraft\enhancedportals" />
+		<delete dir="${dir.development}\mcp\src\minecraft\enhancedcore" />
 		<delete dir="${dir.development}\mcp\src\minecraft\dan200" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft" />
 	</target>
@@ -14,6 +15,7 @@
 	<target name="build">
 		<copy todir="${dir.development}\mcp\src\minecraft">
 			<fileset dir="${dir.development}\source\enhanced-portals\common\" />
+			<fileset dir="${dir.development}\source\enhanced-core\common\" />
 			<fileset dir="${dir.development}\source\computercraft-api\" />
 		</copy>
 		<replace dir="${dir.development}\mcp\src\minecraft" token="@VERSION@" value="${release.mod.version}" />
@@ -57,6 +59,7 @@
 		<antcall target="reobfuscate" />
 		
 		<!-- Build the jar -->
+		<delete dir="${dir.development}\mcp\reobf\minecraft\enhancedcore" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\dan200" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\ibxm" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
@@ -80,6 +83,7 @@
 		<antcall target="reobfuscate" />
 		
 		<!-- Build the jar -->
+		<delete dir="${dir.development}\mcp\reobf\minecraft\enhancedcore" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\dan200" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\ibxm" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />

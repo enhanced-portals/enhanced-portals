@@ -50,15 +50,15 @@ public class PacketGui extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(byte[] data)
     {
-        Object[] packetData = PacketHelper.getObjects(data, "I", "I", "I", "I", "I");
+        Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "I");
 
-        if (packetData != null)
+        if (objArray != null)
         {
-            xCoord = (int) packetData[0];
-            yCoord = (int) packetData[1];
-            zCoord = (int) packetData[2];
-            dimension = (int) packetData[3];
-            guiID = (int) packetData[4];
+            xCoord = Integer.parseInt(objArray[0].toString());
+            yCoord = Integer.parseInt(objArray[1].toString());
+            zCoord = Integer.parseInt(objArray[2].toString());
+            dimension = Integer.parseInt(objArray[3].toString());
+            guiID = Integer.parseInt(objArray[4].toString());
         }
         else
         {

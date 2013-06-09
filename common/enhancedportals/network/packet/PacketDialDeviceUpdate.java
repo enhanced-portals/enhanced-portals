@@ -37,12 +37,12 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
 
             if (objArray != null)
             {
-                xCoord = (int) objArray[0];
-                yCoord = (int) objArray[1];
-                zCoord = (int) objArray[2];
-                dimension = (int) objArray[3];
-                active = (boolean) objArray[4];
-                tickTimer = (int) objArray[5];
+                xCoord = Integer.parseInt(objArray[0].toString());
+                yCoord = Integer.parseInt(objArray[1].toString());
+                zCoord = Integer.parseInt(objArray[2].toString());
+                dimension = Integer.parseInt(objArray[3].toString());
+                active = Boolean.parseBoolean(objArray[4].toString());
+                tickTimer = Integer.parseInt(objArray[5].toString());
 
                 return this;
             }

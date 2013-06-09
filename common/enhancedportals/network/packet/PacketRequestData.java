@@ -38,12 +38,12 @@ public class PacketRequestData extends PacketEnhancedPortals
         {
             Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I");
 
-            if (objArray != null && objArray.length == 4)
+            if (objArray != null)
             {
-                xCoord = (int) objArray[0];
-                yCoord = (int) objArray[1];
-                zCoord = (int) objArray[2];
-                dimension = (int) objArray[3];
+                xCoord = Integer.parseInt(objArray[0].toString());
+                yCoord = Integer.parseInt(objArray[1].toString());
+                zCoord = Integer.parseInt(objArray[2].toString());
+                dimension = Integer.parseInt(objArray[3].toString());
 
                 return this;
             }

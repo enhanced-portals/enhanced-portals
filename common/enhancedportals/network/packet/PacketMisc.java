@@ -31,8 +31,8 @@ public class PacketMisc extends PacketEnhancedPortals
 
             if (objArray != null)
             {
-                type = (byte) objArray[0];
-                this.data = (int) objArray[1];
+                type = Byte.parseByte(objArray[0].toString());
+                this.data = Integer.parseInt(objArray[1].toString());
 
                 return this;
             }

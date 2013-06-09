@@ -45,15 +45,15 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
 
             if (objArray != null)
             {
-                xCoord = (int) objArray[0];
-                yCoord = (int) objArray[1];
-                zCoord = (int) objArray[2];
-                dimension = (int) objArray[3];
-                thickness = (byte) objArray[4];
-                redstoneSetting = (byte) objArray[5];
-                texture = (String) objArray[6];
-                modifierNetwork = (String) objArray[7];
-                dialDeviceNetwork = (String) objArray[8];
+                xCoord = Integer.parseInt(objArray[0].toString());
+                yCoord = Integer.parseInt(objArray[1].toString());
+                zCoord = Integer.parseInt(objArray[2].toString());
+                dimension = Integer.parseInt(objArray[3].toString());
+                thickness = Byte.parseByte(objArray[4].toString());
+                redstoneSetting = Byte.parseByte(objArray[5].toString());
+                texture = objArray[6].toString();
+                modifierNetwork = objArray[7].toString();
+                dialDeviceNetwork = objArray[8].toString();
 
                 return this;
             }

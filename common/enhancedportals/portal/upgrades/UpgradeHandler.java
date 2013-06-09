@@ -65,9 +65,12 @@ public class UpgradeHandler
 
     public void addUpgradesFromByteArray(byte[] upgrades, TileEntity tileEntity)
     {
-        for (byte b : upgrades)
+        if (upgrades != null)
         {
-            addUpgrade(b, tileEntity);
+            for (byte b : upgrades)
+            {
+                addUpgrade(b, tileEntity);
+            }
         }
     }
 

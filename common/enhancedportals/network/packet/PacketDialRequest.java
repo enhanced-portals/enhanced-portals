@@ -39,11 +39,11 @@ public class PacketDialRequest extends PacketEnhancedPortals
 
             if (objArray != null)
             {
-                xCoord = (int) objArray[0];
-                yCoord = (int) objArray[1];
-                zCoord = (int) objArray[2];
-                dimension = (int) objArray[3];
-                network = (String) objArray[4];
+                xCoord = Integer.parseInt(objArray[0].toString());
+                yCoord = Integer.parseInt(objArray[1].toString());
+                zCoord = Integer.parseInt(objArray[2].toString());
+                dimension = Integer.parseInt(objArray[3].toString());
+                network = objArray[4].toString();
 
                 return this;
             }
