@@ -1,9 +1,9 @@
 ##The Basics
 The most basic thing you can do in this mod is create any size/shape portals and dye them any of the sixteen different Minecraft colours. To do this, simply create a frame of Obsidian and light it as you normally would. To change the colour of the Portal, right-click it with that colour dye in your hand. To reset the portal colour to it's default, use a purple dye on the portal.
 
-When creating a portal there are a few restrictions. When using a default Flint & Steel you will be restricted to creating a portal that consists of 6 portal blocks, no more, no less. This is to make it a little more balanced early-game, even though it doesn't take much to get to the Nether for the first time. Once you've been to the Nether, you can then upgrade your Flint & Steel with two pieces of Glowstone. Not only will this double it's durability (to 128 uses), but it will allow you to create a portal of any size.
+When using a default Flint & Steel you will be restricted to creating a portal that consists of 6 portal blocks, no more, no less. This is to make it a little more balanced early-game, even though it doesn't take much to get to the Nether for the first time. Once you've been to the Nether, you can then upgrade your Flint & Steel with two pieces of Glowstone. Not only will this double it's durability (to 128 uses), but it will allow you to create a portal of any size.
 
-If you wish, you can also create Obsidian Stairs, crafted as you would expect.
+You can also create Obsidian Stairs, crafted as you would expect.
 
 ##The Portal Modifier
 The Portal Modifier is a block that allows you to modify your portals in various different ways. Simply right-click on it to open up it's GUI. There are a few different areas that I will explain seperately.
