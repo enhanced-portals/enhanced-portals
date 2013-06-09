@@ -75,7 +75,6 @@ public class EnhancedPortals
         Settings.BorderBlocks.add(BlockIds.PortalModifier);
 
         // Add blocks to destroy list
-        Settings.DestroyBlocks.add(0);
         Settings.DestroyBlocks.add(Block.fire.blockID);
 
         // Row 1

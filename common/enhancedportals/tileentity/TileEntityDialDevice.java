@@ -121,6 +121,13 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
         if (EnhancedPortals.proxy.DialDeviceNetwork.hasNetwork(obj.network))
         {
+            if (EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(obj.network).isEmpty())
+            {
+                EnhancedPortals.proxy.DialDeviceNetwork.removeNetwork(obj.network);
+                sendChatToPlayer(Strings.ChatNoConnection.toString(), player);
+                return;
+            }
+            
             exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(obj.network).get(0).getTileEntity();
 
             if (exitModifier.isActive())

@@ -116,9 +116,8 @@ public class Portal
         while (!queue.isEmpty())
         {
             WorldLocation current = queue.remove();
-            int currentBlockID = current.getBlockId();
 
-            if (isBlockRemovable(currentBlockID))
+            if (isBlockRemovable(world, current.xCoord, current.yCoord, current.zCoord))
             {
                 int sides = getSides(current);
 
@@ -291,37 +290,37 @@ public class Portal
     private int getSides(WorldLocation location)
     {
         int totalSides = 0;
-        int[] allBlocks = new int[4];
+        WorldLocation[] allBlocks = new WorldLocation[4];
 
         if (shape == 6)
         {
-            allBlocks[0] = location.getOffset(ForgeDirection.NORTH).getBlockId();
-            allBlocks[1] = location.getOffset(ForgeDirection.SOUTH).getBlockId();
-            allBlocks[2] = location.getOffset(ForgeDirection.EAST).getBlockId();
-            allBlocks[3] = location.getOffset(ForgeDirection.WEST).getBlockId();
+            allBlocks[0] = location.getOffset(ForgeDirection.NORTH);
+            allBlocks[1] = location.getOffset(ForgeDirection.SOUTH);
+            allBlocks[2] = location.getOffset(ForgeDirection.EAST);
+            allBlocks[3] = location.getOffset(ForgeDirection.WEST);
         }
         else if (shape == 2)
         {
-            allBlocks[0] = location.getOffset(ForgeDirection.WEST).getBlockId();
-            allBlocks[1] = location.getOffset(ForgeDirection.EAST).getBlockId();
-            allBlocks[2] = location.getOffset(ForgeDirection.UP).getBlockId();
-            allBlocks[3] = location.getOffset(ForgeDirection.DOWN).getBlockId();
+            allBlocks[0] = location.getOffset(ForgeDirection.WEST);
+            allBlocks[1] = location.getOffset(ForgeDirection.EAST);
+            allBlocks[2] = location.getOffset(ForgeDirection.UP);
+            allBlocks[3] = location.getOffset(ForgeDirection.DOWN);
         }
         else if (shape == 4)
         {
-            allBlocks[0] = location.getOffset(ForgeDirection.NORTH).getBlockId();
-            allBlocks[1] = location.getOffset(ForgeDirection.SOUTH).getBlockId();
-            allBlocks[2] = location.getOffset(ForgeDirection.UP).getBlockId();
-            allBlocks[3] = location.getOffset(ForgeDirection.DOWN).getBlockId();
+            allBlocks[0] = location.getOffset(ForgeDirection.NORTH);
+            allBlocks[1] = location.getOffset(ForgeDirection.SOUTH);
+            allBlocks[2] = location.getOffset(ForgeDirection.UP);
+            allBlocks[3] = location.getOffset(ForgeDirection.DOWN);
         }
 
-        for (int val : allBlocks)
+        for (WorldLocation val : allBlocks)
         {
-            if (isBlockFrame(val, true))
+            if (isBlockFrame(val.getBlockId(), true))
             {
                 totalSides++;
             }
-            else if (!isBlockRemovable(val))
+            else if (!isBlockRemovable(val.getWorld(), val.xCoord, val.yCoord, val.zCoord))
             {
                 return -1;
             }
@@ -371,9 +370,8 @@ public class Portal
         while (!queue.isEmpty())
         {
             WorldLocation current = queue.remove();
-            int currentBlockID = current.getBlockId();
 
-            if (isBlockRemovable(currentBlockID) && !queueContains(addedBlocks, current))
+            if (isBlockRemovable(world, current.xCoord, current.yCoord, current.zCoord) && !queueContains(addedBlocks, current))
             {
                 int sides = getSides(current);
 
@@ -669,16 +667,25 @@ public class Portal
         return true;
     }
 
-    public boolean isBlockRemovable(int val)
+    public boolean isBlockRemovable(World world, int x, int y, int z)
     {
-        for (int i : Settings.DestroyBlocks)
+        if (world.isAirBlock(x, y, z))
         {
-            if (i == val)
+            return true;
+        }
+        else
+        {
+            int val = world.getBlockId(x, y, z);
+            
+            for (int i : Settings.DestroyBlocks)
             {
-                return true;
+                if (i == val)
+                {
+                    return true;
+                }
             }
         }
-
+        
         return false;
     }
 
@@ -691,7 +698,7 @@ public class Portal
             return false;
         }
 
-        if (isBlockRemovable(world.getBlockId(xCoord, yCoord, zCoord)))
+        if (isBlockRemovable(world, xCoord, yCoord, zCoord))
         {
             if ((shape == 2 || shape == 4) && world.canBlockSeeTheSky(xCoord, yCoord, zCoord))
             {
