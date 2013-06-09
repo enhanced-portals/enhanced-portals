@@ -38,7 +38,7 @@ public class WorldHelper
                 }
             }
         }
-        
+
         return modifierLocation;
     }
 }

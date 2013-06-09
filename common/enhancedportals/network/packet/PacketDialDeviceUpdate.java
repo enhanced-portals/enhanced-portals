@@ -11,7 +11,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
 {
     int     xCoord, yCoord, zCoord, dimension;
     boolean active;
-    int tickTimer;
+    int     tickTimer;
 
     public PacketDialDeviceUpdate()
     {
@@ -61,7 +61,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
     public void execute(INetworkManager network, EntityPlayer player)
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
-        
+
         if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
         {
             ((TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord)).active = active;

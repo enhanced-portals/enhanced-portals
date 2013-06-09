@@ -5,6 +5,7 @@ import net.minecraft.util.EnumChatFormatting;
 public enum Strings
 {
     Accept("gui.accept"),
+    Add("gui.add"),
     Cancel("gui.cancel"),
     ChatAdvDimAlreadyInstalled("chat.advDimUpgradeAlreadyInstalled", EnumChatFormatting.RED),
     ChatDialActivePortal("chat.noDialActivePortal", EnumChatFormatting.RED),
@@ -20,6 +21,7 @@ public enum Strings
     ClickToSetIdentifier("gui.setIdentifier"),
     ClickToSetNetwork("gui.setNetwork"),
     Dial("gui.dial"),
+    DontShutdownAuto("gui.dontShutdownAuto"),
     Facade("gui.facade"),
     FullBlock("gui.fullBlock"),
     Glyphs("gui.glyphs"),
@@ -35,17 +37,16 @@ public enum Strings
     Precise("gui.precise"),
     Random("gui.random"),
     RedstoneControl("gui.redstoneControl"),
+    Remove("gui.remove"),
     RemoveUpgrade("gui.upgrade.remove", EnumChatFormatting.DARK_GRAY),
     RightClickToReset("gui.rightClickToReset"),
     Save("gui.save"),
+    Terminate("gui.terminate"),
     Thick("gui.thick"),
     Thicker("gui.thicker"),
     Thickness("gui.thickness"),
     UniqueIdentifier("gui.uniqueIdentifier"),
-    Upgrades("gui.upgrades"),
-    Add("gui.add"),
-    Terminate("gui.terminate"),
-    Remove("gui.remove"), DontShutdownAuto("gui.dontShutdownAuto");
+    Upgrades("gui.upgrades");
 
     private EnumChatFormatting chatFormatting;
     private String             text;

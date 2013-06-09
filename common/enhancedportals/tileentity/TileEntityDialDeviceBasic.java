@@ -117,9 +117,9 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
                 active = true;
 
-                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);                
+                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
                 loadChunk();
-                    
+
                 PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
             }
         }

@@ -28,7 +28,7 @@ public class GuiDialDevice extends GuiScreen
 {
     TileEntityDialDevice     dialDevice;
     int                      guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166;
-    boolean rightClick;
+    boolean                  rightClick;
     GuiDialDeviceNetworkList networkList;
     public RenderItem        itemRenderer = new RenderItem();
 
@@ -80,10 +80,10 @@ public class GuiDialDevice extends GuiScreen
             {
                 dialDevice.tickTimer += rightClick ? -1 : 1;
             }
-            
+
             dialDevice.tickTimer = MathHelper.clamp_int(dialDevice.tickTimer, 19, 60 * 20 + 1);
-            
-            ((GuiButton) buttonList.get(3)).displayString = dialDevice.tickTimer == 1201 || dialDevice.tickTimer == 19 ? Strings.DontShutdownAuto.toString() : EnumChatFormatting.GOLD + (dialDevice.tickTimer + "") + " " + EnumChatFormatting.WHITE + "ticks (" + EnumChatFormatting.GOLD + (new DecimalFormat("#.##").format((float) dialDevice.tickTimer / 20) + "") + EnumChatFormatting.WHITE + " seconds)";
+
+            ((GuiButton) buttonList.get(3)).displayString = dialDevice.tickTimer == 1201 || dialDevice.tickTimer == 19 ? Strings.DontShutdownAuto.toString() : EnumChatFormatting.GOLD + (dialDevice.tickTimer + "") + " " + EnumChatFormatting.WHITE + "ticks (" + EnumChatFormatting.GOLD + new DecimalFormat("#.##").format((float) dialDevice.tickTimer / 20) + "" + EnumChatFormatting.WHITE + " seconds)";
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate(dialDevice)));
         }
     }
@@ -100,15 +100,15 @@ public class GuiDialDevice extends GuiScreen
         networkList.drawScreen(x, y, par3);
         fontRenderer.drawString(Localization.localizeString("tile.dialDevice.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDevice.name")) / 2, 15, 0xFFCCCCCC);
         super.drawScreen(x, y, par3); // Draw buttons
-        
+
         // Not the best place for this but it will do.        
-        GuiButton button = ((GuiButton) buttonList.get(3));
-        
+        GuiButton button = (GuiButton) buttonList.get(3);
+
         if (Mouse.isButtonDown(1) && button.xPosition <= x && button.yPosition <= y && button.xPosition + 240 >= x && button.yPosition + 20 >= y && !rightClick)
         {
             rightClick = true;
             actionPerformed(button);
-            this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+            mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
         }
         else if (rightClick && !Mouse.isButtonDown(1))
         {
@@ -152,7 +152,7 @@ public class GuiDialDevice extends GuiScreen
         buttonList.add(new GuiButton(1, guiLeft - 30, height - 30, 70, 20, Strings.Add.toString()));
         buttonList.add(new GuiButton(2, guiLeft + 45, height - 30, 90, 20, dialDevice.active ? Strings.Terminate.toString() : Strings.Dial.toString()));
         buttonList.add(new GuiButton(3, guiLeft + 140, height - 30, 70, 20, Strings.Remove.toString()));
-        buttonList.add(new GuiButton(4, guiLeft - 30, height - 55, 240, 20, dialDevice.tickTimer == 1201 || dialDevice.tickTimer == 19 ? Strings.DontShutdownAuto.toString() : EnumChatFormatting.GOLD + (dialDevice.tickTimer + "") + " " + EnumChatFormatting.WHITE + "ticks (" + EnumChatFormatting.GOLD + (new DecimalFormat("#.##").format((float) dialDevice.tickTimer / 20) + "") + EnumChatFormatting.WHITE + " seconds)"));
+        buttonList.add(new GuiButton(4, guiLeft - 30, height - 55, 240, 20, dialDevice.tickTimer == 1201 || dialDevice.tickTimer == 19 ? Strings.DontShutdownAuto.toString() : EnumChatFormatting.GOLD + (dialDevice.tickTimer + "") + " " + EnumChatFormatting.WHITE + "ticks (" + EnumChatFormatting.GOLD + new DecimalFormat("#.##").format((float) dialDevice.tickTimer / 20) + "" + EnumChatFormatting.WHITE + " seconds)"));
 
         if (dialDevice.destinationList.isEmpty())
         {
@@ -190,7 +190,7 @@ public class GuiDialDevice extends GuiScreen
     public void updateScreen()
     {
         super.updateScreen();
-        
+
         if (dialDevice.destinationList.isEmpty())
         {
             ((GuiButton) buttonList.get(1)).enabled = false;

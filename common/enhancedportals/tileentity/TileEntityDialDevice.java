@@ -29,7 +29,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
     public boolean                            active;
 
     WorldLocation                             modifierLocation;
-    Ticket         chunkTicket;
+    Ticket                                    chunkTicket;
 
     public TileEntityDialDevice()
     {
@@ -52,6 +52,44 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         return false;
     }
 
+    @Override
+    public void invalidate()
+    {
+        ForgeChunkManager.releaseTicket(chunkTicket);
+
+        super.invalidate();
+    }
+
+    private void loadChunk()
+    {
+        if (chunkTicket == null)
+        {
+            chunkTicket = ForgeChunkManager.requestTicket(EnhancedPortals.instance, worldObj, Type.NORMAL);
+        }
+
+        if (chunkTicket == null)
+        {
+            Reference.log.log(Level.WARNING, String.format("The Dialling Device at %s, %s, %s may not automatically close the portals due to no chunkloaders available."));
+            return;
+        }
+
+        chunkTicket.getModData().setInteger("dialX", xCoord);
+        chunkTicket.getModData().setInteger("dialY", yCoord);
+        chunkTicket.getModData().setInteger("dialZ", zCoord);
+
+        loadChunk(chunkTicket);
+    }
+
+    public void loadChunk(Ticket ticket)
+    {
+        if (chunkTicket == null)
+        {
+            chunkTicket = ticket;
+        }
+
+        ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
+    }
+
     public void processDiallingRequest(int id, EntityPlayer player)
     {
         if (worldObj.isRemote || active)
@@ -60,7 +98,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             {
                 scheduledBlockUpdate();
             }
-            
+
             return;
         }
 
@@ -101,7 +139,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             else
             {
                 sendChatToPlayer(Strings.ChatDialSuccess.toString(), player);
-                                
+
                 modifier.tempDialDeviceNetwork = obj.network;
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
                 active = true;
@@ -109,10 +147,10 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 if (tickTimer != 19 && tickTimer != 1201)
                 {
                     sendChatToPlayer(String.format(Strings.ChatDialSuccess2.toString(), tickTimer / 20), player);
-                    worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, tickTimer);                    
+                    worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, tickTimer);
                     loadChunk();
                 }
-                
+
                 PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate(this)));
             }
         }
@@ -121,80 +159,14 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             sendChatToPlayer(Strings.ChatNoConnection.toString(), player);
         }
     }
-    
-    @Override
-    public void validate()
-    {
-        super.validate();
-        
-        if (worldObj.isRemote)
-        {
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRequestData(this)));
-        }
-    }
-    
-    @Override
-    public void invalidate()
-    {
-        ForgeChunkManager.releaseTicket(chunkTicket);
 
-        super.invalidate();
-    }
-    
-    private void loadChunk()
-    {
-        if (chunkTicket == null)
-        {
-            chunkTicket = ForgeChunkManager.requestTicket(EnhancedPortals.instance, worldObj, Type.NORMAL);
-        }
-
-        if (chunkTicket == null)
-        {
-            Reference.log.log(Level.WARNING, String.format("The Dialling Device at %s, %s, %s may not automatically close the portals due to no chunkloaders available."));
-            return;
-        }
-
-        chunkTicket.getModData().setInteger("dialX", xCoord);
-        chunkTicket.getModData().setInteger("dialY", yCoord);
-        chunkTicket.getModData().setInteger("dialZ", zCoord);
-
-        loadChunk(chunkTicket);
-    }
-    
-    private void unloadChunk()
-    {
-        ForgeChunkManager.unforceChunk(chunkTicket, new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
-    }
-
-    public void loadChunk(Ticket ticket)
-    {
-        if (chunkTicket == null)
-        {
-            chunkTicket = ticket;
-        }
-
-        ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
-    }
-
-    private void sendChatToPlayer(String str, EntityPlayer player)
-    {
-        if (player != null)
-        {
-            player.sendChatToPlayer(str);
-        }
-        else
-        {
-            Reference.log.log(Level.INFO, str);
-        }
-    }
-    
     @Override
     public void readFromNBT(NBTTagCompound tagCompound)
     {
         super.readFromNBT(tagCompound);
 
         tickTimer = tagCompound.getInteger("TickTimer");
-        
+
         if (tagCompound.hasKey("mX"))
         {
             active = true;
@@ -253,13 +225,41 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         unloadChunk();
     }
 
+    private void sendChatToPlayer(String str, EntityPlayer player)
+    {
+        if (player != null)
+        {
+            player.sendChatToPlayer(str);
+        }
+        else
+        {
+            Reference.log.log(Level.INFO, str);
+        }
+    }
+
+    private void unloadChunk()
+    {
+        ForgeChunkManager.unforceChunk(chunkTicket, new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
+    }
+
+    @Override
+    public void validate()
+    {
+        super.validate();
+
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRequestData(this)));
+        }
+    }
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
 
         tagCompound.setInteger("TickTimer", tickTimer);
-        
+
         if (active)
         {
             tagCompound.setInteger("mX", modifierLocation.xCoord);
