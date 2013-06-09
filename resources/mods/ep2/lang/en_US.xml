@@ -64,6 +64,7 @@
 	<entry key="gui.networkNotSet">No network set</entry>
 	<entry key="gui.identifierInUse">This identifier is in use</entry>
 	<entry key="gui.dontShutdownAuto">Don't automatically shutdown</entry>
+	<entry key="gui.activeModifier">You cannot modify a Portal Modifier while it is active</entry>
 	<entry key="chat.advDimUpgradeAlreadyInstalled">Remove the Advanced Dimensional upgrade first</entry>
 	<entry key="chat.dimUpgradeAlreadyInstalled">Remove the Dimensional upgrade first</entry>
 	<entry key="chat.maxUpgradesInstalled">The maximum amount of upgrades have been installed</entry>

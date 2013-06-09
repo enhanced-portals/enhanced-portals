@@ -691,7 +691,7 @@ public class Portal
             return false;
         }
 
-        if (world.isAirBlock(xCoord, yCoord, zCoord))
+        if (isBlockRemovable(world.getBlockId(xCoord, yCoord, zCoord)))
         {
             if ((shape == 2 || shape == 4) && world.canBlockSeeTheSky(xCoord, yCoord, zCoord))
             {

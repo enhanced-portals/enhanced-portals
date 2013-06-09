@@ -15,7 +15,9 @@
 	<target name="build">
 		<copy todir="${dir.development}\mcp\src\minecraft">
 			<fileset dir="${dir.development}\source\enhanced-portals\common\" />
-			<fileset dir="${dir.development}\source\enhanced-core\common\" />
+			<fileset dir="${dir.development}\source\enhanced-core\common\">
+				<exclude name="mcmod.info" />
+			</fileset>
 			<fileset dir="${dir.development}\source\computercraft-api\" />
 		</copy>
 		<replace dir="${dir.development}\mcp\src\minecraft" token="@VERSION@" value="${release.mod.version}" />
