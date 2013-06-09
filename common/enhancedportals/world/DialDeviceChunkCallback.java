@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class DialDeviceChunkCallback implements ForgeChunkManager.OrderedLoadingCallback
@@ -42,7 +43,12 @@ public class DialDeviceChunkCallback implements ForgeChunkManager.OrderedLoading
 
                 if (world.getBlockId(x, y, z) == BlockIds.DialHomeDevice)
                 {
+                    TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(x, y, z);
 
+                    if (dialDevice != null)
+                    {
+                        dialDevice.loadChunk(ticket);
+                    }
                 }
             }
         }
