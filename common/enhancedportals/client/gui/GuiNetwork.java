@@ -18,7 +18,7 @@ public class GuiNetwork extends GuiScreen
     public RenderItem itemRenderer = new RenderItem();
 
     @SuppressWarnings("rawtypes")
-    protected void drawHoveringText(List par1List, int par2, int par3, FontRenderer font)
+    protected void drawHoverText(List par1List, int par2, int par3, FontRenderer font)
     {
         if (!par1List.isEmpty())
         {
@@ -114,7 +114,7 @@ public class GuiNetwork extends GuiScreen
         }
 
         FontRenderer font = par1ItemStack.getItem().getFontRenderer(par1ItemStack);
-        drawHoveringText(list, par2, par3, font == null ? fontRenderer : font);
+        drawHoverText(list, par2, par3, font == null ? fontRenderer : font);
     }
 
     public void elementClicked(GuiGlyphElement element, int button)

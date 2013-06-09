@@ -109,7 +109,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                     strList.add(str);
                 }
 
-                drawHoveringText(strList, mX - bX, mY - bY, fontRenderer);
+                drawHoverText(strList, mX - bX, mY - bY, fontRenderer);
                 RenderHelper.enableGUIStandardItemLighting();
             }
         }
