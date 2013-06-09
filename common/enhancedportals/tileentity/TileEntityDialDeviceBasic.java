@@ -111,15 +111,16 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             else
             {
                 sendChatToPlayer(Strings.ChatDialSuccess.toString(), player);
-                sendChatToPlayer(Strings.ChatDialSuccess2.toString(), player);
+                sendChatToPlayer(String.format(Strings.ChatDialSuccess2.toString(), "38"), player);
 
                 modifier.tempDialDeviceNetwork = network;
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
                 active = true;
 
-                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
-                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
+                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);                
                 loadChunk();
+                    
+                PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
             }
         }
         else

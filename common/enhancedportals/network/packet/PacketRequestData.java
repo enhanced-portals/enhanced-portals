@@ -74,7 +74,7 @@ public class PacketRequestData extends PacketEnhancedPortals
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
         {
-
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate((TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord))));
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDeviceBasic)
         {

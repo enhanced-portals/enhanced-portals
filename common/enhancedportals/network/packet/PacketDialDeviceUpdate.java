@@ -35,7 +35,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
         {
             Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "B", "I");
 
-            if (objArray != null && objArray.length == 4)
+            if (objArray != null)
             {
                 xCoord = (int) objArray[0];
                 yCoord = (int) objArray[1];
@@ -61,7 +61,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
     public void execute(INetworkManager network, EntityPlayer player)
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
-
+        
         if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
         {
             ((TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord)).active = active;
