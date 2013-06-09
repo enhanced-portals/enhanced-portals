@@ -48,6 +48,7 @@ This section is quite simple, the thickness button will allow you to change the 
 There are a number of restricted blocks from being portal textures, and most items will not work. The following items work successfully:
 * All dyes.
 * Lava & Water buckets.
+* Snowball.
 
 I will be working on a number of different addons that integerate EnhancedPortals with other various mods which will allow you to use some of their special textures, such as liquids, as portal textures. (For example, Fuel, Oil, Liquid Glowstone/Redstone/Ender)
 
