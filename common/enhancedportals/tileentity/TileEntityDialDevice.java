@@ -225,9 +225,14 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();
 
         modifier.removePortal();
-        exitModifier.removePortal();
         modifier.tempDialDeviceNetwork = "";
-        exitModifier.tempDialDeviceNetwork = "";
+        
+        if (exitModifier != null)
+        {
+            exitModifier.removePortal();        
+            exitModifier.tempDialDeviceNetwork = "";
+        }
+        
         active = false;
         unloadChunk();
     }
