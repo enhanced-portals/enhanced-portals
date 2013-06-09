@@ -57,7 +57,16 @@ Finally there are three buttons to the right of the GUI which control the state 
 
 ##The Dialling Devices
 ###Basic Dial Device
-info
+When used with a Portal Modifier with the Dialling upgrade within a 5-block range, the dialling device can 'dial' another portal without changing the settings of the portal modifier. When using a basic dialling device you cannot change the texture, thickness or duration of the portal, you can only change the destination. The thickness and texture of the portal will be selected by the portal modifier's setting.
 
 ###Dial Device
-info
+This version of the Dialling Device is the same as the basic dialling device, but more advanced and has more features. It can store an unlimited number of different identifiers (or the same identifier... If you want), and you can change the duration of how long the portal stays open before it will automatically close (or not). To increase the tick delay, left click and to decrease, right click.
+
+For each stored identifier you can customise a seperate thickness and portal texture, regardless of the Portal Modifier's settings.
+
+The maximum amount of time you can have the portal open for automatically is 1200 ticks, or 60 seconds. If you click again after that it will set it to don't automatically shutdown. The minimum amount of time you can set it to is 20 ticks, or 1 second. If you right-click after that then again, it will set itself to not automatically shutting down.
+
+This is fairly self-explanatory, so a few tips:
+* You can hold Ctrl and click to increase/decrease the ticks by 20 (1 second).
+* You can hold Shift and click to increase/decrease the ticks by 10 (0.5 seconds).
+* You can hold Ctrl & Shift and click to increase/decrease the ticks by 100 (5 seconds).
