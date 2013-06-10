@@ -486,6 +486,7 @@ public class Portal
         if (portal.getParentModifier() == null)
         {
             handleVanillaTeleportation(entity, world);
+            return;
         }
         else if (portal.getParentModifier() != null && entity.timeUntilPortal == 0)
         {
@@ -507,6 +508,7 @@ public class Portal
                 if (modifier == null || modifier.modifierNetwork.equals(""))
                 {
                     handleVanillaTeleportation(entity, world);
+                    return;
                 }
                 else
                 {
