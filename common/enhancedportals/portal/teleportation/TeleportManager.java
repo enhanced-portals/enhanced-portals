@@ -1,6 +1,7 @@
 package enhancedportals.portal.teleportation;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.portal.Portal;
 import enhancedportals.tileentity.TileEntityPortalModifier;
@@ -139,7 +141,6 @@ public class TeleportManager
 
         World world = EnhancedPortals.proxy.getWorld(teleportData.dimension);
         ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
-
         TileEntityPortalModifier outModifier = (TileEntityPortalModifier) teleportData.getTileEntity();
 
         if (outModifier == null)
@@ -154,7 +155,7 @@ public class TeleportManager
 
         if (outModifierOffset.isBlockAir())
         {
-            if (new Portal(outModifier).createPortal())
+            if (new Portal(outModifier).createPortal(outModifier.customBorderBlocks()))
             {
                 teleportEntity = true;
             }
@@ -163,6 +164,10 @@ public class TeleportManager
                 if (!supressMessages && entity instanceof EntityPlayer)
                 {
                     ((EntityPlayer) entity).sendChatToPlayer("A portal could not be created at the exit location.");
+                }
+                else
+                {
+                    Reference.log.log(Level.INFO, String.format("A portal could not be created at %s, %s, %s.", outModifierOffset.xCoord, outModifierOffset.yCoord, outModifierOffset.zCoord));
                 }
             }
         }
@@ -177,6 +182,11 @@ public class TeleportManager
             {
                 outModifierOffset = outModifierOffset.getOffset(ForgeDirection.getOrientation(outModifierMeta));
             }
+            
+            if (outModifierMeta == 0)
+            {
+                outModifierOffset.yCoord -= 1;
+            }
 
             teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, outModifierMeta);
         }
@@ -185,7 +195,7 @@ public class TeleportManager
     }
 
     private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, int metaDirection)
-    {
+    {        
         if (!Settings.AllowTeleporting || !canEntityTravel(entity))
         {
             return entity;
@@ -195,6 +205,21 @@ public class TeleportManager
         float rotationYaw = 0f;
         double velocityX = 0f, velocityY = 0f, velocityZ = 0f, mountedVelocityX = 0f, mountedVelocityY = 0f, mountedVelocityZ = 0f;
 
+        velocityX = entity.motionX;
+        velocityY = entity.motionY;
+        velocityZ = entity.motionZ;
+        Entity mountedEntity = null;
+
+        if (entity.ridingEntity != null)
+        {
+            mountedVelocityX = entity.ridingEntity.motionX;
+            mountedVelocityY = entity.ridingEntity.motionY;
+            mountedVelocityZ = entity.ridingEntity.motionZ;
+
+            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
+            entity.mountEntity(null);
+        }
+        
         if (teleportDataOffset.getMetadata() == 4 || teleportDataOffset.getMetadata() == 5)
         {
             if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
@@ -220,26 +245,6 @@ public class TeleportManager
         else
         {
             rotationYaw = entity.rotationYaw;
-        }
-
-        if (metaDirection == 0)
-        {
-            teleportDataOffset.yCoord -= 1;
-        }
-
-        velocityX = entity.motionX;
-        velocityY = entity.motionY;
-        velocityZ = entity.motionZ;
-        Entity mountedEntity = null;
-
-        if (entity.ridingEntity != null)
-        {
-            mountedVelocityX = entity.ridingEntity.motionX;
-            mountedVelocityY = entity.ridingEntity.motionY;
-            mountedVelocityZ = entity.ridingEntity.motionZ;
-
-            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
-            entity.mountEntity(null);
         }
 
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
@@ -296,11 +301,16 @@ public class TeleportManager
         if (mountedEntity != null)
         {
             entity.mountEntity(mountedEntity);
-            mountedEntity.setVelocity(mountedVelocityX, mountedVelocityY, mountedVelocityZ);
+            mountedEntity = handleRelativeVelocity(mountedEntity, mountedVelocityX, mountedVelocityY, mountedVelocityZ, metaDirection);
         }
 
-        entity.setVelocity(velocityX, velocityY, velocityZ);
+        entity = handleRelativeVelocity(entity, velocityX, velocityY, velocityZ, metaDirection);
         setCanEntityTravel(entity, false);
+        return entity;
+    }
+    
+    private static Entity handleRelativeVelocity(Entity entity, double x, double y, double z, int direction)
+    {
         return entity;
     }
 }

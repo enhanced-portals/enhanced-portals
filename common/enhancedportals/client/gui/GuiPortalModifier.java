@@ -176,6 +176,24 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                 fontRenderer.drawStringWithShadow(Strings.IdentifierInUse.toString(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Strings.IdentifierInUse.toString()) / 2, guiTop + 51, 0xEE0000);
             }
         }
+        
+        String network = portalModifier.isRemotelyControlled() ? portalModifier.dialDeviceNetwork : portalModifier.modifierNetwork;
+
+        if (!network.equals(""))
+        {
+            String[] split = network.split(Reference.glyphSeperator);
+
+            for (int i1 = 0; i1 < split.length; i1++)
+            {
+                for (int j1 = 0; j1 < Reference.glyphItems.size(); j1++)
+                {
+                    if (Reference.glyphItems.get(j1).getItemName().replace("item.", "").equalsIgnoreCase(split[i1]))
+                    {
+                        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j1), guiLeft + 8 + i1 * 18, guiTop + 47);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -190,24 +208,6 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         if (!isActive)
         {
             super.drawScreen(x, y, par3);
-
-            String network = portalModifier.isRemotelyControlled() ? portalModifier.dialDeviceNetwork : portalModifier.modifierNetwork;
-
-            if (!network.equals(""))
-            {
-                String[] split = network.split(Reference.glyphSeperator);
-
-                for (int i = 0; i < split.length; i++)
-                {
-                    for (int j = 0; j < Reference.glyphItems.size(); j++)
-                    {
-                        if (Reference.glyphItems.get(j).getItemName().replace("item.", "").equalsIgnoreCase(split[i]))
-                        {
-                            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j), guiLeft + 8 + i * 18, guiTop + 47);
-                        }
-                    }
-                }
-            }
 
             if (isPointInRegion(7, 46, 162, 18, x, y))
             {

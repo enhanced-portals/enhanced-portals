@@ -24,6 +24,8 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     public boolean active;
     WorldLocation  modifierLocation;
     Ticket         chunkTicket;
+    final int TICK_DELAY = 50;
+    int timer, ticksToGo;
 
     public TileEntityDialDeviceBasic()
     {
@@ -117,7 +119,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
                 active = true;
 
-                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, 760);
+                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, TICK_DELAY);
                 loadChunk();
 
                 PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
@@ -139,6 +141,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         if (active)
         {
             modifierLocation = new WorldLocation(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
+            ticksToGo = tagCompound.getInteger("TicksToGo");
         }
     }
 
@@ -154,13 +157,35 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
         TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();
-
-        modifier.removePortal();
-        exitModifier.removePortal();
-        modifier.tempDialDeviceNetwork = "";
-        exitModifier.tempDialDeviceNetwork = "";
-        active = false;
-        unloadChunk();
+        
+        if (ticksToGo > 0 && active)
+        {
+            int time = TICK_DELAY;
+            
+            if (time > ticksToGo)
+            {
+                time = ticksToGo;
+            }
+            
+            ticksToGo -= time;
+            
+            if (!modifier.isAnyActive() || !exitModifier.isAnyActive())
+            {
+                ticksToGo = 0;
+                time = 0;
+            }
+            
+            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
+        }
+        else if (ticksToGo == 0 && active)
+        {
+            modifier.removePortal();
+            exitModifier.removePortal();
+            modifier.tempDialDeviceNetwork = "";
+            exitModifier.tempDialDeviceNetwork = "";
+            active = false;
+            unloadChunk();
+        }
     }
 
     private void sendChatToPlayer(String str, EntityPlayer player)
@@ -204,6 +229,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             tagCompound.setInteger("ModifierY", modifierLocation.yCoord);
             tagCompound.setInteger("ModifierZ", modifierLocation.zCoord);
             tagCompound.setInteger("ModifierD", modifierLocation.dimension);
+            tagCompound.setInteger("TicksToGo", ticksToGo);
         }
     }
 }

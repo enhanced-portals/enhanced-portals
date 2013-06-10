@@ -424,7 +424,7 @@ public class Portal
     {
         WorldLocation exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
         boolean missingUpgrade = false;
-
+        
         if (exitLocation == null || exitLocation.isEqual(new WorldLocation(xCoord, yCoord, zCoord, dimension)))
         {
             return;
@@ -465,23 +465,23 @@ public class Portal
     public void handleEntityCollide(Entity entity)
     {
         World world = getWorld();
-
+        
+        if (!(world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal))
+        {
+            return;
+        }
+        
+        TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+        
         if (world.isRemote)
         {
-            if (Settings.RenderPortalEffect)
+            if (Settings.RenderPortalEffect && !portal.texture.equals("I:" + Item.netherStar.itemID + ":0"))
             {
                 entity.setInPortal();
             }
 
             return;
         }
-
-        if (!(world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal))
-        {
-            return;
-        }
-
-        TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
 
         if (portal.getParentModifier() == null)
         {
@@ -524,7 +524,7 @@ public class Portal
     {
         List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.modifierNetwork, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
         boolean missingUpgrade = false, teleport = false;
-
+        
         if (validLocations.isEmpty())
         {
             if (entity instanceof EntityPlayer)
@@ -568,7 +568,7 @@ public class Portal
                 missingUpgrade = true;
                 continue;
             }
-
+            
             if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
             {
                 teleport = true;
@@ -620,7 +620,7 @@ public class Portal
     }
 
     private void handleVanillaTeleportation(Entity entity, World world)
-    {
+    {        
         if (world.provider.dimensionId > 0 || world.provider.dimensionId < -1)
         {
             return;
