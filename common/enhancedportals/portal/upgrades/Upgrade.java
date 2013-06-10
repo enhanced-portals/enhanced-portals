@@ -23,7 +23,6 @@ public abstract class Upgrade
         SOUNDS(UpgradeSounds.class),
         DIMENSIONAL(UpgradeDimensional.class),
         ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class),
-        COMPUTER(UpgradeParticles.class),
         NETHER_FRAME(UpgradeNetherFrame.class),
         RESOURCE_FRAME(UpgradeResourceFrame.class),
         CAMOUFLAGE(UpgradeCamouflage.class),

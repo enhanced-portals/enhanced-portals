@@ -147,10 +147,11 @@ public class ItemPortalModifierUpgrade extends Item
     public void registerIcons(IconRegister iconRegister)
     {
         textures = new Icon[Upgrade.getUpgradeNames().length];
+        String[] names = Upgrade.getUpgradeNames();
 
         for (int i = 0; i < textures.length; i++)
         {
-            textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + i);
+            textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + names[i]);
         }
     }
 }
