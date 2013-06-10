@@ -55,7 +55,7 @@ public class ClientProxy extends CommonProxy
                 Textures.portalTextureMap.put("C:" + i, new PortalTexture("C:" + i, event.map.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), event.map.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
             }
         }
-        
+
         Textures.portalTextureMap.put("I:" + Item.bucketWater.itemID + ":0", new PortalTexture("I:" + Item.bucketWater.itemID + ":0", Block.waterStill.getBlockTextureFromSide(0), Textures.getTexture("C:4").getModifierTexture(), Textures.getTexture("C:4").getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.bucketLava.itemID + ":0", new PortalTexture("I:" + Item.bucketLava.itemID + ":0", Block.lavaStill.getBlockTextureFromSide(0), Textures.getTexture("C:14").getModifierTexture(), Textures.getTexture("C:14").getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.snowball.itemID + ":0", new PortalTexture("I:" + Item.snowball.itemID + ":0", Block.snow.getBlockTextureFromSide(0), Textures.getTexture("C:15").getModifierTexture(), Textures.getTexture("C:15").getParticleColour()));

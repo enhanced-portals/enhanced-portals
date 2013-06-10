@@ -47,7 +47,7 @@ import enhancedportals.world.DialDeviceChunkCallback;
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
-{    
+{
     @Instance(Reference.MOD_ID)
     public static EnhancedPortals instance;
 
@@ -152,7 +152,7 @@ public class EnhancedPortals
         proxy.ModifierNetwork.saveData();
         proxy.DialDeviceNetwork.saveData();
     }
-    
+
     @ForgeSubscribe
     public void worldSave(WorldEvent.Save event)
     {

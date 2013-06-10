@@ -21,6 +21,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
+import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketNetherPortalUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
@@ -456,7 +457,7 @@ public class Portal
         {
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendChatToPlayer("missingUpgrade");
+                ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatMissingUpgrade.toString());
             }
         }
     }
@@ -526,7 +527,7 @@ public class Portal
         {
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendChatToPlayer("Could not find any linked portals.");
+                ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatNoLinkedPortals.toString());
             }
 
             entity.timeUntilPortal = entity.getPortalCooldown();
@@ -577,7 +578,7 @@ public class Portal
         {
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendChatToPlayer("The Portal Modifier is missing an upgrade.");
+                ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatMissingUpgrade.toString());
             }
         }
     }
@@ -676,7 +677,7 @@ public class Portal
         else
         {
             int val = world.getBlockId(x, y, z);
-            
+
             for (int i : Settings.DestroyBlocks)
             {
                 if (i == val)
@@ -685,7 +686,7 @@ public class Portal
                 }
             }
         }
-        
+
         return false;
     }
 

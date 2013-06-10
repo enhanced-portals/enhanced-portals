@@ -75,4 +75,6 @@
 	<entry key="chat.invalidDestination">You cannot dial the same portal you're dialling from</entry>
 	<entry key="chat.noConnection">Cannot establish a connection to the portal</entry>
 	<entry key="chat.noModifiers">Cannot establish a connection to a nearby Portal Modifier</entry>
+	<entry key="chat.missingUpgrade">The portal is missing an upgrade</entry>
+	<entry key="chat.noLinkedPortals">Could not find a linked portal</entry>
 </properties>

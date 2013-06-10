@@ -42,7 +42,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         setStepSound(soundStoneFootstep);
         setUnlocalizedName(Localization.PortalModifier_Name);
     }
-    
+
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
@@ -79,7 +79,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
 
         super.breakBlock(world, x, y, z, par5, par6);
     }
-    
+
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {

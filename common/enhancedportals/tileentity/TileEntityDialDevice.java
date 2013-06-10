@@ -127,7 +127,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 sendChatToPlayer(Strings.ChatNoConnection.toString(), player);
                 return;
             }
-            
+
             exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(obj.network).get(0).getTileEntity();
 
             if (exitModifier.isActive())
@@ -226,13 +226,13 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
         modifier.removePortal();
         modifier.tempDialDeviceNetwork = "";
-        
+
         if (exitModifier != null)
         {
-            exitModifier.removePortal();        
+            exitModifier.removePortal();
             exitModifier.tempDialDeviceNetwork = "";
         }
-        
+
         active = false;
         unloadChunk();
     }

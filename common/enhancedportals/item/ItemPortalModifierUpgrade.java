@@ -79,7 +79,7 @@ public class ItemPortalModifierUpgrade extends Item
             {
                 continue;
             }
-            
+
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
@@ -130,7 +130,7 @@ public class ItemPortalModifierUpgrade extends Item
                         player.inventory.mainInventory[player.inventory.currentItem] = null;
                         ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
                     }
-                    
+
                     PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(modifier)));
                 }
                 else

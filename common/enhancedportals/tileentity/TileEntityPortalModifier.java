@@ -21,7 +21,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     public byte           thickness, redstoneSetting, redstoneState;
     public String         modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
     public UpgradeHandler upgradeHandler;
-    
+
     public TileEntityPortalModifier()
     {
         texture = "";

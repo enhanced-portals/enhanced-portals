@@ -51,7 +51,7 @@ class GuiDialDeviceNetworkList extends GuiSlot
                     }
                 }
             }
-            
+
             parent.itemRenderer.renderItemIntoGUI(parent.fontRenderer, parent.mc.renderEngine, Textures.getItemStackFromTexture(obj.texture), par2 + 200, par3);
             GL11.glDisable(GL11.GL_LIGHTING);
         }
