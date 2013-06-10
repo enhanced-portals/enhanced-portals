@@ -74,15 +74,15 @@ public class PacketRequestData extends PacketEnhancedPortals
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
         {
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate((TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord))));
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate((TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDeviceBasic)
         {
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate((TileEntityDialDeviceBasic) world.getBlockTileEntity(xCoord, yCoord, zCoord))));
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate((TileEntityDialDeviceBasic) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
         }
         else if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityAutomaticDialler)
         {
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketAutomaticDiallerUpdate((TileEntityAutomaticDialler) world.getBlockTileEntity(xCoord, yCoord, zCoord))));
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketAutomaticDiallerUpdate((TileEntityAutomaticDialler) world.getBlockTileEntity(xCoord, yCoord, zCoord))), (Player) player);
         }
     }
 
