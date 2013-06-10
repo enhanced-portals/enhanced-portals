@@ -152,7 +152,7 @@ public class TeleportManager
         WorldLocation outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifierMeta));
         boolean teleportEntity = false;
 
-        if (outModifierOffset.getBlockId() == 0)
+        if (outModifierOffset.isBlockAir())
         {
             if (new Portal(outModifier).createPortal())
             {
