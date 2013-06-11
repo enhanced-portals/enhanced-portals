@@ -10,6 +10,7 @@ import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeCamouflage;
 import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeMomentum;
 import enhancedportals.portal.upgrades.modifier.UpgradeNetherFrame;
 import enhancedportals.portal.upgrades.modifier.UpgradeParticles;
 import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
@@ -23,7 +24,7 @@ public abstract class Upgrade
         SOUNDS(UpgradeSounds.class),
         DIMENSIONAL(UpgradeDimensional.class),
         ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class),
-        NULL(UpgradeParticles.class),
+        MOMENTUM(UpgradeMomentum.class),
         NETHER_FRAME(UpgradeNetherFrame.class),
         RESOURCE_FRAME(UpgradeResourceFrame.class),
         CAMOUFLAGE(UpgradeCamouflage.class),

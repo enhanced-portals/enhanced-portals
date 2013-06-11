@@ -5,6 +5,8 @@ import java.util.logging.Level;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -52,22 +54,29 @@ public class TeleportManager
         return player;
     }
 
-    private static Entity handleMomentum(Entity entity, float newYaw)
+    private static Entity handleMomentum(Entity entity, float newYaw, boolean keepMomentum)
     {
-        float rotationYaw = (float)(Math.atan2(entity.motionX, entity.motionZ) * 180D / 3.141592653589793D);
-        double cos = Math.cos(Math.toRadians(-rotationYaw));
-        double sin = Math.sin(Math.toRadians(-rotationYaw));
-        double tempXmotion = cos * entity.motionX - sin * entity.motionZ;
-        double tempZmotion = sin * entity.motionX + cos * entity.motionZ;
-        entity.motionX = tempXmotion;
-        entity.motionZ = tempZmotion;
-        
-        cos = Math.cos(Math.toRadians(newYaw));
-        sin = Math.sin(Math.toRadians(newYaw));
-        tempXmotion = cos * entity.motionX - sin * entity.motionZ;
-        tempZmotion = sin * entity.motionX + cos * entity.motionZ;
-        entity.motionX = tempXmotion;
-        entity.motionZ = tempZmotion;
+        if (!keepMomentum)
+        {
+            entity.motionX = (entity.motionY = (entity.motionZ = 0));
+        }
+        else
+        {
+            float rotationYaw = (float)(Math.atan2(entity.motionX, entity.motionZ) * 180D / 3.141592653589793D);
+            double cos = Math.cos(Math.toRadians(-rotationYaw));
+            double sin = Math.sin(Math.toRadians(-rotationYaw));
+            double tempXmotion = cos * entity.motionX - sin * entity.motionZ;
+            double tempZmotion = sin * entity.motionX + cos * entity.motionZ;
+            entity.motionX = tempXmotion;
+            entity.motionZ = tempZmotion;
+            
+            cos = Math.cos(Math.toRadians(newYaw));
+            sin = Math.sin(Math.toRadians(newYaw));
+            tempXmotion = cos * entity.motionX - sin * entity.motionZ;
+            tempZmotion = sin * entity.motionX + cos * entity.motionZ;
+            entity.motionX = tempXmotion;
+            entity.motionZ = tempZmotion;
+        }
         
         return entity;
     }
@@ -129,7 +138,14 @@ public class TeleportManager
         }
         else
         {
-            entity.timeUntilPortal = entity.getPortalCooldown();
+            if (entity instanceof EntityMinecart || entity instanceof EntityBoat)
+            {
+                entity.timeUntilPortal = 10;
+            }
+            else
+            {
+                entity.timeUntilPortal = entity.getPortalCooldown();
+            }
         }
     }
 
@@ -152,7 +168,7 @@ public class TeleportManager
         GameRegistry.onPlayerChangedDimension(player);
     }
 
-    public static boolean teleportEntity(Entity entity, WorldLocation teleportData, TileEntityPortalModifier originModifier, boolean supressMessages)
+    public static boolean teleportEntity(Entity entity, WorldLocation teleportData, TileEntityPortalModifier originModifier, boolean keepVelocity, boolean supressMessages)
     {
         if (entity.worldObj.isRemote)
         {
@@ -208,13 +224,13 @@ public class TeleportManager
                 outModifierOffset.yCoord -= 1;
             }
 
-            teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, originModifier.getBlockMetadata(), outModifierMeta);
+            teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, keepVelocity, outModifierMeta);
         }
 
         return teleportEntity;
     }
 
-    private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, int direction, int metaDirection)
+    private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, boolean keepVelocity, int metaDirection)
     {
         if (!Settings.AllowTeleporting || !canEntityTravel(entity))
         {
@@ -228,7 +244,7 @@ public class TeleportManager
 
         if (entity.ridingEntity != null)
         {
-            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, direction, metaDirection);
+            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, keepVelocity, metaDirection);
             entity.mountEntity(null);
         }
         
@@ -274,7 +290,7 @@ public class TeleportManager
             removeEntityFromWorld(entity.worldObj, entity);
         }
         
-        handleMomentum(entity, rotationYaw);
+        handleMomentum(entity, rotationYaw, keepVelocity);
 
         entity.setLocationAndAngles(teleportDataOffset.xCoord + 0.5, teleportDataOffset.yCoord, teleportDataOffset.zCoord + 0.5, rotationYaw, entity.rotationPitch);
         world.theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);

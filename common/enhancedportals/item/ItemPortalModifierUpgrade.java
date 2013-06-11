@@ -75,11 +75,6 @@ public class ItemPortalModifierUpgrade extends Item
     {
         for (int var4 = 0; var4 < textures.length; var4++)
         {
-            if (var4 == 4)
-            {
-                continue;
-            }
-
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }

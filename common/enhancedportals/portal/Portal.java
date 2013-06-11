@@ -27,6 +27,7 @@ import enhancedportals.network.packet.PacketNetherPortalUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
 import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
+import enhancedportals.portal.upgrades.modifier.UpgradeMomentum;
 import enhancedportals.portal.upgrades.modifier.UpgradeParticles;
 import enhancedportals.portal.upgrades.modifier.UpgradeSounds;
 import enhancedportals.tileentity.TileEntityNetherPortal;
@@ -450,8 +451,8 @@ public class Portal
 
         if (!missingUpgrade)
         {
-            TeleportManager.teleportEntity(entity, exitLocation, modifier, false);
-            entity.timeUntilPortal = entity.getPortalCooldown();
+            TeleportManager.teleportEntity(entity, exitLocation, modifier, modifier.upgradeHandler.hasUpgrade(new UpgradeMomentum()), false);
+            TeleportManager.setCanEntityTravel(entity, false);
         }
         else
         {
@@ -517,7 +518,7 @@ public class Portal
             }
         }
 
-        entity.timeUntilPortal = entity.getPortalCooldown();
+        TeleportManager.setCanEntityTravel(entity, false);
     }
 
     private void handleModifierTeleportation(Entity entity, TileEntityPortalModifier modifier)
@@ -532,7 +533,7 @@ public class Portal
                 ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatNoLinkedPortals.toString());
             }
 
-            entity.timeUntilPortal = entity.getPortalCooldown();
+            TeleportManager.setCanEntityTravel(entity, false);
             return;
         }
 
@@ -569,7 +570,7 @@ public class Portal
                 continue;
             }
 
-            if (TeleportManager.teleportEntity(entity, randomLocation, modifier, validLocations.size() <= 1))
+            if (TeleportManager.teleportEntity(entity, randomLocation, modifier, modifier.upgradeHandler.hasUpgrade(new UpgradeMomentum()), validLocations.size() <= 1))
             {
                 teleport = true;
                 validLocations.clear();

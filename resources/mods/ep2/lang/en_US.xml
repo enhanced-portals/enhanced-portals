@@ -18,6 +18,7 @@
 	<entry key="item.portalModifierUpgrade.resourceFrame.name">Resourceful Frame Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.camouflage.name">Modifier Camouflage</entry>
 	<entry key="item.portalModifierUpgrade.dialDevice.name">Dialling Upgrade</entry>
+	<entry key="item.portalModifierUpgrade.momentum.name">Momentum Upgrade</entry>
 	<entry key="item.networkCard.name">Network Card</entry>
 	<entry key="item.miscItems.upgradeCard.name">Upgrade Card</entry>
 	<entry key="gui.upgrade.remove">Click to remove</entry>
@@ -33,6 +34,7 @@
 	<entry key="upgrade.camouflage.textA">Makes the Portal Modifier</entry>
 	<entry key="upgrade.camouflage.textB">look like neighboring blocks</entry>
 	<entry key="upgrade.dialDevice.text">Allows use with a Dial Device</entry>
+	<entry key="upgrade.momentum.text">Entities keep horizontal momentum</entry>
 	<entry key="gui.upgrades">Upgrades</entry>
 	<entry key="gui.modifications">Modifications</entry>
 	<entry key="gui.uniqueIdentifier">Identifier</entry>
