@@ -732,7 +732,7 @@ public class Portal
         World world = getWorld();
         WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, world);
 
-        if (location.getBlockId() != BlockIds.NetherPortal || !findPortalShape())
+        if (world.isRemote || location.getBlockId() != BlockIds.NetherPortal || !findPortalShape())
         {
             return false;
         }

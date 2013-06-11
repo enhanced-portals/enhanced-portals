@@ -94,22 +94,22 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         {
             if (redstoneLevel >= 1 && redstoneState == 0 && !isAnyActive())
             {
-                new Portal(this).createPortal(customBorderBlocks());
+                createPortal();
             }
             else if (redstoneLevel == 0 && redstoneState > 0 && isActive())
             {
-                new Portal(this).removePortal();
+                removePortal();
             }
         }
         else if (redstoneSetting == 1)
         {
             if (redstoneLevel == 0 && redstoneState > 0 && !isAnyActive())
             {
-                new Portal(this).createPortal(customBorderBlocks());
+               createPortal();
             }
             else if (redstoneLevel >= 1 && redstoneState == 0 && isActive())
             {
-                new Portal(this).removePortal();
+                removePortal();
             }
         }
         else if (redstoneSetting > 2)
@@ -118,11 +118,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
             if (redstoneLevel == rsLevel && redstoneState != rsLevel && !isAnyActive())
             {
-                new Portal(this).createPortal(customBorderBlocks());
+               createPortal();
             }
             else if (redstoneLevel != rsLevel && redstoneState == rsLevel && isActive())
             {
-                new Portal(this).removePortal();
+                removePortal();
             }
         }
 
@@ -186,9 +186,9 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         }
     }
 
-    public void removePortal()
+    public boolean removePortal()
     {
-        new Portal(this).removePortal();
+        return new Portal(this).removePortal();
     }
 
     public boolean updateData(byte thick)
