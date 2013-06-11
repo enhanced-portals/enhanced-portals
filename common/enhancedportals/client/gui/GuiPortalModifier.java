@@ -176,7 +176,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                 fontRenderer.drawStringWithShadow(Strings.IdentifierInUse.toString(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Strings.IdentifierInUse.toString()) / 2, guiTop + 51, 0xEE0000);
             }
         }
-        
+
         String network = portalModifier.isRemotelyControlled() ? portalModifier.dialDeviceNetwork : portalModifier.modifierNetwork;
 
         if (!network.equals(""))

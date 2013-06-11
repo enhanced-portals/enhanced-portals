@@ -30,7 +30,7 @@ public class EnhancedPortals_ComputerCraft
     {
         Block.blocksList[BlockIds.PortalModifier] = null;
         EnhancedPortals.proxy.blockPortalModifier = null;
-        
+
         EnhancedPortals.proxy.blockPortalModifier = new BlockPortalModifier_cc();
     }
 }

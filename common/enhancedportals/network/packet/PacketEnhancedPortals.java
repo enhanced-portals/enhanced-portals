@@ -24,7 +24,8 @@ public abstract class PacketEnhancedPortals
         NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class),
         PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class),
         PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
-        REQUEST_DATA(PacketRequestData.class);
+        REQUEST_DATA(PacketRequestData.class),
+        CREATE_PORTAL(PacketCreatePortal.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 

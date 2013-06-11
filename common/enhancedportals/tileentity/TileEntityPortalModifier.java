@@ -105,7 +105,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         {
             if (redstoneLevel == 0 && redstoneState > 0 && !isAnyActive())
             {
-               createPortal();
+                createPortal();
             }
             else if (redstoneLevel >= 1 && redstoneState == 0 && isActive())
             {
@@ -118,7 +118,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
             if (redstoneLevel == rsLevel && redstoneState != rsLevel && !isAnyActive())
             {
-               createPortal();
+                createPortal();
             }
             else if (redstoneLevel != rsLevel && redstoneState == rsLevel && isActive())
             {

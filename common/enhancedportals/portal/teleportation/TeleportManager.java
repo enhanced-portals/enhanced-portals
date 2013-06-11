@@ -52,6 +52,11 @@ public class TeleportManager
         return player;
     }
 
+    private static Entity handleRelativeVelocity(Entity entity, double x, double y, double z, int direction)
+    {
+        return entity;
+    }
+
     private static Entity recreateEntity(Entity entity, World world)
     {
         if (!(entity instanceof EntityPlayer))
@@ -182,7 +187,7 @@ public class TeleportManager
             {
                 outModifierOffset = outModifierOffset.getOffset(ForgeDirection.getOrientation(outModifierMeta));
             }
-            
+
             if (outModifierMeta == 0)
             {
                 outModifierOffset.yCoord -= 1;
@@ -195,7 +200,7 @@ public class TeleportManager
     }
 
     private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, int metaDirection)
-    {        
+    {
         if (!Settings.AllowTeleporting || !canEntityTravel(entity))
         {
             return entity;
@@ -219,7 +224,7 @@ public class TeleportManager
             mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
             entity.mountEntity(null);
         }
-        
+
         if (teleportDataOffset.getMetadata() == 4 || teleportDataOffset.getMetadata() == 5)
         {
             if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
@@ -306,11 +311,6 @@ public class TeleportManager
 
         entity = handleRelativeVelocity(entity, velocityX, velocityY, velocityZ, metaDirection);
         setCanEntityTravel(entity, false);
-        return entity;
-    }
-    
-    private static Entity handleRelativeVelocity(Entity entity, double x, double y, double z, int direction)
-    {
         return entity;
     }
 }

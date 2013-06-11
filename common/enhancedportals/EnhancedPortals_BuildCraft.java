@@ -41,7 +41,7 @@ public class EnhancedPortals_BuildCraft
         {
             fuelTexture = event.map.registerIcon("EP2_BC:fuel");
         }
-        
+
         try
         {
             Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);

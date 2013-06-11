@@ -24,8 +24,8 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     public boolean active;
     WorldLocation  modifierLocation;
     Ticket         chunkTicket;
-    final int TICK_DELAY = 50;
-    int timer, ticksToGo;
+    final int      TICK_DELAY = 50;
+    int            timer, ticksToGo;
 
     public TileEntityDialDeviceBasic()
     {
@@ -157,24 +157,24 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
         TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();
-        
+
         if (ticksToGo > 0 && active)
         {
             int time = TICK_DELAY;
-            
+
             if (time > ticksToGo)
             {
                 time = ticksToGo;
             }
-            
+
             ticksToGo -= time;
-            
+
             if (!modifier.isAnyActive() || !exitModifier.isAnyActive())
             {
                 ticksToGo = 0;
                 time = 0;
             }
-            
+
             worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
         }
         else if (ticksToGo == 0 && active)

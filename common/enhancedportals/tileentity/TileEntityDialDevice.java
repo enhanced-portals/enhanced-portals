@@ -26,8 +26,8 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 {
     public ArrayList<DialDeviceNetworkObject> destinationList;
     public int                                selectedDestination, tickTimer;
-    int timer, ticksToGo;
-    final int TICK_DELAY = 50;
+    int                                       timer, ticksToGo;
+    final int                                 TICK_DELAY = 50;
     public boolean                            active;
 
     WorldLocation                             modifierLocation;
@@ -159,12 +159,12 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 {
                     ticksToGo = tickTimer;
                     int time = TICK_DELAY;
-                    
+
                     if (time > tickTimer)
                     {
                         time = tickTimer;
                     }
-                    
+
                     sendChatToPlayer(String.format(Strings.ChatDialSuccess2.toString(), tickTimer / 20), player);
                     worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
                     loadChunk();
@@ -230,48 +230,48 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         {
             return;
         }
-        
-        if (modifierLocation == null|| !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
+
+        if (modifierLocation == null || !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
         {
             active = false;
             unloadChunk();
             PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate(this)));
             return;
         }
-        
+
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
         TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();
-        
+
         if (ticksToGo > 0 && active)
         {
             int time = TICK_DELAY;
-            
+
             if (time > ticksToGo)
             {
                 time = ticksToGo;
             }
-            
+
             ticksToGo -= time;
-            
+
             if (!modifier.isAnyActive() || !exitModifier.isAnyActive())
             {
                 ticksToGo = 0;
                 time = 0;
             }
-            
+
             worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
         }
         else if (ticksToGo == 0 && active)
         {
             modifier.removePortal();
             modifier.tempDialDeviceNetwork = "";
-    
+
             if (exitModifier != null)
             {
                 exitModifier.removePortal();
                 exitModifier.tempDialDeviceNetwork = "";
             }
-    
+
             active = false;
             unloadChunk();
         }

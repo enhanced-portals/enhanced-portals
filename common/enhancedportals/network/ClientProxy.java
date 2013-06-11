@@ -54,15 +54,15 @@ public class ClientProxy extends CommonProxy
             {
                 Textures.portalTextureMap.put("C:" + i, new PortalTexture("C:" + i, event.map.registerIcon(Reference.MOD_ID + ":netherPortal_" + i), event.map.registerIcon(Reference.MOD_ID + ":portalModifier_active_" + i), ItemDye.dyeColors[i]));
             }
-            
+
             Textures.portalTextureMap.put("I:" + Item.netherStar.itemID + ":0", new PortalTexture("I:" + Item.netherStar.itemID + ":0", event.map.registerIcon(Reference.MOD_ID + ":netherPortal_invisible")));
         }
-        
+
         PortalTexture orangeTexture = Textures.getTexture("C:14"), blueTexture = Textures.getTexture("C:4"), whiteTexture = Textures.getTexture("C:15");
         Textures.portalTextureMap.put("I:" + Item.bucketWater.itemID + ":0", new PortalTexture("I:" + Item.bucketWater.itemID + ":0", Block.waterStill.getBlockTextureFromSide(0), blueTexture.getModifierTexture(), blueTexture.getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.bucketLava.itemID + ":0", new PortalTexture("I:" + Item.bucketLava.itemID + ":0", Block.lavaStill.getBlockTextureFromSide(0), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.snowball.itemID + ":0", new PortalTexture("I:" + Item.snowball.itemID + ":0", Block.snow.getBlockTextureFromSide(0), whiteTexture.getModifierTexture(), whiteTexture.getParticleColour()));
-        
+
         Textures.portalTextureMap.put("I:" + Item.helmetChain.itemID + ":0", new PortalTexture("I:" + Item.helmetChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.plateChain.itemID + ":0", new PortalTexture("I:" + Item.plateChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.legsChain.itemID + ":0", new PortalTexture("I:" + Item.legsChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
