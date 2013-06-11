@@ -36,13 +36,13 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
     @Override
     public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
     {
-        if ((method == 0 || method == 1 || method == 2 || method == 5 || method == 7 || method == 9 || method == 10 || method == 11) && arguments.length != 0)
+        if ((method == 0 || method == 1 || method == 2 || method == 3 || method == 5 || method == 7 || method == 9 || method == 10 || method == 11 || method == 12) && arguments.length != 0)
         {
-            throw new Exception("Invalid number of arguments. Expecting 0.");
+            throw new Exception("Invalid number of arguments. Expecting 0");
         }
-        else if ((method == 3 || method == 4 || method == 6 || method == 8) && arguments.length != 1)
+        else if ((method == 4 || method == 6 || method == 8) && arguments.length != 1)
         {
-            throw new Exception("Invalid number of arguments. Expecting 1.");
+            throw new Exception("Invalid number of arguments. Expecting 1");
         }
 
         if (method == 0) // createPortal
@@ -104,7 +104,7 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
             
             if (arguments[0] instanceof String)
             {
-                if (!arguments[0].toString().contains(" "))
+                if (arguments[0].toString().length() == 0)
                 {
                     throw new Exception("Invalid arguments");
                 }
@@ -262,6 +262,19 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
         {
             return new Object[] { isAnyActive() };
         }
+        else if (method == 12) // getGlyphs
+        {
+            HashMap<String, Integer> map = new HashMap<String, Integer>();
+            int counter = 0;
+            
+            for (ItemStack i : Reference.glyphItems)
+            {
+                map.put(i.getDisplayName(), counter);
+                counter++;
+            }
+            
+            return new Object[] { map };
+        }
 
         return null;
     }
@@ -329,7 +342,7 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
     @Override
     public String[] getMethodNames()
     {
-        return new String[] { "createPortal", "removePortal", "getTexture", "getNetwork", "setNetwork", "getIdentifier", "setIdentifier", "getThickness", "setThickness", "getUpgrades", "isSelfActive", "isAnyActive" };
+        return new String[] { "createPortal", "removePortal", "getTexture", "getNetwork", "setNetwork", "getIdentifier", "setIdentifier", "getThickness", "setThickness", "getUpgrades", "isSelfActive", "isAnyActive", "getGlyphs" };
     }
 
     @Override
