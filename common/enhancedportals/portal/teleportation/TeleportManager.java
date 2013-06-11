@@ -52,8 +52,23 @@ public class TeleportManager
         return player;
     }
 
-    private static Entity handleRelativeVelocity(Entity entity, double x, double y, double z, int direction)
+    private static Entity handleMomentum(Entity entity, float newYaw)
     {
+        float rotationYaw = (float)(Math.atan2(entity.motionX, entity.motionZ) * 180D / 3.141592653589793D);
+        double cos = Math.cos(Math.toRadians(-rotationYaw));
+        double sin = Math.sin(Math.toRadians(-rotationYaw));
+        double tempXmotion = cos * entity.motionX - sin * entity.motionZ;
+        double tempZmotion = sin * entity.motionX + cos * entity.motionZ;
+        entity.motionX = tempXmotion;
+        entity.motionZ = tempZmotion;
+        
+        cos = Math.cos(Math.toRadians(newYaw));
+        sin = Math.sin(Math.toRadians(newYaw));
+        tempXmotion = cos * entity.motionX - sin * entity.motionZ;
+        tempZmotion = sin * entity.motionX + cos * entity.motionZ;
+        entity.motionX = tempXmotion;
+        entity.motionZ = tempZmotion;
+        
         return entity;
     }
 
@@ -193,13 +208,13 @@ public class TeleportManager
                 outModifierOffset.yCoord -= 1;
             }
 
-            teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, outModifierMeta);
+            teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, originModifier.getBlockMetadata(), outModifierMeta);
         }
 
         return teleportEntity;
     }
 
-    private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, int metaDirection)
+    private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, int direction, int metaDirection)
     {
         if (!Settings.AllowTeleporting || !canEntityTravel(entity))
         {
@@ -208,23 +223,15 @@ public class TeleportManager
 
         boolean dimensionalTeleport = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
         float rotationYaw = 0f;
-        double velocityX = 0f, velocityY = 0f, velocityZ = 0f, mountedVelocityX = 0f, mountedVelocityY = 0f, mountedVelocityZ = 0f;
 
-        velocityX = entity.motionX;
-        velocityY = entity.motionY;
-        velocityZ = entity.motionZ;
         Entity mountedEntity = null;
 
         if (entity.ridingEntity != null)
         {
-            mountedVelocityX = entity.ridingEntity.motionX;
-            mountedVelocityY = entity.ridingEntity.motionY;
-            mountedVelocityZ = entity.ridingEntity.motionZ;
-
-            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, metaDirection);
+            mountedEntity = teleportEntity(world, entity.ridingEntity, teleportData, teleportDataOffset, direction, metaDirection);
             entity.mountEntity(null);
         }
-
+        
         if (teleportDataOffset.getMetadata() == 4 || teleportDataOffset.getMetadata() == 5)
         {
             if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
@@ -266,6 +273,8 @@ public class TeleportManager
         {
             removeEntityFromWorld(entity.worldObj, entity);
         }
+        
+        handleMomentum(entity, rotationYaw);
 
         entity.setLocationAndAngles(teleportDataOffset.xCoord + 0.5, teleportDataOffset.yCoord, teleportDataOffset.zCoord + 0.5, rotationYaw, entity.rotationPitch);
         world.theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
@@ -306,10 +315,8 @@ public class TeleportManager
         if (mountedEntity != null)
         {
             entity.mountEntity(mountedEntity);
-            mountedEntity = handleRelativeVelocity(mountedEntity, mountedVelocityX, mountedVelocityY, mountedVelocityZ, metaDirection);
         }
 
-        entity = handleRelativeVelocity(entity, velocityX, velocityY, velocityZ, metaDirection);
         setCanEntityTravel(entity, false);
         return entity;
     }
