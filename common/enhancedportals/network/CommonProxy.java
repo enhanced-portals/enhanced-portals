@@ -120,6 +120,9 @@ public class CommonProxy
         // Advanced Dimensional Upgrade
         GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
 
+        // Momentum
+        GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 4), new ItemStack(itemMisc, 1, 0), Block.anvil, Item.feather);
+        
         // Nether Frame Upgrade
         GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 5), new ItemStack(itemMisc, 1, 0), Block.glowStone, Block.netherBrick, Block.blockNetherQuartz);
 

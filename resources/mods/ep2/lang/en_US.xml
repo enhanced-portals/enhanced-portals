@@ -18,7 +18,7 @@
 	<entry key="item.portalModifierUpgrade.resourceFrame.name">Resourceful Frame Upgrade</entry>
 	<entry key="item.portalModifierUpgrade.camouflage.name">Modifier Camouflage</entry>
 	<entry key="item.portalModifierUpgrade.dialDevice.name">Dialling Upgrade</entry>
-	<entry key="item.portalModifierUpgrade.momentum.name">Momentum Upgrade</entry>
+	<entry key="item.portalModifierUpgrade.momentum.name">Kinetic Upgrade</entry>
 	<entry key="item.networkCard.name">Network Card</entry>
 	<entry key="item.miscItems.upgradeCard.name">Upgrade Card</entry>
 	<entry key="gui.upgrade.remove">Click to remove</entry>
