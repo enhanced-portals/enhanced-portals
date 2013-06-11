@@ -10,13 +10,13 @@ import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedcore.util.MathHelper;
 import enhancedcore.world.WorldLocationBlockAccess;
 import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
@@ -177,7 +177,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         byte thickness = ((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).thickness;
-        float thick = 0.125F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
+        float thick = 0.125F * thickness, thickA = MathHelper.clampFloat(0.375F - thick, 0F, 1F), thickB = MathHelper.clampFloat(0.625F + thick, 0F, 1F);
 
         if (meta == 2 || meta == 3) // XY
         {

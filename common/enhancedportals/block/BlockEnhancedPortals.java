@@ -6,9 +6,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import enhancedcore.util.MathHelper;
 import enhancedportals.lib.Localization;
 
 public class BlockEnhancedPortals extends BlockContainer
@@ -93,7 +93,7 @@ public class BlockEnhancedPortals extends BlockContainer
         if (canRotate)
         {
             int direction = 0;
-            int facing = MathHelper.floor_double(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+            int facing = MathHelper.floorDouble(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
             if (facing == 0)
             {

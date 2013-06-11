@@ -7,12 +7,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
 
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import enhancedcore.util.MathHelper;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Strings;
@@ -81,7 +81,7 @@ public class GuiDialDevice extends GuiScreen
                 dialDevice.tickTimer += rightClick ? -1 : 1;
             }
 
-            dialDevice.tickTimer = MathHelper.clamp_int(dialDevice.tickTimer, 19, 60 * 20 + 1);
+            dialDevice.tickTimer = MathHelper.clampInt(dialDevice.tickTimer, 19, 60 * 20 + 1);
 
             ((GuiButton) buttonList.get(3)).displayString = dialDevice.tickTimer == 1201 || dialDevice.tickTimer == 19 ? Strings.DontShutdownAuto.toString() : EnumChatFormatting.GOLD + (dialDevice.tickTimer + "") + " " + EnumChatFormatting.WHITE + "ticks (" + EnumChatFormatting.GOLD + new DecimalFormat("#.##").format((float) dialDevice.tickTimer / 20) + "" + EnumChatFormatting.WHITE + " seconds)";
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate(dialDevice)));

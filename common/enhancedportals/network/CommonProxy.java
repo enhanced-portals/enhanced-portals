@@ -3,12 +3,12 @@ package enhancedportals.network;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import enhancedcore.util.MathHelper;
 import enhancedportals.block.BlockAutomaticDialler;
 import enhancedportals.block.BlockDialDevice;
 import enhancedportals.block.BlockDialDeviceBasic;
@@ -183,9 +183,9 @@ public class CommonProxy
         Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect).getBoolean(Settings.RenderPortalEffect);
 
         // Integer configs
-        Settings.SoundLevel = MathHelper.clamp_int(config.get("Effects", "SoundLevel", 100).getInt(), 0, 100);
-        Settings.ParticleLevel = MathHelper.clamp_int(config.get("Effects", "ParticleLevel", 100).getInt(), 0, 100);
-        Settings.PigmenLevel = MathHelper.clamp_int(config.get("Settings", "PigmenLevel", 100).getInt(), 0, 100);
+        Settings.SoundLevel = MathHelper.clampInt(config.get("Effects", "SoundLevel", 100).getInt(), 0, 100);
+        Settings.ParticleLevel = MathHelper.clampInt(config.get("Effects", "ParticleLevel", 100).getInt(), 0, 100);
+        Settings.PigmenLevel = MathHelper.clampInt(config.get("Settings", "PigmenLevel", 100).getInt(), 0, 100);
 
         config.save();
     }

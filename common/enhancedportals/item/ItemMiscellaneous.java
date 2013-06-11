@@ -7,9 +7,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedcore.util.MathHelper;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
@@ -54,7 +54,7 @@ public class ItemMiscellaneous extends Item
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        int i = MathHelper.clamp_int(par1ItemStack.getItemDamage(), 0, 15);
+        int i = MathHelper.clampInt(par1ItemStack.getItemDamage(), 0, 15);
         return super.getUnlocalizedName() + "." + names[i];
     }
 
