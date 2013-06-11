@@ -118,6 +118,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 modifier.tempDialDeviceNetwork = network;
                 exitModifier.tempDialDeviceNetwork = modifier.dialDeviceNetwork;
                 active = true;
+                ticksToGo = 760;
 
                 worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, TICK_DELAY);
                 loadChunk();
@@ -146,7 +147,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     }
 
     public void scheduledBlockUpdate()
-    {
+    {        
         if (modifierLocation == null || !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
         {
             active = false;
@@ -175,7 +176,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 time = 0;
             }
 
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
+            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, time);
         }
         else if (ticksToGo == 0 && active)
         {
