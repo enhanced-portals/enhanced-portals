@@ -35,8 +35,8 @@ public class EnhancedPortals_ComputerCraft
     public void postInit(FMLPostInitializationEvent event)
     {
         Block.blocksList[BlockIds.PortalModifier] = null;
-        Block.blocksList[BlockIds.DialHomeDeviceBasic] = null;
-        Block.blocksList[BlockIds.DialHomeDevice] = null;
+        Block.blocksList[BlockIds.DialDeviceBasic] = null;
+        Block.blocksList[BlockIds.DialDevice] = null;
 
         EnhancedPortals.proxy.blockPortalModifier = null;
         EnhancedPortals.proxy.blockDialDeviceBasic = null;

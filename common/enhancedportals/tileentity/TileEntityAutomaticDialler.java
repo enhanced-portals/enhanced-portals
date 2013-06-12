@@ -26,27 +26,27 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 
         WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, worldObj);
 
-        if (location.getOffset(ForgeDirection.UP).getBlockId() == BlockIds.DialHomeDeviceBasic)
+        if (location.getOffset(ForgeDirection.UP).getBlockId() == BlockIds.DialDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.UP);
         }
-        else if (location.getOffset(ForgeDirection.DOWN).getBlockId() == BlockIds.DialHomeDeviceBasic)
+        else if (location.getOffset(ForgeDirection.DOWN).getBlockId() == BlockIds.DialDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.DOWN);
         }
-        else if (location.getOffset(ForgeDirection.NORTH).getBlockId() == BlockIds.DialHomeDeviceBasic)
+        else if (location.getOffset(ForgeDirection.NORTH).getBlockId() == BlockIds.DialDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.NORTH);
         }
-        else if (location.getOffset(ForgeDirection.SOUTH).getBlockId() == BlockIds.DialHomeDeviceBasic)
+        else if (location.getOffset(ForgeDirection.SOUTH).getBlockId() == BlockIds.DialDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.SOUTH);
         }
-        else if (location.getOffset(ForgeDirection.EAST).getBlockId() == BlockIds.DialHomeDeviceBasic)
+        else if (location.getOffset(ForgeDirection.EAST).getBlockId() == BlockIds.DialDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.EAST);
         }
-        else if (location.getOffset(ForgeDirection.WEST).getBlockId() == BlockIds.DialHomeDeviceBasic)
+        else if (location.getOffset(ForgeDirection.WEST).getBlockId() == BlockIds.DialDeviceBasic)
         {
             connectedModifier = location.getOffset(ForgeDirection.WEST);
         }

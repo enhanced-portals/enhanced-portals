@@ -39,8 +39,8 @@ public class ClientProxy extends CommonProxy
     {
         super.loadTileEntities();
 
-        MinecraftForgeClient.registerItemRenderer(BlockIds.DialHomeDevice, new ItemDialDeviceRenderer());
-        MinecraftForgeClient.registerItemRenderer(BlockIds.DialHomeDeviceBasic, new ItemDialDeviceRenderer());
+        MinecraftForgeClient.registerItemRenderer(BlockIds.DialDevice, new ItemDialDeviceRenderer());
+        MinecraftForgeClient.registerItemRenderer(BlockIds.DialDeviceBasic, new ItemDialDeviceRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDialDeviceBasic.class, new TileEntityDialDeviceRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDialDevice.class, new TileEntityDialDeviceRenderer());
     }

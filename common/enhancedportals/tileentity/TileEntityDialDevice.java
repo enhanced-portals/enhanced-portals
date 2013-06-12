@@ -166,7 +166,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                     }
 
                     sendChatToPlayer(String.format(Strings.ChatDialSuccess2.toString(), tickTimer / 20), player);
-                    worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
+                    worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialDevice, time);
                     loadChunk();
                 }
 
@@ -259,7 +259,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
                 time = 0;
             }
 
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDevice, time);
+            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialDevice, time);
         }
         else if (ticksToGo == 0 && active)
         {

@@ -23,7 +23,7 @@ public class BlockDialDevice extends BlockEnhancedPortals
 {
     public BlockDialDevice()
     {
-        super(BlockIds.DialHomeDevice, Material.rock);
+        super(BlockIds.DialDevice, Material.rock);
         setCreativeTab(Reference.CREATIVE_TAB);
         setCanRotate();
         setHardness(25.0F);

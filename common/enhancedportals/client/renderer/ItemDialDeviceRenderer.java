@@ -51,7 +51,7 @@ public class ItemDialDeviceRenderer implements IItemRenderer
     {
         boolean basic = false;
 
-        if (item.itemID == BlockIds.DialHomeDeviceBasic)
+        if (item.itemID == BlockIds.DialDeviceBasic)
         {
             basic = true;
         }

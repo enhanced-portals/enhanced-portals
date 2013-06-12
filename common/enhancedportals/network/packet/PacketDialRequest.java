@@ -68,7 +68,7 @@ public class PacketDialRequest extends PacketEnhancedPortals
         {
             WorldLocation loc = new WorldLocation(xCoord, yCoord, zCoord, world);
 
-            if (loc.getBlockId() == BlockIds.DialHomeDeviceBasic)
+            if (loc.getBlockId() == BlockIds.DialDeviceBasic)
             {
                 if (loc.getTileEntity() instanceof TileEntityDialDeviceBasic)
                 {
@@ -77,7 +77,7 @@ public class PacketDialRequest extends PacketEnhancedPortals
                     device.processDiallingRequest(this.network, player);
                 }
             }
-            else if (loc.getBlockId() == BlockIds.DialHomeDevice)
+            else if (loc.getBlockId() == BlockIds.DialDevice)
             {
                 if (loc.getTileEntity() instanceof TileEntityDialDevice)
                 {

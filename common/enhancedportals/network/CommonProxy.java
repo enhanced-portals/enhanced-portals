@@ -208,8 +208,8 @@ public class CommonProxy
         BlockIds.ObsidianStairs = config.getBlock("ObsidianStairs", BlockIds.ObsidianStairs).getInt();
         BlockIds.NetherPortal = config.getBlock("NetherPortal", BlockIds.NetherPortal).getInt();
         BlockIds.PortalModifier = config.getBlock("PortalModifier", BlockIds.PortalModifier).getInt();
-        BlockIds.DialHomeDevice = config.getBlock("DialDevice", BlockIds.DialHomeDevice).getInt();
-        BlockIds.DialHomeDeviceBasic = config.getBlock("BasicDialDevice", BlockIds.DialHomeDeviceBasic).getInt();
+        BlockIds.DialDevice = config.getBlock("DialDevice", BlockIds.DialDevice).getInt();
+        BlockIds.DialDeviceBasic = config.getBlock("BasicDialDevice", BlockIds.DialDeviceBasic).getInt();
         BlockIds.AutomaticDialler = config.getBlock("AutomaticDialler", BlockIds.AutomaticDialler).getInt();
         BlockIds.DummyPortal = config.getBlock("DummyPortal", BlockIds.DummyPortal).getInt();
 

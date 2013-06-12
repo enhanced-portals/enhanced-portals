@@ -84,7 +84,7 @@ public class PacketDialEntry extends PacketEnhancedPortals
     {
         World world = EnhancedPortals.proxy.getWorld(dimension);
 
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.DialHomeDevice)
+        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.DialDevice)
         {
             if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
             {

@@ -120,7 +120,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 active = true;
                 ticksToGo = 760;
 
-                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, TICK_DELAY);
+                worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialDeviceBasic, TICK_DELAY);
                 loadChunk();
 
                 PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate(this)));
@@ -176,7 +176,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
                 time = 0;
             }
 
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialHomeDeviceBasic, time);
+            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialDeviceBasic, time);
         }
         else if (ticksToGo == 0 && active)
         {
