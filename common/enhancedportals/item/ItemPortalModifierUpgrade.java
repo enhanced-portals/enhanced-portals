@@ -54,7 +54,7 @@ public class ItemPortalModifierUpgrade extends Item
     @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage(int par1)
     {
-        if (par1 > textures.length)
+        if (par1 > Upgrade.getAllUpgrades().length)
         {
             return textures[0];
         }
@@ -73,7 +73,7 @@ public class ItemPortalModifierUpgrade extends Item
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (int var4 = 0; var4 < textures.length; var4++)
+        for (int var4 = 0; var4 < Upgrade.getAllUpgrades().length; var4++)
         {
             par3List.add(new ItemStack(par1, 1, var4));
         }
@@ -149,7 +149,7 @@ public class ItemPortalModifierUpgrade extends Item
         textures = new Icon[Upgrade.getUpgradeNames().length];
         String[] names = Upgrade.getUpgradeNames();
 
-        for (int i = 0; i < textures.length; i++)
+        for (int i = 0; i < Upgrade.getAllUpgrades().length; i++)
         {
             textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + names[i]);
         }
