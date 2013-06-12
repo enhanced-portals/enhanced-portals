@@ -15,6 +15,7 @@ import enhancedportals.client.gui.GuiPortalModifierNetwork;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
+import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketAutomaticDiallerUpdate;
 import enhancedportals.network.packet.PacketBasicDialDeviceUpdate;
 import enhancedportals.network.packet.PacketDialDeviceUpdate;
@@ -35,14 +36,14 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (ID == GuiIds.PortalModifier)
+        if (ID == GuiIds.PortalModifier && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
                 return new GuiPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
             }
         }
-        else if (ID == GuiIds.PortalModifierNetwork)
+        else if (ID == GuiIds.PortalModifierNetwork && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
@@ -63,14 +64,14 @@ public class GuiHandler implements IGuiHandler
                 return new GuiDialDeviceBasic((TileEntityDialDeviceBasic) tileEntity);
             }
         }
-        else if (ID == GuiIds.AutoDiallerBasic)
+        else if (ID == GuiIds.AutoDiallerBasic && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityAutomaticDialler)
             {
                 return new GuiAutomaticDiallerSimple((TileEntityAutomaticDialler) tileEntity);
             }
         }
-        else if (ID == GuiIds.DialDeviceAdd)
+        else if (ID == GuiIds.DialDeviceAdd && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityDialDevice)
             {
@@ -86,7 +87,7 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (ID == GuiIds.PortalModifier)
+        if (ID == GuiIds.PortalModifier && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
@@ -120,14 +121,14 @@ public class GuiHandler implements IGuiHandler
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketBasicDialDeviceUpdate((TileEntityDialDeviceBasic) tileEntity)), (Player) player);
             }
         }
-        else if (ID == GuiIds.AutoDiallerBasic)
+        else if (ID == GuiIds.AutoDiallerBasic && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityAutomaticDialler)
             {
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketAutomaticDiallerUpdate((TileEntityAutomaticDialler) tileEntity)), (Player) player);
             }
         }
-        else if (ID == GuiIds.DialDeviceAdd)
+        else if (ID == GuiIds.DialDeviceAdd && Settings.canUse(player))
         {
             if (tileEntity instanceof TileEntityDialDevice)
             {

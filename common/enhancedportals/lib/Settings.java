@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.Configuration;
 
 public class Settings
@@ -19,6 +20,8 @@ public class Settings
 
     public static boolean       RenderPortalEffect    = true;
     public static boolean       AllowPortalColours    = true;
+    
+    public static boolean SurvivalModeLimitation = true;
 
     public static int           PigmenLevel           = 100;
     public static int           SoundLevel            = 100;
@@ -40,5 +43,10 @@ public class Settings
         }
 
         return false;
+    }
+    
+    public static boolean canUse(EntityPlayer player)
+    {
+        return player.capabilities.allowEdit && SurvivalModeLimitation;
     }
 }

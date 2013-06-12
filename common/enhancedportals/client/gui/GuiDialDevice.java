@@ -15,6 +15,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.util.MathHelper;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
+import enhancedportals.lib.Settings;
 import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketDialDeviceUpdate;
 import enhancedportals.network.packet.PacketDialEntry;
@@ -104,13 +105,14 @@ public class GuiDialDevice extends GuiScreen
         // Not the best place for this but it will do.        
         GuiButton button = (GuiButton) buttonList.get(3);
 
-        if (Mouse.isButtonDown(1) && button.xPosition <= x && button.yPosition <= y && button.xPosition + 240 >= x && button.yPosition + 20 >= y && !rightClick)
+        if (Mouse.isButtonDown(1) && button.xPosition <= x && button.yPosition <= y && button.xPosition + 240 >= x && button.yPosition + 20 >= y && !rightClick && Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
         {
-            rightClick = true;
-            actionPerformed(button);
-            mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                rightClick = true;
+                actionPerformed(button);
+                mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+            
         }
-        else if (rightClick && !Mouse.isButtonDown(1))
+        else if (rightClick && !Mouse.isButtonDown(1) && Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
         {
             rightClick = false;
         }
@@ -162,6 +164,13 @@ public class GuiDialDevice extends GuiScreen
         else if (getSelected() < 0 || dialDevice.active)
         {
             ((GuiButton) buttonList.get(2)).enabled = false;
+        }
+        
+        if (!Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
+        {
+            ((GuiButton) buttonList.get(0)).drawButton = false;
+            ((GuiButton) buttonList.get(2)).drawButton = false;
+            ((GuiButton) buttonList.get(3)).drawButton = false;
         }
     }
 

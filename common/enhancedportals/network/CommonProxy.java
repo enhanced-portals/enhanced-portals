@@ -184,6 +184,7 @@ public class CommonProxy
         Settings.DisableDHDRecipe = config.get("Settings", "DisableDialDeviceRecipe", Settings.DisableDHDRecipe).getBoolean(Settings.DisableDHDRecipe);
         Settings.DisableModifierRecipe = config.get("Settings", "DisableModifierRecipe", Settings.DisableModifierRecipe).getBoolean(Settings.DisableModifierRecipe);
         Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect).getBoolean(Settings.RenderPortalEffect);
+        Settings.SurvivalModeLimitation = config.get("Settings", "RestrictSurvivalPlayers", Settings.SurvivalModeLimitation).getBoolean(Settings.SurvivalModeLimitation);
 
         // Integer configs
         Settings.SoundLevel = MathHelper.clampInt(config.get("Effects", "SoundLevel", 100).getInt(), 0, 100);
