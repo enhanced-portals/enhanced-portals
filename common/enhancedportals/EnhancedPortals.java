@@ -44,7 +44,7 @@ import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.world.DialDeviceChunkCallback;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore")
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[0.8,);required-after:Forge@[7.8.0.700,)", acceptedMinecraftVersions = "[1.5,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
 {
