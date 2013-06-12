@@ -147,7 +147,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
     }
 
     public void scheduledBlockUpdate()
-    {        
+    {
         if (modifierLocation == null || !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
         {
             active = false;

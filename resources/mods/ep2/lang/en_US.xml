@@ -67,6 +67,7 @@
 	<entry key="gui.identifierInUse">This identifier is in use</entry>
 	<entry key="gui.dontShutdownAuto">Don't automatically shutdown</entry>
 	<entry key="gui.activeModifier">You cannot modify a Portal Modifier while it is active</entry>
+	<entry key="gui.networkNotSet">No network</entry>
 	<entry key="chat.advDimUpgradeAlreadyInstalled">Remove the Advanced Dimensional upgrade first</entry>
 	<entry key="chat.dimUpgradeAlreadyInstalled">Remove the Dimensional upgrade first</entry>
 	<entry key="chat.maxUpgradesInstalled">The maximum amount of upgrades have been installed</entry>
@@ -79,4 +80,7 @@
 	<entry key="chat.noModifiers">Cannot establish a connection to a nearby Portal Modifier</entry>
 	<entry key="chat.missingUpgrade">The portal is missing an upgrade</entry>
 	<entry key="chat.noLinkedPortals">Could not find a linked portal</entry>
+	<entry key="chat.networkSuccessful">Successfully transferred the network data</entry>
+	<entry key="chat.modifierActive">Cannot transfer data while the modifier is active</entry>
+	<entry key="chat.notLinked">There is no network on the card</entry>
 </properties>

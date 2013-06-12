@@ -13,24 +13,18 @@ import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic implements IPeripheral
 {
     List<IComputerAccess> computerList;
-    
+
     public TileEntityDialDeviceBasic_cc()
     {
         super();
-        
+
         computerList = new ArrayList<IComputerAccess>();
     }
 
     @Override
-    public String getType()
+    public void attach(IComputerAccess computer)
     {
-        return "automaticDialler";
-    }
-
-    @Override
-    public String[] getMethodNames()
-    {
-        return new String[] { "dial", "terminate", "getGlyphs" };
+        computerList.add(computer);
     }
 
     @Override
@@ -44,29 +38,29 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
         {
             throw new Exception("Invalid number of arguments. Expecting 0");
         }
-        
+
         if (method == 0) // dial
         {
-            
+
         }
         else if (method == 1) // terminate
         {
-            
+
         }
         else if (method == 2) // getGlyphs
         {
             HashMap<String, Integer> map = new HashMap<String, Integer>();
             int counter = 0;
-            
+
             for (ItemStack i : Reference.glyphItems)
             {
                 map.put(i.getDisplayName(), counter);
                 counter++;
             }
-            
+
             return new Object[] { map };
         }
-        
+
         return null;
     }
 
@@ -77,14 +71,20 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
     }
 
     @Override
-    public void attach(IComputerAccess computer)
-    {
-        computerList.add(computer);
-    }
-
-    @Override
     public void detach(IComputerAccess computer)
     {
         computerList.remove(computer);
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "dial", "terminate", "getGlyphs" };
+    }
+
+    @Override
+    public String getType()
+    {
+        return "automaticDialler";
     }
 }

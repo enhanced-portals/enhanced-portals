@@ -15,6 +15,7 @@ import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketCreatePortal;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
+import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implements IPeripheral
@@ -31,13 +32,8 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
     private void addMethods()
     {
         // createPortal
-        computerManager.registerMethod(new IMethod() {
-            @Override
-            public String getMethodName()
-            {
-                return "createPortal";
-            }
-
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -49,19 +45,20 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                 {
                     createPortal();
                 }
-                
+
                 return null;
             }
-        });
-        
-        // removePortal
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "removePortal";
+                return "createPortal";
             }
+        });
 
+        // removePortal
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -73,34 +70,36 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                 {
                     removePortal();
                 }
-                
+
                 return null;
             }
-        });
-        
-        // getTexture
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getTexture";
+                return "removePortal";
             }
+        });
 
+        // getTexture
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
                 return new Object[] { texture.equals("") ? "C:5" : texture };
             }
-        });
-        
-        // getNetwork
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getNetwork";
+                return "getTexture";
             }
+        });
 
+        // getNetwork
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -122,16 +121,17 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
 
                 return new Object[] { values };
             }
-        });
-        
-        // setNetwork
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "setNetwork";
+                return "getNetwork";
             }
+        });
 
+        // setNetwork
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -139,17 +139,17 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                 {
                     throw new Exception("You must use setIdentifier()");
                 }
-                
+
                 if (arguments[0] instanceof String)
                 {
                     if (arguments[0].toString().length() == 0)
                     {
                         throw new Exception("Invalid arguments");
                     }
-                    
+
                     String[] str = arguments[0].toString().split(" ");
                     String theNetwork = "";
-                    
+
                     if (str.length > 9)
                     {
                         throw new Exception("Too many values");
@@ -158,25 +158,25 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     {
                         throw new Exception("Invalid arguments");
                     }
-                    
+
                     for (String s : str)
                     {
                         if (s.equals(""))
                         {
                             continue;
                         }
-                        
+
                         int i = Integer.parseInt(s);
-                        
+
                         if (i >= 0 && i < Reference.glyphItems.size())
                         {
                             theNetwork = theNetwork + " " + Reference.glyphItems.get(i).getItemName().replace("item.", "");
                         }
                     }
-                    
+
                     modifierNetwork = theNetwork.substring(1);
                     PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
-                    
+
                     return new Object[] { true };
                 }
                 else
@@ -184,16 +184,17 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     throw new Exception("Invalid type");
                 }
             }
-        });
-        
-        // getIdentifier
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getIdentifier";
+                return "setNetwork";
             }
+        });
 
+        // getIdentifier
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -215,16 +216,17 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
 
                 return new Object[] { values };
             }
-        });
-        
-        // setIdentifier
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "setIdentifier";
+                return "getIdentifier";
             }
+        });
 
+        // setIdentifier
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -232,17 +234,17 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                 {
                     throw new Exception("You must use setNetwork()");
                 }
-                
+
                 if (arguments[0] instanceof String)
                 {
                     if (!arguments[0].toString().contains(" "))
                     {
                         throw new Exception("Invalid arguments");
                     }
-                    
+
                     String[] str = arguments[0].toString().split(" ");
                     String theNetwork = "";
-                    
+
                     if (str.length > 9)
                     {
                         throw new Exception("Too many values");
@@ -251,25 +253,25 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     {
                         throw new Exception("Invalid arguments");
                     }
-                    
+
                     for (String s : str)
                     {
                         if (s.equals(""))
                         {
                             continue;
                         }
-                        
+
                         int i = Integer.parseInt(s);
-                        
+
                         if (i >= 0 && i < Reference.glyphItems.size())
                         {
                             theNetwork = theNetwork + " " + Reference.glyphItems.get(i).getItemName().replace("item.", "");
                         }
                     }
-                    
+
                     dialDeviceNetwork = theNetwork.substring(1);
                     PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
-                    
+
                     return new Object[] { true };
                 }
                 else
@@ -277,38 +279,40 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     throw new Exception("Invalid type");
                 }
             }
-        });
-        
-        // getThickness
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getThickness";
+                return "setIdentifier";
             }
+        });
 
+        // getThickness
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
                 return new Object[] { thickness };
             }
-        });
-        
-        // setThickness
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "setThickness";
+                return "getThickness";
             }
+        });
 
+        // setThickness
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
                 if (arguments[0] instanceof Double)
                 {
                     double obj = Double.parseDouble(arguments[0].toString());
-                    
+
                     if (obj > 0 && obj < 5)
                     {
                         thickness = (byte) (obj - 1);
@@ -325,16 +329,17 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     throw new Exception("Invalid type. Must be an integer between 0 and 5");
                 }
             }
-        });
-        
-        // getUpgrades
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getUpgrades";
+                return "setThickness";
             }
+        });
 
+        // getUpgrades
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -348,45 +353,81 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
 
                 return new Object[] { test };
             }
-        });
-        
-        // getSelfActive
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getSelfActive";
+                return "getUpgrades";
+            }
+        });
+
+        // getUpgradeName
+        computerManager.registerMethod(new IMethod()
+        {
+            @Override
+            public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
+            {
+                if (arguments.length != 1 || !(arguments[0] instanceof Double))
+                {
+                    throw new Exception("Invalid arguments.");
+                }
+
+                int num = (int) Math.round(Double.parseDouble(arguments[0].toString()));
+
+                if (num < 0 || num >= Upgrade.getAllUpgrades().length)
+                {
+                    throw new Exception("Invalid arguments");
+                }
+
+                return new Object[] { Upgrade.getUpgrade(num).getItemStack().getDisplayName() };
             }
 
+            @Override
+            public String getMethodName()
+            {
+                return "getUpgradeName";
+            }
+        });
+
+        // getSelfActive
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
                 return new Object[] { isActive() };
             }
-        });
-        
-        // getAnyActive
-        computerManager.registerMethod(new IMethod() {
+
             @Override
             public String getMethodName()
             {
-                return "getAnyActive";
+                return "getSelfActive";
             }
+        });
 
+        // getAnyActive
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
                 return new Object[] { isAnyActive() };
             }
+
+            @Override
+            public String getMethodName()
+            {
+                return "getAnyActive";
+            }
         });
-        
+
         // getGlyphs
         computerManager.registerMethod(SharedMethods.getGlyphs);
-        
+
         // getGlyph
         computerManager.registerMethod(SharedMethods.getGlyph);
     }
-    
+
     @Override
     public void attach(IComputerAccess computer)
     {

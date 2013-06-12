@@ -33,7 +33,7 @@ public class EnhancedPortals_ComputerCraft
     {
         Block.blocksList[BlockIds.PortalModifier] = null;
         Block.blocksList[BlockIds.DialHomeDeviceBasic] = null;
-        
+
         EnhancedPortals.proxy.blockPortalModifier = null;
         EnhancedPortals.proxy.blockDialDeviceBasic = null;
 

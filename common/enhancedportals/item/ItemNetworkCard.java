@@ -9,7 +9,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -20,6 +19,7 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
+import enhancedportals.lib.Strings;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -87,7 +87,7 @@ public class ItemNetworkCard extends Item
         }
         else
         {
-            list.add(Localization.localizeString("gui.networkNotSet"));
+            list.add(Strings.NetworkNotSet.toString());
         }
     }
 
@@ -146,13 +146,11 @@ public class ItemNetworkCard extends Item
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                    // TODO PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(modifier).getPacket());
-
-                    player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
+                    player.sendChatToPlayer(Strings.ChatNetworkSuccessful.toString());
                 }
                 else if (modifier.isActive())
                 {
-                    player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.modifierActive"));
+                    player.sendChatToPlayer(Strings.ChatModifierActive.toString());
                 }
             }
         }
@@ -162,7 +160,7 @@ public class ItemNetworkCard extends Item
 
             if (!isSet(itemStack))
             {
-                player.sendChatToPlayer(EnumChatFormatting.RED + Localization.localizeString("chat.notLinked"));
+                player.sendChatToPlayer(Strings.ChatNotLinked.toString());
             }
             else
             {
@@ -175,9 +173,7 @@ public class ItemNetworkCard extends Item
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                    // TODO PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, new PacketTEUpdate(dial).getPacket());
-
-                    player.sendChatToPlayer(EnumChatFormatting.GREEN + Localization.localizeString("chat.networkSuccessful"));
+                    player.sendChatToPlayer(Strings.ChatNetworkSuccessful.toString());
                 }
             }
         }
