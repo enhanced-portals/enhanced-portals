@@ -22,6 +22,7 @@ import enhancedportals.lib.Reference;
 import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
+import enhancedportals.network.packet.PacketPortalModifierUpgrade;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
@@ -127,6 +128,7 @@ public class ItemPortalModifierUpgrade extends Item
                     }
 
                     PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(modifier)));
+                    PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade(modifier)));
                 }
                 else
                 {
