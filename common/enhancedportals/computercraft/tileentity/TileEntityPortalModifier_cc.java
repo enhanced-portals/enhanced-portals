@@ -10,6 +10,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.IPeripheral;
 import enhancedcore.computercraft.ComputerManager;
 import enhancedcore.computercraft.ComputerManager.IMethod;
+import enhancedportals.computercraft.GlyphString;
 import enhancedportals.computercraft.SharedMethods;
 import enhancedportals.lib.Reference;
 import enhancedportals.network.packet.PacketCreatePortal;
@@ -37,7 +38,7 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+                if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
                     PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketCreatePortal(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), true)));
                 }
@@ -62,7 +63,7 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+                if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
                     PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketCreatePortal(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), false)));
                 }
@@ -142,41 +143,13 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
 
                 if (arguments[0] instanceof String)
                 {
-                    if (arguments[0].toString().length() == 0)
+                    modifierNetwork = GlyphString.getGlyphStringFromIdString(arguments[0].toString());
+                    
+                    if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                     {
-                        throw new Exception("Invalid arguments");
+                        PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
                     }
-
-                    String[] str = arguments[0].toString().split(" ");
-                    String theNetwork = "";
-
-                    if (str.length > 9)
-                    {
-                        throw new Exception("Too many values");
-                    }
-                    else if (str.length == 0)
-                    {
-                        throw new Exception("Invalid arguments");
-                    }
-
-                    for (String s : str)
-                    {
-                        if (s.equals(""))
-                        {
-                            continue;
-                        }
-
-                        int i = Integer.parseInt(s);
-
-                        if (i >= 0 && i < Reference.glyphItems.size())
-                        {
-                            theNetwork = theNetwork + " " + Reference.glyphItems.get(i).getItemName().replace("item.", "");
-                        }
-                    }
-
-                    modifierNetwork = theNetwork.substring(1);
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
-
+                    
                     return new Object[] { true };
                 }
                 else
@@ -237,41 +210,13 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
 
                 if (arguments[0] instanceof String)
                 {
-                    if (!arguments[0].toString().contains(" "))
+                    dialDeviceNetwork = GlyphString.getGlyphStringFromIdString(arguments[0].toString());
+                    
+                    if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                     {
-                        throw new Exception("Invalid arguments");
+                        PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
                     }
-
-                    String[] str = arguments[0].toString().split(" ");
-                    String theNetwork = "";
-
-                    if (str.length > 9)
-                    {
-                        throw new Exception("Too many values");
-                    }
-                    else if (str.length == 0)
-                    {
-                        throw new Exception("Invalid arguments");
-                    }
-
-                    for (String s : str)
-                    {
-                        if (s.equals(""))
-                        {
-                            continue;
-                        }
-
-                        int i = Integer.parseInt(s);
-
-                        if (i >= 0 && i < Reference.glyphItems.size())
-                        {
-                            theNetwork = theNetwork + " " + Reference.glyphItems.get(i).getItemName().replace("item.", "");
-                        }
-                    }
-
-                    dialDeviceNetwork = theNetwork.substring(1);
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
-
+                    
                     return new Object[] { true };
                 }
                 else
@@ -316,7 +261,12 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     if (obj > 0 && obj < 5)
                     {
                         thickness = (byte) (obj - 1);
-                        PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
+                        
+                        if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+                        {
+                            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
+                        }
+                        
                         return new Object[] { true };
                     }
                     else
