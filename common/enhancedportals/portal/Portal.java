@@ -231,7 +231,7 @@ public class Portal
     {
         if (stack.itemID == Item.flintAndSteel.itemID)
         {
-            return createPortal(6, 6);
+            return Settings.AllowFlintSteel ? createPortal(6, 6) : createPortal(1, 0);
         }
         else if (stack.itemID == EnhancedPortals.proxy.itemEnhancedFlintSteel.itemID)
         {
