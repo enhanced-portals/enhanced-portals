@@ -25,8 +25,8 @@ import enhancedportals.lib.Reference;
 public class NetworkManager
 {
     public Map<String, List<WorldLocation>> networkData;
-    private String                          saveFile;
-    private MinecraftServer                 serverInstance;
+    private String saveFile;
+    private MinecraftServer serverInstance;
 
     public NetworkManager(MinecraftServer server)
     {

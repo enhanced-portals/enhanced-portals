@@ -11,9 +11,9 @@ import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class PacketNetherPortalUpdate extends PacketEnhancedPortals
 {
-    int    xCoord, yCoord, zCoord, dimension;
+    int xCoord, yCoord, zCoord, dimension;
     String texture;
-    byte   thickness;
+    byte thickness;
     boolean particles, sound, hasParent;
 
     public PacketNetherPortalUpdate()

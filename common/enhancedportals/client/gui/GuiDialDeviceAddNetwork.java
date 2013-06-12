@@ -33,18 +33,18 @@ import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
 {
-    TileEntityDialDevice  dialDevice;
-    GuiTextField          nameField;
+    TileEntityDialDevice dialDevice;
+    GuiTextField nameField;
 
-    byte                  thickness;
-    boolean               popUpState;
-    String                texture;
-    String                network, name;
+    byte thickness;
+    boolean popUpState;
+    String texture;
+    String network, name;
 
-    List<GuiGlyphElement> elementList   = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement> stackList     = new ArrayList<GuiGlyphElement>();
-    int                   elementCount  = 0;
-    String                elementString = "";
+    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
+    int elementCount = 0;
+    String elementString = "";
 
     public GuiDialDeviceAddNetwork(InventoryPlayer inventory, TileEntityDialDevice dialdevice)
     {

@@ -15,7 +15,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
 {
-    int    xCoord, yCoord, zCoord, dimension;
+    int xCoord, yCoord, zCoord, dimension;
     byte[] upgrades;
 
     public PacketPortalModifierUpgrade()

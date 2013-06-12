@@ -25,13 +25,13 @@ import enhancedportals.world.WorldHelper;
 public class TileEntityDialDevice extends TileEntityEnhancedPortals
 {
     public ArrayList<DialDeviceNetworkObject> destinationList;
-    public int                                selectedDestination, tickTimer;
-    int                                       timer, ticksToGo;
-    final int                                 TICK_DELAY = 50;
-    public boolean                            active;
+    public int selectedDestination, tickTimer;
+    int timer, ticksToGo;
+    final int TICK_DELAY = 50;
+    public boolean active;
 
-    WorldLocation                             modifierLocation;
-    Ticket                                    chunkTicket;
+    WorldLocation modifierLocation;
+    Ticket chunkTicket;
 
     public TileEntityDialDevice()
     {

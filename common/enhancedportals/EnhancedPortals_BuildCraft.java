@@ -8,6 +8,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
@@ -22,7 +23,8 @@ import enhancedportals.portal.PortalTexture;
 @Mod(modid = Reference.MOD_ID + "_BC", name = "EP2 BuildCraft", version = Reference.MOD_VERSION, dependencies = "required-after:BuildCraft|Energy;required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_BuildCraft
 {
-    Icon                                     fuelTexture;
+    Icon fuelTexture;
+    boolean hasAdded = false;
 
     @Instance(Reference.MOD_ID + "_BC")
     public static EnhancedPortals_BuildCraft instance;
@@ -41,19 +43,30 @@ public class EnhancedPortals_BuildCraft
         {
             fuelTexture = event.map.registerIcon("EP2_BC:fuel");
         }
+    }
 
-        try
+    @ForgeSubscribe
+    public void worldLoad(WorldEvent.Load event)
+    {
+        if (!hasAdded && event.world.isRemote)
         {
-            Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);
-            Item bucketFuel = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketFuel").get(null);
-            Block blockOil = (Block) Class.forName("buildcraft.BuildCraftEnergy").getField("oilMoving").get(null);
+            try
+            {
+                Item bucketOil = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketOil").get(null);
+                Item bucketFuel = (Item) Class.forName("buildcraft.BuildCraftEnergy").getField("bucketFuel").get(null);
+                Block blockOil = (Block) Class.forName("buildcraft.BuildCraftEnergy").getField("oilMoving").get(null);
 
-            Textures.portalTextureMap.put("I:" + bucketFuel.itemID + ":0", new PortalTexture("I:" + bucketFuel.itemID + ":0", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00));
-            Textures.portalTextureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("I:" + bucketOil.itemID + ":0", Block.blocksList[blockOil.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0));
-        }
-        catch (Exception e)
-        {
-            Reference.log.log(Level.WARNING, "Couldn't load BuildCraft addon.");
+                Textures.portalTextureMap.put("I:" + bucketFuel.itemID + ":0", new PortalTexture("I:" + bucketFuel.itemID + ":0", fuelTexture, Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00));
+                Textures.portalTextureMap.put("I:" + bucketOil.itemID + ":0", new PortalTexture("I:" + bucketOil.itemID + ":0", Block.blocksList[blockOil.blockID].getIcon(2, 0), Textures.getTexture("C:0").getModifierTexture(), 0));
+
+                Reference.log.log(Level.INFO, "Loaded BuildCraft addon successfully.");
+            }
+            catch (Exception e)
+            {
+                Reference.log.log(Level.WARNING, "Couldn't load BuildCraft addon.");
+            }
+
+            hasAdded = true;
         }
     }
 }

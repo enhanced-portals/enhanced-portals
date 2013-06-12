@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 public class UpgradeHandler
 {
     private List<Upgrade> upgradeList;
-    private int           maximumUpgrades;
+    private int maximumUpgrades;
 
     public UpgradeHandler()
     {

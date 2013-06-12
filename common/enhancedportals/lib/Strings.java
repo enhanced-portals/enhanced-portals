@@ -55,7 +55,7 @@ public enum Strings
     Upgrades("gui.upgrades");
 
     private EnumChatFormatting chatFormatting;
-    private String             text;
+    private String text;
 
     private Strings(String str)
     {

@@ -9,9 +9,9 @@ import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class PacketDialDeviceUpdate extends PacketEnhancedPortals
 {
-    int     xCoord, yCoord, zCoord, dimension;
+    int xCoord, yCoord, zCoord, dimension;
     boolean active;
-    int     tickTimer;
+    int tickTimer;
 
     public PacketDialDeviceUpdate()
     {

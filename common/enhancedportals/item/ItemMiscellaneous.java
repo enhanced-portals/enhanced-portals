@@ -16,7 +16,7 @@ import enhancedportals.lib.Reference;
 
 public class ItemMiscellaneous extends Item
 {
-    Icon[]   textures;
+    Icon[] textures;
     String[] names = { "upgradeCard" };
 
     public ItemMiscellaneous()

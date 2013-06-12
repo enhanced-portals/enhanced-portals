@@ -10,14 +10,14 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiGlyphElement
 {
-    public int              x, y;
-    public String           value;
-    public ItemStack        itemStack;
-    GuiNetwork              parent;
+    public int x, y;
+    public String value;
+    public ItemStack itemStack;
+    GuiNetwork parent;
     GuiDialDeviceAddNetwork parent2;
 
-    public int              stackSize;
-    public boolean          isStack;
+    public int stackSize;
+    public boolean isStack;
 
     public GuiGlyphElement(int x, int y, String value, ItemStack stack, GuiDialDeviceAddNetwork p)
     {

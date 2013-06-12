@@ -9,7 +9,7 @@ import enhancedportals.EnhancedPortals;
 public class PacketMisc extends PacketEnhancedPortals
 {
     byte type;
-    int  data;
+    int data;
 
     public PacketMisc()
     {

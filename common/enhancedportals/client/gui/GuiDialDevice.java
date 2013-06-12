@@ -27,11 +27,11 @@ import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class GuiDialDevice extends GuiScreen
 {
-    TileEntityDialDevice     dialDevice;
-    int                      guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166;
-    boolean                  rightClick;
+    TileEntityDialDevice dialDevice;
+    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166;
+    boolean rightClick;
     GuiDialDeviceNetworkList networkList;
-    public RenderItem        itemRenderer = new RenderItem();
+    public RenderItem itemRenderer = new RenderItem();
 
     public GuiDialDevice(TileEntityDialDevice dialdevice)
     {
@@ -107,10 +107,10 @@ public class GuiDialDevice extends GuiScreen
 
         if (Mouse.isButtonDown(1) && button.xPosition <= x && button.yPosition <= y && button.xPosition + 240 >= x && button.yPosition + 20 >= y && !rightClick && Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
         {
-                rightClick = true;
-                actionPerformed(button);
-                mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-            
+            rightClick = true;
+            actionPerformed(button);
+            mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+
         }
         else if (rightClick && !Mouse.isButtonDown(1) && Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
         {
@@ -165,7 +165,7 @@ public class GuiDialDevice extends GuiScreen
         {
             ((GuiButton) buttonList.get(2)).enabled = false;
         }
-        
+
         if (!Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
         {
             ((GuiButton) buttonList.get(0)).drawButton = false;

@@ -13,7 +13,7 @@ public class PacketDialEntry extends PacketEnhancedPortals
 {
     int xCoord, yCoord, zCoord, dimension;
     String Name, Texture, Identifier;
-    byte   Type, Thickness;
+    byte Type, Thickness;
 
     public PacketDialEntry()
     {

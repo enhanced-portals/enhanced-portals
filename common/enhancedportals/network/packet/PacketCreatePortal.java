@@ -10,7 +10,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketCreatePortal extends PacketEnhancedPortals
 {
-    int     xCoord, yCoord, zCoord, dimension;
+    int xCoord, yCoord, zCoord, dimension;
     boolean type;
 
     public PacketCreatePortal()

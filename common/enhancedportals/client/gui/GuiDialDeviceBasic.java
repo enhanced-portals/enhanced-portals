@@ -20,12 +20,12 @@ import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class GuiDialDeviceBasic extends GuiNetwork
 {
-    int                       guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
-    RenderItem                itemRenderer = new RenderItem();
+    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
+    RenderItem itemRenderer = new RenderItem();
     TileEntityDialDeviceBasic dialDevice;
 
-    List<GuiGlyphElement>     elementList  = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement>     stackList    = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
 
     public GuiDialDeviceBasic(TileEntityDialDeviceBasic dialdevice)
     {

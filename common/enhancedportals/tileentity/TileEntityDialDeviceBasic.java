@@ -22,10 +22,10 @@ import enhancedportals.world.WorldHelper;
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
     public boolean active;
-    WorldLocation  modifierLocation;
-    Ticket         chunkTicket;
-    final int      TICK_DELAY = 50;
-    int            timer, ticksToGo;
+    WorldLocation modifierLocation;
+    Ticket chunkTicket;
+    final int TICK_DELAY = 50;
+    int timer, ticksToGo;
 
     public TileEntityDialDeviceBasic()
     {

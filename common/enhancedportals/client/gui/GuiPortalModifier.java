@@ -37,8 +37,8 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 {
     TileEntityPortalModifier portalModifier;
-    public boolean           hasInteractedWith, isActive;
-    GuiButton                okayButton;
+    public boolean hasInteractedWith, isActive;
+    GuiButton okayButton;
 
     public GuiPortalModifier(InventoryPlayer player, TileEntityPortalModifier modifier)
     {

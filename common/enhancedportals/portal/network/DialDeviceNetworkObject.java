@@ -4,7 +4,7 @@ public class DialDeviceNetworkObject
 {
     public String network, displayName;
     public String texture;
-    public byte   thickness;
+    public byte thickness;
 
     public DialDeviceNetworkObject(String displayname, String net, String tex, byte thick)
     {

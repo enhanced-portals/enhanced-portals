@@ -8,11 +8,11 @@ import enhancedportals.network.packet.PacketRequestData;
 
 public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 {
-    public String         texture;
-    public boolean        producesSound, producesParticles;
-    public byte           thickness;
+    public String texture;
+    public boolean producesSound, producesParticles;
+    public byte thickness;
     private WorldLocation parentModifier;
-    public boolean        hasParent;
+    public boolean hasParent;
 
     public TileEntityNetherPortal()
     {

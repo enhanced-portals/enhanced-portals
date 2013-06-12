@@ -17,9 +17,9 @@ import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
 
 public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 {
-    public String         texture;
-    public byte           thickness, redstoneSetting, redstoneState;
-    public String         modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
+    public String texture;
+    public byte thickness, redstoneSetting, redstoneState;
+    public String modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
     public UpgradeHandler upgradeHandler;
 
     public TileEntityPortalModifier()

@@ -7,8 +7,8 @@ import enhancedportals.lib.BlockIds;
 
 public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 {
-    public boolean       previousRedstone;
-    public String        activeNetwork;
+    public boolean previousRedstone;
+    public String activeNetwork;
     public WorldLocation connectedModifier;
 
     public TileEntityAutomaticDialler()

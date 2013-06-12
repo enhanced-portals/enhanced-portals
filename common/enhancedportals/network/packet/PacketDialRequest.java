@@ -13,7 +13,7 @@ import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class PacketDialRequest extends PacketEnhancedPortals
 {
-    int    xCoord, yCoord, zCoord, dimension;
+    int xCoord, yCoord, zCoord, dimension;
     String network;
 
     public PacketDialRequest()

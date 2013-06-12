@@ -19,12 +19,12 @@ import enhancedportals.tileentity.TileEntityAutomaticDialler;
 
 public class GuiAutomaticDiallerSimple extends GuiNetwork
 {
-    int                        guiTop       = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
-    RenderItem                 itemRenderer = new RenderItem();
+    int guiTop = 0, guiLeft = 0, xSize = 176, ySize = 166, elementCount = 0;
+    RenderItem itemRenderer = new RenderItem();
     TileEntityAutomaticDialler dialler;
 
-    List<GuiGlyphElement>      elementList  = new ArrayList<GuiGlyphElement>();
-    List<GuiGlyphElement>      stackList    = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement> elementList = new ArrayList<GuiGlyphElement>();
+    List<GuiGlyphElement> stackList = new ArrayList<GuiGlyphElement>();
 
     public GuiAutomaticDiallerSimple(TileEntityAutomaticDialler autoDial)
     {

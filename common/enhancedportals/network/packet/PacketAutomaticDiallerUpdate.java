@@ -10,7 +10,7 @@ import enhancedportals.tileentity.TileEntityAutomaticDialler;
 
 public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
 {
-    int    xCoord, yCoord, zCoord, dimension;
+    int xCoord, yCoord, zCoord, dimension;
     String theNetwork;
 
     public PacketAutomaticDiallerUpdate()

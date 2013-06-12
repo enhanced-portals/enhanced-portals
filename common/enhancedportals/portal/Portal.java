@@ -36,10 +36,10 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 public class Portal
 {
     public WorldLocation portalModifier;
-    public int           xCoord, yCoord, zCoord, dimension;
-    public byte          shape, thickness;
-    public boolean       producesSound, producesParticles;
-    public String        texture;
+    public int xCoord, yCoord, zCoord, dimension;
+    public byte shape, thickness;
+    public boolean producesSound, producesParticles;
+    public String texture;
 
     public Portal()
     {
