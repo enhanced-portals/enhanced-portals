@@ -27,7 +27,7 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
 
     private void addMethods()
     {        
-        // dial
+        // dialStored
         computerManager.registerMethod(new IMethod() {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception

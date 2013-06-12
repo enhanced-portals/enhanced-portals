@@ -31,7 +31,7 @@ public class PacketBasicDialDeviceUpdate extends PacketEnhancedPortals
     {
         try
         {
-            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I");
+            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "B");
 
             if (objArray != null)
             {
@@ -39,6 +39,7 @@ public class PacketBasicDialDeviceUpdate extends PacketEnhancedPortals
                 yCoord = Integer.parseInt(objArray[1].toString());
                 zCoord = Integer.parseInt(objArray[2].toString());
                 dimension = Integer.parseInt(objArray[3].toString());
+                isActive = Boolean.parseBoolean(objArray[4].toString());
 
                 return this;
             }

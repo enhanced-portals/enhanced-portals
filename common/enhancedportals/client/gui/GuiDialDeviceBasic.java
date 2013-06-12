@@ -226,13 +226,20 @@ public class GuiDialDeviceBasic extends GuiNetwork
     {
         super.updateScreen();
 
-        if (stackList.size() == 0)
+        if (dialDevice.active)
         {
             ((GuiButton) buttonList.get(0)).enabled = false;
         }
         else
         {
-            ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
+            if (stackList.size() == 0)
+            {
+                ((GuiButton) buttonList.get(0)).enabled = false;
+            }
+            else
+            {
+                ((GuiButton) buttonList.get(0)).enabled = !dialDevice.active;
+            }
         }
     }
 }
