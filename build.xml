@@ -66,8 +66,8 @@
 		<delete dir="${dir.development}\mcp\reobf\minecraft\ibxm" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\paulscode" />
-		<mkdir dir="${dir.share}\${release.minecraft.version}\${release.mod.version}" />
-		<jar destfile="${dir.share}\${release.minecraft.version}\${release.mod.version}\EnhancedPortals-2_${release.mod.version}.jar">
+		<mkdir dir="${dir.share}\${release.minecraft.version}\" />
+		<jar destfile="${dir.share}\${release.minecraft.version}\EnhancedPortals-2_${release.mod.version}.jar">
 			<fileset dir="${dir.development}\mcp\src\common\"	includes="mcmod.info" />
 			<fileset dir="${dir.development}\mcp\reobf\minecraft\" />
 			<fileset dir="${dir.development}\source\enhanced-portals\resources" />
@@ -90,8 +90,8 @@
 		<delete dir="${dir.development}\mcp\reobf\minecraft\ibxm" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
 		<delete dir="${dir.development}\mcp\reobf\minecraft\paulscode" />
-		<mkdir dir="${dir.release}\${release.minecraft.version}\${release.mod.version}" />
-		<jar destfile="${dir.release}\${release.minecraft.version}\${release.mod.version}\EnhancedPortals-2_${release.mod.version}.jar">
+		<mkdir dir="${dir.release}\${release.minecraft.version}\" />
+		<jar destfile="${dir.release}\${release.minecraft.version}\EnhancedPortals-2_${release.mod.version}.jar">
 			<fileset dir="${dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${dir.development}\mcp\reobf\minecraft\" />
 			<fileset dir="${dir.development}\source\enhanced-portals\resources" />

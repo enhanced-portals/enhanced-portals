@@ -224,6 +224,7 @@ public class CommonProxy
         Settings.AllowPortalColours = config.get("Settings", "AllowPortalColours", Settings.AllowPortalColours).getBoolean(Settings.AllowPortalColours);
         Settings.AllowPortalModifiers = config.get("Settings", "AllowPortalModifiers", Settings.AllowPortalModifiers).getBoolean(Settings.AllowPortalModifiers);
         Settings.AllowFlintSteel = config.get("Settings", "AllowUpgradedFlintAndSteel", Settings.AllowFlintSteel).getBoolean(Settings.AllowFlintSteel);
+        Settings.AllowObsidianStairs = config.get("Settings", "AllowObsidianStairs", Settings.AllowObsidianStairs).getBoolean(Settings.AllowObsidianStairs);
         Settings.DisableDHDRecipe = config.get("Settings", "DisableDialDeviceRecipe", Settings.DisableDHDRecipe).getBoolean(Settings.DisableDHDRecipe);
         Settings.DisableModifierRecipe = config.get("Settings", "DisableModifierRecipe", Settings.DisableModifierRecipe).getBoolean(Settings.DisableModifierRecipe);
         Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect, "Renders the swirly effect when you're inside a portal").getBoolean(Settings.RenderPortalEffect);
