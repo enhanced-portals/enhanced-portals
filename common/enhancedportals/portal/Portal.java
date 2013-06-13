@@ -110,6 +110,16 @@ public class Portal
             return false;
         }
 
+        if (Settings.MinimumPortalSize > 0)
+        {
+            minLimit = Settings.MinimumPortalSize;
+        }
+        
+        if (Settings.MaximumPortalSize > 0)
+        {
+            maxLimit = Settings.MaximumPortalSize;
+        }
+        
         Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
         Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
         int usedChances = 0, MAX_CHANCES = 10;

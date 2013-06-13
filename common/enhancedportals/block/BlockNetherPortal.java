@@ -48,9 +48,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        TileEntityNetherPortal netherPortal = (TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z);
-
-        return Textures.getTexture(netherPortal.texture).getPortalTexture();
+        return Settings.AllowPortalColours ? Textures.getTexture(((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).texture).getPortalTexture() : Textures.getTexture("").getPortalTexture();
     }
 
     @Override

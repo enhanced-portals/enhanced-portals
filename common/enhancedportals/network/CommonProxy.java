@@ -185,7 +185,7 @@ public class CommonProxy
             GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "EID", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
         }
 
-        if (!Settings.DisableDHDRecipe && Settings.AllowDialHomeDevices)
+        if (!Settings.DisableDDRecipe && Settings.AllowDialHomeDevices)
         {
             // Basic Dialling Device
             GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SES", "IDI", "SRS", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
@@ -225,7 +225,7 @@ public class CommonProxy
         Settings.AllowPortalModifiers = config.get("Settings", "AllowPortalModifiers", Settings.AllowPortalModifiers).getBoolean(Settings.AllowPortalModifiers);
         Settings.AllowFlintSteel = config.get("Settings", "AllowUpgradedFlintAndSteel", Settings.AllowFlintSteel).getBoolean(Settings.AllowFlintSteel);
         Settings.AllowObsidianStairs = config.get("Settings", "AllowObsidianStairs", Settings.AllowObsidianStairs).getBoolean(Settings.AllowObsidianStairs);
-        Settings.DisableDHDRecipe = config.get("Settings", "DisableDialDeviceRecipe", Settings.DisableDHDRecipe).getBoolean(Settings.DisableDHDRecipe);
+        Settings.DisableDDRecipe = config.get("Settings", "DisableDialDeviceRecipe", Settings.DisableDDRecipe).getBoolean(Settings.DisableDDRecipe);
         Settings.DisableModifierRecipe = config.get("Settings", "DisableModifierRecipe", Settings.DisableModifierRecipe).getBoolean(Settings.DisableModifierRecipe);
         Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect, "Renders the swirly effect when you're inside a portal").getBoolean(Settings.RenderPortalEffect);
         Settings.AdventureModeLimitation = config.get("Settings", "RestrictAdventurePlayers", Settings.AdventureModeLimitation, "Stops players in Adventure mode from using certain blocks").getBoolean(Settings.AdventureModeLimitation);
@@ -234,7 +234,9 @@ public class CommonProxy
         Settings.SoundLevel = MathHelper.clampInt(config.get("Effects", "SoundLevel", 100, "Percentage chance of sounds to play (per block). 0 = disabled, 100 = vanilla").getInt(), 0, 100);
         Settings.ParticleLevel = MathHelper.clampInt(config.get("Effects", "ParticleLevel", 100, "Percentage chance of particles to spawn. 0 = disabled, 100 = vanilla").getInt(), 0, 100);
         Settings.PigmenLevel = MathHelper.clampInt(config.get("Settings", "PigmenLevel", 100, "Percentage chance of pigmen to spawn. 0 = disabled, 100 = vanilla").getInt(), 0, 100);
-
+        Settings.MinimumPortalSize = config.get("Control", "MinimumPortalSize", Settings.MinimumPortalSize).getInt();
+        Settings.MaximumPortalSize = config.get("Control", "MaximumPortalSize", Settings.MaximumPortalSize).getInt();
+        
         // String configs
         Settings.addExcludedBlocks(config.get("Blocks", "ExcludedTextureBlocks", "", "These blocks are excluded from being used as portal textures. Seperate IDs by a single space").getString());
         Settings.addBorderBlocks(config.get("Blocks", "BorderBlocks", "", "These blocks will be valid for portal frames. Seperate IDs by a single space").getString());

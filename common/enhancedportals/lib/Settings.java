@@ -16,20 +16,17 @@ public class Settings
     public static boolean AllowObsidianStairs = true;
     public static boolean AllowTeleporting = true;
     public static boolean AllowFlintSteel = true;
-
     public static boolean DisableModifierRecipe = false;
-    public static boolean DisableDHDRecipe = false;
-
+    public static boolean DisableDDRecipe = false;
     public static boolean RenderPortalEffect = true;
     public static boolean AllowPortalColours = true;
-
     public static boolean AdventureModeLimitation = true;
 
     public static int PigmenLevel = 100;
     public static int SoundLevel = 100;
     public static int ParticleLevel = 100;
-
-    //public static int[]         ExcludedBlockList     = new int[] { Block.torchWood.blockID, Block.leaves.blockID, Block.sapling.blockID, Block.rail.blockID, Block.railActivator.blockID, Block.railDetector.blockID, Block.railPowered.blockID, Block.deadBush.blockID, Block.mushroomBrown.blockID, Block.mushroomRed.blockID, Block.redstoneComparatorActive.blockID, Block.redstoneComparatorIdle.blockID, Block.redstoneRepeaterActive.blockID, Block.redstoneRepeaterIdle.blockID, Block.redstoneWire.blockID, Block.crops.blockID, Block.lever.blockID, Block.doorIron.blockID, Block.doorWood.blockID, Block.torchRedstoneActive.blockID, Block.torchRedstoneIdle.blockID, Block.cake.blockID, Block.tripWire.blockID, Block.tripWireSource.blockID, Block.melonStem.blockID, Block.waterlily.blockID, Block.vine.blockID, Block.tallGrass.blockID, Block.potato.blockID, Block.netherStalk.blockID, Block.plantYellow.blockID, Block.plantRed.blockID };
+    public static int MinimumPortalSize = 0;
+    public static int MaximumPortalSize = 0;
 
     public static List<Integer> ExcludedBlockList = new ArrayList<Integer>();
     public static List<Integer> BorderBlocks = new ArrayList<Integer>();
