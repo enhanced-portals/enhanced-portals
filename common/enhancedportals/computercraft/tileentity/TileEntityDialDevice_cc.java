@@ -80,7 +80,7 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), "")));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), "0")));
                 }
                 else
                 {
@@ -147,6 +147,21 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
             {
                 return "isActive";
             }        
+        });
+        
+        // getDestinationCount
+        computerManager.registerMethod(new IMethod() {
+            @Override
+            public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
+            {                
+                return new Object[] { destinationList.size() };
+            }
+
+            @Override
+            public String getMethodName()
+            {
+                return "getDestinationCount";
+            }
         });
         
         // getGlyphs
