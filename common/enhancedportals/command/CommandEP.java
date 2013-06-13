@@ -9,28 +9,20 @@ import net.minecraft.command.WrongUsageException;
 import enhancedportals.lib.Commands;
 
 public class CommandEP extends CommandBase
-{
+{    
     @SuppressWarnings("rawtypes")
     @Override
     public List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, new String[] { Commands.EFFECTS, Commands.BLOCKS, Commands.CONTROL });
+            return getListOfStringsMatchingLastWord(args, new String[] { Commands.EFFECTS });
         }
         else if (args.length == 2)
         {
             if (args[0].equalsIgnoreCase(Commands.EFFECTS))
             {
                 return getListOfStringsMatchingLastWord(args, new String[] { Commands.PARTICLES, Commands.SOUNDS, Commands.PORTAL_EFFECTS });
-            }
-            else if (args[0].equalsIgnoreCase(Commands.BLOCKS))
-            {
-                return getListOfStringsMatchingLastWord(args, new String[] { Commands.BORDER_BLOCKS, Commands.DESTROY_BLOCKS });
-            }
-            else if (args[0].equalsIgnoreCase(Commands.CONTROL))
-            {
-                return getListOfStringsMatchingLastWord(args, new String[] {});
             }
         }
         else if (args.length >= 3)
@@ -39,19 +31,21 @@ public class CommandEP extends CommandBase
             {
                 return CommandEffects.addTabCompletionOptions(par1iCommandSender, args);
             }
-            else if (args[0].equalsIgnoreCase(Commands.BLOCKS))
-            {
-                return CommandBlocks.addTabCompletionOptions(par1iCommandSender, args);
-            }
         }
-
+        
         return null;
+    }
+    
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender)
     {
-        return super.canCommandSenderUseCommand(par1iCommandSender);
+        return true;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -79,14 +73,6 @@ public class CommandEP extends CommandBase
             if (commandName.equalsIgnoreCase(Commands.EFFECTS))
             {
                 CommandEffects.processCommand(icommandsender, args);
-            }
-            else if (commandName.equalsIgnoreCase(Commands.BLOCKS))
-            {
-                CommandBlocks.processCommand(icommandsender, args);
-            }
-            else if (commandName.equalsIgnoreCase(Commands.CONTROL))
-            {
-
             }
             else
             {

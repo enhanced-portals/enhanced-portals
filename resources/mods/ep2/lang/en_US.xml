@@ -84,4 +84,10 @@
 	<entry key="chat.networkSuccessful">Successfully transferred the network data</entry>
 	<entry key="chat.modifierActive">Cannot transfer data while the modifier is active</entry>
 	<entry key="chat.notLinked">There is no network on the card</entry>
+	<entry key="chat.particles.on">Particle effects are now on</entry>
+	<entry key="chat.particles.off">Particle effects are now off</entry>
+	<entry key="chat.sounds.on">Sounds are now on</entry>
+	<entry key="chat.sounds.off">Sounds are now off</entry>
+	<entry key="chat.portalEffects.on">Portal effects are now on</entry>
+	<entry key="chat.portalEffects.off">Portal effects are now off</entry>
 </properties>
