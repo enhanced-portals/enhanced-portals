@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,7 +21,7 @@ import enhancedportals.lib.Reference;
 import enhancedportals.lib.Textures;
 import enhancedportals.portal.PortalTexture;
 
-@Mod(modid = Reference.MOD_ID + "_Tech", name = "EP2 Tech", version = Reference.MOD_VERSION, dependencies = "Energy;required-after:" + Reference.MOD_ID)
+@Mod(modid = Reference.MOD_ID + "_Tech", name = "EP2 Tech", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_Tech
 {
     Icon fuelTexture;
@@ -51,6 +52,7 @@ public class EnhancedPortals_Tech
         if (!hasAdded && event.world.isRemote)
         {
             addBuildcraftTextures();
+            addThermalExpansionTextures();
 
             hasAdded = true;
         }
@@ -72,6 +74,30 @@ public class EnhancedPortals_Tech
         catch (Exception e)
         {
             Reference.log.log(Level.WARNING, "Couldn't load BuildCraft addon.");
+        }
+    }
+    
+    private void addThermalExpansionTextures()
+    {
+        try
+        {
+            Block liquidRedstone = (Block) Class.forName("thermalexpansion.liquid.TELiquids").getField("blockRedstone").get(null);
+            Block liquidGlowstone = (Block) Class.forName("thermalexpansion.liquid.TELiquids").getField("blockGlowstone").get(null);
+            Block liquidEnder = (Block) Class.forName("thermalexpansion.liquid.TELiquids").getField("blockEnder").get(null);
+            
+            ItemStack bucketRedstone = (ItemStack) Class.forName("thermalexpansion.liquid.TELiquids").getField("bucketRedstone").get(null);
+            ItemStack bucketGlowstone = (ItemStack) Class.forName("thermalexpansion.liquid.TELiquids").getField("bucketGlowstone").get(null);
+            ItemStack bucketEnder = (ItemStack) Class.forName("thermalexpansion.liquid.TELiquids").getField("bucketEnder").get(null);
+            
+            Textures.portalTextureMap.put("I:" + bucketRedstone.itemID + ":0", new PortalTexture("I:" + bucketRedstone.itemID + ":0", liquidRedstone.getBlockTextureFromSide(0), Textures.getTexture("C:1").getModifierTexture(), 0xFF0000));
+            Textures.portalTextureMap.put("I:" + bucketGlowstone.itemID + ":1", new PortalTexture("I:" + bucketGlowstone.itemID + ":1", liquidGlowstone.getBlockTextureFromSide(0), Textures.getTexture("C:11").getModifierTexture(), 0xFFFF00));
+            Textures.portalTextureMap.put("I:" + bucketEnder.itemID + ":2", new PortalTexture("I:" + bucketEnder.itemID + ":2", liquidEnder.getBlockTextureFromSide(0), Textures.getTexture("C:4").getModifierTexture(), 0x0088AA));
+            
+            Reference.log.log(Level.INFO, "Loaded ThermalExpansion addon successfully.");
+        }
+        catch (Exception e)
+        {
+            Reference.log.log(Level.WARNING, "Couldn't load ThermalExpansion addon.");
         }
     }
 }
