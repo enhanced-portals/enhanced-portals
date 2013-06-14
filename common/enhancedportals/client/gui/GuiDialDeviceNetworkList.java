@@ -64,14 +64,14 @@ class GuiDialDeviceNetworkList extends GuiSlot
     @Override
     protected void elementClicked(int par1, boolean par2)
     {
-        parent.onElementSelected(par1);
-        boolean flag1 = parent.getSelected() >= 0 && parent.getSelected() < getSize() && !parent.dialDevice.active;
-        parent.getDeleteButton().enabled = flag1;
-        parent.getDialButton().enabled = flag1;
-
-        if (par2 && flag1)
+        if (!parent.dialDevice.active)
         {
-            parent.select(par1);
+            parent.onElementSelected(par1);
+            
+            if (par2)
+            {
+                parent.select(par1);
+            }
         }
     }
 
