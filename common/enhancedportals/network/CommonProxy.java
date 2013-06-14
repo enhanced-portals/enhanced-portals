@@ -236,7 +236,7 @@ public class CommonProxy
         Settings.PigmenLevel = MathHelper.clampInt(config.get("Settings", "PigmenLevel", 100, "Percentage chance of pigmen to spawn. 0 = disabled, 100 = vanilla").getInt(), 0, 100);
         Settings.MinimumPortalSize = config.get("Control", "MinimumPortalSize", Settings.MinimumPortalSize).getInt();
         Settings.MaximumPortalSize = config.get("Control", "MaximumPortalSize", Settings.MaximumPortalSize).getInt();
-        
+
         // String configs
         Settings.addExcludedBlocks(config.get("Blocks", "ExcludedTextureBlocks", "", "These blocks are excluded from being used as portal textures. Seperate IDs by a single space").getString());
         Settings.addBorderBlocks(config.get("Blocks", "BorderBlocks", "", "These blocks will be valid for portal frames. Seperate IDs by a single space").getString());

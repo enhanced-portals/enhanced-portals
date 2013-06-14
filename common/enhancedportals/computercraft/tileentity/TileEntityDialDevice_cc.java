@@ -16,19 +16,20 @@ import enhancedportals.tileentity.TileEntityDialDevice;
 public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPeripheral
 {
     ComputerManager computerManager;
-    
+
     public TileEntityDialDevice_cc()
     {
         super();
-        
+
         computerManager = new ComputerManager();
         addMethods();
     }
 
     private void addMethods()
-    {        
+    {
         // dialStored
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -36,28 +37,28 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 {
                     throw new Exception("Cannot dial when there's already an active connection.");
                 }
-                
+
                 if (arguments.length != 1 || !(arguments[0] instanceof Double))
                 {
                     throw new Exception("Invalid arguments");
                 }
-                
+
                 int dialNum = (int) Math.round(Double.parseDouble(arguments[0].toString()));
-                
+
                 if (destinationList.size() < dialNum || dialNum < 0)
                 {
                     throw new Exception("Invalid destination ID");
                 }
-                
+
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialNum + "")));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialNum + "")));
                 }
                 else
                 {
                     ((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).processDiallingRequest(dialNum, null);
                 }
-                
+
                 return null;
             }
 
@@ -67,9 +68,10 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 return "dialStored";
             }
         });
-        
+
         // terminate
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -77,16 +79,16 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 {
                     throw new Exception("Cannot terminate an inactive connection");
                 }
-                
+
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), "0")));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), "0")));
                 }
                 else
                 {
                     ((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).processDiallingRequest(0, null);
                 }
-                
+
                 return null;
             }
 
@@ -96,24 +98,25 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 return "terminate";
             }
         });
-        
+
         // setTimeoutTime
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
-            {                
+            {
                 if (arguments.length != 1 || !(arguments[0] instanceof Double))
                 {
                     throw new Exception("Invalid arguments");
                 }
-                
+
                 int num = (int) Math.round(Double.parseDouble(arguments[0].toString()));
-                
+
                 if (num < 19 || num > 1201)
                 {
                     throw new Exception("Must be between 19 and 1201.");
                 }
-                
+
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
                     ((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).tickTimer = num;
@@ -123,7 +126,7 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 {
                     ((TileEntityDialDevice) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).tickTimer = num;
                 }
-                
+
                 return null;
             }
 
@@ -133,12 +136,13 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 return "setTimeoutTime";
             }
         });
-                
+
         // isActive
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
-            {                
+            {
                 return new Object[] { active };
             }
 
@@ -146,14 +150,15 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
             public String getMethodName()
             {
                 return "isActive";
-            }        
+            }
         });
-        
+
         // getDestinationCount
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
-            {                
+            {
                 return new Object[] { destinationList.size() };
             }
 
@@ -163,24 +168,18 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
                 return "getDestinationCount";
             }
         });
-        
+
         // getGlyphs
         computerManager.registerMethod(SharedMethods.getGlyphs);
-        
+
         // getGlyph
         computerManager.registerMethod(SharedMethods.getGlyph);
     }
 
     @Override
-    public String getType()
+    public void attach(IComputerAccess computer)
     {
-        return "dialDevice";
-    }
-
-    @Override
-    public String[] getMethodNames()
-    {
-        return computerManager.getAllMethodNames();
+        computerManager.addComputer(computer);
     }
 
     @Override
@@ -196,14 +195,20 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
     }
 
     @Override
-    public void attach(IComputerAccess computer)
-    {
-        computerManager.addComputer(computer);
-    }
-
-    @Override
     public void detach(IComputerAccess computer)
     {
         computerManager.removeComputer(computer);
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return computerManager.getAllMethodNames();
+    }
+
+    @Override
+    public String getType()
+    {
+        return "dialDevice";
     }
 }

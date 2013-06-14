@@ -9,7 +9,7 @@ import net.minecraft.command.WrongUsageException;
 import enhancedportals.lib.Commands;
 
 public class CommandEP extends CommandBase
-{    
+{
     @SuppressWarnings("rawtypes")
     @Override
     public List addTabCompletionOptions(ICommandSender par1iCommandSender, String[] args)
@@ -32,14 +32,8 @@ public class CommandEP extends CommandBase
                 return CommandEffects.addTabCompletionOptions(par1iCommandSender, args);
             }
         }
-        
+
         return null;
-    }
-    
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
     }
 
     @Override
@@ -61,6 +55,12 @@ public class CommandEP extends CommandBase
     public String getCommandName()
     {
         return "ep";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

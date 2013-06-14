@@ -144,12 +144,12 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                 if (arguments[0] instanceof String)
                 {
                     modifierNetwork = GlyphString.getGlyphStringFromIdString(arguments[0].toString());
-                    
+
                     if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                     {
                         PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
                     }
-                    
+
                     return new Object[] { true };
                 }
                 else
@@ -211,12 +211,12 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                 if (arguments[0] instanceof String)
                 {
                     dialDeviceNetwork = GlyphString.getGlyphStringFromIdString(arguments[0].toString());
-                    
+
                     if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                     {
                         PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
                     }
-                    
+
                     return new Object[] { true };
                 }
                 else
@@ -261,12 +261,12 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
                     if (obj > 0 && obj < 5)
                     {
                         thickness = (byte) (obj - 1);
-                        
+
                         if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                         {
                             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord))));
                         }
-                        
+
                         return new Object[] { true };
                     }
                     else

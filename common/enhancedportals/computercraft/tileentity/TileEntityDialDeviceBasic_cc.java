@@ -28,7 +28,8 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
     private void addMethods()
     {
         // dial
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
             {
@@ -36,23 +37,23 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
                 {
                     throw new Exception("Cannot dial when there's already an active connection.");
                 }
-                
+
                 if (arguments.length != 1 || !(arguments[0] instanceof String))
                 {
                     throw new Exception("Invalid arguments");
                 }
-                
+
                 String dialString = GlyphString.getGlyphStringFromIdString(arguments[0].toString());
-                
+
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityDialDeviceBasic) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialString)));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialString)));
                 }
                 else
                 {
                     ((TileEntityDialDeviceBasic) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).processDiallingRequest(dialString, null);
                 }
-                
+
                 return null;
             }
 
@@ -62,12 +63,13 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
                 return "dial";
             }
         });
-                
+
         // isActive
-        computerManager.registerMethod(new IMethod() {
+        computerManager.registerMethod(new IMethod()
+        {
             @Override
             public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
-            {                
+            {
                 return new Object[] { active };
             }
 
@@ -75,12 +77,12 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
             public String getMethodName()
             {
                 return "isActive";
-            }        
+            }
         });
-        
+
         // getGlyphs
         computerManager.registerMethod(SharedMethods.getGlyphs);
-        
+
         // getGlyph
         computerManager.registerMethod(SharedMethods.getGlyph);
     }

@@ -176,25 +176,10 @@ public class Settings
         return false;
     }
 
-    public static void setConfigOption(String category, String property, int val)
-    {
-        config.load();
-        
-        if (config.getCategoryNames().contains(category))
-        {
-            if (config.getCategory(category).containsKey(property))
-            {
-                config.getCategory(category).get(property).set(val);
-            }
-        }
-        
-        config.save();
-    }
-    
     public static void setConfigOption(String category, String property, boolean val)
     {
         config.load();
-        
+
         if (config.getCategoryNames().contains(category))
         {
             if (config.getCategory(category).containsKey(property))
@@ -202,7 +187,22 @@ public class Settings
                 config.getCategory(category).get(property).set(val);
             }
         }
-        
+
+        config.save();
+    }
+
+    public static void setConfigOption(String category, String property, int val)
+    {
+        config.load();
+
+        if (config.getCategoryNames().contains(category))
+        {
+            if (config.getCategory(category).containsKey(property))
+            {
+                config.getCategory(category).get(property).set(val);
+            }
+        }
+
         config.save();
     }
 }

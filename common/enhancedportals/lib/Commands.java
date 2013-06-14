@@ -5,7 +5,7 @@ public class Commands
     // GENERAL
     public static final String ON = "on";
     public static final String OFF = "off";
-    
+
     public static final String USAGE = "ep [effects]";
     public static final String ONOFF_USAGE = "ep %s [on/off]";
 

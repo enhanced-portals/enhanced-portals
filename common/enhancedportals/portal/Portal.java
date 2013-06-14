@@ -114,12 +114,12 @@ public class Portal
         {
             minLimit = Settings.MinimumPortalSize;
         }
-        
+
         if (Settings.MaximumPortalSize > 0)
         {
             maxLimit = Settings.MaximumPortalSize;
         }
-        
+
         Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
         Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
         int usedChances = 0, MAX_CHANCES = 10;
