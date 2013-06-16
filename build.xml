@@ -30,9 +30,7 @@
 		<copy todir="${dir.mcp.src}">
 			<fileset dir="${dir.main.source}" />
 		</copy>
-	</target>
-	
-	<target name="tokens">
+		
 		<replace dir="${dir.mcp.src}" token="@VERSION@" value="${version.main}" />
 		<replace dir="${dir.mcp.src}" token="@BUILD_NUMBER@" value="${build_number}" />
 		<replace dir="${dir.mcp.src}" token="@CC_VERSION@" value="${version.cc}" />
@@ -56,7 +54,6 @@
 		<antcall target="build_number" />
 		<antcall target="dependencies" />
 		<antcall target="prep" />
-		<antcall target="tokens" />
 		<antcall target="recompile" />
 		<antcall target="reobfuscate" />		
 		
