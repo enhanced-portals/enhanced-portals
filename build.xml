@@ -55,27 +55,35 @@
 		<antcall target="dependencies" />
 		<antcall target="prep" />
 		<antcall target="recompile" />
-		<antcall target="reobfuscate" />		
+		<antcall target="reobfuscate" />
 		
 		<mkdir dir="${dir.release}\portals\${version.mc}" />
 		<delete dir="${dir.mcp.reobf}\dan200" />
 		<delete dir="${dir.mcp.reobf}\enhancedcore" />
 		<delete dir="${dir.mcp.reobf}\net" />
 		
+		<copy todir="${dir.mcp.reobf}">
+			<fileset dir="${dir.mcp.src}">
+				<include name="mcmod.info" />
+				<include name="mcmod_cc.info" />
+				<include name="mcmod_tech.info" />
+			</fileset>
+		</copy>
+		
 		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_${version.main}.jar">
 			<fileset dir="${dir.mcp.reobf}">
 				<exclude name="**/computercraft/*" />
 				<exclude name="**/computercraft/**" />
 				<exclude name="**/EnhancedPortals_*" />
+				<exclude name="**/mcmod_*" />
 			</fileset>
-			<fileset dir="${dir.main.source}" includes="mcmod.info" />
 			<fileset dir="${dir.main.resources}">
 				<include name="**/EP2/**" />
 			</fileset>
 		</jar>
 		
 		<delete file="${dir.mcp.reobf}/mcmod.info" />
-		<copyfile src="${dir.main.source}/mcmod_cc.info" dest="${dir.mcp.reobf}/mcmod.info" />
+		<move file="${dir.mcp.reobf}/mcmod_cc.info" tofile="${dir.mcp.reobf}/mcmod.info" />
 		
 		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_ComputerCraft_${version.cc}.jar">
 			<fileset dir="${dir.mcp.reobf}">
@@ -87,7 +95,7 @@
 		</jar>
 		
 		<delete file="${dir.mcp.reobf}/mcmod.info" />
-		<copyfile src="${dir.main.source}/mcmod_tech.info" dest="${dir.mcp.reobf}/mcmod.info" />
+		<move file="${dir.mcp.reobf}/mcmod_tech.info" tofile="${dir.mcp.reobf}/mcmod.info" />
 		
 		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_Tech_${version.tech}.jar">
 			<fileset dir="${dir.mcp.reobf}">
