@@ -12,8 +12,7 @@ public class Reference
 {
     public static final String MOD_ID = "EP2";
     public static final String MOD_NAME = "EnhancedPortals 2";
-    public static final String MOD_VERSION = "@VERSION@";
-    public static final String MC_VERSION = "1.5.2";
+    public static final String MOD_VERSION = "@VERSION@ (Build: @BUILD_NUMBER@)";
 
     public static final String PROXY_CLIENT = "enhancedportals.network.ClientProxy";
     public static final String PROXY_COMMON = "enhancedportals.network.CommonProxy";
