@@ -1,104 +1,99 @@
 <?xml version="1.0" ?> 
 <project name="EnhancedPortals 2">
-	<!-- Based upon the EE3 build.xml https://github.com/pahimar/Equivalent-Exchange-3/blob/master/build.xml -->
-	<!-- TODO: Filter out ComputerCraft addon files and add to seperate jar file -->
 	<property file="build.properties" />
 	
 	<target name="clean">
-		<delete file="${dir.development}\mcp\src\minecraft\mcmod.info" />
-		<delete dir="${dir.development}\mcp\src\minecraft\enhancedportals" />
-		<delete dir="${dir.development}\mcp\src\minecraft\enhancedcore" />
-		<delete dir="${dir.development}\mcp\src\minecraft\dan200" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft" />
+		<delete dir="${dir.mcp.src}\enhancedcore" />
+		<delete dir="${dir.mcp.src}\enhancedportals" />
+		<delete dir="${dir.mcp.src}\dan200" />
+		<delete dir="${dir.mcp.reobf}" />
+		<delete file="${dir.mcp.src}\mcmod.info" />
+		<delete file="${dir.mcp.src}\mcmod_cc.info" />
+		<delete file="${dir.mcp.src}\mcmod_tech.info" />
 	</target>
 	
-	<target name="build">
-		<copy todir="${dir.development}\mcp\src\minecraft">
-			<fileset dir="${dir.development}\source\enhanced-portals\common\" />
-			<fileset dir="${dir.development}\source\enhanced-core\common\">
-				<exclude name="mcmod.info" />
-			</fileset>
-			<fileset dir="${dir.development}\source\computercraft-api\" />
+	<target name="dependencies">
+		<copy todir="${dir.mcp.src}">
+			<fileset dir="${dir.core.source}" excludes="**/mcmod.info" />
+			<fileset dir="${dir.ccapi}" />
 		</copy>
-		<replace dir="${dir.development}\mcp\src\minecraft" token="@VERSION@" value="${release.mod.version}" />
+	</target>
+	
+	<target name="prep">
+		<copy todir="${dir.mcp.src}">
+			<fileset dir="${dir.main.source}" />
+		</copy>
+		
+		<replace dir="${dir.mcp.src}" token="@VERSION@" value="${version.main}" />
+		<replace dir="${dir.mcp.src}" token="@CC_VERSION@" value="${version.cc}" />
+		<replace dir="${dir.mcp.src}" token="@TECH_VERSION@" value="${version.tech}" />
 	</target>
 	
 	<target name="recompile">
-		<exec dir="${dir.development}\mcp" executable="cmd" os="Windows 7">
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
 			<arg line="/c recompile.bat" />
-		</exec>
-		<exec dir="${dir.development}\mcp" executable="cmd" os="Windows 8">
-			<arg line="/c recompile.bat" />
-		</exec>
-		<exec dir="${dir.development}\mcp" executable="bash" os="Linux">
-			<arg line="recompile.sh" />
-		</exec>
-		<exec dir="${dir.development}\mcp" executable="bash" os="Mac OS X">
-			<arg line="recompile.sh" />
 		</exec>
 	</target>
 	
 	<target name="reobfuscate">
-		<exec dir="${dir.development}\mcp" executable="cmd" os="Windows 7">
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
 			<arg line="/c reobfuscate_srg.bat" />
-		</exec>
-		<exec dir="${dir.development}\mcp" executable="cmd" os="Windows 8">
-			<arg line="/c reobfuscate_srg.bat" />
-		</exec>
-		<exec dir="${dir.development}\mcp" executable="bash" os="Linux">
-			<arg line="reobfuscate_srg.sh" />
-		</exec>
-		<exec dir="${dir.development}\mcp" executable="bash" os="Mac OS X">
-			<arg line="reobfuscate_srg.sh" />
 		</exec>
 	</target>
 	
-	<target name="release-shared">
-		<!-- Prep for the release -->
+	<target name="build">
 		<antcall target="clean" />
-		<antcall target="build" />
-		<antcall target="recompile" />		
+		<antcall target="dependencies" />
+		<antcall target="prep" />
+		<antcall target="recompile" />
 		<antcall target="reobfuscate" />
 		
-		<!-- Build the jar -->
-		<delete dir="${dir.development}\mcp\reobf\minecraft\enhancedcore" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\dan200" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\ibxm" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\paulscode" />
-		<mkdir dir="${dir.share}\${release.minecraft.version}\" />
-		<jar destfile="${dir.share}\${release.minecraft.version}\EnhancedPortals-2_${release.mod.version}.jar">
-			<fileset dir="${dir.development}\mcp\src\common\"	includes="mcmod.info" />
-			<fileset dir="${dir.development}\mcp\reobf\minecraft\" />
-			<fileset dir="${dir.development}\source\enhanced-portals\resources" />
+		<mkdir dir="${dir.release}\portals\${version.mc}" />
+		<delete dir="${dir.mcp.reobf}\dan200" />
+		<delete dir="${dir.mcp.reobf}\enhancedcore" />
+		<delete dir="${dir.mcp.reobf}\net" />
+		
+		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_${version.main}.jar">
+			<fileset dir="${dir.mcp.reobf}">
+				<exclude name="**/computercraft/*" />
+				<exclude name="**/computercraft/**" />
+				<exclude name="**/EnhancedPortals_*" />
+			</fileset>
+			<fileset dir="${dir.main.source}" includes="mcmod.info" />
+			<fileset dir="${dir.main.resources}">
+				<include name="**/EP2/**" />
+			</fileset>
 		</jar>
 		
-		<!-- Clean up the MCP source now that we are done -->
+		<delete file="${dir.mcp.reobf}/mcmod.info" />
+		<copyfile src="${dir.main.source}/mcmod_cc.info" dest="${dir.mcp.reobf}/mcmod.info" />
+		
+		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_ComputerCraft_${version.cc}.jar">
+			<fileset dir="${dir.mcp.reobf}">
+				<include name="**/computercraft/*" />
+				<include name="**/computercraft/**" />
+				<include name="**/EnhancedPortals_ComputerCraft*" />
+			</fileset>
+			<fileset dir="${dir.mcp.reobf}" includes="mcmod.info" />
+		</jar>
+		
+		<delete file="${dir.mcp.reobf}/mcmod.info" />
+		<copyfile src="${dir.main.source}/mcmod_tech.info" dest="${dir.mcp.reobf}/mcmod.info" />
+		
+		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_Tech_${version.tech}.jar">
+			<fileset dir="${dir.mcp.reobf}">
+				<include name="**/EnhancedPortals_Tech*" />
+			</fileset>
+			<fileset dir="${dir.mcp.reobf}" includes="mcmod.info" />
+			<fileset dir="${dir.main.resources}">
+				<include name="**/EP2_Tech/**" />
+			</fileset>
+		</jar>
+		
 		<antcall target="clean" />
 	</target>
-	
+		
 	<target name="release">
-		<!-- Prep for the release -->
-		<antcall target="clean" />
 		<antcall target="build" />
-		<antcall target="recompile" />		
-		<antcall target="reobfuscate" />
-		
-		<!-- Build the jar -->
-		<delete dir="${dir.development}\mcp\reobf\minecraft\enhancedcore" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\dan200" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\ibxm" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\net" />
-		<delete dir="${dir.development}\mcp\reobf\minecraft\paulscode" />
-		<mkdir dir="${dir.release}\${release.minecraft.version}\" />
-		<jar destfile="${dir.release}\${release.minecraft.version}\EnhancedPortals-2_${release.mod.version}.jar">
-			<fileset dir="${dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
-			<fileset dir="${dir.development}\mcp\reobf\minecraft\" />
-			<fileset dir="${dir.development}\source\enhanced-portals\resources" />
-		</jar>
-		
-		<!-- Clean up the MCP source now that we are done -->
-		<antcall target="clean" />
 	</target>
-	
 </project>

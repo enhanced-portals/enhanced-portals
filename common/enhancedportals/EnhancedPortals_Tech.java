@@ -22,13 +22,13 @@ import enhancedportals.lib.Textures;
 import enhancedportals.lib.Textures.Colour;
 import enhancedportals.portal.PortalTexture;
 
-@Mod(modid = Reference.MOD_ID + "_Tech", name = "EP2 Tech", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID)
+@Mod(modid = Reference.MOD_ID + "_Tech", name = "EP2 Tech", version = "@TECH_VERSION@", dependencies = "required-after:" + Reference.MOD_ID)
 public class EnhancedPortals_Tech
 {
     Icon fuelTexture;
     boolean hasAdded = false;
 
-    @Instance(Reference.MOD_ID + "_BC")
+    @Instance(Reference.MOD_ID + "_Tech")
     public static EnhancedPortals_Tech instance;
 
     @PreInit
@@ -43,7 +43,7 @@ public class EnhancedPortals_Tech
     {
         if (event.map == FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks)
         {
-            fuelTexture = event.map.registerIcon("EP2_BC:fuel");
+            fuelTexture = event.map.registerIcon("EP2_Tech:fuel");
         }
     }
 

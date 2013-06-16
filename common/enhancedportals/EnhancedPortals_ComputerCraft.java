@@ -17,7 +17,7 @@ import enhancedportals.computercraft.tileentity.TileEntityPortalModifier_cc;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 
-@Mod(modid = Reference.MOD_ID + "_CC", name = "EP2 ComputerCraft", version = Reference.MOD_VERSION, dependencies = "required-after:" + Reference.MOD_ID + ";required-after:ComputerCraft")
+@Mod(modid = Reference.MOD_ID + "_CC", name = "EP2 ComputerCraft", version = "@CC_VERSION@", dependencies = "required-after:" + Reference.MOD_ID + ";required-after:ComputerCraft")
 public class EnhancedPortals_ComputerCraft
 {
     @Instance(Reference.MOD_ID + "_CC")
