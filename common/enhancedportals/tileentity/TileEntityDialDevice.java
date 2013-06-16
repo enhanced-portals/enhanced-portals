@@ -226,7 +226,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
     public void scheduledBlockUpdate()
     {
-        if (!active)
+        if (!active || worldObj.isRemote)
         {
             return;
         }
@@ -242,7 +242,14 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) modifierLocation.getTileEntity();
         TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0).getTileEntity();
 
-        if (ticksToGo > 0 && active)
+        if (exitModifier == null)
+        {
+            ticksToGo = 0;
+            scheduledBlockUpdate();
+            return;
+        }
+        
+        if (ticksToGo > 0)
         {
             int time = TICK_DELAY;
 
@@ -261,7 +268,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
             worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, BlockIds.DialDevice, time);
         }
-        else if (ticksToGo == 0 && active)
+        else if (ticksToGo == 0)
         {
             modifier.removePortal();
             modifier.tempDialDeviceNetwork = "";
@@ -274,6 +281,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
             active = false;
             unloadChunk();
+            PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128, worldObj.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketDialDeviceUpdate(this)));
         }
     }
 

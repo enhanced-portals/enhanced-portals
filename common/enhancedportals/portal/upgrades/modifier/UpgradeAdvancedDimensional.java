@@ -47,8 +47,6 @@ public class UpgradeAdvancedDimensional extends Upgrade
         }
 
         list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".text"));
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".textB"));
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".textC"));
 
         if (includeTitle)
         {

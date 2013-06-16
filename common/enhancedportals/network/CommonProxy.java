@@ -114,6 +114,13 @@ public class CommonProxy
 
     public void loadRecipes()
     {
+        ItemStack enderPearl = new ItemStack(Item.enderPearl);
+        
+        if (Settings.AlternateCraftingRecipe)
+        {
+            enderPearl = new ItemStack(Block.glowStone);
+        }
+        
         // --- ITEMS
         if (!Settings.DisableModifierRecipe && Settings.AllowPortalModifiers)
         {
@@ -145,11 +152,13 @@ public class CommonProxy
             GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 1), new ItemStack(itemMisc, 1, 0), Item.redstone, Block.music);
 
             // Dimensional Upgrade
-            GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), "IEI", "GUG", "IRI", Character.valueOf('U'), new ItemStack(itemMisc, 1, 0), Character.valueOf('R'), Item.redstone, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
+            GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), "IEI", "GUG", "IRI", Character.valueOf('U'), new ItemStack(itemMisc, 1, 0), Character.valueOf('R'), Item.redstone, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl);
 
-            // Advanced Dimensional Upgrade
-            GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl);
-
+            // Advanced Dimensional Upgrade TODO: Replace with new upgrade
+            //GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl);
+            // Conversion for previous advanced dimensional upgrades
+            GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), new ItemStack(itemPortalModifierUpgrade, 1, 3));
+            
             // Momentum
             GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 4), new ItemStack(itemMisc, 1, 0), Block.anvil, Item.feather);
 
@@ -160,10 +169,10 @@ public class CommonProxy
             GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 6), new ItemStack(itemMisc, 1, 0), Block.blockIron, Block.blockGold, Item.diamond, Item.diamond, Item.emerald, Item.emerald);
 
             // Modifier Camouflage
-            GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 7), new ItemStack(itemMisc, 1, 0), Item.diamond, Item.redstone, Item.enderPearl);
+            GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 7), new ItemStack(itemMisc, 1, 0), Item.diamond, Item.redstone, enderPearl);
 
             // Dialling Upgrade
-            GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 8), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.redstone, Item.enderPearl);
+            GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 8), new ItemStack(itemMisc, 1, 0), Item.redstone, Item.redstone, enderPearl);
         }
 
         // --- BLOCKS
@@ -179,21 +188,21 @@ public class CommonProxy
             // Portal Modifier
             ItemStack flintSteel = Settings.AllowFlintSteel ? new ItemStack(itemEnhancedFlintSteel) : new ItemStack(Item.flintAndSteel);
 
-            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "DIE", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
-            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "EID", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
-            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "DIE", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
-            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "EID", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), Item.enderPearl, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "DIE", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "OFO", "EID", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "DIE", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockPortalModifier), "ORO", "EID", "OFO", Character.valueOf('O'), Block.obsidian, Character.valueOf('F'), flintSteel, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl, Character.valueOf('R'), Item.redstone);
         }
 
         if (!Settings.DisableDDRecipe && Settings.AllowDialHomeDevices)
         {
             // Basic Dialling Device
-            GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SES", "IDI", "SRS", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
-            GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SRS", "IDI", "SES", Character.valueOf('S'), Block.stone, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SES", "IDI", "SRS", Character.valueOf('S'), Block.stone, Character.valueOf('E'), enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockDialDeviceBasic), "SRS", "IDI", "SES", Character.valueOf('S'), Block.stone, Character.valueOf('E'), enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
 
             // Dialling Device
-            GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "OMO", "DED", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
-            GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "ORO", "DED", "OMO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), Item.enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "OMO", "DED", "ORO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
+            GameRegistry.addShapedRecipe(new ItemStack(blockDialDevice), "ORO", "DED", "OMO", Character.valueOf('O'), Block.obsidian, Character.valueOf('E'), enderPearl, Character.valueOf('D'), Item.diamond, Character.valueOf('M'), Item.emerald, Character.valueOf('R'), Item.redstone);
 
             // Automatic Dialler
             GameRegistry.addShapedRecipe(new ItemStack(blockAutomaticDialler), "SOS", "IRI", "SOS", Character.valueOf('S'), Block.stone, Character.valueOf('O'), Block.obsidian, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone);
@@ -229,6 +238,7 @@ public class CommonProxy
         Settings.DisableModifierRecipe = config.get("Settings", "DisableModifierRecipe", Settings.DisableModifierRecipe).getBoolean(Settings.DisableModifierRecipe);
         Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect, "Renders the swirly effect when you're inside a portal").getBoolean(Settings.RenderPortalEffect);
         Settings.AdventureModeLimitation = config.get("Settings", "RestrictAdventurePlayers", Settings.AdventureModeLimitation, "Stops players in Adventure mode from using certain blocks").getBoolean(Settings.AdventureModeLimitation);
+        Settings.AlternateCraftingRecipe = config.get("Settings", "AlternateCraftingRecipes", Settings.AlternateCraftingRecipe, "Replaces items you cannot get in Peaceful with ones you can").getBoolean(Settings.AlternateCraftingRecipe);
 
         // Integer configs
         Settings.SoundLevel = MathHelper.clampInt(config.get("Effects", "SoundLevel", 100, "Percentage chance of sounds to play (per block). 0 = disabled, 100 = vanilla").getInt(), 0, 100);

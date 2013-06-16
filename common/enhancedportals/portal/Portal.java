@@ -25,7 +25,6 @@ import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketNetherPortalUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
-import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
 import enhancedportals.portal.upgrades.modifier.UpgradeMomentum;
 import enhancedportals.portal.upgrades.modifier.UpgradeParticles;
@@ -434,32 +433,13 @@ public class Portal
     private void handleDialDeviceTeleportation(Entity entity, TileEntityPortalModifier modifier)
     {
         WorldLocation exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
-        boolean missingUpgrade = false;
 
         if (exitLocation == null || exitLocation.isEqual(new WorldLocation(xCoord, yCoord, zCoord, dimension)))
         {
             return;
         }
 
-        if ((exitLocation.dimension == -1 || exitLocation.dimension == 0 || exitLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-        {
-            // Vanilla dimension but we don't have the upgrade
-            missingUpgrade = true;
-        }
-
-        if (exitLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-        {
-            // Same dimension but we don't have the upgrade
-            missingUpgrade = true;
-        }
-
-        if ((exitLocation.dimension > 1 || exitLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-        {
-            // Modded dimension but no upgrade
-            missingUpgrade = true;
-        }
-
-        if (!missingUpgrade)
+        if (upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, exitLocation.dimension))
         {
             TeleportManager.teleportEntity(entity, exitLocation, modifier, modifier.upgradeHandler.hasUpgrade(new UpgradeMomentum()), false);
             TeleportManager.setCanEntityTravel(entity, false);
@@ -550,32 +530,9 @@ public class Portal
         while (!validLocations.isEmpty())
         {
             WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
-
-            if ((randomLocation.dimension == -1 || randomLocation.dimension == 0 || randomLocation.dimension == 1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
+            
+            if (!upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, randomLocation.dimension))
             {
-                // Vanilla dimension but we don't have the upgrade
-
-                if (randomLocation.dimension == -1 && modifier.worldObj.provider.dimensionId == 0 || randomLocation.dimension == 0 && modifier.worldObj.provider.dimensionId == -1)
-                {
-                    // Allow overworld <--> nether travel
-                }
-                else
-                {
-                    missingUpgrade = true;
-                    continue;
-                }
-            }
-
-            if (randomLocation.dimension == modifier.worldObj.provider.dimensionId && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-            {
-                // Same dimension but we don't have the upgrade
-                missingUpgrade = true;
-                continue;
-            }
-
-            if ((randomLocation.dimension > 1 || randomLocation.dimension < -1) && !modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-            {
-                // Modded dimension but no upgrade
                 missingUpgrade = true;
                 continue;
             }
@@ -594,6 +551,35 @@ public class Portal
                 ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatMissingUpgrade.toString());
             }
         }
+    }
+    
+    private boolean upgradeCheck(TileEntityPortalModifier modifier, int entryDimension, int exitDimension)
+    {
+        boolean hasUpgrade = modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional());
+        
+        if ((exitDimension == -1 || exitDimension == 0 || exitDimension == 1) && !hasUpgrade)
+        {
+            if (exitDimension == -1 && entryDimension == 0 || exitDimension == 0 && entryDimension == -1)
+            {
+                // Allow overworld <--> nether travel
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        if (exitDimension == entryDimension && !hasUpgrade)
+        {
+            return false;
+        }
+
+        if ((exitDimension > 1 || exitDimension < -1) && !hasUpgrade)
+        {
+            return false;
+        }
+        
+        return true;
     }
 
     public void handleNeighborChange(int id)

@@ -46,7 +46,8 @@ public class UpgradeDimensional extends Upgrade
             list.add(EnumChatFormatting.AQUA + Localization.localizeString("item." + Localization.PortalModifierUpgrade_Name + "." + getName() + ".name"));
         }
 
-        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".text"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".textA"));
+        list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade." + getName() + ".textB"));
 
         if (includeTitle)
         {

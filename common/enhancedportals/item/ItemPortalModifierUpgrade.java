@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,8 +23,6 @@ import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.network.packet.PacketPortalModifierUpgrade;
 import enhancedportals.portal.upgrades.Upgrade;
-import enhancedportals.portal.upgrades.modifier.UpgradeAdvancedDimensional;
-import enhancedportals.portal.upgrades.modifier.UpgradeDimensional;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class ItemPortalModifierUpgrade extends Item
@@ -39,7 +36,7 @@ public class ItemPortalModifierUpgrade extends Item
         setMaxDamage(0);
         setCreativeTab(Reference.CREATIVE_TAB);
         setUnlocalizedName(Localization.PortalModifierUpgrade_Name);
-        maxStackSize = 1;
+        maxStackSize = 16;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -76,6 +73,11 @@ public class ItemPortalModifierUpgrade extends Item
     {
         for (int var4 = 0; var4 < Upgrade.getAllUpgrades().length; var4++)
         {
+            if (var4 == 3)
+            {
+                continue;
+            }
+            
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
@@ -83,8 +85,7 @@ public class ItemPortalModifierUpgrade extends Item
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        int i = MathHelper.clampInt(par1ItemStack.getItemDamage(), 0, 15);
-        return super.getUnlocalizedName() + "." + Upgrade.getUpgradeNames()[i];
+        return super.getUnlocalizedName() + "." + Upgrade.getUpgradeNames()[MathHelper.clampInt(par1ItemStack.getItemDamage(), 0, textures.length)];
     }
 
     @Override
@@ -108,23 +109,11 @@ public class ItemPortalModifierUpgrade extends Item
 
             if (!modifier.upgradeHandler.hasUpgrade(Upgrade.getUpgrade(stack.getItemDamage())))
             {
-                if (stack.getItemDamage() == 3 && modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional()))
-                {
-                    player.sendChatToPlayer(Strings.ChatDimAlreadyInstalled.toString());
-                    return false;
-                }
-                else if (stack.getItemDamage() == 2 && modifier.upgradeHandler.hasUpgrade(new UpgradeAdvancedDimensional()))
-                {
-                    player.sendChatToPlayer(Strings.ChatAdvDimAlreadyInstalled.toString());
-                    return false;
-                }
-
                 if (modifier.upgradeHandler.addUpgrade(Upgrade.getUpgrade(stack.getItemDamage()), modifier))
                 {
                     if (!player.capabilities.isCreativeMode)
                     {
-                        player.inventory.mainInventory[player.inventory.currentItem] = null;
-                        ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                        player.inventory.mainInventory[player.inventory.currentItem].stackSize--;
                     }
 
                     PacketDispatcher.sendPacketToAllAround(x + 0.5, y + 0.5, z + 0.5, 128, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(modifier)));
@@ -152,7 +141,7 @@ public class ItemPortalModifierUpgrade extends Item
         String[] names = Upgrade.getUpgradeNames();
 
         for (int i = 0; i < Upgrade.getAllUpgrades().length; i++)
-        {
+        {            
             textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + names[i]);
         }
     }

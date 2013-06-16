@@ -155,17 +155,8 @@ public class GuiDialDevice extends GuiScreen
         buttonList.add(new GuiButton(2, guiLeft + 45, height - 30, 90, 20, dialDevice.active ? Strings.Terminate.toString() : Strings.Dial.toString()));
         buttonList.add(new GuiButton(3, guiLeft + 140, height - 30, 70, 20, Strings.Remove.toString()));
         buttonList.add(new GuiButton(4, guiLeft - 30, height - 55, 240, 20, dialDevice.tickTimer == 1201 || dialDevice.tickTimer == 19 ? Strings.DontShutdownAuto.toString() : EnumChatFormatting.GOLD + (dialDevice.tickTimer + "") + " " + EnumChatFormatting.WHITE + "ticks (" + EnumChatFormatting.GOLD + new DecimalFormat("#.##").format((float) dialDevice.tickTimer / 20) + "" + EnumChatFormatting.WHITE + " seconds)"));
-
-        if (dialDevice.destinationList.isEmpty())
-        {
-            ((GuiButton) buttonList.get(1)).enabled = false;
-            ((GuiButton) buttonList.get(2)).enabled = false;
-        }
-        else if (getSelected() < 0 || dialDevice.active)
-        {
-            ((GuiButton) buttonList.get(2)).enabled = false;
-        }
-
+        ((GuiButton) buttonList.get(2)).enabled = !dialDevice.active;
+        
         if (!Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))
         {
             ((GuiButton) buttonList.get(0)).drawButton = false;
@@ -207,7 +198,14 @@ public class GuiDialDevice extends GuiScreen
         }
         else
         {
+            if (dialDevice.selectedDestination < 0)
+            {
+                onElementSelected(0);
+            }
+            
             ((GuiButton) buttonList.get(1)).displayString = dialDevice.active ? Strings.Terminate.toString() : Strings.Dial.toString();
+            ((GuiButton) buttonList.get(1)).enabled = true;
+            ((GuiButton) buttonList.get(2)).enabled = !dialDevice.active;
         }
     }
 }
