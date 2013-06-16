@@ -5,12 +5,43 @@ import java.util.Map;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import enhancedportals.portal.PortalTexture;
 
 public class Textures
 {
+    public enum Colour
+    {
+        BLACK,
+        RED,
+        GREEN,
+        BROWN,
+        BLUE,
+        PURPLE,
+        CYAN,
+        LIGHT_GRAY,
+        GRAY,
+        PINK,
+        LIME,
+        YELLOW,
+        LIGHT_BLUE,
+        MAGENTA,
+        ORANGE,
+        WHITE;
+        
+        public PortalTexture getPortalTexture()
+        {
+            return getTexture("C:" + ordinal());
+        }
+        
+        public Icon getModifierTexture()
+        {
+            return getPortalTexture().getModifierTexture();
+        }
+    }
+    
     public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
 
     public static ItemStack getItemStackFromTexture(PortalTexture texture)
