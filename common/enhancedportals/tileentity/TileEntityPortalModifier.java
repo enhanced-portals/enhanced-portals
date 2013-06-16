@@ -181,7 +181,14 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         {
             if (tagCompound.hasKey("Upgrade" + i))
             {
-                upgradeHandler.addUpgradeNoActivate(tagCompound.getByte("Upgrade" + i), this);
+                Byte b = tagCompound.getByte("Upgrade" + i);
+                
+                if (b == 3)
+                {
+                    b = 2;
+                }
+                
+                upgradeHandler.addUpgradeNoActivate(b, this);
             }
         }
     }
