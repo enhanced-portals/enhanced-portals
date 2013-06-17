@@ -1,5 +1,9 @@
 package enhancedportals.network.packet;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -62,7 +66,7 @@ public abstract class PacketEnhancedPortals
             Type eType = Type.values()[type];
             byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
 
-            return eType.make().consumePacket(data);
+            return eType.make().consumePacket(new DataInputStream(new ByteArrayInputStream(data)));
         }
         catch (Exception e)
         {
@@ -90,7 +94,7 @@ public abstract class PacketEnhancedPortals
         }
     }
 
-    public abstract PacketEnhancedPortals consumePacket(byte[] data);
+    public abstract PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException;
 
     public abstract void execute(INetworkManager network, EntityPlayer player);
 

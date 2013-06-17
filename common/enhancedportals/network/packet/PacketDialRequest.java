@@ -1,5 +1,8 @@
 package enhancedportals.network.packet;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
@@ -31,32 +34,15 @@ public class PacketDialRequest extends PacketEnhancedPortals
     }
 
     @Override
-    public PacketEnhancedPortals consumePacket(byte[] data)
+    public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        try
-        {
-            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "S");
+        xCoord = stream.readInt();
+        yCoord = stream.readInt();
+        zCoord = stream.readInt();
+        dimension = stream.readInt();
+        network = stream.readUTF();
 
-            if (objArray != null)
-            {
-                xCoord = Integer.parseInt(objArray[0].toString());
-                yCoord = Integer.parseInt(objArray[1].toString());
-                zCoord = Integer.parseInt(objArray[2].toString());
-                dimension = Integer.parseInt(objArray[3].toString());
-                network = objArray[4].toString();
-
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        return this;
     }
 
     @Override

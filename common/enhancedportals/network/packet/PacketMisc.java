@@ -1,5 +1,8 @@
 package enhancedportals.network.packet;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
@@ -23,29 +26,12 @@ public class PacketMisc extends PacketEnhancedPortals
     }
 
     @Override
-    public PacketEnhancedPortals consumePacket(byte[] data)
+    public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        try
-        {
-            Object[] objArray = PacketHelper.getObjects(data, "b", "I");
+        type = stream.readByte();
+        data = stream.readInt();
 
-            if (objArray != null)
-            {
-                type = Byte.parseByte(objArray[0].toString());
-                this.data = Integer.parseInt(objArray[1].toString());
-
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        return this;
     }
 
     @Override

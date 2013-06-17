@@ -1,5 +1,8 @@
 package enhancedportals.network.packet;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
@@ -37,36 +40,19 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     }
 
     @Override
-    public PacketEnhancedPortals consumePacket(byte[] data)
+    public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        try
-        {
-            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b", "b", "S", "S", "S");
+        xCoord = stream.readInt();
+        yCoord = stream.readInt();
+        zCoord = stream.readInt();
+        dimension = stream.readInt();
+        thickness = stream.readByte();
+        redstoneSetting = stream.readByte();
+        texture = stream.readUTF();
+        modifierNetwork = stream.readUTF();
+        dialDeviceNetwork = stream.readUTF();
 
-            if (objArray != null)
-            {
-                xCoord = Integer.parseInt(objArray[0].toString());
-                yCoord = Integer.parseInt(objArray[1].toString());
-                zCoord = Integer.parseInt(objArray[2].toString());
-                dimension = Integer.parseInt(objArray[3].toString());
-                thickness = Byte.parseByte(objArray[4].toString());
-                redstoneSetting = Byte.parseByte(objArray[5].toString());
-                texture = objArray[6].toString();
-                modifierNetwork = objArray[7].toString();
-                dialDeviceNetwork = objArray[8].toString();
-
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        return this;
     }
 
     @Override

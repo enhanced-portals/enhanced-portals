@@ -85,16 +85,6 @@ public class Settings
         return player.capabilities.allowEdit && AdventureModeLimitation;
     }
 
-    public static int[] concatIntegerArray(int[] a, int[] b)
-    {
-        int[] c = new int[a.length + b.length];
-
-        System.arraycopy(a, 0, c, 0, a.length);
-        System.arraycopy(b, 0, c, a.length, b.length);
-
-        return c;
-    }
-
     public static boolean isBlockExcluded(int id)
     {
         for (int i : ExcludedBlockList)
@@ -106,18 +96,6 @@ public class Settings
         }
 
         return false;
-    }
-
-    public static int[] listToArray(List<Integer> list)
-    {
-        int[] arr = new int[list.size()];
-
-        for (int i = 0; i < arr.length; i++)
-        {
-            arr[i] = list.get(i);
-        }
-
-        return arr;
     }
 
     public static void setConfigOption(String category, String property, boolean val)

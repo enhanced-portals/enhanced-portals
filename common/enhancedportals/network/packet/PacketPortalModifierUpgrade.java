@@ -1,5 +1,7 @@
 package enhancedportals.network.packet;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -33,32 +35,20 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
     }
 
     @Override
-    public PacketEnhancedPortals consumePacket(byte[] data)
+    public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        try
-        {
-            Object[] objArray = PacketHelper.getObjects(data, "I", "I", "I", "I", "b[]");
+        xCoord = stream.readInt();
+        yCoord = stream.readInt();
+        zCoord = stream.readInt();
+        dimension = stream.readInt();
+        upgrades = new byte[stream.readInt()];
 
-            if (objArray != null)
-            {
-                xCoord = Integer.parseInt(objArray[0].toString());
-                yCoord = Integer.parseInt(objArray[1].toString());
-                zCoord = Integer.parseInt(objArray[2].toString());
-                dimension = Integer.parseInt(objArray[3].toString());
-                upgrades = byte[].class.cast(objArray[4]);
-
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        catch (Exception e)
+        for (int i = 0; i < upgrades.length; i++)
         {
-            e.printStackTrace();
-            return null;
+            upgrades[i] = stream.readByte();
         }
+
+        return this;
     }
 
     @Override
