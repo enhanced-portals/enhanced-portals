@@ -152,7 +152,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
         {
             return;
         }
-        
+
         if (modifierLocation == null || !(modifierLocation.getTileEntity() instanceof TileEntityPortalModifier))
         {
             active = false;
@@ -170,7 +170,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             scheduledBlockUpdate();
             return;
         }
-        
+
         if (ticksToGo > 0)
         {
             int time = TICK_DELAY;

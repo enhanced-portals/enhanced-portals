@@ -30,18 +30,18 @@ public class Textures
         MAGENTA,
         ORANGE,
         WHITE;
-        
-        public PortalTexture getPortalTexture()
-        {
-            return getTexture("C:" + ordinal());
-        }
-        
+
         public Icon getModifierTexture()
         {
             return getPortalTexture().getModifierTexture();
         }
+
+        public PortalTexture getPortalTexture()
+        {
+            return getTexture("C:" + ordinal());
+        }
     }
-    
+
     public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
 
     public static ItemStack getItemStackFromTexture(PortalTexture texture)

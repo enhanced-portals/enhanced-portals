@@ -115,12 +115,12 @@ public class CommonProxy
     public void loadRecipes()
     {
         ItemStack enderPearl = new ItemStack(Item.enderPearl);
-        
+
         if (Settings.AlternateCraftingRecipe)
         {
             enderPearl = new ItemStack(Block.glowStone);
         }
-        
+
         // --- ITEMS
         if (!Settings.DisableModifierRecipe && Settings.AllowPortalModifiers)
         {
@@ -158,7 +158,7 @@ public class CommonProxy
             //GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl);
             // Conversion for previous advanced dimensional upgrades
             GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), new ItemStack(itemPortalModifierUpgrade, 1, 3));
-            
+
             // Momentum
             GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 4), new ItemStack(itemMisc, 1, 0), Block.anvil, Item.feather);
 
@@ -248,9 +248,12 @@ public class CommonProxy
         Settings.MaximumPortalSize = config.get("Control", "MaximumPortalSize", Settings.MaximumPortalSize).getInt();
 
         // String configs
-        Settings.addExcludedBlocks(config.get("Blocks", "ExcludedTextureBlocks", "", "These blocks are excluded from being used as portal textures. Seperate IDs by a single space").getString());
-        Settings.addBorderBlocks(config.get("Blocks", "BorderBlocks", "", "These blocks will be valid for portal frames. Seperate IDs by a single space").getString());
-        Settings.addDestroyBlocks(config.get("Blocks", "DestroyBlocks", "18 30 31 32 37 38 39 40 78 106 131 132 141 142", "These blocks will get removed when creating a portal. Seperate IDs by a single space").getString());
+        Settings.ExcludedBlockList = Settings.addToList(Settings.ExcludedBlockList, config.get("Blocks", "ExcludedTextureBlocks", "", "These blocks are excluded from being used as portal textures. Seperate IDs by a single space").getString());
+        Settings.BorderBlocks = Settings.addToList(Settings.BorderBlocks, config.get("Blocks", "BorderBlocks", "", "These blocks will be valid for portal frames. Seperate IDs by a single space").getString());
+        Settings.ExcludedBlockList = Settings.addToList(Settings.ExcludedBlockList, config.get("Blocks", "DestroyBlocks", "18 30 31 32 37 38 39 40 78 106 131 132 141 142", "These blocks will get removed when creating a portal. Seperate IDs by a single space").getString());
+
+        Settings.NetherFrameUpgrade = Settings.addToList(Settings.NetherFrameUpgrade, config.get("Blocks", "NetherFrameUpgrade", "", "Any block IDs listed here will replace the ones in the Nether Frame upgrade. Seperate IDs by a single space").getString());
+        Settings.ResourceFrameUpgrade = Settings.addToList(Settings.ResourceFrameUpgrade, config.get("Blocks", "ResourceFrameUpgrade", "", "Any block IDs listed here will replace the ones in the Resourceful Frame upgrade. Seperate IDs by a single space").getString());
 
         config.save();
     }

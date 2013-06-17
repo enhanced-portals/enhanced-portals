@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Localization;
+import enhancedportals.lib.Settings;
 import enhancedportals.lib.Strings;
 import enhancedportals.portal.upgrades.Upgrade;
 
@@ -48,9 +49,20 @@ public class UpgradeNetherFrame extends Upgrade
 
         list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.text"));
         list.add(EnumChatFormatting.GRAY + Localization.localizeString("upgrade.blocks.textA"));
-        list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
-        list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
-        list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".default.name"));
+
+        if (Settings.NetherFrameUpgrade.isEmpty())
+        {
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.glowStone.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.netherBrick.getUnlocalizedName() + ".name"));
+            list.add(EnumChatFormatting.DARK_AQUA + Localization.localizeString(Block.blockNetherQuartz.getUnlocalizedName() + ".default.name"));
+        }
+        else
+        {
+            for (int id : Settings.NetherFrameUpgrade)
+            {
+                list.add(EnumChatFormatting.DARK_AQUA + new ItemStack(id, 1, 0).getDisplayName());
+            }
+        }
 
         if (includeTitle)
         {

@@ -33,7 +33,10 @@ public class Settings
     public static List<Integer> BorderBlocks = new ArrayList<Integer>();
     public static List<Integer> DestroyBlocks = new ArrayList<Integer>();
 
-    public static void addBorderBlocks(String str)
+    public static List<Integer> NetherFrameUpgrade = new ArrayList<Integer>();
+    public static List<Integer> ResourceFrameUpgrade = new ArrayList<Integer>();
+
+    public static List<Integer> addToList(List<Integer> list, String str)
     {
         if (str.contains(" "))
         {
@@ -45,9 +48,9 @@ public class Settings
                 {
                     int i = Integer.parseInt(s);
 
-                    if (!BorderBlocks.contains(i))
+                    if (!list.contains(i))
                     {
-                        BorderBlocks.add(i);
+                        list.add(i);
                     }
                 }
                 catch (Exception e)
@@ -63,9 +66,9 @@ public class Settings
             {
                 int i = Integer.parseInt(str);
 
-                if (!BorderBlocks.contains(i))
+                if (!list.contains(i))
                 {
-                    BorderBlocks.add(i);
+                    list.add(i);
                 }
             }
             catch (Exception e)
@@ -73,95 +76,23 @@ public class Settings
                 Reference.log.log(Level.WARNING, String.format("'%s' isn't a valid block ID", str));
             }
         }
-    }
 
-    public static void addDestroyBlocks(String str)
-    {
-        if (str.contains(" "))
-        {
-            String[] strs = str.split(" ");
-
-            for (String s : strs)
-            {
-                try
-                {
-                    int i = Integer.parseInt(s);
-
-                    if (!DestroyBlocks.contains(i))
-                    {
-                        DestroyBlocks.add(i);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Reference.log.log(Level.WARNING, String.format("'%s' isn't a valid block ID", s));
-                    continue;
-                }
-            }
-        }
-        else if (str.length() > 0)
-        {
-            try
-            {
-                int i = Integer.parseInt(str);
-
-                if (!DestroyBlocks.contains(i))
-                {
-                    DestroyBlocks.add(i);
-                }
-            }
-            catch (Exception e)
-            {
-                Reference.log.log(Level.WARNING, String.format("'%s' isn't a valid block ID", str));
-            }
-        }
-    }
-
-    public static void addExcludedBlocks(String str)
-    {
-        if (str.contains(" "))
-        {
-            String[] strs = str.split(" ");
-
-            for (String s : strs)
-            {
-                try
-                {
-                    int i = Integer.parseInt(s);
-
-                    if (!ExcludedBlockList.contains(i))
-                    {
-                        ExcludedBlockList.add(i);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Reference.log.log(Level.WARNING, String.format("'%s' isn't a valid block ID", s));
-                    continue;
-                }
-            }
-        }
-        else if (str.length() > 0)
-        {
-            try
-            {
-                int i = Integer.parseInt(str);
-
-                if (!ExcludedBlockList.contains(i))
-                {
-                    ExcludedBlockList.add(i);
-                }
-            }
-            catch (Exception e)
-            {
-                Reference.log.log(Level.WARNING, String.format("'%s' isn't a valid block ID", str));
-            }
-        }
+        return list;
     }
 
     public static boolean canUse(EntityPlayer player)
     {
         return player.capabilities.allowEdit && AdventureModeLimitation;
+    }
+
+    public static int[] concatIntegerArray(int[] a, int[] b)
+    {
+        int[] c = new int[a.length + b.length];
+
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+
+        return c;
     }
 
     public static boolean isBlockExcluded(int id)
@@ -175,6 +106,18 @@ public class Settings
         }
 
         return false;
+    }
+
+    public static int[] listToArray(List<Integer> list)
+    {
+        int[] arr = new int[list.size()];
+
+        for (int i = 0; i < arr.length; i++)
+        {
+            arr[i] = list.get(i);
+        }
+
+        return arr;
     }
 
     public static void setConfigOption(String category, String property, boolean val)

@@ -43,7 +43,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
                 dimension = Integer.parseInt(objArray[3].toString());
                 active = Boolean.parseBoolean(objArray[4].toString());
                 tickTimer = Integer.parseInt(objArray[5].toString());
-                
+
                 return this;
             }
             else
@@ -65,7 +65,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
         if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
         {
             TileEntityDialDevice dial = (TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord);
-            
+
             dial.active = active;
             dial.tickTimer = tickTimer;
         }

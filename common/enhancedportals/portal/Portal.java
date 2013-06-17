@@ -530,7 +530,7 @@ public class Portal
         while (!validLocations.isEmpty())
         {
             WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
-            
+
             if (!upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, randomLocation.dimension))
             {
                 missingUpgrade = true;
@@ -551,35 +551,6 @@ public class Portal
                 ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatMissingUpgrade.toString());
             }
         }
-    }
-    
-    private boolean upgradeCheck(TileEntityPortalModifier modifier, int entryDimension, int exitDimension)
-    {
-        boolean hasUpgrade = modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional());
-        
-        if ((exitDimension == -1 || exitDimension == 0 || exitDimension == 1) && !hasUpgrade)
-        {
-            if (exitDimension == -1 && entryDimension == 0 || exitDimension == 0 && entryDimension == -1)
-            {
-                // Allow overworld <--> nether travel
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        if (exitDimension == entryDimension && !hasUpgrade)
-        {
-            return false;
-        }
-
-        if ((exitDimension > 1 || exitDimension < -1) && !hasUpgrade)
-        {
-            return false;
-        }
-        
-        return true;
     }
 
     public void handleNeighborChange(int id)
@@ -858,6 +829,35 @@ public class Portal
                     PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
                 }
             }
+        }
+
+        return true;
+    }
+
+    private boolean upgradeCheck(TileEntityPortalModifier modifier, int entryDimension, int exitDimension)
+    {
+        boolean hasUpgrade = modifier.upgradeHandler.hasUpgrade(new UpgradeDimensional());
+
+        if ((exitDimension == -1 || exitDimension == 0 || exitDimension == 1) && !hasUpgrade)
+        {
+            if (exitDimension == -1 && entryDimension == 0 || exitDimension == 0 && entryDimension == -1)
+            {
+                // Allow overworld <--> nether travel
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        if (exitDimension == entryDimension && !hasUpgrade)
+        {
+            return false;
+        }
+
+        if ((exitDimension > 1 || exitDimension < -1) && !hasUpgrade)
+        {
+            return false;
         }
 
         return true;

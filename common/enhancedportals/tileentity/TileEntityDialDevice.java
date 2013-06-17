@@ -248,7 +248,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             scheduledBlockUpdate();
             return;
         }
-        
+
         if (ticksToGo > 0)
         {
             int time = TICK_DELAY;

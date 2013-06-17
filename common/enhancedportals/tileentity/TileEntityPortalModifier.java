@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.world.WorldLocation;
 import enhancedportals.lib.BlockIds;
+import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
 import enhancedportals.portal.Portal;
@@ -69,15 +70,44 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
     {
         if (upgradeHandler.hasUpgrade(new UpgradeNetherFrame()) && upgradeHandler.hasUpgrade(new UpgradeResourceFrame()))
         {
-            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID, Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+            if (Settings.NetherFrameUpgrade.isEmpty() && Settings.ResourceFrameUpgrade.isEmpty())
+            {
+                return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID, Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+            }
+            else if (!Settings.NetherFrameUpgrade.isEmpty() && Settings.ResourceFrameUpgrade.isEmpty())
+            {
+                return Settings.concatIntegerArray(Settings.listToArray(Settings.NetherFrameUpgrade), new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID });
+            }
+            else if (Settings.NetherFrameUpgrade.isEmpty() && !Settings.ResourceFrameUpgrade.isEmpty())
+            {
+                return Settings.concatIntegerArray(new int[] { Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID }, Settings.listToArray(Settings.ResourceFrameUpgrade));
+            }
+            else
+            {
+                return Settings.concatIntegerArray(Settings.listToArray(Settings.NetherFrameUpgrade), Settings.listToArray(Settings.ResourceFrameUpgrade));
+            }
         }
         else if (upgradeHandler.hasUpgrade(new UpgradeNetherFrame()))
         {
-            return new int[] { Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+            if (Settings.NetherFrameUpgrade.isEmpty())
+            {
+                return new int[] { Block.blockNetherQuartz.blockID, Block.glowStone.blockID, Block.netherBrick.blockID };
+            }
+            else
+            {
+                return Settings.listToArray(Settings.NetherFrameUpgrade);
+            }
         }
         else if (upgradeHandler.hasUpgrade(new UpgradeResourceFrame()))
         {
-            return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID };
+            if (Settings.ResourceFrameUpgrade.isEmpty())
+            {
+                return new int[] { Block.blockDiamond.blockID, Block.blockGold.blockID, Block.blockIron.blockID, Block.blockEmerald.blockID };
+            }
+            else
+            {
+                return Settings.listToArray(Settings.ResourceFrameUpgrade);
+            }
         }
 
         return null;
@@ -182,12 +212,12 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
             if (tagCompound.hasKey("Upgrade" + i))
             {
                 Byte b = tagCompound.getByte("Upgrade" + i);
-                
+
                 if (b == 3)
                 {
                     b = 2;
                 }
-                
+
                 upgradeHandler.addUpgradeNoActivate(b, this);
             }
         }

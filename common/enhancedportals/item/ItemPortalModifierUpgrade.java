@@ -77,7 +77,7 @@ public class ItemPortalModifierUpgrade extends Item
             {
                 continue;
             }
-            
+
             par3List.add(new ItemStack(par1, 1, var4));
         }
     }
@@ -141,7 +141,7 @@ public class ItemPortalModifierUpgrade extends Item
         String[] names = Upgrade.getUpgradeNames();
 
         for (int i = 0; i < Upgrade.getAllUpgrades().length; i++)
-        {            
+        {
             textures[i] = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifierUpgrade_Name + "_" + names[i]);
         }
     }

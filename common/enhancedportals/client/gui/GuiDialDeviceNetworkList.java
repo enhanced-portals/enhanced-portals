@@ -67,7 +67,7 @@ class GuiDialDeviceNetworkList extends GuiSlot
         if (!parent.dialDevice.active)
         {
             parent.onElementSelected(par1);
-            
+
             if (par2)
             {
                 parent.select(par1);
