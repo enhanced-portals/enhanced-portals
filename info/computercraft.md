@@ -1,15 +1,16 @@
+##Computercraft Methods
 ###Portal Modifier
 | Method         | Description |
 | -------------- | ----------- |
-| createPortal() | |
-| removePortal() | |
+| createPortal() | Creates a portal |
+| removePortal() | Removes an active portal |
 | getTexture()   | Gets the string representation of a texture. Will either be `C:0-15`, `B:<BLOCKID>:<META>` or `I:<ITEMID>:<META>` |
 | getNetwork()   | Gets a table of all the glyph IDs used in the network |
 | setNetwork(string) | Sets the network to the specified network. Must send a single string as an argument with the glyph IDs seperated by spaces `setNetwork("10 5 22 14 10")` |
 | getIdentifier() | The same as `getNetwork()` but used when the modifier has a dialling upgrade |
 | setIdentifier(string) | The same as `setNetwork(string)` but used when the modifier has a dialling upgrade |
 | getThickness() | Returns an integer of the current thickness level, 1 = default, 4 = fullblock |
-| setThickness() | Sets the thickness to a specified value, 1 = default, 4 = fullblock |
+| setThickness(num) | Sets the thickness to a specified value, 1 = default, 4 = fullblock |
 | getUpgrades() | Returns a table of all installed upgrade IDs |
 | getUpgradeName(num) | Returns the name of the specified upgrade |
 | getSelfActive() | Returns true if this modifier is active |
