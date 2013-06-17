@@ -1,15 +1,8 @@
 ##EnhancedPortals 2
 [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1301217-)
 
-**Latest Beta**: [1.0 Beta 3](https://dl.dropboxusercontent.com/u/16457084/EnhancedPortals%202/1.5.2/EnhancedPortals-2_Beta%203.jar) | [Requires EnhancedCore](https://dl.dropboxusercontent.com/u/16457084/EnhancedCore/1.5.2/EnhancedCore_Beta.jar) (Install into Mods folder)
-
-**Release Notes**: [Changelog](http://shadeddimension.github.io/changelog.html#EnhancedPortals)
-
 ###Setting up the development environment
-The build scripts are set up in the exact same way as the Equivalent Exchange 3 scripts.
-
-When setting up your development environment, follow the guide in [Equivalent Exchange 3's readme file](https://github.com/pahimar/Equivalent-Exchange-3/blob/master/README.md), but obviously replace ee3 with enhanced-portals.
-When done, your directory structure should look like this. (Add the computercraft API, and EnhancedCore into the directory listed, then add them to your workspace)
+Your directory structure should look something like this. If you have everything set up in a different place, you will need to edit the `build.properties` file to reflect your setup.
 
 ***
 	development
@@ -21,11 +14,28 @@ When done, your directory structure should look like this. (Add the computercraf
 		\enhanced-portals\
 			\common\
 			\resources\
-			\README.md
-			\other files
+			\*
 		\enhanced-core\
 			\common\
 			\*
 		\computercraft-api\
 			\*
+***
+
+An example `build.properties` file:
+
+***
+dir.mcp=../../mcp
+dir.mcp.src=../../mcp/src/minecraft
+dir.mcp.reobf=../../mcp/reobf/minecraft
+dir.main.source=../../source/enhanced-portals/common
+dir.main.resources=../../source/enhanced-portals/resources
+dir.core.source=../../source/enhanced-core/common
+dir.core.resources=../../source/enhanced-core/resources
+dir.ccapi=../../source/computercraft-api
+dir.release=../../releases
+version.mc=1.5.2
+version.main=1.0.1
+version.cc=1.0
+version.tech=1.0.1
 ***
