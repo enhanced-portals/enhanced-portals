@@ -5,15 +5,16 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityAutomaticDialler;
 
 public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     String theNetwork;
 
     public PacketAutomaticDiallerUpdate()
@@ -23,9 +24,7 @@ public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
 
     public PacketAutomaticDiallerUpdate(TileEntityAutomaticDialler dialler)
     {
-        xCoord = dialler.xCoord;
-        yCoord = dialler.yCoord;
-        zCoord = dialler.zCoord;
+        position = dialler.getBlockPosition();
         dimension = dialler.worldObj.provider.dimensionId;
         theNetwork = dialler.activeNetwork;
     }
@@ -33,9 +32,7 @@ public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         theNetwork = stream.readUTF();
 
@@ -45,13 +42,11 @@ public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.AutomaticDialler)
+        if (WorldHelper.getBlockId(dimension, position) == BlockIds.AutomaticDialler)
         {
-            if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityAutomaticDialler)
+            if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityAutomaticDialler)
             {
-                TileEntityAutomaticDialler dialler = (TileEntityAutomaticDialler) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+                TileEntityAutomaticDialler dialler = (TileEntityAutomaticDialler) WorldHelper.getTileEntity(dimension, position);
                 dialler.activeNetwork = theNetwork;
             }
         }
@@ -60,6 +55,6 @@ public class PacketAutomaticDiallerUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, theNetwork);
+        return PacketHelper.getByteArray(position, dimension, theNetwork);
     }
 }

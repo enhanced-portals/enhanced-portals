@@ -12,6 +12,7 @@ import enhancedportals.computercraft.SharedMethods;
 import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
 public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic implements IPeripheral
 {
@@ -47,7 +48,7 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
 
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialString)));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityEnhancedPortals) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialString)));
                 }
                 else
                 {

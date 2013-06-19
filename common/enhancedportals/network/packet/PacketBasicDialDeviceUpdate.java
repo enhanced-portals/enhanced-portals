@@ -5,14 +5,15 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 
 public class PacketBasicDialDeviceUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     boolean isActive;
 
     public PacketBasicDialDeviceUpdate()
@@ -22,9 +23,7 @@ public class PacketBasicDialDeviceUpdate extends PacketEnhancedPortals
 
     public PacketBasicDialDeviceUpdate(TileEntityDialDeviceBasic device)
     {
-        xCoord = device.xCoord;
-        yCoord = device.yCoord;
-        zCoord = device.zCoord;
+        position = device.getBlockPosition();
         dimension = device.worldObj.provider.dimensionId;
         isActive = device.active;
     }
@@ -32,9 +31,7 @@ public class PacketBasicDialDeviceUpdate extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         isActive = stream.readBoolean();
 
@@ -44,17 +41,15 @@ public class PacketBasicDialDeviceUpdate extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDeviceBasic)
+        if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityDialDeviceBasic)
         {
-            ((TileEntityDialDeviceBasic) world.getBlockTileEntity(xCoord, yCoord, zCoord)).active = isActive;
+            ((TileEntityDialDeviceBasic) WorldHelper.getTileEntity(dimension, position)).active = isActive;
         }
     }
 
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, isActive);
+        return PacketHelper.getByteArray(position, dimension, isActive);
     }
 }

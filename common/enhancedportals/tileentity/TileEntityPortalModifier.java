@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.util.ArrayHelper;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
@@ -162,7 +162,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
 
     public boolean isActive()
     {
-        WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        WorldPosition block = getWorldPosition().getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
         TileEntityNetherPortal portal = null;
 
         if (!(block.getTileEntity() instanceof TileEntityNetherPortal))
@@ -178,13 +178,13 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         }
         else
         {
-            return portal != null && portal.getParentModifier() != null && portal.getParentModifier().isEqual(new WorldLocation(xCoord, yCoord, zCoord, worldObj));
+            return portal != null && portal.getParentModifier() != null && portal.getParentModifier().equals(getWorldPosition());
         }
     }
 
     public boolean isAnyActive()
     {
-        WorldLocation block = new WorldLocation(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
+        WorldPosition block = new WorldPosition(xCoord, yCoord, zCoord, worldObj).getOffset(ForgeDirection.getOrientation(getBlockMetadata()));
 
         return block.getBlockId() == BlockIds.NetherPortal;
     }

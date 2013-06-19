@@ -17,7 +17,8 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.util.MathHelper;
-import enhancedcore.world.WorldLocationBlockAccess;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
@@ -195,7 +196,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        int meta = new WorldLocationBlockAccess(x, y, z, blockAccess).getOffset(ForgeDirection.getOrientation(side).getOpposite()).getMetadata();
+        int meta = WorldHelper.getMetadata(new BlockPosition(x, y, z).getOffset(ForgeDirection.getOrientation(side).getOpposite()), blockAccess);
 
         if (meta == 2 || meta == 3) // XY
         {

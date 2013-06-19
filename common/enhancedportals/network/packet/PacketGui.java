@@ -5,18 +5,20 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import enhancedcore.packet.PacketHelper;
+import enhancedcore.world.BlockPosition;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
 public class PacketGui extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension, guiID;
+    int dimension, guiID;
+    BlockPosition position;
 
     public PacketGui()
     {
@@ -25,27 +27,21 @@ public class PacketGui extends PacketEnhancedPortals
 
     public PacketGui(int x, int y, int z, int d, int gui)
     {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
+        position = new BlockPosition(x, y, z);
         dimension = d;
         guiID = gui;
     }
 
     public PacketGui(int x, int y, int z, World world, int gui)
     {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
+        position = new BlockPosition(x, y, z);
         dimension = world.provider.dimensionId;
         guiID = gui;
     }
 
-    public PacketGui(TileEntity tileEntity, int gui)
+    public PacketGui(TileEntityEnhancedPortals tileEntity, int gui)
     {
-        xCoord = tileEntity.xCoord;
-        yCoord = tileEntity.yCoord;
-        zCoord = tileEntity.zCoord;
+        position = tileEntity.getBlockPosition();
         dimension = tileEntity.worldObj.provider.dimensionId;
         guiID = gui;
     }
@@ -53,9 +49,7 @@ public class PacketGui extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         guiID = stream.readInt();
 
@@ -65,17 +59,17 @@ public class PacketGui extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        player.openGui(EnhancedPortals.instance, guiID, EnhancedPortals.proxy.getWorld(dimension), xCoord, yCoord, zCoord);
+        player.openGui(EnhancedPortals.instance, guiID, EnhancedPortals.proxy.getWorld(dimension), position.getX(), position.getY(), position.getZ());
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {
-            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(this), (Player) player); // Send it back to the player to open it clientside, TODO : validate
+            PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(this), (Player) player);
         }
     }
 
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, guiID);
+        return PacketHelper.getByteArray(position, dimension, guiID);
     }
 }

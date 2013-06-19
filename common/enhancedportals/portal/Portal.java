@@ -16,7 +16,8 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldHelper;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
@@ -34,8 +35,8 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class Portal
 {
-    public WorldLocation portalModifier;
-    public int xCoord, yCoord, zCoord, dimension;
+    public WorldPosition portalModifier;
+    WorldPosition position;
     public byte shape, thickness;
     public boolean producesSound, producesParticles;
     public String texture;
@@ -47,10 +48,7 @@ public class Portal
 
     public Portal(int x, int y, int z, World world)
     {
-        xCoord = x;
-        yCoord = y;
-        zCoord = z;
-        dimension = world.provider.dimensionId;
+        position = new WorldPosition(x, y, z, world);
         shape = 0;
 
         if (world.getBlockId(x, y, z) == BlockIds.NetherPortal)
@@ -78,13 +76,9 @@ public class Portal
 
     public Portal(TileEntityPortalModifier modifier)
     {
-        WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
-        WorldLocation offset = loc.getOffset(ForgeDirection.getOrientation(loc.getMetadata()));
+        WorldPosition loc = new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
-        xCoord = offset.xCoord;
-        yCoord = offset.yCoord;
-        zCoord = offset.zCoord;
-        dimension = modifier.worldObj.provider.dimensionId;
+        position = loc.getOffset(ForgeDirection.getOrientation(WorldHelper.getMetadata(loc)));
         shape = 0;
         texture = modifier.texture;
         producesParticles = !modifier.upgradeHandler.hasUpgrade(new UpgradeParticles());
@@ -102,9 +96,7 @@ public class Portal
 
     public boolean createPortal(int minLimit, int maxLimit)
     {
-        World world = getWorld();
-
-        if (world.isRemote || !preChecks() || !findPortalShape())
+        if (position.getWorld().isRemote || !preChecks() || !findPortalShape())
         {
             return false;
         }
@@ -119,16 +111,16 @@ public class Portal
             maxLimit = Settings.MaximumPortalSize;
         }
 
-        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
-        Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
+        Queue<WorldPosition> queue = new LinkedList<WorldPosition>();
+        Queue<WorldPosition> addedBlocks = new LinkedList<WorldPosition>();
         int usedChances = 0, MAX_CHANCES = 10;
-        queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
+        queue.add(position);
 
         while (!queue.isEmpty())
         {
-            WorldLocation current = queue.remove();
+            WorldPosition current = queue.remove();
 
-            if (isBlockRemovable(world, current.xCoord, current.yCoord, current.zCoord))
+            if (isBlockRemovable(current))
             {
                 int sides = getSides(current);
 
@@ -146,7 +138,7 @@ public class Portal
                 if (sides >= 2)
                 {
                     addedBlocks.add(current);
-                    current.setBlockAndMeta(BlockIds.NetherPortal, addedBlocks.size() == 1 ? shape + 1 : shape, 3);
+                    current.setBlock(BlockIds.NetherPortal, addedBlocks.size() == 1 ? shape + 1 : shape, 3);
                     queue = updateQueue(queue, current);
 
                     TileEntity te = current.getTileEntity();
@@ -264,11 +256,9 @@ public class Portal
             return true;
         }
 
-        World world = getWorld();
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.NetherPortal)
+        if (position.getBlockId() == BlockIds.NetherPortal)
         {
-            shape = (byte) world.getBlockMetadata(xCoord, yCoord, zCoord);
+            shape = (byte) position.getMetadata();
 
             if (shape == 3 || shape == 5 || shape == 7)
             {
@@ -298,10 +288,10 @@ public class Portal
         return false;
     }
 
-    private int getSides(WorldLocation location)
+    private int getSides(WorldPosition location)
     {
         int totalSides = 0;
-        WorldLocation[] allBlocks = new WorldLocation[4];
+        WorldPosition[] allBlocks = new WorldPosition[4];
 
         if (shape == 6)
         {
@@ -325,24 +315,19 @@ public class Portal
             allBlocks[3] = location.getOffset(ForgeDirection.DOWN);
         }
 
-        for (WorldLocation val : allBlocks)
+        for (WorldPosition val : allBlocks)
         {
             if (isBlockFrame(val.getBlockId(), true))
             {
                 totalSides++;
             }
-            else if (!isBlockRemovable(val.getWorld(), val.xCoord, val.yCoord, val.zCoord))
+            else if (!isBlockRemovable(val))
             {
                 return -1;
             }
         }
 
         return totalSides;
-    }
-
-    private World getWorld()
-    {
-        return EnhancedPortals.proxy.getWorld(dimension);
     }
 
     private byte ghostPortal()
@@ -365,24 +350,23 @@ public class Portal
 
     private boolean ghostPortal(int theShape)
     {
-        World world = getWorld();
         shape = (byte) theShape;
 
-        if (world.isRemote || !preChecks())
+        if (position.getWorld().isRemote || !preChecks())
         {
             return false;
         }
 
-        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
-        Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
+        Queue<WorldPosition> queue = new LinkedList<WorldPosition>();
+        Queue<WorldPosition> addedBlocks = new LinkedList<WorldPosition>();
         int usedChances = 0, MAX_CHANCES = 10;
-        queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
+        queue.add(position);
 
         while (!queue.isEmpty())
         {
-            WorldLocation current = queue.remove();
+            WorldPosition current = queue.remove();
 
-            if (isBlockRemovable(world, current.xCoord, current.yCoord, current.zCoord) && !queueContains(addedBlocks, current))
+            if (isBlockRemovable(current) && !queueContains(addedBlocks, current))
             {
                 int sides = getSides(current);
 
@@ -410,7 +394,7 @@ public class Portal
 
     public boolean handleBlockActivation(EntityPlayer player)
     {
-        if (getWorld().isRemote)
+        if (position.getWorld().isRemote)
         {
             return false;
         }
@@ -432,14 +416,14 @@ public class Portal
 
     private void handleDialDeviceTeleportation(Entity entity, TileEntityPortalModifier modifier)
     {
-        WorldLocation exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
+        WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
 
-        if (exitLocation == null || exitLocation.isEqual(new WorldLocation(xCoord, yCoord, zCoord, dimension)))
+        if (exitLocation == null || exitLocation.equals(position))
         {
             return;
         }
 
-        if (upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, exitLocation.dimension))
+        if (upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, exitLocation.getDimension()))
         {
             TeleportManager.teleportEntity(entity, exitLocation, modifier, modifier.upgradeHandler.hasUpgrade(new UpgradeMomentum()), false);
             TeleportManager.setCanEntityTravel(entity, false);
@@ -455,16 +439,14 @@ public class Portal
 
     public void handleEntityCollide(Entity entity)
     {
-        World world = getWorld();
-
-        if (!(world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal))
+        if (!(position.getTileEntity() instanceof TileEntityNetherPortal))
         {
             return;
         }
 
-        TileEntityNetherPortal portal = (TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+        TileEntityNetherPortal portal = (TileEntityNetherPortal) position.getTileEntity();
 
-        if (world.isRemote)
+        if (position.getWorld().isRemote)
         {
             if (Settings.RenderPortalEffect && !portal.texture.equals("I:" + Item.netherStar.itemID + ":0"))
             {
@@ -476,7 +458,7 @@ public class Portal
 
         if (portal.getParentModifier() == null)
         {
-            handleVanillaTeleportation(entity, world);
+            handleVanillaTeleportation(entity, position.getWorld());
             return;
         }
         else if (portal.getParentModifier() != null && entity.timeUntilPortal == 0)
@@ -498,7 +480,7 @@ public class Portal
             {
                 if (modifier == null || modifier.modifierNetwork.equals(""))
                 {
-                    handleVanillaTeleportation(entity, world);
+                    handleVanillaTeleportation(entity, position.getWorld());
                     return;
                 }
                 else
@@ -513,7 +495,7 @@ public class Portal
 
     private void handleModifierTeleportation(Entity entity, TileEntityPortalModifier modifier)
     {
-        List<WorldLocation> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.modifierNetwork, new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
+        List<WorldPosition> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.modifierNetwork, new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
         boolean missingUpgrade = false, teleport = false;
 
         if (validLocations.isEmpty())
@@ -529,9 +511,9 @@ public class Portal
 
         while (!validLocations.isEmpty())
         {
-            WorldLocation randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
+            WorldPosition randomLocation = validLocations.remove(new Random().nextInt(validLocations.size()));
 
-            if (!upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, randomLocation.dimension))
+            if (!upgradeCheck(modifier, modifier.worldObj.provider.dimensionId, randomLocation.getDimension()))
             {
                 missingUpgrade = true;
                 continue;
@@ -555,32 +537,28 @@ public class Portal
 
     public void handleNeighborChange(int id)
     {
-        World world = getWorld();
-
-        if (world.isRemote || id == 0 || !findPortalShape())
+        if (position.getWorld().isRemote || id == 0 || !findPortalShape())
         {
             return;
         }
 
-        WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, world);
-
         if (shape == 2 || shape == 3) // XY
         {
-            if (location.getOffset(ForgeDirection.EAST).isBlockAir() || location.getOffset(ForgeDirection.WEST).isBlockAir() || location.getOffset(ForgeDirection.UP).isBlockAir() || location.getOffset(ForgeDirection.DOWN).isBlockAir())
+            if (position.getOffset(ForgeDirection.EAST).isAirBlock() || position.getOffset(ForgeDirection.WEST).isAirBlock() || position.getOffset(ForgeDirection.UP).isAirBlock() || position.getOffset(ForgeDirection.DOWN).isAirBlock())
             {
                 removePortal();
             }
         }
         else if (shape == 4 || shape == 5) // ZY
         {
-            if (location.getOffset(ForgeDirection.NORTH).isBlockAir() || location.getOffset(ForgeDirection.SOUTH).isBlockAir() || location.getOffset(ForgeDirection.UP).isBlockAir() || location.getOffset(ForgeDirection.DOWN).isBlockAir())
+            if (position.getOffset(ForgeDirection.NORTH).isAirBlock() || position.getOffset(ForgeDirection.SOUTH).isAirBlock() || position.getOffset(ForgeDirection.UP).isAirBlock() || position.getOffset(ForgeDirection.DOWN).isAirBlock())
             {
                 removePortal();
             }
         }
         else if (shape == 6 || shape == 7) // ZX
         {
-            if (location.getOffset(ForgeDirection.EAST).isBlockAir() || location.getOffset(ForgeDirection.WEST).isBlockAir() || location.getOffset(ForgeDirection.NORTH).isBlockAir() || location.getOffset(ForgeDirection.SOUTH).isBlockAir())
+            if (position.getOffset(ForgeDirection.EAST).isAirBlock() || position.getOffset(ForgeDirection.WEST).isAirBlock() || position.getOffset(ForgeDirection.NORTH).isAirBlock() || position.getOffset(ForgeDirection.SOUTH).isAirBlock())
             {
                 removePortal();
             }
@@ -638,15 +616,15 @@ public class Portal
         return true;
     }
 
-    public boolean isBlockRemovable(World world, int x, int y, int z)
+    public boolean isBlockRemovable(WorldPosition pos)
     {
-        if (world.isAirBlock(x, y, z))
+        if (pos.isAirBlock())
         {
             return true;
         }
         else
         {
-            int val = world.getBlockId(x, y, z);
+            int val = pos.getBlockId();
 
             for (int i : Settings.DestroyBlocks)
             {
@@ -662,16 +640,14 @@ public class Portal
 
     private boolean preChecks()
     {
-        World world = getWorld();
-
-        if (world.isRemote)
+        if (position.getWorld().isRemote)
         {
             return false;
         }
 
-        if (isBlockRemovable(world, xCoord, yCoord, zCoord))
+        if (isBlockRemovable(position))
         {
-            if ((shape == 2 || shape == 4) && world.canBlockSeeTheSky(xCoord, yCoord, zCoord))
+            if ((shape == 2 || shape == 4) && position.canBlockSeeTheSky())
             {
                 return false;
             }
@@ -682,11 +658,11 @@ public class Portal
         return false;
     }
 
-    private boolean queueContains(Queue<WorldLocation> queue, WorldLocation loc)
+    private boolean queueContains(Queue<WorldPosition> queue, WorldPosition loc)
     {
-        for (WorldLocation queueLoc : queue)
+        for (WorldPosition queueLoc : queue)
         {
-            if (queueLoc.isEqual(loc))
+            if (queueLoc.equals(loc))
             {
                 return true;
             }
@@ -697,23 +673,19 @@ public class Portal
 
     public boolean removePortal()
     {
-        World world = getWorld();
-        WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, world);
-
-        if (world.isRemote || location.getBlockId() != BlockIds.NetherPortal || !findPortalShape())
+        if (position.getWorld().isRemote || position.getBlockId() != BlockIds.NetherPortal || !findPortalShape())
         {
             return false;
         }
 
-        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
-        queue.add(location);
+        Queue<WorldPosition> queue = new LinkedList<WorldPosition>();
+        queue.add(position);
 
         while (!queue.isEmpty())
         {
-            WorldLocation current = queue.remove();
-            int currentBlockID = current.getBlockId();
+            WorldPosition current = queue.remove();
 
-            if (currentBlockID == BlockIds.NetherPortal)
+            if (current.getBlockId() == BlockIds.NetherPortal)
             {
                 current.setBlockToAir();
                 queue = updateQueue(queue, current);
@@ -723,31 +695,29 @@ public class Portal
         return true;
     }
 
-    private void removePortal(Queue<WorldLocation> addedBlocks)
+    private void removePortal(Queue<WorldPosition> addedBlocks)
     {
         while (!addedBlocks.isEmpty())
         {
-            WorldLocation current = addedBlocks.remove();
+            WorldPosition current = addedBlocks.remove();
             current.setBlockToAir();
         }
     }
 
     public boolean updateData(boolean sound, boolean particles, byte thickness)
     {
-        World world = getWorld();
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || producesSound == sound && producesParticles == particles && this.thickness == thickness)
+        if (position.getBlockId() != BlockIds.NetherPortal || !findPortalShape() || producesSound == sound && producesParticles == particles && this.thickness == thickness)
         {
             return false;
         }
 
-        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
-        Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
-        queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
+        Queue<WorldPosition> queue = new LinkedList<WorldPosition>();
+        Queue<WorldPosition> addedBlocks = new LinkedList<WorldPosition>();
+        queue.add(position);
 
         while (!queue.isEmpty())
         {
-            WorldLocation current = queue.remove();
+            WorldPosition current = queue.remove();
             TileEntity te = current.getTileEntity();
 
             if (te != null && te instanceof TileEntityNetherPortal && !queueContains(addedBlocks, current))
@@ -763,7 +733,7 @@ public class Portal
 
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
+                    PacketDispatcher.sendPacketToAllAround(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5, 256, position.getWorld().provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
                 }
             }
         }
@@ -771,7 +741,7 @@ public class Portal
         return true;
     }
 
-    private Queue<WorldLocation> updateQueue(Queue<WorldLocation> queue, WorldLocation location)
+    private Queue<WorldPosition> updateQueue(Queue<WorldPosition> queue, WorldPosition location)
     {
         if (shape == 2)
         {
@@ -800,21 +770,19 @@ public class Portal
 
     public boolean updateTexture(String newTexture)
     {
-        World world = getWorld();
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) != BlockIds.NetherPortal || !findPortalShape() || texture.equals(newTexture))
+        if (position.getBlockId() != BlockIds.NetherPortal || !findPortalShape() || texture.equals(newTexture))
         {
             return false;
         }
 
-        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
-        Queue<WorldLocation> addedBlocks = new LinkedList<WorldLocation>();
-        queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
+        Queue<WorldPosition> queue = new LinkedList<WorldPosition>();
+        Queue<WorldPosition> addedBlocks = new LinkedList<WorldPosition>();
+        queue.add(position);
         texture = newTexture;
 
         while (!queue.isEmpty())
         {
-            WorldLocation current = queue.remove();
+            WorldPosition current = queue.remove();
             TileEntity te = current.getTileEntity();
 
             if (te != null && te instanceof TileEntityNetherPortal && !queueContains(addedBlocks, current))
@@ -826,7 +794,7 @@ public class Portal
 
                 if ((current.getMetadata() == 3 || current.getMetadata() == 5 || current.getMetadata() == 7) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
                 {
-                    PacketDispatcher.sendPacketToAllAround(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 256, world.provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
+                    PacketDispatcher.sendPacketToAllAround(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5, 256, position.getWorld().provider.dimensionId, PacketEnhancedPortals.makePacket(new PacketNetherPortalUpdate((TileEntityNetherPortal) te)));
                 }
             }
         }
@@ -863,25 +831,22 @@ public class Portal
         return true;
     }
 
-    private boolean validatePortal(Queue<WorldLocation> addedBlocks)
+    private boolean validatePortal(Queue<WorldPosition> addedBlocks)
     {
-        World world = getWorld();
-
-        if (world.isRemote)
+        if (position.getWorld().isRemote)
         {
             return true;
         }
 
-        Queue<WorldLocation> queue = new LinkedList<WorldLocation>();
-        Queue<WorldLocation> checkedQueue = new LinkedList<WorldLocation>();
-        queue.add(new WorldLocation(xCoord, yCoord, zCoord, world));
+        Queue<WorldPosition> queue = new LinkedList<WorldPosition>();
+        Queue<WorldPosition> checkedQueue = new LinkedList<WorldPosition>();
+        queue.add(position);
 
         while (!queue.isEmpty())
         {
-            WorldLocation current = queue.remove();
-            int currentBlockID = current.getBlockId();
+            WorldPosition current = queue.remove();
 
-            if (currentBlockID == BlockIds.NetherPortal && !queueContains(checkedQueue, current))
+            if (current.getBlockId() == BlockIds.NetherPortal && !queueContains(checkedQueue, current))
             {
                 int sides = getSides(current);
 

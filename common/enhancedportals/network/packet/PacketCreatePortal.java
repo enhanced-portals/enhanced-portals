@@ -5,15 +5,16 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketCreatePortal extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     boolean type;
 
     public PacketCreatePortal()
@@ -21,11 +22,9 @@ public class PacketCreatePortal extends PacketEnhancedPortals
 
     }
 
-    public PacketCreatePortal(TileEntity tileEntity, boolean Type)
+    public PacketCreatePortal(TileEntityEnhancedPortals tileEntity, boolean Type)
     {
-        xCoord = tileEntity.xCoord;
-        yCoord = tileEntity.yCoord;
-        zCoord = tileEntity.zCoord;
+        position = tileEntity.getBlockPosition();
         dimension = tileEntity.worldObj.provider.dimensionId;
         type = Type;
     }
@@ -33,9 +32,7 @@ public class PacketCreatePortal extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         type = stream.readBoolean();
 
@@ -45,11 +42,9 @@ public class PacketCreatePortal extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityPortalModifier)
+        if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityPortalModifier)
         {
-            TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+            TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(dimension, position);
 
             if (type)
             {
@@ -65,6 +60,6 @@ public class PacketCreatePortal extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, type);
+        return PacketHelper.getByteArray(position, dimension, type);
     }
 }

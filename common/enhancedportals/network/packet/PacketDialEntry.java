@@ -5,16 +5,17 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class PacketDialEntry extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     String Name, Texture, Identifier;
     byte Type, Thickness;
 
@@ -25,9 +26,7 @@ public class PacketDialEntry extends PacketEnhancedPortals
 
     public PacketDialEntry(TileEntityDialDevice device, byte type, DialDeviceNetworkObject obj)
     {
-        xCoord = device.xCoord;
-        yCoord = device.yCoord;
-        zCoord = device.zCoord;
+        position = device.getBlockPosition();
         dimension = device.worldObj.provider.dimensionId;
         Name = obj.displayName;
         Texture = obj.texture;
@@ -38,9 +37,7 @@ public class PacketDialEntry extends PacketEnhancedPortals
 
     public PacketDialEntry(TileEntityDialDevice device, byte type, String name, String texture, String identifier, byte thickness)
     {
-        xCoord = device.xCoord;
-        yCoord = device.yCoord;
-        zCoord = device.zCoord;
+        position = device.getBlockPosition();
         dimension = device.worldObj.provider.dimensionId;
         Name = name;
         Texture = texture;
@@ -52,9 +49,7 @@ public class PacketDialEntry extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         Name = stream.readUTF();
         Texture = stream.readUTF();
@@ -68,15 +63,13 @@ public class PacketDialEntry extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.DialDevice)
+        if (WorldHelper.getBlockId(dimension, position) == BlockIds.DialDevice)
         {
-            if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
+            if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityDialDevice)
             {
                 if (Type == 0)
                 {
-                    TileEntityDialDevice dial = (TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+                    TileEntityDialDevice dial = (TileEntityDialDevice) WorldHelper.getTileEntity(dimension, position);
 
                     if (!dial.hasDestination(new DialDeviceNetworkObject(Name, Identifier, Texture, Thickness)))
                     {
@@ -85,7 +78,7 @@ public class PacketDialEntry extends PacketEnhancedPortals
                 }
                 else if (Type == 1)
                 {
-                    TileEntityDialDevice dial = (TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+                    TileEntityDialDevice dial = (TileEntityDialDevice) WorldHelper.getTileEntity(dimension, position);
 
                     dial.removeDestination(new DialDeviceNetworkObject(Name, Identifier, Texture, Thickness));
                 }
@@ -96,6 +89,6 @@ public class PacketDialEntry extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, Name, Texture, Identifier, Thickness, Type);
+        return PacketHelper.getByteArray(position, dimension, Name, Texture, Identifier, Thickness, Type);
     }
 }

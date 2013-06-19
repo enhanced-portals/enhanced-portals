@@ -5,18 +5,20 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import enhancedcore.packet.PacketHelper;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketPortalModifierUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     byte thickness, redstoneSetting;
     String texture, modifierNetwork, dialDeviceNetwork;
 
@@ -27,9 +29,7 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
 
     public PacketPortalModifierUpdate(TileEntityPortalModifier modifier)
     {
-        xCoord = modifier.xCoord;
-        yCoord = modifier.yCoord;
-        zCoord = modifier.zCoord;
+        position = modifier.getBlockPosition();
         thickness = modifier.thickness;
         redstoneSetting = modifier.redstoneSetting;
         dimension = modifier.worldObj.provider.dimensionId;
@@ -42,9 +42,7 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         thickness = stream.readByte();
         redstoneSetting = stream.readByte();
@@ -58,20 +56,19 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-        WorldLocation loc = new WorldLocation(xCoord, yCoord, zCoord, world);
+        WorldPosition loc = new WorldPosition(position.getX(), position.getY(), position.getZ(), dimension);
 
-        if (loc.getBlockId() == BlockIds.PortalModifier)
+        if (WorldHelper.getBlockId(dimension, position) == BlockIds.PortalModifier)
         {
-            if (loc.getTileEntity() instanceof TileEntityPortalModifier)
+            if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityPortalModifier)
             {
-                TileEntityPortalModifier modifier = (TileEntityPortalModifier) loc.getTileEntity();
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(dimension, position);
 
                 modifier.texture = texture;
                 modifier.redstoneSetting = redstoneSetting;
                 modifier.thickness = thickness;
 
-                if (!world.isRemote)
+                if (!WorldHelper.getWorld(dimension).isRemote)
                 {
                     if (modifier.isRemotelyControlled())
                     {
@@ -102,7 +99,7 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                     modifier.dialDeviceNetwork = dialDeviceNetwork;
                 }
 
-                world.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+                WorldHelper.markBlockForUpdate(dimension, position);
             }
         }
     }
@@ -110,6 +107,6 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, redstoneSetting, texture, modifierNetwork, dialDeviceNetwork);
+        return PacketHelper.getByteArray(position, dimension, thickness, redstoneSetting, texture, modifierNetwork, dialDeviceNetwork);
     }
 }

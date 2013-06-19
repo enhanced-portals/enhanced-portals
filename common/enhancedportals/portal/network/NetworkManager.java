@@ -19,19 +19,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.lib.Reference;
 
 public class NetworkManager
 {
-    public Map<String, List<WorldLocation>> networkData;
+    public Map<String, List<WorldPosition>> networkData;
     private String saveFile;
     private MinecraftServer serverInstance;
 
     public NetworkManager(MinecraftServer server)
     {
         serverInstance = server;
-        networkData = new HashMap<String, List<WorldLocation>>();
+        networkData = new HashMap<String, List<WorldPosition>>();
         WorldServer world = serverInstance.worldServerForDimension(0);
 
         if (FMLCommonHandler.instance().getSide() == Side.SERVER)
@@ -65,10 +65,10 @@ public class NetworkManager
             return;
         }
 
-        networkData.put(key, new ArrayList<WorldLocation>());
+        networkData.put(key, new ArrayList<WorldPosition>());
     }
 
-    public void addToNetwork(String key, WorldLocation data)
+    public void addToNetwork(String key, WorldPosition data)
     {
         if (!hasNetwork(key))
         {
@@ -83,19 +83,19 @@ public class NetworkManager
         networkData.get(key).add(data);
     }
 
-    public List<WorldLocation> getNetwork(String key)
+    public List<WorldPosition> getNetwork(String key)
     {
         if (!hasNetwork(key))
         {
             return null;
         }
 
-        List<WorldLocation> list = networkData.get(key);
-        List<WorldLocation> newList = new ArrayList<WorldLocation>();
+        List<WorldPosition> list = networkData.get(key);
+        List<WorldPosition> newList = new ArrayList<WorldPosition>();
 
         if (list == null)
         {
-            return new ArrayList<WorldLocation>();
+            return new ArrayList<WorldPosition>();
         }
 
         for (int i = 0; i < list.size(); i++)
@@ -106,7 +106,7 @@ public class NetworkManager
         return newList;
     }
 
-    public String getNetwork(WorldLocation data)
+    public String getNetwork(WorldPosition data)
     {
         for (String key : networkData.keySet())
         {
@@ -119,19 +119,19 @@ public class NetworkManager
         return "";
     }
 
-    public List<WorldLocation> getNetworkExcluding(String network, WorldLocation worldLocation)
+    public List<WorldPosition> getNetworkExcluding(String network, WorldPosition worldLocation)
     {
-        List<WorldLocation> list = networkData.get(network);
-        List<WorldLocation> newList = new ArrayList<WorldLocation>();
+        List<WorldPosition> list = networkData.get(network);
+        List<WorldPosition> newList = new ArrayList<WorldPosition>();
 
         if (list == null)
         {
-            return new ArrayList<WorldLocation>();
+            return new ArrayList<WorldPosition>();
         }
 
         for (int i = 0; i < list.size(); i++)
         {
-            if (!list.get(i).isEqual(worldLocation))
+            if (!list.get(i).equals(worldLocation))
             {
                 newList.add(list.get(i));
             }
@@ -158,7 +158,7 @@ public class NetworkManager
         return false;
     }
 
-    public boolean isInNetwork(String key, WorldLocation data)
+    public boolean isInNetwork(String key, WorldPosition data)
     {
         if (!hasNetwork(key))
         {
@@ -184,7 +184,7 @@ public class NetworkManager
                     {
                         NBTTagCompound comp = (NBTTagCompound) tag.tagAt(i);
 
-                        addToNetwork(tag.getName(), new WorldLocation(comp.getInteger("xCoord"), comp.getInteger("yCoord"), comp.getInteger("zCoord"), comp.getInteger("dimension")));
+                        addToNetwork(tag.getName(), new WorldPosition(comp.getInteger("xCoord"), comp.getInteger("yCoord"), comp.getInteger("zCoord"), comp.getInteger("dimension")));
                     }
                 }
             }
@@ -195,16 +195,16 @@ public class NetworkManager
         }
     }
 
-    public boolean networkContains(String key, WorldLocation data)
+    public boolean networkContains(String key, WorldPosition data)
     {
         if (!hasNetwork(key))
         {
             return false;
         }
 
-        for (WorldLocation keyData : getNetwork(key))
+        for (WorldPosition keyData : getNetwork(key))
         {
-            if (keyData.isEqual(data))
+            if (keyData.equals(data))
             {
                 return true;
             }
@@ -213,7 +213,7 @@ public class NetworkManager
         return false;
     }
 
-    public void removeFromAllNetworks(WorldLocation worldLocation)
+    public void removeFromAllNetworks(WorldPosition worldLocation)
     {
         for (String str : networkData.keySet())
         {
@@ -224,7 +224,7 @@ public class NetworkManager
         }
     }
 
-    public void removeFromNetwork(String key, WorldLocation data)
+    public void removeFromNetwork(String key, WorldPosition data)
     {
         if (!hasNetwork(key))
         {
@@ -238,7 +238,7 @@ public class NetworkManager
 
         for (int i = 0; i < networkData.get(key).size(); i++)
         {
-            if (networkData.get(key).get(i).isEqual(data))
+            if (networkData.get(key).get(i).equals(data))
             {
                 networkData.get(key).remove(i);
             }
@@ -259,7 +259,7 @@ public class NetworkManager
     {
         NBTTagCompound tagCompound = new NBTTagCompound();
 
-        for (Entry<String, List<WorldLocation>> set : networkData.entrySet())
+        for (Entry<String, List<WorldPosition>> set : networkData.entrySet())
         {
             if (set.getValue().isEmpty())
             {
@@ -268,13 +268,13 @@ public class NetworkManager
 
             NBTTagList list2 = new NBTTagList();
 
-            for (WorldLocation loc : set.getValue())
+            for (WorldPosition loc : set.getValue())
             {
                 NBTTagCompound compound = new NBTTagCompound();
-                compound.setInteger("xCoord", loc.xCoord);
-                compound.setInteger("yCoord", loc.yCoord);
-                compound.setInteger("zCoord", loc.zCoord);
-                compound.setInteger("dimension", loc.dimension);
+                compound.setInteger("xCoord", loc.getX());
+                compound.setInteger("yCoord", loc.getY());
+                compound.setInteger("zCoord", loc.getZ());
+                compound.setInteger("dimension", loc.getDimension());
 
                 list2.appendTag(compound);
             }

@@ -5,18 +5,20 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
 public class PacketDialRequest extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     String network;
 
     public PacketDialRequest()
@@ -24,11 +26,9 @@ public class PacketDialRequest extends PacketEnhancedPortals
 
     }
 
-    public PacketDialRequest(TileEntity dialDevice, String diallingNetwork)
+    public PacketDialRequest(TileEntityEnhancedPortals dialDevice, String diallingNetwork)
     {
-        xCoord = dialDevice.xCoord;
-        yCoord = dialDevice.yCoord;
-        zCoord = dialDevice.zCoord;
+        position = dialDevice.getBlockPosition();
         dimension = dialDevice.worldObj.provider.dimensionId;
         network = diallingNetwork;
     }
@@ -36,9 +36,7 @@ public class PacketDialRequest extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         network = stream.readUTF();
 
@@ -52,22 +50,20 @@ public class PacketDialRequest extends PacketEnhancedPortals
 
         if (!world.isRemote)
         {
-            WorldLocation loc = new WorldLocation(xCoord, yCoord, zCoord, world);
-
-            if (loc.getBlockId() == BlockIds.DialDeviceBasic)
+            if (WorldHelper.getBlockId(world, position) == BlockIds.DialDeviceBasic)
             {
-                if (loc.getTileEntity() instanceof TileEntityDialDeviceBasic)
+                if (WorldHelper.getTileEntity(world, position) instanceof TileEntityDialDeviceBasic)
                 {
-                    TileEntityDialDeviceBasic device = (TileEntityDialDeviceBasic) loc.getTileEntity();
+                    TileEntityDialDeviceBasic device = (TileEntityDialDeviceBasic) WorldHelper.getTileEntity(world, position);
 
                     device.processDiallingRequest(this.network, player);
                 }
             }
-            else if (loc.getBlockId() == BlockIds.DialDevice)
+            else if (WorldHelper.getBlockId(world, position) == BlockIds.DialDevice)
             {
-                if (loc.getTileEntity() instanceof TileEntityDialDevice)
+                if (WorldHelper.getTileEntity(world, position) instanceof TileEntityDialDevice)
                 {
-                    TileEntityDialDevice device = (TileEntityDialDevice) loc.getTileEntity();
+                    TileEntityDialDevice device = (TileEntityDialDevice) WorldHelper.getTileEntity(world, position);
 
                     device.processDiallingRequest(Integer.parseInt(this.network), player);
                 }
@@ -78,6 +74,6 @@ public class PacketDialRequest extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, network);
+        return PacketHelper.getByteArray(position, dimension, network);
     }
 }

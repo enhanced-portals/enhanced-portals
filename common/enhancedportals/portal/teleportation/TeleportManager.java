@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
@@ -168,15 +168,15 @@ public class TeleportManager
         GameRegistry.onPlayerChangedDimension(player);
     }
 
-    public static boolean teleportEntity(Entity entity, WorldLocation teleportData, TileEntityPortalModifier originModifier, boolean keepVelocity, boolean supressMessages)
+    public static boolean teleportEntity(Entity entity, WorldPosition teleportData, TileEntityPortalModifier originModifier, boolean keepVelocity, boolean supressMessages)
     {
         if (entity.worldObj.isRemote)
         {
             return false;
         }
 
-        World world = EnhancedPortals.proxy.getWorld(teleportData.dimension);
-        ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
+        World world = EnhancedPortals.proxy.getWorld(teleportData.getDimension());
+        ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
         TileEntityPortalModifier outModifier = (TileEntityPortalModifier) teleportData.getTileEntity();
 
         if (outModifier == null)
@@ -186,10 +186,10 @@ public class TeleportManager
         }
 
         int outModifierMeta = world.getBlockMetadata(outModifier.xCoord, outModifier.yCoord, outModifier.zCoord);
-        WorldLocation outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifierMeta));
+        WorldPosition outModifierOffset = teleportData.getOffset(ForgeDirection.getOrientation(outModifierMeta));
         boolean teleportEntity = false;
 
-        if (outModifierOffset.isBlockAir())
+        if (outModifierOffset.isAirBlock())
         {
             if (new Portal(outModifier).createPortal(outModifier.customBorderBlocks()))
             {
@@ -203,7 +203,7 @@ public class TeleportManager
                 }
                 else
                 {
-                    Reference.log.log(Level.INFO, String.format("A portal could not be created at %s, %s, %s.", outModifierOffset.xCoord, outModifierOffset.yCoord, outModifierOffset.zCoord));
+                    Reference.log.log(Level.INFO, String.format("A portal could not be created at %s, %s, %s.", outModifierOffset.getX(), outModifierOffset.getY(), outModifierOffset.getZ()));
                 }
             }
         }
@@ -221,7 +221,7 @@ public class TeleportManager
 
             if (outModifierMeta == 0)
             {
-                outModifierOffset.yCoord -= 1;
+                outModifierOffset = outModifierOffset.below();
             }
 
             teleportEntity((WorldServer) world, entity, teleportData, outModifierOffset, keepVelocity, outModifierMeta);
@@ -230,7 +230,7 @@ public class TeleportManager
         return teleportEntity;
     }
 
-    private static Entity teleportEntity(WorldServer world, Entity entity, WorldLocation teleportData, WorldLocation teleportDataOffset, boolean keepVelocity, int metaDirection)
+    private static Entity teleportEntity(WorldServer world, Entity entity, WorldPosition teleportData, WorldPosition teleportDataOffset, boolean keepVelocity, int metaDirection)
     {
         if (!Settings.AllowTeleporting || !canEntityTravel(entity))
         {
@@ -250,7 +250,7 @@ public class TeleportManager
 
         if (teleportDataOffset.getMetadata() == 4 || teleportDataOffset.getMetadata() == 5)
         {
-            if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isBlockAir())
+            if (!teleportDataOffset.getOffset(ForgeDirection.EAST).isAirBlock())
             {
                 rotationYaw = 90F;
             }
@@ -261,7 +261,7 @@ public class TeleportManager
         }
         else if (teleportDataOffset.getMetadata() == 2 || teleportDataOffset.getMetadata() == 3)
         {
-            if (teleportDataOffset.getOffset(ForgeDirection.NORTH).isBlockAir())
+            if (teleportDataOffset.getOffset(ForgeDirection.NORTH).isAirBlock())
             {
                 rotationYaw = 180F;
             }
@@ -292,8 +292,8 @@ public class TeleportManager
 
         handleMomentum(entity, rotationYaw, keepVelocity);
 
-        entity.setLocationAndAngles(teleportDataOffset.xCoord + 0.5, teleportDataOffset.yCoord, teleportDataOffset.zCoord + 0.5, rotationYaw, entity.rotationPitch);
-        world.theChunkProviderServer.loadChunk(teleportData.xCoord >> 4, teleportData.zCoord >> 4);
+        entity.setLocationAndAngles(teleportDataOffset.getX() + 0.5, teleportDataOffset.getY(), teleportDataOffset.getZ() + 0.5, rotationYaw, entity.rotationPitch);
+        world.theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
 
         if (dimensionalTeleport)
         {
@@ -314,7 +314,7 @@ public class TeleportManager
                 player.mcServer.getConfigurationManager().func_72375_a(player, world);
             }
 
-            player.playerNetServerHandler.setPlayerLocation(teleportDataOffset.xCoord + 0.5, teleportDataOffset.yCoord, teleportDataOffset.zCoord + 0.5, rotationYaw, entity.rotationPitch);
+            player.playerNetServerHandler.setPlayerLocation(teleportDataOffset.getX() + 0.5, teleportDataOffset.getY(), teleportDataOffset.getZ() + 0.5, rotationYaw, entity.rotationPitch);
         }
 
         world.updateEntityWithOptionalForce(entity, false);
@@ -326,7 +326,7 @@ public class TeleportManager
             syncPlayer(player, world);
         }
 
-        entity.setLocationAndAngles(teleportDataOffset.xCoord + 0.5, teleportDataOffset.yCoord, teleportDataOffset.zCoord + 0.5, rotationYaw, entity.rotationPitch);
+        entity.setLocationAndAngles(teleportDataOffset.getX() + 0.5, teleportDataOffset.getY(), teleportDataOffset.getZ() + 0.5, rotationYaw, entity.rotationPitch);
 
         if (mountedEntity != null)
         {

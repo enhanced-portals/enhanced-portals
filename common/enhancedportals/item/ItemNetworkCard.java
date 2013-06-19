@@ -13,7 +13,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
@@ -141,8 +141,8 @@ public class ItemNetworkCard extends Item
                 if (!modifier.modifierNetwork.equals(network) && !modifier.isActive())
                 {
                     modifier.modifierNetwork = network;
-                    EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world));
-                    EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldLocation(x, y, z, world));
+                    EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world));
+                    EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldPosition(x, y, z, world));
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);

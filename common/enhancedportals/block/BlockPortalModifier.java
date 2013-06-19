@@ -13,8 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enhancedcore.world.WorldLocation;
-import enhancedcore.world.WorldLocationBlockAccess;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
@@ -57,14 +58,14 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         {
             if (!modifier.dialDeviceNetwork.equals(""))
             {
-                EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
+                EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world.provider.dimensionId));
             }
         }
         else
         {
             if (!modifier.modifierNetwork.equals(""))
             {
-                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldLocation(x, y, z, world.provider.dimensionId));
+                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world.provider.dimensionId));
             }
         }
 
@@ -91,26 +92,25 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) blockAccess.getBlockTileEntity(x, y, z);
+        BlockPosition position = new BlockPosition(x, y, z);
 
         if (modifier.upgradeHandler.hasUpgrade(new UpgradeCamouflage()))
         {
-            WorldLocationBlockAccess location = new WorldLocationBlockAccess(x, y, z, blockAccess);
-
-            if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.NORTH).getBlockId(), modifier.customBorderBlocks()))
+            if (new Portal().isBlockFrame(WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.NORTH)), modifier.customBorderBlocks()))
             {
-                return Block.blocksList[location.getOffset(ForgeDirection.NORTH).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.NORTH).getMetadata());
+                return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.NORTH))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.NORTH), blockAccess));
             }
-            else if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.SOUTH).getBlockId(), modifier.customBorderBlocks()))
+            else if (new Portal().isBlockFrame(WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.SOUTH)), modifier.customBorderBlocks()))
             {
-                return Block.blocksList[location.getOffset(ForgeDirection.SOUTH).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.SOUTH).getMetadata());
+                return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.SOUTH))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.SOUTH), blockAccess));
             }
-            else if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.EAST).getBlockId(), modifier.customBorderBlocks()))
+            else if (new Portal().isBlockFrame(WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.EAST)), modifier.customBorderBlocks()))
             {
-                return Block.blocksList[location.getOffset(ForgeDirection.EAST).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.EAST).getMetadata());
+                return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.EAST))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.EAST), blockAccess));
             }
-            else if (new Portal().isBlockFrame(location.getOffset(ForgeDirection.WEST).getBlockId(), modifier.customBorderBlocks()))
+            else if (new Portal().isBlockFrame(WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.WEST)), modifier.customBorderBlocks()))
             {
-                return Block.blocksList[location.getOffset(ForgeDirection.WEST).getBlockId()].getIcon(side, location.getOffset(ForgeDirection.WEST).getMetadata());
+                return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.WEST))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.WEST), blockAccess));
             }
         }
 

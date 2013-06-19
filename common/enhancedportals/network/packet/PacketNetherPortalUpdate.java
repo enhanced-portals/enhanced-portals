@@ -5,16 +5,17 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.portal.Portal;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class PacketNetherPortalUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     String texture;
     byte thickness;
     boolean particles, sound, hasParent;
@@ -26,9 +27,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
 
     public PacketNetherPortalUpdate(TileEntityNetherPortal portal)
     {
-        xCoord = portal.xCoord;
-        yCoord = portal.yCoord;
-        zCoord = portal.zCoord;
+        position = portal.getBlockPosition();
         dimension = portal.worldObj.provider.dimensionId;
         particles = portal.producesParticles;
         sound = portal.producesSound;
@@ -40,9 +39,7 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         thickness = stream.readByte();
         particles = stream.readBoolean();
@@ -56,18 +53,16 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.NetherPortal)
+        if (WorldHelper.getBlockId(dimension, position) == BlockIds.NetherPortal)
         {
-            if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityNetherPortal)
+            if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityNetherPortal)
             {
-                Portal portal = new Portal(xCoord, yCoord, zCoord, world);
+                Portal portal = new Portal(position.getX(), position.getY(), position.getZ(), WorldHelper.getWorld(dimension));
 
                 portal.updateData(sound, particles, thickness);
                 portal.updateTexture(texture);
 
-                ((TileEntityNetherPortal) world.getBlockTileEntity(xCoord, yCoord, zCoord)).hasParent = hasParent;
+                ((TileEntityNetherPortal) WorldHelper.getTileEntity(dimension, position)).hasParent = hasParent;
             }
         }
     }
@@ -75,6 +70,6 @@ public class PacketNetherPortalUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, thickness, particles, sound, texture, hasParent);
+        return PacketHelper.getByteArray(position, dimension, thickness, particles, sound, texture, hasParent);
     }
 }

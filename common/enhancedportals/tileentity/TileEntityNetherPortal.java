@@ -2,7 +2,7 @@ package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
 
@@ -11,7 +11,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
     public String texture;
     public boolean producesSound, producesParticles;
     public byte thickness;
-    private WorldLocation parentModifier;
+    private WorldPosition parentModifier;
     public boolean hasParent;
 
     public TileEntityNetherPortal()
@@ -23,7 +23,7 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         hasParent = false;
     }
 
-    public WorldLocation getParentModifier()
+    public WorldPosition getParentModifier()
     {
         hasParent = parentModifier != null;
         return parentModifier;
@@ -42,11 +42,11 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
         if (tagCompound.getBoolean("HasModifier"))
         {
             int x = tagCompound.getInteger("ParentX"), y = tagCompound.getInteger("ParentY"), z = tagCompound.getInteger("ParentZ"), d = tagCompound.getInteger("ParentD");
-            setParentModifier(new WorldLocation(x, y, z, d));
+            setParentModifier(new WorldPosition(x, y, z, d));
         }
     }
 
-    public void setParentModifier(WorldLocation loc)
+    public void setParentModifier(WorldPosition loc)
     {
         parentModifier = loc;
         hasParent = parentModifier != null;
@@ -79,10 +79,10 @@ public class TileEntityNetherPortal extends TileEntityEnhancedPortals
 
         if (parentModifier != null)
         {
-            tagCompound.setInteger("ParentX", parentModifier.xCoord);
-            tagCompound.setInteger("ParentY", parentModifier.yCoord);
-            tagCompound.setInteger("ParentZ", parentModifier.zCoord);
-            tagCompound.setInteger("ParentD", parentModifier.dimension);
+            tagCompound.setInteger("ParentX", parentModifier.getX());
+            tagCompound.setInteger("ParentY", parentModifier.getY());
+            tagCompound.setInteger("ParentZ", parentModifier.getZ());
+            tagCompound.setInteger("ParentD", parentModifier.getDimension());
         }
     }
 }

@@ -1,7 +1,7 @@
 package enhancedportals.portal.network;
 
 import net.minecraft.server.MinecraftServer;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.lib.Reference;
 
 public class DialDeviceNetwork extends NetworkManager
@@ -12,7 +12,7 @@ public class DialDeviceNetwork extends NetworkManager
     }
 
     @Override
-    public void addToNetwork(String key, WorldLocation data)
+    public void addToNetwork(String key, WorldPosition data)
     {
         if (!hasNetwork(key) || getNetwork(key).isEmpty())
         {

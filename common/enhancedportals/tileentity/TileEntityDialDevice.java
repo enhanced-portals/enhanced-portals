@@ -7,11 +7,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldHelper;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
@@ -20,17 +22,53 @@ import enhancedportals.network.packet.PacketDialDeviceUpdate;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
 import enhancedportals.portal.network.DialDeviceNetworkObject;
-import enhancedportals.world.WorldHelper;
 
 public class TileEntityDialDevice extends TileEntityEnhancedPortals
 {
+    public static WorldPosition findPortalModifier(WorldPosition modifierLocation, World worldObj, int xCoord, int yCoord, int zCoord)
+    {
+        if (modifierLocation != null)
+        {
+            if (WorldHelper.getTileEntity(modifierLocation) instanceof TileEntityPortalModifier)
+            {
+                return modifierLocation;
+            }
+            else
+            {
+                modifierLocation = null;
+            }
+        }
+
+        for (int i = -5; i < 6; i++)
+        {
+            for (int j = -5; j < 6; j++)
+            {
+                for (int k = -5; k < 6; k++)
+                {
+                    if (worldObj.blockHasTileEntity(xCoord + i, yCoord + k, zCoord + j) && worldObj.getBlockTileEntity(xCoord + i, yCoord + k, zCoord + j) instanceof TileEntityPortalModifier)
+                    {
+                        TileEntityPortalModifier modifier = (TileEntityPortalModifier) worldObj.getBlockTileEntity(xCoord + i, yCoord + k, zCoord + j);
+
+                        if (modifier != null && modifier.isRemotelyControlled() && !modifier.isAnyActive())
+                        {
+                            modifierLocation = new WorldPosition(xCoord + i, yCoord + k, zCoord + j, worldObj);
+                        }
+                    }
+                }
+            }
+        }
+
+        return modifierLocation;
+    }
+
     public ArrayList<DialDeviceNetworkObject> destinationList;
     public int selectedDestination, tickTimer;
     int timer, ticksToGo;
     final int TICK_DELAY = 50;
-    public boolean active;
 
-    WorldLocation modifierLocation;
+    public boolean active;
+    WorldPosition modifierLocation;
+
     Ticket chunkTicket;
 
     public TileEntityDialDevice()
@@ -106,7 +144,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
             return;
         }
 
-        modifierLocation = WorldHelper.findPortalModifier(modifierLocation, worldObj, xCoord, yCoord, zCoord);
+        modifierLocation = findPortalModifier(modifierLocation, worldObj, xCoord, yCoord, zCoord);
         DialDeviceNetworkObject obj = destinationList.get(id);
 
         if (modifierLocation == null)
@@ -189,7 +227,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
         if (tagCompound.hasKey("mX"))
         {
             active = true;
-            modifierLocation = new WorldLocation(tagCompound.getInteger("mX"), tagCompound.getInteger("mY"), tagCompound.getInteger("mZ"), tagCompound.getInteger("mD"));
+            modifierLocation = new WorldPosition(tagCompound.getInteger("mX"), tagCompound.getInteger("mY"), tagCompound.getInteger("mZ"), tagCompound.getInteger("mD"));
             timer = tagCompound.getInteger("Timer");
             ticksToGo = tagCompound.getInteger("TicksToGo");
         }
@@ -322,10 +360,10 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
 
         if (active)
         {
-            tagCompound.setInteger("mX", modifierLocation.xCoord);
-            tagCompound.setInteger("mY", modifierLocation.yCoord);
-            tagCompound.setInteger("mZ", modifierLocation.zCoord);
-            tagCompound.setInteger("mD", modifierLocation.dimension);
+            tagCompound.setInteger("mX", modifierLocation.getX());
+            tagCompound.setInteger("mY", modifierLocation.getY());
+            tagCompound.setInteger("mZ", modifierLocation.getZ());
+            tagCompound.setInteger("mD", modifierLocation.getDimension());
             tagCompound.setInteger("Timer", timer);
             tagCompound.setInteger("TicksToGo", ticksToGo);
         }

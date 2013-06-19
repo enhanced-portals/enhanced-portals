@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Strings;
@@ -62,7 +62,7 @@ public class UpgradeDialDevice extends Upgrade
     public boolean onActivated(TileEntity tileEntity)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-        WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
+        WorldPosition loc = new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
         if (!tileEntity.worldObj.isRemote)
         {
@@ -77,7 +77,7 @@ public class UpgradeDialDevice extends Upgrade
     public boolean onDeactivated(TileEntity tileEntity)
     {
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) tileEntity;
-        WorldLocation loc = new WorldLocation(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
+        WorldPosition loc = new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
         if (!tileEntity.worldObj.isRemote)
         {

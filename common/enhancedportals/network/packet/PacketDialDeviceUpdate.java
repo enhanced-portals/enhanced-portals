@@ -5,14 +5,15 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.tileentity.TileEntityDialDevice;
 
 public class PacketDialDeviceUpdate extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     boolean active;
     int tickTimer;
 
@@ -23,9 +24,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
 
     public PacketDialDeviceUpdate(TileEntityDialDevice device)
     {
-        xCoord = device.xCoord;
-        yCoord = device.yCoord;
-        zCoord = device.zCoord;
+        position = device.getBlockPosition();
         dimension = device.worldObj.provider.dimensionId;
         active = device.active;
         tickTimer = device.tickTimer;
@@ -34,9 +33,7 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         active = stream.readBoolean();
         tickTimer = stream.readInt();
@@ -47,11 +44,9 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityDialDevice)
+        if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityDialDevice)
         {
-            TileEntityDialDevice dial = (TileEntityDialDevice) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+            TileEntityDialDevice dial = (TileEntityDialDevice) WorldHelper.getTileEntity(dimension, position);
 
             dial.active = active;
             dial.tickTimer = tickTimer;
@@ -61,6 +56,6 @@ public class PacketDialDeviceUpdate extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, active, tickTimer);
+        return PacketHelper.getByteArray(position, dimension, active, tickTimer);
     }
 }

@@ -8,16 +8,17 @@ import java.util.Queue;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
+import enhancedcore.world.BlockPosition;
+import enhancedcore.world.WorldHelper;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
 {
-    int xCoord, yCoord, zCoord, dimension;
+    int dimension;
+    BlockPosition position;
     byte[] upgrades;
 
     public PacketPortalModifierUpgrade()
@@ -27,9 +28,7 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
 
     public PacketPortalModifierUpgrade(TileEntityPortalModifier modifier)
     {
-        xCoord = modifier.xCoord;
-        yCoord = modifier.yCoord;
-        zCoord = modifier.zCoord;
+        position = modifier.getBlockPosition();
         dimension = modifier.worldObj.provider.dimensionId;
         upgrades = modifier.upgradeHandler.getInstalledUpgrades();
     }
@@ -37,9 +36,7 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
-        xCoord = stream.readInt();
-        yCoord = stream.readInt();
-        zCoord = stream.readInt();
+        position = BlockPosition.getBlockPosition(stream);
         dimension = stream.readInt();
         upgrades = new byte[stream.readInt()];
 
@@ -54,18 +51,16 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
-
-        if (world.getBlockId(xCoord, yCoord, zCoord) == BlockIds.PortalModifier)
+        if (WorldHelper.getBlockId(dimension, position) == BlockIds.PortalModifier)
         {
-            if (world.getBlockTileEntity(xCoord, yCoord, zCoord) instanceof TileEntityPortalModifier)
+            if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityPortalModifier)
             {
-                TileEntityPortalModifier modifier = (TileEntityPortalModifier) world.getBlockTileEntity(xCoord, yCoord, zCoord);
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(dimension, position);
 
-                if (world.isRemote)
+                if (WorldHelper.getWorld(dimension).isRemote)
                 {
                     modifier.upgradeHandler.addUpgradesFromByteArray(upgrades, modifier);
-                    world.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+                    WorldHelper.markBlockForUpdate(dimension, position);
                 }
                 else
                 {
@@ -92,8 +87,8 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
                     {
                         byte upgradeID = upgradeList.remove();
 
-                        EntityItem entity = new EntityItem(world, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, Upgrade.getUpgrade(upgradeID).getItemStack());
-                        world.spawnEntityInWorld(entity);
+                        EntityItem entity = new EntityItem(WorldHelper.getWorld(dimension), position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5, Upgrade.getUpgrade(upgradeID).getItemStack());
+                        WorldHelper.getWorld(dimension).spawnEntityInWorld(entity);
 
                         for (int i = 0; i < modifier.upgradeHandler.getUpgrades().size(); i++)
                         {
@@ -111,6 +106,6 @@ public class PacketPortalModifierUpgrade extends PacketEnhancedPortals
     @Override
     public byte[] generatePacket(Object... data)
     {
-        return PacketHelper.getByteArray(xCoord, yCoord, zCoord, dimension, upgrades);
+        return PacketHelper.getByteArray(position, dimension, upgrades);
     }
 }

@@ -17,6 +17,7 @@ import enhancedportals.network.packet.PacketCreatePortal;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.portal.upgrades.Upgrade;
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implements IPeripheral
@@ -40,7 +41,7 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
             {
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketCreatePortal(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), true)));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketCreatePortal((TileEntityEnhancedPortals) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), true)));
                 }
                 else
                 {
@@ -65,7 +66,7 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
             {
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketCreatePortal(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), false)));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketCreatePortal((TileEntityEnhancedPortals) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), false)));
                 }
                 else
                 {

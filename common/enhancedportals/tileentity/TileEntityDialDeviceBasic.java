@@ -9,7 +9,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
@@ -17,12 +17,11 @@ import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketBasicDialDeviceUpdate;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketRequestData;
-import enhancedportals.world.WorldHelper;
 
 public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 {
     public boolean active;
-    WorldLocation modifierLocation;
+    WorldPosition modifierLocation;
     Ticket chunkTicket;
     final int TICK_DELAY = 50;
     int timer, ticksToGo;
@@ -77,7 +76,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
             return;
         }
 
-        modifierLocation = WorldHelper.findPortalModifier(modifierLocation, worldObj, xCoord, yCoord, zCoord);
+        modifierLocation = TileEntityDialDevice.findPortalModifier(modifierLocation, worldObj, xCoord, yCoord, zCoord);
 
         if (modifierLocation == null)
         {
@@ -141,7 +140,7 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (active)
         {
-            modifierLocation = new WorldLocation(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
+            modifierLocation = new WorldPosition(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
             ticksToGo = tagCompound.getInteger("TicksToGo");
         }
     }
@@ -239,10 +238,10 @@ public class TileEntityDialDeviceBasic extends TileEntityEnhancedPortals
 
         if (active)
         {
-            tagCompound.setInteger("ModifierX", modifierLocation.xCoord);
-            tagCompound.setInteger("ModifierY", modifierLocation.yCoord);
-            tagCompound.setInteger("ModifierZ", modifierLocation.zCoord);
-            tagCompound.setInteger("ModifierD", modifierLocation.dimension);
+            tagCompound.setInteger("ModifierX", modifierLocation.getX());
+            tagCompound.setInteger("ModifierY", modifierLocation.getY());
+            tagCompound.setInteger("ModifierZ", modifierLocation.getZ());
+            tagCompound.setInteger("ModifierD", modifierLocation.getDimension());
             tagCompound.setInteger("TicksToGo", ticksToGo);
         }
     }

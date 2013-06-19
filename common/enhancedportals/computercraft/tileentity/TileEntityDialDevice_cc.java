@@ -12,6 +12,7 @@ import enhancedportals.network.packet.PacketDialDeviceUpdate;
 import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDevice;
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
 public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPeripheral
 {
@@ -52,7 +53,7 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
 
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialNum + "")));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityEnhancedPortals) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), dialNum + "")));
                 }
                 else
                 {
@@ -82,7 +83,7 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
 
                 if (FMLCommonHandler.instance().getSide() == Side.CLIENT && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
                 {
-                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), "0")));
+                    PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketDialRequest((TileEntityEnhancedPortals) worldObj.getBlockTileEntity(xCoord, yCoord, zCoord), "0")));
                 }
                 else
                 {

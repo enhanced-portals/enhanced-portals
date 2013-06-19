@@ -2,14 +2,14 @@ package enhancedportals.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import enhancedcore.world.WorldLocation;
+import enhancedcore.world.WorldPosition;
 import enhancedportals.lib.BlockIds;
 
 public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
 {
     public boolean previousRedstone;
     public String activeNetwork;
-    public WorldLocation connectedModifier;
+    public WorldPosition connectedModifier;
 
     public TileEntityAutomaticDialler()
     {
@@ -24,7 +24,7 @@ public class TileEntityAutomaticDialler extends TileEntityEnhancedPortals
             return true;
         }
 
-        WorldLocation location = new WorldLocation(xCoord, yCoord, zCoord, worldObj);
+        WorldPosition location = new WorldPosition(xCoord, yCoord, zCoord, worldObj);
 
         if (location.getOffset(ForgeDirection.UP).getBlockId() == BlockIds.DialDeviceBasic)
         {
