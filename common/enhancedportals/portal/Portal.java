@@ -16,7 +16,6 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
-import enhancedcore.world.WorldHelper;
 import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
@@ -78,7 +77,7 @@ public class Portal
     {
         WorldPosition loc = new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj);
 
-        position = loc.getOffset(ForgeDirection.getOrientation(WorldHelper.getMetadata(loc)));
+        position = loc.getOffset(ForgeDirection.getOrientation(loc.getMetadata()));
         shape = 0;
         texture = modifier.texture;
         producesParticles = !modifier.upgradeHandler.hasUpgrade(new UpgradeParticles());

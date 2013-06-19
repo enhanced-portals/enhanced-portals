@@ -12,7 +12,6 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import enhancedcore.world.WorldHelper;
 import enhancedcore.world.WorldPosition;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
@@ -29,7 +28,7 @@ public class TileEntityDialDevice extends TileEntityEnhancedPortals
     {
         if (modifierLocation != null)
         {
-            if (WorldHelper.getTileEntity(modifierLocation) instanceof TileEntityPortalModifier)
+            if (modifierLocation.getTileEntity() instanceof TileEntityPortalModifier)
             {
                 return modifierLocation;
             }
