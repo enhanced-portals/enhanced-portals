@@ -112,6 +112,14 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             {
                 return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.WEST))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.WEST), blockAccess));
             }
+            else if (new Portal().isBlockFrame(WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.UP)), modifier.customBorderBlocks()))
+            {
+                return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.UP))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.UP), blockAccess));
+            }
+            else if (new Portal().isBlockFrame(WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.DOWN)), modifier.customBorderBlocks()))
+            {
+                return Block.blocksList[WorldHelper.getBlockId(blockAccess, position.getOffset(ForgeDirection.DOWN))].getIcon(side, WorldHelper.getMetadata(position.getOffset(ForgeDirection.DOWN), blockAccess));
+            }
         }
 
         return side == blockAccess.getBlockMetadata(x, y, z) ? Textures.getTexture(modifier.texture).getModifierTexture() : texture;
