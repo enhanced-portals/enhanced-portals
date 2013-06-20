@@ -379,7 +379,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         strList = new ArrayList<String>();
         strList.add(Strings.Thickness.toString());
         strList.add("");
-        buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 15, new ItemStack(EnhancedPortals.proxy.blockNetherPortal, 1, 2), true, strList, true));
+        buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 15, new ItemStack(Block.portal), true, strList, true));
         ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (portalModifier.thickness + 1);
         ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? Strings.Normal.toString() : portalModifier.thickness == 1 ? Strings.Thick.toString() : portalModifier.thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
 

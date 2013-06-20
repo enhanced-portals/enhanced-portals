@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -432,7 +433,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         List<String> strList = new ArrayList<String>();
         strList.add(Strings.Thickness.toString());
         strList.add("");
-        buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 40, new ItemStack(EnhancedPortals.proxy.blockNetherPortal, 1, 2), true, strList, true));
+        buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 40, new ItemStack(Block.portal), true, strList, true));
         ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (thickness + 1);
         ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (thickness == 0 ? Strings.Normal.toString() : thickness == 1 ? Strings.Thick.toString() : thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
     }
