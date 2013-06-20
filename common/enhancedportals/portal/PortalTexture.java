@@ -2,6 +2,8 @@ package enhancedportals.portal;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.Icon;
+import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.liquids.LiquidStack;
 import enhancedportals.lib.Textures;
 
 public class PortalTexture
@@ -97,6 +99,10 @@ public class PortalTexture
 
             return getPortalTexture(id, meta);
         }
+        else if (ID.startsWith("L:") && portalTexture == null)
+        {
+            return getPortalTexture(ID.substring(2));
+        }
         else if (portalTexture != null)
         {
             return portalTexture;
@@ -107,12 +113,32 @@ public class PortalTexture
 
     public Icon getPortalTexture(Object... objects)
     {
-        if (objects.length == 2)
+        if (objects.length == 1 && objects[0] instanceof String)
         {
-            if (objects[0] instanceof Integer && objects[1] instanceof Integer)
+            LiquidStack liquid = LiquidDictionary.getLiquid(objects[0].toString(), 1);
+            
+            if (liquid != null)
+            {
+                Icon icon = liquid.canonical().getRenderingIcon();
+                            
+                if (icon == null)
+                {
+                    if (liquid.itemID < Block.blocksList.length && Block.blocksList[liquid.itemID] != null)
+                    {
+                        return Block.blocksList[liquid.itemID].getIcon(2, 0);
+                    }
+                    else
+                    {
+                        return getDefaultPortalTexture();
+                    }
+                }
+                
+                return icon;
+            }
+        }
+        else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
             {
                 return Block.blocksList[Integer.parseInt(objects[0].toString())].getIcon(2, Integer.parseInt(objects[1].toString()));
-            }
         }
 
         return getDefaultPortalTexture();

@@ -12,18 +12,15 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.util.MathHelper;
-import enhancedcore.world.BlockPosition;
-import enhancedcore.world.WorldHelper;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.Textures;
 import enhancedportals.portal.Portal;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
@@ -38,18 +35,11 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         setUnlocalizedName(Localization.NetherPortal_Name);
         setTickRandomly(true);
     }
-
+    
     @Override
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntityNetherPortal();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        return Settings.AllowPortalColours ? Textures.getTexture(((TileEntityNetherPortal) blockAccess.getBlockTileEntity(x, y, z)).texture).getPortalTexture() : Textures.getTexture("").getPortalTexture();
     }
 
     @Override
@@ -62,14 +52,13 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return Textures.getTexture("").getPortalTexture();
+        return EnhancedPortals.proxy.blockDummyPortal.getIcon(side, meta);
     }
-
+    
     @Override
-    @SideOnly(Side.CLIENT)
-    public int getRenderBlockPass()
+    public int getRenderType()
     {
-        return 1;
+        return -1;
     }
 
     @Override
@@ -190,28 +179,6 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         {
             setBlockBounds(0.0F, thickA, 0.0F, 1.0F, thickB, 1.0F);
         }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        int meta = WorldHelper.getMetadata(new BlockPosition(x, y, z).getOffset(ForgeDirection.getOrientation(side).getOpposite()), blockAccess);
-
-        if (meta == 2 || meta == 3) // XY
-        {
-            return side == 2 || side == 3;
-        }
-        else if (meta == 4 || meta == 5) // ZY
-        {
-            return side == 4 || side == 5;
-        }
-        else if (meta == 6 || meta == 7) // ZX
-        {
-            return side == 0 || side == 1;
-        }
-
-        return false;
     }
 
     public boolean tryToCreatePortal(World world, int x, int y, int z)
