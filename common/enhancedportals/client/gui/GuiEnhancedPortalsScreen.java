@@ -57,6 +57,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
 
                 if (Textures.getTextureFromItemStack(stack) == null)
                 {
+                    System.out.println("Fail");
                     return false;
                 }
                 else
@@ -102,6 +103,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                 {
                     strList.add(Strings.Facade.toString());
                     strList.add(EnumChatFormatting.GRAY + str);
+
                     strList.add(EnumChatFormatting.DARK_GRAY + Strings.RightClickToReset.toString());
                 }
                 else

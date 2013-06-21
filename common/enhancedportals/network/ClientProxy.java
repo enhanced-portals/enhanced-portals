@@ -74,12 +74,12 @@ public class ClientProxy extends CommonProxy
         Textures.portalTextureMap.put("I:" + Item.plateChain.itemID + ":0", new PortalTexture("I:" + Item.plateChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.legsChain.itemID + ":0", new PortalTexture("I:" + Item.legsChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
         Textures.portalTextureMap.put("I:" + Item.bootsChain.itemID + ":0", new PortalTexture("I:" + Item.bootsChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2), orangeTexture.getModifierTexture(), orangeTexture.getParticleColour()));
-        
+
         for (Entry<String, LiquidStack> key : LiquidDictionary.getLiquids().entrySet())
         {
             System.out.println(key.getKey());
         }
-        
+
         Textures.portalTextureMap.put("L:Fuel", new PortalTexture("L:Fuel"));
         Textures.portalTextureMap.put("I:" + Item.appleRed.itemID + ":0", new PortalTexture("L:Fuel"));
     }

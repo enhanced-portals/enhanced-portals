@@ -36,7 +36,6 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
         texture = modifier.texture;
         modifierNetwork = modifier.modifierNetwork;
         dialDeviceNetwork = modifier.dialDeviceNetwork;
-
     }
 
     @Override

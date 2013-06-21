@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import enhancedportals.portal.PortalTexture;
@@ -75,7 +76,7 @@ public class Textures
         {
             return portalTextureMap.get(string);
         }
-        else if (string.startsWith("B:"))
+        else if (string.startsWith("B:") || string.startsWith("L:"))
         {
             return new PortalTexture(string);
         }
@@ -144,12 +145,13 @@ public class Textures
                     return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage());
                 }
             }
-            else
+            else if (LiquidContainerRegistry.isFilledContainer(stack))
             {
-                if (LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, 1, stack.getItemDamage())) != null)
-                {
-                    return getTexture("L:" + LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, 1, stack.getItemDamage())));
-                }
+                return getTexture("L:" + LiquidDictionary.findLiquidName(LiquidContainerRegistry.getLiquidForFilledItem(stack)));
+            }
+            else if (LiquidContainerRegistry.isLiquid(stack))
+            {
+                return getTexture("L:" + LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, 1, stack.getItemDamage())));
             }
         }
 

@@ -35,7 +35,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
         setUnlocalizedName(Localization.NetherPortal_Name);
         setTickRandomly(true);
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {
@@ -54,7 +54,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     {
         return EnhancedPortals.proxy.blockDummyPortal.getIcon(side, meta);
     }
-    
+
     @Override
     public int getRenderType()
     {

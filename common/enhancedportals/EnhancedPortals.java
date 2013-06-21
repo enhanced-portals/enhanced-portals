@@ -54,6 +54,8 @@ public class EnhancedPortals
     @SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
     public static CommonProxy proxy;
 
+    boolean added = false;
+
     @Init
     public void init(FMLInitializationEvent event)
     {

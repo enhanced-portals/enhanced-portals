@@ -116,11 +116,11 @@ public class PortalTexture
         if (objects.length == 1 && objects[0] instanceof String)
         {
             LiquidStack liquid = LiquidDictionary.getLiquid(objects[0].toString(), 1);
-            
+
             if (liquid != null)
             {
                 Icon icon = liquid.canonical().getRenderingIcon();
-                            
+
                 if (icon == null)
                 {
                     if (liquid.itemID < Block.blocksList.length && Block.blocksList[liquid.itemID] != null)
@@ -132,13 +132,13 @@ public class PortalTexture
                         return getDefaultPortalTexture();
                     }
                 }
-                
+
                 return icon;
             }
         }
         else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
-            {
-                return Block.blocksList[Integer.parseInt(objects[0].toString())].getIcon(2, Integer.parseInt(objects[1].toString()));
+        {
+            return Block.blocksList[Integer.parseInt(objects[0].toString())].getIcon(2, Integer.parseInt(objects[1].toString()));
         }
 
         return getDefaultPortalTexture();

@@ -12,6 +12,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -28,7 +29,6 @@ import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
-import enhancedportals.network.packet.PacketPortalModifierUpgrade;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
@@ -327,6 +327,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
         }
 
+        System.out.println(stack);
         PortalTexture text = Textures.getTextureFromItemStack(stack);
 
         if (text != null)
@@ -412,11 +413,18 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         }
         else if (isShiftKeyDown() && getSlotAtPosition(x, y) != null)
         {
-            PortalTexture Text = Textures.getTextureFromItemStack(getSlotAtPosition(x, y).decrStackSize(0));
+            ItemStack itemStack = getSlotAtPosition(x, y).getStack();
+            PortalTexture Text = Textures.getTextureFromItemStack(itemStack);
 
             if (Text != null)
             {
-                extendedSlots.get(0).setSlot(getSlotAtPosition(x, y).decrStackSize(0));
+                if (LiquidContainerRegistry.isFilledContainer(itemStack))
+                {
+                    itemStack = LiquidContainerRegistry.getLiquidForFilledItem(itemStack).asItemStack();
+                }
+
+                System.out.println("1 " + itemStack);
+                extendedSlots.get(0).setSlot(itemStack);
             }
         }
     }
@@ -429,7 +437,6 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         if (hasInteractedWith)
         {
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
-            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade(portalModifier)));
 
             portalModifier.worldObj.markBlockForRenderUpdate(portalModifier.xCoord, portalModifier.yCoord, portalModifier.zCoord);
         }
