@@ -1,10 +1,17 @@
 package enhancedportals.client.particle;
 
 import java.awt.Color;
+import java.nio.ByteBuffer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.Texture;
+import net.minecraft.client.renderer.texture.TextureStitched;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import cpw.mods.fml.client.FMLClientHandler;
+import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
 
 public class NetherPortalFX extends EntityFX
@@ -23,10 +30,51 @@ public class NetherPortalFX extends EntityFX
         portalPosX = posX = par2;
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
-        Color color = Color.decode(String.valueOf(Textures.getTexture(texture).getParticleColour()));
-        particleRed = color.getRed() / 255.0F;
-        particleGreen = color.getGreen() / 255.0F;
-        particleBlue = color.getBlue() / 255.0F;
+
+        if (Settings.RequireFancyGraphicsForParticles && Minecraft.isFancyGraphicsEnabled() && Settings.UseNewParticleEffects || !Settings.RequireFancyGraphicsForParticles && Settings.UseNewParticleEffects)
+        {
+            Texture mainTexture = null;
+            TextureStitched icon = (TextureStitched) Textures.getTexture(texture).getPortalTexture();
+            ItemStack item = Textures.getItemStackFromTexture(texture);
+
+            if (item.getItem().getSpriteNumber() == 0)
+            {
+                mainTexture = FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks.getTexture();
+            }
+            else
+            {
+                mainTexture = FMLClientHandler.instance().getClient().renderEngine.textureMapItems.getTexture();
+            }
+
+            int sW = mainTexture.getWidth();
+            int iX = icon.getOriginX(), iY = icon.getOriginY(), w = icon.width, h = icon.height;
+
+            ByteBuffer byteBuffer = mainTexture.getTextureData();
+            byte[] abyte = new byte[sW * h * 4];
+            byteBuffer.position(iY * sW * 4 + iX * 4);
+            byteBuffer.get(abyte);
+
+            int j = rand.nextInt(w), i = rand.nextInt(w);
+            int k = j * sW * 4 + i * 4;
+            byte b0 = 0;
+            int l = b0 | (abyte[k + 2] & 255) << 0;
+            l |= (abyte[k + 1] & 255) << 8;
+            l |= (abyte[k + 0] & 255) << 16;
+            l |= (abyte[k + 3] & 255) << 24;
+
+            Color color = Color.decode(String.valueOf(l));
+            particleRed = color.getRed() / 255F;
+            particleGreen = color.getGreen() / 255F;
+            particleBlue = color.getBlue() / 255F;
+        }
+        else
+        {
+            float f = rand.nextFloat() * 0.6F + 0.4F;
+            particleRed = particleGreen = particleBlue = 1.0F * f;
+            particleGreen *= 0.3F;
+            particleRed *= 0.9F;
+        }
+
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;

@@ -13,30 +13,20 @@ public class PortalTexture
         return Textures.getTexture("").getModifierTexture();
     }
 
-    public static int getDefaultParticleColour()
-    {
-        return Textures.getTexture("").getParticleColour();
-    }
-
     public static Icon getDefaultPortalTexture()
     {
         return Textures.getTexture("").getPortalTexture();
     }
 
     private String ID;
-
     private Icon portalTexture;
-
     private Icon modifierTexture;
-
-    private int particleColour;
 
     public PortalTexture(String id)
     {
         ID = id;
         portalTexture = null;
         modifierTexture = null;
-        particleColour = -1;
     }
 
     public PortalTexture(String id, Icon portaltexture)
@@ -44,7 +34,6 @@ public class PortalTexture
         ID = id;
         portalTexture = portaltexture;
         modifierTexture = null;
-        particleColour = -1;
     }
 
     public PortalTexture(String id, Icon portaltexture, Icon modifiertexture)
@@ -52,23 +41,6 @@ public class PortalTexture
         ID = id;
         portalTexture = portaltexture;
         modifierTexture = modifiertexture;
-        particleColour = -1;
-    }
-
-    public PortalTexture(String id, Icon portaltexture, Icon modifiertexture, int particlecolour)
-    {
-        ID = id;
-        portalTexture = portaltexture;
-        modifierTexture = modifiertexture;
-        particleColour = particlecolour;
-    }
-
-    public PortalTexture(String id, Icon portaltexture, int particlecolour)
-    {
-        ID = id;
-        portalTexture = portaltexture;
-        modifierTexture = null;
-        particleColour = particlecolour;
     }
 
     public String getID()
@@ -84,11 +56,6 @@ public class PortalTexture
     public Icon getModifierTexture(Object... objects)
     {
         return getModifierTexture();
-    }
-
-    public int getParticleColour()
-    {
-        return particleColour != -1 ? particleColour : getDefaultParticleColour();
     }
 
     public Icon getPortalTexture()
@@ -138,7 +105,14 @@ public class PortalTexture
         }
         else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
         {
-            return Block.blocksList[Integer.parseInt(objects[0].toString())].getIcon(2, Integer.parseInt(objects[1].toString()));
+            int id = Integer.parseInt(objects[0].toString()), side = 2, meta = Integer.parseInt(objects[1].toString());
+
+            if (id >= 8 && id <= 11)
+            {
+                side = 0;
+            }
+
+            return Block.blocksList[id].getIcon(side, meta);
         }
 
         return getDefaultPortalTexture();

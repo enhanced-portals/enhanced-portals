@@ -327,7 +327,6 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
         }
 
-        System.out.println(stack);
         PortalTexture text = Textures.getTextureFromItemStack(stack);
 
         if (text != null)
@@ -423,7 +422,6 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                     itemStack = LiquidContainerRegistry.getLiquidForFilledItem(itemStack).asItemStack();
                 }
 
-                System.out.println("1 " + itemStack);
                 extendedSlots.get(0).setSlot(itemStack);
             }
         }

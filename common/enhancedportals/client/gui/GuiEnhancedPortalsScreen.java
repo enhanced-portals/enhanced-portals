@@ -57,7 +57,6 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
 
                 if (Textures.getTextureFromItemStack(stack) == null)
                 {
-                    System.out.println("Fail");
                     return false;
                 }
                 else

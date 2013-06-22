@@ -22,6 +22,8 @@ public class Settings
     public static boolean AllowPortalColours = true;
     public static boolean AdventureModeLimitation = true;
     public static boolean AlternateCraftingRecipe = false;
+    public static boolean UseNewParticleEffects = true;
+    public static boolean RequireFancyGraphicsForParticles = true;
 
     public static int PigmenLevel = 100;
     public static int SoundLevel = 100;

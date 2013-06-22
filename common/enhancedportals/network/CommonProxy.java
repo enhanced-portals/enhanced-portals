@@ -239,6 +239,8 @@ public class CommonProxy
         Settings.RenderPortalEffect = config.get("Effects", "RenderPortalEffect", Settings.RenderPortalEffect, "Renders the swirly effect when you're inside a portal").getBoolean(Settings.RenderPortalEffect);
         Settings.AdventureModeLimitation = config.get("Settings", "RestrictAdventurePlayers", Settings.AdventureModeLimitation, "Stops players in Adventure mode from using certain blocks").getBoolean(Settings.AdventureModeLimitation);
         Settings.AlternateCraftingRecipe = config.get("Settings", "AlternateCraftingRecipes", Settings.AlternateCraftingRecipe, "Replaces items you cannot get in Peaceful with ones you can").getBoolean(Settings.AlternateCraftingRecipe);
+        Settings.RequireFancyGraphicsForParticles = config.get("Effects", "RequireFancyGraphicsForNewParticles", Settings.RequireFancyGraphicsForParticles).getBoolean(Settings.RequireFancyGraphicsForParticles);
+        Settings.UseNewParticleEffects = config.get("Effects", "UseNewParticleEffects", Settings.UseNewParticleEffects).getBoolean(Settings.UseNewParticleEffects);
 
         // Integer configs
         Settings.SoundLevel = MathHelper.clampInt(config.get("Effects", "SoundLevel", 100, "Percentage chance of sounds to play (per block). 0 = disabled, 100 = vanilla").getInt(), 0, 100);
