@@ -131,6 +131,12 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         }
         else if (button.id == 14)
         {
+            if (portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()))
+            {
+                ((GuiItemStackButton) button).isActive = true;
+                return;
+            }
+            
             portalModifier.redstoneSetting = -1;
             ((GuiItemStackButton) buttonList.get(1)).isActive = false;
             ((GuiItemStackButton) buttonList.get(2)).isActive = false;
@@ -151,6 +157,14 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                     {
                         buttonList.remove(button);
                         hasInteractedWith = true;
+                    }
+                    
+                    if (u.getName().equals(new UpgradeDialDevice().getName()))
+                    {
+                        if (portalModifier.redstoneSetting != -1)
+                        {
+                            ((GuiItemStackButton) buttonList.get(4)).isActive = false;
+                        }
                     }
                 }
             }
@@ -393,7 +407,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         strList = new ArrayList<String>();
         strList.add(Strings.RedstoneControl.toString());
         strList.add(EnumChatFormatting.GRAY + Strings.Disabled.toString());
-        buttonList.add(new GuiItemStackButton(14, guiLeft + xSize + 4, guiTop + 64, new ItemStack(Item.gunpowder), portalModifier.redstoneSetting == -1, strList, false, !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
+        buttonList.add(new GuiItemStackButton(14, guiLeft + xSize + 4, guiTop + 64, new ItemStack(Item.gunpowder), portalModifier.redstoneSetting == -1 || portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice()), strList, false, true));
 
         strList = new ArrayList<String>();
         strList.add(Strings.Thickness.toString());
