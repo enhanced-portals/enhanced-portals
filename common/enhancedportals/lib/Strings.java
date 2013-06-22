@@ -58,7 +58,8 @@ public enum Strings
     Thicker("gui.thicker"),
     Thickness("gui.thickness"),
     UniqueIdentifier("gui.uniqueIdentifier"),
-    Upgrades("gui.upgrades");
+    Upgrades("gui.upgrades"),
+    Disabled("gui.disabled");
 
     private EnumChatFormatting chatFormatting;
     private String text;

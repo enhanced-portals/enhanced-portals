@@ -68,6 +68,7 @@
 	<entry key="gui.activeModifier">You cannot modify a Portal Modifier while it is active</entry>
 	<entry key="gui.networkNotSet">No network</entry>
 	<entry key="gui.dialDevice.active">You cannot dial while there is an active connection</entry>
+	<entry key="gui.disabled">Disabled</entry>
 	<entry key="chat.advDimUpgradeAlreadyInstalled">Remove the Advanced Dimensional upgrade first</entry>
 	<entry key="chat.dimUpgradeAlreadyInstalled">Remove the Dimensional upgrade first</entry>
 	<entry key="chat.maxUpgradesInstalled">The maximum amount of upgrades have been installed</entry>

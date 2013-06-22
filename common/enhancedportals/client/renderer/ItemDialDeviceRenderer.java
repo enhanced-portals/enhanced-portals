@@ -25,7 +25,7 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         return true;
     }
 
-    private void render(float x, float y, float z, int type, boolean basic)
+    private void render(float x, float y, float z, ItemRenderType type, boolean basic)
     {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (basic ? "basicDial" : "dial") + "Device.png");
 
@@ -33,11 +33,11 @@ public class ItemDialDeviceRenderer implements IItemRenderer
         GL11.glTranslatef(x + 0.5F, y + 1.5F, z + 0.5F);
         GL11.glRotatef(180, 90, 0, -90);
 
-        if (type == 0)
+        if (type == ItemRenderType.INVENTORY)
         {
             GL11.glRotatef(180, 0, 1.0F, 0);
         }
-        else if (type == 2)
+        else if (type == ItemRenderType.EQUIPPED)
         {
             GL11.glRotatef(270, 0, 1.0F, 0);
         }
@@ -58,19 +58,19 @@ public class ItemDialDeviceRenderer implements IItemRenderer
 
         if (type == ItemRenderType.ENTITY)
         {
-            render(-0.5F, 0F, -0.5F, 1, basic);
+            render(-0.5F, 0F, -0.5F, ItemRenderType.ENTITY, basic);
         }
         else if (type == ItemRenderType.EQUIPPED)
         {
-            render(0F, 0.4F, 0F, 2, basic);
+            render(0F, 0.4F, 0F, ItemRenderType.EQUIPPED, basic);
         }
         else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
         {
-            render(0F, 0.4F, 0F, 3, basic);
+            render(0F, 0.4F, 0F, ItemRenderType.EQUIPPED_FIRST_PERSON, basic);
         }
         else if (type == ItemRenderType.INVENTORY)
         {
-            render(1F, 0.7F, 1F, 0, basic);
+            render(1F, 0.7F, 1F, ItemRenderType.INVENTORY, basic);
         }
     }
 

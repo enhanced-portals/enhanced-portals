@@ -29,6 +29,7 @@ import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
+import enhancedportals.network.packet.PacketPortalModifierUpgrade;
 import enhancedportals.portal.PortalTexture;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
@@ -63,6 +64,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             ((GuiItemStackButton) buttonList.get(2)).isActive = false;
             ((GuiItemStackButton) buttonList.get(3)).displayString = "0";
             ((GuiItemStackButton) buttonList.get(3)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(4)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
         }
@@ -72,6 +74,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             ((GuiItemStackButton) buttonList.get(1)).isActive = false;
             ((GuiItemStackButton) buttonList.get(3)).displayString = "0";
             ((GuiItemStackButton) buttonList.get(3)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(4)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
         }
@@ -98,6 +101,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             portalModifier.redstoneSetting = (byte) (2 + num);
             ((GuiItemStackButton) buttonList.get(1)).isActive = false;
             ((GuiItemStackButton) buttonList.get(2)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(4)).isActive = false;
             hasInteractedWith = true;
             ((GuiItemStackButton) button).isActive = true;
         }
@@ -124,6 +128,16 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
             portalModifier.thickness = (byte) (num - 1);
             ((GuiItemStackButton) button).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? Strings.Normal.toString() : portalModifier.thickness == 1 ? Strings.Thick.toString() : portalModifier.thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
             hasInteractedWith = true;
+        }
+        else if (button.id == 14)
+        {
+            portalModifier.redstoneSetting = -1;
+            ((GuiItemStackButton) buttonList.get(1)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(2)).isActive = false;
+            ((GuiItemStackButton) buttonList.get(3)).displayString = "0";
+            ((GuiItemStackButton) buttonList.get(3)).isActive = false;
+            hasInteractedWith = true;
+            ((GuiItemStackButton) button).isActive = true;
         }
         else if (button.id == 50)
         {
@@ -375,13 +389,18 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         strList.add(Strings.RedstoneControl.toString());
         strList.add(EnumChatFormatting.GRAY + Strings.Precise.toString());
         buttonList.add(new GuiItemStackButton(12, guiLeft + xSize + 4, guiTop + 44, new ItemStack(Item.redstone), portalModifier.redstoneSetting > 1, strList, "" + (portalModifier.redstoneSetting > 2 ? portalModifier.redstoneSetting - 2 : 0), !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
+        
+        strList = new ArrayList<String>();
+        strList.add(Strings.RedstoneControl.toString());
+        strList.add(EnumChatFormatting.GRAY + Strings.Disabled.toString());
+        buttonList.add(new GuiItemStackButton(14, guiLeft + xSize + 4, guiTop + 64, new ItemStack(Item.gunpowder), portalModifier.redstoneSetting == -1, strList, false, !portalModifier.upgradeHandler.hasUpgrade(new UpgradeDialDevice())));
 
         strList = new ArrayList<String>();
         strList.add(Strings.Thickness.toString());
         strList.add("");
         buttonList.add(new GuiItemStackButton(13, guiLeft + xSize - 42, guiTop + 15, new ItemStack(Block.portal), true, strList, true));
-        ((GuiItemStackButton) buttonList.get(4)).displayString = "" + (portalModifier.thickness + 1);
-        ((GuiItemStackButton) buttonList.get(4)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? Strings.Normal.toString() : portalModifier.thickness == 1 ? Strings.Thick.toString() : portalModifier.thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
+        ((GuiItemStackButton) buttonList.get(5)).displayString = "" + (portalModifier.thickness + 1);
+        ((GuiItemStackButton) buttonList.get(5)).hoverText.set(1, EnumChatFormatting.GRAY + (portalModifier.thickness == 0 ? Strings.Normal.toString() : portalModifier.thickness == 1 ? Strings.Thick.toString() : portalModifier.thickness == 2 ? Strings.Thicker.toString() : Strings.FullBlock.toString()));
 
         for (int i = portalModifier.upgradeHandler.getUpgrades().size() - 1; i >= 0; i--)
         {
@@ -435,6 +454,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         if (hasInteractedWith)
         {
             PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate(portalModifier)));
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade(portalModifier)));
 
             portalModifier.worldObj.markBlockForRenderUpdate(portalModifier.xCoord, portalModifier.yCoord, portalModifier.zCoord);
         }
