@@ -11,7 +11,7 @@
   "description": "ComputerCraft addon for EP2.",
   "logoFile" : "",
   "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
-  "parent" : "",
+  "parent" : "EP2",
   "screenshots": [
   ]
 }

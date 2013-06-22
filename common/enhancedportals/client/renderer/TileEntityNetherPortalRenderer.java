@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -66,6 +67,11 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         TileEntityNetherPortal portal = (TileEntityNetherPortal) tile;
         ItemStack stack = Textures.getItemStackFromTexture(portal.texture);
 
+        if (stack.itemID == Item.netherStar.itemID)
+        {
+            return;
+        }
+        
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);

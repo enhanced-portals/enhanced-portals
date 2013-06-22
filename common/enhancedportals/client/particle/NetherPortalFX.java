@@ -31,7 +31,7 @@ public class NetherPortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        if (Settings.RequireFancyGraphicsForParticles && Minecraft.isFancyGraphicsEnabled() && Settings.UseNewParticleEffects || !Settings.RequireFancyGraphicsForParticles && Settings.UseNewParticleEffects)
+        if ((Settings.RequireFancyGraphicsForParticles && Minecraft.isFancyGraphicsEnabled() && Settings.UseNewParticleEffects) || (!Settings.RequireFancyGraphicsForParticles && Settings.UseNewParticleEffects))
         {
             Texture mainTexture = null;
             TextureStitched icon = (TextureStitched) Textures.getTexture(texture).getPortalTexture();
@@ -63,6 +63,7 @@ public class NetherPortalFX extends EntityFX
             l |= (abyte[k + 3] & 255) << 24;
 
             Color color = Color.decode(String.valueOf(l));
+                        
             particleRed = color.getRed() / 255F;
             particleGreen = color.getGreen() / 255F;
             particleBlue = color.getBlue() / 255F;

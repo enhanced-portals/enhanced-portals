@@ -54,17 +54,19 @@ public class ClientProxy extends CommonProxy
         {
             for (int i = 0; i < 16; i++)
             {
+                // Colours
                 Textures.portalTextureMap.put("C:" + i, new PortalTexture("C:" + i, event.map.registerIcon(Reference.MOD_ID + ":netherPortal_" + i)));
             }
-
-            Textures.portalTextureMap.put("I:" + Item.netherStar.itemID + ":0", new PortalTexture("I:" + Item.netherStar.itemID + ":0", event.map.registerIcon(Reference.MOD_ID + ":netherPortal_invisible")));
         }
 
-        Textures.portalTextureMap.put("I:" + Item.snowball.itemID + ":0", new PortalTexture("I:" + Item.snowball.itemID + ":0", Block.snow.getBlockTextureFromSide(0)));
-
-        Textures.portalTextureMap.put("I:" + Item.helmetChain.itemID + ":0", new PortalTexture("I:" + Item.helmetChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2)));
-        Textures.portalTextureMap.put("I:" + Item.plateChain.itemID + ":0", new PortalTexture("I:" + Item.plateChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2)));
-        Textures.portalTextureMap.put("I:" + Item.legsChain.itemID + ":0", new PortalTexture("I:" + Item.legsChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2)));
-        Textures.portalTextureMap.put("I:" + Item.bootsChain.itemID + ":0", new PortalTexture("I:" + Item.bootsChain.itemID + ":0", Block.fire.getBlockTextureFromSide(2)));
+        // Nether Star
+        Textures.portalTextureMap.put("I:" + Item.netherStar.itemID + ":0", new PortalTexture("I:" + Item.netherStar.itemID + ":0"));
+        
+        // Fire
+        PortalTexture fireTexture = new PortalTexture("B:" + Block.fire.blockID + ":0");
+        Textures.portalTextureMap.put("I:" + Item.helmetChain.itemID + ":0", fireTexture);
+        Textures.portalTextureMap.put("I:" + Item.plateChain.itemID + ":0", fireTexture);
+        Textures.portalTextureMap.put("I:" + Item.legsChain.itemID + ":0", fireTexture);
+        Textures.portalTextureMap.put("I:" + Item.bootsChain.itemID + ":0", fireTexture);
     }
 }
