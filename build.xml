@@ -10,7 +10,6 @@
 		<delete dir="${dir.mcp.reobf}" />
 		<delete file="${dir.mcp.src}\mcmod.info" />
 		<delete file="${dir.mcp.src}\mcmod_cc.info" />
-		<delete file="${dir.mcp.src}\mcmod_tech.info" />
 	</target>
 	
 	<target name="build_number">
@@ -34,7 +33,6 @@
 		<replace dir="${dir.mcp.src}" token="@VERSION@" value="${version.main}" />
 		<replace dir="${dir.mcp.src}" token="@BUILD_NUMBER@" value="${build_number}" />
 		<replace dir="${dir.mcp.src}" token="@CC_VERSION@" value="${version.cc}" />
-		<replace dir="${dir.mcp.src}" token="@TECH_VERSION@" value="${version.tech}" />
 	</target>
 	
 	<target name="recompile">
@@ -66,7 +64,6 @@
 			<fileset dir="${dir.mcp.src}">
 				<include name="mcmod.info" />
 				<include name="mcmod_cc.info" />
-				<include name="mcmod_tech.info" />
 			</fileset>
 		</copy>
 		
@@ -92,19 +89,6 @@
 				<include name="**/EnhancedPortals_ComputerCraft*" />
 			</fileset>
 			<fileset dir="${dir.mcp.reobf}" includes="mcmod.info" />
-		</jar>
-		
-		<delete file="${dir.mcp.reobf}/mcmod.info" />
-		<move file="${dir.mcp.reobf}/mcmod_tech.info" tofile="${dir.mcp.reobf}/mcmod.info" />
-		
-		<jar destfile="${dir.release}\portals\${version.mc}\EnhancedPortals-2_Tech_${version.tech}.jar">
-			<fileset dir="${dir.mcp.reobf}">
-				<include name="**/EnhancedPortals_Tech*" />
-			</fileset>
-			<fileset dir="${dir.mcp.reobf}" includes="mcmod.info" />
-			<fileset dir="${dir.main.resources}">
-				<include name="**/EP2_Tech/**" />
-			</fileset>
 		</jar>
 		
 		<antcall target="clean" />

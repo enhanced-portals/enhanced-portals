@@ -37,5 +37,4 @@ An example `build.properties` file:
 	version.mc=1.5.2
 	version.main=1.0.1
 	version.cc=1.0
-	version.tech=1.0.1
 ***
