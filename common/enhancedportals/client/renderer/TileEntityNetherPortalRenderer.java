@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import buildcraft.core.render.RenderEntityBlock.BlockInterface;
 import enhancedcore.util.MathHelper;
 import enhancedportals.lib.Textures;
 import enhancedportals.tileentity.TileEntityNetherPortal;
