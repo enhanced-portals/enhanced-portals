@@ -8,3 +8,4 @@
 * Particles now get their colour from the portal texture.
  * I'm unsure on how this will affect lower-end systems, so it is only enabled when fancy graphics is. Though, it should be fine and it looks awesome.
  * Added config options to toggle if fancy is required, and if these particles should be used.
+* New textures for the active side of the portal modifier.

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
@@ -31,11 +30,6 @@ public class Textures
         MAGENTA,
         ORANGE,
         WHITE;
-
-        public Icon getModifierTexture()
-        {
-            return getPortalTexture().getModifierTexture();
-        }
 
         public PortalTexture getPortalTexture()
         {

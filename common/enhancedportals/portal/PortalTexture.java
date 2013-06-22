@@ -8,11 +8,6 @@ import enhancedportals.lib.Textures;
 
 public class PortalTexture
 {
-    public static Icon getDefaultModifierTexture()
-    {
-        return Textures.getTexture("").getModifierTexture();
-    }
-
     public static Icon getDefaultPortalTexture()
     {
         return Textures.getTexture("").getPortalTexture();
@@ -20,42 +15,22 @@ public class PortalTexture
 
     private String ID;
     private Icon portalTexture;
-    private Icon modifierTexture;
 
     public PortalTexture(String id)
     {
         ID = id;
         portalTexture = null;
-        modifierTexture = null;
     }
 
     public PortalTexture(String id, Icon portaltexture)
     {
         ID = id;
         portalTexture = portaltexture;
-        modifierTexture = null;
-    }
-
-    public PortalTexture(String id, Icon portaltexture, Icon modifiertexture)
-    {
-        ID = id;
-        portalTexture = portaltexture;
-        modifierTexture = modifiertexture;
     }
 
     public String getID()
     {
         return ID;
-    }
-
-    public Icon getModifierTexture()
-    {
-        return modifierTexture != null ? modifierTexture : getDefaultModifierTexture();
-    }
-
-    public Icon getModifierTexture(Object... objects)
-    {
-        return getModifierTexture();
     }
 
     public Icon getPortalTexture()
@@ -106,8 +81,8 @@ public class PortalTexture
         else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
         {
             int id = Integer.parseInt(objects[0].toString()), side = 2, meta = Integer.parseInt(objects[1].toString());
-
-            if (id >= 8 && id <= 11)
+            
+            if (LiquidDictionary.findLiquidName(new LiquidStack(id, 1, meta)) != null)
             {
                 side = 0;
             }

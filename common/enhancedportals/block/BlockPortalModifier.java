@@ -22,7 +22,6 @@ import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
-import enhancedportals.lib.Textures;
 import enhancedportals.portal.Portal;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.portal.upgrades.modifier.UpgradeCamouflage;
@@ -30,7 +29,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class BlockPortalModifier extends BlockEnhancedPortals
 {
-    Icon texture;
+    Icon sideTexture, frontTexture, frontTextureActive;
 
     public BlockPortalModifier()
     {
@@ -122,16 +121,14 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             }
         }
 
-        return side == blockAccess.getBlockMetadata(x, y, z) ? Textures.getTexture(modifier.texture).getModifierTexture() : texture;
+        return side == blockAccess.getBlockMetadata(x, y, z) ?  modifier.isActive() ? frontTextureActive : frontTexture : sideTexture;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        Icon tex = Textures.getTexture("").getModifierTexture();
-
-        return side == 1 ? tex != null ? tex : texture : texture;
+        return side == 1 ? frontTexture : sideTexture;
     }
 
     @Override
@@ -178,6 +175,8 @@ public class BlockPortalModifier extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-        texture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_side");
+        sideTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_side");
+        frontTexture = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_front");
+        frontTextureActive = iconRegister.registerIcon(Reference.MOD_ID + ":" + Localization.PortalModifier_Name + "_frontActive");
     }
 }

@@ -6,12 +6,8 @@ import net.minecraft.world.IBlockAccess;
 
 public class BlockInterface
 {
-    public double minX;
-    public double minY;
-    public double minZ;
-    public double maxX;
-    public double maxY;
-    public double maxZ;
+    public double minX, minY, minZ;
+    public double maxX, maxY, maxZ;
 
     public Block baseBlock = Block.waterStill;
     public Icon texture = null;

@@ -38,7 +38,7 @@ public class BlockAutomaticDialler extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int par1, int par2)
     {
-        return EnhancedPortals.proxy.blockPortalModifier.texture;
+        return EnhancedPortals.proxy.blockPortalModifier.sideTexture;
     }
 
     @Override
