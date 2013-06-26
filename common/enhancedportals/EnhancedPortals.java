@@ -28,6 +28,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.reflection.ReflectionHelper;
@@ -43,6 +44,7 @@ import enhancedportals.network.PacketHandler;
 import enhancedportals.portal.network.DialDeviceNetwork;
 import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.world.DialDeviceChunkCallback;
+import enhancedportals.world.RuinsGenerator;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1,);required-after:Forge@[7.8.0.700,)", acceptedMinecraftVersions = "[1.5,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
@@ -57,6 +59,7 @@ public class EnhancedPortals
     @Init
     public void init(FMLInitializationEvent event)
     {
+        //GameRegistry.registerWorldGenerator(new RuinsGenerator());
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(this);
 

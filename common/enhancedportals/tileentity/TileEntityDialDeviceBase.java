@@ -22,6 +22,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
 {
     public boolean active;
     protected BlockPosition modifierLocation;
+    protected String dialledNetwork;
     protected Ticket chunkTicket;
     protected final int TICK_DELAY = 50;
     protected int timer, ticksToGo;
@@ -193,6 +194,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
             }
             else
             {
+                dialledNetwork = network;
                 entryModifier.tempDialDeviceNetwork = network;
                 exitModifier.tempDialDeviceNetwork = entryModifier.dialDeviceNetwork;
                 active = true;
@@ -227,11 +229,26 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
             active = false;
             unloadChunk();
             sendUpdatePacket();
+            
+            WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork).get(0);
+            
+            if (exitLocation != null)
+            {
+                ((WorldServer) WorldHelper.getWorld(exitLocation.getDimension())).getChunkProvider().loadChunk(exitLocation.getX() >> 4, exitLocation.getZ() >> 4);
+                TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) exitLocation.getTileEntity();
+                
+                if (exitModifier != null)
+                {
+                    exitModifier.removePortal();
+                    exitModifier.tempDialDeviceNetwork = "";
+                }
+            }
+            
             return;
         }
 
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(worldObj, modifierLocation);
-        WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
+        WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork).get(0);
 
         if (exitLocation == null)
         {
