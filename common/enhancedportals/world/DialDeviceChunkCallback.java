@@ -17,38 +17,24 @@ public class DialDeviceChunkCallback implements ForgeChunkManager.OrderedLoading
     {
         for (Ticket ticket : tickets)
         {
-            int x, y, z;
+            int x = ticket.getModData().getInteger("dialX"), y = ticket.getModData().getInteger("dialY"), z = ticket.getModData().getInteger("dialZ");
 
-            if (ticket.getModData().hasKey("basicDialX"))
+            if (world.getBlockId(x, y, z) == BlockIds.DialDevice)
             {
-                x = ticket.getModData().getInteger("basicDialX");
-                y = ticket.getModData().getInteger("basicDialY");
-                z = ticket.getModData().getInteger("basicDialZ");
+                TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(x, y, z);
 
-                if (world.getBlockId(x, y, z) == BlockIds.DialDeviceBasic)
+                if (dialDevice != null)
                 {
-                    TileEntityDialDeviceBasic dialDevice = (TileEntityDialDeviceBasic) world.getBlockTileEntity(x, y, z);
-
-                    if (dialDevice != null)
-                    {
-                        dialDevice.loadChunk(ticket);
-                    }
+                    dialDevice.loadChunk(ticket);
                 }
             }
-            else
+            else if (world.getBlockId(x, y, z) == BlockIds.DialDeviceBasic)
             {
-                x = ticket.getModData().getInteger("dialX");
-                y = ticket.getModData().getInteger("dialY");
-                z = ticket.getModData().getInteger("dialZ");
+                TileEntityDialDeviceBasic dialDevice = (TileEntityDialDeviceBasic) world.getBlockTileEntity(x, y, z);
 
-                if (world.getBlockId(x, y, z) == BlockIds.DialDevice)
+                if (dialDevice != null)
                 {
-                    TileEntityDialDevice dialDevice = (TileEntityDialDevice) world.getBlockTileEntity(x, y, z);
-
-                    if (dialDevice != null)
-                    {
-                        dialDevice.loadChunk(ticket);
-                    }
+                    dialDevice.loadChunk(ticket);
                 }
             }
         }
@@ -61,29 +47,15 @@ public class DialDeviceChunkCallback implements ForgeChunkManager.OrderedLoading
 
         for (Ticket ticket : tickets)
         {
-            int x, y, z;
+            int x = ticket.getModData().getInteger("dialX"), y = ticket.getModData().getInteger("dialY"), z = ticket.getModData().getInteger("dialZ");
 
-            if (ticket.getModData().hasKey("basicDialX"))
+            if (world.getBlockId(x, y, z) == BlockIds.DialDevice)
             {
-                x = ticket.getModData().getInteger("basicDialX");
-                y = ticket.getModData().getInteger("basicDialY");
-                z = ticket.getModData().getInteger("basicDialZ");
-
-                if (world.getBlockId(x, y, z) == BlockIds.DialDeviceBasic)
-                {
-                    validTickets.add(ticket);
-                }
+                validTickets.add(ticket);
             }
-            else
+            else if (world.getBlockId(x, y, z) == BlockIds.DialDeviceBasic)
             {
-                x = ticket.getModData().getInteger("dialX");
-                y = ticket.getModData().getInteger("dialY");
-                z = ticket.getModData().getInteger("dialZ");
-
-                if (world.getBlockId(x, y, z) == BlockIds.DialDevice)
-                {
-                    validTickets.add(ticket);
-                }
+                validTickets.add(ticket);
             }
         }
 
