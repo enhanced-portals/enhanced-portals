@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import enhancedcore.util.MathHelper;
 import enhancedportals.lib.Textures;
+import enhancedportals.portal.PortalTexture;
 import enhancedportals.tileentity.TileEntityNetherPortal;
 
 public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
@@ -65,13 +66,19 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TileEntityNetherPortal portal = (TileEntityNetherPortal) tile;
-        ItemStack stack = Textures.getItemStackFromTexture(portal.texture);
+        PortalTexture texture = Textures.getTexture(portal.texture);
+        ItemStack stack = texture.getItemStack();
+        int spriteNumber = stack.getItem().getSpriteNumber();
 
         if (stack.itemID == Item.netherStar.itemID)
         {
             return;
         }
-        
+        else if (texture.getBlockSheet())
+        {
+            spriteNumber = 0;
+        }
+
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -79,7 +86,7 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        bindTextureByName(stack.getItem().getSpriteNumber() == 0 ? "/terrain.png" : "/gui/items.png");
+        bindTextureByName(spriteNumber == 0 ? "/terrain.png" : "/gui/items.png");
 
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);

@@ -81,7 +81,7 @@ public enum Strings
     {
         return (chatFormatting != null ? chatFormatting.toString() : "") + Localization.localizeString(text);
     }
-    
+
     public String toStringNoFormatting()
     {
         return Localization.localizeString(text);

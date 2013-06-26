@@ -1,6 +1,7 @@
 package enhancedportals.portal;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
@@ -15,22 +16,42 @@ public class PortalTexture
 
     private String ID;
     private Icon portalTexture;
+    private boolean forceBlockSheet;
 
     public PortalTexture(String id)
     {
         ID = id;
         portalTexture = null;
+        forceBlockSheet = false;
     }
 
     public PortalTexture(String id, Icon portaltexture)
     {
         ID = id;
         portalTexture = portaltexture;
+        forceBlockSheet = false;
+    }
+
+    public PortalTexture(String id, Icon portaltexture, boolean blockSheet)
+    {
+        ID = id;
+        portalTexture = portaltexture;
+        forceBlockSheet = blockSheet;
+    }
+
+    public boolean getBlockSheet()
+    {
+        return forceBlockSheet;
     }
 
     public String getID()
     {
         return ID;
+    }
+
+    public ItemStack getItemStack()
+    {
+        return Textures.getItemStackFromTexture(this);
     }
 
     public Icon getPortalTexture()
@@ -81,7 +102,7 @@ public class PortalTexture
         else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
         {
             int id = Integer.parseInt(objects[0].toString()), side = 2, meta = Integer.parseInt(objects[1].toString());
-            
+
             if (LiquidDictionary.findLiquidName(new LiquidStack(id, 1, meta)) != null)
             {
                 side = 0;

@@ -121,7 +121,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
             }
         }
 
-        return side == blockAccess.getBlockMetadata(x, y, z) ?  modifier.isActive() ? frontTextureActive : frontTexture : sideTexture;
+        return side == blockAccess.getBlockMetadata(x, y, z) ? modifier.isActive() ? frontTextureActive : frontTexture : sideTexture;
     }
 
     @Override

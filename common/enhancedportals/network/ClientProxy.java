@@ -61,7 +61,7 @@ public class ClientProxy extends CommonProxy
 
         // Nether Star
         Textures.portalTextureMap.put("I:" + Item.netherStar.itemID + ":0", new PortalTexture("I:" + Item.netherStar.itemID + ":0"));
-        
+
         // Fire
         PortalTexture fireTexture = new PortalTexture("B:" + Block.fire.blockID + ":0");
         Textures.portalTextureMap.put("I:" + Item.helmetChain.itemID + ":0", fireTexture);
