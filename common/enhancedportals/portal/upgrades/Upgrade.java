@@ -100,7 +100,6 @@ public abstract class Upgrade
 
         if (type == null)
         {
-
             throw new RuntimeException("Can not create an upgrade of an unregistered type.");
         }
     }
