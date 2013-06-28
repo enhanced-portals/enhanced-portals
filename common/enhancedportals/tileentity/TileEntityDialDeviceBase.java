@@ -1,5 +1,6 @@
 package enhancedportals.tileentity;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -219,18 +220,23 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
     }
 
     public void scheduledBlockUpdate()
-    {
+    {        
         if (!active || worldObj.isRemote)
         {
             return;
         }
         else if (modifierLocation == null || !(WorldHelper.getTileEntity(worldObj, modifierLocation) instanceof TileEntityPortalModifier))
         {
-            active = false;
             unloadChunk();
             sendUpdatePacket();
             
-            WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork).get(0);
+            List<WorldPosition> positionList = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
+            WorldPosition exitLocation = null;
+            
+            if (!positionList.isEmpty())
+            {
+                exitLocation = positionList.get(0);
+            }
             
             if (exitLocation != null)
             {
@@ -244,14 +250,22 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
                 }
             }
             
+            active = false;
             return;
         }
 
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(worldObj, modifierLocation);
-        WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork).get(0);
+        List<WorldPosition> positionList = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
+        WorldPosition exitLocation = null;
+        
+        if (!positionList.isEmpty())
+        {
+            exitLocation = positionList.get(0);
+        }
 
         if (exitLocation == null)
         {
+            active = false;
             return;
         }
         else

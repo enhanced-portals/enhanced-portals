@@ -60,6 +60,11 @@ public class NetworkManager
 
     public void addNetwork(String key)
     {
+        if (key == null)
+        {
+            return;
+        }
+        
         if (hasNetwork(key))
         {
             return;
@@ -70,6 +75,11 @@ public class NetworkManager
 
     public void addToNetwork(String key, WorldPosition data)
     {
+        if (key == null)
+        {
+            return;
+        }
+        
         if (!hasNetwork(key))
         {
             addNetwork(key);
@@ -85,9 +95,14 @@ public class NetworkManager
 
     public List<WorldPosition> getNetwork(String key)
     {
+        if (key == null)
+        {
+            return new ArrayList<WorldPosition>();
+        }
+        
         if (!hasNetwork(key))
         {
-            return null;
+            return new ArrayList<WorldPosition>();
         }
 
         List<WorldPosition> list = networkData.get(key);
@@ -121,6 +136,11 @@ public class NetworkManager
 
     public List<WorldPosition> getNetworkExcluding(String network, WorldPosition worldLocation)
     {
+        if (network == null)
+        {
+            return new ArrayList<WorldPosition>();
+        }
+        
         List<WorldPosition> list = networkData.get(network);
         List<WorldPosition> newList = new ArrayList<WorldPosition>();
 
@@ -147,6 +167,11 @@ public class NetworkManager
 
     public boolean hasNetwork(String key)
     {
+        if (key == null)
+        {
+            return false;
+        }
+        
         for (String key2 : networkData.keySet())
         {
             if (key.equals(key2))
@@ -159,7 +184,7 @@ public class NetworkManager
     }
 
     public boolean isInNetwork(String key, WorldPosition data)
-    {
+    {        
         if (!hasNetwork(key))
         {
             return false;

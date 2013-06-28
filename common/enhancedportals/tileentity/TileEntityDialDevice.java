@@ -63,6 +63,7 @@ public class TileEntityDialDevice extends TileEntityDialDeviceBase
             modifierLocation = new BlockPosition(tagCompound.getInteger("mX"), tagCompound.getInteger("mY"), tagCompound.getInteger("mZ"));
             timer = tagCompound.getInteger("Timer");
             ticksToGo = tagCompound.getInteger("TicksToGo");
+            dialledNetwork = tagCompound.getString("DialledNetwork");
         }
 
         NBTTagList list = tagCompound.getTagList("Entries");
@@ -115,6 +116,7 @@ public class TileEntityDialDevice extends TileEntityDialDeviceBase
             tagCompound.setInteger("mZ", modifierLocation.getZ());
             tagCompound.setInteger("Timer", timer);
             tagCompound.setInteger("TicksToGo", ticksToGo);
+            tagCompound.setString("DialledNetwork", dialledNetwork);
         }
 
         NBTTagList list = new NBTTagList();

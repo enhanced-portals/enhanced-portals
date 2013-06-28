@@ -31,12 +31,12 @@ public class TileEntityDialDeviceBasic extends TileEntityDialDeviceBase
     {
         super.readFromNBT(tagCompound);
 
-        active = tagCompound.getBoolean("Active");
-
-        if (active)
+        if (tagCompound.hasKey("ModifierX"))
         {
+            active = true;
             modifierLocation = new WorldPosition(tagCompound.getInteger("ModifierX"), tagCompound.getInteger("ModifierY"), tagCompound.getInteger("ModifierZ"), tagCompound.getInteger("ModifierD"));
             ticksToGo = tagCompound.getInteger("TicksToGo");
+            dialledNetwork = tagCompound.getString("DialledNetwork");
         }
     }
 
@@ -51,14 +51,13 @@ public class TileEntityDialDeviceBasic extends TileEntityDialDeviceBase
     {
         super.writeToNBT(tagCompound);
 
-        tagCompound.setBoolean("Active", active);
-
         if (active)
         {
             tagCompound.setInteger("ModifierX", modifierLocation.getX());
             tagCompound.setInteger("ModifierY", modifierLocation.getY());
             tagCompound.setInteger("ModifierZ", modifierLocation.getZ());
             tagCompound.setInteger("TicksToGo", ticksToGo);
+            tagCompound.setString("DialledNetwork", dialledNetwork);
         }
     }
 }

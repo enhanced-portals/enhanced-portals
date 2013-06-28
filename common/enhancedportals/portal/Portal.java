@@ -34,8 +34,7 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class Portal
 {
-    public WorldPosition portalModifier;
-    WorldPosition position;
+    WorldPosition portalModifier, position;
     public byte shape, thickness;
     public boolean producesSound, producesParticles;
     public String texture;
