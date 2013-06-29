@@ -1,6 +1,8 @@
 package enhancedportals;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.logging.Level;
 
 import net.minecraft.block.Block;
@@ -174,8 +176,57 @@ public class EnhancedPortals
             
             if (!(serverWorld.field_85177_Q instanceof EPTeleporter))
             {
-                serverWorld.field_85177_Q = new EPTeleporter(serverWorld);
+                if (!reflectTeleporter(serverWorld, new EPTeleporter(serverWorld)))
+                {
+                    Reference.log.log(Level.SEVERE, "Could not overwrite the default Teleporter. Minecraft will create new portals instead of using custom ones!");
+                }
             }
         }
+    }
+    
+    private boolean reflectTeleporter(WorldServer world, EPTeleporter teleporter)
+    {
+        Field field = null;
+        
+        for (Field f : net.minecraft.world.WorldServer.class.getDeclaredFields())
+        {            
+            if (f.getType() == net.minecraft.world.Teleporter.class)
+            {
+                field = f;
+            }
+        }
+        
+        if (field == null)
+        {
+            return false;
+        }
+                
+        field.setAccessible(true);
+        
+        if ((field.getModifiers() & Modifier.FINAL) != 0)
+        {
+            try
+            {
+                Field modifiers = Field.class.getDeclaredField("modifiers");
+                modifiers.setAccessible(true);
+                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        
+        try
+        {
+            field.set(world, teleporter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        
+        return true;
     }
 }
