@@ -447,7 +447,8 @@ public class EPTeleporter extends Teleporter
                     j3 = j5 + l2;
                     i4 = j2 + (i3 - 1) * l5;
                     flag = i3 == 0 || i3 == 3 || l2 == -1 || l2 == 3;
-                    this.worldServerInstance.setBlock(k3, j3, i4, flag ? Block.obsidian.blockID : EnhancedPortals.proxy.blockNetherPortal.blockID, 2, 2);
+                    boolean flag2 = this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.obsidian.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.obsidian.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID;
+                    this.worldServerInstance.setBlock(k3, j3, i4, flag ? Block.obsidian.blockID : EnhancedPortals.proxy.blockNetherPortal.blockID, flag2 ? 4 : 2, 2);
                 }
             }
 
