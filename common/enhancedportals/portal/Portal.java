@@ -22,6 +22,7 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Strings;
+import enhancedportals.lib.Textures;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketNetherPortalUpdate;
 import enhancedportals.portal.teleportation.TeleportManager;
@@ -397,11 +398,12 @@ public class Portal
             return false;
         }
 
-        ItemStack item = player.inventory.mainInventory[player.inventory.currentItem];
-
-        if (item != null && item.itemID == Item.dyePowder.itemID)
+        ItemStack item = player.getCurrentEquippedItem();
+        int dyeColour = Textures.getDyeColour(item);
+        
+        if (dyeColour >= 0)
         {
-            if (updateTexture("C:" + item.getItemDamage()) && !player.capabilities.isCreativeMode)
+            if (updateTexture("C:" + dyeColour) && !player.capabilities.isCreativeMode)
             {
                 item.stackSize--;
             }

@@ -3,11 +3,11 @@ package enhancedportals.lib;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import enhancedportals.portal.PortalTexture;
 
 public class Textures
@@ -117,9 +117,9 @@ public class Textures
         }
         else
         {
-            if (stack.itemID == Item.dyePowder.itemID)
+            if (getDyeColour(stack) >= 0)
             {
-                return getTexture("C:" + stack.getItemDamage());
+                return getTexture("C:" + getDyeColour(stack));
             }
             else if (portalTextureMap.containsKey("I:" + stack.itemID + ":" + stack.getItemDamage()))
             {
@@ -150,5 +150,46 @@ public class Textures
         }
 
         return null;
+    }
+        
+    public static int getDyeColour(ItemStack stack)
+    {
+        if (stack != null)
+        {
+            String name = OreDictionary.getOreName(OreDictionary.getOreID(stack));
+            
+            String[] dyes =
+                {
+                    "dyeBlack",
+                    "dyeRed",
+                    "dyeGreen",
+                    "dyeBrown",
+                    "dyeBlue",
+                    "dyePurple",
+                    "dyeCyan",
+                    "dyeLightGray",
+                    "dyeGray",
+                    "dyePink",
+                    "dyeLime",
+                    "dyeYellow",
+                    "dyeLightBlue",
+                    "dyeMagenta",
+                    "dyeOrange",
+                    "dyeWhite"
+                };
+            
+            if (name.startsWith("dye"))
+            {
+                for (int i = 0; i < dyes.length; i++)
+                {
+                    if (name.equals(dyes[i]))
+                    {
+                        return i;
+                    }
+                }
+            }
+        }
+        
+        return -1;
     }
 }
