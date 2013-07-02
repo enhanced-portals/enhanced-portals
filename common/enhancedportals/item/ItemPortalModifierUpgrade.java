@@ -121,12 +121,12 @@ public class ItemPortalModifierUpgrade extends Item
                 }
                 else
                 {
-                    player.sendChatToPlayer(Strings.ChatMaxUpgradesInstalled.toString());
+                    player.addChatMessage(Strings.ChatMaxUpgradesInstalled.toString());
                 }
             }
             else
             {
-                player.sendChatToPlayer(Strings.ChatUpgradeInstalled.toString());
+                player.addChatMessage(Strings.ChatUpgradeInstalled.toString());
             }
         }
 

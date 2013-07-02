@@ -316,7 +316,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
     {
         if (player != null)
         {
-            player.sendChatToPlayer(str);
+            player.addChatMessage(str);
         }
         else
         {

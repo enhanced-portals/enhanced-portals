@@ -84,4 +84,10 @@ public class CommandEP extends CommandBase
             throw new WrongUsageException(Commands.USAGE, new Object[0]);
         }
     }
+
+	@Override
+	public String getCommandUsage(ICommandSender icommandsender) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

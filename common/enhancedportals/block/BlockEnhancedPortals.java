@@ -3,6 +3,7 @@ package enhancedportals.block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -88,12 +89,12 @@ public class BlockEnhancedPortals extends BlockContainer
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack)
     {
-        if (canRotate)
+    	if (canRotate)
         {
             int direction = 0;
-            int facing = MathHelper.floorDouble(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+            int facing = MathHelper.floorDouble(entityLivingBase.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
             if (facing == 0)
             {
@@ -114,11 +115,11 @@ public class BlockEnhancedPortals extends BlockContainer
 
             if (canRotateVertically)
             {
-                if (entityLiving.rotationPitch > 65 && entityLiving.rotationPitch <= 90)
+                if (entityLivingBase.rotationPitch > 65 && entityLivingBase.rotationPitch <= 90)
                 {
                     direction = ForgeDirection.UP.ordinal();
                 }
-                else if (entityLiving.rotationPitch < -65 && entityLiving.rotationPitch >= -90)
+                else if (entityLivingBase.rotationPitch < -65 && entityLivingBase.rotationPitch >= -90)
                 {
                     direction = ForgeDirection.DOWN.ordinal();
                 }
