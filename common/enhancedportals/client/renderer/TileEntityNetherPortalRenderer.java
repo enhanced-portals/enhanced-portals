@@ -86,7 +86,7 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        bindTextureByName(spriteNumber == 0 ? "/terrain.png" : "/gui/items.png");
+        bindTextureByName(spriteNumber == 0 ? "/terrain.png" : "/gui/items.png"); // TODO
 
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);

@@ -156,7 +156,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         drawDefaultBackground();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifierNetwork.png");
+        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifierNetwork.png"); // TODO
         int x2 = (width - xSize) / 2;
         int y2 = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);

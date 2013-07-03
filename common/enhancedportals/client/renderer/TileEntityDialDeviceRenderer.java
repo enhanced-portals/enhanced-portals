@@ -42,7 +42,7 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
             GL11.glRotatef(-90, 0F, 1F, 0F);
         }
 
-        bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (tile instanceof TileEntityDialDeviceBasic ? "basicDial" : "dial") + "Device.png");
+        bindTextureByName("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (tile instanceof TileEntityDialDeviceBasic ? "basicDial" : "dial") + "Device.png"); // TODO
         model.renderAll();
         GL11.glPopMatrix();
     }

@@ -177,7 +177,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         super.drawGuiContainerBackgroundLayer(f, i, j);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png");
+        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png"); // TODO
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -217,7 +217,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                 {
                     if (Reference.glyphItems.get(j1).getItemName().replace("item.", "").equalsIgnoreCase(split[i1]))
                     {
-                        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j1), guiLeft + 8 + i1 * 18, guiTop + 47);
+                        itemRenderer.func_110794_c(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j1), guiLeft + 8 + i1 * 18, guiTop + 47);
                     }
                 }
             }

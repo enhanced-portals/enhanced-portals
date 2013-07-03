@@ -129,7 +129,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         drawBackground(0);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "dialDeviceInventory.png");
+        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "dialDeviceInventory.png"); // TODO
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -145,7 +145,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
                     continue;
                 }
 
-                itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stackList.get(i2).itemStack, x2 + i2 * 18, y2);
+                itemRenderer.func_110794_c(fontRenderer, mc.renderEngine, stackList.get(i2).itemStack, x2 + i2 * 18, y2);
             }
         }
 
@@ -281,7 +281,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
             drawBackground(0);
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifierNetwork.png");
+            mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifierNetwork.png"); // TODO
             int x = (width - xSize) / 2;
             int y = (height - ySize) / 2;
             drawTexturedModalRect(x, y, 0, 0, xSize, ySize);

@@ -1,9 +1,9 @@
 package enhancedportals.client.gui;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
@@ -63,7 +63,7 @@ public class GuiGlyphElement
         isStack = isstack;
     }
 
-    public void drawElement(int xOffset, int yOffset, int x2, int y2, FontRenderer fontRenderer, RenderItem itemRenderer, RenderEngine renderEngine)
+    public void drawElement(int xOffset, int yOffset, int x2, int y2, FontRenderer fontRenderer, RenderItem itemRenderer, TextureManager textureManager)
     {
         GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -84,7 +84,7 @@ public class GuiGlyphElement
             itemStack.stackSize = stackSize;
         }
 
-        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, renderEngine, itemStack, x + xOffset, y + yOffset);
+        itemRenderer.func_110794_c(fontRenderer, textureManager, itemStack, x + xOffset, y + yOffset);
 
         if (itemStack.stackSize >= 1)
         {

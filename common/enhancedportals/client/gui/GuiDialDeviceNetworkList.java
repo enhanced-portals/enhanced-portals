@@ -23,12 +23,6 @@ class GuiDialDeviceNetworkList extends GuiSlot
     }
 
     @Override
-    protected void drawBackground()
-    {
-        parent.drawDefaultBackground();
-    }
-
-    @Override
     protected void drawSlot(int par1, int par2, int par3, int par4, Tessellator par5Tessellator)
     {
         DialDeviceNetworkObject obj = (DialDeviceNetworkObject) parent.getSize().get(par1);
@@ -46,13 +40,13 @@ class GuiDialDeviceNetworkList extends GuiSlot
                 {
                     if (Reference.glyphItems.get(j).getItemName().replace("item.", "").equalsIgnoreCase(element2))
                     {
-                        parent.itemRenderer.renderItemIntoGUI(parent.fontRenderer, parent.mc.renderEngine, Reference.glyphItems.get(j), x + count * 18, y);
+                        parent.itemRenderer.func_110794_c(parent.fontRenderer, parent.mc.renderEngine, Reference.glyphItems.get(j), x + count * 18, y);
                         count++;
                     }
                 }
             }
 
-            parent.itemRenderer.renderItemIntoGUI(parent.fontRenderer, parent.mc.renderEngine, Textures.getItemStackFromTexture(obj.texture), par2 + 200, par3);
+            parent.itemRenderer.func_110794_c(parent.fontRenderer, parent.mc.renderEngine, Textures.getItemStackFromTexture(obj.texture), par2 + 200, par3);
             GL11.glDisable(GL11.GL_LIGHTING);
         }
     }
@@ -76,15 +70,6 @@ class GuiDialDeviceNetworkList extends GuiSlot
     }
 
     /**
-     * return the height of the content being scrolled
-     */
-    @Override
-    protected int getContentHeight()
-    {
-        return parent.getSize().size() * 36;
-    }
-
-    /**
      * Gets the size of the current slot list.
      */
     @Override
@@ -101,4 +86,10 @@ class GuiDialDeviceNetworkList extends GuiSlot
     {
         return par1 == parent.getSelected();
     }
+
+	@Override
+	protected void func_130003_c()
+	{
+		
+	}
 }
