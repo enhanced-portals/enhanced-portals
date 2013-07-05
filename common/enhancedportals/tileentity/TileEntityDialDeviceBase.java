@@ -278,8 +278,6 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
         if (exitModifier == null)
         {
             ticksToGo = 0;
-            scheduledBlockUpdate();
-            return;
         }
 
         if (ticksToGo > 0)
