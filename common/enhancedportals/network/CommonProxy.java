@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedcore.util.MathHelper;
@@ -125,16 +126,16 @@ public class CommonProxy
         if (!Settings.DisableModifierRecipe && Settings.AllowPortalModifiers)
         {
             // Upgrade Card
-            GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "NDN", " P ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper);
-            GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", " P ", "NDN", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper);
-            GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", "DP ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper);
-            GameRegistry.addShapedRecipe(new ItemStack(itemMisc, 1, 0), "N N", " PD", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), "NDN", " P ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), "N N", " P ", "NDN", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), "N N", "DP ", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), "N N", " PD", "N N", Character.valueOf('N'), Item.goldNugget, Character.valueOf('D'), "dyePurple", Character.valueOf('P'), Item.paper));
 
             // Network Card
-            GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "IDI", " P ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper);
-            GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", "DP ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper);
-            GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", " PD", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper);
-            GameRegistry.addShapedRecipe(new ItemStack(itemNetworkCard), "I I", " P ", "IDI", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemNetworkCard), "IDI", " P ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemNetworkCard), "I I", "DP ", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemNetworkCard), "I I", " PD", "I I", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemNetworkCard), "I I", " P ", "IDI", Character.valueOf('I'), Item.ingotIron, Character.valueOf('D'), "dyeBlue", Character.valueOf('P'), Item.paper));
         }
 
         if (Settings.AllowFlintSteel)
