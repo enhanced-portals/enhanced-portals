@@ -17,7 +17,7 @@ import enhancedportals.computercraft.tileentity.TileEntityPortalModifier_cc;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 
-@Mod(modid = Reference.MOD_ID + "_CC", name = "EP2 ComputerCraft", version = "@CC_VERSION@", dependencies = "required-after:" + Reference.MOD_ID + ";required-after:ComputerCraft")
+//@Mod(modid = Reference.MOD_ID + "_CC", name = "EP2 ComputerCraft", version = "@CC_VERSION@", dependencies = "required-after:" + Reference.MOD_ID + ";required-after:ComputerCraft")
 public class EnhancedPortals_ComputerCraft
 {
     @Instance(Reference.MOD_ID + "_CC")
@@ -26,15 +26,15 @@ public class EnhancedPortals_ComputerCraft
     @Init
     public void init(FMLInitializationEvent event)
     {
-        GameRegistry.registerTileEntity(TileEntityPortalModifier_cc.class, "EPPModifierCC");
-        GameRegistry.registerTileEntity(TileEntityDialDeviceBasic_cc.class, "EPPBDialCC");
-        GameRegistry.registerTileEntity(TileEntityDialDevice_cc.class, "EPPDialCC");
+        //GameRegistry.registerTileEntity(TileEntityPortalModifier_cc.class, "EPPModifierCC");
+        //GameRegistry.registerTileEntity(TileEntityDialDeviceBasic_cc.class, "EPPBDialCC");
+        //GameRegistry.registerTileEntity(TileEntityDialDevice_cc.class, "EPPDialCC");
     }
 
     @PostInit
     public void postInit(FMLPostInitializationEvent event)
     {
-        Block.blocksList[BlockIds.PortalModifier] = null;
+        /*Block.blocksList[BlockIds.PortalModifier] = null;
         Block.blocksList[BlockIds.DialDeviceBasic] = null;
         Block.blocksList[BlockIds.DialDevice] = null;
 
@@ -44,6 +44,6 @@ public class EnhancedPortals_ComputerCraft
 
         EnhancedPortals.proxy.blockPortalModifier = new BlockPortalModifier_cc();
         EnhancedPortals.proxy.blockDialDeviceBasic = new BlockDialDeviceBasic_cc();
-        EnhancedPortals.proxy.blockDialDevice = new BlockDialDevice_cc();
+        EnhancedPortals.proxy.blockDialDevice = new BlockDialDevice_cc();*/
     }
 }

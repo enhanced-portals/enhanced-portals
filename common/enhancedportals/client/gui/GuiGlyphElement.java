@@ -84,7 +84,7 @@ public class GuiGlyphElement
             itemStack.stackSize = stackSize;
         }
 
-        itemRenderer.func_110794_c(fontRenderer, textureManager, itemStack, x + xOffset, y + yOffset);
+        itemRenderer.renderItemIntoGUI(fontRenderer, textureManager, itemStack, x + xOffset, y + yOffset);
 
         if (itemStack.stackSize >= 1)
         {

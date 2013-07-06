@@ -6,8 +6,7 @@ import java.nio.ByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.Texture;
-import net.minecraft.client.renderer.texture.TextureStitched;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -33,13 +32,14 @@ public class NetherPortalFX extends EntityFX
 
         if (Settings.RequireFancyGraphicsForParticles && Minecraft.isFancyGraphicsEnabled() && Settings.UseNewParticleEffects || !Settings.RequireFancyGraphicsForParticles && Settings.UseNewParticleEffects)
         {
-            Texture mainTexture = null;
-            TextureStitched icon = (TextureStitched) Textures.getTexture(texture).getPortalTexture();
+        	// TODO
+        	/*TextureAtlasSprite mainTexture = null;
+        	TextureAtlasSprite icon = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
             ItemStack item = Textures.getItemStackFromTexture(texture);
 
             if (item.getItem().getSpriteNumber() == 0)
             {
-                mainTexture = FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks.getTexture();
+                mainTexture = FMLClientHandler.instance().getClient().func_110434_K().func_110581_b(par1ResourceLocation)
             }
             else
             {
@@ -66,7 +66,7 @@ public class NetherPortalFX extends EntityFX
 
             particleRed = color.getRed() / 255F;
             particleGreen = color.getGreen() / 255F;
-            particleBlue = color.getBlue() / 255F;
+            particleBlue = color.getBlue() / 255F;*/
         }
         else
         {

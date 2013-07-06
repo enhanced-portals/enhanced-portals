@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -177,7 +178,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         super.drawGuiContainerBackgroundLayer(f, i, j);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png"); // TODO
+        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.GUI_LOCATION + "portalModifier.png"));
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -217,7 +218,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
                 {
                     if (Reference.glyphItems.get(j1).getItemName().replace("item.", "").equalsIgnoreCase(split[i1]))
                     {
-                        itemRenderer.func_110794_c(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j1), guiLeft + 8 + i1 * 18, guiTop + 47);
+                        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, Reference.glyphItems.get(j1), guiLeft + 8 + i1 * 18, guiTop + 47);
                     }
                 }
             }
