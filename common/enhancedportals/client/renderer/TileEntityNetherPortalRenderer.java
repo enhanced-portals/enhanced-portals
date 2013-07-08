@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureObject;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -76,10 +76,6 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         {
             return;
         }
-        else if (texture.getBlockSheet())
-        {
-            spriteNumber = 0;
-        }
 
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -90,8 +86,8 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
 
         //System.out.println(((TextureAtlasSprite) texture.getPortalTexture()).getIconName());
         String[] texNames = ((TextureAtlasSprite) texture.getPortalTexture()).getIconName().split(":");
-        
-        func_110628_a(new ResourceLocation(texNames[0].toLowerCase(), "textures/blocks/" + texNames[1] + ".png"));
+                
+        //func_110628_a(new ResourceLocation(texNames[0].toLowerCase(), "textures/blocks/" + texNames[1] + ".png"));
 
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);
