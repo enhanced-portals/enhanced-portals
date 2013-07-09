@@ -30,7 +30,7 @@ public class Localization
 
     public static String localizeString(String str)
     {
-        String str2 = LanguageRegistry.instance().getStringLocalization(str);
+        String str2 = LanguageRegistry.instance().getStringLocalization(str, "en_US");
 
         if (str2.length() == 0)
         {

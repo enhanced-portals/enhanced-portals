@@ -49,7 +49,7 @@ import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.world.DialDeviceChunkCallback;
 import enhancedportals.world.EPTeleporter;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1,);required-after:Forge@[7.8.0.700,)", acceptedMinecraftVersions = "[1.5,)")
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1.1,);required-after:Forge@[9.10.0.780,)", acceptedMinecraftVersions = "[1.6.2,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
 {
