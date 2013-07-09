@@ -34,16 +34,16 @@ public class NetherPortalFX extends EntityFX
         {
         	TextureAtlasSprite sprite = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
         	
-        	if (sprite.func_110970_k() > 0)
+        	if (sprite != null && sprite.func_110970_k() > 0)
         	{
-	        	int[] data = sprite.func_110965_a(rand.nextInt(sprite.func_110970_k()));
+	        	int[] data = sprite.func_110965_a(0);
 	        	Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
 	        	
 	        	particleRed = color.getRed() / 255F;
 	        	particleGreen = color.getGreen() / 255F;
 	        	particleBlue = color.getBlue() / 255F;
         	}
-        	else
+        	else if (sprite != null)
         	{
         		// TODO: Figure out why the hell this is happening...
         		// non-animated block textures aren't stored here?

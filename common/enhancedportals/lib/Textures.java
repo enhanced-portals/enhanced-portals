@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import enhancedportals.portal.PortalTexture;
@@ -42,17 +43,13 @@ public class Textures
     {
         ItemStack stack = null;
 
-        if (texture.getID().startsWith("B:") || texture.getID().startsWith("I:"))
+        if (texture.getID().startsWith("B:") || texture.getID().startsWith("I:") || texture.getID().startsWith("F:"))
         {
             return new ItemStack(Integer.parseInt(texture.getID().substring(2).split(":")[0]), 1, Integer.parseInt(texture.getID().substring(2).split(":")[1]));
         }
         else if (texture.getID().startsWith("C:"))
         {
             return new ItemStack(BlockIds.DummyPortal, 1, Integer.parseInt(texture.getID().substring(2)));
-        }
-        else if (texture.getID().startsWith("L:"))
-        {
-            //return LiquidDictionary.getLiquid(texture.getID().substring(2), 1).asItemStack(); // TODO
         }
 
         return stack;
@@ -69,7 +66,7 @@ public class Textures
         {
             return portalTextureMap.get(string);
         }
-        else if (string.startsWith("B:") || string.startsWith("L:"))
+        else if (string.startsWith("B:") || string.startsWith("F:"))
         {
             return new PortalTexture(string);
         }
@@ -138,14 +135,10 @@ public class Textures
                     return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage());
                 }
             }
-            /*else if (LiquidContainerRegistry.isFilledContainer(stack))
+            else if (FluidContainerRegistry.isFilledContainer(stack))
             {
-                return getTexture("L:" + LiquidDictionary.findLiquidName(LiquidContainerRegistry.getLiquidForFilledItem(stack)));
+            	return getTexture("F:" + stack.itemID + ":" + stack.getItemDamage());
             }
-            else if (LiquidContainerRegistry.isLiquid(stack))
-            {
-                return getTexture("L:" + LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, 1, stack.getItemDamage())));
-            }*/ // TODO
         }
 
         return null;

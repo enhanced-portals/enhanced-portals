@@ -3,6 +3,9 @@ package enhancedportals.portal;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import enhancedportals.lib.Textures;
 
 public class PortalTexture
@@ -60,7 +63,7 @@ public class PortalTexture
 
             return getPortalTexture(id, meta);
         }
-        else if (ID.startsWith("L:") && portalTexture == null)
+        else if (ID.startsWith("F:") && portalTexture == null)
         {
             return getPortalTexture(ID.substring(2));
         }
@@ -76,36 +79,27 @@ public class PortalTexture
     {
         if (objects.length == 1 && objects[0] instanceof String)
         {
-            /*LiquidStack liquid = LiquidDictionary.getLiquid(objects[0].toString(), 1);
-
-            if (liquid != null)
-            {
-                Icon icon = liquid.canonical().getRenderingIcon();
-
-                if (icon == null)
-                {
-                    if (liquid.itemID < Block.blocksList.length && Block.blocksList[liquid.itemID] != null)
-                    {
-                        return Block.blocksList[liquid.itemID].getIcon(2, 0);
-                    }
-                    else
-                    {
-                        return getDefaultPortalTexture();
-                    }
-                }
-
-                return icon;
-            }*/
-        	// TODO
+        	String str = objects[0].toString();        	
+        	ItemStack stack = new ItemStack(Integer.parseInt(str.split(":")[0]), 1, Integer.parseInt(str.split(":")[1]));
+        	
+        	if (FluidContainerRegistry.isFilledContainer(stack))
+        	{
+        		FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
+        		Icon icon = fluid.getFluid().getStillIcon();
+        		
+        		if (icon != null)
+        		{
+        			return icon;
+        		}
+        		else
+        		{
+        			return Block.blocksList[fluid.getFluid().getBlockID()].getIcon(0, 0);
+        		}
+        	}
         }
         else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
         {
             int id = Integer.parseInt(objects[0].toString()), side = 2, meta = Integer.parseInt(objects[1].toString());
-
-            /*if (LiquidDictionary.findLiquidName(new LiquidStack(id, 1, meta)) != null)
-            {
-                side = 0;
-            }*/ // TODO
 
             return Block.blocksList[id].getIcon(side, meta);
         }
