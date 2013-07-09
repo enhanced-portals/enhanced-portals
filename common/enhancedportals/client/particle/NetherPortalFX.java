@@ -2,10 +2,13 @@ package enhancedportals.client.particle;
 
 import java.awt.Color;
 
+import cpw.mods.fml.client.FMLClientHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.world.World;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
@@ -28,15 +31,23 @@ public class NetherPortalFX extends EntityFX
         portalPosZ = posZ = par6;
 
         if (Minecraft.isFancyGraphicsEnabled() || Settings.UseNewParticleEffects)
-        {        	
+        {
         	TextureAtlasSprite sprite = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
-        	int[] data = sprite.func_110965_a(0);
         	
-            Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
-
-            particleRed = color.getRed() / 255F;
-            particleGreen = color.getGreen() / 255F;
-            particleBlue = color.getBlue() / 255F;
+        	if (sprite.func_110970_k() > 0)
+        	{
+	        	int[] data = sprite.func_110965_a(rand.nextInt(sprite.func_110970_k()));
+	        	Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
+	        	
+	        	particleRed = color.getRed() / 255F;
+	        	particleGreen = color.getGreen() / 255F;
+	        	particleBlue = color.getBlue() / 255F;
+        	}
+        	else
+        	{
+        		// TODO: Figure out why the hell this is happening...
+        		// non-animated block textures aren't stored here?
+        	}
         }
         else
         {

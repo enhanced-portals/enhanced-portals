@@ -178,7 +178,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         super.drawGuiContainerBackgroundLayer(f, i, j);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.GUI_LOCATION + "portalModifier.png"));
+        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "portalModifier.png"));
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);

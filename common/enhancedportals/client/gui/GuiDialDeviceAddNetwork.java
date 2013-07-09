@@ -130,7 +130,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         drawBackground(0);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.GUI_LOCATION + "dialDeviceInventory.png"));
+        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "dialDeviceInventory.png"));
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -282,7 +282,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
             drawBackground(0);
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            mc.renderEngine.func_110577_a(new ResourceLocation(Reference.GUI_LOCATION + "portalModifierNetwork.png"));
+            mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "portalModifierNetwork.png"));
             int x = (width - xSize) / 2;
             int y = (height - ySize) / 2;
             drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
