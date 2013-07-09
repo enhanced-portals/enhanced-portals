@@ -8,12 +8,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -451,11 +451,6 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 
             if (Text != null)
             {
-                if (LiquidContainerRegistry.isFilledContainer(itemStack))
-                {
-                    itemStack = LiquidContainerRegistry.getLiquidForFilledItem(itemStack).asItemStack();
-                }
-
                 extendedSlots.get(0).setSlot(itemStack);
             }
         }

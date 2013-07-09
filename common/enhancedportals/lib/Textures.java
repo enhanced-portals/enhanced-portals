@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import enhancedportals.portal.PortalTexture;
 
@@ -53,7 +52,7 @@ public class Textures
         }
         else if (texture.getID().startsWith("L:"))
         {
-            return LiquidDictionary.getLiquid(texture.getID().substring(2), 1).asItemStack();
+            //return LiquidDictionary.getLiquid(texture.getID().substring(2), 1).asItemStack(); // TODO
         }
 
         return stack;
@@ -139,14 +138,14 @@ public class Textures
                     return getTexture("I:" + stack.itemID + ":" + stack.getItemDamage());
                 }
             }
-            else if (LiquidContainerRegistry.isFilledContainer(stack))
+            /*else if (LiquidContainerRegistry.isFilledContainer(stack))
             {
                 return getTexture("L:" + LiquidDictionary.findLiquidName(LiquidContainerRegistry.getLiquidForFilledItem(stack)));
             }
             else if (LiquidContainerRegistry.isLiquid(stack))
             {
                 return getTexture("L:" + LiquidDictionary.findLiquidName(new LiquidStack(stack.itemID, 1, stack.getItemDamage())));
-            }
+            }*/ // TODO
         }
 
         return null;

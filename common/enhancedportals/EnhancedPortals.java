@@ -84,7 +84,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.goldNugget));
         Reference.glyphItems.add(new ItemStack(Item.redstone));
         Reference.glyphItems.add(new ItemStack(Item.ingotIron));
-        Reference.glyphItems.add(new ItemStack(Item.lightStoneDust));
+        Reference.glyphItems.add(new ItemStack(Item.glowstone));
         Reference.glyphItems.add(new ItemStack(Item.netherQuartz));
         Reference.glyphItems.add(new ItemStack(Item.bucketLava));
         Reference.glyphItems.add(new ItemStack(Item.dyePowder, 1, 4));

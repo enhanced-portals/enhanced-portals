@@ -3,8 +3,6 @@ package enhancedportals.portal;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
 import enhancedportals.lib.Textures;
 
 public class PortalTexture
@@ -78,7 +76,7 @@ public class PortalTexture
     {
         if (objects.length == 1 && objects[0] instanceof String)
         {
-            LiquidStack liquid = LiquidDictionary.getLiquid(objects[0].toString(), 1);
+            /*LiquidStack liquid = LiquidDictionary.getLiquid(objects[0].toString(), 1);
 
             if (liquid != null)
             {
@@ -97,16 +95,17 @@ public class PortalTexture
                 }
 
                 return icon;
-            }
+            }*/
+        	// TODO
         }
         else if (objects.length == 2 && objects[0] instanceof Integer && objects[1] instanceof Integer)
         {
             int id = Integer.parseInt(objects[0].toString()), side = 2, meta = Integer.parseInt(objects[1].toString());
 
-            if (LiquidDictionary.findLiquidName(new LiquidStack(id, 1, meta)) != null)
+            /*if (LiquidDictionary.findLiquidName(new LiquidStack(id, 1, meta)) != null)
             {
                 side = 0;
-            }
+            }*/ // TODO
 
             return Block.blocksList[id].getIcon(side, meta);
         }

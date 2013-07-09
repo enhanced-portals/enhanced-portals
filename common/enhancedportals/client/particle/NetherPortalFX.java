@@ -1,15 +1,12 @@
 package enhancedportals.client.particle;
 
 import java.awt.Color;
-import java.nio.ByteBuffer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.FMLClientHandler;
 import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
 
@@ -30,43 +27,16 @@ public class NetherPortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        if (Settings.RequireFancyGraphicsForParticles && Minecraft.isFancyGraphicsEnabled() && Settings.UseNewParticleEffects || !Settings.RequireFancyGraphicsForParticles && Settings.UseNewParticleEffects)
-        {
-        	// TODO
-        	/*TextureAtlasSprite mainTexture = null;
-        	TextureAtlasSprite icon = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
-            ItemStack item = Textures.getItemStackFromTexture(texture);
-
-            if (item.getItem().getSpriteNumber() == 0)
-            {
-                mainTexture = FMLClientHandler.instance().getClient().func_110434_K().func_110581_b(par1ResourceLocation)
-            }
-            else
-            {
-                mainTexture = FMLClientHandler.instance().getClient().renderEngine.textureMapItems.getTexture();
-            }
-
-            int sW = mainTexture.getWidth();
-            int iX = icon.getOriginX(), iY = icon.getOriginY(), w = icon.width, h = icon.height;
-
-            ByteBuffer byteBuffer = mainTexture.getTextureData();
-            byte[] abyte = new byte[sW * h * 4];
-            byteBuffer.position(iY * sW * 4 + iX * 4);
-            byteBuffer.get(abyte);
-
-            int j = rand.nextInt(w), i = rand.nextInt(w);
-            int k = j * sW * 4 + i * 4;
-            byte b0 = 0;
-            int l = b0 | (abyte[k + 2] & 255) << 0;
-            l |= (abyte[k + 1] & 255) << 8;
-            l |= (abyte[k + 0] & 255) << 16;
-            l |= (abyte[k + 3] & 255) << 24;
-
-            Color color = Color.decode(String.valueOf(l));
+        if (Minecraft.isFancyGraphicsEnabled() || Settings.UseNewParticleEffects)
+        {        	
+        	TextureAtlasSprite sprite = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
+        	int[] data = sprite.func_110965_a(0);
+        	
+            Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
 
             particleRed = color.getRed() / 255F;
             particleGreen = color.getGreen() / 255F;
-            particleBlue = color.getBlue() / 255F;*/
+            particleBlue = color.getBlue() / 255F;
         }
         else
         {
