@@ -1,13 +1,18 @@
 package enhancedportals.command;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import enhancedportals.lib.Commands;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.Strings;
 
 public class CommandEffects
 {

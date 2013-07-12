@@ -1,5 +1,6 @@
 package enhancedportals.lib;
 
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class Textures
     }
 
     public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
-
+    
     public static ItemStack getItemStackFromTexture(PortalTexture texture)
     {
         ItemStack stack = null;

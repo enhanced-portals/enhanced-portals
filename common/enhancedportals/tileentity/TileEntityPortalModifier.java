@@ -1,12 +1,16 @@
 package enhancedportals.tileentity;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.util.ArrayHelper;
 import enhancedcore.world.WorldPosition;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
@@ -17,8 +21,9 @@ import enhancedportals.portal.upgrades.modifier.UpgradeDialDevice;
 import enhancedportals.portal.upgrades.modifier.UpgradeNetherFrame;
 import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
 
-public class TileEntityPortalModifier extends TileEntityEnhancedPortals
+public class TileEntityPortalModifier extends TileEntityEnhancedPortals implements IInventory
 {
+	public ItemStack[] inventory;
     public String texture;
     public byte thickness, redstoneSetting, redstoneState;
     public String modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
@@ -33,6 +38,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
         modifierNetwork = "";
         dialDeviceNetwork = "";
         tempDialDeviceNetwork = "";
+        inventory = new ItemStack[2];
 
         upgradeHandler = new UpgradeHandler(5);
     }
@@ -222,6 +228,15 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
                 upgradeHandler.addUpgradeNoActivate(b, this);
             }
         }
+        
+        NBTTagList list = tagCompound.getTagList("Inventory");
+        
+        for (int i = 0; i < list.tagList.size(); i++)
+        {
+        	NBTTagCompound tag = (NBTTagCompound) list.tagList.get(i);
+        	
+        	inventory[i] = ItemStack.loadItemStackFromNBT(tag);
+        }
     }
 
     public boolean removePortal()
@@ -271,5 +286,89 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals
             tagCompound.setByte("Upgrade" + i, b);
             i++;
         }
+        
+        NBTTagList list = new NBTTagList();
+        
+        for (ItemStack stack : inventory)
+        {
+        	if (stack != null)
+        	{
+        		NBTTagCompound tag = new NBTTagCompound();
+        		stack.writeToNBT(tag);
+        		
+        		list.appendTag(tag);
+        	}
+        }
+        
+        tagCompound.setTag("Inventory", list);
     }
+
+	@Override
+	public int getSizeInventory()
+	{
+		return inventory.length;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return inventory[i];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j)
+	{
+		ItemStack stack = getStackInSlot(i);
+		stack.stackSize -= j;
+		
+		return stack;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i)
+	{
+		return inventory[i];
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack)
+	{
+		inventory[i] = itemstack;
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return "portalModifier";
+	}
+
+	@Override
+	public boolean isInvNameLocalized()
+	{
+		return false;
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 4;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
+	}
+
+	@Override
+	public void openChest() { }
+
+	@Override
+	public void closeChest() { }
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return i == 1 && itemstack.isItemEqual(new ItemStack(EnhancedPortals.proxy.itemMisc, 1, 0));
+	}
 }
