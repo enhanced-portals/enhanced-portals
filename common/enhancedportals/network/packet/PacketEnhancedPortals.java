@@ -29,7 +29,10 @@ public abstract class PacketEnhancedPortals
         PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class),
         PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
         REQUEST_DATA(PacketRequestData.class),
-        CREATE_PORTAL(PacketCreatePortal.class);
+        CREATE_PORTAL(PacketCreatePortal.class),
+        UPGRADE(PacketUpgrade.class),
+        THICKNESS(PacketThickness.class),
+        REDSTONE(PacketRedstoneControl.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 

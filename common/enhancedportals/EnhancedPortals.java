@@ -17,6 +17,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
@@ -40,6 +41,7 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
+import enhancedportals.lib.Textures;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
@@ -48,7 +50,7 @@ import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.world.DialDeviceChunkCallback;
 import enhancedportals.world.EPTeleporter;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1,);required-after:Forge@[7.8.0.700,)", acceptedMinecraftVersions = "[1.5,)")
+@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1.1,);required-after:Forge@[9.10.0.780,)", acceptedMinecraftVersions = "[1.6.2,)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
 public class EnhancedPortals
 {
@@ -58,7 +60,7 @@ public class EnhancedPortals
     @SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
     public static CommonProxy proxy;
 
-    @Init
+    @EventHandler
     public void init(FMLInitializationEvent event)
     {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
@@ -83,7 +85,7 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.goldNugget));
         Reference.glyphItems.add(new ItemStack(Item.redstone));
         Reference.glyphItems.add(new ItemStack(Item.ingotIron));
-        Reference.glyphItems.add(new ItemStack(Item.lightStoneDust));
+        Reference.glyphItems.add(new ItemStack(Item.glowstone));
         Reference.glyphItems.add(new ItemStack(Item.netherQuartz));
         Reference.glyphItems.add(new ItemStack(Item.bucketLava));
         Reference.glyphItems.add(new ItemStack(Item.dyePowder, 1, 4));
@@ -111,13 +113,13 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.cake));
     }
 
-    @PostInit
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new DialDeviceChunkCallback());
     }
 
-    @PreInit
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         Reference.log.setParent(FMLLog.getLogger());
@@ -141,7 +143,7 @@ public class EnhancedPortals
         proxy.registerIcons(event);
     }
 
-    @ServerStarting
+    @EventHandler
     private void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandEP());
@@ -150,7 +152,7 @@ public class EnhancedPortals
         proxy.DialDeviceNetwork = new DialDeviceNetwork(event.getServer());
     }
 
-    @ServerStopping
+    @EventHandler
     private void serverStopping(FMLServerStoppingEvent event)
     {
         proxy.ModifierNetwork.saveData();

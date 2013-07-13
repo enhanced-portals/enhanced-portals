@@ -1,6 +1,7 @@
 package enhancedportals.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -10,10 +11,10 @@ import enhancedportals.client.gui.GuiAutomaticDiallerSimple;
 import enhancedportals.client.gui.GuiDialDevice;
 import enhancedportals.client.gui.GuiDialDeviceAddNetwork;
 import enhancedportals.client.gui.GuiDialDeviceBasic;
-import enhancedportals.client.gui.GuiPortalModifier;
+import enhancedportals.client.gui.GuiModifier;
 import enhancedportals.client.gui.GuiPortalModifierNetwork;
+import enhancedportals.client.gui.container.ContainerModifier;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
-import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketAutomaticDiallerUpdate;
@@ -40,7 +41,8 @@ public class GuiHandler implements IGuiHandler
         {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
-                return new GuiPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
+            	return new GuiModifier(new ContainerModifier(player.inventory, (TileEntityPortalModifier) tileEntity), (IInventory) tileEntity);
+                //return new GuiPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
             }
         }
         else if (ID == GuiIds.PortalModifierNetwork && Settings.canUse(player))
@@ -94,7 +96,8 @@ public class GuiHandler implements IGuiHandler
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpdate((TileEntityPortalModifier) tileEntity)), (Player) player);
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade((TileEntityPortalModifier) tileEntity)), (Player) player);
 
-                return new ContainerPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
+                return new ContainerModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
+                //return new ContainerPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
             }
         }
         else if (ID == GuiIds.PortalModifierNetwork)

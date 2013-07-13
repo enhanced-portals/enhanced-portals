@@ -124,7 +124,7 @@ public class TeleportManager
             }
 
             world.loadedEntityList.remove(entity);
-            world.releaseEntitySkin(entity);
+            //world.releaseEntitySkin(entity);
         }
 
         entity.isDead = false;
@@ -199,7 +199,7 @@ public class TeleportManager
             {
                 if (!supressMessages && entity instanceof EntityPlayer)
                 {
-                    ((EntityPlayer) entity).sendChatToPlayer("A portal could not be created at the exit location.");
+                    ((EntityPlayer) entity).addChatMessage("A portal could not be created at the exit location.");
                 }
                 else
                 {

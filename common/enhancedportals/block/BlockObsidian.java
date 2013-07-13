@@ -1,9 +1,13 @@
 package enhancedportals.block;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
@@ -11,6 +15,8 @@ import enhancedportals.portal.Portal;
 
 public class BlockObsidian extends net.minecraft.block.BlockObsidian
 {
+	Icon texture;
+	
     public BlockObsidian()
     {
         super(BlockIds.Obsidian);
@@ -36,5 +42,19 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
         }
 
         return false;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+    	texture = iconRegister.registerIcon("obsidian");
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int par1, int par2)
+    {
+    	return texture;
     }
 }

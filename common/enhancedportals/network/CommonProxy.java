@@ -141,7 +141,7 @@ public class CommonProxy
         if (Settings.AllowFlintSteel)
         {
             // Flint & Steel
-            GameRegistry.addShapelessRecipe(new ItemStack(itemEnhancedFlintSteel), Item.flintAndSteel, Item.lightStoneDust, Item.lightStoneDust);
+            GameRegistry.addShapelessRecipe(new ItemStack(itemEnhancedFlintSteel), Item.flintAndSteel, Item.glowstone, Item.glowstone);
         }
 
         if (!Settings.DisableModifierRecipe && Settings.AllowPortalModifiers)

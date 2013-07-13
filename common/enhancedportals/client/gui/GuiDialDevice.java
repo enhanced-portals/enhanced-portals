@@ -146,7 +146,6 @@ public class GuiDialDevice extends GuiScreen
         super.initGui();
 
         networkList = new GuiDialDeviceNetworkList(this);
-        networkList.registerScrollButtons(buttonList, 4, 5);
 
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;

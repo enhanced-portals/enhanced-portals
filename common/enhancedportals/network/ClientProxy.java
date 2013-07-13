@@ -50,7 +50,7 @@ public class ClientProxy extends CommonProxy
     @Override
     public void registerIcons(TextureStitchEvent.Pre event)
     {
-        if (event.map == FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks)
+        if (event.map.textureType == 0)
         {
             for (int i = 0; i < 16; i++)
             {

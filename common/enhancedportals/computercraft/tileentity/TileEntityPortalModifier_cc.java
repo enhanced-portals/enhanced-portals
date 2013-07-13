@@ -1,6 +1,6 @@
 package enhancedportals.computercraft.tileentity;
 
-import java.util.HashMap;
+/*import java.util.HashMap;
 
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -18,11 +18,11 @@ import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
-import enhancedportals.tileentity.TileEntityPortalModifier;
+import enhancedportals.tileentity.TileEntityPortalModifier;*/
 
-public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implements IPeripheral
+public class TileEntityPortalModifier_cc //extends TileEntityPortalModifier implements IPeripheral
 {
-    ComputerManager computerManager;
+    /*ComputerManager computerManager;
 
     public TileEntityPortalModifier_cc()
     {
@@ -473,5 +473,5 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
         }
 
         return false;
-    }
+    }*/
 }

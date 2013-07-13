@@ -19,8 +19,9 @@ public class Reference
 
     public static CreativeTabs CREATIVE_TAB = new CreativeTabEP();
 
-    public static final String LOCALE_LOCATION = "/mods/" + MOD_ID + "/lang/";
-    public static final String GUI_LOCATION = "/mods/" + MOD_ID + "/textures/gui/";
+    public static final String RESOURCE_NAME = MOD_ID.toLowerCase();
+    public static final String LOCALE_LOCATION = "/assets/" + MOD_ID.toLowerCase() + "/lang/";
+    public static final String GUI_LOCATION = "textures/gui/";
 
     public static final List<ItemStack> glyphItems = new ArrayList<ItemStack>();
     public static final String glyphSeperator = " ";

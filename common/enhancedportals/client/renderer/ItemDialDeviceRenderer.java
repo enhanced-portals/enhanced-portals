@@ -1,6 +1,7 @@
 package enhancedportals.client.renderer;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
@@ -27,7 +28,7 @@ public class ItemDialDeviceRenderer implements IItemRenderer
 
     private void render(float x, float y, float z, ItemRenderType type, boolean basic)
     {
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/" + Reference.MOD_ID + "/textures/blocks/" + (basic ? "basicDial" : "dial") + "Device.png");
+        FMLClientHandler.instance().getClient().renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, "textures/blocks/" + (basic ? "basicDial" : "dial") + "Device.png"));
 
         GL11.glPushMatrix();
         GL11.glTranslatef(x + 0.5F, y + 1.5F, z + 0.5F);

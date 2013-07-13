@@ -432,7 +432,7 @@ public class Portal
         {
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatMissingUpgrade.toString());
+                ((EntityPlayer) entity).addChatMessage(Strings.ChatMissingUpgrade.toString());
             }
         }
     }
@@ -502,7 +502,7 @@ public class Portal
         {
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatNoLinkedPortals.toString());
+                ((EntityPlayer) entity).addChatMessage(Strings.ChatNoLinkedPortals.toString());
             }
 
             TeleportManager.setCanEntityTravel(entity, false);
@@ -530,7 +530,7 @@ public class Portal
         {
             if (entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendChatToPlayer(Strings.ChatMissingUpgrade.toString());
+                ((EntityPlayer) entity).addChatMessage(Strings.ChatMissingUpgrade.toString());
             }
         }
     }

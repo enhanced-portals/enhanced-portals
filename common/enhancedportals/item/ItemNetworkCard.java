@@ -146,11 +146,11 @@ public class ItemNetworkCard extends Item
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                    player.sendChatToPlayer(Strings.ChatNetworkSuccessful.toString());
+                    player.addChatMessage(Strings.ChatNetworkSuccessful.toString());
                 }
                 else if (modifier.isActive())
                 {
-                    player.sendChatToPlayer(Strings.ChatModifierActive.toString());
+                    player.addChatMessage(Strings.ChatModifierActive.toString());
                 }
             }
         }
@@ -160,7 +160,7 @@ public class ItemNetworkCard extends Item
 
             if (!isSet(itemStack))
             {
-                player.sendChatToPlayer(Strings.ChatNotLinked.toString());
+                player.addChatMessage(Strings.ChatNotLinked.toString());
             }
             else
             {
@@ -173,7 +173,7 @@ public class ItemNetworkCard extends Item
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                    player.sendChatToPlayer(Strings.ChatNetworkSuccessful.toString());
+                    player.addChatMessage(Strings.ChatNetworkSuccessful.toString());
                 }
             }
         }

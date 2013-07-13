@@ -12,7 +12,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -177,7 +178,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         super.drawGuiContainerBackgroundLayer(f, i, j);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifier.png");
+        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "portalModifier.png"));
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -450,11 +451,6 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 
             if (Text != null)
             {
-                if (LiquidContainerRegistry.isFilledContainer(itemStack))
-                {
-                    itemStack = LiquidContainerRegistry.getLiquidForFilledItem(itemStack).asItemStack();
-                }
-
                 extendedSlots.get(0).setSlot(itemStack);
             }
         }

@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -156,7 +157,7 @@ public class GuiPortalModifierNetwork extends GuiNetwork
         drawDefaultBackground();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifierNetwork.png");
+        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "portalModifierNetwork.png"));
         int x2 = (width - xSize) / 2;
         int y2 = (height - ySize) / 2 - 3;
         drawTexturedModalRect(x2, y2, 0, 0, 166 + 22, 176);

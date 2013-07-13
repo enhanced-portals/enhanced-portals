@@ -23,12 +23,6 @@ class GuiDialDeviceNetworkList extends GuiSlot
     }
 
     @Override
-    protected void drawBackground()
-    {
-        parent.drawDefaultBackground();
-    }
-
-    @Override
     protected void drawSlot(int par1, int par2, int par3, int par4, Tessellator par5Tessellator)
     {
         DialDeviceNetworkObject obj = (DialDeviceNetworkObject) parent.getSize().get(par1);
@@ -76,15 +70,6 @@ class GuiDialDeviceNetworkList extends GuiSlot
     }
 
     /**
-     * return the height of the content being scrolled
-     */
-    @Override
-    protected int getContentHeight()
-    {
-        return parent.getSize().size() * 36;
-    }
-
-    /**
      * Gets the size of the current slot list.
      */
     @Override
@@ -101,4 +86,9 @@ class GuiDialDeviceNetworkList extends GuiSlot
     {
         return par1 == parent.getSelected();
     }
+
+	@Override
+	protected void drawBackground() {
+		
+	}
 }

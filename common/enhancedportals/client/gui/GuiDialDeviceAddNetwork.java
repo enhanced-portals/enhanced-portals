@@ -13,6 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -129,7 +130,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         drawBackground(0);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "dialDeviceInventory.png");
+        mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "dialDeviceInventory.png"));
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -281,7 +282,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
             drawBackground(0);
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            mc.renderEngine.bindTexture(Reference.GUI_LOCATION + "portalModifierNetwork.png");
+            mc.renderEngine.func_110577_a(new ResourceLocation(Reference.RESOURCE_NAME, Reference.GUI_LOCATION + "portalModifierNetwork.png"));
             int x = (width - xSize) / 2;
             int y = (height - ySize) / 2;
             drawTexturedModalRect(x, y, 0, 0, xSize, ySize);

@@ -3,10 +3,12 @@ package enhancedportals.client.renderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -41,7 +43,7 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         renderBlocks.enableAO = false;
 
         tessellator.startDrawingQuads();
-        tessellator.setColorOpaque_F(light, light, light);
+        //tessellator.setColorOpaque_F(light, light, light);
 
         if (meta == 2 || meta == 3)
         {
@@ -74,10 +76,6 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         {
             return;
         }
-        else if (texture.getBlockSheet())
-        {
-            spriteNumber = 0;
-        }
 
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -86,8 +84,8 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        bindTextureByName(spriteNumber == 0 ? "/terrain.png" : "/gui/items.png");
-
+        func_110628_a(TextureMap.field_110575_b);
+        
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);
 

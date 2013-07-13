@@ -95,9 +95,9 @@ public class EPTeleporter extends Teleporter
 
                     for (int i2 = this.worldServerInstance.getActualHeight() - 1; i2 >= 0; --i2)
                     {
-                        if (this.worldServerInstance.getBlockId(k1, i2, l1) == EnhancedPortals.proxy.blockNetherPortal.blockID)
+                        if (this.worldServerInstance.getBlockId(k1, i2, l1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(k1, i2, l1) == Block.portal.blockID)
                         {
-                            while (this.worldServerInstance.getBlockId(k1, i2 - 1, l1) == EnhancedPortals.proxy.blockNetherPortal.blockID)
+                            while (this.worldServerInstance.getBlockId(k1, i2 - 1, l1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(k1, i2 - 1, l1) == Block.portal.blockID)
                             {
                                 --i2;
                             }
@@ -131,22 +131,22 @@ public class EPTeleporter extends Teleporter
             d4 = (double)k + 0.5D;
             int j2 = -1;
 
-            if (this.worldServerInstance.getBlockId(i - 1, j, k) == EnhancedPortals.proxy.blockNetherPortal.blockID)
+            if (this.worldServerInstance.getBlockId(i - 1, j, k) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(i - 1, j, k) == Block.portal.blockID)
             {
                 j2 = 2;
             }
 
-            if (this.worldServerInstance.getBlockId(i + 1, j, k) == EnhancedPortals.proxy.blockNetherPortal.blockID)
+            if (this.worldServerInstance.getBlockId(i + 1, j, k) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(i + 1, j, k) == Block.portal.blockID)
             {
                 j2 = 0;
             }
 
-            if (this.worldServerInstance.getBlockId(i, j, k - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID)
+            if (this.worldServerInstance.getBlockId(i, j, k - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(i, j, k - 1) == Block.portal.blockID)
             {
                 j2 = 3;
             }
 
-            if (this.worldServerInstance.getBlockId(i, j, k + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID)
+            if (this.worldServerInstance.getBlockId(i, j, k + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(i, j, k + 1) == Block.portal.blockID)
             {
                 j2 = 1;
             }
@@ -447,7 +447,7 @@ public class EPTeleporter extends Teleporter
                     j3 = j5 + l2;
                     i4 = j2 + (i3 - 1) * l5;
                     flag = i3 == 0 || i3 == 3 || l2 == -1 || l2 == 3;
-                    boolean flag2 = this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.obsidian.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.obsidian.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID;
+                    boolean flag2 = this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.obsidian.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.portal.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.obsidian.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || this.worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.portal.blockID;
                     this.worldServerInstance.setBlock(k3, j3, i4, flag ? Block.obsidian.blockID : EnhancedPortals.proxy.blockNetherPortal.blockID, flag2 ? 4 : 2, 2);
                 }
             }

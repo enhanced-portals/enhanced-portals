@@ -1,17 +1,17 @@
 package enhancedportals.client.particle;
 
 import java.awt.Color;
-import java.nio.ByteBuffer;
+import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.Texture;
-import net.minecraft.client.renderer.texture.TextureStitched;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
-import enhancedportals.lib.Settings;
 import enhancedportals.lib.Textures;
 
 public class NetherPortalFX extends EntityFX
@@ -31,49 +31,35 @@ public class NetherPortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        if (Settings.RequireFancyGraphicsForParticles && Minecraft.isFancyGraphicsEnabled() && Settings.UseNewParticleEffects || !Settings.RequireFancyGraphicsForParticles && Settings.UseNewParticleEffects)
+        float f = rand.nextFloat() * 0.6F + 0.4F;
+        particleRed = particleGreen = particleBlue = 1.0F * f;
+        particleGreen *= 0.3F;
+        particleRed *= 0.9F;
+        
+        if (Minecraft.isFancyGraphicsEnabled())
         {
-            Texture mainTexture = null;
-            TextureStitched icon = (TextureStitched) Textures.getTexture(texture).getPortalTexture();
-            ItemStack item = Textures.getItemStackFromTexture(texture);
-
-            if (item.getItem().getSpriteNumber() == 0)
-            {
-                mainTexture = FMLClientHandler.instance().getClient().renderEngine.textureMapBlocks.getTexture();
-            }
-            else
-            {
-                mainTexture = FMLClientHandler.instance().getClient().renderEngine.textureMapItems.getTexture();
-            }
-
-            int sW = mainTexture.getWidth();
-            int iX = icon.getOriginX(), iY = icon.getOriginY(), w = icon.width, h = icon.height;
-
-            ByteBuffer byteBuffer = mainTexture.getTextureData();
-            byte[] abyte = new byte[sW * h * 4];
-            byteBuffer.position(iY * sW * 4 + iX * 4);
-            byteBuffer.get(abyte);
-
-            int j = rand.nextInt(w), i = rand.nextInt(w);
-            int k = j * sW * 4 + i * 4;
-            byte b0 = 0;
-            int l = b0 | (abyte[k + 2] & 255) << 0;
-            l |= (abyte[k + 1] & 255) << 8;
-            l |= (abyte[k + 0] & 255) << 16;
-            l |= (abyte[k + 3] & 255) << 24;
-
-            Color color = Color.decode(String.valueOf(l));
-
-            particleRed = color.getRed() / 255F;
-            particleGreen = color.getGreen() / 255F;
-            particleBlue = color.getBlue() / 255F;
-        }
-        else
-        {
-            float f = rand.nextFloat() * 0.6F + 0.4F;
-            particleRed = particleGreen = particleBlue = 1.0F * f;
-            particleGreen *= 0.3F;
-            particleRed *= 0.9F;
+        	TextureAtlasSprite sprite = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
+        	
+        	if (sprite != null && sprite.func_110970_k() > 0)
+        	{
+	        	int[] data = sprite.func_110965_a(0);
+	        	Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
+	        	
+	        	particleRed = color.getRed() / 255F;
+	        	particleGreen = color.getGreen() / 255F;
+	        	particleBlue = color.getBlue() / 255F;
+        	}
+        	else if (sprite != null)
+        	{
+        		// Massively round about way of getting the same TextureAtlasSprite..........
+        		//TextureMap map = (TextureMap) FMLClientHandler.instance().getClient().renderEngine.field_110585_a.get(TextureMap.field_110575_b);
+        		//System.out.println(((TextureAtlasSprite)map.mapTexturesStiched.get(sprite.getIconName())).func_110970_k());
+        		//System.out.println(((TextureAtlasSprite)map.field_110574_e.get(sprite.getIconName())).func_110970_k());
+        		        		
+        		//System.out.println(Textures.getTexture(texture).getPortalTexture().getClass());
+        		// TODO: Figure out why the hell this is happening...
+        		// non-animated block textures aren't stored here?
+        	}
         }
 
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
