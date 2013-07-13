@@ -217,7 +217,7 @@ public class GuiModifier extends GuiEnhancedCore
 			{
 				{ "You can camouflage", "the portal with any", "block or fluid" },
 				{ "You can control your", "portals with Redstone", "or ComputerCraft" },
-				{ "The portal modifier", "does not have to be", "inside the portal frame" }
+				{ "The portal modifier", "does not have to be", "inside a portal frame" }
 			};
 		
 		public TipLedger()
@@ -254,6 +254,12 @@ public class GuiModifier extends GuiEnhancedCore
 			}
 			
 			fontRenderer.drawStringWithShadow("Did you know...", x + 22, y + 8, headerColour);
+			
+			if (tip == -1)
+			{
+			    tip = 0;
+			    maxHeight = 25 + tipsList[tip].length * 10;
+			}
 			
 			for (int i = 0; i < tipsList[tip].length; i++)
 			{
