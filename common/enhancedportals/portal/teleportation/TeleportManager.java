@@ -124,7 +124,7 @@ public class TeleportManager
             }
 
             world.loadedEntityList.remove(entity);
-            //world.releaseEntitySkin(entity);
+            // world.releaseEntitySkin(entity);
         }
 
         entity.isDead = false;

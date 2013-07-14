@@ -64,7 +64,7 @@ public class NetworkManager
         {
             return;
         }
-        
+
         if (hasNetwork(key))
         {
             return;
@@ -79,7 +79,7 @@ public class NetworkManager
         {
             return;
         }
-        
+
         if (!hasNetwork(key))
         {
             addNetwork(key);
@@ -99,7 +99,7 @@ public class NetworkManager
         {
             return new ArrayList<WorldPosition>();
         }
-        
+
         if (!hasNetwork(key))
         {
             return new ArrayList<WorldPosition>();
@@ -140,7 +140,7 @@ public class NetworkManager
         {
             return new ArrayList<WorldPosition>();
         }
-        
+
         List<WorldPosition> list = networkData.get(network);
         List<WorldPosition> newList = new ArrayList<WorldPosition>();
 
@@ -171,7 +171,7 @@ public class NetworkManager
         {
             return false;
         }
-        
+
         for (String key2 : networkData.keySet())
         {
             if (key.equals(key2))
@@ -184,7 +184,7 @@ public class NetworkManager
     }
 
     public boolean isInNetwork(String key, WorldPosition data)
-    {        
+    {
         if (!hasNetwork(key))
         {
             return false;

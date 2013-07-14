@@ -1,17 +1,12 @@
 package enhancedportals.client.particle;
 
 import java.awt.Color;
-import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.FMLClientHandler;
 import enhancedportals.lib.Textures;
 
 public class NetherPortalFX extends EntityFX
@@ -35,31 +30,33 @@ public class NetherPortalFX extends EntityFX
         particleRed = particleGreen = particleBlue = 1.0F * f;
         particleGreen *= 0.3F;
         particleRed *= 0.9F;
-        
+
         if (Minecraft.isFancyGraphicsEnabled())
         {
-        	TextureAtlasSprite sprite = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
-        	
-        	if (sprite != null && sprite.func_110970_k() > 0)
-        	{
-	        	int[] data = sprite.func_110965_a(0);
-	        	Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
-	        	
-	        	particleRed = color.getRed() / 255F;
-	        	particleGreen = color.getGreen() / 255F;
-	        	particleBlue = color.getBlue() / 255F;
-        	}
-        	else if (sprite != null)
-        	{
-        		// Massively round about way of getting the same TextureAtlasSprite..........
-        		//TextureMap map = (TextureMap) FMLClientHandler.instance().getClient().renderEngine.field_110585_a.get(TextureMap.field_110575_b);
-        		//System.out.println(((TextureAtlasSprite)map.mapTexturesStiched.get(sprite.getIconName())).func_110970_k());
-        		//System.out.println(((TextureAtlasSprite)map.field_110574_e.get(sprite.getIconName())).func_110970_k());
-        		        		
-        		//System.out.println(Textures.getTexture(texture).getPortalTexture().getClass());
-        		// TODO: Figure out why the hell this is happening...
-        		// non-animated block textures aren't stored here?
-        	}
+            TextureAtlasSprite sprite = (TextureAtlasSprite) Textures.getTexture(texture).getPortalTexture();
+
+            if (sprite != null && sprite.func_110970_k() > 0)
+            {
+                int[] data = sprite.func_110965_a(0);
+                Color color = Color.decode(String.valueOf(data[rand.nextInt(data.length)]));
+
+                particleRed = color.getRed() / 255F;
+                particleGreen = color.getGreen() / 255F;
+                particleBlue = color.getBlue() / 255F;
+            }
+            else if (sprite != null)
+            {
+                // Massively round about way of getting the same
+                // TextureAtlasSprite..........
+                // TextureMap map = (TextureMap)
+                // FMLClientHandler.instance().getClient().renderEngine.field_110585_a.get(TextureMap.field_110575_b);
+                // System.out.println(((TextureAtlasSprite)map.mapTexturesStiched.get(sprite.getIconName())).func_110970_k());
+                // System.out.println(((TextureAtlasSprite)map.field_110574_e.get(sprite.getIconName())).func_110970_k());
+
+                // System.out.println(Textures.getTexture(texture).getPortalTexture().getClass());
+                // TODO: Figure out why the hell this is happening...
+                // non-animated block textures aren't stored here?
+            }
         }
 
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;

@@ -18,12 +18,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.ServerStarting;
-import cpw.mods.fml.common.Mod.ServerStopping;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -41,7 +36,6 @@ import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
-import enhancedportals.lib.Textures;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketHandler;
@@ -136,6 +130,52 @@ public class EnhancedPortals
         Localization.loadLocales();
     }
 
+    private boolean reflectTeleporter(WorldServer world, EPTeleporter teleporter)
+    {
+        Field field = null;
+
+        for (Field f : net.minecraft.world.WorldServer.class.getDeclaredFields())
+        {
+            if (f.getType() == net.minecraft.world.Teleporter.class)
+            {
+                field = f;
+            }
+        }
+
+        if (field == null)
+        {
+            return false;
+        }
+
+        field.setAccessible(true);
+
+        if ((field.getModifiers() & Modifier.FINAL) != 0)
+        {
+            try
+            {
+                Field modifiers = Field.class.getDeclaredField("modifiers");
+                modifiers.setAccessible(true);
+                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        try
+        {
+            field.set(world, teleporter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
     @SideOnly(Side.CLIENT)
     @ForgeSubscribe
     public void registerIcons(TextureStitchEvent.Pre event)
@@ -160,22 +200,12 @@ public class EnhancedPortals
     }
 
     @ForgeSubscribe
-    public void worldSave(WorldEvent.Save event)
-    {
-        if (!event.world.isRemote)
-        {
-            proxy.ModifierNetwork.saveData();
-            proxy.DialDeviceNetwork.saveData();
-        }
-    }
-    
-    @ForgeSubscribe
     public void worldLoad(WorldEvent.Load event)
     {
         if (!event.world.isRemote)
         {
             WorldServer serverWorld = (WorldServer) event.world;
-            
+
             if (!(serverWorld.field_85177_Q instanceof EPTeleporter))
             {
                 if (!reflectTeleporter(serverWorld, new EPTeleporter(serverWorld)))
@@ -185,50 +215,14 @@ public class EnhancedPortals
             }
         }
     }
-    
-    private boolean reflectTeleporter(WorldServer world, EPTeleporter teleporter)
+
+    @ForgeSubscribe
+    public void worldSave(WorldEvent.Save event)
     {
-        Field field = null;
-        
-        for (Field f : net.minecraft.world.WorldServer.class.getDeclaredFields())
-        {            
-            if (f.getType() == net.minecraft.world.Teleporter.class)
-            {
-                field = f;
-            }
-        }
-        
-        if (field == null)
+        if (!event.world.isRemote)
         {
-            return false;
+            proxy.ModifierNetwork.saveData();
+            proxy.DialDeviceNetwork.saveData();
         }
-                
-        field.setAccessible(true);
-        
-        if ((field.getModifiers() & Modifier.FINAL) != 0)
-        {
-            try
-            {
-                Field modifiers = Field.class.getDeclaredField("modifiers");
-                modifiers.setAccessible(true);
-                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-        
-        try
-        {
-            field.set(world, teleporter);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return false;
-        }
-        
-        return true;
     }
 }

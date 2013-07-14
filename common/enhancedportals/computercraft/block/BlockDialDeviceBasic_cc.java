@@ -7,9 +7,9 @@ import enhancedportals.computercraft.tileentity.TileEntityDialDeviceBasic_cc;
 
 public class BlockDialDeviceBasic_cc extends BlockDialDeviceBasic
 {
-    /*@Override
+    @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
         return new TileEntityDialDeviceBasic_cc();
-    }*/
+    }
 }

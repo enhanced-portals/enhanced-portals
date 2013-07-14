@@ -41,8 +41,9 @@ public class GuiHandler implements IGuiHandler
         {
             if (tileEntity instanceof TileEntityPortalModifier)
             {
-            	return new GuiModifier(new ContainerModifier(player.inventory, (TileEntityPortalModifier) tileEntity), (IInventory) tileEntity);
-                //return new GuiPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
+                return new GuiModifier(new ContainerModifier(player.inventory, (TileEntityPortalModifier) tileEntity), (IInventory) tileEntity);
+                // return new GuiPortalModifier(player.inventory,
+                // (TileEntityPortalModifier) tileEntity);
             }
         }
         else if (ID == GuiIds.PortalModifierNetwork && Settings.canUse(player))
@@ -97,7 +98,8 @@ public class GuiHandler implements IGuiHandler
                 PacketDispatcher.sendPacketToPlayer(PacketEnhancedPortals.makePacket(new PacketPortalModifierUpgrade((TileEntityPortalModifier) tileEntity)), (Player) player);
 
                 return new ContainerModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
-                //return new ContainerPortalModifier(player.inventory, (TileEntityPortalModifier) tileEntity);
+                // return new ContainerPortalModifier(player.inventory,
+                // (TileEntityPortalModifier) tileEntity);
             }
         }
         else if (ID == GuiIds.PortalModifierNetwork)

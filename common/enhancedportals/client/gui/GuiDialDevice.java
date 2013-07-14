@@ -102,7 +102,7 @@ public class GuiDialDevice extends GuiScreen
         fontRenderer.drawString(Localization.localizeString("tile.dialDevice.name"), guiLeft + xSize / 2 - fontRenderer.getStringWidth(Localization.localizeString("tile.dialDevice.name")) / 2, 15, 0xFFCCCCCC);
         super.drawScreen(x, y, par3); // Draw buttons
 
-        // Not the best place for this but it will do.        
+        // Not the best place for this but it will do.
         GuiButton button = (GuiButton) buttonList.get(3);
 
         if (Mouse.isButtonDown(1) && button.xPosition <= x && button.yPosition <= y && button.xPosition + 240 >= x && button.yPosition + 20 >= y && !rightClick && Settings.canUse(FMLClientHandler.instance().getClient().thePlayer))

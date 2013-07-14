@@ -23,7 +23,7 @@ import enhancedportals.portal.upgrades.modifier.UpgradeResourceFrame;
 
 public class TileEntityPortalModifier extends TileEntityEnhancedPortals implements IInventory
 {
-	public ItemStack[] inventory;
+    public ItemStack[] inventory;
     public String texture;
     public byte thickness, redstoneSetting, redstoneState;
     public String modifierNetwork, dialDeviceNetwork, tempDialDeviceNetwork;
@@ -41,6 +41,11 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         inventory = new ItemStack[2];
 
         upgradeHandler = new UpgradeHandler(5);
+    }
+
+    @Override
+    public void closeChest()
+    {
     }
 
     public boolean createPortal()
@@ -120,6 +125,45 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         return null;
     }
 
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        ItemStack stack = getStackInSlot(i);
+        stack.stackSize -= j;
+
+        return stack;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 4;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return "portalModifier";
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return inventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return inventory[i];
+    }
+
     public void handleRedstoneChanges(int redstoneLevel)
     {
         if (isRemotelyControlled())
@@ -195,9 +239,32 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
         return block.getBlockId() == BlockIds.NetherPortal;
     }
 
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return i == 1 && itemstack.isItemEqual(new ItemStack(EnhancedPortals.proxy.itemMisc, 1, 0));
+    }
+
     public boolean isRemotelyControlled()
     {
         return upgradeHandler.hasUpgrade(new UpgradeDialDevice());
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
+    }
+
+    @Override
+    public void openChest()
+    {
     }
 
     @Override
@@ -228,20 +295,26 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
                 upgradeHandler.addUpgradeNoActivate(b, this);
             }
         }
-        
+
         NBTTagList list = tagCompound.getTagList("Inventory");
-        
+
         for (int i = 0; i < list.tagList.size(); i++)
         {
-        	NBTTagCompound tag = (NBTTagCompound) list.tagList.get(i);
-        	
-        	inventory[i] = ItemStack.loadItemStackFromNBT(tag);
+            NBTTagCompound tag = (NBTTagCompound) list.tagList.get(i);
+
+            inventory[i] = ItemStack.loadItemStackFromNBT(tag);
         }
     }
 
     public boolean removePortal()
     {
         return new Portal(this).removePortal();
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        inventory[i] = itemstack;
     }
 
     public boolean updateData(byte thick)
@@ -286,89 +359,20 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
             tagCompound.setByte("Upgrade" + i, b);
             i++;
         }
-        
+
         NBTTagList list = new NBTTagList();
-        
+
         for (ItemStack stack : inventory)
         {
-        	if (stack != null)
-        	{
-        		NBTTagCompound tag = new NBTTagCompound();
-        		stack.writeToNBT(tag);
-        		
-        		list.appendTag(tag);
-        	}
+            if (stack != null)
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+                stack.writeToNBT(tag);
+
+                list.appendTag(tag);
+            }
         }
-        
+
         tagCompound.setTag("Inventory", list);
     }
-
-	@Override
-	public int getSizeInventory()
-	{
-		return inventory.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return inventory[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		ItemStack stack = getStackInSlot(i);
-		stack.stackSize -= j;
-		
-		return stack;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		return inventory[i];
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		inventory[i] = itemstack;
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return "portalModifier";
-	}
-
-	@Override
-	public boolean isInvNameLocalized()
-	{
-		return false;
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 4;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
-	}
-
-	@Override
-	public void openChest() { }
-
-	@Override
-	public void closeChest() { }
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return i == 1 && itemstack.isItemEqual(new ItemStack(EnhancedPortals.proxy.itemMisc, 1, 0));
-	}
 }

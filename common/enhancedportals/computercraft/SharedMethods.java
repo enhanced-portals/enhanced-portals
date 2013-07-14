@@ -3,13 +3,15 @@ package enhancedportals.computercraft;
 import java.util.HashMap;
 
 import net.minecraft.item.ItemStack;
+import dan200.computer.api.IComputerAccess;
+import enhancedcore.computercraft.ComputerManager.IMethod;
 //import dan200.computer.api.IComputerAccess;
 //import enhancedcore.computercraft.ComputerManager.IMethod;
 import enhancedportals.lib.Reference;
 
 public class SharedMethods
 {
-    /*public static IMethod getGlyphs = new IMethod()
+    public static IMethod getGlyphs = new IMethod()
     {
         @Override
         public Object[] execute(IComputerAccess computer, Object[] arguments) throws Exception
@@ -58,5 +60,5 @@ public class SharedMethods
         {
             return "getGlyph";
         }
-    };*/
+    };
 }

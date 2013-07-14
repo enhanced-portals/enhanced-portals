@@ -20,15 +20,7 @@ public abstract class Upgrade
 {
     enum Type
     {
-        PARTICLES(UpgradeParticles.class),
-        SOUNDS(UpgradeSounds.class),
-        DIMENSIONAL(UpgradeDimensional.class),
-        ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class),
-        MOMENTUM(UpgradeMomentum.class),
-        NETHER_FRAME(UpgradeNetherFrame.class),
-        RESOURCE_FRAME(UpgradeResourceFrame.class),
-        CAMOUFLAGE(UpgradeCamouflage.class),
-        DIAL_DEVICE(UpgradeDialDevice.class);
+        PARTICLES(UpgradeParticles.class), SOUNDS(UpgradeSounds.class), DIMENSIONAL(UpgradeDimensional.class), ADVANCED_DIMENSIONAL(UpgradeAdvancedDimensional.class), MOMENTUM(UpgradeMomentum.class), NETHER_FRAME(UpgradeNetherFrame.class), RESOURCE_FRAME(UpgradeResourceFrame.class), CAMOUFLAGE(UpgradeCamouflage.class), DIAL_DEVICE(UpgradeDialDevice.class);
 
         private Class<? extends Upgrade> upgradeType;
 

@@ -400,7 +400,7 @@ public class Portal
 
         ItemStack item = player.getCurrentEquippedItem();
         int dyeColour = Textures.getDyeColour(item);
-        
+
         if (dyeColour >= 0)
         {
             if (updateTexture("C:" + dyeColour) && !player.capabilities.isCreativeMode)

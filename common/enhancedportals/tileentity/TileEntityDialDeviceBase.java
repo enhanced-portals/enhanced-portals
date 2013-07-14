@@ -220,7 +220,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
     }
 
     public void scheduledBlockUpdate()
-    {        
+    {
         if (!active || worldObj.isRemote)
         {
             return;
@@ -229,27 +229,27 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
         {
             unloadChunk();
             sendUpdatePacket();
-            
+
             List<WorldPosition> positionList = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
             WorldPosition exitLocation = null;
-            
+
             if (!positionList.isEmpty())
             {
                 exitLocation = positionList.get(0);
             }
-            
+
             if (exitLocation != null)
             {
                 ((WorldServer) WorldHelper.getWorld(exitLocation.getDimension())).getChunkProvider().loadChunk(exitLocation.getX() >> 4, exitLocation.getZ() >> 4);
                 TileEntityPortalModifier exitModifier = (TileEntityPortalModifier) exitLocation.getTileEntity();
-                
+
                 if (exitModifier != null)
                 {
                     exitModifier.removePortal();
                     exitModifier.tempDialDeviceNetwork = "";
                 }
             }
-            
+
             active = false;
             return;
         }
@@ -257,7 +257,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(worldObj, modifierLocation);
         List<WorldPosition> positionList = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
         WorldPosition exitLocation = null;
-        
+
         if (!positionList.isEmpty())
         {
             exitLocation = positionList.get(0);

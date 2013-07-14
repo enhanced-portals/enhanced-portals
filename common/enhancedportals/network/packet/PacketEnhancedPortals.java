@@ -18,21 +18,7 @@ public abstract class PacketEnhancedPortals
 {
     enum Type
     {
-        AUTOMATIC_DIALLER_UPDATE(PacketAutomaticDiallerUpdate.class),
-        BASIC_DIAL_DEVICE_UPDATE(PacketBasicDialDeviceUpdate.class),
-        BASIC_DIAL_REQUEST(PacketDialRequest.class),
-        DIAL_DEVICE_UPDATE(PacketDialDeviceUpdate.class),
-        DIAL_ENTRY_ADD(PacketDialEntry.class),
-        GUI(PacketGui.class),
-        MISC(PacketMisc.class),
-        NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class),
-        PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class),
-        PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class),
-        REQUEST_DATA(PacketRequestData.class),
-        CREATE_PORTAL(PacketCreatePortal.class),
-        UPGRADE(PacketUpgrade.class),
-        THICKNESS(PacketThickness.class),
-        REDSTONE(PacketRedstoneControl.class);
+        AUTOMATIC_DIALLER_UPDATE(PacketAutomaticDiallerUpdate.class), BASIC_DIAL_DEVICE_UPDATE(PacketBasicDialDeviceUpdate.class), BASIC_DIAL_REQUEST(PacketDialRequest.class), DIAL_DEVICE_UPDATE(PacketDialDeviceUpdate.class), DIAL_ENTRY_ADD(PacketDialEntry.class), GUI(PacketGui.class), MISC(PacketMisc.class), NETHER_PORTAL_UPDATE(PacketNetherPortalUpdate.class), PORTAL_MODIFIER_UPDATE(PacketPortalModifierUpdate.class), PORTAL_MODIFIER_UPGRADE(PacketPortalModifierUpgrade.class), REQUEST_DATA(PacketRequestData.class), CREATE_PORTAL(PacketCreatePortal.class), UPGRADE(PacketUpgrade.class), THICKNESS(PacketThickness.class), REDSTONE(PacketRedstoneControl.class);
 
         private Class<? extends PacketEnhancedPortals> packetType;
 

@@ -61,7 +61,11 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                 }
                 else
                 {
-                    if (stack.itemID == Item.dyePowder.itemID) // Display a coloured portal instead of the dye item
+                    if (stack.itemID == Item.dyePowder.itemID) // Display a
+                                                               // coloured
+                                                               // portal instead
+                                                               // of the dye
+                                                               // item
                     {
                         stack = new ItemStack(EnhancedPortals.proxy.blockDummyPortal, 1, stack.getItemDamage());
                     }

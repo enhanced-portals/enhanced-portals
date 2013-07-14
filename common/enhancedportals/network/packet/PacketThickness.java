@@ -16,19 +16,19 @@ public class PacketThickness extends PacketEnhancedPortals
     int dimension;
     BlockPosition position;
     byte thickness;
-    
+
     public PacketThickness()
     {
-        
+
     }
-    
-    public PacketThickness(TileEntityPortalModifier modifier)    
+
+    public PacketThickness(TileEntityPortalModifier modifier)
     {
         position = modifier.getBlockPosition();
         dimension = modifier.worldObj.provider.dimensionId;
         thickness = modifier.thickness;
     }
-    
+
     @Override
     public PacketEnhancedPortals consumePacket(DataInputStream stream) throws IOException
     {
@@ -46,7 +46,7 @@ public class PacketThickness extends PacketEnhancedPortals
         {
             if (WorldHelper.getTileEntity(dimension, position) instanceof TileEntityPortalModifier)
             {
-                TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(dimension, position);                
+                TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(dimension, position);
                 modifier.thickness = thickness;
             }
         }

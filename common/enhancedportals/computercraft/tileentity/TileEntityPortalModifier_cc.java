@@ -1,12 +1,13 @@
 package enhancedportals.computercraft.tileentity;
 
-/*import java.util.HashMap;
+import java.util.HashMap;
 
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 import enhancedcore.computercraft.ComputerManager;
 import enhancedcore.computercraft.ComputerManager.IMethod;
@@ -18,11 +19,11 @@ import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.network.packet.PacketPortalModifierUpdate;
 import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
-import enhancedportals.tileentity.TileEntityPortalModifier;*/
+import enhancedportals.tileentity.TileEntityPortalModifier;
 
-public class TileEntityPortalModifier_cc //extends TileEntityPortalModifier implements IPeripheral
+public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implements IPeripheral
 {
-    /*ComputerManager computerManager;
+    ComputerManager computerManager;
 
     public TileEntityPortalModifier_cc()
     {
@@ -386,7 +387,7 @@ public class TileEntityPortalModifier_cc //extends TileEntityPortalModifier impl
     }
 
     @Override
-    public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         return computerManager.execute(computer, method, arguments);
     }
@@ -473,5 +474,5 @@ public class TileEntityPortalModifier_cc //extends TileEntityPortalModifier impl
         }
 
         return false;
-    }*/
+    }
 }

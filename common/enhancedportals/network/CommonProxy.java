@@ -156,7 +156,12 @@ public class CommonProxy
             GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), "IEI", "GUG", "IRI", Character.valueOf('U'), new ItemStack(itemMisc, 1, 0), Character.valueOf('R'), Item.redstone, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl);
 
             // Advanced Dimensional Upgrade TODO: Replace with new upgrade
-            //GameRegistry.addShapedRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG", Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade, 1, 2), Character.valueOf('D'), Item.diamond, Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'), Item.ingotIron, Character.valueOf('E'), enderPearl);
+            // GameRegistry.addShapedRecipe(new
+            // ItemStack(itemPortalModifierUpgrade, 1, 3), "GEG", "DUD", "GIG",
+            // Character.valueOf('U'), new ItemStack(itemPortalModifierUpgrade,
+            // 1, 2), Character.valueOf('D'), Item.diamond,
+            // Character.valueOf('G'), Item.ingotGold, Character.valueOf('I'),
+            // Item.ingotIron, Character.valueOf('E'), enderPearl);
             // Conversion for previous advanced dimensional upgrades
             GameRegistry.addShapelessRecipe(new ItemStack(itemPortalModifierUpgrade, 1, 2), new ItemStack(itemPortalModifierUpgrade, 1, 3));
 

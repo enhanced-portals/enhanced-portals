@@ -15,8 +15,8 @@ import enhancedportals.portal.Portal;
 
 public class BlockObsidian extends net.minecraft.block.BlockObsidian
 {
-	Icon texture;
-	
+    Icon texture;
+
     public BlockObsidian()
     {
         super(BlockIds.Obsidian);
@@ -24,6 +24,13 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
         setResistance(2000.0F);
         setStepSound(soundStoneFootstep);
         setUnlocalizedName(Localization.Obsidian_Name);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int par1, int par2)
+    {
+        return texture;
     }
 
     @Override
@@ -43,18 +50,11 @@ public class BlockObsidian extends net.minecraft.block.BlockObsidian
 
         return false;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister)
     {
-    	texture = iconRegister.registerIcon("obsidian");
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIcon(int par1, int par2)
-    {
-    	return texture;
+        texture = iconRegister.registerIcon("obsidian");
     }
 }

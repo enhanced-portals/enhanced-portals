@@ -463,6 +463,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void mouseClicked(int par1, int par2, int par3)
     {

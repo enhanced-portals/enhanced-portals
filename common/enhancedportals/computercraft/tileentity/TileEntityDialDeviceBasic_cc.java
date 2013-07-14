@@ -1,9 +1,10 @@
 package enhancedportals.computercraft.tileentity;
 
-/*import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 import enhancedcore.computercraft.ComputerManager;
 import enhancedcore.computercraft.ComputerManager.IMethod;
@@ -12,11 +13,11 @@ import enhancedportals.computercraft.SharedMethods;
 import enhancedportals.network.packet.PacketDialRequest;
 import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
-import enhancedportals.tileentity.TileEntityEnhancedPortals;*/
+import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
-public class TileEntityDialDeviceBasic_cc //extends TileEntityDialDeviceBasic implements IPeripheral
+public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic implements IPeripheral
 {
-    /*ComputerManager computerManager;
+    ComputerManager computerManager;
 
     public TileEntityDialDeviceBasic_cc()
     {
@@ -95,7 +96,7 @@ public class TileEntityDialDeviceBasic_cc //extends TileEntityDialDeviceBasic im
     }
 
     @Override
-    public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         return computerManager.execute(computer, method, arguments);
     }
@@ -122,5 +123,5 @@ public class TileEntityDialDeviceBasic_cc //extends TileEntityDialDeviceBasic im
     public String getType()
     {
         return "automaticDialler";
-    }*/
+    }
 }

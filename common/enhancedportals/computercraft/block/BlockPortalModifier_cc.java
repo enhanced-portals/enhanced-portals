@@ -7,9 +7,9 @@ import enhancedportals.computercraft.tileentity.TileEntityPortalModifier_cc;
 
 public class BlockPortalModifier_cc extends BlockPortalModifier
 {
-    /*@Override
+    @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
         return new TileEntityPortalModifier_cc();
-    }*/
+    }
 }

@@ -1,13 +1,7 @@
 package enhancedportals.command;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -38,13 +32,13 @@ public class CommandEffects
             {
                 Settings.ParticleLevel = 100;
                 Settings.setConfigOption("Effects", "Particles", 100);
-                //sender.sendChatToPlayer(Strings.ChatParticlesOn.toString());
+                // sender.sendChatToPlayer(Strings.ChatParticlesOn.toString());
             }
             else if (args[2].equalsIgnoreCase(Commands.OFF))
             {
                 Settings.ParticleLevel = 0;
                 Settings.setConfigOption("Effects", "Particles", 0);
-                //sender.sendChatToPlayer(Strings.ChatParticlesOff.toString());
+                // sender.sendChatToPlayer(Strings.ChatParticlesOff.toString());
             }
             else
             {
@@ -57,13 +51,13 @@ public class CommandEffects
             {
                 Settings.SoundLevel = 100;
                 Settings.setConfigOption("Effects", "Sounds", 100);
-                //sender.sendChatToPlayer(Strings.ChatSoundsOn.toString());
+                // sender.sendChatToPlayer(Strings.ChatSoundsOn.toString());
             }
             else if (args[2].equalsIgnoreCase(Commands.OFF))
             {
                 Settings.SoundLevel = 0;
                 Settings.setConfigOption("Effects", "Sounds", 0);
-                //sender.sendChatToPlayer(Strings.ChatSoundsOff.toString());
+                // sender.sendChatToPlayer(Strings.ChatSoundsOff.toString());
             }
             else
             {
@@ -76,13 +70,13 @@ public class CommandEffects
             {
                 Settings.RenderPortalEffect = true;
                 Settings.setConfigOption("Effects", "RenderPortalEffect", true);
-                //sender.sendChatToPlayer(Strings.ChatPortalEffectsOn.toString());
+                // sender.sendChatToPlayer(Strings.ChatPortalEffectsOn.toString());
             }
             else if (args[2].equalsIgnoreCase(Commands.OFF))
             {
                 Settings.RenderPortalEffect = false;
                 Settings.setConfigOption("Effects", "RenderPortalEffect", false);
-                //sender.sendChatToPlayer(Strings.ChatPortalEffectsOff.toString());
+                // sender.sendChatToPlayer(Strings.ChatPortalEffectsOff.toString());
             }
             else
             {

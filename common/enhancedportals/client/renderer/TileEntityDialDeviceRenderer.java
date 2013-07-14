@@ -42,7 +42,7 @@ public class TileEntityDialDeviceRenderer extends TileEntitySpecialRenderer
         {
             GL11.glRotatef(-90, 0F, 1F, 0F);
         }
-        
+
         func_110628_a(new ResourceLocation(Reference.RESOURCE_NAME, "textures/blocks/" + (tile instanceof TileEntityDialDeviceBasic ? "basicDial" : "dial") + "Device.png"));
         model.renderAll();
         GL11.glPopMatrix();

@@ -10,10 +10,8 @@ import enhancedportals.lib.BlockIds;
 public class RuinsGenerator implements IWorldGenerator
 {
     public int GENERATION_CHANCE = 10;
-    private String[][][] smallStructures = { 
-            { { "49 49 49 49 49" }, { "49 PORTAL:4 PORTAL:5 PORTAL:4 49" }, { "49 PORTAL:4 PORTAL:4 PORTAL:4 49" }, { "49 49 49 49 49" } }
-    };
-    
+    private String[][][] smallStructures = { { { "49 49 49 49 49" }, { "49 PORTAL:4 PORTAL:5 PORTAL:4 49" }, { "49 PORTAL:4 PORTAL:4 PORTAL:4 49" }, { "49 49 49 49 49" } } };
+
     public RuinsGenerator()
     {
 
@@ -47,30 +45,30 @@ public class RuinsGenerator implements IWorldGenerator
         {
             return;
         }
-        
+
         generateStructure(smallStructures[0], world, x, 100, z);
     }
-    
+
     private void generateStructure(String[][] string, World world, int xCoord, int yCoord, int zCoord)
-    {        
+    {
         for (int y = 0; y < string.length; y++)
         {
             for (int x = 0; x < string[y].length; x++)
             {
                 int z = 0, blockID = 0, blockMeta = 0;
                 String[] blocks = string[y][x].split(" ");
-                
+
                 for (String str : blocks)
                 {
                     if (str.contains(":"))
                     {
                         String s = str.split(":")[0];
-                        
+
                         if (s.equals("PORTAL"))
                         {
                             s = "" + BlockIds.NetherPortal;
                         }
-                        
+
                         blockID = Integer.parseInt(s);
                         blockMeta = Integer.parseInt(str.split(":")[1]);
                     }
@@ -79,7 +77,7 @@ public class RuinsGenerator implements IWorldGenerator
                         blockID = Integer.parseInt(str);
                         blockMeta = 0;
                     }
-                    
+
                     world.setBlock(xCoord + x, yCoord + y, zCoord + z, blockID, blockMeta, 0);
                     z++;
                 }

@@ -1,13 +1,10 @@
 package enhancedportals.lib;
 
-import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import enhancedportals.portal.PortalTexture;
 
@@ -15,22 +12,7 @@ public class Textures
 {
     public enum Colour
     {
-        BLACK,
-        RED,
-        GREEN,
-        BROWN,
-        BLUE,
-        PURPLE,
-        CYAN,
-        LIGHT_GRAY,
-        GRAY,
-        PINK,
-        LIME,
-        YELLOW,
-        LIGHT_BLUE,
-        MAGENTA,
-        ORANGE,
-        WHITE;
+        BLACK, RED, GREEN, BROWN, BLUE, PURPLE, CYAN, LIGHT_GRAY, GRAY, PINK, LIME, YELLOW, LIGHT_BLUE, MAGENTA, ORANGE, WHITE;
 
         public PortalTexture getPortalTexture()
         {
@@ -39,7 +21,30 @@ public class Textures
     }
 
     public static Map<String, PortalTexture> portalTextureMap = new HashMap<String, PortalTexture>();
-    
+
+    public static int getDyeColour(ItemStack stack)
+    {
+        if (stack != null)
+        {
+            String name = OreDictionary.getOreName(OreDictionary.getOreID(stack));
+
+            String[] dyes = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite" };
+
+            if (name.startsWith("dye"))
+            {
+                for (int i = 0; i < dyes.length; i++)
+                {
+                    if (name.equals(dyes[i]))
+                    {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
     public static ItemStack getItemStackFromTexture(PortalTexture texture)
     {
         ItemStack stack = null;
@@ -138,51 +143,10 @@ public class Textures
             }
             else if (FluidContainerRegistry.isFilledContainer(stack))
             {
-            	return getTexture("F:" + stack.itemID + ":" + stack.getItemDamage());
+                return getTexture("F:" + stack.itemID + ":" + stack.getItemDamage());
             }
         }
 
         return null;
-    }
-        
-    public static int getDyeColour(ItemStack stack)
-    {
-        if (stack != null)
-        {
-            String name = OreDictionary.getOreName(OreDictionary.getOreID(stack));
-            
-            String[] dyes =
-                {
-                    "dyeBlack",
-                    "dyeRed",
-                    "dyeGreen",
-                    "dyeBrown",
-                    "dyeBlue",
-                    "dyePurple",
-                    "dyeCyan",
-                    "dyeLightGray",
-                    "dyeGray",
-                    "dyePink",
-                    "dyeLime",
-                    "dyeYellow",
-                    "dyeLightBlue",
-                    "dyeMagenta",
-                    "dyeOrange",
-                    "dyeWhite"
-                };
-            
-            if (name.startsWith("dye"))
-            {
-                for (int i = 0; i < dyes.length; i++)
-                {
-                    if (name.equals(dyes[i]))
-                    {
-                        return i;
-                    }
-                }
-            }
-        }
-        
-        return -1;
     }
 }

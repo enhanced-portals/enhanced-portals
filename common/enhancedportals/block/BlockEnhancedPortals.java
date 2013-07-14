@@ -2,7 +2,6 @@ package enhancedportals.block;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -91,7 +90,7 @@ public class BlockEnhancedPortals extends BlockContainer
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack)
     {
-    	if (canRotate)
+        if (canRotate)
         {
             int direction = 0;
             int facing = MathHelper.floorDouble(entityLivingBase.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
