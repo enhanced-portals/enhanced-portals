@@ -1,3 +1,57 @@
+###Upcoming (1.0.8)
+* Rewrote remaining GUI screens.
+ * Added ability to reorganize entries in the dial device.
+ * Added ability to edit entries in the dial device.
+
+###1.0.7
+* Updated to 1.6.2.
+* Some GUIs have been rewritten to take advantage of new features.
+ * Tabs for Redstone Control.
+ * Upgrades now get removed when you click, instead of all being removed at once when you closed the GUI.
+ * Minor tweaks and improvements.
+* Support for the new Fluid system in Forge.
+ * Modifiers using the old Liquid system will be incompatible, you must re-add any liquid textures you want applied to a portal.
+* Updated Teleporter to look for both Vanilla portal blocks and EP2 portal blocks. Should hopefully resolve any issues remaining with the current system.
+
+###1.0.6
+* ZeroLevels: Optimized image files. Saved 268.50KB (56.26%)
+* Now uses the OreDictionary for dyes, can use any mod dye to colour portals and use in recipes.
+* Fixed rare infinite loop in the dialling devices.
+
+###1.0.5
+* Fixed issue where vanilla portals would be created instead of using custom portals when travelling to and from the Nether.
+
+###1.0.4
+* Fixed issue where portals could get left open (and could not be terminated) if you logged out while the dialling device is active.
+* Fixed crash issue relating to the above.
+
+###1.0.3
+* Fix for crashing issue with dialling devices.
+* Fixed crash issue if you destroyed the portal modifier while it was active with a dialling device.
+
+###1.0.2
+* Added the ability to customize what blocks are in the Nether and Resourceful frame upgrades in the config file.
+* Massively overhauled the way portals are rendered. Now a wider range of effects can be implemented.
+* Can now use any liquid container as a valid source of a texture.
+ * Can use any liquid registered through the LiquidDictionary (should be all...) as a valid portal texture.
+ * Tech addon will either be removed or repurposed for actual tech-based stuff.
+* Fixed issue where the camo upgrade would not affect portal modifiers in vertical parts of the portal frame.
+* Particles now get their colour from the portal texture.
+ * Is only active when fancy graphics is enabled, unless changed in the config.
+ * Added config options to toggle if fancy is required, and if these particles should be used.
+ * Screenshots: http://imgur.com/a/nhorR
+* New textures for the active side of the portal modifier.
+* Added a new Redstone Control button for portal modifiers, will ignore all redstone input.
+* Updated the easter eggs for the new rendering system.
+
+###1.0.1
+* Merged Advanced Dimensional and Dimensional upgrades.
+ * All Adv. Dim. upgrades can be turned into Dimensional upgrades in the crafting table.
+ * All Adv. Dim. upgrades in Portal Modifiers should get turned into Dimensional upgrades when loaded.
+* Added a config option for alternate peaceful recipes.
+* Fixed issue with the Dial Device's GUI and being unable to dial the first time in that session.
+* Upgrades now stack up to 16.
+
 ###1.0
 * Fixed issue with being unable to terminate the connection with a dialling device if you selected a different identifier.
 * Added min/max portal limit options to config file. Defaults to unlimited.
