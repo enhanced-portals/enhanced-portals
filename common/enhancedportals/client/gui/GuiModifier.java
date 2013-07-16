@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
@@ -13,7 +12,6 @@ import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.gui.EnhancedCoreContainer;
 import enhancedcore.gui.GuiEnhancedCore;
@@ -33,247 +31,44 @@ import enhancedportals.tileentity.TileEntityPortalModifier;
 
 public class GuiModifier extends GuiEnhancedCore
 {
-    private class RedstoneControlLedger extends Ledger
+    private class ModifierTips extends TipLedger
     {
-        int headerColour = 0xe1c92f;
-        int subheaderColour = 0xaaafb8;
-        int textColour = 0x000000;
-        int selected = 0, selected2 = 0;
-
-        TileEntityPortalModifier modifier;
-
-        public RedstoneControlLedger(TileEntityPortalModifier theModifier)
-        {
-            modifier = theModifier;
-            overlayColor = 0xd46c1f;
-            maxHeight = 47;
-        }
-
         @Override
-        public void draw(int x, int y)
+        protected String[] getTipsList()
         {
-            drawBackground(x, y);
-
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, 1);
-            drawIcon(new ItemStack(Item.redstone).getIconIndex(), x + 3, y + 3);
-
-            if (!isFullyOpened())
-            {
-                return;
-            }
-
-            int y2 = y + 22, xLoc = x + maxWidth / 2 - 22 * 4 / 2;
-            fontRenderer.drawStringWithShadow("Redstone Control", x + 22, y + 8, headerColour);
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, "epcore", "textures/gui/buttons.png");
-            GL11.glColor3f(1F, 1F, 1F);
-
-            int setting = modifier.redstoneSetting;
-
-            for (int i = 0; i < 4; i++)
-            {
-                int x2 = xLoc + 3 + 22 * i;
-                boolean isActive = false;
-
-                if (i == 0)
-                {
-                    isActive = setting == 0;
-                    selected = isActive ? 0 : selected;
-                }
-                else if (i == 1)
-                {
-                    isActive = setting == 1;
-                    selected = isActive ? 1 : selected;
-                }
-                else if (i == 2)
-                {
-                    isActive = setting >= 2;
-                    selected2 = isActive ? setting - 2 : 0;
-                    selected = isActive ? 2 : selected;
-                }
-                else if (i == 3)
-                {
-                    isActive = setting == -1;
-                    selected = isActive ? 3 : selected;
-                }
-
-                drawTexturedModalRect(x2, y2, 0, isActive ? 40 : 20, 10, 10);
-                drawTexturedModalRect(x2 + 10, y2, 190, isActive ? 40 : 20, 10, 10);
-                drawTexturedModalRect(x2, y2 + 10, 0, isActive ? 50 : 30, 10, 10);
-                drawTexturedModalRect(x2 + 10, y2 + 10, 190, isActive ? 50 : 30, 10, 10);
-            }
-
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, 0);
-            drawIcon(new ItemStack(Block.torchRedstoneActive).getIconIndex(), xLoc + 5, y + 22);
-            drawIcon(new ItemStack(Block.torchRedstoneIdle).getIconIndex(), xLoc + 27, y + 22);
-
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, 1);
-            drawIcon(new ItemStack(Item.redstone).getIconIndex(), xLoc + 49, y + 24);
-            drawIcon(new ItemStack(Item.gunpowder).getIconIndex(), xLoc + 71, y + 24);
-
-            if (selected2 != 0)
-            {
-                fontRenderer.drawStringWithShadow("" + selected2, xLoc + 49 + 17 - fontRenderer.getStringWidth("" + selected2), y + 33, 0xFFFFFFFF);
-            }
-        }
-
-        @Override
-        public ArrayList<String> getTooltip()
-        {
-            ArrayList<String> strList = new ArrayList<String>();
-
-            if (!isOpen())
-            {
-                int num = modifier.redstoneSetting;
-
-                strList.add("Redstone Control");
-                strList.add(EnumChatFormatting.GRAY + (num == 0 ? "Normal" : num == 1 ? "Inverted" : num >= 2 ? "Analogue (" + (num - 2) + ")" : num == -1 ? "Disabled" : "Unknown"));
-            }
-
-            return strList;
-        }
-
-        @Override
-        public boolean handleMouseClicked(int x, int y, int mouseButton)
-        {
-            int xLoc = currentShiftX + maxWidth / 2 - 22 * 4 / 2, y2 = currentShiftY + 22;
-            boolean changed = false;
-
-            for (int i = 0; i < 4; i++)
-            {
-                int x2 = xLoc + 3 + 22 * i;
-
-                if (x >= x2 && x <= x2 + 19 && y >= y2 && y <= y2 + 19)
-                {
-                    if (i == 2 && selected == 2)
-                    {
-                        if (mouseButton == 0)
-                        {
-                            selected2++;
-                        }
-                        else
-                        {
-                            selected2--;
-                        }
-
-                        if (selected2 > 15)
-                        {
-                            selected2 = 1;
-                        }
-                        else if (selected2 < 1)
-                        {
-                            selected2 = 15;
-                        }
-
-                        changed = true;
-                    }
-                    else if (mouseButton == 0 && selected != 2 && i == 2)
-                    {
-                        selected2 = 1;
-                        selected = i;
-                        changed = true;
-                    }
-                    else if (mouseButton == 0)
-                    {
-                        selected = i;
-                        changed = true;
-                    }
-
-                    if (changed)
-                    {
-                        int num = selected;
-
-                        if (selected == 3)
-                        {
-                            num = -1;
-                        }
-                        else if (selected == 2)
-                        {
-                            num = 2 + selected2;
-                        }
-
-                        modifier.redstoneSetting = (byte) num;
-                        PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRedstoneControl(modifier)));
-                        mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
+            return new String[] { "You can camouflage the portal with any block or fluid", "You can control your portals with Redstone or ComputerCraft", "The portal modifier does not have to be inside a portal frame" };
         }
     }
 
-    private class TipLedger extends Ledger
+    private class ModifierRedstone extends RedstoneLedger
     {
-        int headerColour = 0xe1c92f;
-        int subheaderColour = 0xaaafb8;
-        int textColour = 0x000000;
-        int tip = -1;
-
-        String[][] tipsList = new String[][] { { "You can camouflage", "the portal with any", "block or fluid" }, { "You can control your", "portals with Redstone", "or ComputerCraft" }, { "The portal modifier", "does not have to be", "inside a portal frame" } };
-
-        public TipLedger()
+        TileEntityPortalModifier modifier;
+        
+        public ModifierRedstone(TileEntityPortalModifier modifier)
         {
-            overlayColor = 0x5396da;
+            this.modifier = modifier;
+            setSelected(modifier.redstoneSetting);
         }
-
+        
         @Override
-        public void draw(int x, int y)
+        protected void selectedChanged(int i)
         {
-            drawBackground(x, y);
-
-            if (!isFullyOpened())
-            {
-                return;
-            }
-
-            fontRenderer.drawStringWithShadow("Did you know...", x + 22, y + 8, headerColour);
-
-            if (tip == -1)
-            {
-                tip = 0;
-                maxHeight = 25 + tipsList[tip].length * 10;
-            }
-
-            for (int i = 0; i < tipsList[tip].length; i++)
-            {
-                fontRenderer.drawString(tipsList[tip][i], x + 5, y + 20 + i * 10, textColour);
-            }
+            modifier.redstoneSetting = (byte) i;
+            PacketDispatcher.sendPacketToServer(PacketEnhancedPortals.makePacket(new PacketRedstoneControl(modifier)));
         }
-
-        @Override
-        public ArrayList<String> getTooltip()
-        {
-            ArrayList<String> strList = new ArrayList<String>();
-
-            if (!isOpen())
-            {
-                strList.add("Did you know...");
-            }
-
-            return strList;
-        }
-
+        
         @Override
         public boolean handleMouseClicked(int x, int y, int mouseButton)
         {
             if (!isOpen())
             {
-                tip++;
-
-                if (tip >= tipsList.length)
-                {
-                    tip = 0;
-                }
-
-                maxHeight = 25 + tipsList[tip].length * 10;
+                setSelected(modifier.redstoneSetting);
             }
-
+            
             return super.handleMouseClicked(x, y, mouseButton);
         }
     }
-
+    
     TileEntityPortalModifier modifier;
 
     public GuiModifier(EnhancedCoreContainer container, IInventory inventory)
@@ -384,6 +179,7 @@ public class GuiModifier extends GuiEnhancedCore
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
@@ -407,8 +203,8 @@ public class GuiModifier extends GuiEnhancedCore
     {
         super.initLedgers(inventory);
 
-        ledgerManager.add(new TipLedger());
-        ledgerManager.add(new RedstoneControlLedger((TileEntityPortalModifier) inventory));
+        ledgerManager.add(new ModifierTips());
+        ledgerManager.add(new ModifierRedstone((TileEntityPortalModifier) inventory));
     }
 
     @Override
