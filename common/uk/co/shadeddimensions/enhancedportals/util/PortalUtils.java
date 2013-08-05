@@ -22,9 +22,12 @@ public class PortalUtils
         if (!thoroughValidation(world, x, y, z))
         {
             removePortal(world, x, y, z);
+            return false;
         }
+        
+        // TODO add all data from main frame blocks
 
-        return false;
+        return true;
     }
 
     /***
@@ -40,9 +43,10 @@ public class PortalUtils
         if (!thoroughValidation(world, x, y, z))
         {
             removePortal(world, x, y, z);
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /***
@@ -251,7 +255,7 @@ public class PortalUtils
 
                 if (world.getBlockId(self.x + dir.offsetX, self.y + dir.offsetY, self.z + dir.offsetZ) == Identifiers.Block.PORTAL_BLOCK && !isInValidPosition(world, self.offset(dir)))
                 {
-                    world.setBlockToAir(self.x + dir.offsetX, self.y + dir.offsetY, self.z + dir.offsetZ);
+                    removePortal(world, self.x + dir.offsetX, self.y + dir.offsetY, self.z + dir.offsetZ);
                 }
             }
 
@@ -268,7 +272,7 @@ public class PortalUtils
      */
     public static boolean removePortal(WorldServer world, int x, int y, int z)
     {
-        if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME)
+        if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME || world.getBlockId(x, y, z) == 0)
         {
             for (int i = 0; i < 6; i++)
             {
