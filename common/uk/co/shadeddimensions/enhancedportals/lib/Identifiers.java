@@ -22,9 +22,10 @@ public class Identifiers
     public static class Item
     {
         public static int NETHER_QUARTZ_IGNITER = 5120;
+        public static int TEXTURE_DUPLICATOR = 5121;
 
         private static int STARTING_ID = 4096;
-        private static int ENDING_ID = 32064;
+        private static int ENDING_ID = 32000;
         private static int COUNTER = 0;
 
         public static int getNextId()

@@ -3,6 +3,8 @@ package uk.co.shadeddimensions.enhancedportals.util;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.bouncycastle.util.Arrays;
+
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.lib.Coordinate;
@@ -15,15 +17,7 @@ public class PortalUtils
      */
     public static boolean createExistingPortal(WorldServer world, int x, int y, int z)
     {
-        createPreliminaryPortalBlocks(world, x, y, z);
-        createSecondaryPortalBlocks(world, x, y, z);
-        preliminaryValidation(world, x, y, z);
-
-        if (!thoroughValidation(world, x, y, z))
-        {
-            removePortal(world, x, y, z);
-            return false;
-        }
+        createNewPortal(world, x, y, z);
         
         // TODO add all data from main frame blocks
 
@@ -38,17 +32,92 @@ public class PortalUtils
     {
         createPreliminaryPortalBlocks(world, x, y, z);
         createSecondaryPortalBlocks(world, x, y, z);
-        preliminaryValidation(world, x, y, z);
+        //preliminaryValidation(world, x, y, z);
 
-        if (!thoroughValidation(world, x, y, z))
-        {
-            removePortal(world, x, y, z);
-            return false;
-        }
+        //if (!thoroughValidation(world, x, y, z))
+        //{
+        //    removePortal(world, x, y, z);
+        //    return false;
+        //}
+        
+        processMetadata(world, x, y, z);
 
         return true;
     }
 
+    private static void processMetadata(WorldServer world, int x, int y, int z)
+    {
+        if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME || world.getBlockId(x, y, z) == 0)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                ForgeDirection dir = ForgeDirection.getOrientation(i);
+
+                if (world.getBlockId(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == Identifiers.Block.PORTAL_BLOCK)
+                {
+                    x += dir.offsetX;
+                    y += dir.offsetY;
+                    z += dir.offsetZ;
+                    break;
+                }
+            }
+        }
+
+        if (world.getBlockId(x, y, z) != Identifiers.Block.PORTAL_BLOCK)
+        {
+            return;
+        }
+        
+        Queue<Coordinate> toProcess = new LinkedList<Coordinate>();
+        Queue<Coordinate> processed = new LinkedList<Coordinate>();
+        toProcess.add(new Coordinate(x, y, z));
+
+        while (!toProcess.isEmpty())
+        {
+            Coordinate self = toProcess.remove();
+            setupMetadata(world, self);
+
+            if (!processed.contains(self))
+            {
+                toProcess = findConnectedPortalBlocks(toProcess, world, self);
+                processed.add(self);
+            }
+        }
+    }
+    
+    private static void setupMetadata(WorldServer world, Coordinate coord)
+    {
+        int[] blockIds = new int[6];
+        
+        for (int i = 0; i < 6; i++)
+        {
+            Coordinate c = coord.offset(ForgeDirection.getOrientation(i));            
+            blockIds[i] = world.getBlockId(c.x, c.y, c.z);
+        }
+        
+        if (Arrays.areEqual(blockIds, new int[] { Identifiers.Block.PORTAL_BLOCK, Identifiers.Block.PORTAL_BLOCK, Identifiers.Block.PORTAL_BLOCK, Identifiers.Block.PORTAL_BLOCK, Identifiers.Block.PORTAL_BLOCK, Identifiers.Block.PORTAL_BLOCK })) // XYZ
+        {
+            world.setBlockMetadataWithNotify(coord.x, coord.y, coord.z, 4, 2);
+        }
+        else if (isPortalPart(blockIds[0]) && isPortalPart(blockIds[1]) && isPortalPart(blockIds[4]) && isPortalPart(blockIds[5])) // X
+        {
+            world.setBlockMetadataWithNotify(coord.x, coord.y, coord.z, 1, 2);
+        }
+        else if (isPortalPart(blockIds[0]) && isPortalPart(blockIds[1]) && isPortalPart(blockIds[2]) && isPortalPart(blockIds[3])) // Z
+        {
+            world.setBlockMetadataWithNotify(coord.x, coord.y, coord.z, 2, 2);
+        }
+        else if (isPortalPart(blockIds[2]) && isPortalPart(blockIds[3]) && isPortalPart(blockIds[4]) && isPortalPart(blockIds[5])) // XZ
+        {
+            world.setBlockMetadataWithNotify(coord.x, coord.y, coord.z, 3, 2);
+        }
+    }
+    
+    private static boolean isPortalPart(int id)
+    {
+        return id == Identifiers.Block.PORTAL_BLOCK || id == Identifiers.Block.PORTAL_FRAME;
+    }
+    
     /***
      * Creates a new portal. First looks to see if one existed there previously,
      * then calls the correct method.

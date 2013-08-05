@@ -13,6 +13,7 @@ public class ItemNetherQuartzIgniter extends Item
     public ItemNetherQuartzIgniter()
     {
         super(Identifiers.Item.NETHER_QUARTZ_IGNITER);
+        setUnlocalizedName("netherQuartzIgniter");
     }
 
     @Override
