@@ -3,6 +3,7 @@ package enhancedportals.tileentity;
 import java.util.List;
 import java.util.logging.Level;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.WorldServer;
@@ -13,7 +14,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.world.BlockPosition;
 import enhancedcore.world.WorldHelper;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Strings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
@@ -85,7 +85,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
     {
         if (chunkTicket == null)
         {
-            chunkTicket = ForgeChunkManager.requestTicket(EnhancedPortals.instance, worldObj, Type.NORMAL);
+            chunkTicket = ForgeChunkManager.requestTicket(EnhancedPortals_deprecated.instance, worldObj, Type.NORMAL);
         }
 
         if (chunkTicket == null)
@@ -148,16 +148,16 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
             return;
         }
 
-        if (EnhancedPortals.proxy.DialDeviceNetwork.hasNetwork(network))
+        if (EnhancedPortals_deprecated.proxy.DialDeviceNetwork.hasNetwork(network))
         {
-            if (EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(network).isEmpty())
+            if (EnhancedPortals_deprecated.proxy.DialDeviceNetwork.getNetwork(network).isEmpty())
             {
-                EnhancedPortals.proxy.DialDeviceNetwork.removeNetwork(network);
+                EnhancedPortals_deprecated.proxy.DialDeviceNetwork.removeNetwork(network);
                 sendChatToPlayer(Strings.ChatNoConnection.toString(), player);
                 return;
             }
 
-            WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(network).get(0);
+            WorldPosition exitLocation = EnhancedPortals_deprecated.proxy.DialDeviceNetwork.getNetwork(network).get(0);
             ((WorldServer) WorldHelper.getWorld(exitLocation.getDimension())).getChunkProvider().loadChunk(exitLocation.getX() >> 4, exitLocation.getZ() >> 4);
             exitModifier = (TileEntityPortalModifier) exitLocation.getTileEntity();
 
@@ -230,7 +230,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
             unloadChunk();
             sendUpdatePacket();
 
-            List<WorldPosition> positionList = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
+            List<WorldPosition> positionList = EnhancedPortals_deprecated.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
             WorldPosition exitLocation = null;
 
             if (!positionList.isEmpty())
@@ -255,7 +255,7 @@ public class TileEntityDialDeviceBase extends TileEntityEnhancedPortals
         }
 
         TileEntityPortalModifier modifier = (TileEntityPortalModifier) WorldHelper.getTileEntity(worldObj, modifierLocation);
-        List<WorldPosition> positionList = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
+        List<WorldPosition> positionList = EnhancedPortals_deprecated.proxy.DialDeviceNetwork.getNetwork(dialledNetwork);
         WorldPosition exitLocation = null;
 
         if (!positionList.isEmpty())

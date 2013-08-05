@@ -3,13 +3,13 @@ package enhancedportals.network.packet;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
 import enhancedcore.world.BlockPosition;
 import enhancedcore.world.WorldHelper;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
@@ -46,7 +46,7 @@ public class PacketDialRequest extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(dimension);
+        World world = EnhancedPortals_deprecated.proxy.getWorld(dimension);
 
         if (!world.isRemote)
         {

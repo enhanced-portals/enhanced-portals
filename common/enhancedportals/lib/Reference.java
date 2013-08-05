@@ -11,6 +11,7 @@ import enhancedportals.creativetab.CreativeTabEP;
 public class Reference
 {
     public static final String MOD_ID = "EP2";
+    public static final String MOD_ID_NEW = "EnhancedPortals2";
     public static final String MOD_NAME = "EnhancedPortals 2";
     public static final String MOD_VERSION = "@VERSION@ (Build: @BUILD_NUMBER@)";
 

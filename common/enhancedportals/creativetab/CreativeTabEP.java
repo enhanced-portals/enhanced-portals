@@ -1,8 +1,8 @@
 package enhancedportals.creativetab;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Reference;
 
 public class CreativeTabEP extends CreativeTabs
@@ -15,6 +15,6 @@ public class CreativeTabEP extends CreativeTabs
     @Override
     public ItemStack getIconItemStack()
     {
-        return new ItemStack(EnhancedPortals.proxy.blockPortalModifier);
+        return new ItemStack(EnhancedPortals_deprecated.proxy.blockPortalModifier);
     }
 }

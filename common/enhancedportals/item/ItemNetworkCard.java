@@ -2,6 +2,7 @@ package enhancedportals.item;
 
 import java.util.List;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,7 +15,6 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.ItemIds;
 import enhancedportals.lib.Localization;
@@ -141,8 +141,8 @@ public class ItemNetworkCard extends Item
                 if (!modifier.modifierNetwork.equals(network) && !modifier.isActive())
                 {
                     modifier.modifierNetwork = network;
-                    EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world));
-                    EnhancedPortals.proxy.ModifierNetwork.addToNetwork(network, new WorldPosition(x, y, z, world));
+                    EnhancedPortals_deprecated.proxy.ModifierNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world));
+                    EnhancedPortals_deprecated.proxy.ModifierNetwork.addToNetwork(network, new WorldPosition(x, y, z, world));
 
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                     ((EntityPlayerMP) player).mcServer.getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);

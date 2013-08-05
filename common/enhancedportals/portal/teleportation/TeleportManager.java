@@ -3,6 +3,7 @@ package enhancedportals.portal.teleportation;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityBoat;
@@ -20,7 +21,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
@@ -175,13 +175,13 @@ public class TeleportManager
             return false;
         }
 
-        World world = EnhancedPortals.proxy.getWorld(teleportData.getDimension());
+        World world = EnhancedPortals_deprecated.proxy.getWorld(teleportData.getDimension());
         ((WorldServer) world).theChunkProviderServer.loadChunk(teleportData.getX() >> 4, teleportData.getZ() >> 4);
         TileEntityPortalModifier outModifier = (TileEntityPortalModifier) teleportData.getTileEntity();
 
         if (outModifier == null)
         {
-            EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(teleportData);
+            EnhancedPortals_deprecated.proxy.ModifierNetwork.removeFromAllNetworks(teleportData);
             return false;
         }
 

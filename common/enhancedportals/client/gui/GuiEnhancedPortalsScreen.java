@@ -3,6 +3,7 @@ package enhancedportals.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -10,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import enhancedcore.gui.GuiExtendedScreen;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Strings;
 import enhancedportals.lib.Textures;
 
@@ -67,7 +67,7 @@ public class GuiEnhancedPortalsScreen extends GuiExtendedScreen
                                                                // of the dye
                                                                // item
                     {
-                        stack = new ItemStack(EnhancedPortals.proxy.blockDummyPortal, 1, stack.getItemDamage());
+                        stack = new ItemStack(EnhancedPortals_deprecated.proxy.blockDummyPortal, 1, stack.getItemDamage());
                     }
                 }
             }

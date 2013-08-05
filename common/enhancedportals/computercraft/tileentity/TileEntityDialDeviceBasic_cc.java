@@ -15,8 +15,8 @@ import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDeviceBasic;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
-public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic implements IPeripheral
-{
+public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic //implements IPeripheral
+{/*
     ComputerManager computerManager;
 
     public TileEntityDialDeviceBasic_cc()
@@ -123,5 +123,5 @@ public class TileEntityDialDeviceBasic_cc extends TileEntityDialDeviceBasic impl
     public String getType()
     {
         return "automaticDialler";
-    }
+    }*/
 }

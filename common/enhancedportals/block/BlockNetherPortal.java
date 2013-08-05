@@ -2,6 +2,7 @@ package enhancedportals.block;
 
 import java.util.Random;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
@@ -17,7 +18,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.util.MathHelper;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.client.particle.NetherPortalFX;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
@@ -53,7 +53,7 @@ public class BlockNetherPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int side, int meta)
     {
-        return EnhancedPortals.proxy.blockDummyPortal.getIcon(side, meta);
+        return EnhancedPortals_deprecated.proxy.blockDummyPortal.getIcon(side, meta);
     }
 
     @Override

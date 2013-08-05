@@ -1,5 +1,6 @@
 package enhancedportals.block;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,7 +9,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.ItemIds;
@@ -38,7 +38,7 @@ public class BlockAutomaticDialler extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int par1, int par2)
     {
-        return EnhancedPortals.proxy.blockPortalModifier.sideTexture;
+        return EnhancedPortals_deprecated.proxy.blockPortalModifier.sideTexture;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BlockAutomaticDialler extends BlockEnhancedPortals
 
         if (!player.isSneaking())
         {
-            player.openGui(EnhancedPortals.instance, GuiIds.AutoDiallerBasic, worldObj, x, y, z);
+            player.openGui(EnhancedPortals_deprecated.instance, GuiIds.AutoDiallerBasic, worldObj, x, y, z);
             return true;
         }
 

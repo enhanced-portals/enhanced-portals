@@ -1,5 +1,6 @@
 package enhancedportals.tileentity;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -10,7 +11,6 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.util.ArrayHelper;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Settings;
 import enhancedportals.network.packet.PacketEnhancedPortals;
@@ -248,7 +248,7 @@ public class TileEntityPortalModifier extends TileEntityEnhancedPortals implemen
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return i == 1 && itemstack.isItemEqual(new ItemStack(EnhancedPortals.proxy.itemMisc, 1, 0));
+        return i == 1 && itemstack.isItemEqual(new ItemStack(EnhancedPortals_deprecated.proxy.itemMisc, 1, 0));
     }
 
     public boolean isRemotelyControlled()

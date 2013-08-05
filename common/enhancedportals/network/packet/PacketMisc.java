@@ -3,11 +3,11 @@ package enhancedportals.network.packet;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
 import enhancedcore.packet.PacketHelper;
-import enhancedportals.EnhancedPortals;
 
 public class PacketMisc extends PacketEnhancedPortals
 {
@@ -37,13 +37,13 @@ public class PacketMisc extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        World world = EnhancedPortals.proxy.getWorld(0);
+        World world = EnhancedPortals_deprecated.proxy.getWorld(0);
 
         if (world.isRemote)
         {
             if (type == 1)
             {
-                EnhancedPortals.proxy.isIdentifierTaken = true;
+                EnhancedPortals_deprecated.proxy.isIdentifierTaken = true;
             }
         }
     }

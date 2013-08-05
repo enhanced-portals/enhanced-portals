@@ -15,9 +15,9 @@ import enhancedportals.network.packet.PacketEnhancedPortals;
 import enhancedportals.tileentity.TileEntityDialDevice;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
-public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPeripheral
+public class TileEntityDialDevice_cc extends TileEntityDialDevice //implements IPeripheral
 {
-    ComputerManager computerManager;
+    /*ComputerManager computerManager;
 
     public TileEntityDialDevice_cc()
     {
@@ -212,5 +212,5 @@ public class TileEntityDialDevice_cc extends TileEntityDialDevice implements IPe
     public String getType()
     {
         return "dialDevice";
-    }
+    }*/
 }

@@ -3,6 +3,7 @@ package enhancedportals.network.packet;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.world.World;
@@ -12,7 +13,6 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import enhancedcore.packet.PacketHelper;
 import enhancedcore.world.BlockPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 
 public class PacketGui extends PacketEnhancedPortals
@@ -59,7 +59,7 @@ public class PacketGui extends PacketEnhancedPortals
     @Override
     public void execute(INetworkManager network, EntityPlayer player)
     {
-        player.openGui(EnhancedPortals.instance, guiID, EnhancedPortals.proxy.getWorld(dimension), position.getX(), position.getY(), position.getZ());
+        player.openGui(EnhancedPortals_deprecated.instance, guiID, EnhancedPortals_deprecated.proxy.getWorld(dimension), position.getX(), position.getY(), position.getZ());
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
         {

@@ -21,8 +21,8 @@ import enhancedportals.portal.upgrades.Upgrade;
 import enhancedportals.tileentity.TileEntityEnhancedPortals;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
-public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implements IPeripheral
-{
+public class TileEntityPortalModifier_cc extends TileEntityPortalModifier// implements IPeripheral
+{/*
     ComputerManager computerManager;
 
     public TileEntityPortalModifier_cc()
@@ -474,5 +474,5 @@ public class TileEntityPortalModifier_cc extends TileEntityPortalModifier implem
         }
 
         return false;
-    }
+    }*/
 }

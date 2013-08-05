@@ -17,9 +17,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.gui.GuiItemStackButton;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerPortalModifier;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
@@ -195,7 +195,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
 
             drawRect(guiLeft + 7, guiTop + 46, guiLeft + xSize - 7, guiTop + 64, 0x55000000);
 
-            if (!EnhancedPortals.proxy.isIdentifierTaken)
+            if (!EnhancedPortals_deprecated.proxy.isIdentifierTaken)
             {
                 fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 51, 0xFF00FF00);
             }
@@ -350,7 +350,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
     {
         ItemStack stack = slot.getItemStack();
 
-        if (stack.itemID == EnhancedPortals.proxy.blockDummyPortal.blockID)
+        if (stack.itemID == EnhancedPortals_deprecated.proxy.blockDummyPortal.blockID)
         {
             stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
         }
@@ -428,7 +428,7 @@ public class GuiPortalModifier extends GuiEnhancedPortalsScreen
         if (par2 == 1 || par2 == mc.gameSettings.keyBindInventory.keyCode)
         {
             mc.thePlayer.closeScreen();
-            EnhancedPortals.proxy.isIdentifierTaken = false;
+            EnhancedPortals_deprecated.proxy.isIdentifierTaken = false;
         }
 
         super.keyTyped(par1, par2);

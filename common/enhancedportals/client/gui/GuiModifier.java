@@ -12,12 +12,12 @@ import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.gui.EnhancedCoreContainer;
 import enhancedcore.gui.GuiEnhancedCore;
 import enhancedcore.gui.GuiItemStackButton;
 import enhancedcore.util.Properties;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Strings;
@@ -129,7 +129,7 @@ public class GuiModifier extends GuiEnhancedCore
             // Draw error/message
             String str = modifier.isRemotelyControlled() ? Strings.ClickToSetIdentifier.toString() : Strings.ClickToSetNetwork.toString();
 
-            if (!EnhancedPortals.proxy.isIdentifierTaken)
+            if (!EnhancedPortals_deprecated.proxy.isIdentifierTaken)
             {
                 fontRenderer.drawStringWithShadow(str, guiLeft + xSize / 2 - fontRenderer.getStringWidth(str) / 2, guiTop + 54, 0xFF00FF00);
             }

@@ -3,6 +3,7 @@ package enhancedportals.network.packet;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -11,7 +12,6 @@ import enhancedcore.packet.PacketHelper;
 import enhancedcore.world.BlockPosition;
 import enhancedcore.world.WorldHelper;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.tileentity.TileEntityPortalModifier;
 
@@ -71,10 +71,10 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                 {
                     if (modifier.isRemotelyControlled())
                     {
-                        EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(loc);
-                        EnhancedPortals.proxy.DialDeviceNetwork.addToNetwork(dialDeviceNetwork, loc);
+                        EnhancedPortals_deprecated.proxy.DialDeviceNetwork.removeFromAllNetworks(loc);
+                        EnhancedPortals_deprecated.proxy.DialDeviceNetwork.addToNetwork(dialDeviceNetwork, loc);
 
-                        if (EnhancedPortals.proxy.DialDeviceNetwork.isInNetwork(dialDeviceNetwork, loc))
+                        if (EnhancedPortals_deprecated.proxy.DialDeviceNetwork.isInNetwork(dialDeviceNetwork, loc))
                         {
                             modifier.dialDeviceNetwork = dialDeviceNetwork;
                         }
@@ -86,8 +86,8 @@ public class PacketPortalModifierUpdate extends PacketEnhancedPortals
                     }
                     else
                     {
-                        EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(loc);
-                        EnhancedPortals.proxy.ModifierNetwork.addToNetwork(modifierNetwork, loc);
+                        EnhancedPortals_deprecated.proxy.ModifierNetwork.removeFromAllNetworks(loc);
+                        EnhancedPortals_deprecated.proxy.ModifierNetwork.addToNetwork(modifierNetwork, loc);
 
                         modifier.modifierNetwork = modifierNetwork;
                     }

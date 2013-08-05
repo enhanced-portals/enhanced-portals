@@ -2,6 +2,7 @@ package enhancedportals.block;
 
 import java.util.Random;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -12,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
@@ -67,7 +67,7 @@ public class BlockDialDevice extends BlockEnhancedPortals
     {
         if (!player.isSneaking())
         {
-            player.openGui(EnhancedPortals.instance, GuiIds.DialDevice, worldObj, x, y, z);
+            player.openGui(EnhancedPortals_deprecated.instance, GuiIds.DialDevice, worldObj, x, y, z);
             return true;
         }
 

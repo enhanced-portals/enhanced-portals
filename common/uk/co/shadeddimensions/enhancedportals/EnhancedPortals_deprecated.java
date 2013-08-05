@@ -1,4 +1,4 @@
-package enhancedportals;
+package uk.co.shadeddimensions.enhancedportals;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -16,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,11 +28,18 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.reflection.ReflectionHelper;
 import enhancedportals.block.BlockObsidian;
 import enhancedportals.command.CommandEP;
+import enhancedportals.computercraft.block.BlockDialDeviceBasic_cc;
+import enhancedportals.computercraft.block.BlockDialDevice_cc;
+import enhancedportals.computercraft.block.BlockPortalModifier_cc;
+import enhancedportals.computercraft.tileentity.TileEntityDialDeviceBasic_cc;
+import enhancedportals.computercraft.tileentity.TileEntityDialDevice_cc;
+import enhancedportals.computercraft.tileentity.TileEntityPortalModifier_cc;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Reference;
@@ -44,12 +52,12 @@ import enhancedportals.portal.network.ModifierNetwork;
 import enhancedportals.world.DialDeviceChunkCallback;
 import enhancedportals.world.EPTeleporter;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1.1,);required-after:Forge@[9.10.0.780,)", acceptedMinecraftVersions = "[1.6.2,)")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
-public class EnhancedPortals
+@Mod(name = Reference.MOD_NAME + " (Deprecation Support)", modid = Reference.MOD_ID, version = Reference.MOD_VERSION, dependencies = "required-after:EnhancedCore@[1.1.1,);required-after:Forge@[9.10.0.780,)", acceptedMinecraftVersions = "[1.6.2,)")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID })
+public class EnhancedPortals_deprecated
 {
     @Instance(Reference.MOD_ID)
-    public static EnhancedPortals instance;
+    public static EnhancedPortals_deprecated instance;
 
     @SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
     public static CommonProxy proxy;
@@ -105,12 +113,34 @@ public class EnhancedPortals
         Reference.glyphItems.add(new ItemStack(Item.writableBook));
         Reference.glyphItems.add(new ItemStack(Item.potion, 1, 5));
         Reference.glyphItems.add(new ItemStack(Item.cake));
+        
+        if (Loader.isModLoaded("ComputerCraft"))
+        {
+            GameRegistry.registerTileEntity(TileEntityPortalModifier_cc.class, "EPPModifierCC");
+            GameRegistry.registerTileEntity(TileEntityDialDeviceBasic_cc.class, "EPPBDialCC");
+            GameRegistry.registerTileEntity(TileEntityDialDevice_cc.class, "EPPDialCC");
+        }
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new DialDeviceChunkCallback());
+        
+        if (Loader.isModLoaded("ComputerCraft"))
+        {
+            Block.blocksList[BlockIds.PortalModifier] = null;
+            Block.blocksList[BlockIds.DialDeviceBasic] = null;
+            Block.blocksList[BlockIds.DialDevice] = null;
+
+            EnhancedPortals_deprecated.proxy.blockPortalModifier = null;
+            EnhancedPortals_deprecated.proxy.blockDialDeviceBasic = null;
+            EnhancedPortals_deprecated.proxy.blockDialDevice = null;
+
+            EnhancedPortals_deprecated.proxy.blockPortalModifier = new BlockPortalModifier_cc();
+            EnhancedPortals_deprecated.proxy.blockDialDeviceBasic = new BlockDialDeviceBasic_cc();
+            EnhancedPortals_deprecated.proxy.blockDialDevice = new BlockDialDevice_cc();
+        }
     }
 
     @EventHandler

@@ -10,7 +10,7 @@ import enhancedcore.computercraft.ComputerManager.IMethod;
 import enhancedportals.lib.Reference;
 
 public class SharedMethods
-{
+{/*
     public static IMethod getGlyphs = new IMethod()
     {
         @Override
@@ -60,5 +60,5 @@ public class SharedMethods
         {
             return "getGlyph";
         }
-    };
+    };*/
 }

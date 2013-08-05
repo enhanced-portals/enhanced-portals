@@ -18,9 +18,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedcore.gui.GuiItemStackButton;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.container.ContainerDialDeviceAddNetwork;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.Localization;
@@ -391,7 +391,7 @@ public class GuiDialDeviceAddNetwork extends GuiEnhancedPortalsScreen
     {
         ItemStack stack = slot.getItemStack();
 
-        if (stack.itemID == EnhancedPortals.proxy.blockDummyPortal.blockID)
+        if (stack.itemID == EnhancedPortals_deprecated.proxy.blockDummyPortal.blockID)
         {
             stack = new ItemStack(Item.dyePowder, 1, stack.getItemDamage());
         }

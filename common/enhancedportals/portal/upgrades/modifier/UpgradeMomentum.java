@@ -3,11 +3,11 @@ package enhancedportals.portal.upgrades.modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.Localization;
 import enhancedportals.lib.Strings;
 import enhancedportals.portal.upgrades.Upgrade;
@@ -28,7 +28,7 @@ public class UpgradeMomentum extends Upgrade
     @Override
     public ItemStack getItemStack()
     {
-        return new ItemStack(EnhancedPortals.proxy.itemPortalModifierUpgrade, 1, getUpgradeID());
+        return new ItemStack(EnhancedPortals_deprecated.proxy.itemPortalModifierUpgrade, 1, getUpgradeID());
     }
 
     @Override

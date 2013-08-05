@@ -1,5 +1,6 @@
 package enhancedportals.world;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Direction;
@@ -8,7 +9,6 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.PortalPosition;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
-import enhancedportals.EnhancedPortals;
 
 public class EPTeleporter extends Teleporter
 {
@@ -222,8 +222,8 @@ public class EPTeleporter extends Teleporter
                     j3 = j5 + l2;
                     i4 = j2 + (i3 - 1) * l5;
                     flag = i3 == 0 || i3 == 3 || l2 == -1 || l2 == 3;
-                    boolean flag2 = worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.obsidian.blockID || worldServerInstance.getBlockId(k3, j3, i4 - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.portal.blockID || worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.obsidian.blockID || worldServerInstance.getBlockId(k3, j3, i4 + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.portal.blockID;
-                    worldServerInstance.setBlock(k3, j3, i4, flag ? Block.obsidian.blockID : EnhancedPortals.proxy.blockNetherPortal.blockID, flag2 ? 4 : 2, 2);
+                    boolean flag2 = worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.obsidian.blockID || worldServerInstance.getBlockId(k3, j3, i4 - 1) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k3, j3, i4 - 1) == Block.portal.blockID || worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.obsidian.blockID || worldServerInstance.getBlockId(k3, j3, i4 + 1) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k3, j3, i4 + 1) == Block.portal.blockID;
+                    worldServerInstance.setBlock(k3, j3, i4, flag ? Block.obsidian.blockID : EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID, flag2 ? 4 : 2, 2);
                 }
             }
 
@@ -283,9 +283,9 @@ public class EPTeleporter extends Teleporter
 
                     for (int i2 = worldServerInstance.getActualHeight() - 1; i2 >= 0; --i2)
                     {
-                        if (worldServerInstance.getBlockId(k1, i2, l1) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k1, i2, l1) == Block.portal.blockID)
+                        if (worldServerInstance.getBlockId(k1, i2, l1) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k1, i2, l1) == Block.portal.blockID)
                         {
-                            while (worldServerInstance.getBlockId(k1, i2 - 1, l1) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k1, i2 - 1, l1) == Block.portal.blockID)
+                            while (worldServerInstance.getBlockId(k1, i2 - 1, l1) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(k1, i2 - 1, l1) == Block.portal.blockID)
                             {
                                 --i2;
                             }
@@ -319,22 +319,22 @@ public class EPTeleporter extends Teleporter
             d4 = k + 0.5D;
             int j2 = -1;
 
-            if (worldServerInstance.getBlockId(i - 1, j, k) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i - 1, j, k) == Block.portal.blockID)
+            if (worldServerInstance.getBlockId(i - 1, j, k) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i - 1, j, k) == Block.portal.blockID)
             {
                 j2 = 2;
             }
 
-            if (worldServerInstance.getBlockId(i + 1, j, k) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i + 1, j, k) == Block.portal.blockID)
+            if (worldServerInstance.getBlockId(i + 1, j, k) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i + 1, j, k) == Block.portal.blockID)
             {
                 j2 = 0;
             }
 
-            if (worldServerInstance.getBlockId(i, j, k - 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i, j, k - 1) == Block.portal.blockID)
+            if (worldServerInstance.getBlockId(i, j, k - 1) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i, j, k - 1) == Block.portal.blockID)
             {
                 j2 = 3;
             }
 
-            if (worldServerInstance.getBlockId(i, j, k + 1) == EnhancedPortals.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i, j, k + 1) == Block.portal.blockID)
+            if (worldServerInstance.getBlockId(i, j, k + 1) == EnhancedPortals_deprecated.proxy.blockNetherPortal.blockID || worldServerInstance.getBlockId(i, j, k + 1) == Block.portal.blockID)
             {
                 j2 = 1;
             }

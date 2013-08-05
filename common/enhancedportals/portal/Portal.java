@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,7 +18,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.Reference;
 import enhancedportals.lib.Settings;
@@ -233,7 +233,7 @@ public class Portal
         {
             return Settings.AllowFlintSteel ? createPortal(6, 6) : createPortal(1, 0);
         }
-        else if (stack.itemID == EnhancedPortals.proxy.itemEnhancedFlintSteel.itemID)
+        else if (stack.itemID == EnhancedPortals_deprecated.proxy.itemEnhancedFlintSteel.itemID)
         {
             return createPortal(1, 0);
         }
@@ -416,7 +416,7 @@ public class Portal
 
     private void handleDialDeviceTeleportation(Entity entity, TileEntityPortalModifier modifier)
     {
-        WorldPosition exitLocation = EnhancedPortals.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
+        WorldPosition exitLocation = EnhancedPortals_deprecated.proxy.DialDeviceNetwork.getNetwork(modifier.tempDialDeviceNetwork).get(0);
 
         if (exitLocation == null || exitLocation.equals(position))
         {
@@ -495,7 +495,7 @@ public class Portal
 
     private void handleModifierTeleportation(Entity entity, TileEntityPortalModifier modifier)
     {
-        List<WorldPosition> validLocations = EnhancedPortals.proxy.ModifierNetwork.getNetworkExcluding(modifier.modifierNetwork, new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
+        List<WorldPosition> validLocations = EnhancedPortals_deprecated.proxy.ModifierNetwork.getNetworkExcluding(modifier.modifierNetwork, new WorldPosition(modifier.xCoord, modifier.yCoord, modifier.zCoord, modifier.worldObj));
         boolean missingUpgrade = false, teleport = false;
 
         if (validLocations.isEmpty())

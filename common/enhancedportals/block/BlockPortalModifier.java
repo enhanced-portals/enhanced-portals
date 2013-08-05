@@ -1,5 +1,6 @@
 package enhancedportals.block;
 
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals_deprecated;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -16,7 +17,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import enhancedcore.world.BlockPosition;
 import enhancedcore.world.WorldHelper;
 import enhancedcore.world.WorldPosition;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.lib.BlockIds;
 import enhancedportals.lib.GuiIds;
 import enhancedportals.lib.ItemIds;
@@ -57,14 +57,14 @@ public class BlockPortalModifier extends BlockEnhancedPortals
         {
             if (!modifier.dialDeviceNetwork.equals(""))
             {
-                EnhancedPortals.proxy.DialDeviceNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world.provider.dimensionId));
+                EnhancedPortals_deprecated.proxy.DialDeviceNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world.provider.dimensionId));
             }
         }
         else
         {
             if (!modifier.modifierNetwork.equals(""))
             {
-                EnhancedPortals.proxy.ModifierNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world.provider.dimensionId));
+                EnhancedPortals_deprecated.proxy.ModifierNetwork.removeFromAllNetworks(new WorldPosition(x, y, z, world.provider.dimensionId));
             }
         }
 
@@ -158,7 +158,7 @@ public class BlockPortalModifier extends BlockEnhancedPortals
                 return true;
             }
 
-            player.openGui(EnhancedPortals.instance, GuiIds.PortalModifier, world, x, y, z);
+            player.openGui(EnhancedPortals_deprecated.instance, GuiIds.PortalModifier, world, x, y, z);
             return true;
         }
 
