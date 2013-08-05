@@ -14,7 +14,7 @@ public class ItemNetherQuartzIgniter extends Item
     {
         super(Identifiers.Item.NETHER_QUARTZ_IGNITER);
     }
-    
+
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
@@ -30,11 +30,11 @@ public class ItemNetherQuartzIgniter extends Item
                 {
                     PortalUtils.createPortal((WorldServer) world, x, y, z);
                 }
-                
+
                 return true;
             }
         }
-        
+
         return false;
     }
 }

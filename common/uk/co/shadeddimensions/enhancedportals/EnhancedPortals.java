@@ -26,16 +26,16 @@ public class EnhancedPortals
         proxy.registerBlocks();
         proxy.registerItems();
     }
-    
-    @EventHandler
-    public void preInit(FMLInitializationEvent event)
-    {
-        
-    }
-    
+
     @EventHandler
     public void postInit(FMLInitializationEvent event)
     {
-        
+
+    }
+
+    @EventHandler
+    public void preInit(FMLInitializationEvent event)
+    {
+
     }
 }

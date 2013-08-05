@@ -113,7 +113,7 @@ public class EnhancedPortals_deprecated
         Reference.glyphItems.add(new ItemStack(Item.writableBook));
         Reference.glyphItems.add(new ItemStack(Item.potion, 1, 5));
         Reference.glyphItems.add(new ItemStack(Item.cake));
-        
+
         if (Loader.isModLoaded("ComputerCraft"))
         {
             GameRegistry.registerTileEntity(TileEntityPortalModifier_cc.class, "EPPModifierCC");
@@ -126,7 +126,7 @@ public class EnhancedPortals_deprecated
     public void postInit(FMLPostInitializationEvent event)
     {
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new DialDeviceChunkCallback());
-        
+
         if (Loader.isModLoaded("ComputerCraft"))
         {
             Block.blocksList[BlockIds.PortalModifier] = null;

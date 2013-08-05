@@ -9,22 +9,22 @@ public class CommonProxy
 {
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
-    
+
     public static ItemNetherQuartzIgniter itemNetherQuartzIgniter;
-    
+
     public void registerBlocks()
     {
         blockFrame = new BlockFrame();
         blockPortal = new BlockPortal();
-        
+
         GameRegistry.registerBlock(blockFrame, "blockFrame");
         GameRegistry.registerBlock(blockPortal, "blockPortal");
     }
-    
+
     public void registerItems()
     {
         itemNetherQuartzIgniter = new ItemNetherQuartzIgniter();
-        
+
         GameRegistry.registerItem(itemNetherQuartzIgniter, "itemNetherQuartzIgniter");
     }
 }

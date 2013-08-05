@@ -1,8 +1,8 @@
 package uk.co.shadeddimensions.enhancedportals.block;
 
-import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 
 public class BlockFrame extends Block
 {
