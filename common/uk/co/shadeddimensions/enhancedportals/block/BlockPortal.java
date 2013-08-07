@@ -2,12 +2,9 @@ package uk.co.shadeddimensions.enhancedportals.block;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.Explosion;
@@ -17,6 +14,8 @@ import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPortal extends BlockContainer
 {
@@ -105,7 +104,7 @@ public class BlockPortal extends BlockContainer
             return;
         }
         
-        PortalUtils.removePortal((WorldServer) world, x, y, z);
+        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
     }
     
     @Override
@@ -116,7 +115,7 @@ public class BlockPortal extends BlockContainer
             return;
         }
         
-        PortalUtils.removePortal((WorldServer) world, x, y, z);
+        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
     }
     
     @Override
@@ -163,6 +162,10 @@ public class BlockPortal extends BlockContainer
         else if (meta == 4) // XYZ
         {
             setBlockBounds(0, 0f, 0f, 0f, 0f, 0f);
+        }
+        else
+        {
+            setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
         }
     }
     

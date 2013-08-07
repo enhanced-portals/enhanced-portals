@@ -48,7 +48,7 @@ public class BlockFrame extends BlockContainer
             return;
         }
         
-        PortalUtils.removePortal((WorldServer) world, x, y, z);
+        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
     }
     
     @Override
@@ -59,7 +59,7 @@ public class BlockFrame extends BlockContainer
             return;
         }
         
-        PortalUtils.removePortal((WorldServer) world, x, y, z);
+        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class BlockFrame extends BlockContainer
                 frame.texture = new Texture(ItemTextureDuplicator.getStoredTexture(player.inventory.getCurrentItem()), 0xFFFFFF, 0xFFFFFF);
                 world.markBlockForRenderUpdate(x, y, z);
             }
-            else
+            else if (!frame.texture.Texture.equals(""))
             {
                 ItemTextureDuplicator.setStoredTexture(player.inventory.getCurrentItem(), frame.texture.Texture);
             }

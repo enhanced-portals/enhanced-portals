@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 
@@ -25,11 +26,12 @@ public class ItemNetherQuartzIgniter extends Item
             {
                 if (player.isSneaking())
                 {
-                    PortalUtils.removePortal((WorldServer) world, x, y, z);
+                    PortalUtils.removePortalAround((WorldServer) world, x, y, z);
                 }
                 else
                 {
-                    PortalUtils.createPortal((WorldServer) world, x, y, z);
+                    ForgeDirection d = ForgeDirection.getOrientation(side);
+                    PortalUtils.createPortal((WorldServer) world, x + d.offsetX, y + d.offsetY, z + d.offsetZ);
                 }
 
                 return true;

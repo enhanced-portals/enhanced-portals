@@ -20,7 +20,7 @@ public class CommonProxy
     {
         blockFrame = new BlockFrame();
         blockPortal = new BlockPortal();
-
+        
         GameRegistry.registerBlock(blockFrame, "blockFrame");
         GameRegistry.registerBlock(blockPortal, "blockPortal");
     }
