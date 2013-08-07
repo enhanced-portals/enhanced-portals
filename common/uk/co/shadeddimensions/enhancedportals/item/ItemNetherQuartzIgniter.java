@@ -15,6 +15,8 @@ public class ItemNetherQuartzIgniter extends Item
     {
         super(Identifiers.Item.NETHER_QUARTZ_IGNITER);
         setUnlocalizedName("netherQuartzIgniter");
+        maxStackSize = 1;
+        setMaxDamage(1024);
     }
 
     @Override
@@ -31,7 +33,11 @@ public class ItemNetherQuartzIgniter extends Item
                 else
                 {
                     ForgeDirection d = ForgeDirection.getOrientation(side);
-                    PortalUtils.createPortal((WorldServer) world, x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+                    
+                    if (PortalUtils.createPortal((WorldServer) world, x + d.offsetX, y + d.offsetY, z + d.offsetZ))
+                    {
+                        stack.damageItem(1, player);
+                    }
                 }
 
                 return true;
