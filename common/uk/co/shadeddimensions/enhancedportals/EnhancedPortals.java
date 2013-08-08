@@ -1,6 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals;
 
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -8,6 +9,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.lib.Reference;
 
 @Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID_NEW, version = "1.1.0", dependencies = "required-after:EnhancedCore@[1.1.1,)", acceptedMinecraftVersions = "[1.6.2,)")
@@ -27,6 +29,8 @@ public class EnhancedPortals
         proxy.registerTileEntities();
         proxy.registerItems();
         proxy.registerRenderers();
+        
+        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
     }
 
     @EventHandler

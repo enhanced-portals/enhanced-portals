@@ -23,6 +23,7 @@ public class Identifiers
     {
         public static int NETHER_QUARTZ_IGNITER = 5120;
         public static int TEXTURE_DUPLICATOR = 5121;
+        public static int WRENCH = 5122;
 
         private static int STARTING_ID = 4096;
         private static int ENDING_ID = 32000;
@@ -34,5 +35,10 @@ public class Identifiers
 
             return STARTING_ID + COUNTER; // TODO Check if free
         }
+    }
+    
+    public static class Gui
+    {
+        public static int FRAME_CONTROLLER = 1;
     }
 }

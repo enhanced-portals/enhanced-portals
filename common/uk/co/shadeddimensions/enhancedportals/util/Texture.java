@@ -10,6 +10,7 @@ public class Texture
     public String Texture;
     public int TextureColour;
     public int ParticleColour;
+    public int ParticleType;
     
     public Texture()
     {
@@ -18,11 +19,12 @@ public class Texture
         ParticleColour = 0xFFFFFF;
     }
     
-    public Texture(String texture, int tColour, int pColour)
+    public Texture(String texture, int tColour, int pColour, int pType)
     {
         Texture = texture;
         TextureColour = tColour;
         ParticleColour = pColour;
+        ParticleType = pType;
     }
     
     public Texture(NBTTagCompound nbt)

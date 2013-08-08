@@ -3,12 +3,14 @@ package uk.co.shadeddimensions.enhancedportals.block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.item.ItemTextureDuplicator;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
@@ -23,7 +25,7 @@ public class BlockFrame extends BlockContainer
         super(Identifiers.Block.PORTAL_FRAME, Material.rock);
         setHardness(10);
         setResistance(2000);
-        setUnlocalizedName("portalFrame");
+        setUnlocalizedName("ep2.portalFrame");
         setStepSound(soundStoneFootstep);
     }
     
@@ -39,7 +41,7 @@ public class BlockFrame extends BlockContainer
         
         return super.getBlockTexture(blockAccess, x, y, z, side);
     }
-    
+        
     @Override
     public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta)
     {
@@ -71,20 +73,35 @@ public class BlockFrame extends BlockContainer
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemTextureDuplicator.itemID)
+        ItemStack stack = player.inventory.getCurrentItem();
+        
+        if (stack != null)
         {
-            TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
-            
-            if (ItemTextureDuplicator.hasStoredTexture(player.inventory.getCurrentItem()))
+            if (stack.itemID == CommonProxy.itemTextureDuplicator.itemID)
             {
-                frame.texture = new Texture(ItemTextureDuplicator.getStoredTexture(player.inventory.getCurrentItem()), 0xFFFFFF, 0xFFFFFF);
-                world.markBlockForRenderUpdate(x, y, z);
+                TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
+                
+                if (ItemTextureDuplicator.hasStoredTexture(player.inventory.getCurrentItem()))
+                {
+                    frame.texture = new Texture(ItemTextureDuplicator.getStoredTexture(player.inventory.getCurrentItem()), 0xFFFFFF, 0xFFFFFF, 0);
+                    world.markBlockForRenderUpdate(x, y, z);
+                }
+                else if (!frame.texture.Texture.equals(""))
+                {
+                    ItemTextureDuplicator.setStoredTexture(player.inventory.getCurrentItem(), frame.texture.Texture);
+                }
+                
+                return true;
             }
-            else if (!frame.texture.Texture.equals(""))
+            else if (stack.itemID == CommonProxy.itemNetherQuartzIgniter.itemID || stack.itemID == CommonProxy.itemWrench.itemID)
             {
-                ItemTextureDuplicator.setStoredTexture(player.inventory.getCurrentItem(), frame.texture.Texture);
+                return false;
             }
-            
+        }
+        
+        if (world.getBlockMetadata(x, y, z) == 1)
+        {            
+            player.openGui(EnhancedPortals.instance, Identifiers.Gui.FRAME_CONTROLLER, world, x, y, z);
             return true;
         }
         

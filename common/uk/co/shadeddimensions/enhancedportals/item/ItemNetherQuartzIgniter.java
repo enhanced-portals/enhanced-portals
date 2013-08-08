@@ -14,7 +14,7 @@ public class ItemNetherQuartzIgniter extends Item
     public ItemNetherQuartzIgniter()
     {
         super(Identifiers.Item.NETHER_QUARTZ_IGNITER);
-        setUnlocalizedName("netherQuartzIgniter");
+        setUnlocalizedName("ep2.netherQuartzIgniter");
         maxStackSize = 1;
         setMaxDamage(1024);
     }

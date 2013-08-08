@@ -14,6 +14,7 @@ import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,7 +25,7 @@ public class BlockPortal extends BlockContainer
         super(Identifiers.Block.PORTAL_BLOCK, Material.portal);
         setBlockUnbreakable();
         setResistance(2000);
-        setUnlocalizedName("portal");
+        setUnlocalizedName("ep2.portal");
         setStepSound(soundGlassFootstep);
     }
 
@@ -74,7 +75,8 @@ public class BlockPortal extends BlockContainer
                     d5 = (double)(par5Random.nextFloat() * 2.0F * (float)i1);
                 }
     
-                par1World.spawnParticle("portal", d0, d1, d2, d3, d4, d5);
+                //par1World.spawnParticle("portal", d0, d1, d2, d3, d4, d5);
+                FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(par1World, "", 1, d0, d1, d2, d3, d4, d5));
             }
         }
     }
@@ -89,13 +91,7 @@ public class BlockPortal extends BlockContainer
     {
         return 1;
     }
-    
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
-    {
-        // Stop from breaking portal, this should never need to happen here
-    }
-    
+        
     @Override
     public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta)
     {
@@ -121,7 +117,7 @@ public class BlockPortal extends BlockContainer
     @Override
     public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        // teleport
+        // TODO: teleport
     }
         
     @Override

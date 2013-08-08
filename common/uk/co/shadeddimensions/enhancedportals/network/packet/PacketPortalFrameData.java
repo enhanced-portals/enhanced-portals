@@ -52,7 +52,7 @@ public class PacketPortalFrameData extends MainPacket
         {
             TilePortalFrame frame = (TilePortalFrame) tile;
             
-            frame.texture = new Texture(texture, colour, 0xFFFFFF);
+            frame.texture = new Texture(texture, colour, 0xFFFFFF, 0);
             world.markBlockForRenderUpdate(x, y, z);
         }
     }

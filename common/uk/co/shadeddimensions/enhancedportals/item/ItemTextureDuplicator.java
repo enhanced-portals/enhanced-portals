@@ -17,7 +17,7 @@ public class ItemTextureDuplicator extends Item
     public ItemTextureDuplicator()
     {
         super(Identifiers.Item.TEXTURE_DUPLICATOR);
-        setUnlocalizedName("textureDuplicator");
+        setUnlocalizedName("ep2.textureDuplicator");
         setHasSubtypes(true);
         setMaxDamage(0);
         setMaxStackSize(1);
