@@ -5,11 +5,11 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
-public class ContainerFrameController extends Container
+public class ContainerPortalController extends Container
 {
     protected TilePortalFrame tile;
-    
-    public ContainerFrameController(InventoryPlayer player, TilePortalFrame frame)
+
+    public ContainerPortalController(InventoryPlayer player, TilePortalFrame frame)
     {
         tile = frame;
     }

@@ -1,8 +1,9 @@
-package uk.co.shadeddimensions.enhancedportals.block;
+package uk.co.shadeddimensions.enhancedportals.client.particle;
 
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.util.Texture;
 
 public class PortalFX extends EntityFX
 {
@@ -12,7 +13,7 @@ public class PortalFX extends EntityFX
     private double portalPosY;
     private double portalPosZ;
 
-    public PortalFX(World par1World, String texture, int type, double par2, double par4, double par6, double par8, double par10, double par12)
+    public PortalFX(World par1World, Texture texture, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
         motionX = par8;
@@ -22,70 +23,70 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        //float f = rand.nextFloat() * 0.6F + 0.4F;
-       // particleRed = particleGreen = particleBlue = 1.0F * f;
-       // particleGreen *= 0.3F;
-       // particleRed *= 0.9F;
+        // float f = rand.nextFloat() * 0.6F + 0.4F;
+        // particleRed = particleGreen = particleBlue = 1.0F * f;
+        // particleGreen *= 0.3F;
+        // particleRed *= 0.9F;
 
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
-        
-        switch (type)
+
+        switch (texture.ParticleType)
         {
             default:
             case 0:
                 setParticleTextureIndex((int) (Math.random() * 8.0D));
                 break;
-                
+
             case 1:
                 setParticleTextureIndex(32);
                 break;
-                
+
             case 2:
                 setParticleTextureIndex(48 + rand.nextInt(2));
                 break;
-                
+
             case 3:
                 setParticleTextureIndex(64);
                 break;
-                
+
             case 4:
                 setParticleTextureIndex(65);
                 break;
-                
+
             case 5:
                 setParticleTextureIndex(66);
                 break;
-                
+
             case 6:
                 setParticleTextureIndex(80);
                 break;
-                
+
             case 7:
                 setParticleTextureIndex(81);
                 break;
-                
+
             case 8:
                 setParticleTextureIndex(82);
                 break;
-                
+
             case 9:
                 setParticleTextureIndex(83);
                 break;
-                
+
             case 10:
                 setParticleTextureIndex(97);
                 break;
-                
+
             case 11:
                 setParticleTextureIndex(128 + rand.nextInt(8));
                 break;
-                
+
             case 12:
                 setParticleTextureIndex(144 + rand.nextInt(8));
                 break;
-                
+
             case 13:
                 setParticleTextureIndex(160 + rand.nextInt(8));
                 break;

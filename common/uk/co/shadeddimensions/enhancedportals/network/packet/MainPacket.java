@@ -20,16 +20,15 @@ public abstract class MainPacket
 {
     enum PacketType
     {
-        REQUEST_DATA(PacketRequestData.class),
-        PORTAL_FRAME_DATA(PacketPortalFrameData.class);
-        
+        REQUEST_DATA(PacketRequestData.class), PORTAL_FRAME_DATA(PacketPortalFrameData.class);
+
         private Class<? extends MainPacket> packetType;
-        
+
         private PacketType(Class<? extends MainPacket> cls)
         {
             packetType = cls;
         }
-        
+
         MainPacket make()
         {
             try
@@ -42,12 +41,12 @@ public abstract class MainPacket
             }
         }
     }
-    
+
     public static Packet250CustomPayload makePacket(MainPacket packet)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-        DataOutputStream stream = new DataOutputStream(bos);       
-        
+        DataOutputStream stream = new DataOutputStream(bos);
+
         try
         {
             packet.generatePacket(stream);
@@ -56,10 +55,10 @@ public abstract class MainPacket
         {
             e.printStackTrace();
         }
-        
+
         return new Packet250CustomPayload(Reference.MOD_ID_NEW, Bytes.concat(new byte[] { packet.getID() }, bos.toByteArray()));
     }
-    
+
     public static MainPacket readPacket(INetworkManager network, byte[] payload)
     {
         try
@@ -76,7 +75,7 @@ public abstract class MainPacket
             return null;
         }
     }
-    
+
     private PacketType type;
 
     public MainPacket()

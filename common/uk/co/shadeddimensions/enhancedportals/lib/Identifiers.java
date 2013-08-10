@@ -36,7 +36,7 @@ public class Identifiers
             return STARTING_ID + COUNTER; // TODO Check if free
         }
     }
-    
+
     public static class Gui
     {
         public static int FRAME_CONTROLLER = 1;

@@ -22,7 +22,7 @@ public class CommonProxy
     {
         blockFrame = new BlockFrame();
         blockPortal = new BlockPortal();
-        
+
         GameRegistry.registerBlock(blockFrame, "blockFrame");
         GameRegistry.registerBlock(blockPortal, "blockPortal");
     }
@@ -32,7 +32,7 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TilePortal.class, "epPortal");
         GameRegistry.registerTileEntity(TilePortalFrame.class, "epPortalFrame");
     }
-    
+
     public void registerItems()
     {
         itemNetherQuartzIgniter = new ItemNetherQuartzIgniter();
@@ -43,9 +43,9 @@ public class CommonProxy
         GameRegistry.registerItem(itemTextureDuplicator, "itemTextureDuplicator");
         GameRegistry.registerItem(itemWrench, "itemWrench");
     }
-    
+
     public void registerRenderers()
     {
-        
+
     }
 }

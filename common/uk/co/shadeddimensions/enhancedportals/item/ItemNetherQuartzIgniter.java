@@ -33,7 +33,7 @@ public class ItemNetherQuartzIgniter extends Item
                 else
                 {
                     ForgeDirection d = ForgeDirection.getOrientation(side);
-                    
+
                     if (PortalUtils.createPortal((WorldServer) world, x + d.offsetX, y + d.offsetY, z + d.offsetZ))
                     {
                         stack.damageItem(1, player);

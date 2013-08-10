@@ -15,19 +15,19 @@ import cpw.mods.fml.common.network.Player;
 public class PacketRequestData extends MainPacket
 {
     public int x, y, z;
-    
+
     public PacketRequestData()
     {
 
     }
-    
+
     public PacketRequestData(int x, int y, int z)
     {
         this.x = x;
         this.y = y;
         this.z = z;
     }
-    
+
     public PacketRequestData(TileEntity tile)
     {
         x = tile.xCoord;
@@ -41,7 +41,7 @@ public class PacketRequestData extends MainPacket
         x = stream.readInt();
         y = stream.readInt();
         z = stream.readInt();
-        
+
         return this;
     }
 
@@ -50,7 +50,7 @@ public class PacketRequestData extends MainPacket
     {
         World world = player.worldObj;
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (tile instanceof TilePortalFrame)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);

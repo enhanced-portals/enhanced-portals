@@ -29,7 +29,7 @@ public class EnhancedPortals
         proxy.registerTileEntities();
         proxy.registerItems();
         proxy.registerRenderers();
-        
+
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
     }
 

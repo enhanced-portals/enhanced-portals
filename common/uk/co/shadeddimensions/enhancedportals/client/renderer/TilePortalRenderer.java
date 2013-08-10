@@ -39,7 +39,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         renderBlocks.enableAO = false;
 
         tessellator.startDrawingQuads();
-        
+
         if (meta == 1) // X
         {
             renderBlocks.renderFaceZNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
@@ -63,13 +63,13 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortal portal = (TilePortal) tile;
-        //Texture texture = portal.texture;
-        //ItemStack stack = texture.getItemStack();
+        // Texture texture = portal.texture;
+        // ItemStack stack = texture.getItemStack();
 
-        //if (stack.itemID == Item.netherStar.itemID)
-        //{
-        //    return;
-        //}
+        // if (stack.itemID == Item.netherStar.itemID)
+        // {
+        // return;
+        // }
 
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

@@ -15,12 +15,12 @@ public class PacketPortalFrameData extends MainPacket
 {
     int x, y, z, colour;
     String texture;
-    
+
     public PacketPortalFrameData()
     {
-        
+
     }
-    
+
     public PacketPortalFrameData(TilePortalFrame frame)
     {
         x = frame.xCoord;
@@ -38,7 +38,7 @@ public class PacketPortalFrameData extends MainPacket
         z = stream.readInt();
         colour = stream.readInt();
         texture = stream.readUTF();
-        
+
         return this;
     }
 
@@ -47,11 +47,11 @@ public class PacketPortalFrameData extends MainPacket
     {
         World world = player.worldObj;
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (tile != null && tile instanceof TilePortalFrame)
         {
             TilePortalFrame frame = (TilePortalFrame) tile;
-            
+
             frame.texture = new Texture(texture, colour, 0xFFFFFF, 0);
             world.markBlockForRenderUpdate(x, y, z);
         }

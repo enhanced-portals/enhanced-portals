@@ -1,7 +1,10 @@
 package uk.co.shadeddimensions.enhancedportals.block;
 
+import java.util.List;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -28,20 +31,28 @@ public class BlockFrame extends BlockContainer
         setUnlocalizedName("ep2.portalFrame");
         setStepSound(soundStoneFootstep);
     }
-    
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs creativeTab, List list)
+    {
+        list.add(new ItemStack(this, 0));
+        list.add(new ItemStack(this, 1));
+    }
+
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TilePortalFrame frame = (TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z);
-        
+
         if (!frame.texture.Texture.equals(""))
         {
             return Texture.getTexture(frame.texture.Texture, side);
         }
-        
+
         return super.getBlockTexture(blockAccess, x, y, z, side);
     }
-        
+
     @Override
     public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta)
     {
@@ -49,10 +60,10 @@ public class BlockFrame extends BlockContainer
         {
             return;
         }
-        
+
         PortalUtils.removePortalAround((WorldServer) world, x, y, z);
     }
-    
+
     @Override
     public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion par5Explosion)
     {
@@ -60,7 +71,7 @@ public class BlockFrame extends BlockContainer
         {
             return;
         }
-        
+
         PortalUtils.removePortalAround((WorldServer) world, x, y, z);
     }
 
@@ -69,18 +80,18 @@ public class BlockFrame extends BlockContainer
     {
         return new TilePortalFrame();
     }
-    
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
         ItemStack stack = player.inventory.getCurrentItem();
-        
+
         if (stack != null)
         {
             if (stack.itemID == CommonProxy.itemTextureDuplicator.itemID)
             {
                 TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
-                
+
                 if (ItemTextureDuplicator.hasStoredTexture(player.inventory.getCurrentItem()))
                 {
                     frame.texture = new Texture(ItemTextureDuplicator.getStoredTexture(player.inventory.getCurrentItem()), 0xFFFFFF, 0xFFFFFF, 0);
@@ -90,7 +101,7 @@ public class BlockFrame extends BlockContainer
                 {
                     ItemTextureDuplicator.setStoredTexture(player.inventory.getCurrentItem(), frame.texture.Texture);
                 }
-                
+
                 return true;
             }
             else if (stack.itemID == CommonProxy.itemNetherQuartzIgniter.itemID || stack.itemID == CommonProxy.itemWrench.itemID)
@@ -98,13 +109,13 @@ public class BlockFrame extends BlockContainer
                 return false;
             }
         }
-        
+
         if (world.getBlockMetadata(x, y, z) == 1)
-        {            
+        {
             player.openGui(EnhancedPortals.instance, Identifiers.Gui.FRAME_CONTROLLER, world, x, y, z);
             return true;
         }
-        
+
         return false;
     }
 }
