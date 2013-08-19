@@ -9,6 +9,7 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.ChunkCoordinates;
 
 import org.bouncycastle.util.Arrays;
 
@@ -104,5 +105,22 @@ public abstract class MainPacket
     public byte getID()
     {
         return (byte) type.ordinal();
+    }
+
+    protected ChunkCoordinates readChunkCoordinates(DataInputStream stream) throws IOException
+    {
+        return new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
+    }
+
+    protected void writeChunkCoordinates(ChunkCoordinates c, DataOutputStream stream) throws IOException
+    {
+        if (c == null)
+        {
+            c = new ChunkCoordinates(0, -1, 0);
+        }
+
+        stream.writeInt(c.posX);
+        stream.writeInt(c.posY);
+        stream.writeInt(c.posZ);
     }
 }

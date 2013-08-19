@@ -13,7 +13,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.item.ItemTextureDuplicator;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
@@ -108,12 +107,6 @@ public class BlockFrame extends BlockContainer
             {
                 return false;
             }
-        }
-
-        if (world.getBlockMetadata(x, y, z) == 1)
-        {
-            player.openGui(EnhancedPortals.instance, Identifiers.Gui.FRAME_CONTROLLER, world, x, y, z);
-            return true;
         }
 
         return false;

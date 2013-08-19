@@ -1,6 +1,22 @@
 [
 {
   "modid" : "EP2",
+  "name" : "EnhancedPortals 2 (Deprecation Support)",
+  "version" : "@VERSION@",
+  "url" : "http://www.minecraftforum.net/topic/1301217-/",
+  "credits" : "",
+  "authors": [
+    "Alz454"
+  ],
+  "description": "Create any size and shape portals you want!",
+  "logoFile" : "",
+  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
+  "parent" : "",
+  "screenshots": [
+  ]
+},
+{
+  "modid" : "EnhancedPortals2",
   "name" : "EnhancedPortals 2",
   "version" : "@VERSION@",
   "url" : "http://www.minecraftforum.net/topic/1301217-/",

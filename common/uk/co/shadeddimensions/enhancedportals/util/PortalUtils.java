@@ -8,6 +8,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
 public class PortalUtils
 {
@@ -28,10 +29,12 @@ public class PortalUtils
     }
 
     /***
-     * Checks to see if this portal has a controller, returns null if it doesn't (ONLY USE IF CANT FIND FROM INTERNAL DATA)
+     * Links all surrounding portal frame blocks to the controller
      */
-    public static ChunkCoordinates getController(WorldServer world, int x, int y, int z)
+    public static boolean linkController(WorldServer world, int x, int y, int z)
     {
+        ChunkCoordinates linkLocation = new ChunkCoordinates(x, y, z);
+
         if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME)
         {
             for (int i = 0; i < 6; i++)
@@ -49,7 +52,13 @@ public class PortalUtils
             }
         }
 
+        if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME)
+        {
+            return false; // Second check to make sure we now have a portal block selected
+        }
+
         Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
+        Queue<ChunkCoordinates> portalBlocks = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> processed = new LinkedList<ChunkCoordinates>();
         toProcess.add(new ChunkCoordinates(x, y, z));
         int meta = world.getBlockMetadata(x, y, z);
@@ -63,13 +72,12 @@ public class PortalUtils
             {
                 if (id == Identifiers.Block.PORTAL_FRAME)
                 {
-                    if (world.getBlockMetadata(c.posX, c.posY, c.posZ) == 1)
-                    {
-                        return c;
-                    }
+                    TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                    frame.controller = linkLocation;
                 }
                 else
                 {
+                    portalBlocks.add(c);
                     addTouchingBlocks(c, toProcess, meta); // We don't want to follow the frame out to another portal..
                 }
 
@@ -77,7 +85,13 @@ public class PortalUtils
             }
         }
 
-        return null;
+        if (processed.size() == 0)
+        {
+            return false;
+        }
+
+        removePortal(world, portalBlocks);
+        return true;
     }
 
     private static boolean createPortal(WorldServer world, int x, int y, int z, int meta)
@@ -287,5 +301,21 @@ public class PortalUtils
     private static boolean isValidPortalPart(int id)
     {
         return id == Identifiers.Block.PORTAL_FRAME || id == Identifiers.Block.PORTAL_BLOCK;
+    }
+
+    public static boolean findNearbyPortalBlock(WorldServer world, int x, int y, int z)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            ChunkCoordinates c = offsetCoordinate(new ChunkCoordinates(x, y, z), d);
+
+            if (world.getBlockId(c.posX, c.posY, c.posZ) == Identifiers.Block.PORTAL_BLOCK)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
