@@ -6,15 +6,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 
 public class ItemNetherQuartzIgniter extends Item
 {
-    public ItemNetherQuartzIgniter()
+    public ItemNetherQuartzIgniter(int id, String name)
     {
-        super(Identifiers.Item.NETHER_QUARTZ_IGNITER);
-        setUnlocalizedName("ep2.netherQuartzIgniter");
+        super(id);
+        setUnlocalizedName(name);
         maxStackSize = 1;
         setMaxDamage(1024);
     }
@@ -24,7 +24,7 @@ public class ItemNetherQuartzIgniter extends Item
     {
         if (!world.isRemote)
         {
-            if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME)
+            if (world.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)
             {
                 if (player.isSneaking())
                 {

@@ -10,12 +10,12 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
 
 public class GuiPortalController extends GuiContainer
 {
     EntityPlayer player;
-    TilePortalFrame tile;
+    TilePortalController tile;
 
     static GuiRectangle[] rectangles = new GuiRectangle[7];
     static boolean[] disabled = new boolean[7];
@@ -40,7 +40,7 @@ public class GuiPortalController extends GuiContainer
         }
     }
 
-    public GuiPortalController(EntityPlayer player, TilePortalFrame frame)
+    public GuiPortalController(EntityPlayer player, TilePortalController frame)
     {
         super(new ContainerPortalController(player.inventory, frame));
         this.player = player;

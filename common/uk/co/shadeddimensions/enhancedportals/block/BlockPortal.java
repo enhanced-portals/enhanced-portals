@@ -12,7 +12,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
-import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -21,12 +20,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPortal extends BlockContainer
 {
-    public BlockPortal()
+    public BlockPortal(int id, String name)
     {
-        super(Identifiers.Block.PORTAL_BLOCK, Material.portal);
+        super(id, Material.portal);
         setBlockUnbreakable();
         setResistance(2000);
-        setUnlocalizedName("ep2.portal");
+        setUnlocalizedName(name);
         setStepSound(soundGlassFootstep);
     }
 

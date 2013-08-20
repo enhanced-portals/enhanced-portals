@@ -7,7 +7,9 @@ import net.minecraft.block.Block;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
 public class PortalUtils
@@ -35,14 +37,14 @@ public class PortalUtils
     {
         ChunkCoordinates linkLocation = new ChunkCoordinates(x, y, z);
 
-        if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME)
+        if (world.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)
         {
             for (int i = 0; i < 6; i++)
             {
                 ForgeDirection d = ForgeDirection.getOrientation(i);
                 ChunkCoordinates c = offsetCoordinate(new ChunkCoordinates(x, y, z), d);
 
-                if (world.getBlockId(c.posX, c.posY, c.posZ) == Identifiers.Block.PORTAL_BLOCK)
+                if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
                 {
                     x = c.posX;
                     y = c.posY;
@@ -52,7 +54,7 @@ public class PortalUtils
             }
         }
 
-        if (world.getBlockId(x, y, z) == Identifiers.Block.PORTAL_FRAME)
+        if (world.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)
         {
             return false; // Second check to make sure we now have a portal block selected
         }
@@ -68,12 +70,76 @@ public class PortalUtils
             ChunkCoordinates c = toProcess.remove();
             int id = world.getBlockId(c.posX, c.posY, c.posZ);
 
-            if (!processed.contains(c) && (id == Identifiers.Block.PORTAL_FRAME || id == Identifiers.Block.PORTAL_BLOCK))
+            if (!processed.contains(c) && (id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID))
             {
-                if (id == Identifiers.Block.PORTAL_FRAME)
+                if (id == CommonProxy.blockFrame.blockID)
                 {
-                    TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
-                    frame.controller = linkLocation;
+                    TileEP tile = (TileEP) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                    
+                    if (tile instanceof TilePortalFrame)
+                    {
+                        TilePortalFrame frame = (TilePortalFrame) tile;
+                        
+                        if (!frame.checkController())
+                        {
+                            frame.controller = linkLocation;
+                            
+                            for (int i = 0; i < 6; i++)
+                            {
+                                ForgeDirection d = ForgeDirection.getOrientation(i);
+                                
+                                if (world.getBlockId(c.posX + d.offsetX, c.posY + d.offsetY, c.posZ + d.offsetZ) == CommonProxy.blockPortal.blockID)
+                                {
+                                    frame.activeSide[i] = true;
+                                }
+                                else
+                                {
+                                    frame.activeSide[i] = false;
+                                }
+                            }
+                            
+                            CommonProxy.sendUpdatePacketToAllAround(frame);
+                        }
+                    }
+                    else if (tile instanceof TilePortalController) // We found an existing controller within this portal frame, update to that controller
+                    {
+                        linkLocation = new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
+                        processed.add(c);
+                        
+                        while (!processed.isEmpty())
+                        {
+                            ChunkCoordinates cc = processed.remove();                            
+                            TileEP t = (TileEP) world.getBlockTileEntity(cc.posX, cc.posY, cc.posZ);
+                            
+                            if (t instanceof TilePortalFrame)
+                            {
+                                TilePortalFrame frame = (TilePortalFrame) t;
+                                
+                                if (!frame.checkController())
+                                {
+                                    frame.controller = linkLocation;
+                                    
+                                    for (int i = 0; i < 6; i++)
+                                    {
+                                        ForgeDirection d = ForgeDirection.getOrientation(i);
+                                        
+                                        if (world.getBlockId(cc.posX + d.offsetX, cc.posY + d.offsetY, cc.posZ + d.offsetZ) == CommonProxy.blockPortal.blockID)
+                                        {
+                                            frame.activeSide[i] = true;
+                                        }
+                                        else
+                                        {
+                                            frame.activeSide[i] = false;
+                                        }
+                                    }
+                                    
+                                    CommonProxy.sendUpdatePacketToAllAround(frame);
+                                }
+                            }
+                        }
+                        
+                        return true;
+                    }
                 }
                 else
                 {
@@ -90,7 +156,7 @@ public class PortalUtils
             return false;
         }
 
-        removePortal(world, portalBlocks);
+        world.setBlock(linkLocation.posX, linkLocation.posY, linkLocation.posZ, CommonProxy.blockFrame.blockID, 1, 3);
         return true;
     }
 
@@ -123,7 +189,7 @@ public class PortalUtils
                 if (sides >= 2)
                 {
                     addedBlocks.add(cur);
-                    world.setBlock(cur.posX, cur.posY, cur.posZ, Identifiers.Block.PORTAL_BLOCK, meta, 2);
+                    world.setBlock(cur.posX, cur.posY, cur.posZ, CommonProxy.blockPortal.blockID, meta, 2);
                     addTouchingBlocks(cur, toProcess, meta);
                 }
             }
@@ -174,7 +240,7 @@ public class PortalUtils
         {
             ChunkCoordinates cur = toProcess.remove();
 
-            if (world.getBlockId(cur.posX, cur.posY, cur.posZ) == Identifiers.Block.PORTAL_BLOCK)
+            if (world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
             {
                 world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
                 addTouchingBlocks(cur, toProcess, meta);
@@ -192,7 +258,7 @@ public class PortalUtils
             ForgeDirection d = ForgeDirection.getOrientation(i);
             ChunkCoordinates c = offsetCoordinate(new ChunkCoordinates(x, y, z), d);
 
-            if (world.getBlockId(c.posX, c.posY, c.posZ) == Identifiers.Block.PORTAL_BLOCK)
+            if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
             {
                 removePortal(world, c.posX, c.posY, c.posZ, world.getBlockMetadata(c.posX, c.posY, c.posZ));
             }
@@ -205,7 +271,7 @@ public class PortalUtils
         {
             ChunkCoordinates cur = blocks.remove();
 
-            if (world.getBlockId(cur.posX, cur.posY, cur.posZ) == Identifiers.Block.PORTAL_BLOCK)
+            if (world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
             {
                 world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
             }
@@ -300,7 +366,7 @@ public class PortalUtils
 
     private static boolean isValidPortalPart(int id)
     {
-        return id == Identifiers.Block.PORTAL_FRAME || id == Identifiers.Block.PORTAL_BLOCK;
+        return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID;
     }
 
     public static boolean findNearbyPortalBlock(WorldServer world, int x, int y, int z)
@@ -310,7 +376,7 @@ public class PortalUtils
             ForgeDirection d = ForgeDirection.getOrientation(i);
             ChunkCoordinates c = offsetCoordinate(new ChunkCoordinates(x, y, z), d);
 
-            if (world.getBlockId(c.posX, c.posY, c.posZ) == Identifiers.Block.PORTAL_BLOCK)
+            if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
             {
                 return true;
             }

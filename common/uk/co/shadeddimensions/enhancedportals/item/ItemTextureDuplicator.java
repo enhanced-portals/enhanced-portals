@@ -8,16 +8,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.util.Texture;
 
 public class ItemTextureDuplicator extends Item
 {
-    public ItemTextureDuplicator()
+    public ItemTextureDuplicator(int id, String name)
     {
-        super(Identifiers.Item.TEXTURE_DUPLICATOR);
-        setUnlocalizedName("ep2.textureDuplicator");
+        super(id);
+        setUnlocalizedName(name);
         setHasSubtypes(true);
         setMaxDamage(0);
         setMaxStackSize(1);
@@ -70,14 +70,14 @@ public class ItemTextureDuplicator extends Item
     {
         int blockID = world.getBlockId(x, y, z), blockMeta = world.getBlockMetadata(x, y, z);
 
-        if (player.isSneaking() && blockID == Identifiers.Block.PORTAL_FRAME)
+        if (player.isSneaking() && blockID == CommonProxy.blockFrame.blockID)
         {
             TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
             frame.texture = new Texture();
             world.markBlockForRenderUpdate(x, y, z);
             return true;
         }
-        else if (!hasStoredTexture(stack) && blockID != Identifiers.Block.PORTAL_BLOCK && blockID != Identifiers.Block.PORTAL_FRAME && Block.blocksList[blockID].isOpaqueCube())
+        else if (!hasStoredTexture(stack) && blockID != CommonProxy.blockPortal.blockID && blockID != CommonProxy.blockFrame.blockID && Block.blocksList[blockID].isOpaqueCube())
         {
             setStoredTexture(stack, "B:" + blockID + ":" + blockMeta);
             return true;
