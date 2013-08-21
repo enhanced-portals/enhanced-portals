@@ -17,35 +17,26 @@ public class PacketPortalFrameData extends MainPacket
     int colour;
     ChunkCoordinates coord, controller;
     String texture;
-    boolean[] activeSide;
 
     public PacketPortalFrameData()
     {
-
+        
     }
 
     public PacketPortalFrameData(TilePortalFrame frame)
     {
-        coord = new ChunkCoordinates(frame.xCoord, frame.yCoord, frame.zCoord);
+        coord = frame.getChunkCoordinates();
         controller = frame.controller;
         colour = frame.texture.TextureColour;
-        activeSide = frame.activeSide;
         texture = frame.texture.Texture;
     }
 
     @Override
     public MainPacket consumePacket(DataInputStream stream) throws IOException
     {
-        activeSide = new boolean[6];
         coord = readChunkCoordinates(stream);
         controller = readChunkCoordinates(stream);
         colour = stream.readInt();
-        
-        for (int i = 0; i < 6; i++)
-        {
-            activeSide[i] = stream.readBoolean();
-        }
-        
         texture = stream.readUTF();
 
         return this;
@@ -63,7 +54,6 @@ public class PacketPortalFrameData extends MainPacket
 
             frame.controller = controller;
             frame.texture = new Texture(texture, colour, 0xFFFFFF, 0);
-            frame.activeSide = activeSide;
             world.markBlockForRenderUpdate(coord.posX, coord.posY, coord.posZ);
         }
     }
@@ -74,12 +64,6 @@ public class PacketPortalFrameData extends MainPacket
         writeChunkCoordinates(coord, stream);
         writeChunkCoordinates(controller, stream);
         stream.writeInt(colour);
-        
-        for (int i = 0; i < 6; i++)
-        {
-            stream.writeBoolean(activeSide[i]);
-        }
-        
         stream.writeUTF(texture);
     }
 }

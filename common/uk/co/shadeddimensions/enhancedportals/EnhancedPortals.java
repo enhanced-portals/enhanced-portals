@@ -40,8 +40,7 @@ public class EnhancedPortals
         proxy.registerItems();
         proxy.registerRenderers();
 
-        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-        
+        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());        
         TickRegistry.registerTickHandler(new GoggleTickHandler(), Side.CLIENT);
     }
 

@@ -1,5 +1,9 @@
 package uk.co.shadeddimensions.enhancedportals.util;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -80,5 +84,18 @@ public class Texture
         }
 
         return null;
+    }
+    
+    public static Texture getTextureFromStream(DataInputStream stream) throws IOException
+    {
+        return new Texture(stream.readUTF(), stream.readInt(), stream.readInt(), stream.readInt());
+    }
+    
+    public void writeTextureToStream(DataOutputStream stream) throws IOException
+    {
+        stream.writeUTF(Texture);
+        stream.writeInt(TextureColour);
+        stream.writeInt(ParticleColour);
+        stream.writeInt(ParticleType);
     }
 }

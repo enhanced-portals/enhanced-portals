@@ -75,70 +75,41 @@ public class PortalUtils
                 if (id == CommonProxy.blockFrame.blockID)
                 {
                     TileEP tile = (TileEP) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
-                    
+
                     if (tile instanceof TilePortalFrame)
                     {
                         TilePortalFrame frame = (TilePortalFrame) tile;
-                        
+
                         if (!frame.checkController())
                         {
                             frame.controller = linkLocation;
-                            
-                            for (int i = 0; i < 6; i++)
-                            {
-                                ForgeDirection d = ForgeDirection.getOrientation(i);
-                                
-                                if (world.getBlockId(c.posX + d.offsetX, c.posY + d.offsetY, c.posZ + d.offsetZ) == CommonProxy.blockPortal.blockID)
-                                {
-                                    frame.activeSide[i] = true;
-                                }
-                                else
-                                {
-                                    frame.activeSide[i] = false;
-                                }
-                            }
-                            
-                            CommonProxy.sendUpdatePacketToAllAround(frame);
+                            CommonProxy.sendUpdatePacketToAllAround(frame); // TODO
                         }
                     }
                     else if (tile instanceof TilePortalController) // We found an existing controller within this portal frame, update to that controller
                     {
                         linkLocation = new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
-                        processed.add(c);
-                        
-                        while (!processed.isEmpty())
+                        Queue<ChunkCoordinates> proc = duplicateQueue(processed);
+                        proc.add(c);
+
+                        // Go back and clean up your mess before continuing
+
+                        while (!proc.isEmpty())
                         {
-                            ChunkCoordinates cc = processed.remove();                            
+                            ChunkCoordinates cc = proc.remove();                            
                             TileEP t = (TileEP) world.getBlockTileEntity(cc.posX, cc.posY, cc.posZ);
-                            
+
                             if (t instanceof TilePortalFrame)
                             {
                                 TilePortalFrame frame = (TilePortalFrame) t;
-                                
+
                                 if (!frame.checkController())
                                 {
                                     frame.controller = linkLocation;
-                                    
-                                    for (int i = 0; i < 6; i++)
-                                    {
-                                        ForgeDirection d = ForgeDirection.getOrientation(i);
-                                        
-                                        if (world.getBlockId(cc.posX + d.offsetX, cc.posY + d.offsetY, cc.posZ + d.offsetZ) == CommonProxy.blockPortal.blockID)
-                                        {
-                                            frame.activeSide[i] = true;
-                                        }
-                                        else
-                                        {
-                                            frame.activeSide[i] = false;
-                                        }
-                                    }
-                                    
-                                    CommonProxy.sendUpdatePacketToAllAround(frame);
+                                    CommonProxy.sendUpdatePacketToAllAround(frame); // TODO
                                 }
                             }
                         }
-                        
-                        return true;
                     }
                 }
                 else
@@ -156,7 +127,13 @@ public class PortalUtils
             return false;
         }
 
-        world.setBlock(linkLocation.posX, linkLocation.posY, linkLocation.posZ, CommonProxy.blockFrame.blockID, 1, 3);
+        TileEP tile = (TileEP) world.getBlockTileEntity(linkLocation.posX, linkLocation.posY, linkLocation.posZ);
+
+        if (!(tile instanceof TilePortalController))
+        {
+            world.setBlock(linkLocation.posX, linkLocation.posY, linkLocation.posZ, CommonProxy.blockFrame.blockID, 1, 3);
+        }
+
         return true;
     }
 
@@ -208,7 +185,7 @@ public class PortalUtils
             }
         }
 
-        return false;
+        return true;
     }
 
     private static Queue<ChunkCoordinates> duplicateQueue(Queue<ChunkCoordinates> queue)

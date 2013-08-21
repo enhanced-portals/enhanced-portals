@@ -1,6 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -42,18 +43,39 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
 
         if (meta == 1) // X
         {
-            renderBlocks.renderFaceZNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
-            renderBlocks.renderFaceZPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(3));
+            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord, portal.zCoord - 1) != Material.portal)
+            {
+                renderBlocks.renderFaceZNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
+            }
+
+            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord, portal.zCoord + 1) != Material.portal)
+            {
+                renderBlocks.renderFaceZPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(3));
+            }
         }
         else if (meta == 2) // Z
         {
-            renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
-            renderBlocks.renderFaceXPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(3));
+            if (portal.worldObj.getBlockMaterial(portal.xCoord - 1, portal.yCoord, portal.zCoord) != Material.portal)
+            {
+                renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));            
+            }
+
+            if (portal.worldObj.getBlockMaterial(portal.xCoord + 1, portal.yCoord, portal.zCoord + 1) != Material.portal)
+            {
+                renderBlocks.renderFaceXPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(3));
+            }
         }
         else if (meta == 3) // XZ
         {
-            renderBlocks.renderFaceYNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(0));
-            renderBlocks.renderFaceYPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(1));
+            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord - 1, portal.zCoord) != Material.portal)
+            {
+                renderBlocks.renderFaceYNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(0));
+            }
+
+            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord + 1, portal.zCoord) != Material.portal)
+            {
+                renderBlocks.renderFaceYPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(1));
+            }
         }
 
         tessellator.draw();

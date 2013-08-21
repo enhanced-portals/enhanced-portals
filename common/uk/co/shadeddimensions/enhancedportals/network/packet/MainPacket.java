@@ -21,7 +21,9 @@ public abstract class MainPacket
 {
     enum PacketType
     {
-        REQUEST_DATA(PacketRequestData.class), PORTAL_FRAME_DATA(PacketPortalFrameData.class);
+        REQUEST_DATA(PacketRequestData.class),
+        PORTAL_FRAME_DATA(PacketPortalFrameData.class),
+        PORTAL_CONTROLLER_DATA(PacketPortalControllerData.class);
 
         private Class<? extends MainPacket> packetType;
 

@@ -14,7 +14,7 @@ public class ConfigurationManager
 {
     Configuration config;
     
-    int START_BLOCK_ID = 1512, START_ITEM_ID = 20000, MAX_BLOCK_ID = 4096, MAX_ITEM_ID = 30000;
+    int START_BLOCK_ID = 512, START_ITEM_ID = 5000, MAX_BLOCK_ID = 4096, MAX_ITEM_ID = 32000;
     
     TreeMap<String, Property> blockIds, itemIds;
     ArrayList<String> blockEntries, itemEntries;

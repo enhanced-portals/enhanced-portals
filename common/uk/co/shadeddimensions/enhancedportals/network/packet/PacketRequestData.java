@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -54,6 +55,10 @@ public class PacketRequestData extends MainPacket
         if (tile instanceof TilePortalFrame)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
+        }
+        else if (tile instanceof TilePortalController)
+        {
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
         }
     }
 

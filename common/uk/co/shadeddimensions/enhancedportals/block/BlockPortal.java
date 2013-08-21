@@ -2,7 +2,6 @@ package uk.co.shadeddimensions.enhancedportals.block;
 
 import java.util.Random;
 
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +17,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPortal extends BlockContainer
+public class BlockPortal extends BlockEP
 {
     public BlockPortal(int id, String name)
     {

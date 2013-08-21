@@ -4,7 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
+import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.enhancedportals.util.Texture;
@@ -14,47 +15,40 @@ public class TilePortalFrame extends TileEP
 {
     public Texture texture;
     public ChunkCoordinates controller;
-    public boolean[] activeSide;
-    
+
     public TilePortalFrame()
     {
         texture = new Texture();
-        activeSide = new boolean[6];
     }
-    
-    public boolean hasActiveSide()
-    {
-        return !(activeSide[0] == false && activeSide[1] == false && activeSide[2] == false && activeSide[3] == false && activeSide[4] == false && activeSide[5] == false);
-    }
-    
+
     @Override
     public Icon getTexture(int side, int renderpass)
     {
-            if (renderpass == 1 && ClientProxy.isWearingGoggles && activeSide[side])
+        if (renderpass == 1)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(side);
+            
+            if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
             {
-                return Block.glass.getBlockTextureFromSide(side);
+                return Block.blockGold.getBlockTextureFromSide(side);
             }
+        }
         
-        return Block.obsidian.getBlockTextureFromSide(side);
+        return null;
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
 
         texture.writeToNBT(tagCompound);
-        
+
         if (controller != null)
         {
             tagCompound.setInteger("ControllerX", controller.posX);
             tagCompound.setInteger("ControllerY", controller.posY);
             tagCompound.setInteger("ControllerZ", controller.posZ);
-        }
-        
-        for (int i = 0; i < activeSide.length; i++)
-        {
-            tagCompound.setBoolean("ActiveSide" + i, activeSide[i]);
         }
     }
 
@@ -64,15 +58,10 @@ public class TilePortalFrame extends TileEP
         super.readFromNBT(tagCompound);
 
         texture = new Texture(tagCompound);
-        
+
         if (tagCompound.hasKey("ControllerX"))
         {
             controller = new ChunkCoordinates(tagCompound.getInteger("ControllerX"), tagCompound.getInteger("ControllerY"), tagCompound.getInteger("ControllerZ"));
-        }
-        
-        for (int i = 0; i < activeSide.length; i++)
-        {
-            activeSide[i] = tagCompound.getBoolean("ActiveSide" + i);
         }
     }
 

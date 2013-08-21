@@ -2,8 +2,8 @@ package uk.co.shadeddimensions.enhancedportals.block;
 
 import java.util.List;
 
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,12 +20,14 @@ import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.enhancedportals.util.IConnectedTexture;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 import uk.co.shadeddimensions.enhancedportals.util.Texture;
 
-public class BlockFrame extends BlockContainer
+public class BlockFrame extends BlockEP implements IConnectedTexture
 {
     int renderPass = 0;
+    public static Icon portalControllerOverlay;
     
     public BlockFrame(int id, String name)
     {
@@ -34,6 +36,17 @@ public class BlockFrame extends BlockContainer
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
+    }
+    
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        portalControllerOverlay = register.registerIcon("enhancedportals:portalController");
+        
+        for (int i = 0; i < textures.length; i++)
+        {
+            textures[i] = register.registerIcon("enhancedportals:frame/portalFrame_" + i);
+        }
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -46,9 +59,11 @@ public class BlockFrame extends BlockContainer
 
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
+    {   
         TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
-        return frame == null ? null : frame.getTexture(side, renderPass);
+        Icon frameIcon = frame != null ? frame.getTexture(side, renderPass) : null;
+        
+        return frameIcon == null ? super.getBlockTexture(blockAccess, x, y, z, side) : frameIcon;
     }
     
     @Override
@@ -167,14 +182,10 @@ public class BlockFrame extends BlockContainer
             {
                 TilePortalFrame frame = (TilePortalFrame) tile;
                 
-                if (!frame.hasActiveSide())
+                if (frame.controller == null || frame.controller.posY == -1)
                 {
                     return 0xFF0000;
                 }
-            }
-            else if (tile instanceof TilePortalController)
-            {
-                return 0x00FFFF;
             }
         }
         

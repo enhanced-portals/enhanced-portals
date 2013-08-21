@@ -36,7 +36,12 @@ public class ItemNetherQuartzIgniter extends Item
 
                     if (PortalUtils.createPortal((WorldServer) world, x + d.offsetX, y + d.offsetY, z + d.offsetZ))
                     {
-                        stack.damageItem(1, player);
+                        PortalUtils.linkController((WorldServer) world, x, y, z);
+                        
+                        if (!player.capabilities.isCreativeMode)
+                        {
+                            stack.damageItem(1, player);
+                        }
                     }
                 }
 
