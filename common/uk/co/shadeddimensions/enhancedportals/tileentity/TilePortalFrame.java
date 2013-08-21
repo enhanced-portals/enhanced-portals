@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
@@ -24,16 +25,13 @@ public class TilePortalFrame extends TileEP
     @Override
     public Icon getTexture(int side, int renderpass)
     {
-        if (renderpass == 1)
+        ForgeDirection d = ForgeDirection.getOrientation(side);
+
+        if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
         {
-            ForgeDirection d = ForgeDirection.getOrientation(side);
-            
-            if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
-            {
-                return Block.blockGold.getBlockTextureFromSide(side);
-            }
+            return BlockFrame.portalEffect;
         }
-        
+
         return null;
     }
 

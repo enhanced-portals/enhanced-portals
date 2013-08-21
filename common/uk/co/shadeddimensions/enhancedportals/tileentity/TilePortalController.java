@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.enhancedportals.tileentity;
 
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
@@ -19,21 +18,21 @@ public class TilePortalController extends TileEP
     @Override
     public Icon getTexture(int side, int renderpass)
     {
+        ForgeDirection d = ForgeDirection.getOrientation(side);
+
+        if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
+        {
+            return BlockFrame.portalEffect;
+        }
+        
         if (renderpass == 1)
         {
-            ForgeDirection d = ForgeDirection.getOrientation(side);
-            
-            if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
-            {
-                return Block.blockGold.getBlockTextureFromSide(side);
-            }
-            
             if (ClientProxy.isWearingGoggles)
             {
                 return BlockFrame.portalControllerOverlay;
             }
         }
-        
+
         return null;
     }
     

@@ -28,6 +28,7 @@ public class BlockFrame extends BlockEP implements IConnectedTexture
 {
     int renderPass = 0;
     public static Icon portalControllerOverlay;
+    public static Icon portalEffect;
     
     public BlockFrame(int id, String name)
     {
@@ -42,6 +43,7 @@ public class BlockFrame extends BlockEP implements IConnectedTexture
     public void registerIcons(IconRegister register)
     {
         portalControllerOverlay = register.registerIcon("enhancedportals:portalController");
+        portalEffect = register.registerIcon("enhancedportals:portalFrame_portal");
         
         for (int i = 0; i < textures.length; i++)
         {
