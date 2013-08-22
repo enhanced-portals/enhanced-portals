@@ -1,11 +1,13 @@
 package uk.co.shadeddimensions.enhancedportals;
 
 import net.minecraftforge.common.Configuration;
+import uk.co.shadeddimensions.enhancedportals.multipart.RegisterParts;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
 import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
 import uk.co.shadeddimensions.enhancedportals.util.ConfigurationManager;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -42,6 +44,11 @@ public class EnhancedPortals
 
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());        
         TickRegistry.registerTickHandler(new GoggleTickHandler(), Side.CLIENT);
+        
+        if (Loader.isModLoaded("ForgeMultipart"))
+        {
+            new RegisterParts().init();
+        }
     }
 
     @EventHandler

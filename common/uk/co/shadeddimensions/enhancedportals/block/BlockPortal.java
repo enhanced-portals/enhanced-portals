@@ -154,10 +154,6 @@ public class BlockPortal extends BlockEP
         {
             setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
         }
-        else if (meta == 4) // XYZ
-        {
-            setBlockBounds(0, 0f, 0f, 0f, 0f, 0f);
-        }
         else
         {
             setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
