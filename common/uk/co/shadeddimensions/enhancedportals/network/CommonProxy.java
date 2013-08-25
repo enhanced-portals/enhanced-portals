@@ -24,6 +24,7 @@ public class CommonProxy
     public static ItemNetherQuartzIgniter itemNetherQuartzIgniter;
     public static ItemTextureDuplicator itemTextureDuplicator;
     public static ItemWrench itemWrench;
+    public static int multiPartID = -1;
 
     public void registerBlocks()
     {

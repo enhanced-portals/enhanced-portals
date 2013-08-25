@@ -7,6 +7,7 @@ import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
 import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
 import uk.co.shadeddimensions.enhancedportals.util.ConfigurationManager;
+import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -42,19 +43,18 @@ public class EnhancedPortals
         proxy.registerItems();
         proxy.registerRenderers();
 
-        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());        
+        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         TickRegistry.registerTickHandler(new GoggleTickHandler(), Side.CLIENT);
-        
-        if (Loader.isModLoaded("ForgeMultipart"))
-        {
-            new RegisterParts().init();
-        }
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-
+        if (Loader.isModLoaded("ForgeMultipart"))
+        {
+            new RegisterParts().init();
+            CommonProxy.multiPartID = MultipartProxy.config().getTag("block.id").getIntValue();
+        }
     }
 
     @EventHandler

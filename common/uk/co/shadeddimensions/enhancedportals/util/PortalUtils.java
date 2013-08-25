@@ -4,13 +4,18 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.enhancedportals.multipart.MultipartUtils;
+import uk.co.shadeddimensions.enhancedportals.multipart.PortalPart;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import codechicken.multipart.TileMultipart;
+import cpw.mods.fml.common.Loader;
 
 public class PortalUtils
 {
@@ -139,6 +144,82 @@ public class PortalUtils
 
     private static boolean createPortal(WorldServer world, int x, int y, int z, int meta)
     {
+        if (Loader.isModLoaded("ForgeMultipart"))
+        {
+            return createPortalMultipart(world, x, y, z, meta);
+        }
+        else
+        {
+            return createPortalDefault(world, x, y, z, meta);
+        }
+    }
+    
+    private static boolean createPortalMultipart(WorldServer world, int x, int y, int z, int meta)
+    {
+        int USED_CHANCES = 0, MAX_CHANCES = 16;
+        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
+        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
+        toProcess.add(new ChunkCoordinates(x, y, z));
+
+        while (!toProcess.isEmpty())
+        {
+            ChunkCoordinates cur = toProcess.remove();
+
+            if (!addedBlocks.contains(cur) && (world.isAirBlock(cur.posX, cur.posY, cur.posZ) || Block.blocksList[world.getBlockId(cur.posX, cur.posY, cur.posZ)].isBlockReplaceable(world, cur.posX, cur.posY, cur.posZ) || world.getBlockTileEntity(cur.posX, cur.posY, cur.posZ) instanceof TileMultipart))
+            {
+                int sides = getSides(world, cur, meta);
+
+                if (sides == -1)
+                {
+                    removePortal(world, addedBlocks);
+                    return false;
+                }
+                else if (sides < 2 && USED_CHANCES < MAX_CHANCES)
+                {
+                    USED_CHANCES++;
+                    sides += 2;
+                }
+
+                if (sides >= 2)
+                {
+                    TileEntity t = world.getBlockTileEntity(cur.posX, cur.posY, cur.posZ);
+                    
+                    if (t != null && t instanceof TileMultipart)
+                    {
+                        if (!MultipartUtils.doesMultipartContainPortal((TileMultipart) t))
+                        {
+                            MultipartUtils.addPortalToPart((TileMultipart) t, meta);
+                        }
+                    }
+                    else
+                    {
+                        world.setBlock(cur.posX, cur.posY, cur.posZ, CommonProxy.blockPortal.blockID, meta, 2);
+                    }
+                    
+                    addedBlocks.add(cur);
+                    addTouchingBlocks(cur, toProcess, meta);
+                }
+            }
+        }
+
+        Queue<ChunkCoordinates> portalBlocks = duplicateQueue(addedBlocks);
+
+        while (!portalBlocks.isEmpty())
+        {
+            ChunkCoordinates cur = portalBlocks.remove();
+
+            if (!checkTension(world, meta, cur))
+            {
+                removePortal(world, addedBlocks);
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    private static boolean createPortalDefault(WorldServer world, int x, int y, int z, int meta)
+    {
         int USED_CHANCES = 0, MAX_CHANCES = 16;
         Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
@@ -216,28 +297,48 @@ public class PortalUtils
         while (!toProcess.isEmpty())
         {
             ChunkCoordinates cur = toProcess.remove();
-
-            if (world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
+            int id = world.getBlockId(cur.posX, cur.posY, cur.posZ);
+            
+            if (id == CommonProxy.blockPortal.blockID)
             {
                 world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
                 addTouchingBlocks(cur, toProcess, meta);
+            }
+            else if (id == CommonProxy.multiPartID)
+            {
+                if (MultipartUtils.doesMultipartContainPortal(world, cur.posX, cur.posY, cur.posZ))
+                {
+                    MultipartUtils.removePortalFromPart(world, cur.posX, cur.posY, cur.posZ);
+                    addTouchingBlocks(cur, toProcess, meta);
+                }
             }
         }
     }
 
     /***
      * Removes all portals around the specified location.
-     */
+     */    
     public static void removePortalAround(WorldServer world, int x, int y, int z)
     {
         for (int i = 0; i < 6; i++)
         {
             ForgeDirection d = ForgeDirection.getOrientation(i);
             ChunkCoordinates c = offsetCoordinate(new ChunkCoordinates(x, y, z), d);
-
-            if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
+            int id = world.getBlockId(c.posX, c.posY, c.posZ);
+            
+            if (id == CommonProxy.blockPortal.blockID)
             {
                 removePortal(world, c.posX, c.posY, c.posZ, world.getBlockMetadata(c.posX, c.posY, c.posZ));
+            }
+            else if (id == CommonProxy.multiPartID)
+            {                
+                TileMultipart p = (TileMultipart) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                PortalPart part = MultipartUtils.getPortalPart(p);
+                
+                if (part != null)
+                {
+                    removePortal(world, c.posX, c.posY, c.posZ, part.getMetadata());
+                }
             }
         }
     }
@@ -247,10 +348,15 @@ public class PortalUtils
         while (!blocks.isEmpty())
         {
             ChunkCoordinates cur = blocks.remove();
-
-            if (world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
+            int id = world.getBlockId(cur.posX, cur.posY, cur.posZ);
+            
+            if (id == CommonProxy.blockPortal.blockID)
             {
                 world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
+            }
+            else if (id == CommonProxy.multiPartID)
+            {
+                MultipartUtils.removePortalFromPart(world, cur.posX, cur.posY, cur.posZ);
             }
         }
     }
@@ -277,7 +383,7 @@ public class PortalUtils
             queue.add(offsetCoordinate(c, d));
         }
     }
-
+    
     private static boolean checkTension(WorldServer world, int meta, ChunkCoordinates c)
     {
         int[] blockIDs = new int[6];
@@ -343,7 +449,7 @@ public class PortalUtils
 
     private static boolean isValidPortalPart(int id)
     {
-        return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID;
+        return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID || id == CommonProxy.multiPartID;
     }
 
     public static boolean findNearbyPortalBlock(WorldServer world, int x, int y, int z)
