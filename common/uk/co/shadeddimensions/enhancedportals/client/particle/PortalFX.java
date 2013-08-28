@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.enhancedportals.client.particle;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.util.Texture;
+import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 
 public class PortalFX extends EntityFX
 {
@@ -13,7 +13,7 @@ public class PortalFX extends EntityFX
     private double portalPosY;
     private double portalPosZ;
 
-    public PortalFX(World par1World, Texture texture, double par2, double par4, double par6, double par8, double par10, double par12)
+    public PortalFX(World par1World, PortalTexture texture, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
         motionX = par8;

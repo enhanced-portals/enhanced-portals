@@ -7,7 +7,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 public class ClientProxy extends CommonProxy
 {
     public static boolean isWearingGoggles = false;
-    
+
     @Override
     public void registerRenderers()
     {

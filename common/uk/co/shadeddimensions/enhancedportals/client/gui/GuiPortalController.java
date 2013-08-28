@@ -9,14 +9,14 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class GuiPortalController extends GuiContainer
 {
     EntityPlayer player;
-    TilePortalController tile;
+    TilePortalFrameController tile;
 
-    public GuiPortalController(EntityPlayer player, TilePortalController frame)
+    public GuiPortalController(EntityPlayer player, TilePortalFrameController frame)
     {
         super(new ContainerPortalController(player.inventory, frame));
         this.player = player;
@@ -47,20 +47,20 @@ public class GuiPortalController extends GuiContainer
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        
+
         drawRectangle(8, 20, 18, 18, 0xFF000000);
         drawRectangle(9, 21, 16, 16, 0xFFFFFFFF);
-        
+
         drawRectangle(30, 20, 18, 18, 0xFF000000);
         drawRectangle(31, 21, 16, 16, 0xFFFFFFFF);
-        
+
         drawRectangle(8, 62, 18, 18, 0xFF000000);
         drawRectangle(9, 63, 16, 16, 0xFFFFFFFF);
-        
+
         drawRectangle(30, 62, 18, 18, 0xFF000000);
         drawRectangle(31, 63, 16, 16, 0xFFFFFFFF);
     }
-    
+
     private void drawRectangle(int x, int y, int w, int h, int c)
     {
         drawRect(guiLeft + x, guiTop + y, guiLeft + x + w, guiTop + y + h, c);
@@ -79,16 +79,19 @@ public class GuiPortalController extends GuiContainer
 
         // Main Titles
         fontRenderer.drawString("Network", 8, 90, 0x404040);
-        
+
         // Sub Titles
         fontRenderer.drawString("Portal", 8, 8, 0x404040);
         fontRenderer.drawString("Particles", 8, 50, 0x404040);
-        
+
         // Portal
         fontRenderer.drawString("Obsidian", 55, 26, 0x404040);
-        
+
         // Particles
         fontRenderer.drawString("Hearts", 55, 67, 0x404040);
+
+        fontRenderer.drawString("Frame Blocks: " + tile.getAttachedFrames() + " - " + tile.getAttachedFrameRedstone() + " Redstone", 8, 120, 0x404040);
+        fontRenderer.drawString("Portal Blocks: " + tile.getAttachedPortals(), 8, 130, 0x404040);
         
         // Icons
         itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, new ItemStack(49, 0, 1), 31, 21);

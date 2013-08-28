@@ -1,6 +1,8 @@
 package uk.co.shadeddimensions.enhancedportals;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
+import uk.co.shadeddimensions.enhancedportals.creativetab.CreativeTabEP2;
 import uk.co.shadeddimensions.enhancedportals.multipart.RegisterParts;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
@@ -27,7 +29,8 @@ import enhancedportals.lib.Reference;
 public class EnhancedPortals
 {
     public static ConfigurationManager config;
-    
+    public static CreativeTabs creativeTab = new CreativeTabEP2();
+
     @Instance(Reference.MOD_ID_NEW)
     public static EnhancedPortals instance;
 

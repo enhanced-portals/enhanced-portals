@@ -3,13 +3,13 @@ package uk.co.shadeddimensions.enhancedportals.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class ContainerPortalController extends Container
 {
-    protected TilePortalController tile;
+    protected TilePortalFrameController tile;
 
-    public ContainerPortalController(InventoryPlayer player, TilePortalController frame)
+    public ContainerPortalController(InventoryPlayer player, TilePortalFrameController frame)
     {
         tile = frame;
     }

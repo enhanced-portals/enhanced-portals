@@ -13,36 +13,29 @@ public class Texture
 {
     public String Texture;
     public int TextureColour;
-    public int ParticleColour;
-    public int ParticleType;
-
+    
     public Texture()
     {
         Texture = "";
         TextureColour = 0xFFFFFF;
-        ParticleColour = 0xFFFFFF;
     }
 
-    public Texture(String texture, int tColour, int pColour, int pType)
+    public Texture(String t, int c)
     {
-        Texture = texture;
-        TextureColour = tColour;
-        ParticleColour = pColour;
-        ParticleType = pType;
+        Texture = t;
+        TextureColour = c;
     }
 
     public Texture(NBTTagCompound nbt)
     {
         Texture = nbt.getString("Texture");
         TextureColour = nbt.getInteger("TColour");
-        ParticleColour = nbt.getInteger("PColour");
     }
 
     public void writeToNBT(NBTTagCompound nbt)
     {
         nbt.setString("Texture", Texture);
         nbt.setInteger("TColour", TextureColour);
-        nbt.setInteger("PColour", ParticleColour);
     }
 
     @Override
@@ -52,7 +45,7 @@ public class Texture
         {
             Texture tex = (Texture) obj;
 
-            return Texture.equals(tex.Texture) && TextureColour == tex.TextureColour && ParticleColour == tex.ParticleColour;
+            return Texture.equals(tex.Texture) && TextureColour == tex.TextureColour;
         }
 
         return false;
@@ -61,7 +54,7 @@ public class Texture
     @Override
     public String toString()
     {
-        return "Texture (\"" + Texture + "\" TextureColour: " + TextureColour + " ParticleColour: " + ParticleColour + ")";
+        return "Texture (\"" + Texture + "\" TextureColour: " + TextureColour + ")";
     }
 
     public static String getTextureName(String texture)
@@ -85,17 +78,15 @@ public class Texture
 
         return null;
     }
-    
+
     public static Texture getTextureFromStream(DataInputStream stream) throws IOException
     {
-        return new Texture(stream.readUTF(), stream.readInt(), stream.readInt(), stream.readInt());
+        return new Texture(stream.readUTF(), stream.readInt());
     }
-    
+
     public void writeTextureToStream(DataOutputStream stream) throws IOException
     {
         stream.writeUTF(Texture);
         stream.writeInt(TextureColour);
-        stream.writeInt(ParticleColour);
-        stream.writeInt(ParticleType);
     }
 }

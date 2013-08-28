@@ -6,8 +6,12 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.client.gui.GuiPortalController;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalController;
 import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -16,9 +20,10 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (tile instanceof TilePortalController && tile instanceof TilePortalController)
+        if (tile instanceof TilePortalFrameController && tile instanceof TilePortalFrameController)
         {
-            return new ContainerPortalController(player.inventory, (TilePortalController) tile);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
+            return new ContainerPortalController(player.inventory, (TilePortalFrameController) tile);
         }
 
         return null;
@@ -29,9 +34,9 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (ID == Identifiers.Gui.FRAME_CONTROLLER && tile instanceof TilePortalController)
+        if (ID == Identifiers.Gui.FRAME_CONTROLLER && tile instanceof TilePortalFrameController)
         {
-            return new GuiPortalController(player, (TilePortalController) tile);
+            return new GuiPortalController(player, (TilePortalFrameController) tile);
         }
 
         return null;

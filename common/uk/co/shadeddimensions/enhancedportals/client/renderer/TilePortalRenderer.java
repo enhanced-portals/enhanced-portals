@@ -57,7 +57,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         {
             if (portal.worldObj.getBlockMaterial(portal.xCoord - 1, portal.yCoord, portal.zCoord) != Material.portal)
             {
-                renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));            
+                renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
             }
 
             if (portal.worldObj.getBlockMaterial(portal.xCoord + 1, portal.yCoord, portal.zCoord + 1) != Material.portal)
@@ -163,7 +163,8 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
 
     private void setupTexture(TilePortal portal)
     {
-        if (portal.texture.Texture.startsWith("B:"))
+        // TODO
+        /*if (portal.texture.Texture.startsWith("B:"))
         {
             int id = Integer.parseInt(portal.texture.Texture.substring(2).split(":")[0]);
 
@@ -178,6 +179,6 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
             portalBlock.baseBlock = Block.portal;
         }
 
-        portalBlock.texture = Texture.getTexture(portal.texture.Texture, 0);
+        portalBlock.texture = Texture.getTexture(portal.texture.Texture, 0);*/
     }
 }

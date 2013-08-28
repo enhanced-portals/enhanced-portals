@@ -41,7 +41,7 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
         renderBlocks.enableAO = false;
 
         tessellator.startDrawingQuads();
-        
+
         if (meta == 1) // X
         {
             if (worldObj.getBlockMaterial(xCoord, yCoord, zCoord - 1) != Material.portal)
@@ -58,7 +58,7 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
         {
             if (worldObj.getBlockMaterial(xCoord - 1, yCoord, zCoord) != Material.portal)
             {
-                renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));            
+                renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
             }
 
             if (worldObj.getBlockMaterial(xCoord + 1, yCoord, zCoord + 1) != Material.portal)
@@ -88,7 +88,7 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
         TileMultipart portal = (TileMultipart) tile;
         World world = portal.worldObj;
         int xCoord = portal.xCoord, yCoord = portal.yCoord, zCoord = portal.zCoord, meta = (int) f;
-        
+
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -113,7 +113,7 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
     {
         byte thickness = 0;
         float thick = 0.125F * thickness, thickA = MathHelper.clampFloat(0.375F - thick, 0F, 1F), thickB = MathHelper.clampFloat(0.625F + thick, 0F, 1F);
-        
+
         if (meta == 1) // X
         {
             portalBlock.minX = 0F;
@@ -159,7 +159,7 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
     private void setupTexture(TileMultipart portal)
     {
         Texture texture = new Texture();
-        
+
         if (texture.Texture.startsWith("B:"))
         {
             int id = Integer.parseInt(texture.Texture.substring(2).split(":")[0]);

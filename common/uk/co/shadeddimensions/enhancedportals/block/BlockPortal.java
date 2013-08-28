@@ -21,7 +21,7 @@ public class BlockPortal extends BlockEP
 {
     public BlockPortal(int id, String name)
     {
-        super(id, Material.portal);
+        super(id, Material.portal, false);
         setBlockUnbreakable();
         setResistance(2000);
         setUnlocalizedName(name);
@@ -73,8 +73,9 @@ public class BlockPortal extends BlockEP
                 d5 = par5Random.nextFloat() * 2.0F * i1;
             }
 
+            // TODO
             TilePortal portal = (TilePortal) par1World.getBlockTileEntity(par2, par3, par4);
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(par1World, portal.texture, d0, d1, d2, d3, d4, d5));
+            //FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(par1World, portal.texture, d0, d1, d2, d3, d4, d5));
         }
     }
 

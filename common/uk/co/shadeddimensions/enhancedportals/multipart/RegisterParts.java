@@ -1,11 +1,11 @@
 package uk.co.shadeddimensions.enhancedportals.multipart;
 
-import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import codechicken.lib.vec.BlockCoord;
+import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartConverter;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
-import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
 public class RegisterParts implements IPartConverter, IPartFactory
@@ -17,7 +17,7 @@ public class RegisterParts implements IPartConverter, IPartFactory
         {
             return new PortalPart();
         }
-        
+
         return null;
     }
 
@@ -32,15 +32,15 @@ public class RegisterParts implements IPartConverter, IPartFactory
     {
         int id = world.getBlockId(pos.x, pos.y, pos.z);
         int meta = world.getBlockMetadata(pos.x, pos.y, pos.z);
-        
+
         if (id == CommonProxy.blockPortal.blockID)
         {
             return new PortalPart(meta);
         }
-        
+
         return null;
     }
-    
+
     public void init()
     {
         MultiPartRegistry.registerConverter(this);

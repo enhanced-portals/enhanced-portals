@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -12,11 +11,11 @@ import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.util.Texture;
 
-public class ItemTextureDuplicator extends Item
+public class ItemTextureDuplicator extends ItemEP2
 {
     public ItemTextureDuplicator(int id, String name)
     {
-        super(id);
+        super(id, true);
         setUnlocalizedName(name);
         setHasSubtypes(true);
         setMaxDamage(0);
@@ -73,7 +72,7 @@ public class ItemTextureDuplicator extends Item
         if (player.isSneaking() && blockID == CommonProxy.blockFrame.blockID)
         {
             TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
-            frame.texture = new Texture();
+            //frame.texture = new Texture();
             world.markBlockForRenderUpdate(x, y, z);
             return true;
         }

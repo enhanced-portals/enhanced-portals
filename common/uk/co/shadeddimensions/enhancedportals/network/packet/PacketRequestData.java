@@ -7,15 +7,16 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketRequestData extends MainPacket
 {
-    public int x, y, z;
+    ChunkCoordinates location;
 
     public PacketRequestData()
     {
@@ -24,25 +25,18 @@ public class PacketRequestData extends MainPacket
 
     public PacketRequestData(int x, int y, int z)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        location = new ChunkCoordinates(x, y, z);
     }
 
     public PacketRequestData(TileEntity tile)
     {
-        x = tile.xCoord;
-        y = tile.yCoord;
-        z = tile.zCoord;
+        location = new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
     }
 
     @Override
     public MainPacket consumePacket(DataInputStream stream) throws IOException
-    {
-        x = stream.readInt();
-        y = stream.readInt();
-        z = stream.readInt();
-
+    {        
+        location = readChunkCoordinates(stream);
         return this;
     }
 
@@ -50,23 +44,21 @@ public class PacketRequestData extends MainPacket
     public void execute(INetworkManager network, EntityPlayer player)
     {
         World world = player.worldObj;
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        TileEntity tile = world.getBlockTileEntity(location.posX, location.posY, location.posZ);
 
-        if (tile instanceof TilePortalFrame)
+        if (tile instanceof TilePortalFrameController)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
         }
-        else if (tile instanceof TilePortalController)
+        else if (tile instanceof TilePortalFrame)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
+            //PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
         }
     }
 
     @Override
     public void generatePacket(DataOutputStream stream) throws IOException
     {
-        stream.writeInt(x);
-        stream.writeInt(y);
-        stream.writeInt(z);
+        writeChunkCoordinates(location, stream);
     }
 }

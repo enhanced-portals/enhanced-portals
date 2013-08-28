@@ -7,64 +7,77 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.util.IConnectedTexture;
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 
 public class BlockEP extends BlockContainer
 {
     public Icon[] textures = new Icon[16];
-    
-    public BlockEP(int par1, Material par2Material)
+    protected boolean connectedTexture;
+
+    public BlockEP(int par1, Material par2Material, boolean tab)
     {
         super(par1, par2Material);
+
+        if (tab)
+        {
+            setCreativeTab(EnhancedPortals.creativeTab);
+        }
+
+        connectedTexture = false;
+    }
+
+    protected void setConnectedTexture()
+    {
+        connectedTexture = true;
     }
 
     protected boolean canConnectTo(int id)
     {
         return id == blockID;
     }
-    
+
     @Override
     public Icon getIcon(int par1, int par2)
     {
         return textures[0];
     }
-    
+
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        if (this instanceof IConnectedTexture)
+        if (connectedTexture)
         {
             boolean up = false, down = false, left = false, right = false;
             int[] blockIds = new int[6];
-            
+
             for (int i = 0; i < blockIds.length; i++)
             {
                 ForgeDirection d = ForgeDirection.getOrientation(i);
                 blockIds[i] = blockAccess.getBlockId(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
             }
-            
+
             if (side == 0)
             {
                 if (canConnectTo(blockIds[3]))
                 {
                     down = true;
                 }
-                
+
                 if (canConnectTo(blockIds[2]))
                 {
                     up = true;
                 }
-                
+
                 if (canConnectTo(blockIds[4]))
                 {
                     left = true;
                 }
-                
+
                 if (canConnectTo(blockIds[5]))
                 {
                     right = true;
                 }
-                
+
                 if (up && down && left && right)
                 {
                     return textures[1]; // Centre
@@ -132,22 +145,22 @@ public class BlockEP extends BlockContainer
                 {
                     down = true;
                 }
-                
+
                 if (canConnectTo(blockIds[5]))
                 {
                     up = true;
                 }
-                
+
                 if (canConnectTo(blockIds[2]))
                 {
                     left = true;
                 }
-                
+
                 if (canConnectTo(blockIds[3]))
                 {
                     right = true;
                 }
-                
+
                 if (up && down && left && right)
                 {
                     return textures[1];
@@ -215,22 +228,22 @@ public class BlockEP extends BlockContainer
                 {
                     down = true;
                 }
-                
+
                 if (canConnectTo(blockIds[1]))
                 {
                     up = true;
                 }
-                
-                if ((side == 2 && canConnectTo(blockIds[4])) || (side == 3 && canConnectTo(blockIds[5])))
+
+                if (side == 2 && canConnectTo(blockIds[4]) || side == 3 && canConnectTo(blockIds[5]))
                 {
                     left = true;
                 }
-                
-                if ((side == 2 && canConnectTo(blockIds[5])) || (side == 3 && canConnectTo(blockIds[4])))
+
+                if (side == 2 && canConnectTo(blockIds[5]) || side == 3 && canConnectTo(blockIds[4]))
                 {
                     right = true;
                 }
-                
+
                 if (up && down && left && right)
                 {
                     return textures[1];
@@ -298,22 +311,22 @@ public class BlockEP extends BlockContainer
                 {
                     down = true;
                 }
-                
+
                 if (canConnectTo(blockIds[1]))
                 {
                     up = true;
                 }
-                
-                if ((side == 4 && canConnectTo(blockIds[2])) || (side == 5 && canConnectTo(blockIds[3])))
+
+                if (side == 4 && canConnectTo(blockIds[2]) || side == 5 && canConnectTo(blockIds[3]))
                 {
                     left = true;
                 }
-                
-                if ((side == 4 && canConnectTo(blockIds[3])) || (side == 5 && canConnectTo(blockIds[2])))
+
+                if (side == 4 && canConnectTo(blockIds[3]) || side == 5 && canConnectTo(blockIds[2]))
                 {
                     right = true;
                 }
-                
+
                 if (up && down && left && right)
                 {
                     return textures[1];
@@ -376,10 +389,10 @@ public class BlockEP extends BlockContainer
                 }
             }
         }
-        
+
         return textures[0];
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {

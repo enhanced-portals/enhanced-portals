@@ -11,7 +11,7 @@ import cpw.mods.fml.common.TickType;
 public class GoggleTickHandler implements ITickHandler
 {
     int tickTimer = 0;
-    
+
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
@@ -25,14 +25,14 @@ public class GoggleTickHandler implements ITickHandler
         {
             return;
         }
-        
+
         if (tickTimer >= 20)
         {
-            ItemStack helmet = FMLClientHandler.instance().getClient().thePlayer.inventory.armorInventory[3];        
+            ItemStack helmet = FMLClientHandler.instance().getClient().thePlayer.inventory.armorInventory[3];
             ClientProxy.isWearingGoggles = helmet != null && helmet.itemID == Item.helmetGold.itemID;
             tickTimer = -1;
         }
-        
+
         tickTimer++;
     }
 

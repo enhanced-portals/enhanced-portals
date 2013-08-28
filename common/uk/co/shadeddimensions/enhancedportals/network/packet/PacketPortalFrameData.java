@@ -10,34 +10,25 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.util.Texture;
 
 public class PacketPortalFrameData extends MainPacket
 {
-    int colour;
-    ChunkCoordinates coord, controller;
-    String texture;
+    ChunkCoordinates coord;
 
     public PacketPortalFrameData()
     {
-        
+// TODO NOT SURE IF THIS IS REQUIRED ANYMORE
     }
 
     public PacketPortalFrameData(TilePortalFrame frame)
     {
         coord = frame.getChunkCoordinates();
-        controller = frame.controller;
-        colour = frame.texture.TextureColour;
-        texture = frame.texture.Texture;
     }
 
     @Override
     public MainPacket consumePacket(DataInputStream stream) throws IOException
     {
         coord = readChunkCoordinates(stream);
-        controller = readChunkCoordinates(stream);
-        colour = stream.readInt();
-        texture = stream.readUTF();
 
         return this;
     }
@@ -50,10 +41,8 @@ public class PacketPortalFrameData extends MainPacket
 
         if (tile != null && tile instanceof TilePortalFrame)
         {
-            TilePortalFrame frame = (TilePortalFrame) tile;
+            //TilePortalFrame frame = (TilePortalFrame) tile;
 
-            frame.controller = controller;
-            frame.texture = new Texture(texture, colour, 0xFFFFFF, 0);
             world.markBlockForRenderUpdate(coord.posX, coord.posY, coord.posZ);
         }
     }
@@ -62,8 +51,5 @@ public class PacketPortalFrameData extends MainPacket
     public void generatePacket(DataOutputStream stream) throws IOException
     {
         writeChunkCoordinates(coord, stream);
-        writeChunkCoordinates(controller, stream);
-        stream.writeInt(colour);
-        stream.writeUTF(texture);
     }
 }
