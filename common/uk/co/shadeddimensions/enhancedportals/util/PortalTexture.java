@@ -13,7 +13,7 @@ public class PortalTexture extends Texture
     
     public PortalTexture()
     {
-        ParticleColour = 0x000000;
+        ParticleColour = 0xB336A1;
         ParticleType = 0;
     }
     

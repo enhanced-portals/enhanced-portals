@@ -72,6 +72,20 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        
+        int xOffset = 18, yOffset = 25;
+        
+        for (int x = 0; x < 4; x++)
+        {
+            drawRect(guiLeft + xOffset - 1 + (x * 20), guiTop + yOffset - 1, guiLeft + xOffset + 17 + (x * 20), guiTop + yOffset + 17, 0xff000000);
+            drawRect(guiLeft + xOffset + (x * 20), guiTop + yOffset, guiLeft + xOffset + 16 + (x * 20), guiTop + yOffset + 16, 0xffffffff);
+        }
+        
+        for (int x = 0; x < 2; x++)
+        {
+            drawRect(guiLeft + 100 + xOffset - 1 + (x * 20), guiTop + yOffset - 1, guiLeft + 100 + xOffset + 17 + (x * 20), guiTop + yOffset + 17, 0xff000000);
+            drawRect(guiLeft + 100 + xOffset + (x * 20), guiTop + yOffset, guiLeft + 100 + xOffset + 16 + (x * 20), guiTop + yOffset + 16, 0xffffffff);
+        }
     }
     
     @Override
@@ -79,7 +93,9 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
         
-        fontRenderer.drawStringWithShadow("Portal Controller", xSize / 2 - fontRenderer.getStringWidth("Portal Controller") / 2, -13, 0xFFFFFF);
+        fontRenderer.drawStringWithShadow("Portal Controller", xSize / 2 - fontRenderer.getStringWidth("Portal Controller") / 2, -13, 0xFFFFFF);        
+        fontRenderer.drawString("Textures", 8, 8, 0x404040);
+        fontRenderer.drawString("Networking", 8, 50, 0x404040);
     }
     
     @Override

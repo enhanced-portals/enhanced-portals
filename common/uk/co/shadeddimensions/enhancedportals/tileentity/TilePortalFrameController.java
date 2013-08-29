@@ -132,7 +132,7 @@ public class TilePortalFrameController extends TilePortalFrame
                 return super.activate(player);
             }
             
-            byte status = PortalUtils.performControllerLink((WorldServer) worldObj, xCoord, yCoord, zCoord);
+            byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
             
             if (status == 0)
             {
@@ -146,6 +146,10 @@ public class TilePortalFrameController extends TilePortalFrame
             else if (status == 3)
             {
                 player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Another controller was found"));
+            }
+            else if (status == 4)
+            {
+                player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
             }
         }
         else

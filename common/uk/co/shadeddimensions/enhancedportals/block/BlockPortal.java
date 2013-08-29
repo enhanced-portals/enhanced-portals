@@ -7,12 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -41,41 +42,52 @@ public class BlockPortal extends BlockEP
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
-        if (par5Random.nextInt(100) == 0)
+        int metadata = world.getBlockMetadata(x, y, z);
+        
+        if (metadata >= 6)
         {
-            par1World.playSound(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
+            return;
+        }
+        
+        if (random.nextInt(100) == 0)
+        {
+            world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
 
-        /*for (int l = 0; l < 4; ++l)
+        for (int l = 0; l < 4; ++l)
         {
-            double d0 = par2 + par5Random.nextFloat();
-            double d1 = par3 + par5Random.nextFloat();
-            double d2 = par4 + par5Random.nextFloat();
+            double d0 = x + random.nextFloat();
+            double d1 = y + random.nextFloat();
+            double d2 = z + random.nextFloat();
             double d3 = 0.0D;
             double d4 = 0.0D;
             double d5 = 0.0D;
-            int i1 = par5Random.nextInt(2) * 2 - 1;
-            d3 = (par5Random.nextFloat() - 0.5D) * 0.5D;
-            d4 = (par5Random.nextFloat() - 0.5D) * 0.5D;
-            d5 = (par5Random.nextFloat() - 0.5D) * 0.5D;
+            int i1 = random.nextInt(2) * 2 - 1;
+            d3 = (random.nextFloat() - 0.5D) * 0.5D;
+            d4 = (random.nextFloat() - 0.5D) * 0.5D;
+            d5 = (random.nextFloat() - 0.5D) * 0.5D;
 
-            if (par1World.getBlockId(par2 - 1, par3, par4) != blockID && par1World.getBlockId(par2 + 1, par3, par4) != blockID)
+            if (metadata == 1)
             {
-                d0 = par2 + 0.5D + 0.25D * i1;
-                d3 = par5Random.nextFloat() * 2.0F * i1;
+                d2 = z + 0.5D + 0.25D * i1;
+                d5 = random.nextFloat() * 2.0F * i1;
             }
-            else
+            else if (metadata == 2)
             {
-                d2 = par4 + 0.5D + 0.25D * i1;
-                d5 = par5Random.nextFloat() * 2.0F * i1;
+                d0 = x + 0.5D + 0.25D * i1;
+                d3 = random.nextFloat() * 2.0F * i1;
+            }
+            else if (metadata == 3)
+            {
+                d1 = y + 0.5D + 0.25D * i1;
+                d4 = random.nextFloat() * 2.0F * i1;
             }
 
-            // TODO
-            TilePortal portal = (TilePortal) par1World.getBlockTileEntity(par2, par3, par4);
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(par1World, portal.texture, d0, d1, d2, d3, d4, d5));
-        }*/
+            TilePortal portal = (TilePortal) world.getBlockTileEntity(x, y, z);
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, portal.getPortalTexture(), d0, d1, d2, d3, d4, d5));
+        }
     }
 
     @Override
@@ -92,25 +104,14 @@ public class BlockPortal extends BlockEP
     }
 
     @Override
-    public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta)
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
-        if (world.isRemote)
+        if (!world.isRemote)
         {
-            return;
+            PortalUtils.removePortal((WorldServer) world, x, y, z, world.getBlockMetadata(x, y, z));
         }
-
-        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
-    }
-
-    @Override
-    public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion par5Explosion)
-    {
-        if (world.isRemote)
-        {
-            return;
-        }
-
-        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
+        
+        super.breakBlock(world, x, y, z, par5, par6);
     }
 
     @Override

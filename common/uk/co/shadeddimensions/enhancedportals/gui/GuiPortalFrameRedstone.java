@@ -59,27 +59,27 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
             
             case 0:
                 stateText = flag ? "On Portal Created" : "Create Portal on Signal";
-                expandedText = flag ? "Pulse a redstone signal when a portal gets created." : "Creates a portal when recieving a redstone signal.";
+                expandedText = flag ? "Pulse a redstone signal when a portal gets created. Pulse will last for 20 ticks (1 second), with a strength of 15." : "Creates a portal while recieving a redstone signal. Portal will be removed when the signal is interrupted.";
                 break;
 
             case 1:
                 stateText = flag ? "On Portal Removed" : "Create Portal Without Signal";
-                expandedText = flag ? "Pulse a redstone signal when a portal gets removed." : "Creates a portal when no redstone signal is being recieved.";
+                expandedText = flag ? "Pulse a redstone signal when a portal gets removed. Pulse will last for 20 ticks (1 second), with a strength of 15." : "Creates a portal when no redstone signal is being recieved. Portal will be removed when a redstone signal is applied.";
                 break;
                 
             case 2:
                 stateText = flag ? "Portal Active" : "Create Portal on Pulse";
-                expandedText = flag ? "Emit a constant redstone signal while the portal is active." : "Creates a portal when recieving a redstone pulse.";
+                expandedText = flag ? "Emit a constant redstone signal while the portal is active with a strength of 15." : "Creates a portal when recieving a redstone pulse. Portal will not be removed.";
                 break;
                 
             case 3:
                 stateText = flag ? "Portal Inactive" : "Remove Portal on Pulse";
-                expandedText = flag ? "Emit a constant redstone signal while the portal is not active." : "Removes a portal when recieving a redstone pulse.";
+                expandedText = flag ? "Emit a constant redstone signal while the portal is not active with a strength of 15." : "Removes a portal when recieving a redstone pulse. Portal will not be re-created.";
                 break;
                 
             case 4:
                 stateText = "Entity Touch";
-                expandedText = "Pulse a redstone signal when an entity touches any side of this block.";
+                expandedText = "Pulse a redstone signal when an entity touches any side of this block. Pulse will last for 20 ticks (1 second), with a strength of 15.";
                 break;
         }
         

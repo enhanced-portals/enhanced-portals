@@ -1,5 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals.client.particle;
 
+import java.awt.Color;
+
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
@@ -23,10 +25,20 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        // float f = rand.nextFloat() * 0.6F + 0.4F;
-        // particleRed = particleGreen = particleBlue = 1.0F * f;
-        // particleGreen *= 0.3F;
-        // particleRed *= 0.9F;
+        if (texture.ParticleColour == 0xB336A1)
+        {
+            float f = rand.nextFloat() * 0.6F + 0.4F;
+            particleRed = particleGreen = particleBlue = 1.0F * f;
+            particleGreen *= 0.3F;
+            particleRed *= 0.9F;
+        }
+        else
+        {
+            Color c = new Color(texture.ParticleColour);
+            particleRed = c.getRed();
+            particleGreen = c.getGreen();
+            particleBlue = c.getBlue();
+        }
 
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;

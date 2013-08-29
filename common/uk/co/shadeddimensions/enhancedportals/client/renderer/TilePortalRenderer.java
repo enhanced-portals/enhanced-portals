@@ -1,5 +1,6 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,6 +12,7 @@ import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
+import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 import enhancedportals.client.renderer.BlockInterface;
 
 public class TilePortalRenderer extends TileEntitySpecialRenderer
@@ -161,14 +163,15 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
 
     private void setupTexture(TilePortal portal)
     {
-        // TODO
-        /*if (portal.texture.Texture.startsWith("B:"))
+        PortalTexture texture = portal.getPortalTexture();
+        
+        if (texture.Texture.startsWith("B:"))
         {
-            int id = Integer.parseInt(portal.texture.Texture.substring(2).split(":")[0]);
+            int id = Integer.parseInt(texture.Texture.substring(2).split(":")[0]);
 
             portalBlock.baseBlock = Block.blocksList[id];
         }
-        else if (portal.texture.Texture.startsWith("F:"))
+        else if (texture.Texture.startsWith("F:"))
         {
             portalBlock.baseBlock = Block.waterStill;
         }
@@ -177,6 +180,6 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
             portalBlock.baseBlock = Block.portal;
         }
 
-        portalBlock.texture = Texture.getTexture(portal.texture.Texture, 0);*/
+        portalBlock.texture = PortalTexture.getTexture(texture.Texture, 0);
     }
 }
