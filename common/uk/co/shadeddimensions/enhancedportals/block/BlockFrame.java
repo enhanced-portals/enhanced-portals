@@ -2,24 +2,25 @@ package uk.co.shadeddimensions.enhancedportals.block;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.world.Explosion;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
-import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 
 public class BlockFrame extends BlockEP
 {
@@ -102,32 +103,12 @@ public class BlockFrame extends BlockEP
         renderPass = pass;
         return pass < 2;
     }
-
-    private void blockDestroyed(World world, int x, int y, int z)
-    {
-        PortalUtils.removePortalAround((WorldServer) world, x, y, z);
-    }
-
+    
     @Override
-    public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta)
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
-        if (world.isRemote)
-        {
-            return;
-        }
-
-        blockDestroyed(world, x, y, z);
-    }
-
-    @Override
-    public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion par5Explosion)
-    {
-        if (world.isRemote)
-        {
-            return;
-        }
-
-        blockDestroyed(world, x, y, z);
+        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).selfBroken();
+        super.breakBlock(world, x, y, z, par5, par6);
     }
 
     @Override
@@ -172,7 +153,7 @@ public class BlockFrame extends BlockEP
     {
         return true;
     }
-
+    
     @Override
     public boolean isBlockNormalCube(World world, int x, int y, int z)
     {
@@ -189,5 +170,47 @@ public class BlockFrame extends BlockEP
     public int colorMultiplier(IBlockAccess par1iBlockAccess, int par2, int par3, int par4)
     {
         return super.colorMultiplier(par1iBlockAccess, par2, par3, par4);
+    }
+    
+    @Override
+    public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        return ((TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z)).isProvidingStrongPower(side);
+    }
+    
+    @Override
+    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        return ((TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z)).isProvidingWeakPower(side);
+    }
+    
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random)
+    {
+        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).scheduledTick(random);
+    }
+    
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
+    {
+        return false;
+    }
+    
+    @Override
+    public int damageDropped(int par1)
+    {
+        return par1;
+    }
+    
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
     }
 }

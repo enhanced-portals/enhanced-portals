@@ -1,18 +1,16 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
-import uk.co.shadeddimensions.enhancedportals.util.Texture;
-import enhancedcore.util.MathHelper;
 import enhancedportals.client.renderer.BlockInterface;
 
 public class TilePortalRenderer extends TileEntitySpecialRenderer
@@ -117,7 +115,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     {
         int meta = portal.getBlockMetadata();
         byte thickness = 0;
-        float thick = 0.125F * thickness, thickA = MathHelper.clampFloat(0.375F - thick, 0F, 1F), thickB = MathHelper.clampFloat(0.625F + thick, 0F, 1F);
+        float thick = 0.125F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
 
         if (meta == 1) // X
         {

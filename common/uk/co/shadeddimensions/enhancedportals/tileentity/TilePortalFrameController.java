@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
@@ -12,8 +13,8 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
-import uk.co.shadeddimensions.enhancedportals.lib.Identifiers;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.util.NBTHelper;
 import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
@@ -134,7 +135,7 @@ public class TilePortalFrameController extends TilePortalFrame
             byte status = PortalUtils.performControllerLink((WorldServer) worldObj, xCoord, yCoord, zCoord);
             
             if (status == 0)
-            {                
+            {
                 player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
                 return true;
             }
@@ -149,20 +150,105 @@ public class TilePortalFrameController extends TilePortalFrame
         }
         else
         {
-            player.openGui(EnhancedPortals.instance, Identifiers.Gui.FRAME_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
+            player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
         }
         
         return false;
     }
     
-    public boolean createPortal()
+    public void createPortal()
     {
-        System.out.println("Creating portal from controller!");
-        return false;
+        for (ChunkCoordinates c : portalBlocks)
+        {
+            if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
+            {
+                int meta = worldObj.getBlockMetadata(c.posX, c.posY, c.posZ) - 6;
+                
+                if (meta >= 1 && meta <= 3)
+                {
+                    worldObj.setBlockMetadataWithNotify(c.posX, c.posY, c.posZ, meta, 3);
+                }
+            }
+        }
+        
+        for (ChunkCoordinates c : portalFrameRedstone)
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            
+            if (tile != null && tile instanceof TilePortalFrameRedstone)
+            {
+                TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
+                redstone.portalCreated();
+            }
+        }
     }
     
     public void removePortal()
+    {        
+        for (ChunkCoordinates c : portalBlocks)
+        {
+            if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
+            {
+                int meta = worldObj.getBlockMetadata(c.posX, c.posY, c.posZ) + 6;
+                
+                if (meta >= 7 && meta <= 9)
+                {
+                    worldObj.setBlockMetadataWithNotify(c.posX, c.posY, c.posZ, meta, 3);
+                }
+            }
+        }
+        
+        for (ChunkCoordinates c : portalFrameRedstone)
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            
+            if (tile != null && tile instanceof TilePortalFrameRedstone)
+            {
+                TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
+                redstone.portalRemoved();
+            }
+        }
+    }
+    
+    public void destroyAllPortal()
     {
-        System.out.println("Removing portal from controller!");
+        destroyPortal();
+        portalBlocks = new ArrayList<ChunkCoordinates>();
+    }
+    
+    public void destroyPortal()
+    {
+        for (ChunkCoordinates c : portalBlocks)
+        {
+            if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
+            {
+                worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
+            }
+        }
+    }
+
+    public void removeFrame(TilePortalFrame frame)
+    {
+        portalFrame.remove(new ChunkCoordinates(frame.xCoord, frame.yCoord, frame.zCoord));
+        
+        if (frame instanceof TilePortalFrameRedstone)
+        {
+            portalFrameRedstone.remove(new ChunkCoordinates(frame.xCoord, frame.yCoord, frame.zCoord));
+        }
+    }
+    
+    @Override
+    public void selfBroken()
+    {
+        for (ChunkCoordinates c : portalFrame)
+        {
+            if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockFrame.blockID)
+            {
+                TilePortalFrame frame = (TilePortalFrame) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);                
+                frame.controller = new ChunkCoordinates(0, -1, 0);
+            }
+        }
+        
+        destroyPortal();
     }
 }

@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.enhancedportals.container;
+package uk.co.shadeddimensions.enhancedportals.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

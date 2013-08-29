@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
@@ -14,7 +15,6 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.enhancedportals.util.Texture;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.client.FMLClientHandler;
-import enhancedcore.util.MathHelper;
 import enhancedportals.client.renderer.BlockInterface;
 
 public class TilePortalPartRenderer extends TileEntitySpecialRenderer
@@ -112,7 +112,7 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
     private void setCubeBounds(World worldObj, int xCoord, int yCoord, int zCoord, int meta)
     {
         byte thickness = 0;
-        float thick = 0.125F * thickness, thickA = MathHelper.clampFloat(0.375F - thick, 0F, 1F), thickB = MathHelper.clampFloat(0.625F + thick, 0F, 1F);
+        float thick = 0.125F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
 
         if (meta == 1) // X
         {

@@ -4,16 +4,15 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,7 +48,7 @@ public class BlockPortal extends BlockEP
             par1World.playSound(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F, false);
         }
 
-        for (int l = 0; l < 4; ++l)
+        /*for (int l = 0; l < 4; ++l)
         {
             double d0 = par2 + par5Random.nextFloat();
             double d1 = par3 + par5Random.nextFloat();
@@ -75,8 +74,8 @@ public class BlockPortal extends BlockEP
 
             // TODO
             TilePortal portal = (TilePortal) par1World.getBlockTileEntity(par2, par3, par4);
-            //FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(par1World, portal.texture, d0, d1, d2, d3, d4, d5));
-        }
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(par1World, portal.texture, d0, d1, d2, d3, d4, d5));
+        }*/
     }
 
     @Override
@@ -142,7 +141,7 @@ public class BlockPortal extends BlockEP
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         int meta = blockAccess.getBlockMetadata(x, y, z);
-
+  
         if (meta == 1) // X
         {
             setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);
@@ -155,6 +154,10 @@ public class BlockPortal extends BlockEP
         {
             setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
         }
+        else if (meta >= 6)
+        {
+            setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
+        } 
         else
         {
             setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
@@ -165,5 +168,17 @@ public class BlockPortal extends BlockEP
     public TileEntity createNewTileEntity(World world)
     {
         return new TilePortal();
+    }
+    
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
+    {
+        return false;
     }
 }

@@ -20,6 +20,12 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
+    public static class GuiIds
+    {
+        public static final int PORTAL_CONTROLLER = 1;
+        public static final int PORTAL_REDSTONE = 2;
+    }
+    
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
 

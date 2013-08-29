@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.enhancedportals.client.gui;
+package uk.co.shadeddimensions.enhancedportals.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -8,7 +8,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class GuiPortalController extends GuiContainer
