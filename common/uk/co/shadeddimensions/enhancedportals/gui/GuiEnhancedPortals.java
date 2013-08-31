@@ -586,14 +586,6 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         initLedgers(inventory);
     }
 
-    public GuiEnhancedPortals(ContainerEnhancedPortals container, TileEntity tile)
-    {
-        super(container);
-
-        this.tile = tile;
-        initLedgers(tile);
-    }
-
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
@@ -751,10 +743,6 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     }
 
     protected void initLedgers(IInventory inventory)
-    {
-    }
-
-    protected void initLedgers(TileEntity tileEntity)
     {
     }
 

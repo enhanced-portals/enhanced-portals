@@ -21,7 +21,13 @@ public abstract class MainPacket
 {
     enum PacketType
     {
-        REQUEST_DATA(PacketRequestData.class), PORTAL_FRAME_DATA(PacketPortalFrameData.class), PORTAL_CONTROLLER_DATA(PacketPortalFrameControllerData.class), PORTAL_REDSTONE_DATA(PacketPortalFrameRedstoneData.class), PORTAL_REDSTONE_GUI_BUTTON_DATA(PacketPortalFrameRedstonePacketData.class), GUI_REQUEST(PacketGuiRequest.class);
+        REQUEST_DATA(PacketRequestData.class), //
+        PORTAL_FRAME_DATA(PacketPortalFrameData.class), //
+        PORTAL_CONTROLLER_DATA(PacketPortalFrameControllerData.class), //
+        PORTAL_REDSTONE_DATA(PacketPortalFrameRedstoneData.class), //
+        PORTAL_REDSTONE_GUI_BUTTON_DATA(PacketPortalFrameRedstonePacketData.class), //
+        GUI_REQUEST(PacketGuiRequest.class), //
+        PORTAL_CONTROLLER_FRAME_DATA(PacketPortalFrameControllerFrameTextureData.class);
 
         private Class<? extends MainPacket> packetType;
 

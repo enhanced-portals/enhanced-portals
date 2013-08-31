@@ -13,22 +13,24 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
 public class PacketPortalFrameData extends MainPacket
 {
-    ChunkCoordinates coord;
+    ChunkCoordinates coord, controller;
 
     public PacketPortalFrameData()
     {
-        // TODO NOT SURE IF THIS IS REQUIRED ANYMORE
+        
     }
 
     public PacketPortalFrameData(TilePortalFrame frame)
     {
         coord = frame.getChunkCoordinates();
+        controller = frame.controller;
     }
 
     @Override
     public MainPacket consumePacket(DataInputStream stream) throws IOException
     {
         coord = readChunkCoordinates(stream);
+        controller = readChunkCoordinates(stream);
 
         return this;
     }
@@ -41,8 +43,9 @@ public class PacketPortalFrameData extends MainPacket
 
         if (tile != null && tile instanceof TilePortalFrame)
         {
-            // TilePortalFrame frame = (TilePortalFrame) tile;
+            TilePortalFrame frame = (TilePortalFrame) tile;
 
+            frame.controller = controller;
             world.markBlockForRenderUpdate(coord.posX, coord.posY, coord.posZ);
         }
     }
@@ -51,5 +54,6 @@ public class PacketPortalFrameData extends MainPacket
     public void generatePacket(DataOutputStream stream) throws IOException
     {
         writeChunkCoordinates(coord, stream);
+        writeChunkCoordinates(controller, stream);
     }
 }

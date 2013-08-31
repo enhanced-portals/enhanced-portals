@@ -3,8 +3,8 @@ package uk.co.shadeddimensions.enhancedportals.gui;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -107,11 +107,11 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     }
 
     @Override
-    protected void initLedgers(TileEntity tileEntity)
+    protected void initLedgers(IInventory inventory)
     {
         ledgerManager.add(new InformationLedger());
     }
-
+    
     @Override
     protected void mouseClicked(int par1, int par2, int mouseButton)
     {
@@ -122,6 +122,10 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
             if (par2 >= guiTop + 8 && par2 <= guiTop + 25)
             {
                 PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiRequest(CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE)));
+            }
+            else if (par2 >= guiTop + 28 && par2 <= guiTop + 28 + 17)
+            {
+                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiRequest(CommonProxy.GuiIds.PORTAL_CONTROLLER_FRAME_TEXTURE)));
             }
         }
     }

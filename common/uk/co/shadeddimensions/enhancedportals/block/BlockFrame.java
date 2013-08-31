@@ -144,7 +144,7 @@ public class BlockFrame extends BlockEP
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-    {
+    {        
         return ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).activate(player);
     }
 
@@ -169,6 +169,18 @@ public class BlockFrame extends BlockEP
     @Override
     public int colorMultiplier(IBlockAccess par1iBlockAccess, int par2, int par3, int par4)
     {
+        TilePortalFrame frame = (TilePortalFrame) par1iBlockAccess.getBlockTileEntity(par2, par3, par4);
+        TilePortalFrameController controller = frame.getControllerValidated();
+                
+        if (controller != null)
+        {
+            return controller.frameTexture.TextureColour;
+        }
+        else if (frame instanceof TilePortalFrameController)
+        {
+            return ((TilePortalFrameController) frame).frameTexture.TextureColour;
+        }
+        
         return super.colorMultiplier(par1iBlockAccess, par2, par3, par4);
     }
 

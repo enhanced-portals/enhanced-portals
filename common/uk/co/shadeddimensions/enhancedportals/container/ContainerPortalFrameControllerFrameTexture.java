@@ -1,15 +1,15 @@
 package uk.co.shadeddimensions.enhancedportals.container;
 
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
-public class ContainerPortalFrameControllerPortalTexture extends ContainerEnhancedPortals
+public class ContainerPortalFrameControllerFrameTexture extends ContainerEnhancedPortals
 {
     public TilePortalFrameController controller;
 
-    public ContainerPortalFrameControllerPortalTexture(TilePortalFrameController tile, InventoryPlayer inventory)
+    public ContainerPortalFrameControllerFrameTexture(TilePortalFrameController tile, InventoryPlayer inventory)
     {
         super(tile.getSizeInventory());
 

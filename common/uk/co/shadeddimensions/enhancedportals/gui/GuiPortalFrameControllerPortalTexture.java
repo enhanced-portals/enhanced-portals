@@ -1,7 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -14,10 +14,11 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameControll
 public class GuiPortalFrameControllerPortalTexture extends GuiEnhancedPortals
 {
     TilePortalFrameController controller;
-
-    public GuiPortalFrameControllerPortalTexture(TilePortalFrameController tile, EntityPlayer player)
+    int r = 255, g = 255, b = 255;
+    
+    public GuiPortalFrameControllerPortalTexture(TilePortalFrameController tile, InventoryPlayer inventory)
     {
-        super(new ContainerPortalFrameControllerPortalTexture(tile, player), tile);
+        super(new ContainerPortalFrameControllerPortalTexture(tile, inventory), tile);
 
         controller = tile;
         ySize += 10;
@@ -27,18 +28,36 @@ public class GuiPortalFrameControllerPortalTexture extends GuiEnhancedPortals
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1f, 1f, 1f, 1f);
-        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
+        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameControllerPortalTexture.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         
         drawBorderedRectangle(93, 50, 16, 16, 0xFFffffff, 0xFF000000, true);
+        drawColouredItemStack(94, 51, controller.portalTexture.TextureColour, controller.portalTexture.getItemStack(), true);
     }
-
+    
+    @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+        
+        int R = ((GuiRGBSlider) buttonList.get(0)).getValue(),
+            G = ((GuiRGBSlider) buttonList.get(1)).getValue(),
+            B = ((GuiRGBSlider) buttonList.get(2)).getValue();
+        
+        if (r != R || g != G || b != B)
+        {
+            r = R;
+            g = G;
+            b = B;
+            
+            controller.portalTexture.TextureColour = Integer.parseInt(String.format("%02x%02x%02x", r, g, b), 16);
+        }
+    }
+    
     @Override
     protected void mouseClicked(int par1, int par2, int mouseButton)
     {
         super.mouseClicked(par1, par2, mouseButton);
-
-        
     }
     
     @Override
@@ -71,9 +90,9 @@ public class GuiPortalFrameControllerPortalTexture extends GuiEnhancedPortals
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
+    protected void actionPerformed(GuiButton button)
     {
-
+        
     }
 
     @SuppressWarnings("unchecked")

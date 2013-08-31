@@ -2,7 +2,6 @@ package uk.co.shadeddimensions.enhancedportals.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -32,7 +31,7 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1f, 1f, 1f, 1f);
-        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
+        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameRedstoneController.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
@@ -104,11 +103,5 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
     protected void actionPerformed(GuiButton button)
     {
         PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketPortalFrameRedstonePacketData(button.id)));
-    }
-
-    @Override
-    protected void initLedgers(TileEntity tileEntity)
-    {
-
     }
 }

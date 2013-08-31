@@ -4,6 +4,8 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
@@ -16,7 +18,7 @@ import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRe
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public class TilePortalFrameRedstone extends TilePortalFrame
+public class TilePortalFrameRedstone extends TilePortalFrame implements IInventory
 {
     public boolean output;
 
@@ -56,7 +58,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame
             return BlockFrame.redstoneOverlay;
         }
 
-        return null;
+        return super.getTexture(side, renderpass);
     }
 
     @Override
@@ -325,5 +327,71 @@ public class TilePortalFrameRedstone extends TilePortalFrame
         {
             pulseRedstone();
         }
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    { }
+
+    @Override
+    public String getInvName()
+    {
+        return "ep2.tileFrameRedstoneController";
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void openChest()
+    { }
+
+    @Override
+    public void closeChest()
+    { }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return false;
     }
 }

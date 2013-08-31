@@ -88,7 +88,7 @@ public class PortalUtils
                             controller.portalFrame = backupPortalFrame;
                             controller.portalFrameRedstone = backupPortalFrameRedstone;
                             controller.portalBlocks = backupPortalBlocks;
-                            return 3;
+                            return 3; // TODO clean up mess
                         }
                         else
                         {
@@ -96,7 +96,7 @@ public class PortalUtils
                             {
                                 controller.portalFrameRedstone.add(c);
                             }
-
+                            
                             f.controller = control;
                             controller.portalFrame.add(c);
                             processed.add(c);
