@@ -1,7 +1,5 @@
 /**
- * Derived from BuildCraft released under the MMPL
- * https://github.com/BuildCraft/BuildCraft
- * http://www.mod-buildcraft.com/MMPL-1.0.txt
+ * Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
 
 package uk.co.shadeddimensions.enhancedportals.gui.slots;
@@ -23,12 +21,12 @@ public class SlotBase extends Slot
     {
         return true;
     }
-    
+
     public ToolTip getToolTip()
     {
         return toolTips;
     }
-    
+
     public void setToolTips(ToolTip toolTips)
     {
         this.toolTips = toolTips;

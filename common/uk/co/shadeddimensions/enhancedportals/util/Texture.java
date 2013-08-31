@@ -8,12 +8,13 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 
 public class Texture
 {
     public String Texture;
     public int TextureColour;
-    
+
     public Texture()
     {
         Texture = "";
@@ -88,5 +89,23 @@ public class Texture
     {
         stream.writeUTF(Texture);
         stream.writeInt(TextureColour);
+    }
+
+    public ItemStack getItemStack()
+    {
+        if (Texture.startsWith("B:") || Texture.startsWith("I:"))
+        {
+            String tex = Texture.replace("B:", "");
+
+            return new ItemStack(Integer.parseInt(tex.split(":")[0]), 1, Integer.parseInt(tex.split(":")[1]));
+        }
+        else if (Texture.startsWith("C:"))
+        {
+            // String tex = Texture.replace("B:", "");
+
+            // return new ItemStack();
+        }
+
+        return new ItemStack(CommonProxy.blockFrame);
     }
 }

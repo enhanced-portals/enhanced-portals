@@ -35,7 +35,7 @@ public class PacketRequestData extends MainPacket
 
     @Override
     public MainPacket consumePacket(DataInputStream stream) throws IOException
-    {        
+    {
         location = readChunkCoordinates(stream);
         return this;
     }
@@ -52,7 +52,7 @@ public class PacketRequestData extends MainPacket
         }
         else if (tile instanceof TilePortalFrame)
         {
-            //PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
+            // PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
         }
     }
 

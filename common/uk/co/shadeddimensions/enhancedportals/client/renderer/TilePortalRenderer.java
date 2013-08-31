@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
+import uk.co.shadeddimensions.enhancedportals.util.Texture;
 import enhancedportals.client.renderer.BlockInterface;
 
 public class TilePortalRenderer extends TileEntitySpecialRenderer
@@ -164,7 +165,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     private void setupTexture(TilePortal portal)
     {
         PortalTexture texture = portal.getPortalTexture();
-        
+
         if (texture.Texture.startsWith("B:"))
         {
             int id = Integer.parseInt(texture.Texture.substring(2).split(":")[0]);
@@ -180,6 +181,6 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
             portalBlock.baseBlock = Block.portal;
         }
 
-        portalBlock.texture = PortalTexture.getTexture(texture.Texture, 0);
+        portalBlock.texture = Texture.getTexture(texture.Texture, 0);
     }
 }

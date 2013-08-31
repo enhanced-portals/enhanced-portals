@@ -103,7 +103,7 @@ public class BlockFrame extends BlockEP
         renderPass = pass;
         return pass < 2;
     }
-    
+
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
@@ -141,7 +141,7 @@ public class BlockFrame extends BlockEP
     {
         ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).neighborChanged(id);
     }
-    
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
@@ -153,7 +153,7 @@ public class BlockFrame extends BlockEP
     {
         return true;
     }
-    
+
     @Override
     public boolean isBlockNormalCube(World world, int x, int y, int z)
     {
@@ -171,43 +171,43 @@ public class BlockFrame extends BlockEP
     {
         return super.colorMultiplier(par1iBlockAccess, par2, par3, par4);
     }
-    
+
     @Override
     public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         return ((TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z)).isProvidingStrongPower(side);
     }
-    
+
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         return ((TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z)).isProvidingWeakPower(side);
     }
-    
+
     @Override
     public void updateTick(World world, int x, int y, int z, Random random)
     {
         ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).scheduledTick(random);
     }
-    
+
     @Override
     public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
     {
         return false;
     }
-    
+
     @Override
     public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
     {
         return false;
     }
-    
+
     @Override
     public int damageDropped(int par1)
     {
         return par1;
     }
-    
+
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {

@@ -19,35 +19,35 @@ import cpw.mods.fml.common.network.Player;
 public class TilePortalFrameRedstone extends TilePortalFrame
 {
     public boolean output;
-    
+
     byte previousRedstoneInputState, state, timer;
     boolean emitting, pulse;
-    
+
     static byte MAX_INPUT_STATE = 4, MAX_OUTPUT_STATE = 5, MAX_TIMER = 5;
-    
+
     public TilePortalFrameRedstone()
     {
         previousRedstoneInputState = 0;
         state = 0;
         emitting = pulse = false;
     }
-    
+
     public byte getState()
     {
         return state;
     }
-    
+
     public void setState(byte newState)
     {
         state = newState;
-        
+
         if (emitting || pulse)
         {
             emitting = pulse = false;
             notifyNeighbors();
         }
     }
-    
+
     @Override
     public Icon getTexture(int side, int renderpass)
     {
@@ -55,41 +55,41 @@ public class TilePortalFrameRedstone extends TilePortalFrame
         {
             return BlockFrame.redstoneOverlay;
         }
-        
+
         return null;
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
-        
+
         tagCompound.setByte("redstoneInputState", previousRedstoneInputState);
         tagCompound.setBoolean("output", output);
         tagCompound.setByte("state", state);
         tagCompound.setBoolean("emitting", emitting);
         tagCompound.setBoolean("pulse", pulse);
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tagCompound)
     {
         super.readFromNBT(tagCompound);
-        
+
         previousRedstoneInputState = tagCompound.getByte("redstoneInputState");
         output = tagCompound.getBoolean("output");
         state = tagCompound.getByte("state");
         emitting = tagCompound.getBoolean("emitting");
         pulse = tagCompound.getBoolean("pulse");
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player)
     {
-        player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);        
+        player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);
         return true;
     }
-    
+
     @Override
     public void neighborChanged(int id)
     {
@@ -97,17 +97,17 @@ public class TilePortalFrameRedstone extends TilePortalFrame
         {
             return;
         }
-        
+
         if (!output) // Only do this if set to input
         {
             byte redstoneInputState = getHighestPowerState();
-            
+
             if (state == 0 || state == 1)
             {
                 if (redstoneInputState > 0 && previousRedstoneInputState == 0)
                 {
                     TilePortalFrameController c = getControllerValidated();
-                    
+
                     if (c != null)
                     {
                         if (state == 0)
@@ -123,7 +123,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame
                 else if (redstoneInputState == 0 && previousRedstoneInputState > 0)
                 {
                     TilePortalFrameController c = getControllerValidated();
-                    
+
                     if (c != null)
                     {
                         if (state == 0)
@@ -135,7 +135,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame
                             c.createPortal();
                         }
                     }
-                    
+
                 }
             }
             else if (state == 2 || state == 3)
@@ -143,7 +143,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame
                 if (previousRedstoneInputState > 0 && redstoneInputState == 0)
                 {
                     TilePortalFrameController c = getControllerValidated();
-                    
+
                     if (state == 2)
                     {
                         c.createPortal();
@@ -154,33 +154,33 @@ public class TilePortalFrameRedstone extends TilePortalFrame
                     }
                 }
             }
-            
-            previousRedstoneInputState = redstoneInputState;            
+
+            previousRedstoneInputState = redstoneInputState;
         }
     }
-        
+
     private byte getHighestPowerState()
     {
         byte current = 0;
-        
+
         for (int i = 0; i < 6; i++)
         {
             ForgeDirection d = ForgeDirection.getOrientation(i);
             byte c = (byte) worldObj.getIndirectPowerLevelTo(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, i);
-            
+
             if (c > current)
             {
                 current = c;
             }
         }
-        
+
         return current;
     }
-    
+
     public void buttonPressed(int id, EntityPlayer player)
     {
         boolean sendPacket = false;
-        
+
         if (id == 0)
         {
             output = !output;
@@ -211,10 +211,10 @@ public class TilePortalFrameRedstone extends TilePortalFrame
                     setState((byte) 0);
                 }
             }
-            
+
             sendPacket = true;
         }
-        
+
         if (sendPacket)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameRedstoneData(this)), (Player) player);
@@ -227,12 +227,12 @@ public class TilePortalFrameRedstone extends TilePortalFrame
         {
             return;
         }
-        
+
         pulse = true;
         notifyNeighbors();
         worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID, 20);
     }
-    
+
     public void portalCreated()
     {
         if (output)
@@ -249,11 +249,11 @@ public class TilePortalFrameRedstone extends TilePortalFrame
             {
                 emitting = false;
             }
-            
+
             notifyNeighbors();
         }
     }
-    
+
     public void portalRemoved()
     {
         if (output)
@@ -270,22 +270,22 @@ public class TilePortalFrameRedstone extends TilePortalFrame
             {
                 emitting = true;
             }
-            
+
             notifyNeighbors();
         }
     }
-    
+
     private void notifyNeighbors()
     {
         worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID);
-        
+
         for (int i = 0; i < 6; i++)
         {
-            ForgeDirection d = ForgeDirection.getOrientation(i);            
+            ForgeDirection d = ForgeDirection.getOrientation(i);
             worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, CommonProxy.blockFrame.blockID);
         }
     }
-    
+
     @Override
     public int isProvidingStrongPower(int side)
     {
@@ -293,10 +293,10 @@ public class TilePortalFrameRedstone extends TilePortalFrame
         {
             return 15;
         }
-        
+
         return super.isProvidingStrongPower(side);
     }
-    
+
     @Override
     public int isProvidingWeakPower(int side)
     {
@@ -304,10 +304,10 @@ public class TilePortalFrameRedstone extends TilePortalFrame
         {
             return 15;
         }
-        
+
         return super.isProvidingWeakPower(side);
     }
-    
+
     @Override
     public void scheduledTick(Random random)
     {
@@ -317,7 +317,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame
             notifyNeighbors();
         }
     }
-    
+
     @Override
     public void entityTouch(Entity entity)
     {

@@ -1,7 +1,5 @@
 /**
- * Derived from BuildCraft released under the MMPL
- * https://github.com/BuildCraft/BuildCraft
- * http://www.mod-buildcraft.com/MMPL-1.0.txt
+ * Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
 
 package uk.co.shadeddimensions.enhancedportals.gui;
@@ -14,6 +12,7 @@ import net.minecraft.util.Icon;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.enhancedportals.container.ContainerEnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.util.Properties;
 
 public abstract class GuiAdvancedInterface extends GuiEnhancedPortals
@@ -95,8 +94,7 @@ public abstract class GuiAdvancedInterface extends GuiEnhancedPortals
     }
 
     /**
-     * More dynamic slot displaying an inventory stack at specified position in
-     * the passed IInventory
+     * More dynamic slot displaying an inventory stack at specified position in the passed IInventory
      */
     public class IInventorySlot extends AdvancedSlot
     {

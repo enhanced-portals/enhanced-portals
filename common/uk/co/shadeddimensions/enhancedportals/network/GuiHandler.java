@@ -3,9 +3,10 @@ package uk.co.shadeddimensions.enhancedportals.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.gui.ContainerPortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.gui.ContainerPortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameControllerPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
@@ -26,12 +27,16 @@ public class GuiHandler implements IGuiHandler
         if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
-            return new ContainerPortalFrameController();
+            return new ContainerPortalFrameController((TilePortalFrameController) tile);
         }
         else if (ID == CommonProxy.GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile)), (Player) player);
             return new ContainerPortalFrameRedstone((TilePortalFrameRedstone) tile);
+        }
+        else if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE && tile instanceof TilePortalFrameController)
+        {
+            return new ContainerPortalFrameController((TilePortalFrameController) tile);
         }
 
         return null;
@@ -49,6 +54,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == CommonProxy.GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
         {
             return new GuiPortalFrameRedstone(player, (TilePortalFrameRedstone) tile);
+        }
+        else if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE && tile instanceof TilePortalFrameController)
+        {
+            return new GuiPortalFrameControllerPortalTexture((TilePortalFrameController) tile, player);
         }
 
         return null;

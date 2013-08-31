@@ -17,7 +17,7 @@ public class PacketPortalFrameData extends MainPacket
 
     public PacketPortalFrameData()
     {
-// TODO NOT SURE IF THIS IS REQUIRED ANYMORE
+        // TODO NOT SURE IF THIS IS REQUIRED ANYMORE
     }
 
     public PacketPortalFrameData(TilePortalFrame frame)
@@ -41,7 +41,7 @@ public class PacketPortalFrameData extends MainPacket
 
         if (tile != null && tile instanceof TilePortalFrame)
         {
-            //TilePortalFrame frame = (TilePortalFrame) tile;
+            // TilePortalFrame frame = (TilePortalFrame) tile;
 
             world.markBlockForRenderUpdate(coord.posX, coord.posY, coord.posZ);
         }

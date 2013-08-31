@@ -45,12 +45,12 @@ public class BlockPortal extends BlockEP
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
         int metadata = world.getBlockMetadata(x, y, z);
-        
+
         if (metadata >= 6)
         {
             return;
         }
-        
+
         if (random.nextInt(100) == 0)
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
@@ -110,7 +110,7 @@ public class BlockPortal extends BlockEP
         {
             PortalUtils.removePortal((WorldServer) world, x, y, z, world.getBlockMetadata(x, y, z));
         }
-        
+
         super.breakBlock(world, x, y, z, par5, par6);
     }
 
@@ -142,7 +142,7 @@ public class BlockPortal extends BlockEP
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         int meta = blockAccess.getBlockMetadata(x, y, z);
-  
+
         if (meta == 1) // X
         {
             setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);
@@ -158,7 +158,7 @@ public class BlockPortal extends BlockEP
         else if (meta >= 6)
         {
             setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
-        } 
+        }
         else
         {
             setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
@@ -170,13 +170,13 @@ public class BlockPortal extends BlockEP
     {
         return new TilePortal();
     }
-    
+
     @Override
     public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
     {
         return false;
     }
-    
+
     @Override
     public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
     {

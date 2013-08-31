@@ -1,11 +1,10 @@
 /**
- * Derived from BuildCraft released under the MMPL
- * https://github.com/BuildCraft/BuildCraft
- * http://www.mod-buildcraft.com/MMPL-1.0.txt
+ * Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
 
 package uk.co.shadeddimensions.enhancedportals.gui;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,10 +24,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import uk.co.shadeddimensions.enhancedportals.container.ContainerEnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotBase;
 import uk.co.shadeddimensions.enhancedportals.gui.tooltips.ToolTip;
@@ -43,7 +44,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         return mc;
     }
-    
+
     protected abstract class Ledger
     {
         private boolean open;
@@ -366,14 +367,14 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
         protected String[] getTipsList()
         {
-            return new String[] { };
+            return new String[] {};
         }
-        
+
         public TipLedger()
         {
             overlayColor = 0x5396da;
         }
-        
+
         @SuppressWarnings("rawtypes")
         @Override
         public void draw(int x, int y)
@@ -390,10 +391,10 @@ public abstract class GuiEnhancedPortals extends GuiContainer
             if (tip == -1)
             {
                 tip = 0;
-                List list = fontRenderer.listFormattedStringToWidth(getTipsList()[tip], 115);                
+                List list = fontRenderer.listFormattedStringToWidth(getTipsList()[tip], 115);
                 maxHeight = 25 + list.size() * fontRenderer.FONT_HEIGHT;
             }
-            
+
             fontRenderer.drawSplitString(getTipsList()[tip], x + 5, y + 20, 115, textColour);
         }
 
@@ -409,7 +410,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
             return strList;
         }
-        
+
         @SuppressWarnings("rawtypes")
         @Override
         public boolean handleMouseClicked(int x, int y, int mouseButton)
@@ -423,27 +424,27 @@ public abstract class GuiEnhancedPortals extends GuiContainer
                     tip = 0;
                 }
 
-                List list = fontRenderer.listFormattedStringToWidth(getTipsList()[tip], 115);                
+                List list = fontRenderer.listFormattedStringToWidth(getTipsList()[tip], 115);
                 maxHeight = 25 + list.size() * fontRenderer.FONT_HEIGHT;
             }
 
             return super.handleMouseClicked(x, y, mouseButton);
         }
     }
-    
+
     protected class RedstoneLedger extends Ledger
-    {        
+    {
         int headerColour = 0xe1c92f;
         int subheaderColour = 0xaaafb8;
         int textColour = 0x000000;
         int selected = 0;
-        
+
         public RedstoneLedger()
         {
             overlayColor = 0xd46c1f;
             maxHeight = 47;
         }
-        
+
         @Override
         public void draw(int x, int y)
         {
@@ -517,7 +518,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
             return strList;
         }
-        
+
         @Override
         public boolean handleMouseClicked(int x, int y, int mouseButton)
         {
@@ -540,7 +541,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
                             selected = 3;
                         }
                         else
-                        {                        
+                        {
                             selected = MathHelper.clamp_int(mouseButton == 0 ? selected + 1 : mouseButton == 1 ? selected - 1 : selected, 3, 17);
                         }
                     }
@@ -548,7 +549,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
                     {
                         selected = -1;
                     }
-                    
+
                     selectedChanged(selected);
                     getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                     return true;
@@ -557,18 +558,18 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
             return false;
         }
-        
+
         protected void setSelected(int i)
         {
             selected = i;
         }
-        
+
         protected void selectedChanged(int i)
         {
-            
+
         }
     }
-    
+
     protected LedgerManager ledgerManager = new LedgerManager(this);
 
     protected TileEntity tile;
@@ -585,12 +586,12 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         initLedgers(inventory);
     }
 
-    public GuiEnhancedPortals(ContainerEnhancedPortals container, TileEntity inventory)
+    public GuiEnhancedPortals(ContainerEnhancedPortals container, TileEntity tile)
     {
         super(container);
 
-        tile = inventory;
-        initLedgers(inventory);
+        this.tile = tile;
+        initLedgers(tile);
     }
 
     @Override
@@ -678,7 +679,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         {
             int left = guiLeft;
             int top = guiTop;
-            int lenght = 0;
+            int length = 0;
             int x;
             int y;
 
@@ -686,9 +687,9 @@ public abstract class GuiEnhancedPortals extends GuiContainer
             {
                 y = fontRenderer.getStringWidth(tip.text);
 
-                if (y > lenght)
+                if (y > length)
                 {
-                    lenght = y;
+                    length = y;
                 }
             }
 
@@ -704,17 +705,17 @@ public abstract class GuiEnhancedPortals extends GuiContainer
             zLevel = 300.0F;
             itemRenderer.zLevel = 300.0F;
             int var15 = -267386864;
-            drawGradientRect(x - 3, y - 4, x + lenght + 3, y - 3, var15, var15);
-            drawGradientRect(x - 3, y + var14 + 3, x + lenght + 3, y + var14 + 4, var15, var15);
-            drawGradientRect(x - 3, y - 3, x + lenght + 3, y + var14 + 3, var15, var15);
+            drawGradientRect(x - 3, y - 4, x + length + 3, y - 3, var15, var15);
+            drawGradientRect(x - 3, y + var14 + 3, x + length + 3, y + var14 + 4, var15, var15);
+            drawGradientRect(x - 3, y - 3, x + length + 3, y + var14 + 3, var15, var15);
             drawGradientRect(x - 4, y - 3, x - 3, y + var14 + 3, var15, var15);
-            drawGradientRect(x + lenght + 3, y - 3, x + lenght + 4, y + var14 + 3, var15, var15);
+            drawGradientRect(x + length + 3, y - 3, x + length + 4, y + var14 + 3, var15, var15);
             int var16 = 1347420415;
             int var17 = (var16 & 16711422) >> 1 | var16 & -16777216;
             drawGradientRect(x - 3, y - 3 + 1, x - 3 + 1, y + var14 + 3 - 1, var16, var17);
-            drawGradientRect(x + lenght + 2, y - 3 + 1, x + lenght + 3, y + var14 + 3 - 1, var16, var17);
-            drawGradientRect(x - 3, y - 3, x + lenght + 3, y - 3 + 1, var16, var16);
-            drawGradientRect(x - 3, y + var14 + 2, x + lenght + 3, y + var14 + 3, var17, var17);
+            drawGradientRect(x + length + 2, y - 3 + 1, x + length + 3, y + var14 + 3 - 1, var16, var17);
+            drawGradientRect(x - 3, y - 3, x + length + 3, y - 3 + 1, var16, var16);
+            drawGradientRect(x - 3, y + var14 + 2, x + length + 3, y + var14 + 3, var17, var17);
 
             for (ToolTipLine tip : toolTips)
             {
@@ -769,13 +770,11 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         return mouseX >= slot.xDisplayPosition - 1 && mouseX < slot.xDisplayPosition + 16 + 1 && mouseY >= slot.yDisplayPosition - 1 && mouseY < slot.yDisplayPosition + 16 + 1;
     }
 
-    // / MOUSE CLICKS
     @Override
     protected void mouseClicked(int par1, int par2, int mouseButton)
     {
         super.mouseClicked(par1, par2, mouseButton);
 
-        // / Handle ledger clicks
         ledgerManager.handleMouseClicked(par1, par2, mouseButton);
     }
 
@@ -783,14 +782,81 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         return guiLeft;
     }
-    
+
     public int getTop()
     {
         return guiTop;
     }
-    
+
     public RenderItem getItemRenderer()
     {
         return itemRenderer;
+    }
+
+    protected void drawBorderedRectangle(int x, int y, int w, int h, int colour, int borderColour, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        drawRectangle(x + 1, y + 1, w, h, colour, false); // centre
+        drawRectangle(x, y, w + 2, 1, borderColour, false); // top border
+        drawRectangle(x, y + h + 1, w + 2, 1, borderColour, false); // bottom border
+        drawRectangle(x, y + 1, 1, h, borderColour, false); // left border
+        drawRectangle(x + w + 1, y + 1, 1, h, borderColour, false); // right border
+    }
+
+    protected void drawRectangle(int x, int y, int w, int h, int colour, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        drawRect(x, y, x + w, y + h, colour);
+    }
+
+    protected void drawColouredItemStack(int x, int y, int colour, ItemStack stack, boolean offset)
+    {
+        Color c = new Color(colour);
+        drawColouredItemStack(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), stack, offset);
+    }
+
+    /*** RGBA should be 0-255 */
+    protected void drawColouredItemStack(int x, int y, float r, float g, float b, float a, ItemStack stack, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        itemRenderer.renderWithColor = false;
+        GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
+        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
+        itemRenderer.renderWithColor = true;
+    }
+
+    protected void drawParticle(int x, int y, int colour, int texture, boolean offset)
+    {
+        Color c = new Color(colour);
+        drawParticle(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), texture, offset);
+    }
+
+    /*** RGBA should be 0-255 */
+    protected void drawParticle(int x, int y, float r, float g, float b, float a, int textureIndex, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
+        mc.renderEngine.func_110577_a(new ResourceLocation("textures/particle/particles.png"));
+        drawTexturedModalRect(guiLeft + 29, guiTop + 9, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
     }
 }

@@ -33,26 +33,15 @@ public class ItemWrench extends ItemEP2
 
             if (tile instanceof TilePortalFrame)
             {
-                /*TilePortalFrame frame = (TilePortalFrame) tile;
-
-                if (frame.checkController())
-                {
-                    player.openGui(EnhancedPortals.instance, Identifiers.Gui.FRAME_CONTROLLER, world, frame.controller.posX, frame.controller.posY, frame.controller.posZ);
-                }
-                else
-                {
-                    if (PortalUtils.findNearbyPortalBlock((WorldServer) world, x, y, z))
-                    {
-                        if (PortalUtils.linkController((WorldServer) world, x, y, z))
-                        {
-                            player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Portal terminated: " + EnumChatFormatting.GREEN + "Successfully initialized the portal"));
-                        }
-                    }
-                    else
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Failed to initialize the portal: " + EnumChatFormatting.WHITE + "No portal found"));
-                    }
-                }*/
+                /*
+                 * TilePortalFrame frame = (TilePortalFrame) tile; if (frame.checkController()) { player.openGui(EnhancedPortals.instance,
+                 * Identifiers.Gui.FRAME_CONTROLLER, world, frame.controller.posX, frame.controller.posY, frame.controller.posZ); } else { if
+                 * (PortalUtils.findNearbyPortalBlock((WorldServer) world, x, y, z)) { if (PortalUtils.linkController((WorldServer) world, x, y, z)) {
+                 * player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Portal terminated: " +
+                 * EnumChatFormatting.GREEN + "Successfully initialized the portal")); } } else {
+                 * player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Failed to initialize the portal: " +
+                 * EnumChatFormatting.WHITE + "No portal found")); } }
+                 */
             }
             else if (tile instanceof TilePortalFrameController)
             {

@@ -44,65 +44,7 @@ public class PortalFX extends EntityFX
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
 
-        switch (texture.ParticleType)
-        {
-            default:
-            case 0:
-                setParticleTextureIndex((int) (Math.random() * 8.0D));
-                break;
-
-            case 1:
-                setParticleTextureIndex(32);
-                break;
-
-            case 2:
-                setParticleTextureIndex(48 + rand.nextInt(2));
-                break;
-
-            case 3:
-                setParticleTextureIndex(64);
-                break;
-
-            case 4:
-                setParticleTextureIndex(65);
-                break;
-
-            case 5:
-                setParticleTextureIndex(66);
-                break;
-
-            case 6:
-                setParticleTextureIndex(80);
-                break;
-
-            case 7:
-                setParticleTextureIndex(81);
-                break;
-
-            case 8:
-                setParticleTextureIndex(82);
-                break;
-
-            case 9:
-                setParticleTextureIndex(83);
-                break;
-
-            case 10:
-                setParticleTextureIndex(97);
-                break;
-
-            case 11:
-                setParticleTextureIndex(128 + rand.nextInt(8));
-                break;
-
-            case 12:
-                setParticleTextureIndex(144 + rand.nextInt(8));
-                break;
-
-            case 13:
-                setParticleTextureIndex(160 + rand.nextInt(8));
-                break;
-        }
+        setParticleTextureIndex(texture.getParticleIndex());
     }
 
     /**

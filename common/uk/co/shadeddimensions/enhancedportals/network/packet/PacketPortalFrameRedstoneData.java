@@ -13,15 +13,15 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone
 
 public class PacketPortalFrameRedstoneData extends MainPacket
 {
-    ChunkCoordinates pos;    
+    ChunkCoordinates pos;
     boolean output;
     byte state;
-    
+
     public PacketPortalFrameRedstoneData()
     {
-        
+
     }
-    
+
     public PacketPortalFrameRedstoneData(TilePortalFrameRedstone tile)
     {
         pos = tile.getChunkCoordinates();
@@ -35,7 +35,7 @@ public class PacketPortalFrameRedstoneData extends MainPacket
         pos = readChunkCoordinates(stream);
         output = stream.readBoolean();
         state = stream.readByte();
-        
+
         return this;
     }
 
@@ -48,7 +48,7 @@ public class PacketPortalFrameRedstoneData extends MainPacket
         if (tile instanceof TilePortalFrameRedstone)
         {
             TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
-            
+
             redstone.output = output;
             redstone.setState(state);
         }

@@ -27,28 +27,28 @@ public class TilePortalFrameController extends TilePortalFrame
 {
     public Texture frameTexture;
     public PortalTexture portalTexture;
-    
+
     public List<ChunkCoordinates> portalFrame;
     public List<ChunkCoordinates> portalFrameRedstone;
     public List<ChunkCoordinates> portalBlocks;
-        
+
     @SideOnly(Side.CLIENT)
     public int attachedFrames;
     @SideOnly(Side.CLIENT)
     public int attachedFrameRedstone;
     @SideOnly(Side.CLIENT)
     public int attachedPortals;
-    
+
     public TilePortalFrameController()
     {
         frameTexture = new Texture();
         portalTexture = new PortalTexture();
-        
+
         portalFrame = new ArrayList<ChunkCoordinates>();
         portalFrameRedstone = new ArrayList<ChunkCoordinates>();
         portalBlocks = new ArrayList<ChunkCoordinates>();
     }
-    
+
     public int getAttachedFrames()
     {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -60,7 +60,7 @@ public class TilePortalFrameController extends TilePortalFrame
             return attachedFrames;
         }
     }
-    
+
     public int getAttachedFrameRedstone()
     {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -72,7 +72,7 @@ public class TilePortalFrameController extends TilePortalFrame
             return attachedFrameRedstone;
         }
     }
-    
+
     public int getAttachedPortals()
     {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
@@ -84,15 +84,15 @@ public class TilePortalFrameController extends TilePortalFrame
             return attachedPortals;
         }
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
-        
+
         frameTexture.writeToNBT(tagCompound);
         portalTexture.writeToNBT(tagCompound);
-        
+
         NBTHelper.saveCCList(tagCompound, portalFrame, "portalFrame");
         NBTHelper.saveCCList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
         NBTHelper.saveCCList(tagCompound, portalBlocks, "portalBlocks");
@@ -102,15 +102,15 @@ public class TilePortalFrameController extends TilePortalFrame
     public void readFromNBT(NBTTagCompound tagCompound)
     {
         super.readFromNBT(tagCompound);
-        
+
         frameTexture = new Texture(tagCompound);
         portalTexture = new PortalTexture(tagCompound);
-        
+
         portalFrame = NBTHelper.loadCCList(tagCompound, "portalFrame");
         portalFrameRedstone = NBTHelper.loadCCList(tagCompound, "portalFrameRedstone");
         portalBlocks = NBTHelper.loadCCList(tagCompound, "portalBlocks");
     }
-    
+
     @Override
     public Icon getTexture(int side, int renderpass)
     {
@@ -121,19 +121,19 @@ public class TilePortalFrameController extends TilePortalFrame
 
         return null;
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player)
     {
         if (player.inventory.getCurrentItem() != null)
-        {        
+        {
             if (worldObj.isRemote)
             {
                 return super.activate(player);
             }
-            
+
             byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
-            
+
             if (status == 0)
             {
                 player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
@@ -156,10 +156,10 @@ public class TilePortalFrameController extends TilePortalFrame
         {
             player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
         }
-        
+
         return false;
     }
-    
+
     public void createPortal()
     {
         for (ChunkCoordinates c : portalBlocks)
@@ -167,18 +167,18 @@ public class TilePortalFrameController extends TilePortalFrame
             if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
             {
                 int meta = worldObj.getBlockMetadata(c.posX, c.posY, c.posZ) - 6;
-                
+
                 if (meta >= 1 && meta <= 3)
                 {
                     worldObj.setBlockMetadataWithNotify(c.posX, c.posY, c.posZ, meta, 3);
                 }
             }
         }
-        
+
         for (ChunkCoordinates c : portalFrameRedstone)
         {
             TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            
+
             if (tile != null && tile instanceof TilePortalFrameRedstone)
             {
                 TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
@@ -186,26 +186,26 @@ public class TilePortalFrameController extends TilePortalFrame
             }
         }
     }
-    
+
     public void removePortal()
-    {        
+    {
         for (ChunkCoordinates c : portalBlocks)
         {
             if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
             {
                 int meta = worldObj.getBlockMetadata(c.posX, c.posY, c.posZ) + 6;
-                
+
                 if (meta >= 7 && meta <= 9)
                 {
                     worldObj.setBlockMetadataWithNotify(c.posX, c.posY, c.posZ, meta, 3);
                 }
             }
         }
-        
+
         for (ChunkCoordinates c : portalFrameRedstone)
         {
             TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            
+
             if (tile != null && tile instanceof TilePortalFrameRedstone)
             {
                 TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
@@ -213,13 +213,13 @@ public class TilePortalFrameController extends TilePortalFrame
             }
         }
     }
-    
+
     public void destroyAllPortal()
     {
         destroyPortal();
         portalBlocks = new ArrayList<ChunkCoordinates>();
     }
-    
+
     public void destroyPortal()
     {
         for (ChunkCoordinates c : portalBlocks)
@@ -234,13 +234,13 @@ public class TilePortalFrameController extends TilePortalFrame
     public void removeFrame(TilePortalFrame frame)
     {
         portalFrame.remove(new ChunkCoordinates(frame.xCoord, frame.yCoord, frame.zCoord));
-        
+
         if (frame instanceof TilePortalFrameRedstone)
         {
             portalFrameRedstone.remove(new ChunkCoordinates(frame.xCoord, frame.yCoord, frame.zCoord));
         }
     }
-    
+
     @Override
     public void selfBroken()
     {
@@ -248,11 +248,11 @@ public class TilePortalFrameController extends TilePortalFrame
         {
             if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockFrame.blockID)
             {
-                TilePortalFrame frame = (TilePortalFrame) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);                
+                TilePortalFrame frame = (TilePortalFrame) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
                 frame.controller = new ChunkCoordinates(0, -1, 0);
             }
         }
-        
+
         destroyPortal();
     }
 }
