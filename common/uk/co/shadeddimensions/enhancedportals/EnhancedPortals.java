@@ -28,6 +28,8 @@ import enhancedportals.lib.Reference;
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID_NEW })
 public class EnhancedPortals
 {
+    public static boolean DEBUG = true;
+    
     public static ConfigurationManager config;
     public static CreativeTabs creativeTab = new CreativeTabEP2();
 

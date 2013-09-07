@@ -18,6 +18,8 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone
 
 public class PortalUtils
 {
+    // TODO: Rewrite this better.
+    
     private static boolean controllerLinkCreatePortal(WorldServer world, int x, int y, int z)
     {
         for (int i = 0; i < 6; i++)
@@ -98,6 +100,7 @@ public class PortalUtils
                             }
                             
                             f.controller = control;
+                            CommonProxy.sendUpdatePacketToAllAround(f);
                             controller.portalFrame.add(c);
                             processed.add(c);
                             addTouchingBlocks(c, toProcess, 0);
@@ -108,6 +111,7 @@ public class PortalUtils
                         TilePortal portal = (TilePortal) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
 
                         portal.controller = control;
+                        CommonProxy.sendUpdatePacketToAllAround(portal);
                         controller.portalBlocks.add(c);
                         processed.add(c);
                         addTouchingBlocks(c, toProcess, 0);

@@ -58,13 +58,9 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
             g = G;
             b = B;
 
+            unsavedChanges = true;
             controller.frameTexture.TextureColour = Integer.parseInt(String.format("%02x%02x%02x", r, g, b), 16);
-            updateServer();
-        }
-        else if (unsavedChanges && lastUpdate >= 20)
-        {
-            updateServer();
-        }        
+        }   
         
         lastUpdate++;
     }
@@ -74,8 +70,7 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
     {
         if (unsavedChanges)
         {
-            lastUpdate = 25;
-            updateServer();
+            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketPortalFrameControllerFrameTextureData(controller)));
         }
         
         super.onGuiClosed();
@@ -95,7 +90,7 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
                 if (Block.isNormalCube(blockID))
                 {
                     controller.frameTexture.Texture = "B:" + blockID + ":" + blockMeta;
-                    updateServer();
+                    unsavedChanges = true;
                     return;
                 }
             }
@@ -149,20 +144,5 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
         buttonList.add(new GuiRGBSlider(0, guiLeft + 8, guiTop + 25, "Red", c.getRed() / 255));
         buttonList.add(new GuiRGBSlider(1, guiLeft + xSize - 8 - 75, guiTop + 25, "Green", c.getGreen() / 255));
         buttonList.add(new GuiRGBSlider(2, guiLeft + 8, guiTop + 49, "Blue", c.getBlue() / 255));
-    }
-    
-    private void updateServer()
-    {
-        if (lastUpdate > 20)
-        {
-            unsavedChanges = false;
-            lastUpdate = 0;
-            System.out.println("Sent packet to server!");
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketPortalFrameControllerFrameTextureData(controller)));
-        }
-        else
-        {
-            unsavedChanges = true;
-        }
     }
 }

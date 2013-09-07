@@ -40,11 +40,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 
 public abstract class GuiEnhancedPortals extends GuiContainer
 {
-    protected Minecraft getMinecraft()
-    {
-        return mc;
-    }
-
     protected abstract class Ledger
     {
         private boolean open;
@@ -766,6 +761,26 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         ledgerManager.handleMouseClicked(par1, par2, mouseButton);
     }
 
+    public int getGuiLeft()
+    {
+        return guiLeft;
+    }
+    
+    public int getGuiTop()
+    {
+        return guiTop;
+    }
+    
+    public int getXSize()
+    {
+        return xSize;
+    }
+    
+    public int getYSize()
+    {
+        return ySize;
+    }
+    
     public int getLeft()
     {
         return guiLeft;
@@ -779,6 +794,11 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     public RenderItem getItemRenderer()
     {
         return itemRenderer;
+    }
+    
+    public Minecraft getMinecraft()
+    {
+        return FMLClientHandler.instance().getClient();
     }
 
     protected void drawBorderedRectangle(int x, int y, int w, int h, int colour, int borderColour, boolean offset)
@@ -846,5 +866,16 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
         mc.renderEngine.func_110577_a(new ResourceLocation("textures/particle/particles.png"));
         drawTexturedModalRect(guiLeft + 29, guiTop + 9, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
+    }
+    
+    protected void drawItemSlotBackground(int x, int y, int w, int h)
+    {
+        drawRectangle(x, y, w - 1, h, 0xFF8b8b8b, true); // background
+        drawRectangle(x, y, w - 1, 1, 0xFF373737, true); // top
+        drawRectangle(x, y, 1, h, 0xFF373737, true); // left
+        drawRectangle(x, y + h, w - 1, 1, 0xFFffffff, true); // bottom
+        drawRectangle(x + w - 1, y, 1, h + 1, 0xFFffffff, true); // right
+        drawRectangle(x + w - 1, y, 1, 1, 0xFF8b8b8b, true); // corner
+        drawRectangle(x, y + h, 1, 1, 0xFF8b8b8b, true); // corner
     }
 }

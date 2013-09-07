@@ -42,6 +42,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     @SideOnly(Side.CLIENT)
     public int attachedPortals;
 
+    boolean hasInitialized;
+    
     public TilePortalFrameController()
     {
         frameTexture = new Texture();
@@ -50,6 +52,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalFrame = new ArrayList<ChunkCoordinates>();
         portalFrameRedstone = new ArrayList<ChunkCoordinates>();
         portalBlocks = new ArrayList<ChunkCoordinates>();
+        
+        hasInitialized = false;
     }
 
     public int getAttachedFrames()
@@ -99,6 +103,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         NBTHelper.saveCCList(tagCompound, portalFrame, "portalFrame");
         NBTHelper.saveCCList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
         NBTHelper.saveCCList(tagCompound, portalBlocks, "portalBlocks");
+        
+        tagCompound.setBoolean("initialized", hasInitialized);
     }
 
     @Override
@@ -112,6 +118,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalFrame = NBTHelper.loadCCList(tagCompound, "portalFrame");
         portalFrameRedstone = NBTHelper.loadCCList(tagCompound, "portalFrameRedstone");
         portalBlocks = NBTHelper.loadCCList(tagCompound, "portalBlocks");
+        
+        hasInitialized = tagCompound.getBoolean("initialized");
     }
 
     @Override
@@ -138,11 +146,16 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     @Override
     public boolean activate(EntityPlayer player)
     {
-        if (player.inventory.getCurrentItem() != null)
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
+        {
+            return false;
+        }
+        
+        if (!hasInitialized)
         {
             if (worldObj.isRemote)
             {
-                return super.activate(player);
+                return true;
             }
 
             byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
@@ -150,7 +163,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
             if (status == 0)
             {
                 player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
-                return true;
+                hasInitialized = true;
             }
             else if (status == 1)
             {
@@ -169,8 +182,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         {
             player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
         }
-
-        return false;
+        
+        return true;
     }
 
     public void createPortal()

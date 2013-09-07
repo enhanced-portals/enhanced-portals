@@ -1,20 +1,20 @@
 package uk.co.shadeddimensions.enhancedportals.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiRequest;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiPortalFrameController extends GuiEnhancedPortals
 {
@@ -42,7 +42,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
                 fontRenderer.drawString(String.format("Portals: %s", controller.getAttachedPortals()), x + 5, y + 45, textColour);
             }
 
-            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, new ItemStack(CommonProxy.blockFrame), x + 3, y + 4);
+            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, new ItemStack(CommonProxy.blockFrame, 1, 1), x + 3, y + 4);
         }
 
         @Override
@@ -58,17 +58,67 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
             return strList;
         }
     }
-
+    
     TilePortalFrameController controller;
     EntityPlayer player;
+    
+    static GuiGlyphElement[] elementList = new GuiGlyphElement[27];
+    static boolean isChanging = false, expanding = false, expanded = false;
+    static final int MIN_SIZE = 122, MAX_SIZE = 215;
+    static int currentSize = MIN_SIZE;
 
+    static
+    {        
+        for (int i = 0; i < elementList.length; i++)
+        {
+            int x = (i % 9) * 18;
+            int y = (i / 9) * 18;
+            
+            elementList[i] = new GuiGlyphElement(new ItemStack(i + 1, 1, 0), true, x, y);
+        }
+    }
+    
     public GuiPortalFrameController(EntityPlayer play, TilePortalFrameController tile)
     {
         super(new ContainerPortalFrameController(tile), tile);
 
         controller = tile;
         player = play;
-        ySize -= 75;
+        ySize = MIN_SIZE;
+    }
+    
+    private void toggleState()
+    {
+        isChanging = true;
+        
+        if (expanded)
+        {
+            expanded = false;
+            updateButtons();
+        }
+    }
+    
+    private void updateButtons()
+    {
+        ((GuiButton) buttonList.get(0)).drawButton = expanded;
+        ((GuiButton) buttonList.get(1)).drawButton = expanded;
+    }
+    
+    @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+        
+        if (isShiftKeyDown())
+        {
+            ((GuiButton) buttonList.get(0)).displayString = EnumChatFormatting.AQUA + "Clear";
+            ((GuiButton) buttonList.get(1)).displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + "Random";
+        }
+        else
+        {
+            ((GuiButton) buttonList.get(0)).displayString = "Cancel";
+            ((GuiButton) buttonList.get(1)).displayString = "Save";
+        }
     }
 
     @Override
@@ -76,17 +126,52 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-        drawBorderedRectangle(8, 8, 16, 16, 0x00ffffff, 0xff404040, true);
-        drawBorderedRectangle(28, 8, 16, 16, 0x00ffffff, 0xff404040, true);
-        drawBorderedRectangle(8, 28, 16, 16, 0x00ffffff, 0xff404040, true);
-        drawBorderedRectangle(28, 28, 16, 16, 0x00ffffff, 0x44404040, true);
-
-        drawColouredItemStack(9, 9, controller.portalTexture.TextureColour, controller.portalTexture.getItemStack(), true);
-        drawColouredItemStack(9, 29, controller.frameTexture.TextureColour, controller.frameTexture.getItemStack(), true);
-
-        drawParticle(29, 9, controller.portalTexture.ParticleColour, controller.portalTexture.getStaticParticleIndex(), true);
+        
+        drawTexturedModalRect(guiLeft, guiTop + 40, 0, 235 - currentSize, xSize, currentSize - 114);        
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 40); // Draw in the static top
+        
+        drawItemSlotBackground(6, 20, xSize - 12, 18);
+        
+        if (expanded)
+        {
+            drawItemSlotBackground(6, 55, xSize - 12, 56);
+            
+            for (int k = 0; k < elementList.length; k++)
+            {
+                elementList[k].draw(fontRenderer, mc.renderEngine, itemRenderer, guiLeft + 8, guiTop + 57);
+            }
+        }
+        
+        // Logic for updating background -- can't be in update because that doesn't get called as frequently..        
+        if (isChanging)
+        {
+            if (expanding)
+            {
+                if (currentSize < MAX_SIZE)
+                {
+                    currentSize += 2;
+                }
+                else
+                {
+                    expanding = false;
+                    expanded = true;
+                    updateButtons();
+                    isChanging = false;
+                }
+            }
+            else
+            {
+                if (currentSize > MIN_SIZE)
+                {
+                    currentSize -= 2;
+                }
+                else
+                {
+                    expanding = true;
+                    isChanging = false;
+                }
+            }
+        }
     }
 
     @Override
@@ -95,17 +180,39 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         super.drawGuiContainerForegroundLayer(par1, par2);
 
         fontRenderer.drawStringWithShadow("Portal Controller", xSize / 2 - fontRenderer.getStringWidth("Portal Controller") / 2, -13, 0xFFFFFF);
-        fontRenderer.drawString("Portal Texture", 53, 13, 0x404040);
-        fontRenderer.drawString("Frame Texture", 53, 33, 0x404040);
-        fontRenderer.drawString("Network", 8, 53, 0x404040);
+        fontRenderer.drawString("Unique Identifier", 8, 8, 0x404040);
+        
+        if (expanded)
+        {
+            fontRenderer.drawString("Glyphs", 8, 43, 0x404040);
+        }
+        else if (!expanded && !isChanging)
+        {
+            if (par1 >= guiLeft + 10 && par1 <= guiLeft + xSize - 10)
+            {
+                if (par2 >= guiTop + 20 && par2 <= guiTop + 36)
+                {
+                    List<String> list = new ArrayList<String>();
+                    list.add("Click to modify");
+                    
+                    drawHoveringText(list, par1 - guiLeft, par2 - guiTop, fontRenderer);
+                }
+            }
+        }        
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
         super.initGui();
+        
+        buttonList.add(new GuiButton(0, guiLeft + 10, guiTop + 116, ((xSize - 20) / 2) - 5, 20, "Cancel"));
+        buttonList.add(new GuiButton(1, guiLeft + (xSize / 2) + 6, guiTop + 116, ((xSize - 20) / 2) - 5, 20, "Save"));
+        
+        updateButtons();
     }
-
+    
     @Override
     protected void initLedgers(IInventory inventory)
     {
@@ -117,15 +224,47 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.mouseClicked(par1, par2, mouseButton);
 
-        if (par1 >= guiLeft + 8 && par1 <= guiLeft + 45)
+        if (par1 >= guiLeft + 10 && par1 <= guiLeft + xSize - 10)
         {
-            if (par2 >= guiTop + 8 && par2 <= guiTop + 25)
+            if (par2 >= guiTop + 20 && par2 <= guiTop + 36)
             {
-                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiRequest(CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE)));
+                if (!expanded && !isChanging)
+                {
+                    toggleState();
+                }
             }
-            else if (par2 >= guiTop + 28 && par2 <= guiTop + 28 + 17)
+        }
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        if (isShiftKeyDown())
+        {
+            if (button.id == 0)
             {
-                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiRequest(CommonProxy.GuiIds.PORTAL_CONTROLLER_FRAME_TEXTURE)));
+                // clear
+            }
+            else if (button.id == 1)
+            {
+                boolean forceMaximum = isCtrlKeyDown();
+                
+                // random
+            }
+        }
+        else
+        {
+            if (button.id == 0)
+            {
+                // reset changes
+                
+                toggleState();
+            }
+            else if (button.id == 1)
+            {
+                // save changes
+                
+                toggleState();
             }
         }
     }
