@@ -28,6 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TilePortalFrameController extends TilePortalFrame implements IInventory
 {
+    public String UniqueIdentifier;
     public Texture frameTexture;
     public PortalTexture portalTexture;
 
@@ -54,6 +55,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalBlocks = new ArrayList<ChunkCoordinates>();
         
         hasInitialized = false;
+        
+        UniqueIdentifier = "NOT_SET";
     }
 
     public int getAttachedFrames()
@@ -99,12 +102,13 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
         frameTexture.writeToNBT(tagCompound);
         portalTexture.writeToNBT(tagCompound);
-
+        
         NBTHelper.saveCCList(tagCompound, portalFrame, "portalFrame");
         NBTHelper.saveCCList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
         NBTHelper.saveCCList(tagCompound, portalBlocks, "portalBlocks");
         
         tagCompound.setBoolean("initialized", hasInitialized);
+        tagCompound.setString("identifier", UniqueIdentifier);
     }
 
     @Override
@@ -120,6 +124,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalBlocks = NBTHelper.loadCCList(tagCompound, "portalBlocks");
         
         hasInitialized = tagCompound.getBoolean("initialized");
+        UniqueIdentifier = tagCompound.getString("identifier");
     }
 
     @Override

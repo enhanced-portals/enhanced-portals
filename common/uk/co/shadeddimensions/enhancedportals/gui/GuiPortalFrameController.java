@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.util.GlyphManager;
 
 public class GuiPortalFrameController extends GuiEnhancedPortals
 {
@@ -63,10 +64,13 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     EntityPlayer player;
     
     static GuiGlyphElement[] elementList = new GuiGlyphElement[27];
+    static GuiGlyphElement[] selectedElementList = new GuiGlyphElement[9];
     static boolean isChanging = false, expanding = false, expanded = false;
-    static final int MIN_SIZE = 122, MAX_SIZE = 215;
+    static final int MIN_SIZE = 110, MAX_SIZE = 220;
     static int currentSize = MIN_SIZE;
 
+    ArrayList<ItemStack> selectedGlyphs;
+    
     static
     {        
         for (int i = 0; i < elementList.length; i++)
@@ -74,7 +78,48 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
             int x = (i % 9) * 18;
             int y = (i / 9) * 18;
             
-            elementList[i] = new GuiGlyphElement(new ItemStack(i + 1, 1, 0), true, x, y);
+            elementList[i] = new GuiGlyphElement(GlyphManager.Glyphs.get(i), true, x, y);
+        }
+        
+        for (int i = 0; i < selectedElementList.length; i++)
+        {
+            int x = (i % 9) * 18;
+            int y = (i / 9) * 18;
+            
+            selectedElementList[i] = new GuiGlyphElement(null, false, x, y);
+        }
+    }
+    
+    private void updateGlyphs()
+    {
+        for (int i = 0; i < selectedElementList.length; i++)
+        {
+            selectedElementList[i].DisplayItem = selectedGlyphs.size() > i ? selectedGlyphs.get(i) : null;
+        }
+    }
+    
+    private int getElementCount()
+    {        
+        return selectedGlyphs.size();
+    }
+    
+    private void addToEnd(ItemStack stack)
+    {
+        stack.stackSize = 0;
+        selectedGlyphs.add(stack);
+        updateGlyphs();
+    }
+    
+    private void removeFromEnd(ItemStack stack)
+    {
+        for (int i = selectedGlyphs.size() - 1; i >= 0; i--)
+        {
+            if (selectedGlyphs.get(i).isItemEqual(stack))
+            {
+                selectedGlyphs.remove(i);
+                updateGlyphs();
+                return;
+            }
         }
     }
     
@@ -85,6 +130,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         controller = tile;
         player = play;
         ySize = MIN_SIZE;
+        selectedGlyphs = new ArrayList<ItemStack>();
     }
     
     private void toggleState()
@@ -124,25 +170,27 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
         
-        drawTexturedModalRect(guiLeft, guiTop + 40, 0, 235 - currentSize, xSize, currentSize - 114);        
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 40); // Draw in the static top
+        GL11.glColor4f(0.2f, 0.4f, 0.5f, 1f);
+        drawTexturedModalRect(guiLeft, guiTop + 39, 0, 6 - currentSize, xSize, currentSize - 50);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 43); // Draw in the static top
         
-        drawItemSlotBackground(6, 20, xSize - 12, 18);
+        for (int k = 0; k < selectedElementList.length; k++)
+        {
+            selectedElementList[k].draw(fontRenderer, mc.renderEngine, itemRenderer, guiLeft + 8, guiTop + 18, i, j);
+        }
         
         if (expanded)
         {
-            drawItemSlotBackground(6, 55, xSize - 12, 56);
-            
             for (int k = 0; k < elementList.length; k++)
             {
-                elementList[k].draw(fontRenderer, mc.renderEngine, itemRenderer, guiLeft + 8, guiTop + 57);
+                elementList[k].draw(fontRenderer, mc.renderEngine, itemRenderer, guiLeft + 8, guiTop + 60, i, j);
             }
         }
         
-        // Logic for updating background -- can't be in update because that doesn't get called as frequently..        
+        // Logic for updating background
         if (isChanging)
         {
             if (expanding)
@@ -180,17 +228,22 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         super.drawGuiContainerForegroundLayer(par1, par2);
 
         fontRenderer.drawStringWithShadow("Portal Controller", xSize / 2 - fontRenderer.getStringWidth("Portal Controller") / 2, -13, 0xFFFFFF);
-        fontRenderer.drawString("Unique Identifier", 8, 8, 0x404040);
-        
+        fontRenderer.drawString("Unique Identifier", 8, 6, 0x404040);
+                
         if (expanded)
         {
-            fontRenderer.drawString("Glyphs", 8, 43, 0x404040);
+            fontRenderer.drawString("Glyphs", 8, 47, 0xe1c92f);
+            
+            for (int k = 0; k < elementList.length; k++)
+            {
+                elementList[k].drawForeground(fontRenderer, mc.renderEngine, itemRenderer, 8, 60, par1 - guiLeft, par2 - guiTop);
+            }
         }
         else if (!expanded && !isChanging)
         {
             if (par1 >= guiLeft + 10 && par1 <= guiLeft + xSize - 10)
             {
-                if (par2 >= guiTop + 20 && par2 <= guiTop + 36)
+                if (par2 >= guiTop + 17 && par2 <= guiTop + 34)
                 {
                     List<String> list = new ArrayList<String>();
                     list.add("Click to modify");
@@ -207,8 +260,8 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.initGui();
         
-        buttonList.add(new GuiButton(0, guiLeft + 10, guiTop + 116, ((xSize - 20) / 2) - 5, 20, "Cancel"));
-        buttonList.add(new GuiButton(1, guiLeft + (xSize / 2) + 6, guiTop + 116, ((xSize - 20) / 2) - 5, 20, "Save"));
+        buttonList.add(new GuiButton(0, guiLeft + 10, guiTop + 118, ((xSize - 20) / 2) - 5, 20, "Cancel"));
+        buttonList.add(new GuiButton(1, guiLeft + (xSize / 2) + 6, guiTop + 118, ((xSize - 20) / 2) - 5, 20, "Save"));
         
         updateButtons();
     }
@@ -226,11 +279,49 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
 
         if (par1 >= guiLeft + 10 && par1 <= guiLeft + xSize - 10)
         {
-            if (par2 >= guiTop + 20 && par2 <= guiTop + 36)
+            if (par2 >= guiTop + 17 && par2 <= guiTop + 34)
             {
                 if (!expanded && !isChanging)
                 {
                     toggleState();
+                }
+            }
+        }
+        
+        if (expanded)
+        {   
+            for (int k = 0; k < selectedElementList.length; k++)
+            {
+                byte val = selectedElementList[k].mouseClicked(8, 18, par1 - guiLeft, par2 - guiTop, mouseButton, false);
+                
+                if (val == 2)
+                {
+                    for (int j = 0; j < elementList.length; j++)
+                    {
+                        if (elementList[j].DisplayItem.isItemEqual(selectedElementList[k].DisplayItem))
+                        {
+                            elementList[j].DisplayItem.stackSize--;
+                            break;
+                        }
+                    }
+                    
+                    selectedGlyphs.remove(k);
+                    selectedElementList[k].DisplayItem = null;
+                    updateGlyphs();
+                }
+            }
+            
+            for (int k = 0; k < elementList.length; k++)
+            {
+                byte val = elementList[k].mouseClicked(8, 60, par1 - guiLeft, par2 - guiTop, mouseButton, getElementCount() < 9);
+                
+                if (val == 1)
+                {
+                    addToEnd(elementList[k].DisplayItem.copy());
+                }
+                else if (val == 2)
+                {
+                    removeFromEnd(elementList[k].DisplayItem.copy());
                 }
             }
         }
@@ -247,7 +338,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
             }
             else if (button.id == 1)
             {
-                boolean forceMaximum = isCtrlKeyDown();
+                //boolean forceMaximum = isCtrlKeyDown();
                 
                 // random
             }
