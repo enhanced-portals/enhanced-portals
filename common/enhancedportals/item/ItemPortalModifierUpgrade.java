@@ -85,7 +85,7 @@ public class ItemPortalModifierUpgrade extends Item
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack)
     {
-        return super.getUnlocalizedName() + "." + Upgrade.getUpgradeNames()[MathHelper.clampInt(par1ItemStack.getItemDamage(), 0, textures.length)];
+        return super.getUnlocalizedName() + "." + Upgrade.getUpgradeNames()[MathHelper.clampInt(par1ItemStack.getItemDamage(), 0, Upgrade.getUpgradeNames().length)];
     }
 
     @Override
