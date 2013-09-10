@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.util.GlyphManager;
 
 public class GuiPortalFrameController extends GuiEnhancedPortals
 {
@@ -60,68 +59,15 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         }
     }
     
+    GuiGlyphSelector glyphSelector;
+    GuiGlyphViewer glyphViewer;
+    
     TilePortalFrameController controller;
     EntityPlayer player;
     
-    static GuiGlyphElement[] elementList = new GuiGlyphElement[27];
-    static GuiGlyphElement[] selectedElementList = new GuiGlyphElement[9];
     static boolean isChanging = false, expanding = false, expanded = false;
     static final int MIN_SIZE = 110, MAX_SIZE = 220;
     static int currentSize = MIN_SIZE;
-
-    ArrayList<ItemStack> selectedGlyphs;
-    
-    static
-    {        
-        for (int i = 0; i < elementList.length; i++)
-        {
-            int x = (i % 9) * 18;
-            int y = (i / 9) * 18;
-            
-            elementList[i] = new GuiGlyphElement(GlyphManager.Glyphs.get(i), true, x, y);
-        }
-        
-        for (int i = 0; i < selectedElementList.length; i++)
-        {
-            int x = (i % 9) * 18;
-            int y = (i / 9) * 18;
-            
-            selectedElementList[i] = new GuiGlyphElement(null, false, x, y);
-        }
-    }
-    
-    private void updateGlyphs()
-    {
-        for (int i = 0; i < selectedElementList.length; i++)
-        {
-            selectedElementList[i].DisplayItem = selectedGlyphs.size() > i ? selectedGlyphs.get(i) : null;
-        }
-    }
-    
-    private int getElementCount()
-    {        
-        return selectedGlyphs.size();
-    }
-    
-    private void addToEnd(ItemStack stack)
-    {
-        stack.stackSize = 0;
-        selectedGlyphs.add(stack);
-        updateGlyphs();
-    }
-    
-    private void removeFromEnd(ItemStack stack)
-    {
-        for (int i = selectedGlyphs.size() - 1; i >= 0; i--)
-        {
-            if (selectedGlyphs.get(i).isItemEqual(stack))
-            {
-                selectedGlyphs.remove(i);
-                updateGlyphs();
-                return;
-            }
-        }
-    }
     
     public GuiPortalFrameController(EntityPlayer play, TilePortalFrameController tile)
     {
@@ -130,7 +76,14 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         controller = tile;
         player = play;
         ySize = MIN_SIZE;
-        selectedGlyphs = new ArrayList<ItemStack>();
+        
+        expanding = true;
+        isChanging = false;
+        expanded = false;
+        currentSize = MIN_SIZE;
+        
+        glyphSelector = new GuiGlyphSelector(7, 59, 0xffffff, this);
+        glyphViewer = new GuiGlyphViewer(7, 17, 0xffffff, this, glyphSelector);
     }
     
     private void toggleState()
@@ -148,6 +101,8 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         ((GuiButton) buttonList.get(0)).drawButton = expanded;
         ((GuiButton) buttonList.get(1)).drawButton = expanded;
+        glyphSelector.setEditable(expanded);
+        glyphViewer.setEditable(expanded);
     }
     
     @Override
@@ -155,20 +110,23 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.updateScreen();
         
-        if (isShiftKeyDown())
+        if (expanded)
         {
-            ((GuiButton) buttonList.get(0)).displayString = EnumChatFormatting.AQUA + "Clear";
-            ((GuiButton) buttonList.get(1)).displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + "Random";
-        }
-        else
-        {
-            ((GuiButton) buttonList.get(0)).displayString = "Cancel";
-            ((GuiButton) buttonList.get(1)).displayString = "Save";
+            if (isShiftKeyDown())
+            {
+                ((GuiButton) buttonList.get(0)).displayString = EnumChatFormatting.AQUA + "Clear";
+                ((GuiButton) buttonList.get(1)).displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + "Random";
+            }
+            else
+            {
+                ((GuiButton) buttonList.get(0)).displayString = "Cancel";
+                ((GuiButton) buttonList.get(1)).displayString = "Save";
+            }
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) // 0, 0 = 0, 0
     {
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
         
@@ -177,17 +135,11 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         GL11.glColor4f(1f, 1f, 1f, 1f);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 43); // Draw in the static top
         
-        for (int k = 0; k < selectedElementList.length; k++)
-        {
-            selectedElementList[k].draw(fontRenderer, mc.renderEngine, itemRenderer, guiLeft + 8, guiTop + 18, i, j);
-        }
+        glyphViewer.drawBackground(i, j);
         
         if (expanded)
         {
-            for (int k = 0; k < elementList.length; k++)
-            {
-                elementList[k].draw(fontRenderer, mc.renderEngine, itemRenderer, guiLeft + 8, guiTop + 60, i, j);
-            }
+            glyphSelector.drawBackground(i, j);
         }
         
         // Logic for updating background
@@ -223,24 +175,23 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) // 0, 0 = guiLeft, guiTop
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
+        // Draw titles
         fontRenderer.drawStringWithShadow("Portal Controller", xSize / 2 - fontRenderer.getStringWidth("Portal Controller") / 2, -13, 0xFFFFFF);
         fontRenderer.drawString("Unique Identifier", 8, 6, 0x404040);
                 
+        glyphViewer.drawForeground(par1, par2);
+        
         if (expanded)
         {
             fontRenderer.drawString("Glyphs", 8, 47, 0xe1c92f);
-            
-            for (int k = 0; k < elementList.length; k++)
-            {
-                elementList[k].drawForeground(fontRenderer, mc.renderEngine, itemRenderer, 8, 60, par1 - guiLeft, par2 - guiTop);
-            }
+            glyphSelector.drawForeground(par1, par2);
         }
         else if (!expanded && !isChanging)
-        {
+        {            
             if (par1 >= guiLeft + 10 && par1 <= guiLeft + xSize - 10)
             {
                 if (par2 >= guiTop + 17 && par2 <= guiTop + 34)
@@ -251,7 +202,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
                     drawHoveringText(list, par1 - guiLeft, par2 - guiTop, fontRenderer);
                 }
             }
-        }        
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -277,6 +228,9 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.mouseClicked(par1, par2, mouseButton);
 
+        glyphViewer.mouseClicked(par1, par2, mouseButton);
+        glyphSelector.mouseClicked(par1, par2, mouseButton);
+        
         if (par1 >= guiLeft + 10 && par1 <= guiLeft + xSize - 10)
         {
             if (par2 >= guiTop + 17 && par2 <= guiTop + 34)
@@ -287,44 +241,6 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
                 }
             }
         }
-        
-        if (expanded)
-        {   
-            for (int k = 0; k < selectedElementList.length; k++)
-            {
-                byte val = selectedElementList[k].mouseClicked(8, 18, par1 - guiLeft, par2 - guiTop, mouseButton, false);
-                
-                if (val == 2)
-                {
-                    for (int j = 0; j < elementList.length; j++)
-                    {
-                        if (elementList[j].DisplayItem.isItemEqual(selectedElementList[k].DisplayItem))
-                        {
-                            elementList[j].DisplayItem.stackSize--;
-                            break;
-                        }
-                    }
-                    
-                    selectedGlyphs.remove(k);
-                    selectedElementList[k].DisplayItem = null;
-                    updateGlyphs();
-                }
-            }
-            
-            for (int k = 0; k < elementList.length; k++)
-            {
-                byte val = elementList[k].mouseClicked(8, 60, par1 - guiLeft, par2 - guiTop, mouseButton, getElementCount() < 9);
-                
-                if (val == 1)
-                {
-                    addToEnd(elementList[k].DisplayItem.copy());
-                }
-                else if (val == 2)
-                {
-                    removeFromEnd(elementList[k].DisplayItem.copy());
-                }
-            }
-        }
     }
     
     @Override
@@ -332,29 +248,25 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         if (isShiftKeyDown())
         {
-            if (button.id == 0)
+            if (button.id == 0) // Clear
             {
-                // clear
+                glyphSelector.clearSelection();
             }
-            else if (button.id == 1)
+            else if (button.id == 1) // Random
             {
-                //boolean forceMaximum = isCtrlKeyDown();
-                
-                // random
+                glyphSelector.randomize(isCtrlKeyDown());
             }
         }
         else
         {
-            if (button.id == 0)
+            if (button.id == 0) // Reset Changes
             {
-                // reset changes
-                
+                glyphSelector.setSelectedToIdentifier(controller.UniqueIdentifier);
                 toggleState();
             }
-            else if (button.id == 1)
+            else if (button.id == 1) // Save Changes
             {
-                // save changes
-                
+                controller.UniqueIdentifier = glyphViewer.getSelectedIdentifier(); // TODO Send this to the server...
                 toggleState();
             }
         }

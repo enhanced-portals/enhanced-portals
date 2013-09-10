@@ -15,6 +15,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -877,5 +878,10 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         drawRectangle(x + w - 1, y, 1, h + 1, 0xFFffffff, true); // right
         drawRectangle(x + w - 1, y, 1, 1, 0xFF8b8b8b, true); // corner
         drawRectangle(x, y + h, 1, 1, 0xFF8b8b8b, true); // corner
+    }
+
+    public TextureManager getTextureManager()
+    {
+        return mc.renderEngine;
     }
 }
