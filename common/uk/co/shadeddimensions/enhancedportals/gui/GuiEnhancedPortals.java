@@ -766,22 +766,22 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         return guiLeft;
     }
-    
+
     public int getGuiTop()
     {
         return guiTop;
     }
-    
+
     public int getXSize()
     {
         return xSize;
     }
-    
+
     public int getYSize()
     {
         return ySize;
     }
-    
+
     public int getLeft()
     {
         return guiLeft;
@@ -796,7 +796,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         return itemRenderer;
     }
-    
+
     public Minecraft getMinecraft()
     {
         return FMLClientHandler.instance().getClient();
@@ -868,7 +868,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         mc.renderEngine.func_110577_a(new ResourceLocation("textures/particle/particles.png"));
         drawTexturedModalRect(guiLeft + 29, guiTop + 9, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
     }
-    
+
     protected void drawItemSlotBackground(int x, int y, int w, int h)
     {
         drawRectangle(x, y, w - 1, h, 0xFF8b8b8b, true); // background

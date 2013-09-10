@@ -28,10 +28,10 @@ public abstract class ContainerEnhancedPortals extends Container
         {
             return;
         }
-        
+
         ItemStack stackSlot = slot.getStack();
         int stackSize;
-        
+
         if (modifier == 1)
         {
             stackSize = mouseButton == 0 ? (stackSlot.stackSize + 1) / 2 : stackSlot.stackSize * 2;
@@ -60,14 +60,14 @@ public abstract class ContainerEnhancedPortals extends Container
         {
             return;
         }
-        
+
         int stackSize = mouseButton == 0 ? stackHeld.stackSize : 1;
-        
+
         if (stackSize > slot.getSlotStackLimit())
         {
             stackSize = slot.getSlotStackLimit();
         }
-        
+
         ItemStack phantomStack = stackHeld.copy();
         phantomStack.stackSize = stackSize;
 
@@ -82,19 +82,19 @@ public abstract class ContainerEnhancedPortals extends Container
     protected boolean shiftItemStack(ItemStack stackToShift, int start, int end)
     {
         boolean changed = false;
-        
+
         if (stackToShift.isStackable())
         {
             for (int slotIndex = start; stackToShift.stackSize > 0 && slotIndex < end; slotIndex++)
             {
                 Slot slot = (Slot) inventorySlots.get(slotIndex);
                 ItemStack stackInSlot = slot.getStack();
-                
+
                 if (stackInSlot != null && StackHelper.instance().canStacksMerge(stackInSlot, stackToShift))
                 {
                     int resultingStackSize = stackInSlot.stackSize + stackToShift.stackSize;
                     int max = Math.min(stackToShift.getMaxStackSize(), slot.getSlotStackLimit());
-                    
+
                     if (resultingStackSize <= max)
                     {
                         stackToShift.stackSize = 0;
@@ -118,7 +118,7 @@ public abstract class ContainerEnhancedPortals extends Container
             {
                 Slot slot = (Slot) inventorySlots.get(slotIndex);
                 ItemStack stackInSlot = slot.getStack();
-                
+
                 if (stackInSlot == null)
                 {
                     int max = Math.min(stackToShift.getMaxStackSize(), slot.getSlotStackLimit());
@@ -138,12 +138,12 @@ public abstract class ContainerEnhancedPortals extends Container
     public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player)
     {
         Slot slot = slotNum < 0 ? null : (Slot) inventorySlots.get(slotNum);
-        
+
         if (slot instanceof IPhantomSlot)
         {
             return slotClickPhantom(slot, mouseButton, modifier, player);
         }
-        
+
         return super.slotClick(slotNum, mouseButton, modifier, player);
     }
 
@@ -194,7 +194,7 @@ public abstract class ContainerEnhancedPortals extends Container
                 }
             }
         }
-        
+
         return stack;
     }
 
@@ -204,12 +204,12 @@ public abstract class ContainerEnhancedPortals extends Container
         ItemStack originalStack = null;
         Slot slot = (Slot) inventorySlots.get(slotIndex);
         int numSlots = inventorySlots.size();
-        
+
         if (slot != null && slot.getHasStack())
         {
             ItemStack stackInSlot = slot.getStack();
             originalStack = stackInSlot.copy();
-            
+
             if (slotIndex >= numSlots - 9 * 4 && tryShiftItem(stackInSlot, numSlots))
             {
                 // NOOP
@@ -232,9 +232,9 @@ public abstract class ContainerEnhancedPortals extends Container
             {
                 return null;
             }
-            
+
             slot.onSlotChange(stackInSlot, originalStack);
-            
+
             if (stackInSlot.stackSize <= 0)
             {
                 slot.putStack(null);
@@ -247,10 +247,10 @@ public abstract class ContainerEnhancedPortals extends Container
             {
                 return null;
             }
-            
+
             slot.onPickupFromSlot(player, stackInSlot);
         }
-        
+
         return originalStack;
     }
 
@@ -259,7 +259,7 @@ public abstract class ContainerEnhancedPortals extends Container
         for (int machineIndex = 0; machineIndex < numSlots - 9 * 4; machineIndex++)
         {
             Slot slot = (Slot) inventorySlots.get(machineIndex);
-            
+
             if (slot instanceof SlotBase && !((SlotBase) slot).canShift())
             {
                 continue;
@@ -277,7 +277,7 @@ public abstract class ContainerEnhancedPortals extends Container
                 return true;
             }
         }
-        
+
         return false;
     }
 }

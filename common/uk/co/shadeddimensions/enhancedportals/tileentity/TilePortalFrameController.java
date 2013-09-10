@@ -44,7 +44,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public int attachedPortals;
 
     boolean hasInitialized;
-    
+
     public TilePortalFrameController()
     {
         frameTexture = new Texture();
@@ -53,9 +53,9 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalFrame = new ArrayList<ChunkCoordinates>();
         portalFrameRedstone = new ArrayList<ChunkCoordinates>();
         portalBlocks = new ArrayList<ChunkCoordinates>();
-        
+
         hasInitialized = false;
-        
+
         UniqueIdentifier = "NOT_SET";
     }
 
@@ -102,11 +102,11 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
         frameTexture.writeToNBT(tagCompound);
         portalTexture.writeToNBT(tagCompound);
-        
+
         NBTHelper.saveCCList(tagCompound, portalFrame, "portalFrame");
         NBTHelper.saveCCList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
         NBTHelper.saveCCList(tagCompound, portalBlocks, "portalBlocks");
-        
+
         tagCompound.setBoolean("initialized", hasInitialized);
         tagCompound.setString("identifier", UniqueIdentifier);
     }
@@ -122,7 +122,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalFrame = NBTHelper.loadCCList(tagCompound, "portalFrame");
         portalFrameRedstone = NBTHelper.loadCCList(tagCompound, "portalFrameRedstone");
         portalBlocks = NBTHelper.loadCCList(tagCompound, "portalBlocks");
-        
+
         hasInitialized = tagCompound.getBoolean("initialized");
         UniqueIdentifier = tagCompound.getString("identifier");
     }
@@ -139,12 +139,11 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
             if (frameTexture.Texture.startsWith("B:"))
             {
                 String t = frameTexture.Texture.replace("B:", "");
-                
+
                 return Block.blocksList[Integer.parseInt(t.split(":")[0])].getIcon(side, Integer.parseInt(t.split(":")[1]));
             }
         }
-            
-        
+
         return null;
     }
 
@@ -155,7 +154,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         {
             return false;
         }
-        
+
         if (!hasInitialized)
         {
             if (worldObj.isRemote)
@@ -187,7 +186,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         {
             player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
         }
-        
+
         return true;
     }
 
@@ -286,7 +285,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
         destroyPortal();
     }
-    
+
     @Override
     public int getSizeInventory()
     {
@@ -313,7 +312,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
-    { }
+    {
+    }
 
     @Override
     public String getInvName()
@@ -341,11 +341,13 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
     @Override
     public void openChest()
-    { }
+    {
+    }
 
     @Override
     public void closeChest()
-    { }
+    {
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)

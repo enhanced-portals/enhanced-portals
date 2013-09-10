@@ -355,7 +355,8 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
-    { }
+    {
+    }
 
     @Override
     public String getInvName()
@@ -383,11 +384,13 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
 
     @Override
     public void openChest()
-    { }
+    {
+    }
 
     @Override
     public void closeChest()
-    { }
+    {
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)

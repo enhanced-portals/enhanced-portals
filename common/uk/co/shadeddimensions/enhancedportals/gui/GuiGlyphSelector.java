@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -22,7 +23,7 @@ public class GuiGlyphSelector extends Gui
     static final int MAX_COUNT = 9, ITEMS_PER_LINE = 9;
     static ArrayList<ItemStack> Glyphs = new ArrayList<ItemStack>();
     ArrayList<ItemStack> selectedGlyphs;
-    
+
     static
     {
         Glyphs.add(new ItemStack(Item.diamond, 0));
@@ -55,12 +56,12 @@ public class GuiGlyphSelector extends Gui
         Glyphs.add(new ItemStack(Item.potion, 0, 5));
         Glyphs.add(new ItemStack(Item.cake, 0));
     }
-    
+
     protected int x, y, colour;
     int[] counter;
     protected GuiEnhancedPortals gui;
     protected boolean canEdit;
-    
+
     public GuiGlyphSelector(int x, int y, GuiEnhancedPortals parent)
     {
         this.x = x;
@@ -71,7 +72,7 @@ public class GuiGlyphSelector extends Gui
         gui = parent;
         canEdit = false;
     }
-    
+
     public GuiGlyphSelector(int x, int y, int color, GuiEnhancedPortals parent)
     {
         this.x = x;
@@ -82,7 +83,7 @@ public class GuiGlyphSelector extends Gui
         gui = parent;
         canEdit = false;
     }
-    
+
     public void setEditable(boolean edit)
     {
         canEdit = edit;
@@ -92,64 +93,64 @@ public class GuiGlyphSelector extends Gui
     {
         return selectedGlyphs.size();
     }
-    
+
     public boolean canIncrementGlyph()
     {
         return getCurrentSelectedCount() < MAX_COUNT;
     }
-    
+
     public String getSelectedIdentifier()
     {
         String s = "";
-        
+
         for (ItemStack stack : selectedGlyphs)
         {
             if (s.length() == 0)
             {
-                s = stack.getItemName();
+                s = stack.getItemName().replace("item.", "");
             }
             else
             {
-                s += " " + stack.getItemName();
+                s += " " + stack.getItemName().replace("item.", "");
             }
         }
-        
+
         return s;
     }
-    
+
     public ArrayList<ItemStack> getSelectedGlyphs()
     {
         return selectedGlyphs;
     }
-    
+
     public static ItemStack getGlyph(int id)
     {
         return id >= 0 && id < Glyphs.size() ? Glyphs.get(id) : null;
     }
-    
+
     public void drawBackground(int mouseX, int mouseY)
     {
         int X = x + gui.getGuiLeft(), Y = y + gui.getGuiTop();
-        
+
         Color c = new Color(colour);
         GL11.glColor4f(c.getRed() / 255, c.getGreen() / 255, c.getBlue() / 255, 1f);
-        
-        gui.getTextureManager().func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));        
+
+        gui.getTextureManager().func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(X, Y, 0, 0, 162, 54);
-        
+
         for (int i = 0; i < Glyphs.size(); i++)
         {
-            int tX = X + ((i % ITEMS_PER_LINE) * 18) + 1, tY = Y + ((i / ITEMS_PER_LINE) * 18) + 1;
-            
+            int tX = X + i % ITEMS_PER_LINE * 18 + 1, tY = Y + i / ITEMS_PER_LINE * 18 + 1;
+
             gui.getItemRenderer().renderItemIntoGUI(gui.fontRenderer, gui.getTextureManager(), Glyphs.get(i), tX, tY, false);
             gui.getItemRenderer().renderItemOverlayIntoGUI(gui.fontRenderer, gui.getTextureManager(), Glyphs.get(i), tX, tY, counter[i] > 0 ? counter[i] + "" : null);
         }
-        
+
         GL11.glColor4f(1f, 1f, 1f, 1f);
     }
-    
+
     public void drawForeground(int mouseX, int mouseY)
-    {        
+    {
         if (isOnSelf(mouseX, mouseY))
         {
             for (int i = 0; i < Glyphs.size(); i++)
@@ -163,20 +164,20 @@ public class GuiGlyphSelector extends Gui
             }
         }
     }
-    
+
     protected boolean isOnSelf(int mouseX, int mouseY)
     {
         return mouseX > x + gui.getGuiLeft() && mouseY > y + gui.getGuiTop() && mouseX < x + 162 + gui.getGuiLeft() && mouseY < y + 54 + gui.getGuiTop();
     }
-    
+
     protected boolean isOnElement(int mouseX, int mouseY, int id)
     {
-        int X = x + ((id % ITEMS_PER_LINE) * 18) + gui.getGuiLeft();
-        int Y = y + ((id / ITEMS_PER_LINE) * 18) + gui.getGuiTop();
-        
+        int X = x + id % ITEMS_PER_LINE * 18 + gui.getGuiLeft();
+        int Y = y + id / ITEMS_PER_LINE * 18 + gui.getGuiTop();
+
         return mouseX > X && mouseY > Y && mouseX < X + 17 && mouseY < Y + 17;
     }
-    
+
     public void mouseClicked(int mouseX, int mouseY, int button)
     {
         if (canEdit && isOnSelf(mouseX, mouseY))
@@ -184,12 +185,12 @@ public class GuiGlyphSelector extends Gui
             for (int i = 0; i < Glyphs.size(); i++)
             {
                 if (isOnElement(mouseX, mouseY, i))
-                {                    
+                {
                     if (button == 0) // LMB - Increment
-                    {                        
+                    {
                         if (canIncrementGlyph())
                         {
-                            counter[i]++;                            
+                            counter[i]++;
                             selectedGlyphs.add(Glyphs.get(i)); // Add Glyph to the end
                         }
                     }
@@ -205,7 +206,7 @@ public class GuiGlyphSelector extends Gui
             }
         }
     }
-    
+
     protected void removeAtIndex(int i)
     {
         if (i >= 0 && selectedGlyphs.size() > i && selectedGlyphs.get(i) != null)
@@ -214,29 +215,73 @@ public class GuiGlyphSelector extends Gui
             selectedGlyphs.remove(i);
         }
     }
-    
+
     public void setSelectedToIdentifier(String identifier)
     {
         clearSelection();
-        
-        // TODO
+
+        if (identifier.contains(" "))
+        {
+            for (String s : identifier.split(" "))
+            {
+                int id = getGlyphID(s);
+
+                if (id >= 0)
+                {
+                    selectedGlyphs.add(Glyphs.get(id));
+                    counter[id]++;
+                }
+            }
+        }
+        else
+        {
+            int id = getGlyphID(identifier);
+
+            if (id >= 0)
+            {
+                selectedGlyphs.add(Glyphs.get(id));
+                counter[id]++;
+            }
+        }
     }
-    
+
+    private int getGlyphID(String s)
+    {
+        for (int i = 0; i < Glyphs.size(); i++)
+        {
+            if (Glyphs.get(i).getItemName().replace("item.", "").equals(s))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     public void clearSelection()
     {
         selectedGlyphs.clear();
-        
+
         for (int i = 0; i < counter.length; i++)
         {
             counter[i] = 0;
         }
     }
-    
+
     public void randomize(boolean forceMaximum)
     {
-        
+        clearSelection();
+        Random rand = new Random();
+
+        for (int i = 0; i < (forceMaximum ? MAX_COUNT : rand.nextInt(MAX_COUNT)); i++)
+        {
+            int glyphID = rand.nextInt(Glyphs.size());
+
+            selectedGlyphs.add(Glyphs.get(glyphID));
+            counter[glyphID]++;
+        }
     }
-    
+
     @SuppressWarnings("rawtypes")
     protected void drawHoveringText(List par1List, int par2, int par3, FontRenderer font, RenderItem itemRenderer)
     {
@@ -251,7 +296,7 @@ public class GuiGlyphSelector extends Gui
 
             while (iterator.hasNext())
             {
-                String s = (String)iterator.next();
+                String s = (String) iterator.next();
                 int l = font.getStringWidth(s);
 
                 if (l > k)
@@ -269,24 +314,24 @@ public class GuiGlyphSelector extends Gui
                 k1 += 2 + (par1List.size() - 1) * 10;
             }
 
-            this.zLevel = 300.0F;
+            zLevel = 300.0F;
             itemRenderer.zLevel = 300.0F;
             int l1 = -267386864;
-            this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
             int i2 = 1347420415;
             int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
-            this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
+            drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
+            drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
+            drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
 
             for (int k2 = 0; k2 < par1List.size(); ++k2)
             {
-                String s1 = (String)par1List.get(k2);
+                String s1 = (String) par1List.get(k2);
                 font.drawStringWithShadow(s1, i1, j1, -1);
 
                 if (k2 == 0)
@@ -297,7 +342,7 @@ public class GuiGlyphSelector extends Gui
                 j1 += 10;
             }
 
-            this.zLevel = 0.0F;
+            zLevel = 0.0F;
             itemRenderer.zLevel = 0.0F;
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_DEPTH_TEST);

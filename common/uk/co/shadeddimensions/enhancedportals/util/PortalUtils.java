@@ -19,7 +19,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone
 public class PortalUtils
 {
     // TODO: Rewrite this better.
-    
+
     private static boolean controllerLinkCreatePortal(WorldServer world, int x, int y, int z)
     {
         for (int i = 0; i < 6; i++)
@@ -98,7 +98,7 @@ public class PortalUtils
                             {
                                 controller.portalFrameRedstone.add(c);
                             }
-                            
+
                             f.controller = control;
                             CommonProxy.sendUpdatePacketToAllAround(f);
                             controller.portalFrame.add(c);

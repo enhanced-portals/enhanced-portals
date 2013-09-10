@@ -15,7 +15,7 @@ public class GuiPortalFrameControllerPortalTexture extends GuiEnhancedPortals
 {
     TilePortalFrameController controller;
     int r = 255, g = 255, b = 255;
-    
+
     public GuiPortalFrameControllerPortalTexture(TilePortalFrameController tile, InventoryPlayer inventory)
     {
         super(new ContainerPortalFrameControllerPortalTexture(tile, inventory), tile);
@@ -30,41 +30,39 @@ public class GuiPortalFrameControllerPortalTexture extends GuiEnhancedPortals
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameControllerPortalTexture.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        
+
         drawBorderedRectangle(93, 50, 16, 16, 0xFFffffff, 0xFF000000, true);
         drawColouredItemStack(94, 51, controller.portalTexture.TextureColour, controller.portalTexture.getItemStack(), true);
     }
-    
+
     @Override
     public void updateScreen()
     {
         super.updateScreen();
-        
-        int R = ((GuiRGBSlider) buttonList.get(0)).getValue(),
-            G = ((GuiRGBSlider) buttonList.get(1)).getValue(),
-            B = ((GuiRGBSlider) buttonList.get(2)).getValue();
-        
+
+        int R = ((GuiRGBSlider) buttonList.get(0)).getValue(), G = ((GuiRGBSlider) buttonList.get(1)).getValue(), B = ((GuiRGBSlider) buttonList.get(2)).getValue();
+
         if (r != R || g != G || b != B)
         {
             r = R;
             g = G;
             b = B;
-            
+
             controller.portalTexture.TextureColour = Integer.parseInt(String.format("%02x%02x%02x", r, g, b), 16);
         }
     }
-    
+
     @Override
     protected void mouseClicked(int par1, int par2, int mouseButton)
     {
         super.mouseClicked(par1, par2, mouseButton);
     }
-    
+
     @Override
     protected void mouseMovedOrUp(int par1, int par2, int par3)
     {
         super.mouseMovedOrUp(par1, par2, par3);
-        
+
         if (par3 >= 0)
         {
             for (Object o : buttonList)
@@ -92,7 +90,7 @@ public class GuiPortalFrameControllerPortalTexture extends GuiEnhancedPortals
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        
+
     }
 
     @SuppressWarnings("unchecked")

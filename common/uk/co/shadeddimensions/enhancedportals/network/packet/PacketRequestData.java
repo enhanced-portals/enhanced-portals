@@ -50,7 +50,7 @@ public class PacketRequestData extends MainPacket
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
         }
-        
+
         if (tile instanceof TilePortalFrame) // Needs to be in addition to
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);

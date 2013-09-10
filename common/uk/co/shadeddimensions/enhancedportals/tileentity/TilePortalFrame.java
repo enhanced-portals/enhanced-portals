@@ -23,15 +23,15 @@ public class TilePortalFrame extends TileEP
     {
         controller = new ChunkCoordinates(0, -1, 0);
     }
-    
+
     public boolean validateController()
     {
         if (controller.posY == -1)
-        {            
+        {
             return false;
         }
         else
-        {            
+        {
             TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
             return tile != null && tile instanceof TilePortalFrameController;
         }
@@ -82,17 +82,17 @@ public class TilePortalFrame extends TileEP
     public Icon getTexture(int side, int renderpass)
     {
         TilePortalFrameController controller = getControllerValidated();
-        
+
         if (controller != null)
         {
             if (controller.frameTexture.Texture.startsWith("B:"))
             {
                 String t = controller.frameTexture.Texture.replace("B:", "");
-                
+
                 return Block.blocksList[Integer.parseInt(t.split(":")[0])].getIcon(side, Integer.parseInt(t.split(":")[1]));
             }
         }
-        
+
         return null;
     }
 

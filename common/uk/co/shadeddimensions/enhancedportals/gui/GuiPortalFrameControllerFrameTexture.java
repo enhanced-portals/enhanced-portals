@@ -48,9 +48,7 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
     {
         super.updateScreen();
 
-        int R = ((GuiRGBSlider) buttonList.get(0)).getValue(),
-            G = ((GuiRGBSlider) buttonList.get(1)).getValue(),
-            B = ((GuiRGBSlider) buttonList.get(2)).getValue();
+        int R = ((GuiRGBSlider) buttonList.get(0)).getValue(), G = ((GuiRGBSlider) buttonList.get(1)).getValue(), B = ((GuiRGBSlider) buttonList.get(2)).getValue();
 
         if (r != R || g != G || b != B)
         {
@@ -60,11 +58,11 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
 
             unsavedChanges = true;
             controller.frameTexture.TextureColour = Integer.parseInt(String.format("%02x%02x%02x", r, g, b), 16);
-        }   
-        
+        }
+
         lastUpdate++;
     }
-    
+
     @Override
     public void onGuiClosed()
     {
@@ -72,7 +70,7 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
         {
             PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketPortalFrameControllerFrameTextureData(controller)));
         }
-        
+
         super.onGuiClosed();
     }
 
@@ -82,11 +80,11 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
         if (isShiftKeyDown() && getSlotAtPosition(xPos, yPos) != null && mouseButton == 0)
         {
             ItemStack stack = getSlotAtPosition(xPos, yPos).getStack();
-            
+
             if (stack != null && stack.getItemSpriteNumber() == 0)
             {
                 int blockID = stack.getItem().itemID, blockMeta = stack.getItemDamage();
-                
+
                 if (Block.isNormalCube(blockID))
                 {
                     controller.frameTexture.Texture = "B:" + blockID + ":" + blockMeta;
@@ -95,7 +93,7 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
                 }
             }
         }
-        
+
         super.mouseClicked(xPos, yPos, mouseButton);
     }
 
@@ -139,7 +137,7 @@ public class GuiPortalFrameControllerFrameTexture extends GuiEnhancedPortals
     public void initGui()
     {
         super.initGui();
-        
+
         Color c = new Color(controller.frameTexture.TextureColour);
         buttonList.add(new GuiRGBSlider(0, guiLeft + 8, guiTop + 25, "Red", c.getRed() / 255));
         buttonList.add(new GuiRGBSlider(1, guiLeft + xSize - 8 - 75, guiTop + 25, "Green", c.getGreen() / 255));

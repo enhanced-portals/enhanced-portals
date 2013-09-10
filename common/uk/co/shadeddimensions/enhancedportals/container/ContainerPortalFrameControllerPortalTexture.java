@@ -25,7 +25,7 @@ public class ContainerPortalFrameControllerPortalTexture extends ContainerEnhanc
         {
             addSlotToContainer(new Slot(inventory, i, 8 + i * 18, 142 + 10));
         }
-        
+
         controller = tile;
     }
 

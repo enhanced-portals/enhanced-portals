@@ -7,10 +7,10 @@ import org.lwjgl.opengl.GL11;
 public class GuiRGBSlider extends GuiBetterSlider
 {
     String originalText;
-    
+
     public GuiRGBSlider(int id, int x, int y, String displayText, float initialValue)
     {
-        super(id, x, y, displayText + ": " + ((int) (255 * initialValue)), initialValue, 75);
+        super(id, x, y, displayText + ": " + (int) (255 * initialValue), initialValue, 75);
         originalText = displayText;
     }
 
@@ -35,7 +35,7 @@ public class GuiRGBSlider extends GuiBetterSlider
             }
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            displayString = originalText + ": " + ((int) (255 * sliderValue));
+            displayString = originalText + ": " + (int) (255 * sliderValue);
             drawTexturedModalRect(xPosition + (int) (sliderValue * (width - 8)), yPosition, 0, 66, 4, 20);
             drawTexturedModalRect(xPosition + (int) (sliderValue * (width - 8)) + 4, yPosition, 196, 66, 4, 20);
         }
@@ -59,7 +59,7 @@ public class GuiRGBSlider extends GuiBetterSlider
             }
 
             dragging = true;
-            displayString = originalText + ": " + ((int) (255 * sliderValue));
+            displayString = originalText + ": " + (int) (255 * sliderValue);
             return true;
         }
         else
@@ -67,7 +67,7 @@ public class GuiRGBSlider extends GuiBetterSlider
             return false;
         }
     }
-    
+
     public int getValue()
     {
         return (int) (255 * sliderValue);

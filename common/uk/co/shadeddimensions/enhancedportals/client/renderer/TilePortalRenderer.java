@@ -106,8 +106,8 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);
 
-        //test();
-        
+        // test();
+
         setupTexture(portal);
         setCubeBounds(portal);
         renderBlock(portal);
@@ -185,9 +185,9 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
 
         portalBlock.texture = Texture.getTexture(texture.Texture, 0);
     }
-    
+
     private void test()
     {
-        
+
     }
 }

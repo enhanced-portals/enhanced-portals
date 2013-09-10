@@ -15,7 +15,7 @@ public class GuiBetterSlider extends GuiButton
         super(id, x, y, 150, 20, displayText);
         sliderValue = initialValue;
     }
-    
+
     public GuiBetterSlider(int id, int x, int y, String displayText, float initialValue, int w)
     {
         super(id, x, y, w, 20, displayText);

@@ -1,9 +1,9 @@
 package uk.co.shadeddimensions.enhancedportals.container;
 
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class ContainerPortalFrameControllerFrameTexture extends ContainerEnhancedPortals
 {
@@ -25,7 +25,7 @@ public class ContainerPortalFrameControllerFrameTexture extends ContainerEnhance
         {
             addSlotToContainer(new Slot(inventory, i, 8 + i * 18, 142 + 10));
         }
-        
+
         controller = tile;
     }
 

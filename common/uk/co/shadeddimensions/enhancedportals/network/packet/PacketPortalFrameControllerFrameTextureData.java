@@ -20,7 +20,7 @@ public class PacketPortalFrameControllerFrameTextureData extends MainPacket
     {
 
     }
-    
+
     public PacketPortalFrameControllerFrameTextureData(TilePortalFrameController controller)
     {
         colour = controller.frameTexture.TextureColour;
@@ -32,7 +32,7 @@ public class PacketPortalFrameControllerFrameTextureData extends MainPacket
     {
         colour = stream.readInt();
         texture = stream.readUTF();
-        
+
         return this;
     }
 
@@ -40,11 +40,11 @@ public class PacketPortalFrameControllerFrameTextureData extends MainPacket
     public void execute(INetworkManager network, EntityPlayer player)
     {
         Container container = player.openContainer;
-        
+
         if (container != null && container instanceof ContainerPortalFrameControllerFrameTexture)
         {
             TilePortalFrameController controller = ((ContainerPortalFrameControllerFrameTexture) container).controller;
-            
+
             controller.frameTexture.TextureColour = colour;
             controller.frameTexture.Texture = texture;
             CommonProxy.sendUpdatePacketToAllAround(controller);

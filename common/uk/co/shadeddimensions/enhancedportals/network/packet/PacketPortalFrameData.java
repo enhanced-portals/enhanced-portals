@@ -17,7 +17,7 @@ public class PacketPortalFrameData extends MainPacket
 
     public PacketPortalFrameData()
     {
-        
+
     }
 
     public PacketPortalFrameData(TilePortalFrame frame)

@@ -29,7 +29,7 @@ import enhancedportals.lib.Reference;
 public class EnhancedPortals
 {
     public static boolean DEBUG = true;
-    
+
     public static ConfigurationManager config;
     public static CreativeTabs creativeTab = new CreativeTabEP2();
 
