@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstonePacketData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiButtonPressed;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
@@ -102,6 +102,6 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketPortalFrameRedstonePacketData(button.id)));
+        PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiButtonPressed(button.id)));
     }
 }

@@ -25,9 +25,9 @@ public abstract class MainPacket
         PORTAL_FRAME_DATA(PacketPortalFrameData.class), //
         PORTAL_CONTROLLER_DATA(PacketPortalFrameControllerData.class), //
         PORTAL_REDSTONE_DATA(PacketPortalFrameRedstoneData.class), //
-        PORTAL_REDSTONE_GUI_BUTTON_DATA(PacketPortalFrameRedstonePacketData.class), //
+        GUI_BUTTON_PRESSED(PacketGuiButtonPressed.class), //
         GUI_REQUEST(PacketGuiRequest.class), //
-        PORTAL_CONTROLLER_FRAME_DATA(PacketPortalFrameControllerFrameTextureData.class);
+        GUI_STRING(PacketGuiString.class);
 
         private Class<? extends MainPacket> packetType;
 

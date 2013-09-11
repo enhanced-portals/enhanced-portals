@@ -20,7 +20,7 @@ public class PortalUtils
 {
     // TODO: Rewrite this better.
 
-    private static boolean controllerLinkCreatePortal(WorldServer world, int x, int y, int z)
+    public static boolean controllerLinkCreatePortal(WorldServer world, int x, int y, int z)
     {
         for (int i = 0; i < 6; i++)
         {

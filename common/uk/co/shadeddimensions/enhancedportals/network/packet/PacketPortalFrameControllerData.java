@@ -19,6 +19,7 @@ public class PacketPortalFrameControllerData extends MainPacket
     Texture frameTexture;
     PortalTexture portalTexture;
     int attachedFrames, attachedFrameRedstone, attachedPortals;
+    String uID;
 
     public PacketPortalFrameControllerData()
     {
@@ -33,6 +34,7 @@ public class PacketPortalFrameControllerData extends MainPacket
         attachedFrames = tile.getAttachedFrames();
         attachedFrameRedstone = tile.getAttachedFrameRedstone();
         attachedPortals = tile.getAttachedPortals();
+        uID = tile.UniqueIdentifier;
     }
 
     @Override
@@ -44,6 +46,7 @@ public class PacketPortalFrameControllerData extends MainPacket
         attachedFrames = stream.readInt();
         attachedFrameRedstone = stream.readInt();
         attachedPortals = stream.readInt();
+        uID = stream.readUTF();
 
         return this;
     }
@@ -63,6 +66,7 @@ public class PacketPortalFrameControllerData extends MainPacket
             controller.attachedFrames = attachedFrames;
             controller.attachedFrameRedstone = attachedFrameRedstone;
             controller.attachedPortals = attachedPortals;
+            controller.UniqueIdentifier = uID;
         }
     }
 
@@ -75,5 +79,6 @@ public class PacketPortalFrameControllerData extends MainPacket
         stream.writeInt(attachedFrames);
         stream.writeInt(attachedFrameRedstone);
         stream.writeInt(attachedPortals);
+        stream.writeUTF(uID);
     }
 }

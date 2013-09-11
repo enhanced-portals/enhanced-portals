@@ -11,15 +11,18 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.enhancedportals.gui.slots.IPhantomSlot;
 import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotBase;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.util.StackHelper;
 
 public abstract class ContainerEnhancedPortals extends Container
 {
+    public TileEP tile;
     private int inventorySize;
 
-    public ContainerEnhancedPortals(int inventorySize)
+    public ContainerEnhancedPortals(int inventorySize, TileEP t)
     {
         this.inventorySize = inventorySize;
+        tile = t;
     }
 
     protected void adjustPhantomSlot(Slot slot, int mouseButton, int modifier)

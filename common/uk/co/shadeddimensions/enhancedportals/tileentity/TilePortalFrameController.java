@@ -55,7 +55,6 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalBlocks = new ArrayList<ChunkCoordinates>();
 
         hasInitialized = false;
-
         UniqueIdentifier = "NOT_SET";
     }
 
@@ -192,6 +191,11 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
     public void createPortal()
     {
+        if (portalBlocks.isEmpty())
+        {
+            PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
+        }
+
         for (ChunkCoordinates c : portalBlocks)
         {
             if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
@@ -353,5 +357,15 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
         return false;
+    }
+
+    @Override
+    public void actionPerformed(int id, String string, EntityPlayer player)
+    {
+        if (id == 0)
+        {
+            UniqueIdentifier = string;
+            CommonProxy.sendUpdatePacketToAllAround(this);
+        }
     }
 }

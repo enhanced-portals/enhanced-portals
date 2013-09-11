@@ -4,12 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameControllerFrameTexture;
-import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameControllerPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameControllerFrameTexture;
-import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameControllerPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
@@ -37,14 +33,6 @@ public class GuiHandler implements IGuiHandler
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile)), (Player) player);
             return new ContainerPortalFrameRedstone((TilePortalFrameRedstone) tile);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE && tile instanceof TilePortalFrameController)
-        {
-            return new ContainerPortalFrameControllerPortalTexture((TilePortalFrameController) tile, player.inventory);
-        }
-        else if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER_FRAME_TEXTURE && tile instanceof TilePortalFrameController)
-        {
-            return new ContainerPortalFrameControllerFrameTexture((TilePortalFrameController) tile, player.inventory);
-        }
 
         return null;
     }
@@ -61,14 +49,6 @@ public class GuiHandler implements IGuiHandler
         else if (ID == CommonProxy.GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
         {
             return new GuiPortalFrameRedstone(player, (TilePortalFrameRedstone) tile);
-        }
-        else if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE && tile instanceof TilePortalFrameController)
-        {
-            return new GuiPortalFrameControllerPortalTexture((TilePortalFrameController) tile, player.inventory);
-        }
-        else if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER_FRAME_TEXTURE && tile instanceof TilePortalFrameController)
-        {
-            return new GuiPortalFrameControllerFrameTexture((TilePortalFrameController) tile, player.inventory);
         }
 
         return null;

@@ -45,7 +45,7 @@ public class PacketGuiRequest extends MainPacket
 
         if (c instanceof ContainerPortalFrameController)
         {
-            TilePortalFrameController controller = ((ContainerPortalFrameController) c).controller;
+            TilePortalFrameController controller = (TilePortalFrameController) ((ContainerPortalFrameController) c).tile;
 
             if (id == CommonProxy.GuiIds.PORTAL_CONTROLLER_PORTAL_TEXTURE || id == CommonProxy.GuiIds.PORTAL_CONTROLLER_FRAME_TEXTURE || id == CommonProxy.GuiIds.PORTAL_CONTROLLER_NETWORK)
             {

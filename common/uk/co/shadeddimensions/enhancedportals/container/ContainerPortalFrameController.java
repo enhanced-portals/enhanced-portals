@@ -5,17 +5,14 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameControll
 
 public class ContainerPortalFrameController extends ContainerEnhancedPortals
 {
-    public TilePortalFrameController controller;
-
     public ContainerPortalFrameController(TilePortalFrameController tile)
     {
-        super(0);
-        controller = tile;
+        super(tile.getSizeInventory(), tile);
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return true;
+        return ((TilePortalFrameController) tile).isUseableByPlayer(entityplayer);
     }
 }

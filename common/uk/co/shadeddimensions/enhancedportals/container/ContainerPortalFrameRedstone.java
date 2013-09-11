@@ -5,18 +5,14 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone
 
 public class ContainerPortalFrameRedstone extends ContainerEnhancedPortals
 {
-    public TilePortalFrameRedstone redstone;
-
     public ContainerPortalFrameRedstone(TilePortalFrameRedstone tile)
     {
-        super(0);
-
-        redstone = tile;
+        super(tile.getSizeInventory(), tile);
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return true;
+        return ((TilePortalFrameRedstone) tile).isUseableByPlayer(entityplayer);
     }
 }

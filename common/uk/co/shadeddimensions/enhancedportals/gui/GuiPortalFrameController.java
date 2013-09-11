@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class GuiPortalFrameController extends GuiEnhancedPortals
@@ -23,9 +24,16 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         int textColour = 0x000000;
         int currentTip = 0;
 
+        @SuppressWarnings("rawtypes")
         public TipLedger()
         {
             overlayColor = 0x5396da;
+
+            if (maxHeight == 24)
+            {
+                List list = getMinecraft().fontRenderer.listFormattedStringToWidth(getTip(), maxWidth - 16);
+                maxHeight = 24 + list.size() * getMinecraft().fontRenderer.FONT_HEIGHT + 5;
+            }
         }
 
         @Override
@@ -227,7 +235,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         }
         else if (!expanded && !isChanging)
         {
-            String s1 = "" + controller.getAttachedFrames(), s2 = "" + controller.getAttachedFrameRedstone(), s3 = "" + controller.getAttachedPortals();
+            String s1 = "" + (controller.getAttachedFrames() - controller.getAttachedFrameRedstone()), s2 = "" + controller.getAttachedFrameRedstone(), s3 = "" + controller.getAttachedPortals();
 
             fontRenderer.drawString("Frame Blocks", 12, 57, 0x777777);
             fontRenderer.drawString("Redstone Controllers", 12, 67, 0x777777);
@@ -311,7 +319,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
             }
             else if (button.id == 1) // Save Changes
             {
-                controller.UniqueIdentifier = glyphViewer.getSelectedIdentifier(); // TODO Send this to the server...
+                ClientProxy.sendGuiPacket(0, glyphViewer.getSelectedIdentifier());
                 toggleState();
             }
         }

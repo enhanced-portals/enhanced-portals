@@ -11,6 +11,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -224,5 +225,41 @@ public class BlockFrame extends BlockEP
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
+    }
+
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+        if (world.isRemote)
+        {
+            return;
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+
+            if (world.getBlockId(x + d.offsetX, y + d.offsetY, z + d.offsetZ) == blockID)
+            {
+                TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+
+                if (frame.validateController())
+                {
+                    TilePortalFrameController controller = frame.getControllerValidated();
+                    TilePortalFrame self = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
+                    self.controller = frame.controller;
+
+                    controller.portalFrame.add(new ChunkCoordinates(x, y, z));
+
+                    if (self instanceof TilePortalFrameRedstone)
+                    {
+                        controller.portalFrameRedstone.add(new ChunkCoordinates(x, y, z));
+                    }
+
+                    CommonProxy.sendUpdatePacketToAllAround(controller);
+                    return;
+                }
+            }
+        }
     }
 }

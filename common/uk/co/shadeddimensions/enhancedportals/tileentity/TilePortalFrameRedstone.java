@@ -179,6 +179,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
         return current;
     }
 
+    @Override
     public void buttonPressed(int id, EntityPlayer player)
     {
         boolean sendPacket = false;

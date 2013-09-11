@@ -7,18 +7,18 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.network.INetworkManager;
-import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.container.ContainerEnhancedPortals;
 
-public class PacketPortalFrameRedstonePacketData extends MainPacket
+public class PacketGuiButtonPressed extends MainPacket
 {
     int button;
 
-    public PacketPortalFrameRedstonePacketData()
+    public PacketGuiButtonPressed()
     {
 
     }
 
-    public PacketPortalFrameRedstonePacketData(int Button)
+    public PacketGuiButtonPressed(int Button)
     {
         button = Button;
     }
@@ -36,10 +36,10 @@ public class PacketPortalFrameRedstonePacketData extends MainPacket
     {
         Container container = player.openContainer;
 
-        if (container instanceof ContainerPortalFrameRedstone)
+        if (container instanceof ContainerEnhancedPortals)
         {
-            ContainerPortalFrameRedstone rsContainer = (ContainerPortalFrameRedstone) container;
-            rsContainer.redstone.buttonPressed(button, player);
+            ContainerEnhancedPortals Container = (ContainerEnhancedPortals) container;
+            Container.tile.buttonPressed(button, player);
         }
     }
 
