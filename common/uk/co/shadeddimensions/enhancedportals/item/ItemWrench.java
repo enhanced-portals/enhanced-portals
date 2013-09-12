@@ -2,8 +2,13 @@ package uk.co.shadeddimensions.enhancedportals.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
 public class ItemWrench extends ItemEP2
 {
@@ -14,20 +19,29 @@ public class ItemWrench extends ItemEP2
         maxStackSize = 1;
         setMaxDamage(0);
     }
-
+    
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-    {
-        if (world.isRemote)
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    {        
+        if (player.isSneaking())
         {
-            return false;
+            TileEntity tile = world.getBlockTileEntity(x, y, z);
+            
+            if (tile != null && tile instanceof TileEP)
+            {
+                if (tile instanceof TilePortal)
+                {
+                    // open portal gui
+                    return true;
+                }
+                else if (tile instanceof TilePortalFrame)
+                {                    
+                    player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE, world, x, y, z);
+                    return world.isRemote ? false : true;
+                }
+            }
         }
-
-        if (world.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)
-        {
-            return true;
-        }
-
-        return false;
+        
+        return super.onItemUseFirst(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 }

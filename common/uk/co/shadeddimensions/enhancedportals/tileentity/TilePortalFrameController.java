@@ -44,6 +44,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public int attachedPortals;
 
     boolean hasInitialized;
+    
+    ItemStack[] inventory;
 
     public TilePortalFrameController()
     {
@@ -56,6 +58,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
         hasInitialized = false;
         UniqueIdentifier = "NOT_SET";
+        
+        inventory = new ItemStack[2];
     }
 
     public int getAttachedFrames()
@@ -149,44 +153,40 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     @Override
     public boolean activate(EntityPlayer player)
     {
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
+        if (!worldObj.isRemote)
         {
-            return false;
-        }
-
-        if (!hasInitialized)
-        {
-            if (worldObj.isRemote)
+            if (!hasInitialized)
             {
+                byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
+    
+                if (status == 0)
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
+                    hasInitialized = true;
+                }
+                else if (status == 1)
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "An unknown error occurred"));
+                }
+                else if (status == 3)
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Another controller was found"));
+                }
+                else if (status == 4)
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
+                }
+                
                 return true;
             }
-
-            byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
-
-            if (status == 0)
+            else if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
             {
-                player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
-                hasInitialized = true;
-            }
-            else if (status == 1)
-            {
-                player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "An unknown error occurred"));
-            }
-            else if (status == 3)
-            {
-                player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Another controller was found"));
-            }
-            else if (status == 4)
-            {
-                player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
+                player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
+                return true;
             }
         }
-        else
-        {
-            player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
-        }
 
-        return true;
+        return false;
     }
 
     public void createPortal()
@@ -291,38 +291,52 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     }
 
     @Override
+    public void actionPerformed(int id, String string, EntityPlayer player)
+    {
+        if (id == 0)
+        {
+            UniqueIdentifier = string;
+            CommonProxy.sendUpdatePacketToAllAround(this);
+        }
+    }
+    
+    @Override
     public int getSizeInventory()
     {
-        return 0;
+        return inventory.length;
     }
 
     @Override
     public ItemStack getStackInSlot(int i)
     {
-        return null;
+        return inventory[i];
     }
 
     @Override
     public ItemStack decrStackSize(int i, int j)
     {
-        return null;
+        ItemStack s = getStackInSlot(i);
+        s.stackSize -= j;
+        
+        return s;
     }
 
     @Override
     public ItemStack getStackInSlotOnClosing(int i)
     {
-        return null;
+        return inventory[i];
     }
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
+        inventory[i] = itemstack;
     }
 
     @Override
     public String getInvName()
     {
-        return null;
+        return "ep2.portalController";
     }
 
     @Override
@@ -334,38 +348,12 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     @Override
     public int getInventoryStackLimit()
     {
-        return 0;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void openChest()
-    {
-    }
-
-    @Override
-    public void closeChest()
-    {
+        return 1;
     }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return false;
-    }
-
-    @Override
-    public void actionPerformed(int id, String string, EntityPlayer player)
-    {
-        if (id == 0)
-        {
-            UniqueIdentifier = string;
-            CommonProxy.sendUpdatePacketToAllAround(this);
-        }
+        return true;
     }
 }

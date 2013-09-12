@@ -1,11 +1,16 @@
 package uk.co.shadeddimensions.enhancedportals.tileentity;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 
-public class TilePortal extends TileEP
+public class TilePortal extends TileEP implements IInventory
 {
     public ChunkCoordinates controller;
 
@@ -64,5 +69,87 @@ public class TilePortal extends TileEP
         }
 
         return tex;
+    }
+    
+    public boolean activate(EntityPlayer player)
+    {
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
+        {
+            TilePortalFrameController control = getControllerValidated();
+            
+            if (control != null)
+            {
+                player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, control.xCoord, control.yCoord, control.zCoord);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    { }
+
+    @Override
+    public String getInvName()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void openChest()
+    { }
+
+    @Override
+    public void closeChest()
+    { }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return false;
     }
 }
