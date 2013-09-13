@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,7 +11,6 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.enhancedportals.util.Texture;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.client.FMLClientHandler;
 import enhancedportals.client.renderer.BlockInterface;
@@ -158,23 +156,11 @@ public class TilePortalPartRenderer extends TileEntitySpecialRenderer
 
     private void setupTexture(TileMultipart portal)
     {
-        Texture texture = new Texture();
-
-        if (texture.Texture.startsWith("B:"))
-        {
-            int id = Integer.parseInt(texture.Texture.substring(2).split(":")[0]);
-
-            portalBlock.baseBlock = Block.blocksList[id];
-        }
-        else if (texture.Texture.startsWith("F:"))
-        {
-            portalBlock.baseBlock = Block.waterStill;
-        }
-        else
-        {
-            portalBlock.baseBlock = Block.portal;
-        }
-
-        portalBlock.texture = Texture.getTexture(texture.Texture, 0);
+        /*
+         * Texture texture = new Texture(); if (texture.Texture.startsWith("B:")) { int id =
+         * Integer.parseInt(texture.Texture.substring(2).split(":")[0]); portalBlock.baseBlock = Block.blocksList[id]; } else if
+         * (texture.Texture.startsWith("F:")) { portalBlock.baseBlock = Block.waterStill; } else { portalBlock.baseBlock = Block.portal; }
+         * portalBlock.texture = Texture.getTexture(texture.Texture, 0);
+         */
     }
 }

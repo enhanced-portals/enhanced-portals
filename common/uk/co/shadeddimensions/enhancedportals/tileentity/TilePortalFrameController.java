@@ -19,9 +19,7 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.util.NBTHelper;
-import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
-import uk.co.shadeddimensions.enhancedportals.util.Texture;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,8 +27,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TilePortalFrameController extends TilePortalFrame implements IInventory
 {
     public String UniqueIdentifier;
-    public Texture frameTexture;
-    public PortalTexture portalTexture;
+
+    public int FrameColour;
+    public int PortalColour;
+    public int ParticleColour;
+    public int ParticleType;
 
     public List<ChunkCoordinates> portalFrame;
     public List<ChunkCoordinates> portalFrameRedstone;
@@ -44,13 +45,14 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public int attachedPortals;
 
     boolean hasInitialized;
-    
+
     ItemStack[] inventory;
 
     public TilePortalFrameController()
     {
-        frameTexture = new Texture();
-        portalTexture = new PortalTexture();
+        FrameColour = PortalColour = 0xffffff;
+        ParticleColour = 0xB336A1;
+        ParticleType = 0;
 
         portalFrame = new ArrayList<ChunkCoordinates>();
         portalFrameRedstone = new ArrayList<ChunkCoordinates>();
@@ -58,7 +60,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
         hasInitialized = false;
         UniqueIdentifier = "NOT_SET";
-        
+
         inventory = new ItemStack[2];
     }
 
@@ -103,15 +105,17 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         super.writeToNBT(tagCompound);
 
-        frameTexture.writeToNBT(tagCompound);
-        portalTexture.writeToNBT(tagCompound);
-
         NBTHelper.saveCCList(tagCompound, portalFrame, "portalFrame");
         NBTHelper.saveCCList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
         NBTHelper.saveCCList(tagCompound, portalBlocks, "portalBlocks");
 
         tagCompound.setBoolean("initialized", hasInitialized);
         tagCompound.setString("identifier", UniqueIdentifier);
+
+        tagCompound.setInteger("FrameColour", FrameColour);
+        tagCompound.setInteger("PortalColour", PortalColour);
+        tagCompound.setInteger("ParticleColour", ParticleColour);
+        tagCompound.setInteger("ParticleType", ParticleType);
     }
 
     @Override
@@ -119,15 +123,17 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         super.readFromNBT(tagCompound);
 
-        frameTexture = new Texture(tagCompound);
-        portalTexture = new PortalTexture(tagCompound);
-
         portalFrame = NBTHelper.loadCCList(tagCompound, "portalFrame");
         portalFrameRedstone = NBTHelper.loadCCList(tagCompound, "portalFrameRedstone");
         portalBlocks = NBTHelper.loadCCList(tagCompound, "portalBlocks");
 
         hasInitialized = tagCompound.getBoolean("initialized");
         UniqueIdentifier = tagCompound.getString("identifier");
+
+        FrameColour = tagCompound.getInteger("FrameColour");
+        PortalColour = tagCompound.getInteger("PortalColour");
+        ParticleColour = tagCompound.getInteger("ParticleColour");
+        ParticleType = tagCompound.getInteger("ParticleType");
     }
 
     @Override
@@ -139,11 +145,11 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         }
         else
         {
-            if (frameTexture.Texture.startsWith("B:"))
-            {
-                String t = frameTexture.Texture.replace("B:", "");
+            ItemStack s = getStackInSlot(0);
 
-                return Block.blocksList[Integer.parseInt(t.split(":")[0])].getIcon(side, Integer.parseInt(t.split(":")[1]));
+            if (s != null && s.getItemSpriteNumber() == 0 && s.itemID != CommonProxy.blockFrame.blockID)
+            {
+                return Block.blocksList[s.itemID].getIcon(side, s.getItemDamage());
             }
         }
 
@@ -158,7 +164,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
             if (!hasInitialized)
             {
                 byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
-    
+
                 if (status == 0)
                 {
                     player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
@@ -176,7 +182,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
                 {
                     player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
                 }
-                
+
                 return true;
             }
             else if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
@@ -299,7 +305,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
             CommonProxy.sendUpdatePacketToAllAround(this);
         }
     }
-    
+
     @Override
     public int getSizeInventory()
     {
@@ -317,7 +323,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         ItemStack s = getStackInSlot(i);
         s.stackSize -= j;
-        
+
         return s;
     }
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,12 +18,9 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -354,218 +350,6 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         }
     }
 
-    protected class TipLedger extends Ledger
-    {
-        int headerColour = 0xe1c92f;
-        int subheaderColour = 0xaaafb8;
-        int textColour = 0x000000;
-        int tip = 0;
-
-        protected String[] getTipsList()
-        {
-            return new String[] {};
-        }
-
-        public TipLedger()
-        {
-            overlayColor = 0x5396da;
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public void draw(int x, int y)
-        {
-            drawBackground(x, y);
-
-            if (!isFullyOpened())
-            {
-                return;
-            }
-
-            fontRenderer.drawStringWithShadow("Did you know...", x + 22, y + 8, headerColour);
-
-            if (tip == -1)
-            {
-                tip = 0;
-                List list = fontRenderer.listFormattedStringToWidth(getTipsList()[tip], 115);
-                maxHeight = 25 + list.size() * fontRenderer.FONT_HEIGHT;
-            }
-
-            fontRenderer.drawSplitString(getTipsList()[tip], x + 5, y + 20, 115, textColour);
-        }
-
-        @Override
-        public ArrayList<String> getTooltip()
-        {
-            ArrayList<String> strList = new ArrayList<String>();
-
-            if (!isOpen())
-            {
-                strList.add("Did you know...");
-            }
-
-            return strList;
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean handleMouseClicked(int x, int y, int mouseButton)
-        {
-            if (!isOpen())
-            {
-                tip++;
-
-                if (tip >= getTipsList().length)
-                {
-                    tip = 0;
-                }
-
-                List list = fontRenderer.listFormattedStringToWidth(getTipsList()[tip], 115);
-                maxHeight = 25 + list.size() * fontRenderer.FONT_HEIGHT;
-            }
-
-            return super.handleMouseClicked(x, y, mouseButton);
-        }
-    }
-
-    protected class RedstoneLedger extends Ledger
-    {
-        int headerColour = 0xe1c92f;
-        int subheaderColour = 0xaaafb8;
-        int textColour = 0x000000;
-        int selected = 0;
-
-        public RedstoneLedger()
-        {
-            overlayColor = 0xd46c1f;
-            maxHeight = 47;
-        }
-
-        @Override
-        public void draw(int x, int y)
-        {
-            drawBackground(x, y);
-
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, 1);
-            drawIcon(new ItemStack(Item.redstone).getIconIndex(), x + 3, y + 3);
-
-            if (!isFullyOpened())
-            {
-                return;
-            }
-
-            int y2 = y + 22, xLoc = x + maxWidth / 2 - 22 * 4 / 2;
-            fontRenderer.drawStringWithShadow("Redstone Control", x + 22, y + 8, headerColour);
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, "epcore", "textures/gui/buttons.png");
-            GL11.glColor3f(1F, 1F, 1F);
-
-            for (int i = 0; i < 4; i++)
-            {
-                int x2 = xLoc + 3 + 22 * i;
-                boolean isActive = false;
-
-                if (i == 0)
-                {
-                    isActive = selected == 0;
-                }
-                else if (i == 1)
-                {
-                    isActive = selected == 1;
-                }
-                else if (i == 2)
-                {
-                    isActive = selected >= 2;
-                }
-                else if (i == 3)
-                {
-                    isActive = selected == -1;
-                }
-
-                drawTexturedModalRect(x2, y2, 0, isActive ? 40 : 20, 10, 10);
-                drawTexturedModalRect(x2 + 10, y2, 190, isActive ? 40 : 20, 10, 10);
-                drawTexturedModalRect(x2, y2 + 10, 0, isActive ? 50 : 30, 10, 10);
-                drawTexturedModalRect(x2 + 10, y2 + 10, 190, isActive ? 50 : 30, 10, 10);
-            }
-
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, 0);
-            drawIcon(new ItemStack(Block.torchRedstoneActive).getIconIndex(), xLoc + 5, y + 22);
-            drawIcon(new ItemStack(Block.torchRedstoneIdle).getIconIndex(), xLoc + 27, y + 22);
-
-            Properties.bindTexture(FMLClientHandler.instance().getClient().renderEngine, 1);
-            drawIcon(new ItemStack(Item.redstone).getIconIndex(), xLoc + 49, y + 24);
-            drawIcon(new ItemStack(Item.gunpowder).getIconIndex(), xLoc + 71, y + 24);
-
-            if (selected >= 2)
-            {
-                fontRenderer.drawStringWithShadow("" + (selected - 2), xLoc + 49 + 17 - fontRenderer.getStringWidth("" + (selected - 2)), y + 33, 0xFFFFFFFF);
-            }
-        }
-
-        @Override
-        public ArrayList<String> getTooltip()
-        {
-            ArrayList<String> strList = new ArrayList<String>();
-
-            if (!isOpen())
-            {
-                strList.add("Redstone Control");
-                strList.add(EnumChatFormatting.GRAY + (selected == 0 ? "Normal" : selected == 1 ? "Inverted" : selected >= 2 ? "Analogue (" + (selected - 2) + ")" : selected == -1 ? "Disabled" : "Unknown"));
-            }
-
-            return strList;
-        }
-
-        @Override
-        public boolean handleMouseClicked(int x, int y, int mouseButton)
-        {
-            int xLoc = currentShiftX + maxWidth / 2 - 22 * 4 / 2, y2 = currentShiftY + 22;
-
-            for (int i = 0; i < 4; i++)
-            {
-                int x2 = xLoc + 3 + 22 * i;
-
-                if (x >= x2 && x <= x2 + 19 && y >= y2 && y <= y2 + 19)
-                {
-                    if ((i == 0 || i == 1) && mouseButton == 0)
-                    {
-                        selected = i;
-                    }
-                    else if (i == 2)
-                    {
-                        if (selected < 2)
-                        {
-                            selected = 3;
-                        }
-                        else
-                        {
-                            selected = MathHelper.clamp_int(mouseButton == 0 ? selected + 1 : mouseButton == 1 ? selected - 1 : selected, 3, 17);
-                        }
-                    }
-                    else if (i == 3 && mouseButton == 0)
-                    {
-                        selected = -1;
-                    }
-
-                    selectedChanged(selected);
-                    getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        protected void setSelected(int i)
-        {
-            selected = i;
-        }
-
-        protected void selectedChanged(int i)
-        {
-
-        }
-    }
-
     protected LedgerManager ledgerManager = new LedgerManager(this);
 
     protected TileEntity tile;
@@ -883,5 +667,21 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     public TextureManager getTextureManager()
     {
         return mc.renderEngine;
+    }
+
+    protected void drawTab(int x, int y, int w, int h, float f1, float f2, float f3)
+    {
+        GL11.glColor4f(f1, f2, f3, 1f);
+        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
+        drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
+        drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
+        drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
+        drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
+        drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
+    }
+
+    protected void drawTab(int x, int y, int w, int h)
+    {
+        drawTab(x, y, w, h, 1f, 1f, 1f);
     }
 }

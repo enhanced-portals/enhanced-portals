@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -86,8 +87,16 @@ public class BlockPortal extends BlockEP
                 d4 = random.nextFloat() * 2.0F * i1;
             }
 
-            TilePortal portal = (TilePortal) world.getBlockTileEntity(x, y, z);
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, portal.getPortalTexture(), d0, d1, d2, d3, d4, d5));
+            int type = 0, colour = 0xB336A1;
+            TilePortalFrameController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getControllerValidated();
+
+            if (controller != null)
+            {
+                colour = controller.ParticleColour;
+                type = controller.ParticleType;
+            }
+
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, type, colour, d0, d1, d2, d3, d4, d5));
         }
     }
 
@@ -183,10 +192,18 @@ public class BlockPortal extends BlockEP
     {
         return false;
     }
-    
+
     @Override
     public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
         return ((TilePortal) par1World.getBlockTileEntity(par2, par3, par4)).activate(par5EntityPlayer);
+    }
+
+    @Override
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
+    {
+        TilePortalFrameController controller = ((TilePortal) blockAccess.getBlockTileEntity(x, y, z)).getControllerValidated();
+
+        return controller == null ? 0xFFFFFF : controller.PortalColour;
     }
 }

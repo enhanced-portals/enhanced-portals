@@ -19,14 +19,14 @@ public class ItemWrench extends ItemEP2
         maxStackSize = 1;
         setMaxDamage(0);
     }
-    
+
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-    {        
+    {
         if (player.isSneaking())
         {
             TileEntity tile = world.getBlockTileEntity(x, y, z);
-            
+
             if (tile != null && tile instanceof TileEP)
             {
                 if (tile instanceof TilePortal)
@@ -35,13 +35,13 @@ public class ItemWrench extends ItemEP2
                     return true;
                 }
                 else if (tile instanceof TilePortalFrame)
-                {                    
+                {
                     player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE, world, x, y, z);
                     return world.isRemote ? false : true;
                 }
             }
         }
-        
+
         return super.onItemUseFirst(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 }

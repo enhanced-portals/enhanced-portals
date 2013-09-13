@@ -5,7 +5,6 @@ import java.awt.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 
 public class PortalFX extends EntityFX
 {
@@ -15,7 +14,7 @@ public class PortalFX extends EntityFX
     private double portalPosY;
     private double portalPosZ;
 
-    public PortalFX(World par1World, PortalTexture texture, double par2, double par4, double par6, double par8, double par10, double par12)
+    public PortalFX(World par1World, int ParticleType, int ParticleColour, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
         motionX = par8;
@@ -25,7 +24,7 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        if (texture.ParticleColour == 0xB336A1)
+        if (ParticleColour == 0xB336A1)
         {
             float f = rand.nextFloat() * 0.6F + 0.4F;
             particleRed = particleGreen = particleBlue = 1.0F * f;
@@ -34,7 +33,7 @@ public class PortalFX extends EntityFX
         }
         else
         {
-            Color c = new Color(texture.ParticleColour);
+            Color c = new Color(ParticleColour);
             particleRed = c.getRed();
             particleGreen = c.getGreen();
             particleBlue = c.getBlue();
@@ -44,7 +43,56 @@ public class PortalFX extends EntityFX
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
 
-        setParticleTextureIndex(texture.getParticleIndex());
+        setParticleTextureIndex(getParticleIndex(ParticleType));
+    }
+
+    private int getParticleIndex(int ParticleType)
+    {
+        switch (ParticleType)
+        {
+            default:
+            case 0:
+                return (int) (Math.random() * 8.0D);
+
+            case 1:
+                return 32;
+
+            case 2:
+                return 48 + (int) (2 * Math.random());
+
+            case 3:
+                return 64;
+
+            case 4:
+                return 65;
+
+            case 5:
+                return 66;
+
+            case 6:
+                return 80;
+
+            case 7:
+                return 81;
+
+            case 8:
+                return 82;
+
+            case 9:
+                return 83;
+
+            case 10:
+                return 97;
+
+            case 11:
+                return 128 + (int) (8 * Math.random());
+
+            case 12:
+                return 144 + (int) (8 * Math.random());
+
+            case 13:
+                return 160 + (int) (8 * Math.random());
+        }
     }
 
     /**

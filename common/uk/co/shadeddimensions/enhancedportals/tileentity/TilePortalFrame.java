@@ -88,11 +88,11 @@ public class TilePortalFrame extends TileEP implements IInventory
 
         if (controller != null)
         {
-            if (controller.frameTexture.Texture.startsWith("B:"))
-            {
-                String t = controller.frameTexture.Texture.replace("B:", "");
+            ItemStack s = controller.getStackInSlot(0);
 
-                return Block.blocksList[Integer.parseInt(t.split(":")[0])].getIcon(side, Integer.parseInt(t.split(":")[1]));
+            if (s != null && s.getItemSpriteNumber() == 0 && s.itemID != CommonProxy.blockFrame.blockID)
+            {
+                return Block.blocksList[s.itemID].getIcon(side, s.getItemDamage());
             }
         }
 
@@ -115,14 +115,14 @@ public class TilePortalFrame extends TileEP implements IInventory
         if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
         {
             TilePortalFrameController control = getControllerValidated();
-            
+
             if (control != null)
             {
                 player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, control.xCoord, control.yCoord, control.zCoord);
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -165,7 +165,7 @@ public class TilePortalFrame extends TileEP implements IInventory
     {
 
     }
-    
+
     @Override
     public int getSizeInventory()
     {

@@ -36,9 +36,7 @@ public class PacketGuiRequest extends MainPacket
     public void execute(INetworkManager network, EntityPlayer player)
     {
         boolean validRequest = false, sendPacket = player instanceof EntityPlayerMP;
-        //Container c = player.openContainer;
-
-        
+        // Container c = player.openContainer;
 
         if (validRequest && sendPacket)
         {

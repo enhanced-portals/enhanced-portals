@@ -168,21 +168,21 @@ public class BlockFrame extends BlockEP
     }
 
     @Override
-    public int colorMultiplier(IBlockAccess par1iBlockAccess, int par2, int par3, int par4)
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
     {
-        TilePortalFrame frame = (TilePortalFrame) par1iBlockAccess.getBlockTileEntity(par2, par3, par4);
+        TilePortalFrame frame = (TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalFrameController controller = frame.getControllerValidated();
 
         if (controller != null)
         {
-            return controller.frameTexture.TextureColour;
+            return controller.FrameColour;
         }
         else if (frame instanceof TilePortalFrameController)
         {
-            return ((TilePortalFrameController) frame).frameTexture.TextureColour;
+            return ((TilePortalFrameController) frame).FrameColour;
         }
 
-        return super.colorMultiplier(par1iBlockAccess, par2, par3, par4);
+        return 0xFFFFFF;
     }
 
     @Override

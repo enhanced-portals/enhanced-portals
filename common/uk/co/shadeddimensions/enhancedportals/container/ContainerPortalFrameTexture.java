@@ -10,9 +10,9 @@ public class ContainerPortalFrameTexture extends ContainerEnhancedPortals
     public ContainerPortalFrameTexture(EntityPlayer player, TilePortalFrameController frame)
     {
         super(frame.getSizeInventory(), frame);
-        
-        addSlotToContainer(new SlotPhantom(frame, 0, 150, 9));
-        
+
+        addSlotToContainer(new SlotPhantom(frame, 0, 69, 21));
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)

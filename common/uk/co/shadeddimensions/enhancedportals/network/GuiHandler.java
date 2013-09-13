@@ -25,7 +25,7 @@ public class GuiHandler implements IGuiHandler
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
@@ -39,7 +39,7 @@ public class GuiHandler implements IGuiHandler
         else if (ID == CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrame)
         {
             TilePortalFrameController c = null;
-            
+
             if (tile instanceof TilePortalFrameController)
             {
                 c = (TilePortalFrameController) tile;
@@ -48,7 +48,7 @@ public class GuiHandler implements IGuiHandler
             {
                 c = ((TilePortalFrame) tile).getControllerValidated();
             }
-            
+
             return c == null ? null : new ContainerPortalFrameTexture(player, c);
         }
 
@@ -71,7 +71,7 @@ public class GuiHandler implements IGuiHandler
         else if (ID == CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrame)
         {
             TilePortalFrameController c = null;
-            
+
             if (tile instanceof TilePortalFrameController)
             {
                 c = (TilePortalFrameController) tile;
@@ -80,7 +80,7 @@ public class GuiHandler implements IGuiHandler
             {
                 c = ((TilePortalFrame) tile).getControllerValidated();
             }
-            
+
             return c == null ? null : new GuiPortalFrameTexture(player, c);
         }
 

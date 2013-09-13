@@ -8,7 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
 
 public class TilePortal extends TileEP implements IInventory
 {
@@ -58,32 +57,19 @@ public class TilePortal extends TileEP implements IInventory
         return validateController() ? (TilePortalFrameController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
     }
 
-    public PortalTexture getPortalTexture()
-    {
-        PortalTexture tex = new PortalTexture();
-        TilePortalFrameController controller = getControllerValidated();
-
-        if (controller != null)
-        {
-            tex = controller.portalTexture;
-        }
-
-        return tex;
-    }
-    
     public boolean activate(EntityPlayer player)
     {
         if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
         {
             TilePortalFrameController control = getControllerValidated();
-            
+
             if (control != null)
             {
                 player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, control.xCoord, control.yCoord, control.zCoord);
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -113,7 +99,8 @@ public class TilePortal extends TileEP implements IInventory
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
-    { }
+    {
+    }
 
     @Override
     public String getInvName()
@@ -141,11 +128,13 @@ public class TilePortal extends TileEP implements IInventory
 
     @Override
     public void openChest()
-    { }
+    {
+    }
 
     @Override
     public void closeChest()
-    { }
+    {
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)

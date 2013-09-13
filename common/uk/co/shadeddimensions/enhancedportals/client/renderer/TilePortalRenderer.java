@@ -6,14 +6,14 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
-import uk.co.shadeddimensions.enhancedportals.util.PortalTexture;
-import uk.co.shadeddimensions.enhancedportals.util.Texture;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import enhancedportals.client.renderer.BlockInterface;
 
 public class TilePortalRenderer extends TileEntitySpecialRenderer
@@ -86,6 +86,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortal portal = (TilePortal) tile;
+        TilePortalFrameController controller = portal.getControllerValidated();
         // Texture texture = portal.texture;
         // ItemStack stack = texture.getItemStack();
 
@@ -108,7 +109,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
 
         // test();
 
-        setupTexture(portal);
+        setupTexture(controller);
         setCubeBounds(portal);
         renderBlock(portal);
 
@@ -164,30 +165,20 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         }
     }
 
-    private void setupTexture(TilePortal portal)
+    private void setupTexture(TilePortalFrameController controller)
     {
-        PortalTexture texture = portal.getPortalTexture();
+        if (controller != null)
+        {
+            ItemStack s = controller.getStackInSlot(0);
 
-        if (texture.Texture.startsWith("B:"))
-        {
-            int id = Integer.parseInt(texture.Texture.substring(2).split(":")[0]);
+            if (s != null && s.getItemSpriteNumber() == 0)
+            {
+                portalBlock.baseBlock = Block.blocksList[s.itemID];
 
-            portalBlock.baseBlock = Block.blocksList[id];
-        }
-        else if (texture.Texture.startsWith("F:"))
-        {
-            portalBlock.baseBlock = Block.waterStill;
-        }
-        else
-        {
-            portalBlock.baseBlock = Block.portal;
+                return;
+            }
         }
 
-        portalBlock.texture = Texture.getTexture(texture.Texture, 0);
-    }
-
-    private void test()
-    {
-
+        portalBlock.baseBlock = Block.portal;
     }
 }
