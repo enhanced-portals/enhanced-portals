@@ -169,12 +169,11 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     {
         if (controller != null)
         {
-            ItemStack s = controller.getStackInSlot(0);
+            ItemStack s = controller.getStackInSlot(1);
 
             if (s != null && s.getItemSpriteNumber() == 0)
             {
                 portalBlock.baseBlock = Block.blocksList[s.itemID];
-
                 return;
             }
         }

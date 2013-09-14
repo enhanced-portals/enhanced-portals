@@ -650,7 +650,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
         GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
         mc.renderEngine.func_110577_a(new ResourceLocation("textures/particle/particles.png"));
-        drawTexturedModalRect(guiLeft + 29, guiTop + 9, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
+        drawTexturedModalRect(x, y, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
     }
 
     protected void drawItemSlotBackground(int x, int y, int w, int h)
@@ -673,6 +673,17 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         GL11.glColor4f(f1, f2, f3, 1f);
         mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
+        drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
+        drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
+        drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
+        drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
+        drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
+    }
+
+    protected void drawTabFlipped(int x, int y, int w, int h, float f1, float f2, float f3)
+    {
+        GL11.glColor4f(f1, f2, f3, 1f);
+        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/ledgerFlipped.png"));
         drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
         drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
         drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right

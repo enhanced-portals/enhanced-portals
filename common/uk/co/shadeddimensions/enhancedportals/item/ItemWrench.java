@@ -23,6 +23,11 @@ public class ItemWrench extends ItemEP2
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
+        if (world.isRemote)
+        {
+            return false;
+        }
+
         if (player.isSneaking())
         {
             TileEntity tile = world.getBlockTileEntity(x, y, z);
@@ -31,13 +36,13 @@ public class ItemWrench extends ItemEP2
             {
                 if (tile instanceof TilePortal)
                 {
-                    // open portal gui
+                    player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_TEXTURE, world, x, y, z);
                     return true;
                 }
                 else if (tile instanceof TilePortalFrame)
                 {
                     player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE, world, x, y, z);
-                    return world.isRemote ? false : true;
+                    return true;
                 }
             }
         }

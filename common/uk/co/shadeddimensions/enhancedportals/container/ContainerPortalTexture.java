@@ -1,18 +1,35 @@
 package uk.co.shadeddimensions.enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
+import net.minecraft.inventory.Slot;
+import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotPhantom;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class ContainerPortalTexture extends ContainerEnhancedPortals
 {
-    public ContainerPortalTexture(TilePortal t)
+    public ContainerPortalTexture(EntityPlayer player, TilePortalFrameController frame)
     {
-        super(t.getSizeInventory(), t);
+        super(frame.getSizeInventory(), frame);
+
+        addSlotToContainer(new SlotPhantom(frame, 1, 129, 23));
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+            }
+        }
+
+        for (int i = 0; i < 9; i++)
+        {
+            addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
+        }
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TilePortal) tile).isUseableByPlayer(entityplayer);
+        return ((TilePortalFrameController) tile).isUseableByPlayer(entityplayer);
     }
 }

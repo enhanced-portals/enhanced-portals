@@ -22,12 +22,13 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEP
 {
     int renderPass = 0;
-    public static Icon controllerOverlay;
-    public static Icon redstoneOverlay;
+    public static Icon controllerOverlay, redstoneOverlay, connectedToPortal;
+    static ConnectedTextures connectedTextures;
 
     public BlockFrame(int id, String name)
     {
@@ -36,7 +37,7 @@ public class BlockFrame extends BlockEP
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
-        setConnectedTexture();
+        connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", blockID, -1);
     }
 
     @Override
@@ -44,11 +45,9 @@ public class BlockFrame extends BlockEP
     {
         controllerOverlay = register.registerIcon("enhancedportals:portalFrame_controller");
         redstoneOverlay = register.registerIcon("enhancedportals:portalFrame_redstone");
+        connectedToPortal = register.registerIcon("enhancedportals:Portal_inside_DRAFT1");
 
-        for (int i = 0; i < textures.length; i++)
-        {
-            textures[i] = register.registerIcon("enhancedportals:frame/portalFrame_" + i);
-        }
+        connectedTextures.registerIcons(register);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class BlockFrame extends BlockEP
             }
         }
 
-        return textures[0];
+        return connectedTextures.getNormalIcon();
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -95,7 +94,7 @@ public class BlockFrame extends BlockEP
         TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
         Icon frameIcon = frame != null ? frame.getTexture(side, renderPass) : null;
 
-        return frameIcon == null ? super.getBlockTexture(blockAccess, x, y, z, side) : frameIcon;
+        return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
     }
 
     @Override

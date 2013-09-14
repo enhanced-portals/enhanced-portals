@@ -13,7 +13,10 @@ import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameText
 import uk.co.shadeddimensions.enhancedportals.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.enhancedportals.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiInteger;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiPortalFrameTexture extends GuiEnhancedPortals
 {
@@ -35,7 +38,7 @@ public class GuiPortalFrameTexture extends GuiEnhancedPortals
         fontRenderer.drawString("Texture", 8, 8, 0x404040);
         fontRenderer.drawString("Inventory", 8, 70, 0x404040);
 
-        fontRenderer.drawString("Colour", xSize + 8, 18, 0xe1c92f);
+        fontRenderer.drawString("Colour", xSize + 6, 18, 0xe1c92f);
     }
 
     @SuppressWarnings("unchecked")
@@ -48,19 +51,26 @@ public class GuiPortalFrameTexture extends GuiEnhancedPortals
         buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, "Red", c.getRed() / 255f));
         buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, "Green", c.getGreen() / 255f));
         buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, "Blue", c.getBlue() / 255f));
-        buttonList.add(new GuiButton(10, guiLeft + xSize / 2 - 75 / 2, guiTop + 45, 75, 20, "Save"));
+
+        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, "Save"));
+        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, "Reset"));
     }
 
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        if (button.id == 10)
+        if (button.id == 10 || button.id == 11)
         {
-            String hex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
-            controller.FrameColour = Integer.parseInt(hex, 16);
-            controller.worldObj.markBlockForRenderUpdate(controller.xCoord, controller.yCoord, controller.zCoord);
+            if (button.id == 11)
+            {
+                ((GuiRGBSlider) buttonList.get(0)).sliderValue = 1f;
+                ((GuiRGBSlider) buttonList.get(1)).sliderValue = 1f;
+                ((GuiRGBSlider) buttonList.get(2)).sliderValue = 1f;
+            }
 
-            // TODO: send to server
+            String hex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
+            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(0, Integer.parseInt(hex, 16))));
+            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 0)));
         }
     }
 

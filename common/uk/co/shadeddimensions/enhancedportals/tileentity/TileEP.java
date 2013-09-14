@@ -22,6 +22,11 @@ public class TileEP extends TileEntity
 
     }
 
+    public void actionPerformed(int id, int data, EntityPlayer player)
+    {
+
+    }
+
     public void buttonPressed(int button, EntityPlayer player)
     {
 

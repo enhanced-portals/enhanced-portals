@@ -22,12 +22,14 @@ public abstract class MainPacket
     enum PacketType
     {
         REQUEST_DATA(PacketRequestData.class), //
+        PORTAL_DATA(PacketPortalData.class), //
         PORTAL_FRAME_DATA(PacketPortalFrameData.class), //
         PORTAL_CONTROLLER_DATA(PacketPortalFrameControllerData.class), //
         PORTAL_REDSTONE_DATA(PacketPortalFrameRedstoneData.class), //
         GUI_BUTTON_PRESSED(PacketGuiButtonPressed.class), //
         GUI_REQUEST(PacketGuiRequest.class), //
-        GUI_STRING(PacketGuiString.class);
+        GUI_STRING(PacketGuiString.class), //
+        GUI_INTEGER(PacketGuiInteger.class);
 
         private Class<? extends MainPacket> packetType;
 

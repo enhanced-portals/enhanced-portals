@@ -9,6 +9,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -49,6 +50,10 @@ public class PacketRequestData extends MainPacket
         if (tile instanceof TilePortalFrameController)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
+        }
+        else if (tile instanceof TilePortal)
+        {
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalData((TilePortal) tile)), (Player) player);
         }
 
         if (tile instanceof TilePortalFrame) // Needs to be in addition to

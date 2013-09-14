@@ -7,7 +7,10 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockPortal;
 import uk.co.shadeddimensions.enhancedportals.item.ItemPortalFrame;
 import uk.co.shadeddimensions.enhancedportals.item.ItemWrench;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -60,9 +63,21 @@ public class CommonProxy
     {
         Packet250CustomPayload packet = null;
 
-        if (tile instanceof TilePortalFrame)
+        if (tile instanceof TilePortalFrameController)
+        {
+            packet = MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile));
+        }
+        else if (tile instanceof TilePortalFrameRedstone)
+        {
+            packet = MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile));
+        }
+        else if (tile instanceof TilePortalFrame)
         {
             packet = MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile));
+        }
+        else if (tile instanceof TilePortal)
+        {
+            packet = MainPacket.makePacket(new PacketPortalData((TilePortal) tile));
         }
 
         if (packet != null)

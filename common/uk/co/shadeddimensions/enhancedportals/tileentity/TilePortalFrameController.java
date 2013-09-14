@@ -8,12 +8,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
@@ -116,6 +118,21 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         tagCompound.setInteger("PortalColour", PortalColour);
         tagCompound.setInteger("ParticleColour", ParticleColour);
         tagCompound.setInteger("ParticleType", ParticleType);
+
+        NBTTagList list = new NBTTagList();
+        for (ItemStack s : inventory)
+        {
+            if (s == null)
+            {
+                continue;
+            }
+
+            NBTTagCompound compound = new NBTTagCompound();
+            s.writeToNBT(compound);
+            list.appendTag(compound);
+        }
+
+        tagCompound.setTag("Inventory", list);
     }
 
     @Override
@@ -134,6 +151,12 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         PortalColour = tagCompound.getInteger("PortalColour");
         ParticleColour = tagCompound.getInteger("ParticleColour");
         ParticleType = tagCompound.getInteger("ParticleType");
+
+        NBTTagList list = tagCompound.getTagList("Inventory");
+        for (int i = 0; i < list.tagList.size(); i++)
+        {
+            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
+        }
     }
 
     @Override
@@ -145,6 +168,13 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         }
         else
         {
+            ForgeDirection d = ForgeDirection.getOrientation(side);
+
+            if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
+            {
+                return BlockFrame.connectedToPortal;
+            }
+
             ItemStack s = getStackInSlot(0);
 
             if (s != null && s.getItemSpriteNumber() == 0 && s.itemID != CommonProxy.blockFrame.blockID)
@@ -302,6 +332,40 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         if (id == 0)
         {
             UniqueIdentifier = string;
+        }
+
+        CommonProxy.sendUpdatePacketToAllAround(this);
+    }
+
+    @Override
+    public void actionPerformed(int id, int data, EntityPlayer player)
+    {
+        boolean sendUpdate = true;
+
+        if (id == 0)
+        {
+            FrameColour = data;
+        }
+        else if (id == 1)
+        {
+            PortalColour = data;
+        }
+        else if (id == 2)
+        {
+            ParticleColour = data;
+        }
+        else if (id == 3)
+        {
+            ParticleType = data;
+        }
+        else if (id == 4)
+        {
+            setInventorySlotContents(data, null);
+            sendUpdate = false;
+        }
+
+        if (sendUpdate)
+        {
             CommonProxy.sendUpdatePacketToAllAround(this);
         }
     }

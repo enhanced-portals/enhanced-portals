@@ -13,6 +13,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
+import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
@@ -84,6 +85,13 @@ public class TilePortalFrame extends TileEP implements IInventory
     @Override
     public Icon getTexture(int side, int renderpass)
     {
+        ForgeDirection d = ForgeDirection.getOrientation(side);
+
+        if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
+        {
+            return BlockFrame.connectedToPortal;
+        }
+
         TilePortalFrameController controller = getControllerValidated();
 
         if (controller != null)

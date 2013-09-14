@@ -8,6 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TilePortal extends TileEP implements IInventory
 {
@@ -140,5 +143,16 @@ public class TilePortal extends TileEP implements IInventory
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
         return false;
+    }
+
+    @Override
+    public void validate()
+    {
+        super.validate();
+
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketRequestData(this)));
+        }
     }
 }

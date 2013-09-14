@@ -46,7 +46,31 @@ public class PortalFX extends EntityFX
         setParticleTextureIndex(getParticleIndex(ParticleType));
     }
 
-    private int getParticleIndex(int ParticleType)
+    public static int getStaticParticleIndex(int ParticleType)
+    {
+        switch (ParticleType)
+        {
+            case 0:
+                return 7;
+
+            case 2:
+                return 49;
+
+            case 11:
+                return 129;
+
+            case 12:
+                return 145;
+
+            case 13:
+                return 161;
+
+            default:
+                return getParticleIndex(ParticleType);
+        }
+    }
+
+    public static int getParticleIndex(int ParticleType)
     {
         switch (ParticleType)
         {
