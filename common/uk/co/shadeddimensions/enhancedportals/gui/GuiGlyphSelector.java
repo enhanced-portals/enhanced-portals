@@ -191,6 +191,7 @@ public class GuiGlyphSelector extends Gui
                         {
                             counter[i]++;
                             selectedGlyphs.add(Glyphs.get(i)); // Add Glyph to the end
+                            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                         }
                     }
                     else if (button == 1) // RMB - Decrement
@@ -199,6 +200,7 @@ public class GuiGlyphSelector extends Gui
                         {
                             counter[i]--;
                             selectedGlyphs.remove(selectedGlyphs.lastIndexOf(Glyphs.get(i))); // Remove the last Glyph
+                            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                         }
                     }
                 }
@@ -212,6 +214,7 @@ public class GuiGlyphSelector extends Gui
         {
             counter[Glyphs.indexOf(selectedGlyphs.get(i))]--;
             selectedGlyphs.remove(i);
+            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
         }
     }
 

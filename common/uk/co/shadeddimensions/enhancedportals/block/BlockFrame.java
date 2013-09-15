@@ -53,18 +53,6 @@ public class BlockFrame extends BlockEP
     @Override
     public Icon getIcon(int side, int meta)
     {
-        if (ClientProxy.renderPass == 1)
-        {
-            if (meta == 1)
-            {
-                return controllerOverlay;
-            }
-            else if (meta == 2)
-            {
-                return redstoneOverlay;
-            }
-        }
-
         return connectedTextures.getNormalIcon();
     }
 
@@ -95,13 +83,6 @@ public class BlockFrame extends BlockEP
         Icon frameIcon = frame != null ? frame.getTexture(side, ClientProxy.renderPass) : null;
 
         return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
-    }
-
-    @Override
-    public boolean canRenderInPass(int pass)
-    {
-        ClientProxy.renderPass = pass;
-        return true;
     }
     
     @Override
@@ -176,30 +157,6 @@ public class BlockFrame extends BlockEP
     public boolean isBlockNormalCube(World world, int x, int y, int z)
     {
         return false;
-    }
-
-    @Override
-    public int getRenderBlockPass()
-    {
-        return 1;
-    }
-
-    @Override
-    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
-    {
-        TilePortalFrame frame = (TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z);
-        TilePortalFrameController controller = frame.getControllerValidated();
-
-        if (controller != null)
-        {
-            return controller.FrameColour;
-        }
-        else if (frame instanceof TilePortalFrameController)
-        {
-            return ((TilePortalFrameController) frame).FrameColour;
-        }
-
-        return 0xFFFFFF;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -33,12 +34,12 @@ public class GuiPortalFrameTexture extends GuiEnhancedPortals
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
-        fontRenderer.drawStringWithShadow("Portal Frame Texture", xSize / 2 - fontRenderer.getStringWidth("Portal Frame Texture") / 2, -13, 0xFFFFFF);
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui.ep2.portalFrameTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui.ep2.portalFrameTexture")) / 2, -13, 0xFFFFFF);
 
-        fontRenderer.drawString("Texture", 8, 8, 0x404040);
-        fontRenderer.drawString("Inventory", 8, 70, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.texture"), 8, 8, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
 
-        fontRenderer.drawString("Colour", xSize + 6, 18, 0xe1c92f);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.colour"), xSize + 6, 18, 0xe1c92f);
     }
 
     @SuppressWarnings("unchecked")
@@ -48,12 +49,12 @@ public class GuiPortalFrameTexture extends GuiEnhancedPortals
         super.initGui();
 
         Color c = new Color(controller.FrameColour);
-        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, "Red", c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, "Green", c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, "Blue", c.getBlue() / 255f));
+        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui.ep2.colour.red"), c.getRed() / 255f));
+        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui.ep2.colour.green"), c.getGreen() / 255f));
+        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui.ep2.colour.blue"), c.getBlue() / 255f));
 
-        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, "Save"));
-        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, "Reset"));
+        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui.ep2.button.save")));
+        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui.ep2.button.reset")));
     }
 
     @Override

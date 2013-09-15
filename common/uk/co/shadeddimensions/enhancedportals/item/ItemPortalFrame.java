@@ -3,7 +3,6 @@ package uk.co.shadeddimensions.enhancedportals.item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 
 public class ItemPortalFrame extends ItemBlock

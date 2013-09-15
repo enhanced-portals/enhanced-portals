@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -43,7 +44,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
 
             if (isFullyOpened())
             {
-                drawString(fontRenderer, "Did you know...", x + 20, y + 8, headerColour);
+                drawString(fontRenderer, StatCollector.translateToLocal("gui.ep2.didYouKnow"), x + 20, y + 8, headerColour);
 
                 fontRenderer.drawSplitString(getTip(), x + 8, y + 22, maxWidth - 16, textColour);
             }
@@ -64,22 +65,14 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
 
         private String getTip()
         {
-            if (currentTip == 0)
+            if (currentTip >= 0 && currentTip <= 2)
             {
-                return "You can right-click this tab to get more tips! This also works for other information tabs.";
-            }
-            else if (currentTip == 1)
-            {
-                return String.format("You can hold %s while selecting Glyphs to get additional options.", EnumChatFormatting.GRAY + "shift" + EnumChatFormatting.BLACK);
-            }
-            else if (currentTip == 2)
-            {
-                return String.format("Holding %s will force the Random button to use all %s Glyphs.", EnumChatFormatting.GRAY + "control and shift" + EnumChatFormatting.BLACK, GuiGlyphSelector.MAX_COUNT);
+                return StatCollector.translateToLocal("gui.ep2.controller.tip." + currentTip);
             }
             else
             {
                 currentTip = 0;
-                return getTip();
+                return StatCollector.translateToLocal("gui.ep2.controller.tip.0");
             }
         }
 
@@ -159,13 +152,13 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         {
             if (isShiftKeyDown())
             {
-                ((GuiButton) buttonList.get(0)).displayString = EnumChatFormatting.AQUA + "Clear";
-                ((GuiButton) buttonList.get(1)).displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + "Random";
+                ((GuiButton) buttonList.get(0)).displayString = EnumChatFormatting.AQUA + StatCollector.translateToLocal("gui.ep2.button.clear");
+                ((GuiButton) buttonList.get(1)).displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + StatCollector.translateToLocal("gui.ep2.button.random");
             }
             else
             {
-                ((GuiButton) buttonList.get(0)).displayString = "Cancel";
-                ((GuiButton) buttonList.get(1)).displayString = "Save";
+                ((GuiButton) buttonList.get(0)).displayString = StatCollector.translateToLocal("gui.ep2.button.cancel");
+                ((GuiButton) buttonList.get(1)).displayString = StatCollector.translateToLocal("gui.ep2.button.save");
             }
         }
     }
@@ -223,9 +216,9 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
-        fontRenderer.drawStringWithShadow("Portal Controller", xSize / 2 - fontRenderer.getStringWidth("Portal Controller") / 2, -13, 0xFFFFFF);
-        fontRenderer.drawString("Unique Identifier", 8, 8, 0x404040);
-        fontRenderer.drawString(isChanging ? "" : expanded ? "Glyphs" : "Portal Components", 8, 44, 0x404040);
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile.ep2.portalFrame.controller.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile.ep2.portalFrame.controller.name")) / 2, -13, 0xFFFFFF);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.uniqueIdentifier"), 8, 8, 0x404040);
+        fontRenderer.drawString(isChanging ? "" : expanded ? StatCollector.translateToLocal("gui.ep2.glyphs") : StatCollector.translateToLocal("gui.ep2.portalComponents"), 8, 44, 0x404040);
 
         glyphViewer.drawForeground(par1, par2);
 
@@ -237,9 +230,9 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
         {
             String s1 = "" + (controller.getAttachedFrames() - controller.getAttachedFrameRedstone()), s2 = "" + controller.getAttachedFrameRedstone(), s3 = "" + controller.getAttachedPortals();
 
-            fontRenderer.drawString("Frame Blocks", 12, 57, 0x777777);
-            fontRenderer.drawString("Redstone Controllers", 12, 67, 0x777777);
-            fontRenderer.drawString("Portal Blocks", 12, 77, 0x777777);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.frameBlocks"), 12, 57, 0x777777);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.redstoneControllers"), 12, 67, 0x777777);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.portalBlocks"), 12, 77, 0x777777);
 
             fontRenderer.drawString(s1, xSize - 12 - fontRenderer.getStringWidth(s1), 57, 0x404040);
             fontRenderer.drawString(s2, xSize - 12 - fontRenderer.getStringWidth(s2), 67, 0x404040);
@@ -250,7 +243,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
                 if (par2 >= guiTop + 20 && par2 <= guiTop + 37)
                 {
                     List<String> list = new ArrayList<String>();
-                    list.add("Click to modify");
+                    list.add(StatCollector.translateToLocal("gui.ep2.clickToModify"));
 
                     drawHoveringText(list, par1 - guiLeft, par2 - guiTop, fontRenderer);
                 }
@@ -264,8 +257,8 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     {
         super.initGui();
 
-        buttonList.add(new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, "Cancel"));
-        buttonList.add(new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, "Save"));
+        buttonList.add(new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, StatCollector.translateToLocal("gui.ep2.button.cancel")));
+        buttonList.add(new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, StatCollector.translateToLocal("gui.ep2.button.save")));
 
         updateButtons();
     }
@@ -291,6 +284,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
                 if (!expanded && !isChanging)
                 {
                     toggleState();
+                    mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                 }
             }
         }

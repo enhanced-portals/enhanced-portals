@@ -15,7 +15,6 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
@@ -168,13 +167,6 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         }
         else
         {
-            ForgeDirection d = ForgeDirection.getOrientation(side);
-
-            if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
-            {
-                return BlockFrame.connectedToPortal;
-            }
-
             ItemStack s = getStackInSlot(0);
 
             if (s != null && s.getItemSpriteNumber() == 0 && s.itemID != CommonProxy.blockFrame.blockID)

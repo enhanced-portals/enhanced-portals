@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.enhancedportals.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -40,7 +41,7 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
-        fontRenderer.drawStringWithShadow("Redstone Controller", xSize / 2 - fontRenderer.getStringWidth("Redstone Controller") / 2, -13, 0xFFFFFF);
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile.ep2.portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile.ep2.portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
         fontRenderer.drawSplitString(expandedText, 8, 55, xSize - 16, 0x404040);
     }
 
@@ -53,39 +54,38 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
         boolean flag = redstone.output;
 
         switch (redstone.getState())
-        // TODO: Localization
         {
             default:
                 expandedText = "";
                 break;
 
             case 0:
-                stateText = flag ? "On Portal Created" : "Create Portal on Signal";
-                expandedText = flag ? "Pulse a redstone signal when a portal gets created. Pulse will last for 20 ticks (1 second), with a strength of 15." : "Creates a portal while recieving a redstone signal. Portal will be removed when the signal is interrupted.";
+                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalCreated" : "input.portalOnSignal"));
+                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalCreated.desc" : "input.portalOnSignal.desc"));
                 break;
 
             case 1:
-                stateText = flag ? "On Portal Removed" : "Create Portal Without Signal";
-                expandedText = flag ? "Pulse a redstone signal when a portal gets removed. Pulse will last for 20 ticks (1 second), with a strength of 15." : "Creates a portal when no redstone signal is being recieved. Portal will be removed when a redstone signal is applied.";
+                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalRemoved" : "input.portalNoSignal"));
+                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalRemoved.desc" : "input.portalNoSignal.desc"));
                 break;
 
             case 2:
-                stateText = flag ? "Portal Active" : "Create Portal on Pulse";
-                expandedText = flag ? "Emit a constant redstone signal while the portal is active with a strength of 15." : "Creates a portal when recieving a redstone pulse. Portal will not be removed.";
+                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalActive" : "input.portalOnPulse"));
+                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalActive.desc" : "input.portalOnPulse.desc"));
                 break;
 
             case 3:
-                stateText = flag ? "Portal Inactive" : "Remove Portal on Pulse";
-                expandedText = flag ? "Emit a constant redstone signal while the portal is not active with a strength of 15." : "Removes a portal when recieving a redstone pulse. Portal will not be re-created.";
+                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalInactive" : "input.noPortalOnPulse"));
+                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalInactive.desc" : "input.noPortalOnPulse.desc"));
                 break;
 
             case 4:
-                stateText = "Entity Touch";
-                expandedText = "Pulse a redstone signal when an entity touches any side of this block. Pulse will last for 20 ticks (1 second), with a strength of 15.";
+                stateText = StatCollector.translateToLocal("gui.ep2.redstone.output.entityTouch");
+                expandedText = StatCollector.translateToLocal("gui.ep2.redstone.output.entityTouch.desc");
                 break;
         }
 
-        ((GuiButton) buttonList.get(0)).displayString = redstone.output ? "Outputting" : "Recieving";
+        ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui.ep2.button.output") : StatCollector.translateToLocal("gui.ep2.button.input");
         ((GuiButton) buttonList.get(1)).displayString = stateText;
     }
 
