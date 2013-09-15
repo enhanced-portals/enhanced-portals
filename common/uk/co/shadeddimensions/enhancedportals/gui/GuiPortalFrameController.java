@@ -173,7 +173,7 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) // 0, 0 = 0, 0
     {
-        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
         GL11.glColor4f(1f, 1f, 1f, 1f);
 
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 43); // Draw in the static top

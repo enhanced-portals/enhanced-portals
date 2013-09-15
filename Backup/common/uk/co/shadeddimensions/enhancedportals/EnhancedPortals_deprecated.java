@@ -236,13 +236,13 @@ public class EnhancedPortals_deprecated
         {
             WorldServer serverWorld = (WorldServer) event.world;
 
-            if (!(serverWorld.field_85177_Q instanceof EPTeleporter))
-            {
-                if (!reflectTeleporter(serverWorld, new EPTeleporter(serverWorld)))
-                {
-                    Reference.log.log(Level.SEVERE, "Could not overwrite the default Teleporter. Minecraft will create new portals instead of using custom ones!");
-                }
-            }
+            //if (!(serverWorld.worldTeleporter instanceof EPTeleporter))
+            //{
+            //    if (!reflectTeleporter(serverWorld, new EPTeleporter(serverWorld)))
+            //    {
+            //        Reference.log.log(Level.SEVERE, "Could not overwrite the default Teleporter. Minecraft will create new portals instead of using custom ones!");
+            //    }
+            //}
         }
     }
 

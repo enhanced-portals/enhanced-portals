@@ -13,9 +13,9 @@ import net.minecraft.util.ChunkCoordinates;
 
 import org.bouncycastle.util.Arrays;
 
-import com.google.common.primitives.Bytes;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 
-import enhancedportals.lib.Reference;
+import com.google.common.primitives.Bytes;
 
 public abstract class MainPacket
 {
@@ -65,7 +65,7 @@ public abstract class MainPacket
             e.printStackTrace();
         }
 
-        return new Packet250CustomPayload(Reference.MOD_ID_NEW, Bytes.concat(new byte[] { packet.getID() }, bos.toByteArray()));
+        return new Packet250CustomPayload(Reference.ID, Bytes.concat(new byte[] { packet.getID() }, bos.toByteArray()));
     }
 
     public static MainPacket readPacket(INetworkManager network, byte[] payload)

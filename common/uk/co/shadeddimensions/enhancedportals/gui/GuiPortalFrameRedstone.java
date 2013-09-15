@@ -31,7 +31,7 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1f, 1f, 1f, 1f);
-        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/frameRedstoneController.png"));
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/frameRedstoneController.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 

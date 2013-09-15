@@ -197,20 +197,20 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
                 if (status == 0)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.GREEN + "Success: " + EnumChatFormatting.WHITE + String.format("Successfully linked %s frame and %s portal blocks", getAttachedFrames(), getAttachedPortals())));
                     hasInitialized = true;
                 }
                 else if (status == 1)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "An unknown error occurred"));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "An unknown error occurred"));
                 }
                 else if (status == 3)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Another controller was found"));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Another controller was found"));
                 }
                 else if (status == 4)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
                 }
 
                 return true;

@@ -1,8 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
-import uk.co.shadeddimensions.enhancedportals.creativetab.CreativeTabEP2;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.multipart.RegisterParts;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
@@ -22,21 +21,17 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
-import enhancedportals.lib.Reference;
 
-@Mod(name = Reference.MOD_NAME, modid = Reference.MOD_ID_NEW, version = "1.1.0", dependencies = "required-after:EnhancedCore@[1.1.1,)", acceptedMinecraftVersions = "[1.6.2,)")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = PacketHandler.class, channels = { Reference.MOD_ID_NEW })
+@Mod(name = Reference.NAME, modid = Reference.ID, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, acceptedMinecraftVersions = Reference.MC_VERSION)
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = PacketHandler.class, channels = { Reference.ID })
 public class EnhancedPortals
 {
-    public static boolean DEBUG = true;
+    public static ConfigurationManager config;    
 
-    public static ConfigurationManager config;
-    public static CreativeTabs creativeTab = new CreativeTabEP2();
-
-    @Instance(Reference.MOD_ID_NEW)
+    @Instance(Reference.ID)
     public static EnhancedPortals instance;
 
-    @SidedProxy(clientSide = "uk.co.shadeddimensions.enhancedportals.network.ClientProxy", serverSide = "uk.co.shadeddimensions.enhancedportals.network.CommonProxy")
+    @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.COMMON_PROXY)
     public static CommonProxy proxy;
 
     @EventHandler

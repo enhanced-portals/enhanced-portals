@@ -80,7 +80,7 @@ public class TileEntityNetherPortalRenderer extends TileEntitySpecialRenderer
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        func_110628_a(TextureMap.field_110575_b);
+        bindTexture(TextureMap.locationBlocksTexture);
 
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);

@@ -7,11 +7,11 @@ package uk.co.shadeddimensions.enhancedportals.gui.button;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.gui.tooltips.ToolTip;
-import uk.co.shadeddimensions.enhancedportals.util.Properties;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -40,7 +40,7 @@ public class GuiBetterButton extends GuiButton
 
     protected void bindButtonTextures(Minecraft minecraft)
     {
-        Properties.bindTexture(minecraft.renderEngine, BUTTON_TEXTURES);
+        minecraft.renderEngine.bindTexture(new ResourceLocation(BUTTON_TEXTURES));
     }
 
     @Override

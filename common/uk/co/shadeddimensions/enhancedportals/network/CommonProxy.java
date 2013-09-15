@@ -37,7 +37,7 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemPortalFrame.class, "ep2.portalFrame");
+        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, "ep2.portalFrame");
         blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, "ep2.portal");
     }
 

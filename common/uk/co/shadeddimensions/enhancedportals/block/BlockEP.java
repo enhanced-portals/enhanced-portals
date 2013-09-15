@@ -4,7 +4,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 
 public class BlockEP extends BlockContainer
 {
@@ -14,7 +14,7 @@ public class BlockEP extends BlockContainer
 
         if (tab)
         {
-            setCreativeTab(EnhancedPortals.creativeTab);
+            setCreativeTab(Reference.creativeTab);
         }
     }
 

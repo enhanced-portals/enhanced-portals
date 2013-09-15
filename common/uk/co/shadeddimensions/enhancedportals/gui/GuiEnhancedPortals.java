@@ -31,7 +31,6 @@ import uk.co.shadeddimensions.enhancedportals.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotBase;
 import uk.co.shadeddimensions.enhancedportals.gui.tooltips.ToolTip;
 import uk.co.shadeddimensions.enhancedportals.gui.tooltips.ToolTipLine;
-import uk.co.shadeddimensions.enhancedportals.util.Properties;
 import uk.co.shadeddimensions.enhancedportals.util.SessionVars;
 import cpw.mods.fml.client.FMLClientHandler;
 
@@ -61,7 +60,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
             GL11.glColor4f(colorR, colorG, colorB, 1.0F);
 
-            Properties.bindTexture(getMinecraft().renderEngine, "epcore", "textures/gui/ledger.png");
+            getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
             drawTexturedModalRect(x, y, 0, 256 - currentHeight, 4, currentHeight);
             drawTexturedModalRect(x + 4, y, 256 - currentWidth + 4, 0, currentWidth - 4, 4);
             // Add in top left corner again
@@ -649,7 +648,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         }
 
         GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
-        mc.renderEngine.func_110577_a(new ResourceLocation("textures/particle/particles.png"));
+        mc.renderEngine.bindTexture(new ResourceLocation("textures/particle/particles.png"));
         drawTexturedModalRect(x, y, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
     }
 
@@ -668,11 +667,16 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         return mc.renderEngine;
     }
+    
+    public FontRenderer getFontRenderer()
+    {
+        return mc.fontRenderer;
+    }
 
     protected void drawTab(int x, int y, int w, int h, float f1, float f2, float f3)
     {
         GL11.glColor4f(f1, f2, f3, 1f);
-        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
         drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
         drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
         drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
@@ -683,7 +687,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     protected void drawTabFlipped(int x, int y, int w, int h, float f1, float f2, float f3)
     {
         GL11.glColor4f(f1, f2, f3, 1f);
-        mc.renderEngine.func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/ledgerFlipped.png"));
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledgerFlipped.png"));
         drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
         drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
         drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right

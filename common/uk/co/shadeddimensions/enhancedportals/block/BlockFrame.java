@@ -17,6 +17,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -26,7 +27,6 @@ import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEP
 {
-    int renderPass = 0;
     public static Icon controllerOverlay, redstoneOverlay, connectedToPortal;
     static ConnectedTextures connectedTextures;
 
@@ -39,7 +39,7 @@ public class BlockFrame extends BlockEP
         setStepSound(soundStoneFootstep);
         connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", blockID, -1);
     }
-
+    
     @Override
     public void registerIcons(IconRegister register)
     {
@@ -53,7 +53,7 @@ public class BlockFrame extends BlockEP
     @Override
     public Icon getIcon(int side, int meta)
     {
-        if (renderPass == 1)
+        if (ClientProxy.renderPass == 1)
         {
             if (meta == 1)
             {
@@ -92,7 +92,7 @@ public class BlockFrame extends BlockEP
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
-        Icon frameIcon = frame != null ? frame.getTexture(side, renderPass) : null;
+        Icon frameIcon = frame != null ? frame.getTexture(side, ClientProxy.renderPass) : null;
 
         return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
     }
@@ -100,10 +100,28 @@ public class BlockFrame extends BlockEP
     @Override
     public boolean canRenderInPass(int pass)
     {
-        renderPass = pass;
-        return pass < 2;
+        ClientProxy.renderPass = pass;
+        return true;
     }
-
+    
+    @Override
+    public int getRenderType()
+    {
+        return ClientProxy.portalFrameRenderType;
+    }
+    
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return true;
+    }
+    
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {

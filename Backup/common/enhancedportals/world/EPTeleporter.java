@@ -20,7 +20,7 @@ public class EPTeleporter extends Teleporter
     @Override
     public boolean makePortal(Entity par1Entity)
     {
-        byte b0 = 16;
+        /*byte b0 = 16;
         double d0 = -1.0D;
         int i = MathHelper.floor_double(par1Entity.posX);
         int j = MathHelper.floor_double(par1Entity.posY);
@@ -29,7 +29,7 @@ public class EPTeleporter extends Teleporter
         int i1 = j;
         int j1 = k;
         int k1 = 0;
-        int l1 = random.nextInt(4);
+        int l1 = 0; // random.nextInt(4);
         int i2;
         double d1;
         double d2;
@@ -237,7 +237,7 @@ public class EPTeleporter extends Teleporter
                     worldServerInstance.notifyBlocksOfNeighborChange(k3, j3, i4, worldServerInstance.getBlockId(k3, j3, i4));
                 }
             }
-        }
+        }*/
 
         return true;
     }
@@ -249,7 +249,7 @@ public class EPTeleporter extends Teleporter
     @SuppressWarnings("unchecked")
     public boolean placeInExistingPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
     {
-        short short1 = 128;
+        /*short short1 = 128;
         double d3 = -1.0D;
         int i = 0;
         int j = 0;
@@ -428,13 +428,15 @@ public class EPTeleporter extends Teleporter
         else
         {
             return false;
-        }
+        }*/
+        
+        return false;
     }
 
     @Override
     public void placeInPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
     {
-        if (worldServerInstance.provider.dimensionId != 1)
+        /*if (worldServerInstance.provider.dimensionId != 1)
         {
             if (!placeInExistingPortal(par1Entity, par2, par4, par6, par8))
             {
@@ -467,6 +469,6 @@ public class EPTeleporter extends Teleporter
 
             par1Entity.setLocationAndAngles(i, j, k, par1Entity.rotationYaw, 0.0F);
             par1Entity.motionX = par1Entity.motionY = par1Entity.motionZ = 0.0D;
-        }
+        }*/
     }
 }

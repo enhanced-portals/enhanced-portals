@@ -10,7 +10,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -107,11 +106,11 @@ public class GuiGlyphSelector extends Gui
         {
             if (s.length() == 0)
             {
-                s = stack.getItemName().replace("item.", "");
+                s = stack.getDisplayName().replace("item.", "");
             }
             else
             {
-                s += " " + stack.getItemName().replace("item.", "");
+                s += " " + stack.getDisplayName().replace("item.", "");
             }
         }
 
@@ -135,15 +134,15 @@ public class GuiGlyphSelector extends Gui
         Color c = new Color(colour);
         GL11.glColor4f(c.getRed() / 255, c.getGreen() / 255, c.getBlue() / 255, 1f);
 
-        gui.getTextureManager().func_110577_a(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
+        gui.getTextureManager().bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(X, Y, 0, 0, 162, 54);
 
         for (int i = 0; i < Glyphs.size(); i++)
         {
             int tX = X + i % ITEMS_PER_LINE * 18 + 1, tY = Y + i / ITEMS_PER_LINE * 18 + 1;
 
-            gui.getItemRenderer().renderItemIntoGUI(gui.fontRenderer, gui.getTextureManager(), Glyphs.get(i), tX, tY, false);
-            gui.getItemRenderer().renderItemOverlayIntoGUI(gui.fontRenderer, gui.getTextureManager(), Glyphs.get(i), tX, tY, counter[i] > 0 ? counter[i] + "" : null);
+            gui.getItemRenderer().renderItemIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), Glyphs.get(i), tX, tY, false);
+            gui.getItemRenderer().renderItemOverlayIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), Glyphs.get(i), tX, tY, counter[i] > 0 ? counter[i] + "" : null);
         }
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
@@ -158,8 +157,8 @@ public class GuiGlyphSelector extends Gui
                 if (isOnElement(mouseX, mouseY, i))
                 {
                     List<String> strList = new ArrayList<String>();
-                    strList.add(I18n.func_135053_a(Glyphs.get(i).getItemName() + ".name"));
-                    drawHoveringText(strList, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), gui.fontRenderer, gui.getItemRenderer());
+                    strList.add(Glyphs.get(i).getDisplayName());
+                    drawHoveringText(strList, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), gui.getFontRenderer(), gui.getItemRenderer());
                 }
             }
         }
@@ -249,7 +248,7 @@ public class GuiGlyphSelector extends Gui
     {
         for (int i = 0; i < Glyphs.size(); i++)
         {
-            if (Glyphs.get(i).getItemName().replace("item.", "").equals(s))
+            if (Glyphs.get(i).getDisplayName().replace("item.", "").equals(s))
             {
                 return i;
             }

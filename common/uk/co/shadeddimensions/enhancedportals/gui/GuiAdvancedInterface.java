@@ -9,11 +9,11 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.container.ContainerEnhancedPortals;
-import uk.co.shadeddimensions.enhancedportals.util.Properties;
 
 public abstract class GuiAdvancedInterface extends GuiEnhancedPortals
 {
@@ -40,7 +40,8 @@ public abstract class GuiAdvancedInterface extends GuiEnhancedPortals
             }
             else if (getTexture() != null)
             {
-                Properties.bindTexture(mc.renderEngine, "gui/items.png");
+                getMinecraft().renderEngine.bindTexture(new ResourceLocation("gui/items.png"));
+                
                 // System.out.printf("Drawing advanced sprite %s (%d,%d) at %d %d\n",
                 // getTexture().getIconName(),
                 // getTexture().getOriginX(),getTexture().getOriginY(),cornerX +

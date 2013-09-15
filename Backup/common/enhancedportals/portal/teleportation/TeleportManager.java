@@ -88,9 +88,9 @@ public class TeleportManager
             NBTTagCompound nbt = new NBTTagCompound();
             entity.isDead = false;
             entity.riddenByEntity = null;
-            entity.addEntityID(nbt);
+            entity.writeToNBT(nbt);
             entity.isDead = true;
-
+            
             entity = EntityList.createEntityFromNBT(nbt, world);
 
             if (entity == null)
