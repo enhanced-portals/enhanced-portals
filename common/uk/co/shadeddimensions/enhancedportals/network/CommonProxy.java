@@ -33,7 +33,6 @@ public class CommonProxy
     public static BlockPortal blockPortal;
 
     public static ItemWrench itemWrench;
-    public static int multiPartID = -1;
 
     public void registerBlocks()
     {

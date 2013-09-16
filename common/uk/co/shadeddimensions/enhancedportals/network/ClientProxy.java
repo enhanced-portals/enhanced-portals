@@ -1,5 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals.network;
 
+import net.minecraftforge.client.MinecraftForgeClient;
+import uk.co.shadeddimensions.enhancedportals.client.renderer.PortalFrameItemRenderer;
 import uk.co.shadeddimensions.enhancedportals.client.renderer.PortalFrameRenderer;
 import uk.co.shadeddimensions.enhancedportals.client.renderer.TilePortalRenderer;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
@@ -22,7 +24,9 @@ public class ClientProxy extends CommonProxy
         portalFrameRenderType = RenderingRegistry.getNextAvailableRenderId();
         
         RenderingRegistry.registerBlockHandler(new PortalFrameRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TilePortal.class, new TilePortalRenderer());        
+        ClientRegistry.bindTileEntitySpecialRenderer(TilePortal.class, new TilePortalRenderer());       
+        
+        MinecraftForgeClient.registerItemRenderer(blockFrame.blockID, new PortalFrameItemRenderer());
     }
 
     public static void sendGuiPacket(int i, String s)

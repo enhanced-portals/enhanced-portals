@@ -81,7 +81,7 @@ public class PortalFrameRenderer implements ISimpleBlockRenderingHandler
     @Override
     public boolean shouldRender3DInInventory()
     {
-        return true;
+        return false;
     }
 
     @Override

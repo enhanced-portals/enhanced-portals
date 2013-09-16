@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.multipart.MultipartUtils;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -241,14 +240,6 @@ public class PortalUtils
                 world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
                 addTouchingBlocks(cur, toProcess, meta);
             }
-            else if (id == CommonProxy.multiPartID)
-            {
-                if (MultipartUtils.doesMultipartContainPortal(world, cur.posX, cur.posY, cur.posZ))
-                {
-                    MultipartUtils.removePortalFromPart(world, cur.posX, cur.posY, cur.posZ);
-                    addTouchingBlocks(cur, toProcess, meta);
-                }
-            }
         }
     }
 
@@ -262,10 +253,6 @@ public class PortalUtils
             if (id == CommonProxy.blockPortal.blockID)
             {
                 world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
-            }
-            else if (id == CommonProxy.multiPartID)
-            {
-                MultipartUtils.removePortalFromPart(world, cur.posX, cur.posY, cur.posZ);
             }
         }
     }
@@ -373,6 +360,6 @@ public class PortalUtils
 
     private static boolean isValidPortalPart(int id)
     {
-        return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID || id == CommonProxy.multiPartID;
+        return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID;
     }
 }
