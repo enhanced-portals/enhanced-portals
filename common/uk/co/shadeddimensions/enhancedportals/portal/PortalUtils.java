@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.enhancedportals.util;
+package uk.co.shadeddimensions.enhancedportals.portal;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

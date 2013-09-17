@@ -17,10 +17,11 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
+import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
 import uk.co.shadeddimensions.enhancedportals.util.NBTHelper;
-import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -163,7 +164,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         if (renderpass == 1 && ClientProxy.isWearingGoggles)
         {
-            return BlockFrame.controllerOverlay;
+            return BlockFrame.typeOverlayIcons[1];
         }
         else
         {
@@ -209,7 +210,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
             }
             else if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
             {
-                player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
+                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, worldObj, xCoord, yCoord, zCoord);
                 return true;
             }
         }

@@ -1,5 +1,6 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -8,10 +9,9 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 
-public class PortalFrameItemRenderer implements IItemRenderer
+public class PortalItemRenderer implements IItemRenderer
 {
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)
@@ -70,7 +70,7 @@ public class PortalFrameItemRenderer implements IItemRenderer
     {
         Tessellator tessellator = Tessellator.instance;
         
-        Icon icon = CommonProxy.blockFrame.getIcon(0, 0);
+        Icon icon = Block.portal.getIcon(0, 0);
         renderer.setRenderBoundsFromBlock(CommonProxy.blockFrame);
         
         GL11.glTranslatef(x, y, z);
@@ -99,35 +99,5 @@ public class PortalFrameItemRenderer implements IItemRenderer
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
         renderer.renderFaceXPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
         tessellator.draw();
-        
-        if (item.getItemDamage() >= 1)
-        {
-            icon = BlockFrame.typeOverlayIcons[item.getItemDamage()];
-            
-            tessellator.startDrawingQuads();
-            tessellator.setNormal(0.0F, -1F, 0.0F);
-            renderer.renderFaceYNeg(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
-            tessellator.draw();
-            tessellator.startDrawingQuads();
-            tessellator.setNormal(0.0F, 1.0F, 0.0F);
-            renderer.renderFaceYPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
-            tessellator.draw();
-            tessellator.startDrawingQuads();
-            tessellator.setNormal(0.0F, 0.0F, -1F);
-            renderer.renderFaceZNeg(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
-            tessellator.draw();
-            tessellator.startDrawingQuads();
-            tessellator.setNormal(0.0F, 0.0F, 1.0F);
-            renderer.renderFaceZPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
-            tessellator.draw();
-            tessellator.startDrawingQuads();
-            tessellator.setNormal(-1F, 0.0F, 0.0F);
-            renderer.renderFaceXNeg(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
-            tessellator.draw();
-            tessellator.startDrawingQuads();
-            tessellator.setNormal(1.0F, 0.0F, 0.0F);
-            renderer.renderFaceXPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
-            tessellator.draw();
-        }
     }
 }

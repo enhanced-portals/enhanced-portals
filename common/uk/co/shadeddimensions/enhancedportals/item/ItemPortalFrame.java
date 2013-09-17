@@ -32,17 +32,32 @@ public class ItemPortalFrame extends ItemBlock
         int meta = stack.getItemDamage();
         String name = "unknown";
 
-        if (meta == 0)
+        switch (meta)
         {
-            name = "frame";
-        }
-        else if (meta == 1)
-        {
-            name = "controller";
-        }
-        else if (meta == 2)
-        {
-            name = "redstone";
+            default:
+            case 0:
+                name = "frame";
+                break;
+                
+            case 1:
+                name = "controller";
+                break;
+                
+            case 2:
+                name = "redstone";
+                break;
+                
+            case 3:
+                name = "networkInterface";
+                break;
+                
+            case 4:
+                name = "dialDevice";
+                break;
+                
+            case 5:
+                name = "biometric";
+                break;
         }
 
         return super.getUnlocalizedName() + "." + name;

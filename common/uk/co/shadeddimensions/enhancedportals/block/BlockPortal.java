@@ -12,9 +12,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
+import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
+import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.util.PortalUtils;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -133,7 +134,7 @@ public class BlockPortal extends BlockEP
     @Override
     public int getRenderType()
     {
-        return -1;
+        return ClientProxy.portalRenderType;
     }
 
     @Override

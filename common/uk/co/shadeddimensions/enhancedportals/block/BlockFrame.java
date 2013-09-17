@@ -21,13 +21,18 @@ import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEP
 {
-    public static Icon controllerOverlay, redstoneOverlay, connectedToPortal;
+    static final int FRAME_TYPES = 6;
+    public static Icon[] typeOverlayIcons = new Icon[FRAME_TYPES];
+    
     static ConnectedTextures connectedTextures;
 
     public BlockFrame(int id, String name)
@@ -43,9 +48,10 @@ public class BlockFrame extends BlockEP
     @Override
     public void registerIcons(IconRegister register)
     {
-        controllerOverlay = register.registerIcon("enhancedportals:portalFrame_controller");
-        redstoneOverlay = register.registerIcon("enhancedportals:portalFrame_redstone");
-        connectedToPortal = register.registerIcon("enhancedportals:Portal_inside_DRAFT1");
+        for (int i = 0; i < typeOverlayIcons.length; i++)
+        {
+            typeOverlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
+        }
 
         connectedTextures.registerIcons(register);
     }
@@ -60,7 +66,7 @@ public class BlockFrame extends BlockEP
     @Override
     public void addCreativeItems(ArrayList list)
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < FRAME_TYPES; i++)
         {
             list.add(new ItemStack(this, 1, i));
         }
@@ -70,7 +76,7 @@ public class BlockFrame extends BlockEP
     @Override
     public void getSubBlocks(int par1, CreativeTabs creativeTab, List list)
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < FRAME_TYPES; i++)
         {
             list.add(new ItemStack(this, 1, i));
         }
@@ -130,6 +136,18 @@ public class BlockFrame extends BlockEP
         else if (metadata == 2)
         {
             return new TilePortalFrameRedstone();
+        }
+        else if (metadata == 3)
+        {
+            return new TilePortalFrameNetworkInterface();
+        }
+        else if (metadata == 4)
+        {
+            return new TilePortalFrameDialDevice();
+        }
+        else if (metadata == 5)
+        {
+            return new TilePortalFrameBiometric();
         }
 
         return null;

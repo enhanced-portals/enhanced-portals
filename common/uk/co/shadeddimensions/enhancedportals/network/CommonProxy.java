@@ -14,21 +14,16 @@ import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRe
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
-    public static class GuiIds
-    {
-        public static final int PORTAL_CONTROLLER = 1;
-        public static final int PORTAL_REDSTONE = 2;
-        public static final int PORTAL_TEXTURE = 3;
-        public static final int PORTAL_FRAME_TEXTURE = 4;
-    }
-
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
 
@@ -46,6 +41,9 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TilePortalFrame.class, "epPortalFrame");
         GameRegistry.registerTileEntity(TilePortalFrameController.class, "epPortalController");
         GameRegistry.registerTileEntity(TilePortalFrameRedstone.class, "epPortalRedstone");
+        GameRegistry.registerTileEntity(TilePortalFrameNetworkInterface.class, "epPortalNI");
+        GameRegistry.registerTileEntity(TilePortalFrameDialDevice.class, "epPortalDD");
+        GameRegistry.registerTileEntity(TilePortalFrameBiometric.class, "epPortalBiometric");        
     }
 
     public void registerItems()

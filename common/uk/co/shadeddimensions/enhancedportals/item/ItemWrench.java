@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
-import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -36,12 +36,12 @@ public class ItemWrench extends ItemEP2
             {
                 if (tile instanceof TilePortal)
                 {
-                    player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_TEXTURE, world, x, y, z);
+                    player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_TEXTURE, world, x, y, z);
                     return true;
                 }
                 else if (tile instanceof TilePortalFrame)
                 {
-                    player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE, world, x, y, z);
+                    player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_FRAME_TEXTURE, world, x, y, z);
                     return true;
                 }
             }

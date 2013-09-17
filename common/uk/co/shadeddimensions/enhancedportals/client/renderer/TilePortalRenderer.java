@@ -15,11 +15,13 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
+@Deprecated
 public class TilePortalRenderer extends TileEntitySpecialRenderer
 {
     private RenderBlocks renderBlocks;
     private BlockInterface portalBlock;
 
+    @Deprecated
     public TilePortalRenderer()
     {
         portalBlock = new BlockInterface();

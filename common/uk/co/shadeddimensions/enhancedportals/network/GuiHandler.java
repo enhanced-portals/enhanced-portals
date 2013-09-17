@@ -11,6 +11,7 @@ import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameTexture;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalTexture;
+import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
@@ -29,17 +30,17 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
+        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
             return new ContainerPortalFrameController((TilePortalFrameController) tile);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
+        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile)), (Player) player);
             return new ContainerPortalFrameRedstone((TilePortalFrameRedstone) tile);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrame)
+        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrame)
         {
             TilePortalFrameController c = null;
 
@@ -54,7 +55,7 @@ public class GuiHandler implements IGuiHandler
 
             return c == null ? null : new ContainerPortalFrameTexture(player, c);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_TEXTURE && tile instanceof TilePortal)
+        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortal)
         {
             TilePortalFrameController c = ((TilePortal) tile).getControllerValidated();
 
@@ -69,15 +70,15 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (ID == CommonProxy.GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
+        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
         {
             return new GuiPortalFrameController(player, (TilePortalFrameController) tile);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
+        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
         {
             return new GuiPortalFrameRedstone(player, (TilePortalFrameRedstone) tile);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrame)
+        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrame)
         {
             TilePortalFrameController c = null;
 
@@ -92,7 +93,7 @@ public class GuiHandler implements IGuiHandler
 
             return c == null ? null : new GuiPortalFrameTexture(player, c);
         }
-        else if (ID == CommonProxy.GuiIds.PORTAL_TEXTURE && tile instanceof TilePortal)
+        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortal)
         {
             TilePortalFrameController c = ((TilePortal) tile).getControllerValidated();
 

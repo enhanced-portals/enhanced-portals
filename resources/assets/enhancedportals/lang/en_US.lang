@@ -2,6 +2,10 @@
 tile.ep2.portalFrame.frame.name=Portal Frame
 tile.ep2.portalFrame.controller.name=Portal Controller
 tile.ep2.portalFrame.redstone.name=Redstone Interface
+tile.ep2.portalFrame.networkInterface.name=Network Interface
+tile.ep2.portalFrame.dialDevice.name=Dial Device
+tile.ep2.portalFrame.biometric.name=Biometric Identifier
+tile.ep2.portal.name=Portal
 
 # Items
 item.ep2.wrench.name=Portal Something or other

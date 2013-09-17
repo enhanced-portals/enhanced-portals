@@ -11,6 +11,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
+import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
@@ -55,7 +56,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
     {
         if (renderpass == 1 && ClientProxy.isWearingGoggles)
         {
-            return BlockFrame.redstoneOverlay;
+            return BlockFrame.typeOverlayIcons[1];
         }
 
         return super.getTexture(side, renderpass);
@@ -88,7 +89,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
     @Override
     public boolean activate(EntityPlayer player)
     {
-        player.openGui(EnhancedPortals.instance, CommonProxy.GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);
+        player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);
         return true;
     }
 
