@@ -1,39 +1,38 @@
 package uk.co.shadeddimensions.enhancedportals.gui;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiButtonPressed;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class GuiPortalFrameRedstone extends GuiEnhancedPortals
+public class GuiPortalFrameRedstone extends GuiResizable
 {
     TilePortalFrameRedstone redstone;
     EntityPlayer player;
-    String expandedText;
+    String expandedText, oldText;
 
     public GuiPortalFrameRedstone(EntityPlayer play, TilePortalFrameRedstone tile)
     {
-        super(new ContainerPortalFrameRedstone(tile), tile);
+        super(new ContainerPortalFrameRedstone(tile), tile, 176, 58);
 
         redstone = tile;
         player = play;
-        expandedText = "";
+        expandedText = oldText = "";
+
+        ySize += 40;
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/frameRedstoneController.png"));
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        super.drawGuiContainerBackgroundLayer(f, i, j);
     }
 
     @Override
@@ -42,9 +41,14 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
         super.drawGuiContainerForegroundLayer(par1, par2);
 
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile.ep2.portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile.ep2.portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
-        fontRenderer.drawSplitString(expandedText, 8, 55, xSize - 16, 0x404040);
+
+        if (MAX_HEIGHT > 58 && !isChanging && EnhancedPortals.config.getBoolean("showExtendedRedstoneInformation"))
+        {
+            fontRenderer.drawSplitString(expandedText, 8, 55, xSize - 16, 0x404040);
+        }
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void updateScreen()
     {
@@ -83,6 +87,36 @@ public class GuiPortalFrameRedstone extends GuiEnhancedPortals
                 stateText = StatCollector.translateToLocal("gui.ep2.redstone.output.entityTouch");
                 expandedText = StatCollector.translateToLocal("gui.ep2.redstone.output.entityTouch.desc");
                 break;
+        }
+        
+        if (EnhancedPortals.config.getBoolean("showExtendedRedstoneInformation"))
+        {
+            if (!expandedText.equals(oldText))
+            {
+                oldText = expandedText;
+                List list = getMinecraft().fontRenderer.listFormattedStringToWidth(expandedText, xSize - 16);
+                int tmpHeight = 58 + list.size() * getMinecraft().fontRenderer.FONT_HEIGHT + 5;
+
+                if (MAX_HEIGHT != tmpHeight)
+                {
+                    MAX_HEIGHT = tmpHeight;
+
+                    if (CURRENT_HEIGHT > MAX_HEIGHT)
+                    {
+                        MIN_HEIGHT = MAX_HEIGHT;
+                        expanding = false;
+                    }
+                    else
+                    {
+                        expanding = true;
+                    }
+
+                    if (!isChanging)
+                    {
+                        isChanging = true;
+                    }
+                }
+            }
         }
 
         ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui.ep2.button.output") : StatCollector.translateToLocal("gui.ep2.button.input");

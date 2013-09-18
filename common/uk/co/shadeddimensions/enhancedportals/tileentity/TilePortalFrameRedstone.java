@@ -89,8 +89,18 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
     @Override
     public boolean activate(EntityPlayer player)
     {
-        player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);
-        return true;
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
+        {
+            TilePortalFrameController control = getControllerValidated();
+
+            if (control != null)
+            {
+                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     @Override

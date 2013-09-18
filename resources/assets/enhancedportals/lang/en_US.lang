@@ -3,7 +3,7 @@ tile.ep2.portalFrame.frame.name=Portal Frame
 tile.ep2.portalFrame.controller.name=Portal Controller
 tile.ep2.portalFrame.redstone.name=Redstone Interface
 tile.ep2.portalFrame.networkInterface.name=Network Interface
-tile.ep2.portalFrame.dialDevice.name=Dial Device
+tile.ep2.portalFrame.dialDevice.name=Dialling Device
 tile.ep2.portalFrame.biometric.name=Biometric Identifier
 tile.ep2.portal.name=Portal
 
@@ -37,6 +37,11 @@ gui.ep2.portalComponents=Portal Components
 gui.ep2.controller.frameBlocks=Frame Blocks
 gui.ep2.controller.redstoneControllers=Redstone Interfaces
 gui.ep2.controller.portalBlocks=Portal Blocks
+gui.ep2.controller.networkInterface=Network Interface
+gui.ep2.controller.dialDevice=Dialling Device
+gui.ep2.controller.biometric=Biometric Identifiers
+gui.ep2.controller.initialized=Initialized
+gui.ep2.controller.invalid=Invalid
 gui.ep2.clickToModify=Click to modify
 
 # Controller Tips

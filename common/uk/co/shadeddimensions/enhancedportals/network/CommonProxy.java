@@ -7,10 +7,12 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockPortal;
 import uk.co.shadeddimensions.enhancedportals.item.ItemPortalFrame;
 import uk.co.shadeddimensions.enhancedportals.item.ItemWrench;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
+import uk.co.shadeddimensions.enhancedportals.portal.networking.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -28,6 +30,8 @@ public class CommonProxy
     public static BlockPortal blockPortal;
 
     public static ItemWrench itemWrench;
+    
+    public static NetworkManager networkManager;
 
     public void registerBlocks()
     {
@@ -68,6 +72,10 @@ public class CommonProxy
         {
             packet = MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile));
         }
+        else if (tile instanceof TilePortalFrameNetworkInterface)
+        {
+            packet = MainPacket.makePacket(new PacketNetworkInterfaceData((TilePortalFrameNetworkInterface) tile));
+        }
         else if (tile instanceof TilePortalFrame)
         {
             packet = MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile));
@@ -89,7 +97,9 @@ public class CommonProxy
         EnhancedPortals.config.addBlock("ep2.portalFrame");
 
         EnhancedPortals.config.addItem("ep2.wrench");
-
-        EnhancedPortals.config.registerIds();
+        
+        EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
+        
+        EnhancedPortals.config.fillConfigFile(); // Must be last.
     }
 }

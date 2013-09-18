@@ -19,7 +19,7 @@ import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiInteger;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class GuiPortalFrameTexture extends GuiEnhancedPortals
+public class GuiPortalFrameTexture extends GuiResizable
 {
     TilePortalFrameController controller;
 
@@ -78,9 +78,7 @@ public class GuiPortalFrameTexture extends GuiEnhancedPortals
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/frameRedstoneController.png"));
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        super.drawGuiContainerBackgroundLayer(f, i, j);
 
         drawTab(guiLeft + xSize, guiTop + 10, 87, 97, 0.4f, 0.4f, 1f);
 

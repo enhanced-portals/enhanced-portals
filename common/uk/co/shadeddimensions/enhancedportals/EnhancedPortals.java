@@ -6,6 +6,7 @@ import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
 import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
+import uk.co.shadeddimensions.enhancedportals.portal.networking.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.util.ConfigurationManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -14,6 +15,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
@@ -58,5 +60,11 @@ public class EnhancedPortals
     public void preInit(FMLPreInitializationEvent event)
     {
         config = new ConfigurationManager(new Configuration(event.getSuggestedConfigurationFile()));
+    }
+    
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {        
+        CommonProxy.networkManager = new NetworkManager(event);
     }
 }

@@ -7,16 +7,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
-public class GuiPortalFrameController extends GuiEnhancedPortals
+public class GuiPortalFrameController extends GuiResizable
 {
     class TipLedger extends Ledger
     {
@@ -101,38 +97,29 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     TilePortalFrameController controller;
     EntityPlayer player;
 
-    static boolean isChanging = false, expanding = false, expanded = false;
-    static final int MIN_SIZE = 170, MAX_SIZE = 220;
-    static int currentSize = MIN_SIZE;
-
     public GuiPortalFrameController(EntityPlayer play, TilePortalFrameController tile)
     {
-        super(new ContainerPortalFrameController(tile), tile);
+        super(new ContainerPortalFrameController(tile), tile, 176, 126, 176, 146);
 
         controller = tile;
         player = play;
-        ySize = MIN_SIZE - 20;
-
-        expanding = true;
-        isChanging = false;
-        expanded = false;
-        currentSize = MIN_SIZE;
 
         glyphSelector = new GuiGlyphSelector(7, 57, 0xffffff, this);
         glyphViewer = new GuiGlyphViewer(7, 20, 0xffffff, this, glyphSelector);
 
         glyphSelector.setSelectedToIdentifier(controller.UniqueIdentifier);
     }
-
-    private void toggleState()
+    
+    @Override
+    protected void onExpandGui()
     {
-        isChanging = true;
-
-        if (expanded)
-        {
-            expanded = false;
-            updateButtons();
-        }
+        updateButtons();
+    }
+    
+    @Override
+    protected void onShrinkGui()
+    {
+        updateButtons();
     }
 
     private void updateButtons()
@@ -164,50 +151,15 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) // 0, 0 = 0, 0
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/frameController.png"));
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, 43); // Draw in the static top
-        drawTexturedModalRect(guiLeft, guiTop + 39, 0, 6 - currentSize, xSize, currentSize - 50);
+        super.drawGuiContainerBackgroundLayer(f, i, j);
 
         glyphViewer.drawBackground(i, j);
 
         if (expanded)
         {
             glyphSelector.drawBackground(i, j);
-        }
-
-        // Logic for updating background
-        if (isChanging)
-        {
-            if (expanding)
-            {
-                if (currentSize < MAX_SIZE)
-                {
-                    currentSize += 2;
-                }
-                else
-                {
-                    expanding = false;
-                    expanded = true;
-                    updateButtons();
-                    isChanging = false;
-                }
-            }
-            else
-            {
-                if (currentSize > MIN_SIZE)
-                {
-                    currentSize -= 2;
-                }
-                else
-                {
-                    expanding = true;
-                    isChanging = false;
-                }
-            }
         }
     }
 
@@ -233,10 +185,16 @@ public class GuiPortalFrameController extends GuiEnhancedPortals
             fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.frameBlocks"), 12, 57, 0x777777);
             fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.redstoneControllers"), 12, 67, 0x777777);
             fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.portalBlocks"), 12, 77, 0x777777);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.networkInterface"), 12, 87, 0x777777);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.dialDevice"), 12, 97, 0x777777);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.biometric"), 12, 107, 0x777777);
 
             fontRenderer.drawString(s1, xSize - 12 - fontRenderer.getStringWidth(s1), 57, 0x404040);
             fontRenderer.drawString(s2, xSize - 12 - fontRenderer.getStringWidth(s2), 67, 0x404040);
             fontRenderer.drawString(s3, xSize - 12 - fontRenderer.getStringWidth(s3), 77, 0x404040);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.initialized"), xSize - 12 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui.ep2.controller.initialized")), 87, 0x404040);
+            fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.controller.invalid"), xSize - 12 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui.ep2.controller.invalid")), 97, 0x404040);
+            fontRenderer.drawString("0", xSize - 12 - fontRenderer.getStringWidth("0"), 107, 0x404040); // TODO
 
             if (par1 >= guiLeft + 7 && par1 <= guiLeft + xSize - 8)
             {

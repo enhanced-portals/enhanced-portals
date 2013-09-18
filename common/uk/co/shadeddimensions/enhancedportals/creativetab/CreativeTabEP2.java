@@ -15,6 +15,6 @@ public class CreativeTabEP2 extends CreativeTabs
     @Override
     public ItemStack getIconItemStack()
     {
-        return new ItemStack(CommonProxy.blockFrame, 1, 0);
+        return new ItemStack(CommonProxy.blockPortal, 1, 0);
     }
 }

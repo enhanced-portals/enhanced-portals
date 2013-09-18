@@ -2,6 +2,8 @@ package uk.co.shadeddimensions.enhancedportals.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import net.minecraft.block.Block;
@@ -13,14 +15,31 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ConfigurationManager
 {
-    Configuration config;
+    public class ConfigProperty
+    {
+        String ID;
+        
+        public ConfigProperty(String id)
+        {
+            ID = id;
+        }
+        
+        public void addComment(String comment)
+        {
+            ConfigurationManager.this.addComment(ID, comment);
+        }
+    }
+    
+    public Configuration config;
 
     int START_BLOCK_ID = 512, START_ITEM_ID = 5000, MAX_BLOCK_ID = 4096, MAX_ITEM_ID = 32000;
 
-    TreeMap<String, Property> blockIds, itemIds;
+    TreeMap<String, Property> blockIds, itemIds, boolValues;
     ArrayList<String> blockEntries, itemEntries;
     ArrayList<Integer> usedBlockIds, usedItemIds;
-
+    Map<String, Boolean> boolEntries;
+    Map<String, String> commentEntries;
+    
     public ConfigurationManager(Configuration c)
     {
         blockEntries = new ArrayList<String>();
@@ -28,22 +47,30 @@ public class ConfigurationManager
 
         blockIds = new TreeMap<String, Property>();
         itemIds = new TreeMap<String, Property>();
+        boolValues = new TreeMap<String, Property>();
 
         usedBlockIds = new ArrayList<Integer>();
         usedItemIds = new ArrayList<Integer>();
-
+        
+        boolEntries = new HashMap<String, Boolean>();
+        commentEntries = new HashMap<String, String>();
+        
         config = c;
         config.load();
     }
-
-    public void addBlock(String name)
+    
+    public ConfigProperty addBlock(String name)
     {
         blockEntries.add(name);
+        
+        return new ConfigProperty(name);
     }
 
-    public void addItem(String name)
+    public ConfigProperty addItem(String name)
     {
         itemEntries.add(name);
+        
+        return new ConfigProperty(name);
     }
 
     public String formatName(String name)
@@ -75,15 +102,25 @@ public class ConfigurationManager
         return prop.getInt();
     }
 
-    public void registerIds()
+    private String getComment(String id)
     {
+        if (commentEntries.containsKey(id))
+        {
+            return commentEntries.get(id);
+        }
+        
+        return null;
+    }
+    
+    public void fillConfigFile()
+    {        
         // BLOCKS
         for (String entry : blockEntries)
         {
             if (config.hasKey("block", entry))
             {
                 int id = config.getCategory("block").getValues().get(formatName(entry)).getInt();
-                blockIds.put(entry, config.getBlock(formatName(entry), id));
+                blockIds.put(entry, config.getBlock(formatName(entry), id, getComment(entry)));
                 usedBlockIds.add(id);
             }
         }
@@ -96,7 +133,7 @@ public class ConfigurationManager
                 {
                     if (Block.blocksList[i] == null && !usedBlockIds.contains(i))
                     {
-                        blockIds.put(entry, config.getBlock(formatName(entry), i));
+                        blockIds.put(entry, config.getBlock(formatName(entry), i, getComment(entry)));
                         usedBlockIds.add(i);
                         break;
                     }
@@ -110,7 +147,7 @@ public class ConfigurationManager
             if (config.hasKey("item", entry))
             {
                 int id = config.getCategory("item").getValues().get(formatName(entry)).getInt();
-                itemIds.put(entry, config.getItem(formatName(entry), id));
+                itemIds.put(entry, config.getItem(formatName(entry), id, getComment(entry)));
                 usedItemIds.add(id);
             }
         }
@@ -123,14 +160,23 @@ public class ConfigurationManager
                 {
                     if (Item.itemsList[i] == null && !usedItemIds.contains(i))
                     {
-                        itemIds.put(entry, config.getItem(formatName(entry), i));
+                        itemIds.put(entry, config.getItem(formatName(entry), i, getComment(entry)));
                         usedItemIds.add(i);
                         break;
                     }
                 }
             }
         }
-
+        
+        // BOOLS
+        for (Map.Entry<String, Boolean> entry : boolEntries.entrySet())
+        {
+            boolValues.put(entry.getKey(), config.get("boolean", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
+        }
+        
+        config.addCustomCategoryComment("block", "All block IDs will attempt to find the first free ID from " + START_BLOCK_ID + " to " + MAX_BLOCK_ID + ", when one is not set below");
+        config.addCustomCategoryComment("item", "All item IDs will attempt to find the first free ID from " + START_ITEM_ID + " to " + MAX_ITEM_ID + ", when one is not set below");
+        
         config.save();
     }
 
@@ -183,5 +229,29 @@ public class ConfigurationManager
         }
 
         return i;
+    }
+
+    public ConfigProperty addBoolean(String string, boolean b)
+    {
+        boolEntries.put(string, b);
+        
+        return new ConfigProperty(string);
+    }
+    
+    public ConfigProperty addBoolean(String string)
+    {
+        addBoolean(string, false);
+        
+        return new ConfigProperty(string);
+    }
+    
+    public boolean getBoolean(String string)
+    {
+        return boolValues.get(string).getBoolean(boolEntries.get(string));
+    }
+    
+    public void addComment(String id, String comment)
+    {
+        commentEntries.put(id, comment);
     }
 }

@@ -146,6 +146,7 @@ public class GuiGlyphSelector extends Gui
         }
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
+        GL11.glDisable(GL11.GL_LIGHTING);
     }
 
     public void drawForeground(int mouseX, int mouseY)

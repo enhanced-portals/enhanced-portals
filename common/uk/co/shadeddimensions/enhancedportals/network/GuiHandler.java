@@ -3,21 +3,25 @@ package uk.co.shadeddimensions.enhancedportals.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalTexture;
+import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameTexture;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -61,6 +65,22 @@ public class GuiHandler implements IGuiHandler
 
             return c == null ? null : new ContainerPortalTexture(player, c);
         }
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrame)
+        {
+            TilePortalFrameController c = null;
+
+            if (tile instanceof TilePortalFrameController)
+            {
+                c = (TilePortalFrameController) tile;
+            }
+            else
+            {
+                c = ((TilePortalFrame) tile).getControllerValidated();
+            }
+
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TilePortalFrameNetworkInterface) tile)), (Player) player);
+            return c == null ? null : new ContainerNetworkInterface(c);
+        }
 
         return null;
     }
@@ -98,6 +118,15 @@ public class GuiHandler implements IGuiHandler
             TilePortalFrameController c = ((TilePortal) tile).getControllerValidated();
 
             return c == null ? null : new GuiPortalTexture(player, c);
+        }
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrameNetworkInterface)
+        {
+            if (((TilePortalFrame) tile).getControllerValidated() == null)
+            {
+                return null;
+            }
+            
+            return new GuiPortalFrameNetworkInterface((TilePortalFrameNetworkInterface) tile);
         }
 
         return null;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.util.ChunkCoordinates;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class NetworkManager
 {
@@ -13,7 +14,7 @@ public class NetworkManager
            //  UID   , Portals UIDs
     Map<String, ArrayList<String>> basicNetwork;
     
-    public NetworkManager()
+    public NetworkManager(FMLServerStartingEvent event)
     {
         portalLocations = new HashMap<String, ChunkCoordinates>();
         basicNetwork = new HashMap<String, ArrayList<String>>();

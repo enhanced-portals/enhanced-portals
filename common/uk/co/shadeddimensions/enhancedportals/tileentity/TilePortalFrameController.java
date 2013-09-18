@@ -324,6 +324,15 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         if (id == 0)
         {
+            if (UniqueIdentifier.equals("NOT_SET"))
+            {
+                CommonProxy.networkManager.addNewPortal(string, new ChunkCoordinates(xCoord, yCoord, zCoord));
+            }
+            else
+            {
+                CommonProxy.networkManager.updateExistingPortal(UniqueIdentifier, string);
+            }
+            
             UniqueIdentifier = string;
         }
 
