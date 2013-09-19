@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiButtonPressed;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
@@ -40,7 +41,7 @@ public class GuiPortalFrameRedstone extends GuiResizable
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile.ep2.portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile.ep2.portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
 
         if (MAX_HEIGHT > 58 && !isChanging && EnhancedPortals.config.getBoolean("showExtendedRedstoneInformation"))
         {
@@ -64,28 +65,28 @@ public class GuiPortalFrameRedstone extends GuiResizable
                 break;
 
             case 0:
-                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalCreated" : "input.portalOnSignal"));
-                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalCreated.desc" : "input.portalOnSignal.desc"));
+                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalCreated" : "input.portalOnSignal"));
+                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalCreated.desc" : "input.portalOnSignal.desc"));
                 break;
 
             case 1:
-                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalRemoved" : "input.portalNoSignal"));
-                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalRemoved.desc" : "input.portalNoSignal.desc"));
+                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalRemoved" : "input.portalNoSignal"));
+                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalRemoved.desc" : "input.portalNoSignal.desc"));
                 break;
 
             case 2:
-                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalActive" : "input.portalOnPulse"));
-                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalActive.desc" : "input.portalOnPulse.desc"));
+                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalActive" : "input.portalOnPulse"));
+                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalActive.desc" : "input.portalOnPulse.desc"));
                 break;
 
             case 3:
-                stateText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalInactive" : "input.noPortalOnPulse"));
-                expandedText = StatCollector.translateToLocal("gui.ep2.redstone." + (flag ? "output.portalInactive.desc" : "input.noPortalOnPulse.desc"));
+                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalInactive" : "input.noPortalOnPulse"));
+                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalInactive.desc" : "input.noPortalOnPulse.desc"));
                 break;
 
             case 4:
-                stateText = StatCollector.translateToLocal("gui.ep2.redstone.output.entityTouch");
-                expandedText = StatCollector.translateToLocal("gui.ep2.redstone.output.entityTouch.desc");
+                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone.output.entityTouch");
+                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone.output.entityTouch.desc");
                 break;
         }
         
@@ -119,7 +120,7 @@ public class GuiPortalFrameRedstone extends GuiResizable
             }
         }
 
-        ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui.ep2.button.output") : StatCollector.translateToLocal("gui.ep2.button.input");
+        ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.output") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.input");
         ((GuiButton) buttonList.get(1)).displayString = stateText;
     }
 

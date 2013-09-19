@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.enhancedportals.portal.networking;
+package uk.co.shadeddimensions.enhancedportals.portal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +89,11 @@ public class NetworkManager
     {
         if (!isPortalInNetwork(UID, network))
         {
+            if (!networkExists(network))
+            {
+                basicNetwork.put(network, new ArrayList<String>());
+            }
+            
             getNetworkedPortals(network).add(UID);
         }
     }

@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
@@ -20,8 +18,9 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink;
 import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
-import uk.co.shadeddimensions.enhancedportals.util.NBTHelper;
+import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,6 +37,9 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public List<ChunkCoordinates> portalFrame;
     public List<ChunkCoordinates> portalFrameRedstone;
     public List<ChunkCoordinates> portalBlocks;
+    public ChunkCoordinates portalBiometric;
+    public ChunkCoordinates portalNetworkInterface;
+    public ChunkCoordinates portalDialDevice;
 
     @SideOnly(Side.CLIENT)
     public int attachedFrames;
@@ -45,6 +47,12 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public int attachedFrameRedstone;
     @SideOnly(Side.CLIENT)
     public int attachedPortals;
+    @SideOnly(Side.CLIENT)
+    public boolean networkInterface;
+    @SideOnly(Side.CLIENT)
+    public boolean dialDevice;
+    @SideOnly(Side.CLIENT)
+    public boolean biometric;
 
     boolean hasInitialized;
 
@@ -61,7 +69,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         portalBlocks = new ArrayList<ChunkCoordinates>();
 
         hasInitialized = false;
-        UniqueIdentifier = "NOT_SET";
+        UniqueIdentifier = "";
 
         inventory = new ItemStack[2];
     }
@@ -107,10 +115,13 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         super.writeToNBT(tagCompound);
 
-        NBTHelper.saveCCList(tagCompound, portalFrame, "portalFrame");
-        NBTHelper.saveCCList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
-        NBTHelper.saveCCList(tagCompound, portalBlocks, "portalBlocks");
-
+        ChunkCoordinateUtils.saveChunkCoordList(tagCompound, portalFrame, "portalFrame");
+        ChunkCoordinateUtils.saveChunkCoordList(tagCompound, portalFrameRedstone, "portalFrameRedstone");
+        ChunkCoordinateUtils.saveChunkCoordList(tagCompound, portalBlocks, "portalBlocks");
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, portalNetworkInterface, "portalNetworkInterface");
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, portalDialDevice, "portalDialDevice");
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, portalBiometric, "portalBiometric");
+        
         tagCompound.setBoolean("initialized", hasInitialized);
         tagCompound.setString("identifier", UniqueIdentifier);
 
@@ -140,9 +151,13 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         super.readFromNBT(tagCompound);
 
-        portalFrame = NBTHelper.loadCCList(tagCompound, "portalFrame");
-        portalFrameRedstone = NBTHelper.loadCCList(tagCompound, "portalFrameRedstone");
-        portalBlocks = NBTHelper.loadCCList(tagCompound, "portalBlocks");
+        portalFrame = ChunkCoordinateUtils.loadChunkCoordList(tagCompound, "portalFrame");
+        portalFrameRedstone = ChunkCoordinateUtils.loadChunkCoordList(tagCompound, "portalFrameRedstone");
+        portalBlocks = ChunkCoordinateUtils.loadChunkCoordList(tagCompound, "portalBlocks");
+        
+        portalNetworkInterface = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "portalNetworkInterface");
+        portalDialDevice = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "portalDialDevice");
+        portalBiometric = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "portalBiometric");
 
         hasInitialized = tagCompound.getBoolean("initialized");
         UniqueIdentifier = tagCompound.getString("identifier");
@@ -186,7 +201,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         {
             if (!hasInitialized)
             {
-                byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
+                /*byte status = PortalUtils.linkPortalController((WorldServer) worldObj, xCoord, yCoord, zCoord);
 
                 if (status == 0)
                 {
@@ -204,7 +219,9 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
                 else if (status == 4)
                 {
                     player.sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "Error: " + EnumChatFormatting.WHITE + "Couldn't create a portal!"));
-                }
+                }*/
+                
+                System.out.println(new ControllerLink(this).doLink());
 
                 return true;
             }
@@ -318,18 +335,50 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
         destroyPortal();
     }
+    
+    public boolean validateNI()
+    {
+        if (portalNetworkInterface.posY == -1)
+        {
+            return false;
+        }
+        else
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(portalNetworkInterface.posX, portalNetworkInterface.posY, portalNetworkInterface.posZ);
+            return tile != null && tile instanceof TilePortalFrameNetworkInterface;
+        }
+    }
+
+    public TilePortalFrameNetworkInterface getNIValidated()
+    {
+        return validateNI() ? (TilePortalFrameNetworkInterface) worldObj.getBlockTileEntity(portalNetworkInterface.posX, portalNetworkInterface.posY, portalNetworkInterface.posZ) : null;
+    }
 
     @Override
     public void actionPerformed(int id, String string, EntityPlayer player)
     {
         if (id == 0)
         {
-            if (UniqueIdentifier.equals("NOT_SET"))
+            if (CommonProxy.networkManager.networkExists(string))
+            {
+                // TODO: REJECT
+                return;
+            }
+            
+            if (UniqueIdentifier.equals(""))
             {
                 CommonProxy.networkManager.addNewPortal(string, new ChunkCoordinates(xCoord, yCoord, zCoord));
             }
             else
             {
+                TilePortalFrameNetworkInterface ni = getNIValidated();
+
+                if (ni != null)
+                {
+                    CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, ni.NetworkIdentifier);
+                    CommonProxy.networkManager.addPortalToNetwork(string, ni.NetworkIdentifier);
+                }
+                
                 CommonProxy.networkManager.updateExistingPortal(UniqueIdentifier, string);
             }
             

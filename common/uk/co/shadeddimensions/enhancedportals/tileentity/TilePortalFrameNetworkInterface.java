@@ -1,18 +1,23 @@
 package uk.co.shadeddimensions.enhancedportals.tileentity;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TilePortalFrameNetworkInterface extends TilePortalFrame
 {
     public String NetworkIdentifier;
 
+    @SideOnly(Side.CLIENT)
+    public int connectedPortals = 0;
+    
     public TilePortalFrameNetworkInterface()
     {
-        NetworkIdentifier = "NOT_SET";
+        NetworkIdentifier = "";
     }
 
     @Override
@@ -50,14 +55,16 @@ public class TilePortalFrameNetworkInterface extends TilePortalFrame
     
     @Override
     public void actionPerformed(int id, String string, EntityPlayer player)
-    {
-        System.out.println(id);
-        
+    {        
         if (id == 0)
         {
-            // TODO: NETWORKING
-            NetworkIdentifier = string;
-            System.out.println(NetworkIdentifier);
+            if (!NetworkIdentifier.equals(""))
+            {
+                CommonProxy.networkManager.removePortalFromNetwork(getControllerValidated().UniqueIdentifier, NetworkIdentifier);
+            }
+            
+            CommonProxy.networkManager.addPortalToNetwork(getControllerValidated().UniqueIdentifier, string);
+            NetworkIdentifier = string;            
         }
         
         CommonProxy.sendUpdatePacketToAllAround(this);

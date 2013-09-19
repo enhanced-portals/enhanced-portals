@@ -13,6 +13,7 @@ import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
 
 public class PortalUtils
@@ -96,6 +97,10 @@ public class PortalUtils
                             if (f instanceof TilePortalFrameRedstone)
                             {
                                 controller.portalFrameRedstone.add(c);
+                            }
+                            else if (f instanceof TilePortalFrameNetworkInterface)
+                            {
+                                controller.portalNetworkInterface = c;
                             }
 
                             f.controller = control;

@@ -15,6 +15,7 @@ import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.enhancedportals.gui.slider.GuiRGBSlider;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiInteger;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
@@ -62,13 +63,13 @@ public class GuiPortalTexture extends GuiResizable
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui.ep2.portalTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui.ep2.portalTexture")) / 2, -13, 0xFFFFFF);
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture")) / 2, -13, 0xFFFFFF);
 
-        fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.texture"), 8, 8, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".texture"), 8, 8, 0x404040);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
 
-        fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.portalColour"), xSize + 6, 18, 0xe1c92f);
-        fontRenderer.drawString(StatCollector.translateToLocal("gui.ep2.particleColour"), -80, 18, 0xe1c92f);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalColour"), xSize + 6, 18, 0xe1c92f);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".particleColour"), -80, 18, 0xe1c92f);
     }
 
     @Override
@@ -96,17 +97,17 @@ public class GuiPortalTexture extends GuiResizable
         super.initGui();
 
         Color c = new Color(controller.PortalColour);
-        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui.ep2.colour.red"), c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui.ep2.colour.green"), c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui.ep2.colour.blue"), c.getBlue() / 255f));
+        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
+        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
+        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
 
         c = new Color(controller.ParticleColour);
-        buttonList.add(new GuiRGBSlider(3, guiLeft - 79, guiTop + 32, StatCollector.translateToLocal("gui.ep2.colour.red"), c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(4, guiLeft - 79, guiTop + 56, StatCollector.translateToLocal("gui.ep2.colour.green"), c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(5, guiLeft - 79, guiTop + 80, StatCollector.translateToLocal("gui.ep2.colour.blue"), c.getBlue() / 255f));
+        buttonList.add(new GuiRGBSlider(3, guiLeft - 79, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
+        buttonList.add(new GuiRGBSlider(4, guiLeft - 79, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
+        buttonList.add(new GuiRGBSlider(5, guiLeft - 79, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
 
-        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui.ep2.button.save")));
-        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui.ep2.button.reset")));
+        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
+        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset")));
 
         buttonList.add(new GuiButton(12, guiLeft + 8, guiTop + 21, 16, 20, "<"));
         buttonList.add(new GuiButton(13, guiLeft + 66, guiTop + 21, 16, 20, ">"));

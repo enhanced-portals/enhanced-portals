@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ConfigurationManager
@@ -75,7 +76,7 @@ public class ConfigurationManager
 
     public String formatName(String name)
     {
-        return name.replace("ep2.", "");
+        return name.replace(Reference.SHORT_ID + ".", "");
     }
 
     public int getBlockId(String name)

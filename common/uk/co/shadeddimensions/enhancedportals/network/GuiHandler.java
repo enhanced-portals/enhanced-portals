@@ -2,6 +2,9 @@ package uk.co.shadeddimensions.enhancedportals.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
@@ -65,21 +68,20 @@ public class GuiHandler implements IGuiHandler
 
             return c == null ? null : new ContainerPortalTexture(player, c);
         }
-        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrame)
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrameNetworkInterface)
         {
-            TilePortalFrameController c = null;
-
-            if (tile instanceof TilePortalFrameController)
+            if (((TilePortalFrame) tile).getControllerValidated() == null)
             {
-                c = (TilePortalFrameController) tile;
+                return null;
             }
-            else
+            else if (((TilePortalFrame) tile).getControllerValidated().UniqueIdentifier.equals(""))
             {
-                c = ((TilePortalFrame) tile).getControllerValidated();
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + StatCollector.translateToLocal("chat.ep2.uniqueIdentifierNotSet")));
+                return null;
             }
-
+            
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TilePortalFrameNetworkInterface) tile)), (Player) player);
-            return c == null ? null : new ContainerNetworkInterface(c);
+            return new ContainerNetworkInterface((TilePortalFrameNetworkInterface) tile);
         }
 
         return null;
@@ -122,6 +124,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrameNetworkInterface)
         {
             if (((TilePortalFrame) tile).getControllerValidated() == null)
+            {
+                return null;
+            }
+            else if (((TilePortalFrame) tile).getControllerValidated().UniqueIdentifier.equals(""))
             {
                 return null;
             }

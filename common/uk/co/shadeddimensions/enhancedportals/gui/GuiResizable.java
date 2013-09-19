@@ -8,7 +8,7 @@ import uk.co.shadeddimensions.enhancedportals.container.ContainerEnhancedPortals
 
 public class GuiResizable extends GuiEnhancedPortals
 {
-    static final int RESIZE_RATE = 1;
+    static final int RESIZE_RATE = 2;
     int MAX_HEIGHT, MAX_WIDTH, MIN_HEIGHT, MIN_WIDTH, CURRENT_HEIGHT, CURRENT_WIDTH;
     boolean expanded, expanding, isChanging;
 
@@ -130,7 +130,7 @@ public class GuiResizable extends GuiEnhancedPortals
     
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
+    {        
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/sizableGui.png"));
         GL11.glColor4f(1f, 1f, 1f, 1f);
         
@@ -141,6 +141,103 @@ public class GuiResizable extends GuiEnhancedPortals
         drawTexturedModalRect(guiLeft, guiTop + CURRENT_HEIGHT - 4, 0, 256 - 4, 4, 4); // Bottom Left
         drawTexturedModalRect(guiLeft + CURRENT_WIDTH - 4, guiTop + CURRENT_HEIGHT - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
         
+        drawBackground(f, i, j);
+        
+        if (!isChanging)
+        {
+            if (expanded)
+            {
+                drawBackgroundExpanded(f, i, j);
+            }
+            else
+            {
+                drawBackgroundShrunk(f, i, j);
+            }
+        }
+        
         update();
+    }
+    
+    @Override
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    {
+        super.drawGuiContainerForegroundLayer(par1, par2);        
+        drawForeground(par1, par2);
+        
+        if (!isChanging)
+        {
+            if (expanded)
+            {
+                drawForegroundExpanded(par1, par2);
+            }
+            else
+            {
+                drawForegroundShrunk(par1, par2);
+            }
+        }
+    }
+    
+    @Override
+    protected void mouseClicked(int par1, int par2, int mouseButton)
+    {
+        super.mouseClicked(par1, par2, mouseButton);        
+        mouseClick(par1, par2, mouseButton);
+        
+        if (!isChanging)
+        {
+            if (expanded)
+            {
+                mouseClickExpanded(par1, par2, mouseButton);
+            }
+            else
+            {
+                mouseClickShrunk(par1, par2, mouseButton);
+            }
+        }
+    }
+    
+    protected void drawBackgroundExpanded(float f, int i, int j)
+    {
+        
+    }
+    
+    protected void drawBackgroundShrunk(float f, int i, int j)
+    {
+        
+    }
+    
+    protected void drawBackground(float f, int i, int j)
+    {
+        
+    }
+    
+    protected void drawForegroundExpanded(int par1, int par2)
+    {
+        
+    }
+    
+    protected void drawForegroundShrunk(int par1, int par2)
+    {
+        
+    }
+    
+    protected void drawForeground(int par1, int par2)
+    {
+        
+    }
+    
+    protected void mouseClick(int par1, int par2, int mouseButton)
+    {
+        
+    }
+    
+    protected void mouseClickExpanded(int par1, int par2, int mouseButton)
+    {
+        
+    }
+    
+    protected void mouseClickShrunk(int par1, int par2, int mouseButton)
+    {
+        
     }
 }

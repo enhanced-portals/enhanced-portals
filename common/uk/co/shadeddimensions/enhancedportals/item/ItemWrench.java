@@ -10,7 +10,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
-public class ItemWrench extends ItemEP2
+public class ItemWrench extends ItemEP3
 {
     public ItemWrench(int id, String name) // TODO: Needs a better name, "wrench" doesn't really describe what it does.
     {

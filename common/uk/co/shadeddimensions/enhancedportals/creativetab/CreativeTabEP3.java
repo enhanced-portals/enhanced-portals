@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 
-public class CreativeTabEP2 extends CreativeTabs
+public class CreativeTabEP3 extends CreativeTabs
 {
-    public CreativeTabEP2()
+    public CreativeTabEP3()
     {
         super(Reference.ID);
     }

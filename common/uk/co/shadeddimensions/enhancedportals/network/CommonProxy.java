@@ -12,7 +12,7 @@ import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
-import uk.co.shadeddimensions.enhancedportals.portal.networking.NetworkManager;
+import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -35,8 +35,8 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemPortalFrame.class, "ep2.portalFrame");
-        blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, "ep2.portal");
+        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemPortalFrame.class, "ep3.portalFrame");
+        blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, "ep3.portal");
     }
 
     public void registerTileEntities()
@@ -52,7 +52,7 @@ public class CommonProxy
 
     public void registerItems()
     {
-        itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, "ep2.wrench");
+        itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, "ep3.wrench");
     }
 
     public void registerRenderers()
@@ -93,12 +93,14 @@ public class CommonProxy
 
     public void setupConfiguration()
     {
-        EnhancedPortals.config.addBlock("ep2.portal");
-        EnhancedPortals.config.addBlock("ep2.portalFrame");
+        EnhancedPortals.config.addBlock("ep3.portal");
+        EnhancedPortals.config.addBlock("ep3.portalFrame");
 
-        EnhancedPortals.config.addItem("ep2.wrench");
+        EnhancedPortals.config.addItem("ep3.wrench");
         
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
+        EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");
+        EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("If enabled, overwrites the Nether portals mechanics to allow any shape/size.");
         
         EnhancedPortals.config.fillConfigFile(); // Must be last.
     }

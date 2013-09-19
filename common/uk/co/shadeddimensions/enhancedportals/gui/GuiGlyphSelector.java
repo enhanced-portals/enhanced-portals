@@ -55,6 +55,35 @@ public class GuiGlyphSelector extends Gui
         Glyphs.add(new ItemStack(Item.potion, 0, 5));
         Glyphs.add(new ItemStack(Item.cake, 0));
     }
+    
+    public static ArrayList<ItemStack> getGlyphsFromIdentifier(String identifier)
+    {
+        ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+        
+        if (identifier.contains(" "))
+        {
+            for (String s : identifier.split(" "))
+            {
+                int id = getGlyphID(s);
+
+                if (id >= 0)
+                {
+                    list.add(Glyphs.get(id));
+                }
+            }
+        }
+        else
+        {
+            int id = getGlyphID(identifier);
+
+            if (id >= 0)
+            {                
+                list.add(Glyphs.get(id));
+            }
+        }
+        
+        return list;
+    }
 
     protected int x, y, colour;
     int[] counter;
@@ -106,11 +135,11 @@ public class GuiGlyphSelector extends Gui
         {
             if (s.length() == 0)
             {
-                s = stack.getDisplayName().replace("item.", "");
+                s = stack.getUnlocalizedName().replace("item.", "");
             }
             else
             {
-                s += " " + stack.getDisplayName().replace("item.", "");
+                s += " " + stack.getUnlocalizedName().replace("item.", "");
             }
         }
 
@@ -160,6 +189,7 @@ public class GuiGlyphSelector extends Gui
                     List<String> strList = new ArrayList<String>();
                     strList.add(Glyphs.get(i).getDisplayName());
                     drawHoveringText(strList, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), gui.getFontRenderer(), gui.getItemRenderer());
+                    GL11.glDisable(GL11.GL_LIGHTING);
                 }
             }
         }
@@ -248,11 +278,11 @@ public class GuiGlyphSelector extends Gui
         }
     }
 
-    private int getGlyphID(String s)
+    private static int getGlyphID(String s)
     {
         for (int i = 0; i < Glyphs.size(); i++)
         {
-            if (Glyphs.get(i).getDisplayName().replace("item.", "").equals(s))
+            if (Glyphs.get(i).getUnlocalizedName().replace("item.", "").equals(s))
             {
                 return i;
             }

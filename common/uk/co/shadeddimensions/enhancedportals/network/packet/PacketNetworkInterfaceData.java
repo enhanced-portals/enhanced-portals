@@ -9,12 +9,14 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
 
 public class PacketNetworkInterfaceData extends MainPacket
 {
     ChunkCoordinates coord;
     String networkID;
+    int connectedPortals;
     
     public PacketNetworkInterfaceData()
     {
@@ -25,6 +27,7 @@ public class PacketNetworkInterfaceData extends MainPacket
     {
         coord = tile.getChunkCoordinates();
         networkID = tile.NetworkIdentifier;
+        connectedPortals = CommonProxy.networkManager.getNetworkedPortals(tile.NetworkIdentifier).size() - 1;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class PacketNetworkInterfaceData extends MainPacket
     {
         coord = readChunkCoordinates(stream);
         networkID = stream.readUTF();
+        connectedPortals = stream.readInt();
         
         return this;
     }
@@ -47,6 +51,7 @@ public class PacketNetworkInterfaceData extends MainPacket
             TilePortalFrameNetworkInterface ni = (TilePortalFrameNetworkInterface) tile;
 
             ni.NetworkIdentifier = networkID;
+            ni.connectedPortals = connectedPortals;
         }
     }
 
@@ -55,5 +60,6 @@ public class PacketNetworkInterfaceData extends MainPacket
     {
         writeChunkCoordinates(coord, stream);
         stream.writeUTF(networkID);
+        stream.writeInt(connectedPortals);
     }
 }

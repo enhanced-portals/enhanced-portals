@@ -6,7 +6,7 @@ import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
 import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
-import uk.co.shadeddimensions.enhancedportals.portal.networking.NetworkManager;
+import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.util.ConfigurationManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

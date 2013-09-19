@@ -1,72 +1,78 @@
 # Blocks
-tile.ep2.portalFrame.frame.name=Portal Frame
-tile.ep2.portalFrame.controller.name=Portal Controller
-tile.ep2.portalFrame.redstone.name=Redstone Interface
-tile.ep2.portalFrame.networkInterface.name=Network Interface
-tile.ep2.portalFrame.dialDevice.name=Dialling Device
-tile.ep2.portalFrame.biometric.name=Biometric Identifier
-tile.ep2.portal.name=Portal
+tile.ep3.portalFrame.frame.name=Portal Frame
+tile.ep3.portalFrame.controller.name=Portal Controller
+tile.ep3.portalFrame.redstone.name=Redstone Interface
+tile.ep3.portalFrame.networkInterface.name=Network Interface
+tile.ep3.portalFrame.dialDevice.name=Dialling Device
+tile.ep3.portalFrame.biometric.name=Biometric Identifier
+tile.ep3.portal.name=Portal
 
 # Items
-item.ep2.wrench.name=Portal Something or other
+item.ep3.wrench.name=Portal Something or other
 
 # Creative Tab
-itemGroup.EnhancedPortals2=EnhancedPortals 2
+itemGroup.EnhancedPortals3=EnhancedPortals 3
 
 # Gui
-gui.ep2.texture=Texture
-gui.ep2.portalTexture=Portal Texture
-gui.ep2.portalFrameTexture=Portal Frame Texture
-gui.ep2.button.reset=Reset
-gui.ep2.button.save=Save
-gui.ep2.button.input=Input
-gui.ep2.button.output=Output
-gui.ep2.button.clear=Clear
-gui.ep2.button.random=Random
-gui.ep2.button.cancel=Cancel
-gui.ep2.colour=Colour
-gui.ep2.colour.red=Red
-gui.ep2.colour.green=Green
-gui.ep2.colour.blue=Blue
-gui.ep2.particleColour=Particle Colour
-gui.ep2.portalColour=Portal Colour
-gui.ep2.didYouKnow=Did you know...
-gui.ep2.uniqueIdentifier=Unique Identifier
-gui.ep2.glyphs=Glyphs
-gui.ep2.portalComponents=Portal Components
-gui.ep2.controller.frameBlocks=Frame Blocks
-gui.ep2.controller.redstoneControllers=Redstone Interfaces
-gui.ep2.controller.portalBlocks=Portal Blocks
-gui.ep2.controller.networkInterface=Network Interface
-gui.ep2.controller.dialDevice=Dialling Device
-gui.ep2.controller.biometric=Biometric Identifiers
-gui.ep2.controller.initialized=Initialized
-gui.ep2.controller.invalid=Invalid
-gui.ep2.clickToModify=Click to modify
+gui.ep3.texture=Texture
+gui.ep3.portalTexture=Portal Texture
+gui.ep3.portalFrameTexture=Portal Frame Texture
+gui.ep3.button.reset=Reset
+gui.ep3.button.save=Save
+gui.ep3.button.input=Input
+gui.ep3.button.output=Output
+gui.ep3.button.clear=Clear
+gui.ep3.button.random=Random
+gui.ep3.button.cancel=Cancel
+gui.ep3.colour=Colour
+gui.ep3.colour.red=Red
+gui.ep3.colour.green=Green
+gui.ep3.colour.blue=Blue
+gui.ep3.particleColour=Particle Colour
+gui.ep3.portalColour=Portal Colour
+gui.ep3.didYouKnow=Did you know...
+gui.ep3.uniqueIdentifier=Unique Identifier
+gui.ep3.glyphs=Glyphs
+gui.ep3.portalComponents=Portal Components
+gui.ep3.controller.frameBlocks=Frame Blocks
+gui.ep3.controller.redstoneControllers=Redstone Interfaces
+gui.ep3.controller.portalBlocks=Portal Blocks
+gui.ep3.controller.networkInterface=Network Interface
+gui.ep3.controller.dialDevice=Dialling Device
+gui.ep3.controller.biometric=Biometric Identifier
+gui.ep3.controller.initialized=Initialized
+gui.ep3.controller.invalid=Invalid
+gui.ep3.clickToModify=Click to modify
+gui.ep3.networkIdentifier=Network Identifier
+gui.ep3.networkInfo=Network Information
+gui.ep3.networkIdentifier.connectedPortals=Connected Portals
+gui.ep3.networkIdentifier.teleportMode=Teleport Mode
+gui.ep3.networkIdentifier.sequential=Sequential
+gui.ep3.networkIdentifier.random=Random
 
 # Controller Tips
-gui.ep2.controller.tip.0=You can right-click this tab to get more tips! This also works for other information tabs.
-gui.ep2.controller.tip.1=You can hold SHIFT while selecting Glyphs to get additional options.
-gui.ep2.controller.tip.2=Holding SHIFT and CONTROL will force the Random button to use all 9 Glyphs.
+gui.ep3.controller.tip.0=You can right-click this tab to get more tips! This also works for other information tabs.
+gui.ep3.controller.tip.1=You can hold SHIFT while selecting Glyphs to get additional options.
+gui.ep3.controller.tip.2=Holding SHIFT and CONTROL will force the Random button to use all 9 Glyphs.
 
 # Redstone States (Titles)
-gui.ep2.redstone.output.portalCreated=Portal Created
-gui.ep2.redstone.output.portalRemoved=Portal Removed
-gui.ep2.redstone.output.portalActive=Portal Active
-gui.ep2.redstone.output.portalInactive=Portal Inactive
-gui.ep2.redstone.output.entityTouch=Entity Touch
-gui.ep2.redstone.input.portalOnSignal=Create Portal on Signal
-gui.ep2.redstone.input.portalNoSignal=Create Portal with no Signal
-gui.ep2.redstone.input.portalOnPulse=Create Portal on Pulse
-gui.ep2.redstone.input.noPortalOnPulse=Remove Portal on Pulse
+gui.ep3.redstone.output.portalCreated=Portal Created
+gui.ep3.redstone.output.portalRemoved=Portal Removed
+gui.ep3.redstone.output.portalActive=Portal Active
+gui.ep3.redstone.output.portalInactive=Portal Inactive
+gui.ep3.redstone.output.entityTouch=Entity Touch
+gui.ep3.redstone.input.portalOnSignal=Create Portal on Signal
+gui.ep3.redstone.input.portalNoSignal=Create Portal with no Signal
+gui.ep3.redstone.input.portalOnPulse=Create Portal on Pulse
+gui.ep3.redstone.input.noPortalOnPulse=Remove Portal on Pulse
 
 # Redstone States (Descriptions)
-gui.ep2.redstone.output.portalCreated.desc=Pulse a redstone signal when a portal gets created
-gui.ep2.redstone.output.portalRemoved.desc=Pulse a redstone signal when a portal gets removed
-gui.ep2.redstone.output.portalActive.desc=Emit a constant redstone signal while the portal is active
-gui.ep2.redstone.output.portalInactive.desc=Emit a constant redstone signal while the portal is not active
-gui.ep2.redstone.output.entityTouch.desc=Pulse a redstone signal when an entity touches any side of this block
-gui.ep2.redstone.input.portalOnSignal.desc=Creates a portal while recieving a redstone signal, the portal will be removed when the signal is interrupted
-gui.ep2.redstone.input.portalNoSignal.desc=Creates a portal when no redstone signal is being recieved, the portal will be removed when a redstone signal is applied
-gui.ep2.redstone.input.portalOnPulse.desc=Creates a portal when recieving a redstone pulse, the portal will not be removed
-gui.ep2.redstone.input.noPortalOnPulse.desc=Removes a portal when recieving a redstone pulse, the portal will not get recreated
+gui.ep3.redstone.output.portalCreated.desc=Pulse a redstone signal when a portal gets created
+gui.ep3.redstone.output.portalRemoved.desc=Pulse a redstone signal when a portal gets removed
+gui.ep3.redstone.output.portalActive.desc=Emit a constant redstone signal while the portal is active
+gui.ep3.redstone.output.portalInactive.desc=Emit a constant redstone signal while the portal is not active
+gui.ep3.redstone.output.entityTouch.desc=Pulse a redstone signal when an entity touches any side of this block
+gui.ep3.redstone.input.portalOnSignal.desc=Creates a portal while recieving a redstone signal, the portal will be removed when the signal is interrupted
+gui.ep3.redstone.input.portalNoSignal.desc=Creates a portal when no redstone signal is being recieved, the portal will be removed when a redstone signal is applied
+gui.ep3.redstone.input.portalOnPulse.desc=Creates a portal when recieving a redstone pulse, the portal will not be removed
+gui.ep3.redstone.input.noPortalOnPulse.desc=Removes a portal when recieving a redstone pulse, the portal will not get recreated
