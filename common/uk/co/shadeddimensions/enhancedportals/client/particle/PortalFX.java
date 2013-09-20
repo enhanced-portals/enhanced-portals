@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 
 public class PortalFX extends EntityFX
 {
-
     private float portalParticleScale;
     private double portalPosX;
     private double portalPosY;
@@ -34,9 +33,9 @@ public class PortalFX extends EntityFX
         else
         {
             Color c = new Color(ParticleColour);
-            particleRed = c.getRed();
-            particleGreen = c.getGreen();
-            particleBlue = c.getBlue();
+            particleRed = c.getRed() / 255f;
+            particleGreen = c.getGreen() / 255f;
+            particleBlue = c.getBlue() / 255f;
         }
 
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;

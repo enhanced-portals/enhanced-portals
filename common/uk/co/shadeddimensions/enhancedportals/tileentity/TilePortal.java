@@ -6,11 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
-import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
-import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
-import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
+import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TilePortal extends TileEP implements IInventory
@@ -19,7 +17,7 @@ public class TilePortal extends TileEP implements IInventory
 
     public TilePortal()
     {
-        controller = new ChunkCoordinates(0, -1, 0);
+        
     }
 
     @Override
@@ -27,9 +25,7 @@ public class TilePortal extends TileEP implements IInventory
     {
         super.writeToNBT(tagCompound);
 
-        tagCompound.setInteger("ControllerX", controller.posX);
-        tagCompound.setInteger("ControllerY", controller.posY);
-        tagCompound.setInteger("ControllerZ", controller.posZ);
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, controller, "controller");
     }
 
     @Override
@@ -37,15 +33,12 @@ public class TilePortal extends TileEP implements IInventory
     {
         super.readFromNBT(tagCompound);
 
-        if (tagCompound.hasKey("ControllerX")) // Otherwise, leave it as 0, -1, 0
-        {
-            controller = new ChunkCoordinates(tagCompound.getInteger("ControllerX"), tagCompound.getInteger("ControllerY"), tagCompound.getInteger("ControllerZ"));
-        }
+        controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
     }
 
     public boolean validateController()
     {
-        if (controller.posY == -1)
+        if (controller == null || controller.posY == -1)
         {
             return false;
         }
@@ -61,19 +54,18 @@ public class TilePortal extends TileEP implements IInventory
         return validateController() ? (TilePortalFrameController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
     }
 
+    public void selfBroken()
+    {
+        TilePortalFrameController control = getControllerValidated();
+
+        if (control != null)
+        {
+            control.selfBroken();
+        }
+    }
+    
     public boolean activate(EntityPlayer player)
     {
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
-        {
-            TilePortalFrameController control = getControllerValidated();
-
-            if (control != null)
-            {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, worldObj, control.xCoord, control.yCoord, control.zCoord);
-                return true;
-            }
-        }
-
         return false;
     }
 

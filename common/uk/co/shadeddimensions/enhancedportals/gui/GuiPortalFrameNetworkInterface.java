@@ -149,7 +149,7 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
             }
         }
         
-        String s = EnhancedPortals.config.getBoolean("randomTeleportMode") ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.random") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.sequential"), s1 = "" + networkInterface.connectedPortals;
+        String s = EnhancedPortals.config.getBoolean("randomTeleportMode") ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.random") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.sequential"), s1 = networkInterface.connectedPortals == -1 ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.notSet") : "" + networkInterface.connectedPortals;
         
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.connectedPortals"), 12, 57, 0x777777);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.teleportMode"), 12, 67, 0x777777);

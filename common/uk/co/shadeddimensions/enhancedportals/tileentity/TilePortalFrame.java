@@ -11,12 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
-import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
-import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
+import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TilePortalFrame extends TileEP implements IInventory
@@ -25,12 +23,12 @@ public class TilePortalFrame extends TileEP implements IInventory
 
     public TilePortalFrame()
     {
-        controller = new ChunkCoordinates(0, -1, 0);
+        
     }
 
     public boolean validateController()
     {
-        if (controller.posY == -1)
+        if (controller == null || controller.posY == -1)
         {
             return false;
         }
@@ -46,29 +44,12 @@ public class TilePortalFrame extends TileEP implements IInventory
         return validateController() ? (TilePortalFrameController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
     }
 
-    public boolean isTouchingPortal()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-
-            if (worldObj.getBlockId(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ) == CommonProxy.blockPortal.blockID)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
 
-        tagCompound.setInteger("ControllerX", controller.posX);
-        tagCompound.setInteger("ControllerY", controller.posY);
-        tagCompound.setInteger("ControllerZ", controller.posZ);
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, controller, "controller");
     }
 
     @Override
@@ -76,10 +57,7 @@ public class TilePortalFrame extends TileEP implements IInventory
     {
         super.readFromNBT(tagCompound);
 
-        if (tagCompound.hasKey("ControllerX")) // Otherwise, leave it as 0, -1, 0
-        {
-            controller = new ChunkCoordinates(tagCompound.getInteger("ControllerX"), tagCompound.getInteger("ControllerY"), tagCompound.getInteger("ControllerZ"));
-        }
+        controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
     }
 
     @Override
@@ -113,17 +91,6 @@ public class TilePortalFrame extends TileEP implements IInventory
 
     public boolean activate(EntityPlayer player)
     {
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
-        {
-            TilePortalFrameController control = getControllerValidated();
-
-            if (control != null)
-            {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, worldObj, control.xCoord, control.yCoord, control.zCoord);
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -138,12 +105,7 @@ public class TilePortalFrame extends TileEP implements IInventory
 
         if (control != null)
         {
-            if (isTouchingPortal())
-            {
-                control.destroyAllPortal();
-            }
-
-            control.removeFrame(this);
+            control.selfBroken();
         }
     }
 

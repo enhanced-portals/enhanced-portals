@@ -3,17 +3,16 @@ package uk.co.shadeddimensions.enhancedportals.block;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
-import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
-import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -22,6 +21,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPortal extends BlockEP
 {
+    public static Icon[] colouredPortalTextures;
+    
     public BlockPortal(int id, String name)
     {
         super(id, Material.portal, false);
@@ -29,8 +30,31 @@ public class BlockPortal extends BlockEP
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundGlassFootstep);
+        setLightValue(1f);
+        colouredPortalTextures = new Icon[16];
     }
 
+    @Override
+    public int getRenderBlockPass()
+    {
+        return 1;
+    }
+    
+    @Override
+    public Icon getIcon(int side, int meta)
+    {
+        return colouredPortalTextures[meta];
+    }
+    
+    @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        for (int i = 0; i < colouredPortalTextures.length; i++)
+        {
+            colouredPortalTextures[i] = iconRegister.registerIcon("enhancedportals:colouredPortal_" + i);
+        }
+    }
+    
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
@@ -109,17 +133,11 @@ public class BlockPortal extends BlockEP
     }
 
     @Override
-    public int getRenderBlockPass()
-    {
-        return 1;
-    }
-
-    @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         if (!world.isRemote)
         {
-            PortalUtils.removePortal((WorldServer) world, x, y, z, world.getBlockMetadata(x, y, z));
+            ((TilePortal) world.getBlockTileEntity(x, y, z)).selfBroken();
         }
 
         super.breakBlock(world, x, y, z, par5, par6);
@@ -134,7 +152,7 @@ public class BlockPortal extends BlockEP
     @Override
     public int getRenderType()
     {
-        return ClientProxy.portalRenderType;
+        return -1;
     }
 
     @Override
@@ -198,13 +216,5 @@ public class BlockPortal extends BlockEP
     public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
         return ((TilePortal) par1World.getBlockTileEntity(par2, par3, par4)).activate(par5EntityPlayer);
-    }
-
-    @Override
-    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
-    {
-        TilePortalFrameController controller = ((TilePortal) blockAccess.getBlockTileEntity(x, y, z)).getControllerValidated();
-
-        return controller == null ? 0xFFFFFF : controller.PortalColour;
     }
 }

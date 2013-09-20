@@ -11,7 +11,6 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -43,6 +42,12 @@ public class BlockFrame extends BlockEP
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
         connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", blockID, -1);
+    }
+    
+    @Override
+    public int getRenderBlockPass()
+    {
+        return 0;
     }
     
     @Override
@@ -94,7 +99,7 @@ public class BlockFrame extends BlockEP
     @Override
     public int getRenderType()
     {
-        return ClientProxy.portalFrameRenderType;
+        return -1;
     }
     
     @Override
@@ -227,31 +232,6 @@ public class BlockFrame extends BlockEP
             return;
         }
 
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-
-            if (world.getBlockId(x + d.offsetX, y + d.offsetY, z + d.offsetZ) == blockID)
-            {
-                TilePortalFrame frame = (TilePortalFrame) world.getBlockTileEntity(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
-
-                if (frame.validateController())
-                {
-                    TilePortalFrameController controller = frame.getControllerValidated();
-                    TilePortalFrame self = (TilePortalFrame) world.getBlockTileEntity(x, y, z);
-                    self.controller = frame.controller;
-
-                    controller.portalFrame.add(new ChunkCoordinates(x, y, z));
-
-                    if (self instanceof TilePortalFrameRedstone)
-                    {
-                        controller.portalFrameRedstone.add(new ChunkCoordinates(x, y, z));
-                    }
-
-                    CommonProxy.sendUpdatePacketToAllAround(controller);
-                    return;
-                }
-            }
-        }
+        // TODO
     }
 }

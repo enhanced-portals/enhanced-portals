@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
-import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
@@ -84,23 +82,6 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
         state = tagCompound.getByte("state");
         emitting = tagCompound.getBoolean("emitting");
         pulse = tagCompound.getBoolean("pulse");
-    }
-
-    @Override
-    public boolean activate(EntityPlayer player)
-    {
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == CommonProxy.itemWrench.itemID)
-        {
-            TilePortalFrameController control = getControllerValidated();
-
-            if (control != null)
-            {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, worldObj, xCoord, yCoord, zCoord);
-                return true;
-            }
-        }
-        
-        return false;
     }
 
     @Override

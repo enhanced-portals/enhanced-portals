@@ -41,7 +41,7 @@ gui.ep3.controller.networkInterface=Network Interface
 gui.ep3.controller.dialDevice=Dialling Device
 gui.ep3.controller.biometric=Biometric Identifier
 gui.ep3.controller.initialized=Initialized
-gui.ep3.controller.invalid=Invalid
+gui.ep3.controller.invalid=
 gui.ep3.clickToModify=Click to modify
 gui.ep3.networkIdentifier=Network Identifier
 gui.ep3.networkInfo=Network Information
@@ -49,6 +49,7 @@ gui.ep3.networkIdentifier.connectedPortals=Connected Portals
 gui.ep3.networkIdentifier.teleportMode=Teleport Mode
 gui.ep3.networkIdentifier.sequential=Sequential
 gui.ep3.networkIdentifier.random=Random
+gui.ep3.networkIdentifier.notSet=Not Set
 
 # Controller Tips
 gui.ep3.controller.tip.0=You can right-click this tab to get more tips! This also works for other information tabs.
@@ -76,3 +77,12 @@ gui.ep3.redstone.input.portalOnSignal.desc=Creates a portal while recieving a re
 gui.ep3.redstone.input.portalNoSignal.desc=Creates a portal when no redstone signal is being recieved, the portal will be removed when a redstone signal is applied
 gui.ep3.redstone.input.portalOnPulse.desc=Creates a portal when recieving a redstone pulse, the portal will not be removed
 gui.ep3.redstone.input.noPortalOnPulse.desc=Removes a portal when recieving a redstone pulse, the portal will not get recreated
+
+# Chat
+chat.ep3.portalLink.success=Successfully created a portal
+chat.ep3.portalLink.fail.noportalblocks=Failed to create a portal: No portal blocks found
+chat.ep3.portalLink.fail.multiplecontrollers=Failed to create a portal: You cannot have multiple Portal Controllers
+chat.ep3.portalLink.fail.multiplenetworkidentifiers=Failed to create a portal: You cannot have multiple Network Interfaces
+chat.ep3.portalLink.fail.multipledialdevices=Failed to create a portal: You cannot have multiple Dialling Devices
+chat.ep3.portalLink.fail.networkinterfaceanddialdevice=Failed to create a portal: You can have a Dialling Device OR a Network Interface
+chat.ep3.portalLink.fail.multiplebiometric=Failed to create a portal: You cannot have multiple Biometric Identifiers

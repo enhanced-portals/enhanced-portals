@@ -11,6 +11,7 @@ import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
+import uk.co.shadeddimensions.enhancedportals.portal.ClientBlockManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class GuiPortalFrameController extends GuiResizable
@@ -231,8 +232,9 @@ public class GuiPortalFrameController extends GuiResizable
     protected void drawForegroundShrunk(int par1, int par2)
     {
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalComponents"), 8, 44, 0x404040);
-
-        String s1 = "" + controller.getAttachedFrames(), s2 = "" + controller.getAttachedFrameRedstone(), s3 = "" + controller.getAttachedPortals(), s4 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (controller.networkInterface ? "initialized" : "invalid")), s5 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (controller.dialDevice ? "initialized" : "invalid")), s6 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (controller.biometric ? "initialized" : "invalid"));
+        ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;        
+        
+        String s1 = "" + blockManager.portalFrame, s2 = "" + blockManager.redstone, s3 = "" + blockManager.portal, s4 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.networkInterface ? "initialized" : "invalid")), s5 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.dialDevice ? "initialized" : "invalid")), s6 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.biometric ? "initialized" : "invalid"));
 
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.frameBlocks"), 12, 57, 0x777777);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.redstoneControllers"), 12, 67, 0x777777);

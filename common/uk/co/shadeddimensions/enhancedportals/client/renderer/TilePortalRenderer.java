@@ -1,86 +1,32 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
+import java.awt.Color;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
-@Deprecated
 public class TilePortalRenderer extends TileEntitySpecialRenderer
 {
-    private RenderBlocks renderBlocks;
-    private BlockInterface portalBlock;
-
-    @Deprecated
+private RenderBlocks renderBlocks;
+    
     public TilePortalRenderer()
     {
-        portalBlock = new BlockInterface();
         renderBlocks = new RenderBlocks();
-    }
-
-    private void renderBlock(TilePortal portal)
-    {
-        Tessellator tessellator = Tessellator.instance;
-        int meta = portal.getBlockMetadata();
-
-        renderBlocks.renderMaxX = portalBlock.maxX;
-        renderBlocks.renderMinX = portalBlock.minX;
-        renderBlocks.renderMaxY = portalBlock.maxY;
-        renderBlocks.renderMinY = portalBlock.minY;
-        renderBlocks.renderMaxZ = portalBlock.maxZ;
-        renderBlocks.renderMinZ = portalBlock.minZ;
-        renderBlocks.enableAO = false;
-
-        tessellator.startDrawingQuads();
-
-        if (meta == 1) // X
-        {
-            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord, portal.zCoord - 1) != Material.portal)
-            {
-                renderBlocks.renderFaceZNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
-            }
-
-            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord, portal.zCoord + 1) != Material.portal)
-            {
-                renderBlocks.renderFaceZPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(3));
-            }
-        }
-        else if (meta == 2) // Z
-        {
-            if (portal.worldObj.getBlockMaterial(portal.xCoord - 1, portal.yCoord, portal.zCoord) != Material.portal)
-            {
-                renderBlocks.renderFaceXNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(2));
-            }
-
-            if (portal.worldObj.getBlockMaterial(portal.xCoord + 1, portal.yCoord, portal.zCoord + 1) != Material.portal)
-            {
-                renderBlocks.renderFaceXPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(3));
-            }
-        }
-        else if (meta == 3) // XZ
-        {
-            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord - 1, portal.zCoord) != Material.portal)
-            {
-                renderBlocks.renderFaceYNeg(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(0));
-            }
-
-            if (portal.worldObj.getBlockMaterial(portal.xCoord, portal.yCoord + 1, portal.zCoord) != Material.portal)
-            {
-                renderBlocks.renderFaceYPos(null, 0, 0, 0, portalBlock.getBlockTextureFromSide(1));
-            }
-        }
-
-        tessellator.draw();
+        
+        renderBlocks.renderMinX = renderBlocks.renderMinY = renderBlocks.renderMinZ = 0;
+        renderBlocks.renderMaxX = renderBlocks.renderMaxY = renderBlocks.renderMaxZ = 1;
     }
 
     @Override
@@ -88,14 +34,14 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     {
         TilePortal portal = (TilePortal) tile;
         TilePortalFrameController controller = portal.getControllerValidated();
-        // Texture texture = portal.texture;
-        // ItemStack stack = texture.getItemStack();
-
-        // if (stack.itemID == Item.netherStar.itemID)
-        // {
-        // return;
-        // }
-
+        Tessellator tessellator = Tessellator.instance;
+        int meta = portal.getBlockMetadata();
+        
+        if (meta >= 6)
+        {
+            return;
+        }
+        
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -107,78 +53,130 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
 
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);
-
-        // test();
-
-        setupTexture(controller);
-        setCubeBounds(portal);
-        renderBlock(portal);
-
+        tessellator.startDrawingQuads();
+        
+        setupPortal(portal, meta);
+        renderPortal(portal, controller, tessellator);
+        
+        tessellator.draw();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
-
-    private void setCubeBounds(TilePortal portal)
+    
+    private void setupPortal(TilePortal portal, int meta)
     {
-        int meta = portal.getBlockMetadata();
         byte thickness = 0;
         float thick = 0.125F * thickness, thickA = MathHelper.clamp_float(0.375F - thick, 0F, 1F), thickB = MathHelper.clamp_float(0.625F + thick, 0F, 1F);
 
-        if (meta == 1) // X
+        if (meta == 1)
         {
-            portalBlock.minX = 0F;
-            portalBlock.minY = 0F;
-            portalBlock.minZ = thickA;
-
-            portalBlock.maxX = 1F;
-            portalBlock.maxY = 1F;
-            portalBlock.maxZ = thickB;
+            renderBlocks.renderMinX = renderBlocks.renderMinY = 0f;
+            renderBlocks.renderMinZ = thickA;
+            
+            renderBlocks.renderMaxX = renderBlocks.renderMaxY = 1f;
+            renderBlocks.renderMaxZ = thickB;
         }
-        else if (meta == 2) // Z
+        else if (meta == 2)
         {
-            portalBlock.minX = thickA;
-            portalBlock.minY = 0F;
-            portalBlock.minZ = 0F;
-
-            portalBlock.maxX = thickB;
-            portalBlock.maxY = 1F;
-            portalBlock.maxZ = 1F;
+            renderBlocks.renderMinZ = renderBlocks.renderMinY = 0f;
+            renderBlocks.renderMinX = thickA;
+            
+            renderBlocks.renderMaxZ = renderBlocks.renderMaxY = 1f;
+            renderBlocks.renderMaxX = thickB;
         }
-        else if (meta == 3) // XZ
+        else if (meta == 3)
         {
-            portalBlock.minX = 0F;
-            portalBlock.minY = thickA;
-            portalBlock.minZ = 0F;
-
-            portalBlock.maxX = 1F;
-            portalBlock.maxY = thickB;
-            portalBlock.maxZ = 1F;
+            renderBlocks.renderMinX = renderBlocks.renderMinZ = 0f;
+            renderBlocks.renderMinY = thickA;
+            
+            renderBlocks.renderMaxX = renderBlocks.renderMaxZ = 1f;
+            renderBlocks.renderMaxY = thickB;
         }
-        else if (meta == 4) // XYZ
+        else
         {
-            portalBlock.minX = 0F;
-            portalBlock.minY = 0F;
-            portalBlock.minZ = 0F;
-
-            portalBlock.maxX = 1F;
-            portalBlock.maxY = 1F;
-            portalBlock.maxZ = 1F;
+            renderBlocks.renderMinX = renderBlocks.renderMinY = renderBlocks.renderMinZ = 0f;
+            
+            renderBlocks.renderMaxX = renderBlocks.renderMaxY = renderBlocks.renderMaxZ = 1f;
         }
     }
-
-    private void setupTexture(TilePortalFrameController controller)
+    
+    private void renderPortal(TilePortal portal, TilePortalFrameController controller, Tessellator tessellator)
     {
-        if (controller != null)
+        int x = portal.xCoord, y = portal.yCoord, z = portal.zCoord;
+        World world = portal.worldObj;
+        Color c = new Color(controller == null ? 0xFFFFFF : controller.PortalColour);
+        float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
+        
+        Block baseBlock = controller == null ? CommonProxy.blockPortal : controller.getStackInSlot(1) != null ? Block.blocksList[controller.getStackInSlot(1).itemID] : CommonProxy.blockPortal;
+        int baseMeta = controller == null ? 5 : controller.getStackInSlot(1) != null ? controller.getStackInSlot(1).getItemDamage() : 5;
+        
+        float f3 = 0.5F;
+        float f4 = 1.0F;
+        float f5 = 0.8F;
+        float f6 = 0.6F;
+        float f7 = f4 * red;
+        float f8 = f4 * green;
+        float f9 = f4 * blue;
+        float f10 = f3;
+        float f11 = f5;
+        float f12 = f6;
+        float f13 = f3;
+        float f14 = f5;
+        float f15 = f6;
+        float f16 = f3;
+        float f17 = f5;
+        float f18 = f6;
+
+        f10 = f3 * red;
+        f11 = f5 * red;
+        f12 = f6 * red;
+        f13 = f3 * green;
+        f14 = f5 * green;
+        f15 = f6 * green;
+        f16 = f3 * blue;
+        f17 = f5 * blue;
+        f18 = f6 * blue;
+        
+        if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y - 1, z, 0) && world.getBlockId(x, y - 1, z) != CommonProxy.blockPortal.blockID)
         {
-            ItemStack s = controller.getStackInSlot(1);
-
-            if (s != null && s.getItemSpriteNumber() == 0)
-            {
-                portalBlock.baseBlock = Block.blocksList[s.itemID];
-                return;
-            }
+            //tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y - 1, z));            
+            tessellator.setColorOpaque_F(f10, f13, f16);
+            renderBlocks.renderFaceYNeg(null, 0, 0, 0, baseBlock.getIcon(0, baseMeta));
         }
-
-        portalBlock.baseBlock = Block.portal;
+        
+        if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y + 1, z, 1) && world.getBlockId(x, y + 1, z) != CommonProxy.blockPortal.blockID)
+        {
+            //tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y + 1, z)); 
+            tessellator.setColorOpaque_F(f7, f8, f9);
+            renderBlocks.renderFaceYPos(null, 0, 0, 0, baseBlock.getIcon(1, baseMeta));
+        }
+        
+        if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y, z - 1, 2) && world.getBlockId(x, y, z - 1) != CommonProxy.blockPortal.blockID)
+        {
+            //tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y, z - 1));
+            tessellator.setColorOpaque_F(f11, f14, f17);
+            renderBlocks.renderFaceZNeg(null, 0, 0, 0, baseBlock.getIcon(2, baseMeta));
+        }
+        
+        if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y, z + 1, 3) && world.getBlockId(x, y, z + 1) != CommonProxy.blockPortal.blockID)
+        {
+            //tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y, z + 1));
+            tessellator.setColorOpaque_F(f11, f14, f17);
+            renderBlocks.renderFaceZPos(null, 0, 0, 0, baseBlock.getIcon(3, baseMeta));
+        }
+        
+        if (CommonProxy.blockPortal.shouldSideBeRendered(world, x - 1, y, z, 4) && world.getBlockId(x - 1, y, z) != CommonProxy.blockPortal.blockID)
+        {
+            //tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x - 1, y, z));
+            tessellator.setColorOpaque_F(f12, f15, f18);
+            renderBlocks.renderFaceXNeg(null, 0, 0, 0, baseBlock.getIcon(4, baseMeta));
+        }
+        
+        if (CommonProxy.blockPortal.shouldSideBeRendered(world, x + 1, y, z, 5) && world.getBlockId(x + 1, y, z) != CommonProxy.blockPortal.blockID)
+        {
+            //tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x + 1, y, z));
+            tessellator.setColorOpaque_F(f12, f15, f18);
+            renderBlocks.renderFaceXPos(null, 0, 0, 0, baseBlock.getIcon(5, baseMeta));
+        }
     }
 }

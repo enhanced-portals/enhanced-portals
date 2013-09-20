@@ -9,6 +9,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.portal.ClientBlockManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class PacketPortalFrameControllerData extends MainPacket
@@ -27,17 +28,17 @@ public class PacketPortalFrameControllerData extends MainPacket
     public PacketPortalFrameControllerData(TilePortalFrameController tile)
     {
         coord = tile.getChunkCoordinates();
-        attachedFrames = tile.getAttachedFrames();
-        attachedFrameRedstone = tile.getAttachedFrameRedstone();
-        attachedPortals = tile.getAttachedPortals();
+        attachedFrames = tile.blockManager.getPortalFrameCoord().size();
+        attachedFrameRedstone = tile.blockManager.getRedstoneCoord().size();
+        attachedPortals = tile.blockManager.getPortalsCoord().size();
         uID = tile.UniqueIdentifier;
         FrameColour = tile.FrameColour;
         PortalColour = tile.PortalColour;
         ParticleColour = tile.ParticleColour;
         ParticleType = tile.ParticleType;
-        biometric = tile.portalBiometric != null  && tile.portalBiometric.posY != -1;
-        dialDevice = tile.portalDialDevice != null && tile.portalDialDevice.posY != -1;
-        networkInterface = tile.portalNetworkInterface != null && tile.portalNetworkInterface.posY != -1;
+        biometric = tile.blockManager.getBiometricCoord() != null;
+        dialDevice = tile.blockManager.getDialDeviceCoord() != null;
+        networkInterface = tile.blockManager.getNetworkInterfaceCoord() != null;
     }
 
     @Override
@@ -69,17 +70,20 @@ public class PacketPortalFrameControllerData extends MainPacket
         {
             TilePortalFrameController controller = (TilePortalFrameController) tile;
 
-            controller.attachedFrames = attachedFrames;
-            controller.attachedFrameRedstone = attachedFrameRedstone;
-            controller.attachedPortals = attachedPortals;
             controller.UniqueIdentifier = uID;
             controller.FrameColour = FrameColour;
             controller.PortalColour = PortalColour;
             controller.ParticleColour = ParticleColour;
             controller.ParticleType = ParticleType;
-            controller.biometric = biometric;
-            controller.dialDevice = dialDevice;
-            controller.networkInterface = networkInterface;
+            
+            controller.blockManager = new ClientBlockManager();
+            ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
+            blockManager.portal = attachedPortals;
+            blockManager.portalFrame = attachedFrames;
+            blockManager.redstone = attachedFrameRedstone;
+            blockManager.biometric = biometric;
+            blockManager.dialDevice = dialDevice;
+            blockManager.networkInterface = networkInterface;
         }
     }
 

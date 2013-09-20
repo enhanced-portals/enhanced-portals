@@ -5,18 +5,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.util.ChunkCoordinates;
+import uk.co.shadeddimensions.enhancedportals.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class NetworkManager
 {
            //  UID   , Location
-    Map<String, ChunkCoordinates> portalLocations;
+    Map<String, WorldCoordinates> portalLocations;
            //  UID   , Portals UIDs
     Map<String, ArrayList<String>> basicNetwork;
     
     public NetworkManager(FMLServerStartingEvent event)
     {
-        portalLocations = new HashMap<String, ChunkCoordinates>();
+        portalLocations = new HashMap<String, WorldCoordinates>();
         basicNetwork = new HashMap<String, ArrayList<String>>();
     }
     
@@ -45,7 +46,7 @@ public class NetworkManager
         return getNetworkedPortals(networkID).contains(UID);
     }
     
-    public void addNewPortal(String UID, ChunkCoordinates pos)
+    public void addNewPortal(String UID, WorldCoordinates pos)
     {
         if (!portalExists(UID))
         {
@@ -62,7 +63,7 @@ public class NetworkManager
         }
     }
     
-    public void updateExistingPortal(String oldUID, String newUID, ChunkCoordinates newPos)
+    public void updateExistingPortal(String oldUID, String newUID, WorldCoordinates newPos)
     {
         if (portalExists(oldUID))
         {
@@ -71,7 +72,7 @@ public class NetworkManager
         }
     }
     
-    public void updateExistingPortal(String UID, ChunkCoordinates newPos)
+    public void updateExistingPortal(String UID, WorldCoordinates newPos)
     {
         if (portalExists(UID))
         {

@@ -27,9 +27,9 @@ public class ChunkCoordinateUtils
         tag.setTag(name, tagList);
     }
 
-    public static List<ChunkCoordinates> loadChunkCoordList(NBTTagCompound tag, String name)
+    public static ArrayList<ChunkCoordinates> loadChunkCoordList(NBTTagCompound tag, String name)
     {
-        List<ChunkCoordinates> list = new ArrayList<ChunkCoordinates>();
+        ArrayList<ChunkCoordinates> list = new ArrayList<ChunkCoordinates>();
 
         NBTTagList tagList = tag.getTagList(name);
 
@@ -47,7 +47,7 @@ public class ChunkCoordinateUtils
     {
         if (c == null)
         {
-            c = new ChunkCoordinates(0, -1, 0);
+            return;
         }
         
         NBTTagCompound t = new NBTTagCompound();
@@ -67,7 +67,7 @@ public class ChunkCoordinateUtils
         
         NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
         
-        return new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
+        return t.getInteger("Y") == -1 ? null : new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
     }
     
     public static ChunkCoordinates offset(ChunkCoordinates coord, ForgeDirection dir)

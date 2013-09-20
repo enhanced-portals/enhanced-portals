@@ -119,24 +119,19 @@ public class ControllerLink
             return LinkStatus.FAIL_NetworkInterfaceAndDialDevice;
         }
         
-        // everything seems to be OK - lets continue
-        
-        controller.portalBlocks.clear();
-        controller.portalFrame.clear();
-        controller.portalFrameRedstone.clear();
-        controller.portalDialDevice = null;
-        controller.portalNetworkInterface = null;
-        controller.portalBiometric = null;
+        // everything seems to be OK - lets continue        
+        controller.blockManager.clearAll();
         
         while (!portalBlocks.isEmpty()) // loop through portal blocks connecting them to controller
         {
-            ChunkCoordinates c = portalBlocks.remove();            
+            ChunkCoordinates c = portalBlocks.remove();
             TilePortal portal = (TilePortal) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
             
             if (portal != null)
             {
                 portal.controller = controller.getChunkCoordinates();
-                controller.portalBlocks.add(c);
+                controller.blockManager.addToPortals(c);
+                CommonProxy.sendUpdatePacketToAllAround(portal);
             }
         }
         
@@ -148,7 +143,8 @@ public class ControllerLink
             if (frame != null)
             {
                 frame.controller = controller.getChunkCoordinates();
-                controller.portalFrame.add(c);
+                controller.blockManager.addToPortalFrames(c);
+                CommonProxy.sendUpdatePacketToAllAround(frame);
             }
         }
         
@@ -160,7 +156,8 @@ public class ControllerLink
             if (frame != null)
             {
                 frame.controller = controller.getChunkCoordinates();
-                controller.portalFrameRedstone.add(c);
+                controller.blockManager.addToRedstone(c);
+                CommonProxy.sendUpdatePacketToAllAround(frame);
             }
         }
         
@@ -172,7 +169,8 @@ public class ControllerLink
             if (networkInterface != null)
             {
                 networkInterface.controller = controller.getChunkCoordinates();
-                controller.portalNetworkInterface = c;
+                controller.blockManager.setNetworkInterface(c);
+                CommonProxy.sendUpdatePacketToAllAround(networkInterface);
             }
         }
         else if (!dialBlocks.isEmpty()) // OR one of these (checked above)
@@ -183,7 +181,8 @@ public class ControllerLink
             if (device != null)
             {
                 device.controller = controller.getChunkCoordinates();
-                controller.portalDialDevice = c;
+                controller.blockManager.setDialDevice(c);
+                CommonProxy.sendUpdatePacketToAllAround(device);
             }
         }
         
@@ -195,7 +194,8 @@ public class ControllerLink
             if (biometric != null)
             {
                 biometric.controller = controller.getChunkCoordinates();
-                controller.portalBiometric = c;
+                controller.blockManager.setBiometric(c);
+                CommonProxy.sendUpdatePacketToAllAround(biometric);
             }
         }
         

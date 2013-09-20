@@ -14,7 +14,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkI
 
 public class PacketNetworkInterfaceData extends MainPacket
 {
-    ChunkCoordinates coord;
+    ChunkCoordinates coord, controller;
     String networkID;
     int connectedPortals;
     
@@ -28,12 +28,14 @@ public class PacketNetworkInterfaceData extends MainPacket
         coord = tile.getChunkCoordinates();
         networkID = tile.NetworkIdentifier;
         connectedPortals = CommonProxy.networkManager.getNetworkedPortals(tile.NetworkIdentifier).size() - 1;
+        controller = tile.controller;
     }
 
     @Override
     public MainPacket consumePacket(DataInputStream stream) throws IOException
     {
         coord = readChunkCoordinates(stream);
+        controller = readChunkCoordinates(stream);
         networkID = stream.readUTF();
         connectedPortals = stream.readInt();
         
@@ -52,6 +54,7 @@ public class PacketNetworkInterfaceData extends MainPacket
 
             ni.NetworkIdentifier = networkID;
             ni.connectedPortals = connectedPortals;
+            ni.controller = controller;
         }
     }
 
@@ -59,6 +62,7 @@ public class PacketNetworkInterfaceData extends MainPacket
     public void generatePacket(DataOutputStream stream) throws IOException
     {
         writeChunkCoordinates(coord, stream);
+        writeChunkCoordinates(controller, stream);
         stream.writeUTF(networkID);
         stream.writeInt(connectedPortals);
     }

@@ -6,6 +6,7 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.block.BlockPortal;
 import uk.co.shadeddimensions.enhancedportals.item.ItemPortalFrame;
 import uk.co.shadeddimensions.enhancedportals.item.ItemWrench;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalData;
@@ -35,8 +36,8 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemPortalFrame.class, "ep3.portalFrame");
-        blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, "ep3.portal");
+        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemPortalFrame.class, Reference.SHORT_ID + ".portalFrame");
+        blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, Reference.SHORT_ID + ".portal");
     }
 
     public void registerTileEntities()
@@ -52,7 +53,7 @@ public class CommonProxy
 
     public void registerItems()
     {
-        itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, "ep3.wrench");
+        itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, Reference.SHORT_ID + ".wrench");
     }
 
     public void registerRenderers()
@@ -93,10 +94,10 @@ public class CommonProxy
 
     public void setupConfiguration()
     {
-        EnhancedPortals.config.addBlock("ep3.portal");
-        EnhancedPortals.config.addBlock("ep3.portalFrame");
+        EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portal");
+        EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portalFrame");
 
-        EnhancedPortals.config.addItem("ep3.wrench");
+        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
         
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");
