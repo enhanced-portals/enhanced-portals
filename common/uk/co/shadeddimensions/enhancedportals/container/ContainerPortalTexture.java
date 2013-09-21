@@ -2,7 +2,7 @@ package uk.co.shadeddimensions.enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotPhantom;
+import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
 public class ContainerPortalTexture extends ContainerEnhancedPortals
@@ -11,7 +11,7 @@ public class ContainerPortalTexture extends ContainerEnhancedPortals
     {
         super(frame.getSizeInventory(), frame);
 
-        addSlotToContainer(new SlotPhantom(frame, 1, 129, 23));
+        addSlotToContainer(new SlotPortalTexture(frame, 1, 129, 23));
 
         for (int i = 0; i < 3; i++)
         {

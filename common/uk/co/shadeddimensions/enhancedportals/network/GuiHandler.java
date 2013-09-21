@@ -51,7 +51,7 @@ public class GuiHandler implements IGuiHandler
             return new ContainerPortalTexture(player, (TilePortalFrameController) tile);
         }
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrameNetworkInterface)
-        {            
+        {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TilePortalFrameNetworkInterface) tile)), (Player) player);
             return new ContainerNetworkInterface((TilePortalFrameNetworkInterface) tile);
         }

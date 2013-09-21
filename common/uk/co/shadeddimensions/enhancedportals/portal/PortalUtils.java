@@ -15,6 +15,43 @@ public class PortalUtils
 {
     // TODO: Rewrite to be better.
 
+    public static void removePortalForController(TilePortalFrameController control)
+    {
+        WorldServer world = (WorldServer) control.worldObj;
+        
+        for (int k = 0; k < 6; k++)
+        {
+            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
+            
+            if (world.isAirBlock(c.posX, c.posY, c.posZ))
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    removePortal(world, c.posX, c.posY, c.posZ);
+                }
+            }
+        }
+    }
+    
+    private static void removePortal(WorldServer world, int x, int y, int z)
+    {
+        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
+        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
+        toProcess.add(new ChunkCoordinates(x, y, z));
+
+        while (!toProcess.isEmpty())
+        {
+            ChunkCoordinates cur = toProcess.remove();
+
+            if (!addedBlocks.contains(cur) && world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
+            {
+                addedBlocks.add(cur);
+                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
+                addTouchingBlocks(cur, toProcess, 0);
+            }
+        }
+    }
+
     public static boolean createPortalForController(TilePortalFrameController control)
     {
         WorldServer world = (WorldServer) control.worldObj;

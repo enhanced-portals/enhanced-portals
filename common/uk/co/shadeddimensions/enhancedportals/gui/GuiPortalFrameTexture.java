@@ -68,11 +68,11 @@ public class GuiPortalFrameTexture extends GuiResizable
                 ((GuiRGBSlider) buttonList.get(0)).sliderValue = 1f;
                 ((GuiRGBSlider) buttonList.get(1)).sliderValue = 1f;
                 ((GuiRGBSlider) buttonList.get(2)).sliderValue = 1f;
+                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 0)));
             }
 
             String hex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
             PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(0, Integer.parseInt(hex, 16))));
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 0)));
         }
     }
 

@@ -3,9 +3,11 @@ package uk.co.shadeddimensions.enhancedportals.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
@@ -50,7 +52,24 @@ public class ItemWrench extends ItemEP
             }
             else if (tile instanceof TilePortalFrameDialDevice)
             {
+                TilePortalFrameDialDevice ni = (TilePortalFrameDialDevice) tile;
+                
+                if (ni.getControllerValidated() == null)
+                {
+                    return false;
+                }
+                else if (ni.getControllerValidated().UniqueIdentifier.equals(""))
+                {
+                    if (!world.isRemote)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".dialDevice.noUidSet"));
+                    }
+                    
+                    return false;
+                }
+                
                 // TODO
+                
                 return true;
             }
             else if (tile instanceof TilePortalFrameNetworkInterface)
@@ -59,6 +78,15 @@ public class ItemWrench extends ItemEP
                 
                 if (ni.getControllerValidated() == null)
                 {
+                    return false;
+                }
+                else if (ni.getControllerValidated().UniqueIdentifier.equals(""))
+                {
+                    if (!world.isRemote)
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".networkInterface.noUidSet"));
+                    }
+                    
                     return false;
                 }
                 

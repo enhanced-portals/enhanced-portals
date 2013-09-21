@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -14,6 +15,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
 
@@ -107,9 +109,24 @@ private RenderBlocks renderBlocks;
         Color c = new Color(controller == null ? 0xFFFFFF : controller.PortalColour);
         float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
         
-        Block baseBlock = controller == null ? CommonProxy.blockPortal : controller.getStackInSlot(1) != null ? Block.blocksList[controller.getStackInSlot(1).itemID] : CommonProxy.blockPortal;
-        int baseMeta = controller == null ? 5 : controller.getStackInSlot(1) != null ? controller.getStackInSlot(1).getItemDamage() : 5;
+        Block baseBlock = CommonProxy.blockPortal;
+        int baseMeta = 5;
         
+        if (controller != null)
+        {
+            ItemStack stack = controller.getStackInSlot(1);
+            
+            if (StackHelper.isStackDye(stack))
+            {
+                baseMeta = StackHelper.getDyeColour(stack);
+            }
+            else if (StackHelper.isItemStackValidForPortalTexture(stack))
+            {
+                baseBlock = Block.blocksList[stack.itemID];
+                baseMeta = stack.getItemDamage();
+            }
+        }
+               
         float f3 = 0.5F;
         float f4 = 1.0F;
         float f5 = 0.8F;

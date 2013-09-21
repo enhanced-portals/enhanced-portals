@@ -67,13 +67,13 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         NBTTagList list = new NBTTagList();
         for (ItemStack s : inventory)
         {
-            if (s == null)
-            {
-                continue;
-            }
-
             NBTTagCompound compound = new NBTTagCompound();
-            s.writeToNBT(compound);
+            
+            if (s != null)
+            {
+                s.writeToNBT(compound);
+            }
+            
             list.appendTag(compound);
         }
 
@@ -144,6 +144,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
                 }
                 else
                 {
+                    PortalUtils.removePortalForController(this);
                     player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".portalLink." + status.toString().toLowerCase().replace("_", ".")));
                 }
                 

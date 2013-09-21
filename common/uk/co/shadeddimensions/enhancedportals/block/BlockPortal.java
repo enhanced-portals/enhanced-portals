@@ -30,8 +30,18 @@ public class BlockPortal extends BlockEP
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundGlassFootstep);
-        setLightValue(1f);
         colouredPortalTextures = new Icon[16];
+    }
+    
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z)
+    {
+        if (world.getBlockMetadata(x, y, z) < 6)
+        {
+            return 14;
+        }
+        
+        return 0;
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -25,6 +26,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameControll
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEP
@@ -43,13 +45,7 @@ public class BlockFrame extends BlockEP
         setStepSound(soundStoneFootstep);
         connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", blockID, -1);
     }
-    
-    @Override
-    public int getRenderBlockPass()
-    {
-        return 0;
-    }
-    
+        
     @Override
     public void registerIcons(IconRegister register)
     {
@@ -232,6 +228,14 @@ public class BlockFrame extends BlockEP
             return;
         }
 
-        // TODO
+        for (int i = 0; i < 6; i++)
+        {
+            ChunkCoordinates c = ChunkCoordinateUtils.offset(new ChunkCoordinates(x, y, z), ForgeDirection.getOrientation(i));
+            
+            if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockFrame.blockID)
+            {
+                ((TilePortalFrame) world.getBlockTileEntity(c.posX, c.posY, c.posZ)).selfBroken();
+            }
+        }
     }
 }

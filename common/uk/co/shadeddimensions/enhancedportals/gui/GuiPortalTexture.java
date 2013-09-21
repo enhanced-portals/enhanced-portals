@@ -130,6 +130,7 @@ public class GuiPortalTexture extends GuiResizable
                 ((GuiRGBSlider) buttonList.get(5)).sliderValue = c.getBlue() / 255f;
 
                 PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(3, 0)));
+                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 1)));
             }
 
             String portalColourHex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
@@ -137,7 +138,6 @@ public class GuiPortalTexture extends GuiResizable
 
             PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(1, Integer.parseInt(portalColourHex, 16))));
             PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(2, Integer.parseInt(particleColourHex, 16))));
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 1)));
         }
         else if (button.id == 12 || button.id == 13)
         {
