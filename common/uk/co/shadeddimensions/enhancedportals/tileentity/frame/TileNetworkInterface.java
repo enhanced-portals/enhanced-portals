@@ -1,19 +1,20 @@
-package uk.co.shadeddimensions.enhancedportals.tileentity;
+package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TilePortalFrameNetworkInterface extends TilePortalFrame
+public class TileNetworkInterface extends TilePortalFrame
 {
     public String NetworkIdentifier;
 
     @SideOnly(Side.CLIENT)
     public int connectedPortals = 0;
     
-    public TilePortalFrameNetworkInterface()
+    public TileNetworkInterface()
     {
         NetworkIdentifier = "";
     }

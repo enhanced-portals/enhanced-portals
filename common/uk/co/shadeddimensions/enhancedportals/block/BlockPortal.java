@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -123,7 +123,7 @@ public class BlockPortal extends BlockEP
             }
 
             int type = 0, colour = 0xB336A1;
-            TilePortalFrameController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getControllerValidated();
+            TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getControllerValidated();
 
             if (controller != null)
             {
@@ -193,10 +193,6 @@ public class BlockPortal extends BlockEP
         else if (meta == 3) // XZ
         {
             setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
-        }
-        else if (meta >= 6)
-        {
-            setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
         }
         else
         {

@@ -21,17 +21,18 @@ import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEP
 {
-    static final int FRAME_TYPES = 6;
+    static final int FRAME_TYPES = 7;
     public static Icon[] typeOverlayIcons = new Icon[FRAME_TYPES];
     
     static ConnectedTextures connectedTextures;
@@ -132,23 +133,27 @@ public class BlockFrame extends BlockEP
         }
         else if (metadata == 1)
         {
-            return new TilePortalFrameController();
+            return new TilePortalController();
         }
         else if (metadata == 2)
         {
-            return new TilePortalFrameRedstone();
+            return new TileRedstoneInterface();
         }
         else if (metadata == 3)
         {
-            return new TilePortalFrameNetworkInterface();
+            return new TileNetworkInterface();
         }
         else if (metadata == 4)
         {
-            return new TilePortalFrameDialDevice();
+            return new TileDiallingDevice();
         }
         else if (metadata == 5)
         {
-            return new TilePortalFrameBiometric();
+            return new TileBiometricIdentifier();
+        }
+        else if (metadata == 6)
+        {
+            return new TileModuleManipulator();
         }
 
         return null;

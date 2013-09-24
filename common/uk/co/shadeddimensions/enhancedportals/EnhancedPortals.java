@@ -8,6 +8,7 @@ import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
 import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.util.ConfigurationManager;
+import uk.co.shadeddimensions.enhancedportals.util.CustomIconManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,6 +17,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
@@ -26,6 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 public class EnhancedPortals
 {
     public static ConfigurationManager config;    
+    public static CustomIconManager customPortalIcons, customPortalFrameIcons;
 
     @Instance(Reference.ID)
     public static EnhancedPortals instance;
@@ -36,6 +39,9 @@ public class EnhancedPortals
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        customPortalIcons = new CustomIconManager();
+        customPortalFrameIcons = new CustomIconManager();
+        
         proxy.setupConfiguration();
         proxy.registerBlocks();
         proxy.registerTileEntities();
@@ -66,5 +72,11 @@ public class EnhancedPortals
     public void serverStarting(FMLServerStartingEvent event)
     {        
         CommonProxy.networkManager = new NetworkManager(event);
+    }
+    
+    @EventHandler
+    public void serverStopping(FMLServerStoppingEvent event)
+    {
+        CommonProxy.networkManager.saveAllData();
     }
 }

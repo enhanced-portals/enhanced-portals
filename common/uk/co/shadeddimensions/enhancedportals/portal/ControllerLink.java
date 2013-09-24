@@ -10,11 +10,11 @@ import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 
 public class ControllerLink
@@ -31,9 +31,9 @@ public class ControllerLink
     }
     
     World world;
-    TilePortalFrameController controller;
+    TilePortalController controller;
     
-    public ControllerLink(TilePortalFrameController control)
+    public ControllerLink(TilePortalController control)
     {
         controller = control;
         world = controller.worldObj;
@@ -65,23 +65,23 @@ public class ControllerLink
                 {
                     portalBlocks.add(c);
                 }
-                else if (t instanceof TilePortalFrameRedstone)
+                else if (t instanceof TileRedstoneInterface)
                 {
                     redstoneBlocks.add(c);
                 }
-                else if (t instanceof TilePortalFrameNetworkInterface)
+                else if (t instanceof TileNetworkInterface)
                 {
                     networkBlocks.add(c);
                 }
-                else if (t instanceof TilePortalFrameDialDevice)
+                else if (t instanceof TileDiallingDevice)
                 {
                     dialBlocks.add(c);
                 }
-                else if (t instanceof TilePortalFrameBiometric)
+                else if (t instanceof TileBiometricIdentifier)
                 {
                     biometricBlocks.add(c);
                 }
-                else if (t instanceof TilePortalFrameController)
+                else if (t instanceof TilePortalController)
                 {
                     if (!processed.isEmpty())
                     {
@@ -151,7 +151,7 @@ public class ControllerLink
         while (!redstoneBlocks.isEmpty()) // redstone too
         {
             ChunkCoordinates c = redstoneBlocks.remove();            
-            TilePortalFrameRedstone frame = (TilePortalFrameRedstone) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            TileRedstoneInterface frame = (TileRedstoneInterface) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
             
             if (frame != null)
             {
@@ -164,7 +164,7 @@ public class ControllerLink
         if (!networkBlocks.isEmpty()) // there should only be one of these. (checked above)
         {
             ChunkCoordinates c = networkBlocks.remove();            
-            TilePortalFrameNetworkInterface networkInterface = (TilePortalFrameNetworkInterface) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            TileNetworkInterface networkInterface = (TileNetworkInterface) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
             
             if (networkInterface != null)
             {
@@ -176,7 +176,7 @@ public class ControllerLink
         else if (!dialBlocks.isEmpty()) // OR one of these (checked above)
         {
             ChunkCoordinates c = dialBlocks.remove();            
-            TilePortalFrameDialDevice device = (TilePortalFrameDialDevice) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            TileDiallingDevice device = (TileDiallingDevice) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
             
             if (device != null)
             {
@@ -189,7 +189,7 @@ public class ControllerLink
         if (!biometricBlocks.isEmpty()) // there should only be one of these. (checked above)
         {
             ChunkCoordinates c = biometricBlocks.remove();            
-            TilePortalFrameBiometric biometric = (TilePortalFrameBiometric) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            TileBiometricIdentifier biometric = (TileBiometricIdentifier) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
             
             if (biometric != null)
             {

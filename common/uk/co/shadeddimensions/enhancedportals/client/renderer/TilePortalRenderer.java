@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
 public class TilePortalRenderer extends TileEntitySpecialRenderer
 {
@@ -35,14 +35,9 @@ private RenderBlocks renderBlocks;
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortal portal = (TilePortal) tile;
-        TilePortalFrameController controller = portal.getControllerValidated();
+        TilePortalController controller = portal.getControllerValidated();
         Tessellator tessellator = Tessellator.instance;
         int meta = portal.getBlockMetadata();
-        
-        if (meta >= 6)
-        {
-            return;
-        }
         
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -102,7 +97,7 @@ private RenderBlocks renderBlocks;
         }
     }
     
-    private void renderPortal(TilePortal portal, TilePortalFrameController controller, Tessellator tessellator)
+    private void renderPortal(TilePortal portal, TilePortalController controller, Tessellator tessellator)
     {
         int x = portal.xCoord, y = portal.yCoord, z = portal.zCoord;
         World world = portal.worldObj;

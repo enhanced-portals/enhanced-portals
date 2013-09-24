@@ -14,16 +14,16 @@ import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 
 public class GuiPortalFrameNetworkInterface extends GuiResizable
 {
     GuiGlyphSelector glyphSelector;
     GuiGlyphViewer glyphViewer;
     
-    TilePortalFrameNetworkInterface networkInterface;
+    TileNetworkInterface networkInterface;
     
-    public GuiPortalFrameNetworkInterface(TilePortalFrameNetworkInterface tile)
+    public GuiPortalFrameNetworkInterface(TileNetworkInterface tile)
     {
         super(new ContainerNetworkInterface(tile), tile, 176, 85, 176, 143);
         

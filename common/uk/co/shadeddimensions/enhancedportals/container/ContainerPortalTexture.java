@@ -3,11 +3,11 @@ package uk.co.shadeddimensions.enhancedportals.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotPortalTexture;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
 public class ContainerPortalTexture extends ContainerEnhancedPortals
 {
-    public ContainerPortalTexture(EntityPlayer player, TilePortalFrameController frame)
+    public ContainerPortalTexture(EntityPlayer player, TilePortalController frame)
     {
         super(frame.getSizeInventory(), frame);
 
@@ -30,6 +30,6 @@ public class ContainerPortalTexture extends ContainerEnhancedPortals
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TilePortalFrameController) tile).isUseableByPlayer(entityplayer);
+        return ((TilePortalController) tile).isUseableByPlayer(entityplayer);
     }
 }

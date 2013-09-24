@@ -5,10 +5,11 @@ tile.ep3.portalFrame.redstone.name=Redstone Interface
 tile.ep3.portalFrame.networkInterface.name=Network Interface
 tile.ep3.portalFrame.dialDevice.name=Dialling Device
 tile.ep3.portalFrame.biometric.name=Biometric Identifier
+tile.ep3.portalFrame.upgrade.name=Module Manipulator
 tile.ep3.portal.name=Portal
 
 # Items
-item.ep3.wrench.name=Portal Something or other
+item.ep3.wrench.name=Multitool
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3

@@ -9,10 +9,10 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 
 public class BlockManager
@@ -109,7 +109,10 @@ public class BlockManager
     {
         for (ChunkCoordinates c : portal)
         {
-            world.setBlockToAir(c.posX, c.posY, c.posZ);
+            if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
+            {
+                world.setBlockToAir(c.posX, c.posY, c.posZ);
+            }
         }
     }
     
@@ -135,7 +138,7 @@ public class BlockManager
             
             if (tile != null)
             {
-                ((TilePortalFrameRedstone) tile).controller = null;
+                ((TileRedstoneInterface) tile).controller = null;
                 CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
             }
         }
@@ -149,7 +152,7 @@ public class BlockManager
             
             if (tile != null)
             {
-                ((TilePortalFrameBiometric) tile).controller = null;
+                ((TileBiometricIdentifier) tile).controller = null;
                 CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
             }
         }
@@ -163,7 +166,7 @@ public class BlockManager
             
             if (tile != null)
             {
-                ((TilePortalFrameDialDevice) tile).controller = null;
+                ((TileDiallingDevice) tile).controller = null;
                 CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
             }
         }
@@ -177,7 +180,7 @@ public class BlockManager
             
             if (tile != null)
             {
-                ((TilePortalFrameNetworkInterface) tile).controller = null;
+                ((TileNetworkInterface) tile).controller = null;
                 CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
             }
         }
@@ -239,45 +242,45 @@ public class BlockManager
         networkInterface = c;
     }
     
-    public TilePortalFrameBiometric getBiometric(World world)
+    public TileBiometricIdentifier getBiometric(World world)
     {
         if (biometric != null)
         {
             TileEntity tile = world.getBlockTileEntity(biometric.posX, biometric.posY, biometric.posZ);
             
-            if (tile != null && tile instanceof TilePortalFrameBiometric)
+            if (tile != null && tile instanceof TileBiometricIdentifier)
             {
-                return (TilePortalFrameBiometric) tile;
+                return (TileBiometricIdentifier) tile;
             }
         }
         
         return null;
     }
     
-    public TilePortalFrameDialDevice getDialDevice(World world)
+    public TileDiallingDevice getDialDevice(World world)
     {
         if (dialDevice != null)
         {
             TileEntity tile = world.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
             
-            if (tile != null && tile instanceof TilePortalFrameDialDevice)
+            if (tile != null && tile instanceof TileDiallingDevice)
             {
-                return (TilePortalFrameDialDevice) tile;
+                return (TileDiallingDevice) tile;
             }
         }
         
         return null;
     }
     
-    public TilePortalFrameNetworkInterface getNetworkInterface(World world)
+    public TileNetworkInterface getNetworkInterface(World world)
     {
         if (networkInterface != null)
         {
             TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
             
-            if (tile != null && tile instanceof TilePortalFrameNetworkInterface)
+            if (tile != null && tile instanceof TileNetworkInterface)
             {
-                return (TilePortalFrameNetworkInterface) tile;
+                return (TileNetworkInterface) tile;
             }
         }
         

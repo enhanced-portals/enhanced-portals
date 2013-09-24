@@ -4,7 +4,7 @@ import net.minecraft.util.ChunkCoordinates;
 
 public class WorldCoordinates extends ChunkCoordinates
 {
-    int dimension;
+    public int dimension;
     
     public WorldCoordinates()
     {

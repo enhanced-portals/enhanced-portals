@@ -58,6 +58,10 @@ public class ItemPortalFrame extends ItemBlock
             case 5:
                 name = "biometric";
                 break;
+                
+            case 6:
+                name = "upgrade";
+                break;
         }
 
         return super.getUnlocalizedName() + "." + name;

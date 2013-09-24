@@ -18,15 +18,15 @@ import uk.co.shadeddimensions.enhancedportals.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiInteger;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiPortalTexture extends GuiResizable
 {
-    TilePortalFrameController controller;
+    TilePortalController controller;
     int pType;
 
-    public GuiPortalTexture(EntityPlayer player, TilePortalFrameController control)
+    public GuiPortalTexture(EntityPlayer player, TilePortalController control)
     {
         super(new ContainerPortalTexture(player, control), control);
         controller = control;
@@ -48,14 +48,14 @@ public class GuiPortalTexture extends GuiResizable
         drawTexturedModalRect(guiLeft + 37, guiTop + 22, 0, 0, 18, 18);
         drawTexturedModalRect(guiLeft + xSize - 48, guiTop + 22, 0, 0, 18, 18);
         drawTexturedModalRect(guiLeft + xSize - 28, guiTop + 22, 0, 0, 18, 18);
-
+        
+        drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.ParticleType), true);
+        
         GL11.glColor3f(((GuiRGBSlider) buttonList.get(0)).sliderValue, ((GuiRGBSlider) buttonList.get(1)).sliderValue, ((GuiRGBSlider) buttonList.get(2)).sliderValue);
         itemRenderer.renderWithColor = false;
         itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, controller.getStackInSlot(1) == null ? new ItemStack(Block.portal, 1) : controller.getStackInSlot(1), guiLeft + xSize - 27, guiTop + 23);
         itemRenderer.renderWithColor = true;
         GL11.glColor3f(1f, 1f, 1f);
-
-        drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.ParticleType), true);
     }
 
     @Override

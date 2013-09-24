@@ -16,11 +16,11 @@ import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalTexture;
 import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalControllerData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRedstoneInterfaceData;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -32,28 +32,28 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
+        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalController)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
-            return new ContainerPortalFrameController((TilePortalFrameController) tile);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
+            return new ContainerPortalFrameController((TilePortalController) tile);
         }
-        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
+        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TileRedstoneInterface)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile)), (Player) player);
-            return new ContainerPortalFrameRedstone((TilePortalFrameRedstone) tile);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData((TileRedstoneInterface) tile)), (Player) player);
+            return new ContainerPortalFrameRedstone((TileRedstoneInterface) tile);
         }
-        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrameController)
+        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
         {
-            return new ContainerPortalFrameTexture(player, (TilePortalFrameController) tile);
+            return new ContainerPortalFrameTexture(player, (TilePortalController) tile);
         }
-        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalFrameController)
+        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
         {
-            return new ContainerPortalTexture(player, (TilePortalFrameController) tile);
+            return new ContainerPortalTexture(player, (TilePortalController) tile);
         }
-        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrameNetworkInterface)
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TilePortalFrameNetworkInterface) tile)), (Player) player);
-            return new ContainerNetworkInterface((TilePortalFrameNetworkInterface) tile);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile)), (Player) player);
+            return new ContainerNetworkInterface((TileNetworkInterface) tile);
         }
 
         return null;
@@ -64,25 +64,25 @@ public class GuiHandler implements IGuiHandler
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalFrameController)
+        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalController)
         {
-            return new GuiPortalFrameController(player, (TilePortalFrameController) tile);
+            return new GuiPortalFrameController(player, (TilePortalController) tile);
         }
-        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TilePortalFrameRedstone)
+        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TileRedstoneInterface)
         {
-            return new GuiPortalFrameRedstone(player, (TilePortalFrameRedstone) tile);
+            return new GuiPortalFrameRedstone(player, (TileRedstoneInterface) tile);
         }
-        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalFrameController)
+        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
         {
-            return new GuiPortalFrameTexture(player, (TilePortalFrameController) tile);
+            return new GuiPortalFrameTexture(player, (TilePortalController) tile);
         }
-        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalFrameController)
+        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
         {
-            return new GuiPortalTexture(player, (TilePortalFrameController) tile);
+            return new GuiPortalTexture(player, (TilePortalController) tile);
         }
-        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalFrameNetworkInterface)
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
         {            
-            return new GuiPortalFrameNetworkInterface((TilePortalFrameNetworkInterface) tile);
+            return new GuiPortalFrameNetworkInterface((TileNetworkInterface) tile);
         }
 
         return null;

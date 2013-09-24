@@ -1,11 +1,11 @@
 package uk.co.shadeddimensions.enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 
 public class ContainerPortalFrameRedstone extends ContainerEnhancedPortals
 {
-    public ContainerPortalFrameRedstone(TilePortalFrameRedstone tile)
+    public ContainerPortalFrameRedstone(TileRedstoneInterface tile)
     {
         super(tile.getSizeInventory(), tile);
     }
@@ -13,6 +13,6 @@ public class ContainerPortalFrameRedstone extends ContainerEnhancedPortals
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TilePortalFrameRedstone) tile).isUseableByPlayer(entityplayer);
+        return ((TileRedstoneInterface) tile).isUseableByPlayer(entityplayer);
     }
 }

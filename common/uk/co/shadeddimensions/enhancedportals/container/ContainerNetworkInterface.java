@@ -1,11 +1,11 @@
 package uk.co.shadeddimensions.enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 
 public class ContainerNetworkInterface extends ContainerEnhancedPortals
 {
-    public ContainerNetworkInterface(TilePortalFrameNetworkInterface t)
+    public ContainerNetworkInterface(TileNetworkInterface t)
     {
         super(t.getSizeInventory(), t);
     }
@@ -13,6 +13,6 @@ public class ContainerNetworkInterface extends ContainerEnhancedPortals
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TilePortalFrameNetworkInterface) tile).isUseableByPlayer(entityplayer);
+        return ((TileNetworkInterface) tile).isUseableByPlayer(entityplayer);
     }
 }

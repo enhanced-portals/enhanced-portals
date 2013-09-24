@@ -1,10 +1,23 @@
 package uk.co.shadeddimensions.enhancedportals.portal;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
+import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
+import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
@@ -15,10 +28,17 @@ public class NetworkManager
            //  UID   , Portals UIDs
     Map<String, ArrayList<String>> basicNetwork;
     
+    File dataFile;
+    MinecraftServer server;
+    
     public NetworkManager(FMLServerStartingEvent event)
     {
         portalLocations = new HashMap<String, WorldCoordinates>();
         basicNetwork = new HashMap<String, ArrayList<String>>();
+        server = event.getServer();        
+        dataFile = new File(EnhancedPortals.proxy.getWorldDir(), Reference.NAME + ".dat");
+        
+        loadAllData();
     }
     
     public ChunkCoordinates getPortalLocation(String UID)
@@ -104,6 +124,109 @@ public class NetworkManager
         if (isPortalInNetwork(UID, network))
         {
             getNetworkedPortals(network).remove(UID);
+        }
+    }
+
+    private void makeFile()
+    {
+        try
+        {
+            if (!dataFile.exists())
+            {
+                dataFile.createNewFile();
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadAllData()
+    {
+        makeFile();
+        NBTTagCompound mainTag = null;
+        
+        try
+        {
+            mainTag = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(dataFile)));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        
+        if (mainTag == null)
+        {
+            return;
+        }
+
+        NBTTagCompound portalTag = (NBTTagCompound) mainTag.getTag("PortalLocations");
+        NBTTagCompound networkTag = (NBTTagCompound) mainTag.getTag("Networks");
+        
+        for (Object o : portalTag.getTags())
+        {
+            NBTTagCompound tag = (NBTTagCompound) o;            
+            portalLocations.put(tag.getName(), new WorldCoordinates(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D")));
+        }
+        
+        for (Object o : networkTag.getTags())
+        {
+            NBTTagList tag = (NBTTagList) o;
+            ArrayList<String> sList = new ArrayList<String>();
+            
+            for (Object ob : tag.tagList)
+            {
+                NBTTagCompound c = (NBTTagCompound) ob;
+                sList.add(c.getString("ID"));
+            }
+            
+            basicNetwork.put(tag.getName(), sList);
+        }
+    }
+    
+    public void saveAllData()
+    {
+        makeFile();
+        NBTTagCompound mainTag = new NBTTagCompound();
+        NBTTagCompound portalTag = new NBTTagCompound();
+        NBTTagCompound networkTag = new NBTTagCompound();
+        
+        for (Entry<String, WorldCoordinates> entry : portalLocations.entrySet())
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setInteger("X", entry.getValue().posX);
+            t.setInteger("Y", entry.getValue().posY);
+            t.setInteger("Z", entry.getValue().posZ);
+            t.setInteger("D", entry.getValue().dimension);
+            
+            portalTag.setTag(entry.getKey(), t);
+        }
+        
+        for (Entry<String, ArrayList<String>> entry : basicNetwork.entrySet())
+        {
+            NBTTagList t = new NBTTagList();
+            
+            for (String s : entry.getValue())
+            {
+                NBTTagCompound c = new NBTTagCompound();
+                c.setString("ID", s);
+                t.appendTag(c);
+            }
+            
+            networkTag.setTag(entry.getKey(), t);
+        }
+        
+        mainTag.setTag("PortalLocations", portalTag);
+        mainTag.setTag("Networks", networkTag);
+        
+        try
+        {
+            NBTBase.writeNamedTag(mainTag, new DataOutputStream(new FileOutputStream(dataFile)));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 }

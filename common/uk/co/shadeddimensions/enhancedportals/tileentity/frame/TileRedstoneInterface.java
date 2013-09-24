@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.enhancedportals.tileentity;
+package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 
 import java.util.Random;
 
@@ -13,11 +13,12 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRedstoneInterfaceData;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public class TilePortalFrameRedstone extends TilePortalFrame implements IInventory
+public class TileRedstoneInterface extends TilePortalFrame implements IInventory
 {
     public boolean output;
 
@@ -26,7 +27,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
 
     static byte MAX_INPUT_STATE = 4, MAX_OUTPUT_STATE = 5, MAX_TIMER = 5;
 
-    public TilePortalFrameRedstone()
+    public TileRedstoneInterface()
     {
         previousRedstoneInputState = 0;
         state = 0;
@@ -100,7 +101,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
             {
                 if (redstoneInputState > 0 && previousRedstoneInputState == 0)
                 {
-                    TilePortalFrameController c = getControllerValidated();
+                    TilePortalController c = getControllerValidated();
 
                     if (c != null)
                     {
@@ -116,7 +117,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
                 }
                 else if (redstoneInputState == 0 && previousRedstoneInputState > 0)
                 {
-                    TilePortalFrameController c = getControllerValidated();
+                    TilePortalController c = getControllerValidated();
 
                     if (c != null)
                     {
@@ -136,7 +137,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
             {
                 if (previousRedstoneInputState > 0 && redstoneInputState == 0)
                 {
-                    TilePortalFrameController c = getControllerValidated();
+                    TilePortalController c = getControllerValidated();
 
                     if (state == 2)
                     {
@@ -212,7 +213,7 @@ public class TilePortalFrameRedstone extends TilePortalFrame implements IInvento
 
         if (sendPacket)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameRedstoneData(this)), (Player) player);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData(this)), (Player) player);
         }
     }
 

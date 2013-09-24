@@ -2,9 +2,9 @@ package uk.co.shadeddimensions.enhancedportals.portal;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 
 public class ClientBlockManager extends BlockManager
 {
@@ -28,19 +28,19 @@ public class ClientBlockManager extends BlockManager
     }
     
     @Override
-    public TilePortalFrameBiometric getBiometric(World world)
+    public TileBiometricIdentifier getBiometric(World world)
     {
         return null;
     }
     
     @Override
-    public TilePortalFrameDialDevice getDialDevice(World world)
+    public TileDiallingDevice getDialDevice(World world)
     {
         return null;
     }
     
     @Override
-    public TilePortalFrameNetworkInterface getNetworkInterface(World world)
+    public TileNetworkInterface getNetworkInterface(World world)
     {
         return null;
     }

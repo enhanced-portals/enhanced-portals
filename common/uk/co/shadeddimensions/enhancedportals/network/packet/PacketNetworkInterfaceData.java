@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 
 public class PacketNetworkInterfaceData extends MainPacket
 {
@@ -23,7 +23,7 @@ public class PacketNetworkInterfaceData extends MainPacket
         
     }
     
-    public PacketNetworkInterfaceData(TilePortalFrameNetworkInterface tile)
+    public PacketNetworkInterfaceData(TileNetworkInterface tile)
     {
         coord = tile.getChunkCoordinates();
         networkID = tile.NetworkIdentifier;
@@ -48,9 +48,9 @@ public class PacketNetworkInterfaceData extends MainPacket
         World world = player.worldObj;
         TileEntity tile = world.getBlockTileEntity(coord.posX, coord.posY, coord.posZ);
 
-        if (tile != null && tile instanceof TilePortalFrameNetworkInterface)
+        if (tile != null && tile instanceof TileNetworkInterface)
         {
-            TilePortalFrameNetworkInterface ni = (TilePortalFrameNetworkInterface) tile;
+            TileNetworkInterface ni = (TileNetworkInterface) tile;
 
             ni.NetworkIdentifier = networkID;
             ni.connectedPortals = connectedPortals;

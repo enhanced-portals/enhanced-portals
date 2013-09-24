@@ -12,7 +12,7 @@ import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameCont
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.portal.ClientBlockManager;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
 public class GuiPortalFrameController extends GuiResizable
 {
@@ -96,10 +96,10 @@ public class GuiPortalFrameController extends GuiResizable
     GuiGlyphSelector glyphSelector;
     GuiGlyphViewer glyphViewer;
 
-    TilePortalFrameController controller;
+    TilePortalController controller;
     EntityPlayer player;
 
-    public GuiPortalFrameController(EntityPlayer play, TilePortalFrameController tile)
+    public GuiPortalFrameController(EntityPlayer play, TilePortalController tile)
     {
         super(new ContainerPortalFrameController(tile), tile, 176, 126, 176, 146);
 

@@ -11,7 +11,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
@@ -47,9 +47,9 @@ public class PacketRequestData extends MainPacket
         World world = player.worldObj;
         TileEntity tile = world.getBlockTileEntity(location.posX, location.posY, location.posZ);
 
-        if (tile instanceof TilePortalFrameController)
+        if (tile instanceof TilePortalController)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile)), (Player) player);
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
         }
         else if (tile instanceof TilePortal)
         {

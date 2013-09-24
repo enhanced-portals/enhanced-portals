@@ -17,14 +17,14 @@ import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiInteger;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiPortalFrameTexture extends GuiResizable
 {
-    TilePortalFrameController controller;
+    TilePortalController controller;
 
-    public GuiPortalFrameTexture(EntityPlayer player, TilePortalFrameController control)
+    public GuiPortalFrameTexture(EntityPlayer player, TilePortalController control)
     {
         super(new ContainerPortalFrameTexture(player, control), control);
         controller = control;

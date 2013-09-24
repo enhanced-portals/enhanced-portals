@@ -35,10 +35,11 @@ public class ConfigurationManager
 
     int START_BLOCK_ID = 512, START_ITEM_ID = 5000, MAX_BLOCK_ID = 4096, MAX_ITEM_ID = 32000;
 
-    TreeMap<String, Property> blockIds, itemIds, boolValues;
+    TreeMap<String, Property> blockIds, itemIds, boolValues, stringValues;
     ArrayList<String> blockEntries, itemEntries;
     ArrayList<Integer> usedBlockIds, usedItemIds;
     Map<String, Boolean> boolEntries;
+    Map<String, String> stringEntries;
     Map<String, String> commentEntries;
     
     public ConfigurationManager(Configuration c)
@@ -49,11 +50,13 @@ public class ConfigurationManager
         blockIds = new TreeMap<String, Property>();
         itemIds = new TreeMap<String, Property>();
         boolValues = new TreeMap<String, Property>();
+        stringValues = new TreeMap<String, Property>();
 
         usedBlockIds = new ArrayList<Integer>();
         usedItemIds = new ArrayList<Integer>();
         
         boolEntries = new HashMap<String, Boolean>();
+        stringEntries = new HashMap<String, String>();
         commentEntries = new HashMap<String, String>();
         
         config = c;
@@ -175,6 +178,12 @@ public class ConfigurationManager
             boolValues.put(entry.getKey(), config.get("boolean", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
         }
         
+        // STRINGS
+        for (Map.Entry<String, String> entry : stringEntries.entrySet())
+        {
+            stringValues.put(entry.getKey(), config.get("string", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
+        }
+        
         config.addCustomCategoryComment("block", "All block IDs will attempt to find the first free ID from " + START_BLOCK_ID + " to " + MAX_BLOCK_ID + ", when one is not set below");
         config.addCustomCategoryComment("item", "All item IDs will attempt to find the first free ID from " + START_ITEM_ID + " to " + MAX_ITEM_ID + ", when one is not set below");
         
@@ -246,9 +255,21 @@ public class ConfigurationManager
         return new ConfigProperty(string);
     }
     
+    public ConfigProperty addString(String name, String s)
+    {
+        stringEntries.put(name, s);
+        
+        return new ConfigProperty(name);
+    }
+    
     public boolean getBoolean(String string)
     {
         return boolValues.get(string).getBoolean(boolEntries.get(string));
+    }
+    
+    public String getString(String string)
+    {
+        return stringValues.get(string).getString();
     }
     
     public void addComment(String id, String comment)

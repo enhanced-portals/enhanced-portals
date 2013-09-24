@@ -14,6 +14,7 @@ import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
@@ -35,13 +36,13 @@ public class TilePortalFrame extends TileEP implements IInventory
         else
         {
             TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
-            return tile != null && tile instanceof TilePortalFrameController;
+            return tile != null && tile instanceof TilePortalController;
         }
     }
 
-    public TilePortalFrameController getControllerValidated()
+    public TilePortalController getControllerValidated()
     {
-        return validateController() ? (TilePortalFrameController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
+        return validateController() ? (TilePortalController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class TilePortalFrame extends TileEP implements IInventory
     @Override
     public Icon getTexture(int side, int renderpass)
     {
-        TilePortalFrameController controller = getControllerValidated();
+        TilePortalController controller = getControllerValidated();
 
         if (controller != null)
         {
@@ -101,7 +102,7 @@ public class TilePortalFrame extends TileEP implements IInventory
 
     public void selfBroken()
     {
-        TilePortalFrameController control = getControllerValidated();
+        TilePortalController control = getControllerValidated();
 
         if (control != null)
         {

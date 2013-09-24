@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.enhancedportals.tileentity;
+package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,9 +18,10 @@ import uk.co.shadeddimensions.enhancedportals.portal.BlockManager;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink.LinkStatus;
 import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.util.WorldCoordinates;
 
-public class TilePortalFrameController extends TilePortalFrame implements IInventory
+public class TilePortalController extends TilePortalFrame implements IInventory
 {
     public String UniqueIdentifier;
 
@@ -28,6 +29,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     public int PortalColour;
     public int ParticleColour;
     public int ParticleType;
+    public int PortalType;
 
     public BlockManager blockManager;
     
@@ -35,11 +37,12 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
 
     ItemStack[] inventory;
 
-    public TilePortalFrameController()
+    public TilePortalController()
     {
         FrameColour = PortalColour = 0xffffff;
         ParticleColour = 0xB336A1;
         ParticleType = 0;
+        PortalType = 0;
 
         blockManager = new BlockManager();
         
@@ -63,6 +66,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         tagCompound.setInteger("PortalColour", PortalColour);
         tagCompound.setInteger("ParticleColour", ParticleColour);
         tagCompound.setInteger("ParticleType", ParticleType);
+        tagCompound.setInteger("PortalType", PortalType);
 
         NBTTagList list = new NBTTagList();
         for (ItemStack s : inventory)
@@ -94,7 +98,8 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         PortalColour = tagCompound.getInteger("PortalColour");
         ParticleColour = tagCompound.getInteger("ParticleColour");
         ParticleType = tagCompound.getInteger("ParticleType");
-
+        PortalType = tagCompound.getInteger("PortalType");
+        
         NBTTagList list = tagCompound.getTagList("Inventory");
         for (int i = 0; i < list.tagList.size(); i++)
         {
@@ -159,24 +164,16 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         for (ChunkCoordinates c : blockManager.getPortalsCoord())
         {
-            if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
-            {
-                int meta = worldObj.getBlockMetadata(c.posX, c.posY, c.posZ) - 6;
-
-                if (meta >= 1 && meta <= 3)
-                {
-                    worldObj.setBlockMetadataWithNotify(c.posX, c.posY, c.posZ, meta, 3);
-                }
-            }
+            worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, PortalType, 2);
         }
 
         for (ChunkCoordinates c : blockManager.getRedstoneCoord())
         {
             TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
 
-            if (tile != null && tile instanceof TilePortalFrameRedstone)
+            if (tile != null && tile instanceof TileRedstoneInterface)
             {
-                TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
+                TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
                 redstone.portalCreated();
             }
         }
@@ -186,24 +183,16 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
     {
         for (ChunkCoordinates c : blockManager.getPortalsCoord())
         {
-            if (worldObj.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockPortal.blockID)
-            {
-                int meta = worldObj.getBlockMetadata(c.posX, c.posY, c.posZ) + 6;
-
-                if (meta >= 7 && meta <= 9)
-                {
-                    worldObj.setBlockMetadataWithNotify(c.posX, c.posY, c.posZ, meta, 3);
-                }
-            }
+            worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
         }
 
         for (ChunkCoordinates c : blockManager.getRedstoneCoord())
         {
             TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
 
-            if (tile != null && tile instanceof TilePortalFrameRedstone)
+            if (tile != null && tile instanceof TileRedstoneInterface)
             {
-                TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
+                TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
                 redstone.portalRemoved();
             }
         }
@@ -215,6 +204,18 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
         if (!worldObj.isRemote)
         {
             blockManager.destroyAndClearAll(worldObj);
+            
+            if (!UniqueIdentifier.equals(""))
+            {
+                if (blockManager.getNetworkInterfaceCoord() != null)
+                {
+                    CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, blockManager.getNetworkInterface(worldObj).NetworkIdentifier);
+                }
+                
+                CommonProxy.networkManager.removePortal(UniqueIdentifier);
+                UniqueIdentifier = "";
+            }
+            
             hasInitialized = false; // For when other blocks get destroyed - allows user to reinit portal
         }
     }
@@ -236,7 +237,7 @@ public class TilePortalFrameController extends TilePortalFrame implements IInven
             }
             else
             {
-                TilePortalFrameNetworkInterface ni = blockManager.getNetworkInterface(worldObj);
+                TileNetworkInterface ni = blockManager.getNetworkInterface(worldObj);
 
                 if (ni != null)
                 {

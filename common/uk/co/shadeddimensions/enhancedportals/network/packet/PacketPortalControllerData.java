@@ -10,9 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.portal.ClientBlockManager;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
-public class PacketPortalFrameControllerData extends MainPacket
+public class PacketPortalControllerData extends MainPacket
 {
     ChunkCoordinates coord;
     int attachedFrames, attachedFrameRedstone, attachedPortals;
@@ -20,12 +20,12 @@ public class PacketPortalFrameControllerData extends MainPacket
     boolean biometric, dialDevice, networkInterface;
     String uID;
 
-    public PacketPortalFrameControllerData()
+    public PacketPortalControllerData()
     {
 
     }
 
-    public PacketPortalFrameControllerData(TilePortalFrameController tile)
+    public PacketPortalControllerData(TilePortalController tile)
     {
         coord = tile.getChunkCoordinates();
         attachedFrames = tile.blockManager.getPortalFrameCoord().size();
@@ -66,9 +66,9 @@ public class PacketPortalFrameControllerData extends MainPacket
         World world = player.worldObj;
         TileEntity tile = world.getBlockTileEntity(coord.posX, coord.posY, coord.posZ);
 
-        if (tile != null && tile instanceof TilePortalFrameController)
+        if (tile != null && tile instanceof TilePortalController)
         {
-            TilePortalFrameController controller = (TilePortalFrameController) tile;
+            TilePortalController controller = (TilePortalController) tile;
 
             controller.UniqueIdentifier = uID;
             controller.FrameColour = FrameColour;

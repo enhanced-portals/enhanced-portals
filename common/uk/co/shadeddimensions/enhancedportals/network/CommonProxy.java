@@ -1,6 +1,9 @@
 package uk.co.shadeddimensions.enhancedportals.network;
 
+import java.io.File;
+
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.block.BlockPortal;
@@ -9,19 +12,21 @@ import uk.co.shadeddimensions.enhancedportals.item.ItemWrench;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalData;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameData;
-import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalFrameRedstoneData;
+import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRedstoneInterfaceData;
 import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -44,11 +49,12 @@ public class CommonProxy
     {
         GameRegistry.registerTileEntity(TilePortal.class, "epPortal");
         GameRegistry.registerTileEntity(TilePortalFrame.class, "epPortalFrame");
-        GameRegistry.registerTileEntity(TilePortalFrameController.class, "epPortalController");
-        GameRegistry.registerTileEntity(TilePortalFrameRedstone.class, "epPortalRedstone");
-        GameRegistry.registerTileEntity(TilePortalFrameNetworkInterface.class, "epPortalNI");
-        GameRegistry.registerTileEntity(TilePortalFrameDialDevice.class, "epPortalDD");
-        GameRegistry.registerTileEntity(TilePortalFrameBiometric.class, "epPortalBiometric");        
+        GameRegistry.registerTileEntity(TilePortalController.class, "epPortalController");
+        GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRedstoneInterface");
+        GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNetworkInterface");
+        GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDiallingDevice");
+        GameRegistry.registerTileEntity(TileBiometricIdentifier.class, "epBiometricIdentifier");
+        GameRegistry.registerTileEntity(TileModuleManipulator.class, "epModuleManipulator");
     }
 
     public void registerItems()
@@ -65,17 +71,17 @@ public class CommonProxy
     {
         Packet250CustomPayload packet = null;
 
-        if (tile instanceof TilePortalFrameController)
+        if (tile instanceof TilePortalController)
         {
-            packet = MainPacket.makePacket(new PacketPortalFrameControllerData((TilePortalFrameController) tile));
+            packet = MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile));
         }
-        else if (tile instanceof TilePortalFrameRedstone)
+        else if (tile instanceof TileRedstoneInterface)
         {
-            packet = MainPacket.makePacket(new PacketPortalFrameRedstoneData((TilePortalFrameRedstone) tile));
+            packet = MainPacket.makePacket(new PacketRedstoneInterfaceData((TileRedstoneInterface) tile));
         }
-        else if (tile instanceof TilePortalFrameNetworkInterface)
+        else if (tile instanceof TileNetworkInterface)
         {
-            packet = MainPacket.makePacket(new PacketNetworkInterfaceData((TilePortalFrameNetworkInterface) tile));
+            packet = MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile));
         }
         else if (tile instanceof TilePortalFrame)
         {
@@ -104,5 +110,15 @@ public class CommonProxy
         EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("If enabled, overwrites the Nether portals mechanics to allow any shape/size.");
         
         EnhancedPortals.config.fillConfigFile(); // Must be last.
+    }
+    
+    public File getBaseDir()
+    {
+        return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
+    }
+    
+    public File getWorldDir()
+    {
+        return new File(getBaseDir(), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
     }
 }

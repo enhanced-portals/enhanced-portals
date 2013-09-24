@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
@@ -45,23 +46,18 @@ public class TilePortal extends TileEP implements IInventory
         else
         {
             TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
-            return tile != null && tile instanceof TilePortalFrameController;
+            return tile != null && tile instanceof TilePortalController;
         }
     }
 
-    public TilePortalFrameController getControllerValidated()
+    public TilePortalController getControllerValidated()
     {
-        return validateController() ? (TilePortalFrameController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
+        return validateController() ? (TilePortalController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
     }
 
     public void selfBroken()
     {
-        TilePortalFrameController control = getControllerValidated();
-
-        if (control != null)
-        {
-            control.selfBroken();
-        }
+        
     }
     
     public boolean activate(EntityPlayer player)

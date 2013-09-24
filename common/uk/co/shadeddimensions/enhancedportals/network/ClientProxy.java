@@ -1,6 +1,9 @@
 package uk.co.shadeddimensions.enhancedportals.network;
 
+import java.io.File;
+
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.enhancedportals.client.renderer.PortalFrameItemRenderer;
 import uk.co.shadeddimensions.enhancedportals.client.renderer.PortalItemRenderer;
 import uk.co.shadeddimensions.enhancedportals.client.renderer.TilePortalFrameRenderer;
@@ -30,5 +33,11 @@ public class ClientProxy extends CommonProxy
     public static void sendGuiPacket(int i, String s)
     {
         PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiString(i, s)));
+    }
+    
+    @Override
+    public File getWorldDir()
+    {
+        return new File(getBaseDir(), "saves/" + DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
     }
 }

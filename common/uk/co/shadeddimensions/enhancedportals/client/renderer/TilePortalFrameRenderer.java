@@ -16,7 +16,7 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
 public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
 {
@@ -34,7 +34,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortalFrame frame = (TilePortalFrame) tile;
-        TilePortalFrameController controller = frame.getControllerValidated();
+        TilePortalController controller = frame.getControllerValidated();
         Tessellator tessellator = Tessellator.instance;
         
         GL11.glPushMatrix();
@@ -58,11 +58,11 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         GL11.glPopMatrix();
     }
     
-    private void renderFrame(TilePortalFrame frame, TilePortalFrameController controller, Tessellator tessellator)
+    private void renderFrame(TilePortalFrame frame, TilePortalController controller, Tessellator tessellator)
     {
         int x = frame.xCoord, y = frame.yCoord, z = frame.zCoord;
         World world = frame.worldObj;
-        Color c = new Color(frame instanceof TilePortalFrameController ? ((TilePortalFrameController) frame).FrameColour : controller == null ? 0xFFFFFF : controller.FrameColour);
+        Color c = new Color(frame instanceof TilePortalController ? ((TilePortalController) frame).FrameColour : controller == null ? 0xFFFFFF : controller.FrameColour);
         float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
         
         float f3 = 0.5F;
@@ -135,7 +135,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         }
     }
     
-    private void renderFrameOverlay(TilePortalFrame frame, TilePortalFrameController controller, Tessellator tessellator, int pass)
+    private void renderFrameOverlay(TilePortalFrame frame, TilePortalController controller, Tessellator tessellator, int pass)
     {
         if (pass != 1)
         {

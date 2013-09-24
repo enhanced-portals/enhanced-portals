@@ -10,16 +10,16 @@ import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameReds
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketGuiButtonPressed;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiPortalFrameRedstone extends GuiResizable
 {
-    TilePortalFrameRedstone redstone;
+    TileRedstoneInterface redstone;
     EntityPlayer player;
     String expandedText, oldText;
 
-    public GuiPortalFrameRedstone(EntityPlayer play, TilePortalFrameRedstone tile)
+    public GuiPortalFrameRedstone(EntityPlayer play, TileRedstoneInterface tile)
     {
         super(new ContainerPortalFrameRedstone(tile), tile, 176, 58);
 

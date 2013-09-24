@@ -9,20 +9,20 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 
-public class PacketPortalFrameRedstoneData extends MainPacket
+public class PacketRedstoneInterfaceData extends MainPacket
 {
     ChunkCoordinates pos, controller;
     boolean output;
     byte state;
 
-    public PacketPortalFrameRedstoneData()
+    public PacketRedstoneInterfaceData()
     {
 
     }
 
-    public PacketPortalFrameRedstoneData(TilePortalFrameRedstone tile)
+    public PacketRedstoneInterfaceData(TileRedstoneInterface tile)
     {
         pos = tile.getChunkCoordinates();
         controller = tile.controller;
@@ -47,9 +47,9 @@ public class PacketPortalFrameRedstoneData extends MainPacket
         World world = player.worldObj;
         TileEntity tile = world.getBlockTileEntity(pos.posX, pos.posY, pos.posZ);
 
-        if (tile instanceof TilePortalFrameRedstone)
+        if (tile instanceof TileRedstoneInterface)
         {
-            TilePortalFrameRedstone redstone = (TilePortalFrameRedstone) tile;
+            TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
 
             redstone.output = output;
             redstone.controller = controller;

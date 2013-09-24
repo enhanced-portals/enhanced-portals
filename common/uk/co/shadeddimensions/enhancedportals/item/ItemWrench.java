@@ -10,11 +10,11 @@ import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameBiometric;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameDialDevice;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameNetworkInterface;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameRedstone;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 
 public class ItemWrench extends ItemEP
 {
@@ -33,9 +33,9 @@ public class ItemWrench extends ItemEP
         
         if (tile != null)
         {
-            if (tile instanceof TilePortalFrameController)
+            if (tile instanceof TilePortalController)
             {
-                TilePortalFrameController controller = (TilePortalFrameController) tile;
+                TilePortalController controller = (TilePortalController) tile;
                 
                 if (!controller.hasInitialized)
                 {
@@ -45,14 +45,14 @@ public class ItemWrench extends ItemEP
                 player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_FRAME_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, x, y, z);
                 return true;
             }
-            else if (tile instanceof TilePortalFrameRedstone)
+            else if (tile instanceof TileRedstoneInterface)
             {
                 player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, world, x, y, z);
                 return true;
             }
-            else if (tile instanceof TilePortalFrameDialDevice)
+            else if (tile instanceof TileDiallingDevice)
             {
-                TilePortalFrameDialDevice ni = (TilePortalFrameDialDevice) tile;
+                TileDiallingDevice ni = (TileDiallingDevice) tile;
                 
                 if (ni.getControllerValidated() == null)
                 {
@@ -72,9 +72,9 @@ public class ItemWrench extends ItemEP
                 
                 return true;
             }
-            else if (tile instanceof TilePortalFrameNetworkInterface)
+            else if (tile instanceof TileNetworkInterface)
             {
-                TilePortalFrameNetworkInterface ni = (TilePortalFrameNetworkInterface) tile;
+                TileNetworkInterface ni = (TileNetworkInterface) tile;
                 
                 if (ni.getControllerValidated() == null)
                 {
@@ -93,7 +93,7 @@ public class ItemWrench extends ItemEP
                 player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, world, x, y, z);
                 return true;
             }
-            else if (tile instanceof TilePortalFrameBiometric)
+            else if (tile instanceof TileBiometricIdentifier)
             {
                 // TODO
                 return true;
@@ -101,7 +101,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TilePortalFrame)
             {
                 TilePortalFrame frame = (TilePortalFrame) tile;
-                TilePortalFrameController control = frame.getControllerValidated();
+                TilePortalController control = frame.getControllerValidated();
                 
                 if (control != null)
                 {
@@ -112,7 +112,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TilePortal)
             {
                 TilePortal portal = (TilePortal) tile;
-                TilePortalFrameController control = portal.getControllerValidated();
+                TilePortalController control = portal.getControllerValidated();
                 
                 if (control != null)
                 {

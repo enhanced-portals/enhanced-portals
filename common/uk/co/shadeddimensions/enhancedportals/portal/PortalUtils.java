@@ -8,14 +8,14 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrameController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 
 public class PortalUtils
 {
     // TODO: Rewrite to be better.
 
-    public static void removePortalForController(TilePortalFrameController control)
+    public static void removePortalForController(TilePortalController control)
     {
         WorldServer world = (WorldServer) control.worldObj;
         
@@ -52,7 +52,7 @@ public class PortalUtils
         }
     }
 
-    public static boolean createPortalForController(TilePortalFrameController control)
+    public static boolean createPortalForController(TilePortalController control)
     {
         WorldServer world = (WorldServer) control.worldObj;
         
@@ -64,8 +64,9 @@ public class PortalUtils
             {
                 for (int i = 1; i < 4; i++)
                 {
-                    if (createPortal(world, c.posX, c.posY, c.posZ, i + 6))
+                    if (createPortal(world, c.posX, c.posY, c.posZ, i))
                     {
+                        control.PortalType = i;
                         return true;
                     }
                 }
