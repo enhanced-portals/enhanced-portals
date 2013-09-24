@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockPortal extends BlockEP
 {
     public static Icon[] colouredPortalTextures;
-    
+
     public BlockPortal(int id, String name)
     {
         super(id, Material.portal, false);
@@ -32,7 +32,48 @@ public class BlockPortal extends BlockEP
         setStepSound(soundGlassFootstep);
         colouredPortalTextures = new Icon[16];
     }
-    
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        if (!world.isRemote)
+        {
+            ((TilePortal) world.getBlockTileEntity(x, y, z)).selfBroken();
+        }
+
+        super.breakBlock(world, x, y, z, par5, par6);
+    }
+
+    @Override
+    public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+    {
+        return false;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TilePortal();
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    {
+        return null;
+    }
+
+    @Override
+    public Icon getIcon(int side, int meta)
+    {
+        return colouredPortalTextures[meta];
+    }
+
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
     {
@@ -40,7 +81,7 @@ public class BlockPortal extends BlockEP
         {
             return 14;
         }
-        
+
         return 0;
     }
 
@@ -49,26 +90,36 @@ public class BlockPortal extends BlockEP
     {
         return 1;
     }
-    
+
     @Override
-    public Icon getIcon(int side, int meta)
+    public int getRenderType()
     {
-        return colouredPortalTextures[meta];
+        return -1;
     }
-    
+
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    @SideOnly(Side.CLIENT)
+    public int idPicked(World par1World, int par2, int par3, int par4)
     {
-        for (int i = 0; i < colouredPortalTextures.length; i++)
-        {
-            colouredPortalTextures[i] = iconRegister.registerIcon("enhancedportals:colouredPortal_" + i);
-        }
+        return 0;
     }
-    
+
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    public boolean isOpaqueCube()
     {
-        return null;
+        return false;
+    }
+
+    @Override
+    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+    {
+        return ((TilePortal) par1World.getBlockTileEntity(par2, par3, par4)).activate(par5EntityPlayer);
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
+    {
+        // TODO: teleport
     }
 
     @Override
@@ -136,39 +187,12 @@ public class BlockPortal extends BlockEP
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public int idPicked(World par1World, int par2, int par3, int par4)
+    public void registerIcons(IconRegister iconRegister)
     {
-        return 0;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-    {
-        if (!world.isRemote)
+        for (int i = 0; i < colouredPortalTextures.length; i++)
         {
-            ((TilePortal) world.getBlockTileEntity(x, y, z)).selfBroken();
+            colouredPortalTextures[i] = iconRegister.registerIcon("enhancedportals:colouredPortal_" + i);
         }
-
-        super.breakBlock(world, x, y, z, par5, par6);
-    }
-
-    @Override
-    public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
-    {
-        // TODO: teleport
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return -1;
-    }
-
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
     }
 
     @Override
@@ -198,29 +222,5 @@ public class BlockPortal extends BlockEP
         {
             setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
         }
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World world)
-    {
-        return new TilePortal();
-    }
-
-    @Override
-    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-    {
-        return ((TilePortal) par1World.getBlockTileEntity(par2, par3, par4)).activate(par5EntityPlayer);
     }
 }

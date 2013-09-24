@@ -7,7 +7,7 @@ public class TileDiallingDevice extends TilePortalFrame
 
     public TileDiallingDevice()
     {
-        
+
     }
 
 }

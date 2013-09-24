@@ -8,10 +8,10 @@ public class CustomIconManager
 {
     public Icon[] registeredIcons;
     String[] unregisteredIcons;
-    
+
     public CustomIconManager()
     {
-        
+
     }
 
     /***
@@ -19,14 +19,14 @@ public class CustomIconManager
      */
     public void initializeIcons(ResourceLocation location)
     {
-        
+
     }
-    
+
     /***
      * Registers all icons, ready for use.
      */
     public void registerIcons(IconRegister register)
     {
-        
+
     }
 }

@@ -13,31 +13,15 @@ public class TileNetworkInterface extends TilePortalFrame
 
     @SideOnly(Side.CLIENT)
     public int connectedPortals = 0;
-    
+
     public TileNetworkInterface()
     {
         NetworkIdentifier = "";
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-        
-        tagCompound.setString("NetworkIdentifier", NetworkIdentifier);
-    }
-    
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-        
-        NetworkIdentifier = tagCompound.getString("NetworkIdentifier");
-    }
-    
-    @Override
     public void actionPerformed(int id, String string, EntityPlayer player)
-    {        
+    {
         if (id == 0)
         {
             if (!NetworkIdentifier.equals(""))
@@ -48,10 +32,26 @@ public class TileNetworkInterface extends TilePortalFrame
             {
                 CommonProxy.networkManager.addPortalToNetwork(getController().UniqueIdentifier, string);
             }
-            
+
             NetworkIdentifier = string;
         }
-        
+
         CommonProxy.sendUpdatePacketToAllAround(this);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+
+        NetworkIdentifier = tagCompound.getString("NetworkIdentifier");
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+
+        tagCompound.setString("NetworkIdentifier", NetworkIdentifier);
     }
 }

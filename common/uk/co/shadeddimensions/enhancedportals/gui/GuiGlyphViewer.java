@@ -22,21 +22,9 @@ public class GuiGlyphViewer extends GuiGlyphSelector
     }
 
     @Override
-    public ArrayList<ItemStack> getSelectedGlyphs()
+    public boolean canIncrementGlyph()
     {
-        return selector.getSelectedGlyphs();
-    }
-
-    @Override
-    public int getCurrentSelectedCount()
-    {
-        return selector.getCurrentSelectedCount();
-    }
-
-    @Override
-    public String getSelectedIdentifier()
-    {
-        return selector.getSelectedIdentifier();
+        return false;
     }
 
     @Override
@@ -86,6 +74,24 @@ public class GuiGlyphViewer extends GuiGlyphSelector
     }
 
     @Override
+    public int getCurrentSelectedCount()
+    {
+        return selector.getCurrentSelectedCount();
+    }
+
+    @Override
+    public ArrayList<ItemStack> getSelectedGlyphs()
+    {
+        return selector.getSelectedGlyphs();
+    }
+
+    @Override
+    public String getSelectedIdentifier()
+    {
+        return selector.getSelectedIdentifier();
+    }
+
+    @Override
     public void mouseClicked(int mouseX, int mouseY, int button)
     {
         if (canEdit && isOnSelf(mouseX, mouseY))
@@ -101,11 +107,5 @@ public class GuiGlyphViewer extends GuiGlyphSelector
                 }
             }
         }
-    }
-
-    @Override
-    public boolean canIncrementGlyph()
-    {
-        return false;
     }
 }

@@ -31,44 +31,162 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
         emitting = pulse = false;
     }
 
+    @Override
+    public void buttonPressed(int id, EntityPlayer player)
+    {
+        boolean sendPacket = false;
+
+        if (id == 0)
+        {
+            output = !output;
+            setState((byte) 0);
+            sendPacket = true;
+        }
+        else if (id == 1)
+        {
+            if (output)
+            {
+                if (state + 1 < MAX_OUTPUT_STATE)
+                {
+                    setState((byte) (state + 1));
+                }
+                else
+                {
+                    setState((byte) 0);
+                }
+            }
+            else
+            {
+                if (state + 1 < MAX_INPUT_STATE)
+                {
+                    setState((byte) (state + 1));
+                }
+                else
+                {
+                    setState((byte) 0);
+                }
+            }
+
+            sendPacket = true;
+        }
+
+        if (sendPacket)
+        {
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData(this)), (Player) player);
+        }
+    }
+
+    @Override
+    public void closeChest()
+    {
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        return null;
+    }
+
+    @Override
+    public void entityTouch(Entity entity)
+    {
+        if (output && state == 4)
+        {
+            pulseRedstone();
+        }
+    }
+
+    private byte getHighestPowerState()
+    {
+        byte current = 0;
+
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            byte c = (byte) worldObj.getIndirectPowerLevelTo(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, i);
+
+            if (c > current)
+            {
+                current = c;
+            }
+        }
+
+        return current;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return "ep2.tileFrameRedstoneController";
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return null;
+    }
+
     public byte getState()
     {
         return state;
     }
 
-    public void setState(byte newState)
+    @Override
+    public boolean isInvNameLocalized()
     {
-        state = newState;
+        return false;
+    }
 
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return false;
+    }
+
+    @Override
+    public int isProvidingStrongPower(int side)
+    {
         if (emitting || pulse)
         {
-            emitting = pulse = false;
-            notifyNeighbors();
+            return 15;
         }
+
+        return super.isProvidingStrongPower(side);
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
+    public int isProvidingWeakPower(int side)
     {
-        super.writeToNBT(tagCompound);
+        if (emitting || pulse)
+        {
+            return 15;
+        }
 
-        tagCompound.setByte("redstoneInputState", previousRedstoneInputState);
-        tagCompound.setBoolean("output", output);
-        tagCompound.setByte("state", state);
-        tagCompound.setBoolean("emitting", emitting);
-        tagCompound.setBoolean("pulse", pulse);
+        return super.isProvidingWeakPower(side);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
-        super.readFromNBT(tagCompound);
-
-        previousRedstoneInputState = tagCompound.getByte("redstoneInputState");
-        output = tagCompound.getBoolean("output");
-        state = tagCompound.getByte("state");
-        emitting = tagCompound.getBoolean("emitting");
-        pulse = tagCompound.getBoolean("pulse");
+        return true;
     }
 
     @Override
@@ -140,79 +258,20 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
         }
     }
 
-    private byte getHighestPowerState()
+    private void notifyNeighbors()
     {
-        byte current = 0;
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID);
 
         for (int i = 0; i < 6; i++)
         {
             ForgeDirection d = ForgeDirection.getOrientation(i);
-            byte c = (byte) worldObj.getIndirectPowerLevelTo(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, i);
-
-            if (c > current)
-            {
-                current = c;
-            }
+            worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, CommonProxy.blockFrame.blockID);
         }
-
-        return current;
     }
 
     @Override
-    public void buttonPressed(int id, EntityPlayer player)
+    public void openChest()
     {
-        boolean sendPacket = false;
-
-        if (id == 0)
-        {
-            output = !output;
-            setState((byte) 0);
-            sendPacket = true;
-        }
-        else if (id == 1)
-        {
-            if (output)
-            {
-                if (state + 1 < MAX_OUTPUT_STATE)
-                {
-                    setState((byte) (state + 1));
-                }
-                else
-                {
-                    setState((byte) 0);
-                }
-            }
-            else
-            {
-                if (state + 1 < MAX_INPUT_STATE)
-                {
-                    setState((byte) (state + 1));
-                }
-                else
-                {
-                    setState((byte) 0);
-                }
-            }
-
-            sendPacket = true;
-        }
-
-        if (sendPacket)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData(this)), (Player) player);
-        }
-    }
-
-    private void pulseRedstone()
-    {
-        if (pulse)
-        {
-            return;
-        }
-
-        pulse = true;
-        notifyNeighbors();
-        worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID, 20);
     }
 
     public void portalCreated()
@@ -257,37 +316,28 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
         }
     }
 
-    private void notifyNeighbors()
+    private void pulseRedstone()
     {
-        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID);
-
-        for (int i = 0; i < 6; i++)
+        if (pulse)
         {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, CommonProxy.blockFrame.blockID);
+            return;
         }
+
+        pulse = true;
+        notifyNeighbors();
+        worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID, 20);
     }
 
     @Override
-    public int isProvidingStrongPower(int side)
+    public void readFromNBT(NBTTagCompound tagCompound)
     {
-        if (emitting || pulse)
-        {
-            return 15;
-        }
+        super.readFromNBT(tagCompound);
 
-        return super.isProvidingStrongPower(side);
-    }
-
-    @Override
-    public int isProvidingWeakPower(int side)
-    {
-        if (emitting || pulse)
-        {
-            return 15;
-        }
-
-        return super.isProvidingWeakPower(side);
+        previousRedstoneInputState = tagCompound.getByte("redstoneInputState");
+        output = tagCompound.getBoolean("output");
+        state = tagCompound.getByte("state");
+        emitting = tagCompound.getBoolean("emitting");
+        pulse = tagCompound.getBoolean("pulse");
     }
 
     @Override
@@ -301,80 +351,30 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
     }
 
     @Override
-    public void entityTouch(Entity entity)
-    {
-        if (output && state == 4)
-        {
-            pulseRedstone();
-        }
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return 0;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
-    @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
     }
 
-    @Override
-    public String getInvName()
+    public void setState(byte newState)
     {
-        return "ep2.tileFrameRedstoneController";
+        state = newState;
+
+        if (emitting || pulse)
+        {
+            emitting = pulse = false;
+            notifyNeighbors();
+        }
     }
 
     @Override
-    public boolean isInvNameLocalized()
+    public void writeToNBT(NBTTagCompound tagCompound)
     {
-        return false;
-    }
+        super.writeToNBT(tagCompound);
 
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 0;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void openChest()
-    {
-    }
-
-    @Override
-    public void closeChest()
-    {
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
-        return false;
+        tagCompound.setByte("redstoneInputState", previousRedstoneInputState);
+        tagCompound.setBoolean("output", output);
+        tagCompound.setByte("state", state);
+        tagCompound.setBoolean("emitting", emitting);
+        tagCompound.setBoolean("pulse", pulse);
     }
 }

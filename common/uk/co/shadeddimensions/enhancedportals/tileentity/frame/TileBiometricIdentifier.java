@@ -7,7 +7,7 @@ public class TileBiometricIdentifier extends TilePortalFrame
 
     public TileBiometricIdentifier()
     {
-        
+
     }
 
 }

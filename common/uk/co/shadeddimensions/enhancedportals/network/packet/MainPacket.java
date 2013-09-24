@@ -119,7 +119,7 @@ public abstract class MainPacket
     protected ChunkCoordinates readChunkCoordinates(DataInputStream stream) throws IOException
     {
         ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
-        
+
         return c.posY == -1 ? null : c;
     }
 

@@ -18,8 +18,8 @@ import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRedstoneInterfaceData;
-import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -27,6 +27,35 @@ import cpw.mods.fml.common.network.Player;
 
 public class GuiHandler implements IGuiHandler
 {
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalController)
+        {
+            return new GuiPortalFrameController(player, (TilePortalController) tile);
+        }
+        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TileRedstoneInterface)
+        {
+            return new GuiPortalFrameRedstone(player, (TileRedstoneInterface) tile);
+        }
+        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
+        {
+            return new GuiPortalFrameTexture(player, (TilePortalController) tile);
+        }
+        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
+        {
+            return new GuiPortalTexture(player, (TilePortalController) tile);
+        }
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
+        {
+            return new GuiPortalFrameNetworkInterface((TileNetworkInterface) tile);
+        }
+
+        return null;
+    }
+
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
@@ -54,35 +83,6 @@ public class GuiHandler implements IGuiHandler
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile)), (Player) player);
             return new ContainerNetworkInterface((TileNetworkInterface) tile);
-        }
-
-        return null;
-    }
-
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-        if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalController)
-        {
-            return new GuiPortalFrameController(player, (TilePortalController) tile);
-        }
-        else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TileRedstoneInterface)
-        {
-            return new GuiPortalFrameRedstone(player, (TileRedstoneInterface) tile);
-        }
-        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
-        {
-            return new GuiPortalFrameTexture(player, (TilePortalController) tile);
-        }
-        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
-        {
-            return new GuiPortalTexture(player, (TilePortalController) tile);
-        }
-        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
-        {            
-            return new GuiPortalFrameNetworkInterface((TileNetworkInterface) tile);
         }
 
         return null;

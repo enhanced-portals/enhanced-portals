@@ -8,67 +8,6 @@ import net.minecraft.world.World;
 
 public class PortalFX extends EntityFX
 {
-    private float portalParticleScale;
-    private double portalPosX;
-    private double portalPosY;
-    private double portalPosZ;
-
-    public PortalFX(World par1World, int ParticleType, int ParticleColour, double par2, double par4, double par6, double par8, double par10, double par12)
-    {
-        super(par1World, par2, par4, par6, par8, par10, par12);
-        motionX = par8;
-        motionY = par10;
-        motionZ = par12;
-        portalPosX = posX = par2;
-        portalPosY = posY = par4;
-        portalPosZ = posZ = par6;
-
-        if (ParticleColour == 0xB336A1)
-        {
-            float f = rand.nextFloat() * 0.6F + 0.4F;
-            particleRed = particleGreen = particleBlue = 1.0F * f;
-            particleGreen *= 0.3F;
-            particleRed *= 0.9F;
-        }
-        else
-        {
-            Color c = new Color(ParticleColour);
-            particleRed = c.getRed() / 255f;
-            particleGreen = c.getGreen() / 255f;
-            particleBlue = c.getBlue() / 255f;
-        }
-
-        portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
-        particleMaxAge = (int) (Math.random() * 10.0D) + 40;
-        noClip = true;
-
-        setParticleTextureIndex(getParticleIndex(ParticleType));
-    }
-
-    public static int getStaticParticleIndex(int ParticleType)
-    {
-        switch (ParticleType)
-        {
-            case 0:
-                return 7;
-
-            case 2:
-                return 49;
-
-            case 11:
-                return 129;
-
-            case 12:
-                return 145;
-
-            case 13:
-                return 161;
-
-            default:
-                return getParticleIndex(ParticleType);
-        }
-    }
-
     public static int getParticleIndex(int ParticleType)
     {
         switch (ParticleType)
@@ -116,6 +55,69 @@ public class PortalFX extends EntityFX
             case 13:
                 return 160 + (int) (8 * Math.random());
         }
+    }
+
+    public static int getStaticParticleIndex(int ParticleType)
+    {
+        switch (ParticleType)
+        {
+            case 0:
+                return 7;
+
+            case 2:
+                return 49;
+
+            case 11:
+                return 129;
+
+            case 12:
+                return 145;
+
+            case 13:
+                return 161;
+
+            default:
+                return getParticleIndex(ParticleType);
+        }
+    }
+
+    private float portalParticleScale;
+    private double portalPosX;
+
+    private double portalPosY;
+
+    private double portalPosZ;
+
+    public PortalFX(World par1World, int ParticleType, int ParticleColour, double par2, double par4, double par6, double par8, double par10, double par12)
+    {
+        super(par1World, par2, par4, par6, par8, par10, par12);
+        motionX = par8;
+        motionY = par10;
+        motionZ = par12;
+        portalPosX = posX = par2;
+        portalPosY = posY = par4;
+        portalPosZ = posZ = par6;
+
+        if (ParticleColour == 0xB336A1)
+        {
+            float f = rand.nextFloat() * 0.6F + 0.4F;
+            particleRed = particleGreen = particleBlue = 1.0F * f;
+            particleGreen *= 0.3F;
+            particleRed *= 0.9F;
+        }
+        else
+        {
+            Color c = new Color(ParticleColour);
+            particleRed = c.getRed() / 255f;
+            particleGreen = c.getGreen() / 255f;
+            particleBlue = c.getBlue() / 255f;
+        }
+
+        portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
+        particleMaxAge = (int) (Math.random() * 10.0D) + 40;
+        noClip = true;
+
+        setParticleTextureIndex(getParticleIndex(ParticleType));
     }
 
     /**

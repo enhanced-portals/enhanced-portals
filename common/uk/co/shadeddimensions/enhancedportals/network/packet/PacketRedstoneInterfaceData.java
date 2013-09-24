@@ -37,7 +37,7 @@ public class PacketRedstoneInterfaceData extends MainPacket
         controller = readChunkCoordinates(stream);
         output = stream.readBoolean();
         state = stream.readByte();
-        
+
         return this;
     }
 

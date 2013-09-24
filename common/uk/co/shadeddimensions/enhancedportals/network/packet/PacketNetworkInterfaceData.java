@@ -17,12 +17,12 @@ public class PacketNetworkInterfaceData extends MainPacket
     ChunkCoordinates coord, controller;
     String networkID;
     int connectedPortals;
-    
+
     public PacketNetworkInterfaceData()
     {
-        
+
     }
-    
+
     public PacketNetworkInterfaceData(TileNetworkInterface tile)
     {
         coord = tile.getChunkCoordinates();
@@ -38,7 +38,7 @@ public class PacketNetworkInterfaceData extends MainPacket
         controller = readChunkCoordinates(stream);
         networkID = stream.readUTF();
         connectedPortals = stream.readInt();
-        
+
         return this;
     }
 

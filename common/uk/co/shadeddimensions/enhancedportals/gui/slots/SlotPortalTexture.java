@@ -1,8 +1,8 @@
 package uk.co.shadeddimensions.enhancedportals.gui.slots;
 
-import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 
 public class SlotPortalTexture extends SlotPhantom
 {
@@ -10,7 +10,7 @@ public class SlotPortalTexture extends SlotPhantom
     {
         super(iinventory, slotIndex, posX, posY);
     }
-    
+
     @Override
     public boolean isItemValid(ItemStack stack)
     {

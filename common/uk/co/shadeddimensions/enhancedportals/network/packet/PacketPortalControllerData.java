@@ -75,7 +75,7 @@ public class PacketPortalControllerData extends MainPacket
             controller.PortalColour = PortalColour;
             controller.ParticleColour = ParticleColour;
             controller.ParticleType = ParticleType;
-            
+
             controller.blockManager = new ClientBlockManager();
             ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
             blockManager.portal = attachedPortals;

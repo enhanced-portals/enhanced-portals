@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = PacketHandler.class, channels = { Reference.ID })
 public class EnhancedPortals
 {
-    public static ConfigurationManager config;    
+    public static ConfigurationManager config;
     public static CustomIconManager customPortalIcons, customPortalFrameIcons;
 
     @Instance(Reference.ID)
@@ -41,7 +41,7 @@ public class EnhancedPortals
     {
         customPortalIcons = new CustomIconManager();
         customPortalFrameIcons = new CustomIconManager();
-        
+
         proxy.setupConfiguration();
         proxy.registerBlocks();
         proxy.registerTileEntities();
@@ -55,11 +55,9 @@ public class EnhancedPortals
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        /*if (Loader.isModLoaded("ForgeMultipart"))
-        {
-            new RegisterParts().init();
-            CommonProxy.multiPartID = MultipartProxy.config().getTag("block.id").getIntValue();
-        }*/
+        /*
+         * if (Loader.isModLoaded("ForgeMultipart")) { new RegisterParts().init(); CommonProxy.multiPartID = MultipartProxy.config().getTag("block.id").getIntValue(); }
+         */
     }
 
     @EventHandler
@@ -67,16 +65,16 @@ public class EnhancedPortals
     {
         config = new ConfigurationManager(new Configuration(event.getSuggestedConfigurationFile()));
     }
-    
+
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
-    {        
+    {
         CommonProxy.networkManager = new NetworkManager(event);
     }
-    
+
     @EventHandler
     public void serverStopping(FMLServerStoppingEvent event)
     {
-        CommonProxy.networkManager.saveAllData();
+        CommonProxy.networkManager.saveAllData(); // TODO: Also do this on world saved.
     }
 }

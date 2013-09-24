@@ -14,34 +14,34 @@ public class ClientBlockManager extends BlockManager
     public boolean biometric;
     public boolean dialDevice;
     public boolean networkInterface;
-    
-    @Override
-    public void saveData(NBTTagCompound tag)
-    {
-        
-    }
-    
-    @Override
-    public void loadData(NBTTagCompound tag)
-    {
-        
-    }
-    
+
     @Override
     public TileBiometricIdentifier getBiometric(World world)
     {
         return null;
     }
-    
+
     @Override
     public TileDiallingDevice getDialDevice(World world)
     {
         return null;
     }
-    
+
     @Override
     public TileNetworkInterface getNetworkInterface(World world)
     {
         return null;
+    }
+
+    @Override
+    public void loadData(NBTTagCompound tag)
+    {
+
+    }
+
+    @Override
+    public void saveData(NBTTagCompound tag)
+    {
+
     }
 }

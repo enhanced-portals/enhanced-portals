@@ -15,149 +15,6 @@ public class PortalUtils
 {
     // TODO: Rewrite to be better.
 
-    public static void removePortalForController(TilePortalController control)
-    {
-        WorldServer world = (WorldServer) control.worldObj;
-        
-        for (int k = 0; k < 6; k++)
-        {
-            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
-            
-            if (world.isAirBlock(c.posX, c.posY, c.posZ))
-            {
-                for (int i = 1; i < 4; i++)
-                {
-                    removePortal(world, c.posX, c.posY, c.posZ);
-                }
-            }
-        }
-    }
-    
-    private static void removePortal(WorldServer world, int x, int y, int z)
-    {
-        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
-        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
-        toProcess.add(new ChunkCoordinates(x, y, z));
-
-        while (!toProcess.isEmpty())
-        {
-            ChunkCoordinates cur = toProcess.remove();
-
-            if (!addedBlocks.contains(cur) && world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
-            {
-                addedBlocks.add(cur);
-                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
-                addTouchingBlocks(cur, toProcess, 0);
-            }
-        }
-    }
-
-    public static boolean createPortalForController(TilePortalController control)
-    {
-        WorldServer world = (WorldServer) control.worldObj;
-        
-        for (int k = 0; k < 6; k++)
-        {
-            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
-            
-            if (world.isAirBlock(c.posX, c.posY, c.posZ))
-            {
-                for (int i = 1; i < 4; i++)
-                {
-                    if (createPortal(world, c.posX, c.posY, c.posZ, i))
-                    {
-                        control.PortalType = i;
-                        return true;
-                    }
-                }
-            }
-        }
-        
-        return false;
-    }
-
-    private static boolean createPortal(WorldServer world, int x, int y, int z, int meta)
-    {
-        int USED_CHANCES = 0, MAX_CHANCES = 16;
-        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
-        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
-        toProcess.add(new ChunkCoordinates(x, y, z));
-
-        while (!toProcess.isEmpty())
-        {
-            ChunkCoordinates cur = toProcess.remove();
-
-            if (!addedBlocks.contains(cur) && (world.isAirBlock(cur.posX, cur.posY, cur.posZ) || Block.blocksList[world.getBlockId(cur.posX, cur.posY, cur.posZ)].isBlockReplaceable(world, cur.posX, cur.posY, cur.posZ)))
-            {
-                int sides = getSides(world, cur, meta);
-
-                if (sides == -1)
-                {
-                    removePortal(world, addedBlocks);
-                    return false;
-                }
-                else if (sides < 2 && USED_CHANCES < MAX_CHANCES)
-                {
-                    USED_CHANCES++;
-                    sides += 2;
-                }
-
-                if (sides >= 2)
-                {
-                    addedBlocks.add(cur);
-                    world.setBlock(cur.posX, cur.posY, cur.posZ, CommonProxy.blockPortal.blockID, meta, 2);
-                    addTouchingBlocks(cur, toProcess, meta);
-                }
-            }
-        }
-
-        Queue<ChunkCoordinates> portalBlocks = duplicateQueue(addedBlocks);
-
-        while (!portalBlocks.isEmpty())
-        {
-            ChunkCoordinates cur = portalBlocks.remove();
-
-            if (!checkTension(world, meta, cur))
-            {
-                removePortal(world, addedBlocks);
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private static Queue<ChunkCoordinates> duplicateQueue(Queue<ChunkCoordinates> queue)
-    {
-        Queue<ChunkCoordinates> q = new LinkedList<ChunkCoordinates>();
-
-        for (ChunkCoordinates c : queue)
-        {
-            q.add(c);
-        }
-
-        return q;
-    }
-
-    private static ChunkCoordinates offsetCoordinate(ChunkCoordinates coord, ForgeDirection dir)
-    {
-        return new ChunkCoordinates(coord.posX + dir.offsetX, coord.posY + dir.offsetY, coord.posZ + dir.offsetZ);
-    }
-
-    private static void removePortal(WorldServer world, Queue<ChunkCoordinates> blocks)
-    {
-        while (!blocks.isEmpty())
-        {
-            ChunkCoordinates cur = blocks.remove();
-            int id = world.getBlockId(cur.posX, cur.posY, cur.posZ);
-
-            if (id == CommonProxy.blockPortal.blockID)
-            {
-                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
-            }
-        }
-    }
-
     private static void addTouchingBlocks(ChunkCoordinates c, Queue<ChunkCoordinates> queue, int meta)
     {
         if (meta >= 6)
@@ -219,6 +76,93 @@ public class PortalUtils
         return false;
     }
 
+    private static boolean createPortal(WorldServer world, int x, int y, int z, int meta)
+    {
+        int USED_CHANCES = 0, MAX_CHANCES = 16;
+        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
+        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
+        toProcess.add(new ChunkCoordinates(x, y, z));
+
+        while (!toProcess.isEmpty())
+        {
+            ChunkCoordinates cur = toProcess.remove();
+
+            if (!addedBlocks.contains(cur) && (world.isAirBlock(cur.posX, cur.posY, cur.posZ) || Block.blocksList[world.getBlockId(cur.posX, cur.posY, cur.posZ)].isBlockReplaceable(world, cur.posX, cur.posY, cur.posZ)))
+            {
+                int sides = getSides(world, cur, meta);
+
+                if (sides == -1)
+                {
+                    removePortal(world, addedBlocks);
+                    return false;
+                }
+                else if (sides < 2 && USED_CHANCES < MAX_CHANCES)
+                {
+                    USED_CHANCES++;
+                    sides += 2;
+                }
+
+                if (sides >= 2)
+                {
+                    addedBlocks.add(cur);
+                    world.setBlock(cur.posX, cur.posY, cur.posZ, CommonProxy.blockPortal.blockID, meta, 2);
+                    addTouchingBlocks(cur, toProcess, meta);
+                }
+            }
+        }
+
+        Queue<ChunkCoordinates> portalBlocks = duplicateQueue(addedBlocks);
+
+        while (!portalBlocks.isEmpty())
+        {
+            ChunkCoordinates cur = portalBlocks.remove();
+
+            if (!checkTension(world, meta, cur))
+            {
+                removePortal(world, addedBlocks);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean createPortalForController(TilePortalController control)
+    {
+        WorldServer world = (WorldServer) control.worldObj;
+
+        for (int k = 0; k < 6; k++)
+        {
+            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
+
+            if (world.isAirBlock(c.posX, c.posY, c.posZ))
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    if (createPortal(world, c.posX, c.posY, c.posZ, i))
+                    {
+                        control.PortalType = i;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static Queue<ChunkCoordinates> duplicateQueue(Queue<ChunkCoordinates> queue)
+    {
+        Queue<ChunkCoordinates> q = new LinkedList<ChunkCoordinates>();
+
+        for (ChunkCoordinates c : queue)
+        {
+            q.add(c);
+        }
+
+        return q;
+    }
+
     private static int getSides(WorldServer world, ChunkCoordinates coord, int meta)
     {
         if (meta >= 6)
@@ -262,5 +206,61 @@ public class PortalUtils
     private static boolean isValidPortalPart(int id)
     {
         return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID;
+    }
+
+    private static ChunkCoordinates offsetCoordinate(ChunkCoordinates coord, ForgeDirection dir)
+    {
+        return new ChunkCoordinates(coord.posX + dir.offsetX, coord.posY + dir.offsetY, coord.posZ + dir.offsetZ);
+    }
+
+    private static void removePortal(WorldServer world, int x, int y, int z)
+    {
+        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
+        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
+        toProcess.add(new ChunkCoordinates(x, y, z));
+
+        while (!toProcess.isEmpty())
+        {
+            ChunkCoordinates cur = toProcess.remove();
+
+            if (!addedBlocks.contains(cur) && world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
+            {
+                addedBlocks.add(cur);
+                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
+                addTouchingBlocks(cur, toProcess, 0);
+            }
+        }
+    }
+
+    private static void removePortal(WorldServer world, Queue<ChunkCoordinates> blocks)
+    {
+        while (!blocks.isEmpty())
+        {
+            ChunkCoordinates cur = blocks.remove();
+            int id = world.getBlockId(cur.posX, cur.posY, cur.posZ);
+
+            if (id == CommonProxy.blockPortal.blockID)
+            {
+                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
+            }
+        }
+    }
+
+    public static void removePortalForController(TilePortalController control)
+    {
+        WorldServer world = (WorldServer) control.worldObj;
+
+        for (int k = 0; k < 6; k++)
+        {
+            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
+
+            if (world.isAirBlock(c.posX, c.posY, c.posZ))
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    removePortal(world, c.posX, c.posY, c.posZ);
+                }
+            }
+        }
     }
 }

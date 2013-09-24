@@ -23,49 +23,24 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class NetworkManager
 {
-           //  UID   , Location
+    // UID , Location
     Map<String, WorldCoordinates> portalLocations;
-           //  UID   , Portals UIDs
+    // UID , Portals UIDs
     Map<String, ArrayList<String>> basicNetwork;
-    
+
     File dataFile;
     MinecraftServer server;
-    
+
     public NetworkManager(FMLServerStartingEvent event)
     {
         portalLocations = new HashMap<String, WorldCoordinates>();
         basicNetwork = new HashMap<String, ArrayList<String>>();
-        server = event.getServer();        
+        server = event.getServer();
         dataFile = new File(EnhancedPortals.proxy.getWorldDir(), Reference.NAME + ".dat");
-        
+
         loadAllData();
     }
-    
-    public ChunkCoordinates getPortalLocation(String UID)
-    {
-        return portalLocations.get(UID);
-    }
-    
-    public ArrayList<String> getNetworkedPortals(String UID)
-    {
-        return networkExists(UID) ? basicNetwork.get(UID) : new ArrayList<String>();
-    }
-    
-    public boolean portalExists(String UID)
-    {
-        return portalLocations.containsKey(UID);
-    }
-    
-    public boolean networkExists(String UID)
-    {
-        return basicNetwork.containsKey(UID);
-    }
-    
-    public boolean isPortalInNetwork(String UID, String networkID)
-    {
-        return getNetworkedPortals(networkID).contains(UID);
-    }
-    
+
     public void addNewPortal(String UID, WorldCoordinates pos)
     {
         if (!portalExists(UID))
@@ -73,39 +48,7 @@ public class NetworkManager
             portalLocations.put(UID, pos);
         }
     }
-    
-    public void updateExistingPortal(String oldUID, String newUID)
-    {
-        if (portalExists(oldUID))
-        {
-            portalLocations.put(newUID, portalLocations.get(oldUID));
-            removePortal(oldUID);
-        }
-    }
-    
-    public void updateExistingPortal(String oldUID, String newUID, WorldCoordinates newPos)
-    {
-        if (portalExists(oldUID))
-        {
-            portalLocations.put(newUID, newPos);
-            removePortal(oldUID);
-        }
-    }
-    
-    public void updateExistingPortal(String UID, WorldCoordinates newPos)
-    {
-        if (portalExists(UID))
-        {
-            removePortal(UID);
-            portalLocations.put(UID, newPos);            
-        }
-    }
-    
-    public void removePortal(String UID)
-    {
-        portalLocations.remove(UID);
-    }
-    
+
     public void addPortalToNetwork(String UID, String network)
     {
         if (!isPortalInNetwork(UID, network))
@@ -114,16 +57,66 @@ public class NetworkManager
             {
                 basicNetwork.put(network, new ArrayList<String>());
             }
-            
+
             getNetworkedPortals(network).add(UID);
         }
     }
-    
-    public void removePortalFromNetwork(String UID, String network)
+
+    public ArrayList<String> getNetworkedPortals(String UID)
     {
-        if (isPortalInNetwork(UID, network))
+        return networkExists(UID) ? basicNetwork.get(UID) : new ArrayList<String>();
+    }
+
+    public ChunkCoordinates getPortalLocation(String UID)
+    {
+        return portalLocations.get(UID);
+    }
+
+    public boolean isPortalInNetwork(String UID, String networkID)
+    {
+        return getNetworkedPortals(networkID).contains(UID);
+    }
+
+    public void loadAllData()
+    {
+        makeFile();
+        NBTTagCompound mainTag = null;
+
+        try
         {
-            getNetworkedPortals(network).remove(UID);
+            mainTag = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(dataFile)));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (mainTag == null)
+        {
+            return;
+        }
+
+        NBTTagCompound portalTag = (NBTTagCompound) mainTag.getTag("PortalLocations");
+        NBTTagCompound networkTag = (NBTTagCompound) mainTag.getTag("Networks");
+
+        for (Object o : portalTag.getTags())
+        {
+            NBTTagCompound tag = (NBTTagCompound) o;
+            portalLocations.put(tag.getName(), new WorldCoordinates(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D")));
+        }
+
+        for (Object o : networkTag.getTags())
+        {
+            NBTTagList tag = (NBTTagList) o;
+            ArrayList<String> sList = new ArrayList<String>();
+
+            for (Object ob : tag.tagList)
+            {
+                NBTTagCompound c = (NBTTagCompound) ob;
+                sList.add(c.getString("ID"));
+            }
+
+            basicNetwork.put(tag.getName(), sList);
         }
     }
 
@@ -141,57 +134,37 @@ public class NetworkManager
             e.printStackTrace();
         }
     }
-    
-    public void loadAllData()
-    {
-        makeFile();
-        NBTTagCompound mainTag = null;
-        
-        try
-        {
-            mainTag = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(dataFile)));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        
-        if (mainTag == null)
-        {
-            return;
-        }
 
-        NBTTagCompound portalTag = (NBTTagCompound) mainTag.getTag("PortalLocations");
-        NBTTagCompound networkTag = (NBTTagCompound) mainTag.getTag("Networks");
-        
-        for (Object o : portalTag.getTags())
+    public boolean networkExists(String UID)
+    {
+        return basicNetwork.containsKey(UID);
+    }
+
+    public boolean portalExists(String UID)
+    {
+        return portalLocations.containsKey(UID);
+    }
+
+    public void removePortal(String UID)
+    {
+        portalLocations.remove(UID);
+    }
+
+    public void removePortalFromNetwork(String UID, String network)
+    {
+        if (isPortalInNetwork(UID, network))
         {
-            NBTTagCompound tag = (NBTTagCompound) o;            
-            portalLocations.put(tag.getName(), new WorldCoordinates(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D")));
-        }
-        
-        for (Object o : networkTag.getTags())
-        {
-            NBTTagList tag = (NBTTagList) o;
-            ArrayList<String> sList = new ArrayList<String>();
-            
-            for (Object ob : tag.tagList)
-            {
-                NBTTagCompound c = (NBTTagCompound) ob;
-                sList.add(c.getString("ID"));
-            }
-            
-            basicNetwork.put(tag.getName(), sList);
+            getNetworkedPortals(network).remove(UID);
         }
     }
-    
+
     public void saveAllData()
     {
         makeFile();
         NBTTagCompound mainTag = new NBTTagCompound();
         NBTTagCompound portalTag = new NBTTagCompound();
         NBTTagCompound networkTag = new NBTTagCompound();
-        
+
         for (Entry<String, WorldCoordinates> entry : portalLocations.entrySet())
         {
             NBTTagCompound t = new NBTTagCompound();
@@ -199,27 +172,27 @@ public class NetworkManager
             t.setInteger("Y", entry.getValue().posY);
             t.setInteger("Z", entry.getValue().posZ);
             t.setInteger("D", entry.getValue().dimension);
-            
+
             portalTag.setTag(entry.getKey(), t);
         }
-        
+
         for (Entry<String, ArrayList<String>> entry : basicNetwork.entrySet())
         {
             NBTTagList t = new NBTTagList();
-            
+
             for (String s : entry.getValue())
             {
                 NBTTagCompound c = new NBTTagCompound();
                 c.setString("ID", s);
                 t.appendTag(c);
             }
-            
+
             networkTag.setTag(entry.getKey(), t);
         }
-        
+
         mainTag.setTag("PortalLocations", portalTag);
         mainTag.setTag("Networks", networkTag);
-        
+
         try
         {
             NBTBase.writeNamedTag(mainTag, new DataOutputStream(new FileOutputStream(dataFile)));
@@ -227,6 +200,33 @@ public class NetworkManager
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public void updateExistingPortal(String oldUID, String newUID)
+    {
+        if (portalExists(oldUID))
+        {
+            portalLocations.put(newUID, portalLocations.get(oldUID));
+            removePortal(oldUID);
+        }
+    }
+
+    public void updateExistingPortal(String oldUID, String newUID, WorldCoordinates newPos)
+    {
+        if (portalExists(oldUID))
+        {
+            portalLocations.put(newUID, newPos);
+            removePortal(oldUID);
+        }
+    }
+
+    public void updateExistingPortal(String UID, WorldCoordinates newPos)
+    {
+        if (portalExists(UID))
+        {
+            removePortal(UID);
+            portalLocations.put(UID, newPos);
         }
     }
 }

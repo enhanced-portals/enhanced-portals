@@ -365,11 +365,89 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         initLedgers(inventory);
     }
 
+    protected void drawBorderedRectangle(int x, int y, int w, int h, int colour, int borderColour, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        drawRectangle(x + 1, y + 1, w, h, colour, false); // centre
+        drawRectangle(x, y, w + 2, 1, borderColour, false); // top border
+        drawRectangle(x, y + h + 1, w + 2, 1, borderColour, false); // bottom border
+        drawRectangle(x, y + 1, 1, h, borderColour, false); // left border
+        drawRectangle(x + w + 1, y + 1, 1, h, borderColour, false); // right border
+    }
+
+    /*** RGBA should be 0-255 */
+    protected void drawColouredItemStack(int x, int y, float r, float g, float b, float a, ItemStack stack, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        itemRenderer.renderWithColor = false;
+        GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
+        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
+        itemRenderer.renderWithColor = true;
+    }
+
+    protected void drawColouredItemStack(int x, int y, int colour, ItemStack stack, boolean offset)
+    {
+        Color c = new Color(colour);
+        drawColouredItemStack(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), stack, offset);
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         ledgerManager.drawLedgers(par1, par2);
         GL11.glDisable(GL11.GL_LIGHTING);
+    }
+
+    protected void drawItemSlotBackground(int x, int y, int w, int h)
+    {
+        drawRectangle(x, y, w - 1, h, 0xFF8b8b8b, true); // background
+        drawRectangle(x, y, w - 1, 1, 0xFF373737, true); // top
+        drawRectangle(x, y, 1, h, 0xFF373737, true); // left
+        drawRectangle(x, y + h, w - 1, 1, 0xFFffffff, true); // bottom
+        drawRectangle(x + w - 1, y, 1, h + 1, 0xFFffffff, true); // right
+        drawRectangle(x + w - 1, y, 1, 1, 0xFF8b8b8b, true); // corner
+        drawRectangle(x, y + h, 1, 1, 0xFF8b8b8b, true); // corner
+    }
+
+    /*** RGBA should be 0-255 */
+    protected void drawParticle(int x, int y, float r, float g, float b, float a, int textureIndex, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
+        mc.renderEngine.bindTexture(new ResourceLocation("textures/particle/particles.png"));
+        drawTexturedModalRect(x, y, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
+    }
+
+    protected void drawParticle(int x, int y, int colour, int texture, boolean offset)
+    {
+        Color c = new Color(colour);
+        drawParticle(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), texture, offset);
+    }
+
+    protected void drawRectangle(int x, int y, int w, int h, int colour, boolean offset)
+    {
+        if (offset)
+        {
+            x += guiLeft;
+            y += guiTop;
+        }
+
+        drawRect(x, y, x + w, y + h, colour);
     }
 
     /**
@@ -442,6 +520,33 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         GL11.glPopMatrix();
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+    }
+
+    protected void drawTab(int x, int y, int w, int h)
+    {
+        drawTab(x, y, w, h, 1f, 1f, 1f);
+    }
+
+    protected void drawTab(int x, int y, int w, int h, float f1, float f2, float f3)
+    {
+        GL11.glColor4f(f1, f2, f3, 1f);
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
+        drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
+        drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
+        drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
+        drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
+        drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
+    }
+
+    protected void drawTabFlipped(int x, int y, int w, int h, float f1, float f2, float f3)
+    {
+        GL11.glColor4f(f1, f2, f3, 1f);
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledgerFlipped.png"));
+        drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
+        drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
+        drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
+        drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
+        drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
     }
 
     private void drawToolTips(ToolTip toolTips, int mouseX, int mouseY)
@@ -521,6 +626,56 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         return (xWidth - fontRenderer.getStringWidth(string)) / 2;
     }
 
+    public FontRenderer getFontRenderer()
+    {
+        return mc.fontRenderer;
+    }
+
+    public int getGuiLeft()
+    {
+        return guiLeft;
+    }
+
+    public int getGuiTop()
+    {
+        return guiTop;
+    }
+
+    public RenderItem getItemRenderer()
+    {
+        return itemRenderer;
+    }
+
+    public int getLeft()
+    {
+        return guiLeft;
+    }
+
+    public Minecraft getMinecraft()
+    {
+        return FMLClientHandler.instance().getClient();
+    }
+
+    public TextureManager getTextureManager()
+    {
+        return mc.renderEngine;
+    }
+
+    public int getTop()
+    {
+        return guiTop;
+    }
+
+    public int getXSize()
+    {
+        return xSize;
+    }
+
+    public int getYSize()
+    {
+        return ySize;
+    }
+
     protected void initLedgers(IInventory inventory)
     {
     }
@@ -543,160 +698,5 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         super.mouseClicked(par1, par2, mouseButton);
 
         ledgerManager.handleMouseClicked(par1, par2, mouseButton);
-    }
-
-    public int getGuiLeft()
-    {
-        return guiLeft;
-    }
-
-    public int getGuiTop()
-    {
-        return guiTop;
-    }
-
-    public int getXSize()
-    {
-        return xSize;
-    }
-
-    public int getYSize()
-    {
-        return ySize;
-    }
-
-    public int getLeft()
-    {
-        return guiLeft;
-    }
-
-    public int getTop()
-    {
-        return guiTop;
-    }
-
-    public RenderItem getItemRenderer()
-    {
-        return itemRenderer;
-    }
-
-    public Minecraft getMinecraft()
-    {
-        return FMLClientHandler.instance().getClient();
-    }
-
-    protected void drawBorderedRectangle(int x, int y, int w, int h, int colour, int borderColour, boolean offset)
-    {
-        if (offset)
-        {
-            x += guiLeft;
-            y += guiTop;
-        }
-
-        drawRectangle(x + 1, y + 1, w, h, colour, false); // centre
-        drawRectangle(x, y, w + 2, 1, borderColour, false); // top border
-        drawRectangle(x, y + h + 1, w + 2, 1, borderColour, false); // bottom border
-        drawRectangle(x, y + 1, 1, h, borderColour, false); // left border
-        drawRectangle(x + w + 1, y + 1, 1, h, borderColour, false); // right border
-    }
-
-    protected void drawRectangle(int x, int y, int w, int h, int colour, boolean offset)
-    {
-        if (offset)
-        {
-            x += guiLeft;
-            y += guiTop;
-        }
-
-        drawRect(x, y, x + w, y + h, colour);
-    }
-
-    protected void drawColouredItemStack(int x, int y, int colour, ItemStack stack, boolean offset)
-    {
-        Color c = new Color(colour);
-        drawColouredItemStack(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), stack, offset);
-    }
-
-    /*** RGBA should be 0-255 */
-    protected void drawColouredItemStack(int x, int y, float r, float g, float b, float a, ItemStack stack, boolean offset)
-    {
-        if (offset)
-        {
-            x += guiLeft;
-            y += guiTop;
-        }
-
-        itemRenderer.renderWithColor = false;
-        GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
-        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
-        itemRenderer.renderWithColor = true;
-    }
-
-    protected void drawParticle(int x, int y, int colour, int texture, boolean offset)
-    {
-        Color c = new Color(colour);
-        drawParticle(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), texture, offset);
-    }
-
-    /*** RGBA should be 0-255 */
-    protected void drawParticle(int x, int y, float r, float g, float b, float a, int textureIndex, boolean offset)
-    {
-        if (offset)
-        {
-            x += guiLeft;
-            y += guiTop;
-        }
-
-        GL11.glColor4f(r / 255, g / 255, b / 255, a / 255);
-        mc.renderEngine.bindTexture(new ResourceLocation("textures/particle/particles.png"));
-        drawTexturedModalRect(x, y, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
-    }
-
-    protected void drawItemSlotBackground(int x, int y, int w, int h)
-    {
-        drawRectangle(x, y, w - 1, h, 0xFF8b8b8b, true); // background
-        drawRectangle(x, y, w - 1, 1, 0xFF373737, true); // top
-        drawRectangle(x, y, 1, h, 0xFF373737, true); // left
-        drawRectangle(x, y + h, w - 1, 1, 0xFFffffff, true); // bottom
-        drawRectangle(x + w - 1, y, 1, h + 1, 0xFFffffff, true); // right
-        drawRectangle(x + w - 1, y, 1, 1, 0xFF8b8b8b, true); // corner
-        drawRectangle(x, y + h, 1, 1, 0xFF8b8b8b, true); // corner
-    }
-
-    public TextureManager getTextureManager()
-    {
-        return mc.renderEngine;
-    }
-    
-    public FontRenderer getFontRenderer()
-    {
-        return mc.fontRenderer;
-    }
-
-    protected void drawTab(int x, int y, int w, int h, float f1, float f2, float f3)
-    {
-        GL11.glColor4f(f1, f2, f3, 1f);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledger.png"));
-        drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
-        drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
-        drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
-        drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
-        drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
-    }
-
-    protected void drawTabFlipped(int x, int y, int w, int h, float f1, float f2, float f3)
-    {
-        GL11.glColor4f(f1, f2, f3, 1f);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/ledgerFlipped.png"));
-        drawTexturedModalRect(x, y, 0, 0, w - 4, h - 4); // Top & Background
-        drawTexturedModalRect(x + w - 4, y, 256 - 4, 0, 4, 4); // Top Right
-        drawTexturedModalRect(x + w - 4, y + 4, 256 - 4, 4, 4, h - 8); // Right
-        drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
-        drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
-    }
-
-    protected void drawTab(int x, int y, int w, int h)
-    {
-        drawTab(x, y, w, h, 1f, 1f, 1f);
     }
 }

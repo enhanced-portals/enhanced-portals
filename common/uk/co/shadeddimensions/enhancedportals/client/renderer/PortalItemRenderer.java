@@ -20,25 +20,19 @@ public class PortalItemRenderer implements IItemRenderer
         {
             case ENTITY:
                 return true;
-                
+
             case EQUIPPED:
                 return true;
-                
+
             case EQUIPPED_FIRST_PERSON:
                 return true;
-                
+
             case INVENTORY:
                 return true;
-                
+
             default:
                 return false;
         }
-    }
-
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-    {
-        return true;
     }
 
     @Override
@@ -49,32 +43,32 @@ public class PortalItemRenderer implements IItemRenderer
             case ENTITY:
                 renderPortalItem((RenderBlocks) data[0], item, -0.5f, -0.5f, -0.5f);
                 break;
-                
+
             case EQUIPPED:
                 renderPortalItem((RenderBlocks) data[0], item, -0.4f, 0.50f, 0.35f);
                 break;
-                
+
             case EQUIPPED_FIRST_PERSON:
                 renderPortalItem((RenderBlocks) data[0], item, -0.4f, 0.2f, 0.2f);
                 break;
-                
+
             case INVENTORY:
                 renderPortalItem((RenderBlocks) data[0], item, -0.5f, -0.5f, -0.5f);
                 break;
-                
+
             default:
         }
     }
-    
+
     private void renderPortalItem(RenderBlocks renderer, ItemStack item, float x, float y, float z)
     {
         Tessellator tessellator = Tessellator.instance;
-        
+
         Icon icon = Block.portal.getIcon(0, 0);
         renderer.setRenderBoundsFromBlock(CommonProxy.blockFrame);
-        
+
         GL11.glTranslatef(x, y, z);
-                
+
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1F, 0.0F);
         renderer.renderFaceYNeg(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
@@ -99,5 +93,11 @@ public class PortalItemRenderer implements IItemRenderer
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
         renderer.renderFaceXPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
         tessellator.draw();
+    }
+
+    @Override
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+    {
+        return true;
     }
 }

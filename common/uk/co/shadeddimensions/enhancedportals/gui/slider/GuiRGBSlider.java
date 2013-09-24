@@ -14,6 +14,11 @@ public class GuiRGBSlider extends GuiBetterSlider
         originalText = displayText;
     }
 
+    public int getValue()
+    {
+        return (int) (255 * sliderValue);
+    }
+
     @Override
     protected void mouseDragged(Minecraft par1Minecraft, int par2, int par3)
     {
@@ -66,10 +71,5 @@ public class GuiRGBSlider extends GuiBetterSlider
         {
             return false;
         }
-    }
-
-    public int getValue()
-    {
-        return (int) (255 * sliderValue);
     }
 }

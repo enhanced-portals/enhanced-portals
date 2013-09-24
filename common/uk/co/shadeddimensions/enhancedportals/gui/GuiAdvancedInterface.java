@@ -41,7 +41,7 @@ public abstract class GuiAdvancedInterface extends GuiEnhancedPortals
             else if (getTexture() != null)
             {
                 getMinecraft().renderEngine.bindTexture(new ResourceLocation("gui/items.png"));
-                
+
                 // System.out.printf("Drawing advanced sprite %s (%d,%d) at %d %d\n",
                 // getTexture().getIconName(),
                 // getTexture().getOriginX(),getTexture().getOriginY(),cornerX +

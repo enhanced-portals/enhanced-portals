@@ -13,9 +13,9 @@ public class GoggleTickHandler implements ITickHandler
     int tickTimer = 0;
 
     @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData)
+    public String getLabel()
     {
-
+        return "EP2 Goggles";
     }
 
     @Override
@@ -43,8 +43,8 @@ public class GoggleTickHandler implements ITickHandler
     }
 
     @Override
-    public String getLabel()
+    public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
-        return "EP2 Goggles";
+
     }
 }

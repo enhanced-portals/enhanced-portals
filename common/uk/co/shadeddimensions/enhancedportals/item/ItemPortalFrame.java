@@ -11,15 +11,15 @@ public class ItemPortalFrame extends ItemBlock
     {
         super(par1);
         setMaxDamage(0);
-        setHasSubtypes(true);        
+        setHasSubtypes(true);
     }
-    
+
     @Override
     public Icon getIconFromDamage(int par1)
     {
         return CommonProxy.blockFrame.getBlockTextureFromSide(0);
     }
-    
+
     @Override
     public int getMetadata(int par1)
     {
@@ -38,27 +38,27 @@ public class ItemPortalFrame extends ItemBlock
             case 0:
                 name = "frame";
                 break;
-                
+
             case 1:
                 name = "controller";
                 break;
-                
+
             case 2:
                 name = "redstone";
                 break;
-                
+
             case 3:
                 name = "networkInterface";
                 break;
-                
+
             case 4:
                 name = "dialDevice";
                 break;
-                
+
             case 5:
                 name = "biometric";
                 break;
-                
+
             case 6:
                 name = "upgrade";
                 break;

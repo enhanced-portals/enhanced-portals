@@ -21,6 +21,25 @@ public class GuiGlyphSelector extends Gui
 {
     static final int MAX_COUNT = 9, ITEMS_PER_LINE = 9;
     static ArrayList<ItemStack> Glyphs = new ArrayList<ItemStack>();
+
+    public static ItemStack getGlyph(int id)
+    {
+        return id >= 0 && id < Glyphs.size() ? Glyphs.get(id) : null;
+    }
+
+    private static int getGlyphID(String s)
+    {
+        for (int i = 0; i < Glyphs.size(); i++)
+        {
+            if (Glyphs.get(i).getUnlocalizedName().replace("item.", "").equals(s))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     ArrayList<ItemStack> selectedGlyphs;
 
     static
@@ -55,11 +74,11 @@ public class GuiGlyphSelector extends Gui
         Glyphs.add(new ItemStack(Item.potion, 0, 5));
         Glyphs.add(new ItemStack(Item.cake, 0));
     }
-    
+
     public static ArrayList<ItemStack> getGlyphsFromIdentifier(String identifier)
     {
         ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-        
+
         if (identifier.contains(" "))
         {
             for (String s : identifier.split(" "))
@@ -77,17 +96,19 @@ public class GuiGlyphSelector extends Gui
             int id = getGlyphID(identifier);
 
             if (id >= 0)
-            {                
+            {
                 list.add(Glyphs.get(id));
             }
         }
-        
+
         return list;
     }
 
     protected int x, y, colour;
     int[] counter;
+
     protected GuiEnhancedPortals gui;
+
     protected boolean canEdit;
 
     public GuiGlyphSelector(int x, int y, GuiEnhancedPortals parent)
@@ -112,48 +133,19 @@ public class GuiGlyphSelector extends Gui
         canEdit = false;
     }
 
-    public void setEditable(boolean edit)
-    {
-        canEdit = edit;
-    }
-
-    public int getCurrentSelectedCount()
-    {
-        return selectedGlyphs.size();
-    }
-
     public boolean canIncrementGlyph()
     {
         return getCurrentSelectedCount() < MAX_COUNT;
     }
 
-    public String getSelectedIdentifier()
+    public void clearSelection()
     {
-        String s = "";
+        selectedGlyphs.clear();
 
-        for (ItemStack stack : selectedGlyphs)
+        for (int i = 0; i < counter.length; i++)
         {
-            if (s.length() == 0)
-            {
-                s = stack.getUnlocalizedName().replace("item.", "");
-            }
-            else
-            {
-                s += " " + stack.getUnlocalizedName().replace("item.", "");
-            }
+            counter[i] = 0;
         }
-
-        return s;
-    }
-
-    public ArrayList<ItemStack> getSelectedGlyphs()
-    {
-        return selectedGlyphs;
-    }
-
-    public static ItemStack getGlyph(int id)
-    {
-        return id >= 0 && id < Glyphs.size() ? Glyphs.get(id) : null;
     }
 
     public void drawBackground(int mouseX, int mouseY)
@@ -192,126 +184,6 @@ public class GuiGlyphSelector extends Gui
                     GL11.glDisable(GL11.GL_LIGHTING);
                 }
             }
-        }
-    }
-
-    protected boolean isOnSelf(int mouseX, int mouseY)
-    {
-        return mouseX > x + gui.getGuiLeft() && mouseY > y + gui.getGuiTop() && mouseX < x + 162 + gui.getGuiLeft() && mouseY < y + 54 + gui.getGuiTop();
-    }
-
-    protected boolean isOnElement(int mouseX, int mouseY, int id)
-    {
-        int X = x + id % ITEMS_PER_LINE * 18 + gui.getGuiLeft();
-        int Y = y + id / ITEMS_PER_LINE * 18 + gui.getGuiTop();
-
-        return mouseX > X && mouseY > Y && mouseX < X + 17 && mouseY < Y + 17;
-    }
-
-    public void mouseClicked(int mouseX, int mouseY, int button)
-    {
-        if (canEdit && isOnSelf(mouseX, mouseY))
-        {
-            for (int i = 0; i < Glyphs.size(); i++)
-            {
-                if (isOnElement(mouseX, mouseY, i))
-                {
-                    if (button == 0) // LMB - Increment
-                    {
-                        if (canIncrementGlyph())
-                        {
-                            counter[i]++;
-                            selectedGlyphs.add(Glyphs.get(i)); // Add Glyph to the end
-                            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                        }
-                    }
-                    else if (button == 1) // RMB - Decrement
-                    {
-                        if (counter[i] > 0)
-                        {
-                            counter[i]--;
-                            selectedGlyphs.remove(selectedGlyphs.lastIndexOf(Glyphs.get(i))); // Remove the last Glyph
-                            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    protected void removeAtIndex(int i)
-    {
-        if (i >= 0 && selectedGlyphs.size() > i && selectedGlyphs.get(i) != null)
-        {
-            counter[Glyphs.indexOf(selectedGlyphs.get(i))]--;
-            selectedGlyphs.remove(i);
-            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-        }
-    }
-
-    public void setSelectedToIdentifier(String identifier)
-    {
-        clearSelection();
-
-        if (identifier.contains(" "))
-        {
-            for (String s : identifier.split(" "))
-            {
-                int id = getGlyphID(s);
-
-                if (id >= 0)
-                {
-                    selectedGlyphs.add(Glyphs.get(id));
-                    counter[id]++;
-                }
-            }
-        }
-        else
-        {
-            int id = getGlyphID(identifier);
-
-            if (id >= 0)
-            {
-                selectedGlyphs.add(Glyphs.get(id));
-                counter[id]++;
-            }
-        }
-    }
-
-    private static int getGlyphID(String s)
-    {
-        for (int i = 0; i < Glyphs.size(); i++)
-        {
-            if (Glyphs.get(i).getUnlocalizedName().replace("item.", "").equals(s))
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    public void clearSelection()
-    {
-        selectedGlyphs.clear();
-
-        for (int i = 0; i < counter.length; i++)
-        {
-            counter[i] = 0;
-        }
-    }
-
-    public void randomize(boolean forceMaximum)
-    {
-        clearSelection();
-        Random rand = new Random();
-
-        for (int i = 0; i < (forceMaximum ? MAX_COUNT : rand.nextInt(MAX_COUNT)); i++)
-        {
-            int glyphID = rand.nextInt(Glyphs.size());
-
-            selectedGlyphs.add(Glyphs.get(glyphID));
-            counter[glyphID]++;
         }
     }
 
@@ -381,6 +253,137 @@ public class GuiGlyphSelector extends Gui
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             RenderHelper.enableStandardItemLighting();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        }
+    }
+
+    public int getCurrentSelectedCount()
+    {
+        return selectedGlyphs.size();
+    }
+
+    public ArrayList<ItemStack> getSelectedGlyphs()
+    {
+        return selectedGlyphs;
+    }
+
+    public String getSelectedIdentifier()
+    {
+        String s = "";
+
+        for (ItemStack stack : selectedGlyphs)
+        {
+            if (s.length() == 0)
+            {
+                s = stack.getUnlocalizedName().replace("item.", "");
+            }
+            else
+            {
+                s += " " + stack.getUnlocalizedName().replace("item.", "");
+            }
+        }
+
+        return s;
+    }
+
+    protected boolean isOnElement(int mouseX, int mouseY, int id)
+    {
+        int X = x + id % ITEMS_PER_LINE * 18 + gui.getGuiLeft();
+        int Y = y + id / ITEMS_PER_LINE * 18 + gui.getGuiTop();
+
+        return mouseX > X && mouseY > Y && mouseX < X + 17 && mouseY < Y + 17;
+    }
+
+    protected boolean isOnSelf(int mouseX, int mouseY)
+    {
+        return mouseX > x + gui.getGuiLeft() && mouseY > y + gui.getGuiTop() && mouseX < x + 162 + gui.getGuiLeft() && mouseY < y + 54 + gui.getGuiTop();
+    }
+
+    public void mouseClicked(int mouseX, int mouseY, int button)
+    {
+        if (canEdit && isOnSelf(mouseX, mouseY))
+        {
+            for (int i = 0; i < Glyphs.size(); i++)
+            {
+                if (isOnElement(mouseX, mouseY, i))
+                {
+                    if (button == 0) // LMB - Increment
+                    {
+                        if (canIncrementGlyph())
+                        {
+                            counter[i]++;
+                            selectedGlyphs.add(Glyphs.get(i)); // Add Glyph to the end
+                            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                        }
+                    }
+                    else if (button == 1) // RMB - Decrement
+                    {
+                        if (counter[i] > 0)
+                        {
+                            counter[i]--;
+                            selectedGlyphs.remove(selectedGlyphs.lastIndexOf(Glyphs.get(i))); // Remove the last Glyph
+                            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void randomize(boolean forceMaximum)
+    {
+        clearSelection();
+        Random rand = new Random();
+
+        for (int i = 0; i < (forceMaximum ? MAX_COUNT : rand.nextInt(MAX_COUNT)); i++)
+        {
+            int glyphID = rand.nextInt(Glyphs.size());
+
+            selectedGlyphs.add(Glyphs.get(glyphID));
+            counter[glyphID]++;
+        }
+    }
+
+    protected void removeAtIndex(int i)
+    {
+        if (i >= 0 && selectedGlyphs.size() > i && selectedGlyphs.get(i) != null)
+        {
+            counter[Glyphs.indexOf(selectedGlyphs.get(i))]--;
+            selectedGlyphs.remove(i);
+            gui.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+        }
+    }
+
+    public void setEditable(boolean edit)
+    {
+        canEdit = edit;
+    }
+
+    public void setSelectedToIdentifier(String identifier)
+    {
+        clearSelection();
+
+        if (identifier.contains(" "))
+        {
+            for (String s : identifier.split(" "))
+            {
+                int id = getGlyphID(s);
+
+                if (id >= 0)
+                {
+                    selectedGlyphs.add(Glyphs.get(id));
+                    counter[id]++;
+                }
+            }
+        }
+        else
+        {
+            int id = getGlyphID(identifier);
+
+            if (id >= 0)
+            {
+                selectedGlyphs.add(Glyphs.get(id));
+                counter[id]++;
+            }
         }
     }
 }

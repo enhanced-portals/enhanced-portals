@@ -33,7 +33,7 @@ public class BlockFrame extends BlockEP
 {
     static final int FRAME_TYPES = 7;
     public static Icon[] typeOverlayIcons = new Icon[FRAME_TYPES];
-    
+
     static ConnectedTextures connectedTextures;
 
     public BlockFrame(int id, String name)
@@ -44,23 +44,6 @@ public class BlockFrame extends BlockEP
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
         connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", blockID, -1);
-    }
-        
-    @Override
-    public void registerIcons(IconRegister register)
-    {
-        for (int i = 0; i < typeOverlayIcons.length; i++)
-        {
-            typeOverlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
-        }
-
-        connectedTextures.registerIcons(register);
-    }
-
-    @Override
-    public Icon getIcon(int side, int meta)
-    {
-        return connectedTextures.getNormalIcon();
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -73,48 +56,23 @@ public class BlockFrame extends BlockEP
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public void getSubBlocks(int par1, CreativeTabs creativeTab, List list)
-    {
-        for (int i = 0; i < FRAME_TYPES; i++)
-        {
-            list.add(new ItemStack(this, 1, i));
-        }
-    }
-
-    @Override
-    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
-        Icon frameIcon = frame != null ? null /* TODO */ : null;
-
-        return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
-    }
-    
-    @Override
-    public int getRenderType()
-    {
-        return -1;
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return true;
-    }
-    
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).selfBroken();
         super.breakBlock(world, x, y, z, par5, par6);
+    }
+
+    @Override
+    public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+    {
+        return false;
     }
 
     @Override
@@ -159,15 +117,52 @@ public class BlockFrame extends BlockEP
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+    public int damageDropped(int par1)
     {
-        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).neighborChanged(id);
+        return par1;
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).activate(player);
+        TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
+        Icon frameIcon = frame != null ? null /* TODO */: null;
+
+        return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
+    }
+
+    @Override
+    public Icon getIcon(int side, int meta)
+    {
+        return connectedTextures.getNormalIcon();
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
+    }
+
+    @Override
+    public int getRenderType()
+    {
+        return -1;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs creativeTab, List list)
+    {
+        for (int i = 0; i < FRAME_TYPES; i++)
+        {
+            list.add(new ItemStack(this, 1, i));
+        }
+    }
+
+    @Override
+    public boolean isBlockNormalCube(World world, int x, int y, int z)
+    {
+        return false;
     }
 
     @Override
@@ -177,9 +172,9 @@ public class BlockFrame extends BlockEP
     }
 
     @Override
-    public boolean isBlockNormalCube(World world, int x, int y, int z)
+    public boolean isOpaqueCube()
     {
-        return false;
+        return true;
     }
 
     @Override
@@ -195,33 +190,9 @@ public class BlockFrame extends BlockEP
     }
 
     @Override
-    public void updateTick(World world, int x, int y, int z, Random random)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).scheduledTick(random);
-    }
-
-    @Override
-    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean canBeReplacedByLeaves(World world, int x, int y, int z)
-    {
-        return false;
-    }
-
-    @Override
-    public int damageDropped(int par1)
-    {
-        return par1;
-    }
-
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-    {
-        return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
+        return ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).activate(player);
     }
 
     @Override
@@ -235,11 +206,40 @@ public class BlockFrame extends BlockEP
         for (int i = 0; i < 6; i++)
         {
             ChunkCoordinates c = ChunkCoordinateUtils.offset(new ChunkCoordinates(x, y, z), ForgeDirection.getOrientation(i));
-            
+
             if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockFrame.blockID)
             {
                 ((TilePortalFrame) world.getBlockTileEntity(c.posX, c.posY, c.posZ)).selfBroken();
             }
         }
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+    {
+        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).neighborChanged(id);
+    }
+
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        for (int i = 0; i < typeOverlayIcons.length; i++)
+        {
+            typeOverlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
+        }
+
+        connectedTextures.registerIcons(register);
+    }
+
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random)
+    {
+        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).scheduledTick(random);
     }
 }

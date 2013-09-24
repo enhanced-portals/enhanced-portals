@@ -11,9 +11,9 @@ import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 
 public class ItemWrench extends ItemEP
@@ -28,20 +28,20 @@ public class ItemWrench extends ItemEP
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-    {        
+    {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (tile != null)
         {
             if (tile instanceof TilePortalController)
             {
                 TilePortalController controller = (TilePortalController) tile;
-                
+
                 if (!controller.hasInitialized)
                 {
                     return false;
                 }
-                
+
                 player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_FRAME_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, x, y, z);
                 return true;
             }
@@ -53,7 +53,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TileDiallingDevice)
             {
                 TileDiallingDevice ni = (TileDiallingDevice) tile;
-                
+
                 if (ni.getController() == null)
                 {
                     return false;
@@ -64,18 +64,18 @@ public class ItemWrench extends ItemEP
                     {
                         player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".dialDevice.noUidSet"));
                     }
-                    
+
                     return false;
                 }
-                
+
                 // TODO
-                
+
                 return true;
             }
             else if (tile instanceof TileNetworkInterface)
             {
                 TileNetworkInterface ni = (TileNetworkInterface) tile;
-                
+
                 if (ni.getController() == null)
                 {
                     return false;
@@ -86,10 +86,10 @@ public class ItemWrench extends ItemEP
                     {
                         player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".networkInterface.noUidSet"));
                     }
-                    
+
                     return false;
                 }
-                
+
                 player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, world, x, y, z);
                 return true;
             }
@@ -102,7 +102,7 @@ public class ItemWrench extends ItemEP
             {
                 TilePortalFrame frame = (TilePortalFrame) tile;
                 TilePortalController control = frame.getController();
-                
+
                 if (control != null)
                 {
                     player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_FRAME_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, control.xCoord, control.yCoord, control.zCoord);
@@ -113,7 +113,7 @@ public class ItemWrench extends ItemEP
             {
                 TilePortal portal = (TilePortal) tile;
                 TilePortalController control = portal.getControllerValidated();
-                
+
                 if (control != null)
                 {
                     player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, control.xCoord, control.yCoord, control.zCoord);
@@ -121,7 +121,7 @@ public class ItemWrench extends ItemEP
                 }
             }
         }
-        
+
         return false;
     }
 }

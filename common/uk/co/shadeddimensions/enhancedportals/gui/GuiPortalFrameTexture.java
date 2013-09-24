@@ -31,34 +31,6 @@ public class GuiPortalFrameTexture extends GuiResizable
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
-        super.drawGuiContainerForegroundLayer(par1, par2);
-
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalFrameTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalFrameTexture")) / 2, -13, 0xFFFFFF);
-
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".texture"), 8, 8, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
-
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour"), xSize + 6, 18, 0xe1c92f);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-
-        Color c = new Color(controller.FrameColour);
-        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
-
-        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
-        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset")));
-    }
-
-    @Override
     protected void actionPerformed(GuiButton button)
     {
         if (button.id == 10 || button.id == 11)
@@ -95,6 +67,34 @@ public class GuiPortalFrameTexture extends GuiResizable
         itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, controller.getStackInSlot(0) == null ? new ItemStack(CommonProxy.blockFrame, 1) : controller.getStackInSlot(0), guiLeft + xSize / 2 + 1, guiTop + 21);
         itemRenderer.renderWithColor = true;
         GL11.glColor3f(1f, 1f, 1f);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    {
+        super.drawGuiContainerForegroundLayer(par1, par2);
+
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalFrameTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalFrameTexture")) / 2, -13, 0xFFFFFF);
+
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".texture"), 8, 8, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
+
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour"), xSize + 6, 18, 0xe1c92f);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+
+        Color c = new Color(controller.FrameColour);
+        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
+        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
+        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
+
+        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
+        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset")));
     }
 
     @Override

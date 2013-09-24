@@ -10,21 +10,16 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class ChunkCoordinateUtils
 {
-    public static void saveChunkCoordList(NBTTagCompound tag, List<ChunkCoordinates> list, String name)
+    public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)
     {
-        NBTTagList tagList = new NBTTagList();
-
-        for (ChunkCoordinates c : list)
+        if (tagCompound.getTag(string) == null)
         {
-            NBTTagCompound t = new NBTTagCompound();
-            t.setInteger("X", c.posX);
-            t.setInteger("Y", c.posY);
-            t.setInteger("Z", c.posZ);
-
-            tagList.appendTag(t);
+            return null;
         }
 
-        tag.setTag(name, tagList);
+        NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
+
+        return t.getInteger("Y") == -1 ? null : new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
     }
 
     public static ArrayList<ChunkCoordinates> loadChunkCoordList(NBTTagCompound tag, String name)
@@ -43,35 +38,40 @@ public class ChunkCoordinateUtils
         return list;
     }
 
+    public static ChunkCoordinates offset(ChunkCoordinates coord, ForgeDirection dir)
+    {
+        return new ChunkCoordinates(coord.posX + dir.offsetX, coord.posY + dir.offsetY, coord.posZ + dir.offsetZ);
+    }
+
     public static void saveChunkCoord(NBTTagCompound tagCompound, ChunkCoordinates c, String string)
     {
         if (c == null)
         {
             return;
         }
-        
+
         NBTTagCompound t = new NBTTagCompound();
         t.setInteger("X", c.posX);
         t.setInteger("Y", c.posY);
         t.setInteger("Z", c.posZ);
-        
+
         tagCompound.setTag(string, t);
     }
-    
-    public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)
+
+    public static void saveChunkCoordList(NBTTagCompound tag, List<ChunkCoordinates> list, String name)
     {
-        if (tagCompound.getTag(string) == null)
+        NBTTagList tagList = new NBTTagList();
+
+        for (ChunkCoordinates c : list)
         {
-            return null;
+            NBTTagCompound t = new NBTTagCompound();
+            t.setInteger("X", c.posX);
+            t.setInteger("Y", c.posY);
+            t.setInteger("Z", c.posZ);
+
+            tagList.appendTag(t);
         }
-        
-        NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
-        
-        return t.getInteger("Y") == -1 ? null : new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
-    }
-    
-    public static ChunkCoordinates offset(ChunkCoordinates coord, ForgeDirection dir)
-    {
-        return new ChunkCoordinates(coord.posX + dir.offsetX, coord.posY + dir.offsetY, coord.posZ + dir.offsetZ);
+
+        tag.setTag(name, tagList);
     }
 }

@@ -21,49 +21,7 @@ public class TilePortalFrame extends TileEP implements IInventory
 
     public TilePortalFrame()
     {
-        
-    }
 
-    public TilePortalController getController()
-    {
-        if (controller != null)
-        {
-            TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
-            
-            if (tile != null && tile instanceof TilePortalController)
-            {
-                return (TilePortalController) tile;
-            }
-        }
-        
-        return null;
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-
-        ChunkCoordinateUtils.saveChunkCoord(tagCompound, controller, "controller");
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-
-        controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
-    }
-
-    @Override
-    public void validate()
-    {
-        super.validate();
-
-        if (worldObj.isRemote)
-        {
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketRequestData(this)));
-        }
     }
 
     public boolean activate(EntityPlayer player)
@@ -71,39 +29,47 @@ public class TilePortalFrame extends TileEP implements IInventory
         return false;
     }
 
-    public void neighborChanged(int id)
+    @Override
+    public void closeChest()
     {
-
     }
 
-    public void selfBroken()
+    @Override
+    public ItemStack decrStackSize(int i, int j)
     {
-        TilePortalController control = getController();
-
-        if (control != null)
-        {
-            control.selfBroken();
-        }
-    }
-
-    public int isProvidingStrongPower(int side)
-    {
-        return 0;
-    }
-
-    public int isProvidingWeakPower(int side)
-    {
-        return 0;
-    }
-
-    public void scheduledTick(Random random)
-    {
-
+        return null;
     }
 
     public void entityTouch(Entity entity)
     {
 
+    }
+
+    public TilePortalController getController()
+    {
+        if (controller != null)
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
+
+            if (tile != null && tile instanceof TilePortalController)
+            {
+                return (TilePortalController) tile;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return null;
     }
 
     @Override
@@ -119,24 +85,7 @@ public class TilePortalFrame extends TileEP implements IInventory
     }
 
     @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        return null;
-    }
-
-    @Override
     public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-    }
-
-    @Override
-    public String getInvName()
     {
         return null;
     }
@@ -148,7 +97,17 @@ public class TilePortalFrame extends TileEP implements IInventory
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return false;
+    }
+
+    public int isProvidingStrongPower(int side)
+    {
+        return 0;
+    }
+
+    public int isProvidingWeakPower(int side)
     {
         return 0;
     }
@@ -159,19 +118,60 @@ public class TilePortalFrame extends TileEP implements IInventory
         return true;
     }
 
+    public void neighborChanged(int id)
+    {
+
+    }
+
     @Override
     public void openChest()
     {
     }
 
     @Override
-    public void closeChest()
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+
+        controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
+    }
+
+    public void scheduledTick(Random random)
+    {
+
+    }
+
+    public void selfBroken()
+    {
+        TilePortalController control = getController();
+
+        if (control != null)
+        {
+            control.selfBroken();
+        }
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
     {
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public void validate()
     {
-        return false;
+        super.validate();
+
+        if (worldObj.isRemote)
+        {
+            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketRequestData(this)));
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, controller, "controller");
     }
 }

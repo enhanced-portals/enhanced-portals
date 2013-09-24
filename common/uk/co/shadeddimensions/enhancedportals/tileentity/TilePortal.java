@@ -18,36 +18,23 @@ public class TilePortal extends TileEP implements IInventory
 
     public TilePortal()
     {
-        
+
+    }
+
+    public boolean activate(EntityPlayer player)
+    {
+        return false;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
+    public void closeChest()
     {
-        super.writeToNBT(tagCompound);
-
-        ChunkCoordinateUtils.saveChunkCoord(tagCompound, controller, "controller");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
+    public ItemStack decrStackSize(int i, int j)
     {
-        super.readFromNBT(tagCompound);
-
-        controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
-    }
-
-    public boolean validateController()
-    {
-        if (controller == null || controller.posY == -1)
-        {
-            return false;
-        }
-        else
-        {
-            TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
-            return tile != null && tile instanceof TilePortalController;
-        }
+        return null;
     }
 
     public TilePortalController getControllerValidated()
@@ -55,14 +42,16 @@ public class TilePortal extends TileEP implements IInventory
         return validateController() ? (TilePortalController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
     }
 
-    public void selfBroken()
+    @Override
+    public int getInventoryStackLimit()
     {
-        
+        return 0;
     }
-    
-    public boolean activate(EntityPlayer player)
+
+    @Override
+    public String getInvName()
     {
-        return false;
+        return null;
     }
 
     @Override
@@ -78,24 +67,7 @@ public class TilePortal extends TileEP implements IInventory
     }
 
     @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        return null;
-    }
-
-    @Override
     public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-    }
-
-    @Override
-    public String getInvName()
     {
         return null;
     }
@@ -107,9 +79,9 @@ public class TilePortal extends TileEP implements IInventory
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return 0;
+        return false;
     }
 
     @Override
@@ -124,14 +96,21 @@ public class TilePortal extends TileEP implements IInventory
     }
 
     @Override
-    public void closeChest()
+    public void readFromNBT(NBTTagCompound tagCompound)
     {
+        super.readFromNBT(tagCompound);
+
+        controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
+    }
+
+    public void selfBroken()
+    {
+
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public void setInventorySlotContents(int i, ItemStack itemstack)
     {
-        return false;
     }
 
     @Override
@@ -143,5 +122,26 @@ public class TilePortal extends TileEP implements IInventory
         {
             PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketRequestData(this)));
         }
+    }
+
+    public boolean validateController()
+    {
+        if (controller == null || controller.posY == -1)
+        {
+            return false;
+        }
+        else
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
+            return tile != null && tile instanceof TilePortalController;
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+
+        ChunkCoordinateUtils.saveChunkCoord(tagCompound, controller, "controller");
     }
 }

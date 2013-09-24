@@ -34,86 +34,6 @@ public class GuiPortalTexture extends GuiResizable
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
-        super.drawGuiContainerBackgroundLayer(f, i, j);
-
-        drawTab(guiLeft + xSize, guiTop + 10, 87, 97, 0.4f, 0.4f, 1f);
-        drawTabFlipped(guiLeft - 87, guiTop + 10, 87, 97, 0.4f, 0.4f, 1f);
-
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
-        drawTexturedModalRect(guiLeft + 7, guiTop + 83, 0, 0, 162, 54);
-        drawTexturedModalRect(guiLeft + 7, guiTop + 141, 0, 0, 162, 18);
-        drawTexturedModalRect(guiLeft + 37, guiTop + 22, 0, 0, 18, 18);
-        drawTexturedModalRect(guiLeft + xSize - 48, guiTop + 22, 0, 0, 18, 18);
-        drawTexturedModalRect(guiLeft + xSize - 28, guiTop + 22, 0, 0, 18, 18);
-        
-        drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.ParticleType), true);
-        
-        GL11.glColor3f(((GuiRGBSlider) buttonList.get(0)).sliderValue, ((GuiRGBSlider) buttonList.get(1)).sliderValue, ((GuiRGBSlider) buttonList.get(2)).sliderValue);
-        itemRenderer.renderWithColor = false;
-        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, controller.getStackInSlot(1) == null ? new ItemStack(Block.portal, 1) : controller.getStackInSlot(1), guiLeft + xSize - 27, guiTop + 23);
-        itemRenderer.renderWithColor = true;
-        GL11.glColor3f(1f, 1f, 1f);
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
-        super.drawGuiContainerForegroundLayer(par1, par2);
-
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture")) / 2, -13, 0xFFFFFF);
-
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".texture"), 8, 8, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
-
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalColour"), xSize + 6, 18, 0xe1c92f);
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".particleColour"), -80, 18, 0xe1c92f);
-    }
-
-    @Override
-    protected void mouseMovedOrUp(int par1, int par2, int par3)
-    {
-        super.mouseMovedOrUp(par1, par2, par3);
-
-        if (par3 == 0)
-        {
-            for (Object o : buttonList)
-            {
-                if (o instanceof GuiBetterSlider)
-                {
-                    GuiBetterSlider slider = (GuiBetterSlider) o;
-                    slider.mouseReleased(par1, par2);
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-
-        Color c = new Color(controller.PortalColour);
-        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
-
-        c = new Color(controller.ParticleColour);
-        buttonList.add(new GuiRGBSlider(3, guiLeft - 79, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(4, guiLeft - 79, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(5, guiLeft - 79, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
-
-        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
-        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset")));
-
-        buttonList.add(new GuiButton(12, guiLeft + 8, guiTop + 21, 16, 20, "<"));
-        buttonList.add(new GuiButton(13, guiLeft + 66, guiTop + 21, 16, 20, ">"));
-    }
-
-    @Override
     protected void actionPerformed(GuiButton button)
     {
         if (button.id == 10 || button.id == 11)
@@ -167,6 +87,86 @@ public class GuiPortalTexture extends GuiResizable
             if (changed)
             {
                 PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(3, controller.ParticleType)));
+            }
+        }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    {
+        super.drawGuiContainerBackgroundLayer(f, i, j);
+
+        drawTab(guiLeft + xSize, guiTop + 10, 87, 97, 0.4f, 0.4f, 1f);
+        drawTabFlipped(guiLeft - 87, guiTop + 10, 87, 97, 0.4f, 0.4f, 1f);
+
+        GL11.glColor4f(1f, 1f, 1f, 1f);
+        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
+        drawTexturedModalRect(guiLeft + 7, guiTop + 83, 0, 0, 162, 54);
+        drawTexturedModalRect(guiLeft + 7, guiTop + 141, 0, 0, 162, 18);
+        drawTexturedModalRect(guiLeft + 37, guiTop + 22, 0, 0, 18, 18);
+        drawTexturedModalRect(guiLeft + xSize - 48, guiTop + 22, 0, 0, 18, 18);
+        drawTexturedModalRect(guiLeft + xSize - 28, guiTop + 22, 0, 0, 18, 18);
+
+        drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.ParticleType), true);
+
+        GL11.glColor3f(((GuiRGBSlider) buttonList.get(0)).sliderValue, ((GuiRGBSlider) buttonList.get(1)).sliderValue, ((GuiRGBSlider) buttonList.get(2)).sliderValue);
+        itemRenderer.renderWithColor = false;
+        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, controller.getStackInSlot(1) == null ? new ItemStack(Block.portal, 1) : controller.getStackInSlot(1), guiLeft + xSize - 27, guiTop + 23);
+        itemRenderer.renderWithColor = true;
+        GL11.glColor3f(1f, 1f, 1f);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    {
+        super.drawGuiContainerForegroundLayer(par1, par2);
+
+        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture")) / 2, -13, 0xFFFFFF);
+
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".texture"), 8, 8, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
+
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalColour"), xSize + 6, 18, 0xe1c92f);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".particleColour"), -80, 18, 0xe1c92f);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+
+        Color c = new Color(controller.PortalColour);
+        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
+        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
+        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
+
+        c = new Color(controller.ParticleColour);
+        buttonList.add(new GuiRGBSlider(3, guiLeft - 79, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
+        buttonList.add(new GuiRGBSlider(4, guiLeft - 79, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
+        buttonList.add(new GuiRGBSlider(5, guiLeft - 79, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
+
+        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
+        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset")));
+
+        buttonList.add(new GuiButton(12, guiLeft + 8, guiTop + 21, 16, 20, "<"));
+        buttonList.add(new GuiButton(13, guiLeft + 66, guiTop + 21, 16, 20, ">"));
+    }
+
+    @Override
+    protected void mouseMovedOrUp(int par1, int par2, int par3)
+    {
+        super.mouseMovedOrUp(par1, par2, par3);
+
+        if (par3 == 0)
+        {
+            for (Object o : buttonList)
+            {
+                if (o instanceof GuiBetterSlider)
+                {
+                    GuiBetterSlider slider = (GuiBetterSlider) o;
+                    slider.mouseReleased(par1, par2);
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ public class TileModuleManipulator extends TilePortalFrame
 
     public TileModuleManipulator()
     {
-        
+
     }
 
 }

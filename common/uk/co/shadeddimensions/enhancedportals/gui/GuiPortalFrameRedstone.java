@@ -31,6 +31,12 @@ public class GuiPortalFrameRedstone extends GuiResizable
     }
 
     @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiButtonPressed(button.id)));
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         super.drawGuiContainerBackgroundLayer(f, i, j);
@@ -47,6 +53,16 @@ public class GuiPortalFrameRedstone extends GuiResizable
         {
             fontRenderer.drawSplitString(expandedText, 8, 55, xSize - 16, 0x404040);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+
+        buttonList.add(new GuiButton(0, guiLeft + 8, guiTop + 8, xSize - 16, 20, ""));
+        buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 30, xSize - 16, 20, ""));
     }
 
     @SuppressWarnings("rawtypes")
@@ -89,7 +105,7 @@ public class GuiPortalFrameRedstone extends GuiResizable
                 expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone.output.entityTouch.desc");
                 break;
         }
-        
+
         if (EnhancedPortals.config.getBoolean("showExtendedRedstoneInformation"))
         {
             if (!expandedText.equals(oldText))
@@ -122,21 +138,5 @@ public class GuiPortalFrameRedstone extends GuiResizable
 
         ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.output") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.input");
         ((GuiButton) buttonList.get(1)).displayString = stateText;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-
-        buttonList.add(new GuiButton(0, guiLeft + 8, guiTop + 8, xSize - 16, 20, ""));
-        buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 30, xSize - 16, 20, ""));
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiButtonPressed(button.id)));
     }
 }

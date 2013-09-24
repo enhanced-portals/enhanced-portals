@@ -23,9 +23,9 @@ public class BlockManager
     ChunkCoordinates biometric;
     ChunkCoordinates dialDevice;
     ChunkCoordinates networkInterface;
-    
+
     boolean isProcessing;
-    
+
     public BlockManager()
     {
         portal = new ArrayList<ChunkCoordinates>();
@@ -34,57 +34,22 @@ public class BlockManager
         biometric = dialDevice = networkInterface = null;
         isProcessing = false;
     }
-    
-    public void saveData(NBTTagCompound tag)
+
+    public void addToPortalFrames(ChunkCoordinates c)
     {
-        ChunkCoordinateUtils.saveChunkCoordList(tag, portal, "portal");
-        ChunkCoordinateUtils.saveChunkCoordList(tag, portalFrame, "portalFrame");
-        ChunkCoordinateUtils.saveChunkCoordList(tag, redstone, "redstone");
-        ChunkCoordinateUtils.saveChunkCoord(tag, biometric, "biometric");
-        ChunkCoordinateUtils.saveChunkCoord(tag, dialDevice, "dialDevice");
-        ChunkCoordinateUtils.saveChunkCoord(tag, networkInterface, "networkInterface");
+        portalFrame.add(c);
     }
-    
-    public void loadData(NBTTagCompound tag)
+
+    public void addToPortals(ChunkCoordinates c)
     {
-        portal = ChunkCoordinateUtils.loadChunkCoordList(tag, "portal");
-        portalFrame = ChunkCoordinateUtils.loadChunkCoordList(tag, "portalFrame");
-        redstone = ChunkCoordinateUtils.loadChunkCoordList(tag, "redstone");
-        biometric = ChunkCoordinateUtils.loadChunkCoord(tag, "biometric");
-        dialDevice = ChunkCoordinateUtils.loadChunkCoord(tag, "dialDevice");
-        networkInterface = ChunkCoordinateUtils.loadChunkCoord(tag, "networkInterface");
+        portal.add(c);
     }
-    
-    public void clearPortals()
+
+    public void addToRedstone(ChunkCoordinates c)
     {
-        portal.clear();
+        redstone.add(c);
     }
-    
-    public void clearPortalFrames()
-    {
-        portalFrame.clear();
-    }
-    
-    public void clearRedstone()
-    {
-        redstone.clear();
-    }
-    
-    public void clearBiometric()
-    {
-        biometric = null;
-    }
-    
-    public void clearDialDevice()
-    {
-        dialDevice = null;
-    }
-    
-    public void clearNetworkInterface()
-    {
-        networkInterface = null;
-    }
-    
+
     /***
      * Clears all lists.
      */
@@ -94,7 +59,7 @@ public class BlockManager
         {
             return;
         }
-        
+
         isProcessing = true;
         clearPortals();
         clearPortalFrames();
@@ -104,7 +69,119 @@ public class BlockManager
         clearNetworkInterface();
         isProcessing = false;
     }
-    
+
+    public void clearBiometric()
+    {
+        biometric = null;
+    }
+
+    public void clearDialDevice()
+    {
+        dialDevice = null;
+    }
+
+    public void clearNetworkInterface()
+    {
+        networkInterface = null;
+    }
+
+    public void clearPortalFrames()
+    {
+        portalFrame.clear();
+    }
+
+    public void clearPortals()
+    {
+        portal.clear();
+    }
+
+    public void clearRedstone()
+    {
+        redstone.clear();
+    }
+
+    /***
+     * Removes all portal blocks and resets frames.
+     */
+    public void destroyAll(World world)
+    {
+        if (isProcessing)
+        {
+            return;
+        }
+
+        isProcessing = true;
+        destroyPortals(world);
+        destroyPortalFrames(world);
+        destroyRedstone(world);
+        destroyBiometric(world);
+        destroyDiallingDevice(world);
+        destroyNetworkInterface(world);
+        isProcessing = false;
+    }
+
+    public void destroyAndClearAll(World world)
+    {
+        destroyAll(world);
+        clearAll();
+    }
+
+    public void destroyBiometric(World world)
+    {
+        if (biometric != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(biometric.posX, biometric.posY, biometric.posZ);
+
+            if (tile != null)
+            {
+                ((TileBiometricIdentifier) tile).controller = null;
+                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
+            }
+        }
+    }
+
+    public void destroyDiallingDevice(World world)
+    {
+        if (dialDevice != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
+
+            if (tile != null)
+            {
+                ((TileDiallingDevice) tile).controller = null;
+                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
+            }
+        }
+    }
+
+    public void destroyNetworkInterface(World world)
+    {
+        if (networkInterface != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
+
+            if (tile != null)
+            {
+                ((TileNetworkInterface) tile).controller = null;
+                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
+            }
+        }
+    }
+
+    public void destroyPortalFrames(World world)
+    {
+        for (ChunkCoordinates c : portalFrame)
+        {
+            TileEntity tile = world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+            if (tile != null)
+            {
+                ((TilePortalFrame) tile).controller = null;
+                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
+            }
+        }
+    }
+
     public void destroyPortals(World world)
     {
         for (ChunkCoordinates c : portal)
@@ -115,27 +192,13 @@ public class BlockManager
             }
         }
     }
-    
-    public void destroyPortalFrames(World world)
-    {
-        for (ChunkCoordinates c : portalFrame)
-        {
-            TileEntity tile = world.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            
-            if (tile != null)
-            {
-                ((TilePortalFrame) tile).controller = null;
-                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
-            }
-        }
-    }
-    
+
     public void destroyRedstone(World world)
     {
         for (ChunkCoordinates c : redstone)
         {
             TileEntity tile = world.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            
+
             if (tile != null)
             {
                 ((TileRedstoneInterface) tile).controller = null;
@@ -143,148 +206,70 @@ public class BlockManager
             }
         }
     }
-    
-    public void destroyBiometric(World world)
-    {
-        if (biometric != null)
-        {
-            TileEntity tile = world.getBlockTileEntity(biometric.posX, biometric.posY, biometric.posZ);
-            
-            if (tile != null)
-            {
-                ((TileBiometricIdentifier) tile).controller = null;
-                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
-            }
-        }
-    }
-    
-    public void destroyDiallingDevice(World world)
-    {
-        if (dialDevice != null)
-        {
-            TileEntity tile = world.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
-            
-            if (tile != null)
-            {
-                ((TileDiallingDevice) tile).controller = null;
-                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
-            }
-        }
-    }
-    
-    public void destroyNetworkInterface(World world)
-    {
-        if (networkInterface != null)
-        {
-            TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
-            
-            if (tile != null)
-            {
-                ((TileNetworkInterface) tile).controller = null;
-                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
-            }
-        }
-    }
-    
-    /***
-     * Removes all portal blocks and resets frames.
-     */
-    public void destroyAll(World world)
-    {
-        if (isProcessing)
-        {
-            return;
-        }
-        
-        isProcessing = true;
-        destroyPortals(world);
-        destroyPortalFrames(world);
-        destroyRedstone(world);
-        destroyBiometric(world);
-        destroyDiallingDevice(world);
-        destroyNetworkInterface(world);
-        isProcessing = false;
-    }
-    
-    public void destroyAndClearAll(World world)
-    {        
-        destroyAll(world);
-        clearAll();
-    }
-    
-    public void addToPortals(ChunkCoordinates c)
-    {
-        portal.add(c);
-    }
-    
-    public void addToPortalFrames(ChunkCoordinates c)
-    {
-        portalFrame.add(c);
-    }
-    
-    public void addToRedstone(ChunkCoordinates c)
-    {
-        redstone.add(c);
-    }
-    
-    public void setBiometric(ChunkCoordinates c)
-    {
-        biometric = c;
-    }
-    
-    public void setDialDevice(ChunkCoordinates c)
-    {
-        dialDevice = c;
-    }
-    
-    public void setNetworkInterface(ChunkCoordinates c)
-    {
-        networkInterface = c;
-    }
-    
+
     public TileBiometricIdentifier getBiometric(World world)
     {
         if (biometric != null)
         {
             TileEntity tile = world.getBlockTileEntity(biometric.posX, biometric.posY, biometric.posZ);
-            
+
             if (tile != null && tile instanceof TileBiometricIdentifier)
             {
                 return (TileBiometricIdentifier) tile;
             }
         }
-        
+
         return null;
     }
-    
+
+    public ChunkCoordinates getBiometricCoord()
+    {
+        return biometric;
+    }
+
     public TileDiallingDevice getDialDevice(World world)
     {
         if (dialDevice != null)
         {
             TileEntity tile = world.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
-            
+
             if (tile != null && tile instanceof TileDiallingDevice)
             {
                 return (TileDiallingDevice) tile;
             }
         }
-        
+
         return null;
     }
-    
+
+    public ChunkCoordinates getDialDeviceCoord()
+    {
+        return dialDevice;
+    }
+
     public TileNetworkInterface getNetworkInterface(World world)
     {
         if (networkInterface != null)
         {
             TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
-            
+
             if (tile != null && tile instanceof TileNetworkInterface)
             {
                 return (TileNetworkInterface) tile;
             }
         }
-        
+
         return null;
+    }
+
+    public ChunkCoordinates getNetworkInterfaceCoord()
+    {
+        return networkInterface;
+    }
+
+    public ArrayList<ChunkCoordinates> getPortalFrameCoord()
+    {
+        return portalFrame;
     }
 
     public ArrayList<ChunkCoordinates> getPortalsCoord()
@@ -296,24 +281,39 @@ public class BlockManager
     {
         return redstone;
     }
-    
-    public ArrayList<ChunkCoordinates> getPortalFrameCoord()
+
+    public void loadData(NBTTagCompound tag)
     {
-        return portalFrame;
+        portal = ChunkCoordinateUtils.loadChunkCoordList(tag, "portal");
+        portalFrame = ChunkCoordinateUtils.loadChunkCoordList(tag, "portalFrame");
+        redstone = ChunkCoordinateUtils.loadChunkCoordList(tag, "redstone");
+        biometric = ChunkCoordinateUtils.loadChunkCoord(tag, "biometric");
+        dialDevice = ChunkCoordinateUtils.loadChunkCoord(tag, "dialDevice");
+        networkInterface = ChunkCoordinateUtils.loadChunkCoord(tag, "networkInterface");
     }
-    
-    public ChunkCoordinates getBiometricCoord()
+
+    public void saveData(NBTTagCompound tag)
     {
-        return biometric;
+        ChunkCoordinateUtils.saveChunkCoordList(tag, portal, "portal");
+        ChunkCoordinateUtils.saveChunkCoordList(tag, portalFrame, "portalFrame");
+        ChunkCoordinateUtils.saveChunkCoordList(tag, redstone, "redstone");
+        ChunkCoordinateUtils.saveChunkCoord(tag, biometric, "biometric");
+        ChunkCoordinateUtils.saveChunkCoord(tag, dialDevice, "dialDevice");
+        ChunkCoordinateUtils.saveChunkCoord(tag, networkInterface, "networkInterface");
     }
-    
-    public ChunkCoordinates getDialDeviceCoord()
+
+    public void setBiometric(ChunkCoordinates c)
     {
-        return dialDevice;
+        biometric = c;
     }
-    
-    public ChunkCoordinates getNetworkInterfaceCoord()
+
+    public void setDialDevice(ChunkCoordinates c)
     {
-        return networkInterface;
+        dialDevice = c;
+    }
+
+    public void setNetworkInterface(ChunkCoordinates c)
+    {
+        networkInterface = c;
     }
 }

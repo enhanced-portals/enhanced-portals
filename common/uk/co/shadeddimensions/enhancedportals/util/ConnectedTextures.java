@@ -27,39 +27,9 @@ public class ConnectedTextures
         meta = metadata;
     }
 
-    public void registerIcons(IconRegister register)
+    private boolean canConnectTo(int id, int m)
     {
-        for (int i = 0; i < textures.length; i++)
-        {
-            textures[i] = register.registerIcon(String.format(loc, i));
-        }
-    }
-
-    public Icon getIconForFace(IBlockAccess blockAccess, int x, int y, int z, int face)
-    {
-        int[] blockIds = getBlockIDs(blockAccess, x, y, z);
-        int[] blockMetas = getBlockMetas(blockAccess, x, y, z);
-
-        switch (face)
-        {
-            default:
-                return textures[0];
-
-            case 0:
-                return getDownIcon(blockIds, blockMetas);
-
-            case 1:
-                return getUpIcon(blockIds, blockMetas);
-
-            case 2:
-            case 3:
-                return getNorthSouthIcon(blockIds, blockMetas, face);
-
-            case 4:
-            case 5:
-                return getEastWestIcon(blockIds, blockMetas, face);
-
-        }
+        return id == blockID && meta == m;
     }
 
     private int[] getBlockIDs(IBlockAccess blockAccess, int x, int y, int z)
@@ -93,11 +63,6 @@ public class ConnectedTextures
         }
 
         return blockMetas;
-    }
-
-    private boolean canConnectTo(int id, int m)
-    {
-        return id == blockID && meta == m;
     }
 
     private Icon getDownIcon(int[] blockIds, int[] blockMetas)
@@ -183,182 +148,6 @@ public class ConnectedTextures
         else if (right)
         {
             return textures[12]; // Left cap
-        }
-
-        return textures[0];
-    }
-
-    private Icon getUpIcon(int[] blockIds, int[] blockMetas)
-    {
-        boolean up = false, down = false, left = false, right = false;
-
-        if (canConnectTo(blockIds[4], blockMetas[4]))
-        {
-            down = true;
-        }
-
-        if (canConnectTo(blockIds[5], blockMetas[5]))
-        {
-            up = true;
-        }
-
-        if (canConnectTo(blockIds[2], blockMetas[2]))
-        {
-            left = true;
-        }
-
-        if (canConnectTo(blockIds[3], blockMetas[3]))
-        {
-            right = true;
-        }
-
-        if (up && down && left && right)
-        {
-            return textures[1];
-        }
-        else if (up && down && left)
-        {
-            return textures[7];
-        }
-        else if (up && down && right)
-        {
-            return textures[6];
-        }
-        else if (up && left && right)
-        {
-            return textures[9];
-        }
-        else if (down && left && right)
-        {
-            return textures[10];
-        }
-        else if (down && up)
-        {
-            return textures[8];
-        }
-        else if (left && right)
-        {
-            return textures[11];
-        }
-        else if (down && left)
-        {
-            return textures[4];
-        }
-        else if (down && right)
-        {
-            return textures[2];
-        }
-        else if (up && left)
-        {
-            return textures[5];
-        }
-        else if (up && right)
-        {
-            return textures[3];
-        }
-        else if (down)
-        {
-            return textures[14];
-        }
-        else if (up)
-        {
-            return textures[12];
-        }
-        else if (left)
-        {
-            return textures[15];
-        }
-        else if (right)
-        {
-            return textures[13];
-        }
-
-        return textures[0];
-    }
-
-    private Icon getNorthSouthIcon(int[] blockIds, int[] blockMetas, int side)
-    {
-        boolean up = false, down = false, left = false, right = false;
-
-        if (canConnectTo(blockIds[0], blockMetas[0]))
-        {
-            down = true;
-        }
-
-        if (canConnectTo(blockIds[1], blockMetas[1]))
-        {
-            up = true;
-        }
-
-        if (side == 2 && canConnectTo(blockIds[4], blockMetas[4]) || side == 3 && canConnectTo(blockIds[5], blockMetas[5]))
-        {
-            left = true;
-        }
-
-        if (side == 2 && canConnectTo(blockIds[5], blockMetas[5]) || side == 3 && canConnectTo(blockIds[4], blockMetas[4]))
-        {
-            right = true;
-        }
-
-        if (up && down && left && right)
-        {
-            return textures[1];
-        }
-        else if (up && down && left)
-        {
-            return textures[9];
-        }
-        else if (up && down && right)
-        {
-            return textures[10];
-        }
-        else if (up && left && right)
-        {
-            return textures[7];
-        }
-        else if (down && left && right)
-        {
-            return textures[6];
-        }
-        else if (down && up)
-        {
-            return textures[11];
-        }
-        else if (left && right)
-        {
-            return textures[8];
-        }
-        else if (down && left)
-        {
-            return textures[3];
-        }
-        else if (down && right)
-        {
-            return textures[2];
-        }
-        else if (up && left)
-        {
-            return textures[5];
-        }
-        else if (up && right)
-        {
-            return textures[4];
-        }
-        else if (down)
-        {
-            return textures[13];
-        }
-        else if (up)
-        {
-            return textures[15];
-        }
-        else if (left)
-        {
-            return textures[12];
-        }
-        else if (right)
-        {
-            return textures[14];
         }
 
         return textures[0];
@@ -452,8 +241,219 @@ public class ConnectedTextures
         return textures[0];
     }
 
+    public Icon getIconForFace(IBlockAccess blockAccess, int x, int y, int z, int face)
+    {
+        int[] blockIds = getBlockIDs(blockAccess, x, y, z);
+        int[] blockMetas = getBlockMetas(blockAccess, x, y, z);
+
+        switch (face)
+        {
+            default:
+                return textures[0];
+
+            case 0:
+                return getDownIcon(blockIds, blockMetas);
+
+            case 1:
+                return getUpIcon(blockIds, blockMetas);
+
+            case 2:
+            case 3:
+                return getNorthSouthIcon(blockIds, blockMetas, face);
+
+            case 4:
+            case 5:
+                return getEastWestIcon(blockIds, blockMetas, face);
+
+        }
+    }
+
     public Icon getNormalIcon()
     {
         return textures[0];
+    }
+
+    private Icon getNorthSouthIcon(int[] blockIds, int[] blockMetas, int side)
+    {
+        boolean up = false, down = false, left = false, right = false;
+
+        if (canConnectTo(blockIds[0], blockMetas[0]))
+        {
+            down = true;
+        }
+
+        if (canConnectTo(blockIds[1], blockMetas[1]))
+        {
+            up = true;
+        }
+
+        if (side == 2 && canConnectTo(blockIds[4], blockMetas[4]) || side == 3 && canConnectTo(blockIds[5], blockMetas[5]))
+        {
+            left = true;
+        }
+
+        if (side == 2 && canConnectTo(blockIds[5], blockMetas[5]) || side == 3 && canConnectTo(blockIds[4], blockMetas[4]))
+        {
+            right = true;
+        }
+
+        if (up && down && left && right)
+        {
+            return textures[1];
+        }
+        else if (up && down && left)
+        {
+            return textures[9];
+        }
+        else if (up && down && right)
+        {
+            return textures[10];
+        }
+        else if (up && left && right)
+        {
+            return textures[7];
+        }
+        else if (down && left && right)
+        {
+            return textures[6];
+        }
+        else if (down && up)
+        {
+            return textures[11];
+        }
+        else if (left && right)
+        {
+            return textures[8];
+        }
+        else if (down && left)
+        {
+            return textures[3];
+        }
+        else if (down && right)
+        {
+            return textures[2];
+        }
+        else if (up && left)
+        {
+            return textures[5];
+        }
+        else if (up && right)
+        {
+            return textures[4];
+        }
+        else if (down)
+        {
+            return textures[13];
+        }
+        else if (up)
+        {
+            return textures[15];
+        }
+        else if (left)
+        {
+            return textures[12];
+        }
+        else if (right)
+        {
+            return textures[14];
+        }
+
+        return textures[0];
+    }
+
+    private Icon getUpIcon(int[] blockIds, int[] blockMetas)
+    {
+        boolean up = false, down = false, left = false, right = false;
+
+        if (canConnectTo(blockIds[4], blockMetas[4]))
+        {
+            down = true;
+        }
+
+        if (canConnectTo(blockIds[5], blockMetas[5]))
+        {
+            up = true;
+        }
+
+        if (canConnectTo(blockIds[2], blockMetas[2]))
+        {
+            left = true;
+        }
+
+        if (canConnectTo(blockIds[3], blockMetas[3]))
+        {
+            right = true;
+        }
+
+        if (up && down && left && right)
+        {
+            return textures[1];
+        }
+        else if (up && down && left)
+        {
+            return textures[7];
+        }
+        else if (up && down && right)
+        {
+            return textures[6];
+        }
+        else if (up && left && right)
+        {
+            return textures[9];
+        }
+        else if (down && left && right)
+        {
+            return textures[10];
+        }
+        else if (down && up)
+        {
+            return textures[8];
+        }
+        else if (left && right)
+        {
+            return textures[11];
+        }
+        else if (down && left)
+        {
+            return textures[4];
+        }
+        else if (down && right)
+        {
+            return textures[2];
+        }
+        else if (up && left)
+        {
+            return textures[5];
+        }
+        else if (up && right)
+        {
+            return textures[3];
+        }
+        else if (down)
+        {
+            return textures[14];
+        }
+        else if (up)
+        {
+            return textures[12];
+        }
+        else if (left)
+        {
+            return textures[15];
+        }
+        else if (right)
+        {
+            return textures[13];
+        }
+
+        return textures[0];
+    }
+
+    public void registerIcons(IconRegister register)
+    {
+        for (int i = 0; i < textures.length; i++)
+        {
+            textures[i] = register.registerIcon(String.format(loc, i));
+        }
     }
 }

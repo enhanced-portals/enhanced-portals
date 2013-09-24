@@ -19,18 +19,18 @@ public class ConfigurationManager
     public class ConfigProperty
     {
         String ID;
-        
+
         public ConfigProperty(String id)
         {
             ID = id;
         }
-        
+
         public void addComment(String comment)
         {
             ConfigurationManager.this.addComment(ID, comment);
         }
     }
-    
+
     public Configuration config;
 
     int START_BLOCK_ID = 512, START_ITEM_ID = 5000, MAX_BLOCK_ID = 4096, MAX_ITEM_ID = 32000;
@@ -41,7 +41,7 @@ public class ConfigurationManager
     Map<String, Boolean> boolEntries;
     Map<String, String> stringEntries;
     Map<String, String> commentEntries;
-    
+
     public ConfigurationManager(Configuration c)
     {
         blockEntries = new ArrayList<String>();
@@ -54,70 +54,57 @@ public class ConfigurationManager
 
         usedBlockIds = new ArrayList<Integer>();
         usedItemIds = new ArrayList<Integer>();
-        
+
         boolEntries = new HashMap<String, Boolean>();
         stringEntries = new HashMap<String, String>();
         commentEntries = new HashMap<String, String>();
-        
+
         config = c;
         config.load();
     }
-    
+
     public ConfigProperty addBlock(String name)
     {
         blockEntries.add(name);
-        
+
         return new ConfigProperty(name);
+    }
+
+    public ConfigProperty addBoolean(String string)
+    {
+        addBoolean(string, false);
+
+        return new ConfigProperty(string);
+    }
+
+    public ConfigProperty addBoolean(String string, boolean b)
+    {
+        boolEntries.put(string, b);
+
+        return new ConfigProperty(string);
+    }
+
+    public void addComment(String id, String comment)
+    {
+        commentEntries.put(id, comment);
     }
 
     public ConfigProperty addItem(String name)
     {
         itemEntries.add(name);
-        
+
         return new ConfigProperty(name);
     }
 
-    public String formatName(String name)
+    public ConfigProperty addString(String name, String s)
     {
-        return name.replace(Reference.SHORT_ID + ".", "");
+        stringEntries.put(name, s);
+
+        return new ConfigProperty(name);
     }
 
-    public int getBlockId(String name)
-    {
-        Property prop = blockIds.get(name);
-
-        if (prop == null)
-        {
-            return -1;
-        }
-
-        return prop.getInt();
-    }
-
-    public int getItemId(String name)
-    {
-        Property prop = itemIds.get(name);
-
-        if (prop == null)
-        {
-            return -1;
-        }
-
-        return prop.getInt();
-    }
-
-    private String getComment(String id)
-    {
-        if (commentEntries.containsKey(id))
-        {
-            return commentEntries.get(id);
-        }
-        
-        return null;
-    }
-    
     public void fillConfigFile()
-    {        
+    {
         // BLOCKS
         for (String entry : blockEntries)
         {
@@ -171,40 +158,72 @@ public class ConfigurationManager
                 }
             }
         }
-        
+
         // BOOLS
         for (Map.Entry<String, Boolean> entry : boolEntries.entrySet())
         {
             boolValues.put(entry.getKey(), config.get("boolean", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
         }
-        
+
         // STRINGS
         for (Map.Entry<String, String> entry : stringEntries.entrySet())
         {
             stringValues.put(entry.getKey(), config.get("string", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
         }
-        
+
         config.addCustomCategoryComment("block", "All block IDs will attempt to find the first free ID from " + START_BLOCK_ID + " to " + MAX_BLOCK_ID + ", when one is not set below");
         config.addCustomCategoryComment("item", "All item IDs will attempt to find the first free ID from " + START_ITEM_ID + " to " + MAX_ITEM_ID + ", when one is not set below");
-        
+
         config.save();
     }
 
-    public Block registerBlock(Class<? extends Block> block, String name)
+    public String formatName(String name)
     {
-        Block b = null;
+        return name.replace(Reference.SHORT_ID + ".", "");
+    }
 
-        try
+    public int getBlockId(String name)
+    {
+        Property prop = blockIds.get(name);
+
+        if (prop == null)
         {
-            b = block.getConstructor(int.class, String.class).newInstance(getBlockId(name), name);
-            GameRegistry.registerBlock(b, name);
-        }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
-        {
-            e.printStackTrace();
+            return -1;
         }
 
-        return b;
+        return prop.getInt();
+    }
+
+    public boolean getBoolean(String string)
+    {
+        return boolValues.get(string).getBoolean(boolEntries.get(string));
+    }
+
+    private String getComment(String id)
+    {
+        if (commentEntries.containsKey(id))
+        {
+            return commentEntries.get(id);
+        }
+
+        return null;
+    }
+
+    public int getItemId(String name)
+    {
+        Property prop = itemIds.get(name);
+
+        if (prop == null)
+        {
+            return -1;
+        }
+
+        return prop.getInt();
+    }
+
+    public String getString(String string)
+    {
+        return stringValues.get(string).getString();
     }
 
     public Block registerBlock(Class<? extends Block> block, Class<? extends ItemBlock> item, String name)
@@ -215,6 +234,23 @@ public class ConfigurationManager
         {
             b = block.getConstructor(int.class, String.class).newInstance(getBlockId(name), name);
             GameRegistry.registerBlock(b, item, name);
+        }
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+        {
+            e.printStackTrace();
+        }
+
+        return b;
+    }
+
+    public Block registerBlock(Class<? extends Block> block, String name)
+    {
+        Block b = null;
+
+        try
+        {
+            b = block.getConstructor(int.class, String.class).newInstance(getBlockId(name), name);
+            GameRegistry.registerBlock(b, name);
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
         {
@@ -239,41 +275,5 @@ public class ConfigurationManager
         }
 
         return i;
-    }
-
-    public ConfigProperty addBoolean(String string, boolean b)
-    {
-        boolEntries.put(string, b);
-        
-        return new ConfigProperty(string);
-    }
-    
-    public ConfigProperty addBoolean(String string)
-    {
-        addBoolean(string, false);
-        
-        return new ConfigProperty(string);
-    }
-    
-    public ConfigProperty addString(String name, String s)
-    {
-        stringEntries.put(name, s);
-        
-        return new ConfigProperty(name);
-    }
-    
-    public boolean getBoolean(String string)
-    {
-        return boolValues.get(string).getBoolean(boolEntries.get(string));
-    }
-    
-    public String getString(String string)
-    {
-        return stringValues.get(string).getString();
-    }
-    
-    public void addComment(String id, String comment)
-    {
-        commentEntries.put(id, comment);
     }
 }

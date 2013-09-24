@@ -6,9 +6,9 @@ import net.minecraft.util.ChunkCoordinates;
 
 public class TileEP extends TileEntity
 {
-    public ChunkCoordinates getChunkCoordinates()
+    public void actionPerformed(int id, int data, EntityPlayer player)
     {
-        return new ChunkCoordinates(xCoord, yCoord, zCoord);
+
     }
 
     public void actionPerformed(int id, String string, EntityPlayer player)
@@ -16,13 +16,13 @@ public class TileEP extends TileEntity
 
     }
 
-    public void actionPerformed(int id, int data, EntityPlayer player)
+    public void buttonPressed(int button, EntityPlayer player)
     {
 
     }
 
-    public void buttonPressed(int button, EntityPlayer player)
+    public ChunkCoordinates getChunkCoordinates()
     {
-
+        return new ChunkCoordinates(xCoord, yCoord, zCoord);
     }
 }
