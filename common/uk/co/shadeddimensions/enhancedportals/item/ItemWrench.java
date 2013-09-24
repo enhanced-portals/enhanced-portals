@@ -112,7 +112,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TilePortal)
             {
                 TilePortal portal = (TilePortal) tile;
-                TilePortalController control = portal.getControllerValidated();
+                TilePortalController control = portal.getController();
 
                 if (control != null)
                 {

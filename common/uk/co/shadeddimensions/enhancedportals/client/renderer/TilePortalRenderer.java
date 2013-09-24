@@ -130,7 +130,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortal portal = (TilePortal) tile;
-        TilePortalController controller = portal.getControllerValidated();
+        TilePortalController controller = portal.getController();
         Tessellator tessellator = Tessellator.instance;
         int meta = portal.getBlockMetadata();
 

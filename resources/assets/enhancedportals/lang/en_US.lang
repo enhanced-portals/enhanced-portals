@@ -10,6 +10,7 @@ tile.ep3.portal.name=Portal
 
 # Items
 item.ep3.wrench.name=Multitool
+item.ep3.goggles.name=Goggles
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3

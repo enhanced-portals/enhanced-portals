@@ -229,4 +229,40 @@ public class NetworkManager
             portalLocations.put(UID, newPos);
         }
     }
+    
+    public ArrayList<String> getDestinationsExcluding(String network, String excludedUid)
+    {
+        ArrayList<String> strList = new ArrayList<String>();
+        
+        for (String s : getNetworkedPortals(network))
+        {
+            if (!s.equals(excludedUid))
+            {
+                strList.add(s);
+            }
+        }
+        
+        return strList;
+    }
+    
+    public String getNextDestination(String network, String UID)
+    {
+        ArrayList<String> sList = getNetworkedPortals(network);
+        
+        if (!sList.contains(UID))
+        {
+            return null; // Should never happen, but let's make sure.
+        }
+        
+        int index = sList.indexOf(UID);
+        
+        if (index == sList.size() - 1)
+        {
+            return sList.get(0);
+        }
+        else
+        {
+            return sList.get(index + 1);
+        }
+    }
 }

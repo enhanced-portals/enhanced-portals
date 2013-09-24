@@ -7,6 +7,7 @@ import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.block.BlockPortal;
+import uk.co.shadeddimensions.enhancedportals.item.ItemGoggles;
 import uk.co.shadeddimensions.enhancedportals.item.ItemPortalFrame;
 import uk.co.shadeddimensions.enhancedportals.item.ItemWrench;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
@@ -36,6 +37,7 @@ public class CommonProxy
     public static BlockPortal blockPortal;
 
     public static ItemWrench itemWrench;
+    public static ItemGoggles itemGoggles;
 
     public static NetworkManager networkManager;
 
@@ -89,6 +91,7 @@ public class CommonProxy
     public void registerItems()
     {
         itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, Reference.SHORT_ID + ".wrench");
+        itemGoggles = (ItemGoggles) EnhancedPortals.config.registerItem(ItemGoggles.class, Reference.SHORT_ID + ".goggles");
     }
 
     public void registerRenderers()
@@ -114,6 +117,7 @@ public class CommonProxy
         EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portalFrame");
 
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
+        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".goggles");
 
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");

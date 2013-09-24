@@ -3,7 +3,6 @@ package uk.co.shadeddimensions.enhancedportals;
 import net.minecraftforge.common.Configuration;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import uk.co.shadeddimensions.enhancedportals.network.GoggleTickHandler;
 import uk.co.shadeddimensions.enhancedportals.network.GuiHandler;
 import uk.co.shadeddimensions.enhancedportals.network.PacketHandler;
 import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
@@ -20,8 +19,6 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 @Mod(name = Reference.NAME, modid = Reference.ID, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, acceptedMinecraftVersions = Reference.MC_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = PacketHandler.class, channels = { Reference.ID })
@@ -49,7 +46,6 @@ public class EnhancedPortals
         proxy.registerRenderers();
 
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-        TickRegistry.registerTickHandler(new GoggleTickHandler(), Side.CLIENT);
     }
 
     @EventHandler

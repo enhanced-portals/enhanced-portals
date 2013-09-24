@@ -37,9 +37,19 @@ public class TilePortal extends TileEP implements IInventory
         return null;
     }
 
-    public TilePortalController getControllerValidated()
+    public TilePortalController getController()
     {
-        return validateController() ? (TilePortalController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
+        if (controller != null)
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
+
+            if (tile != null && tile instanceof TilePortalController)
+            {
+                return (TilePortalController) tile;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -121,19 +131,6 @@ public class TilePortal extends TileEP implements IInventory
         if (worldObj.isRemote)
         {
             PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketRequestData(this)));
-        }
-    }
-
-    public boolean validateController()
-    {
-        if (controller == null || controller.posY == -1)
-        {
-            return false;
-        }
-        else
-        {
-            TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
-            return tile != null && tile instanceof TilePortalController;
         }
     }
 

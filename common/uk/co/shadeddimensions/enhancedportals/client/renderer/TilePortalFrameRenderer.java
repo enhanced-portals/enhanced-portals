@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
 import java.awt.Color;
 
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -13,10 +14,10 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
-import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import cpw.mods.fml.client.FMLClientHandler;
 
 public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
 {
@@ -106,6 +107,18 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
             renderBlocks.renderFaceXPos(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 5));
         }
     }
+    
+    private boolean isWearingGoggles()
+    {
+        EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
+        
+        if (player != null && player.inventory.armorInventory[3] != null)
+        {
+            return player.inventory.armorInventory[3].itemID == CommonProxy.itemGoggles.itemID;
+        }
+        
+        return false;
+    }
 
     private void renderFrameOverlay(TilePortalFrame frame, TilePortalController controller, Tessellator tessellator, int pass)
     {
@@ -116,7 +129,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
 
         int x = frame.xCoord, y = frame.yCoord, z = frame.zCoord, meta = frame.getBlockMetadata();
         World world = frame.worldObj;
-        Icon overlayIcon = pass == 1 && ClientProxy.isWearingGoggles ? meta >= 1 ? BlockFrame.typeOverlayIcons[meta] : null : null;
+        Icon overlayIcon = pass == 1 && isWearingGoggles() ? meta >= 1 ? BlockFrame.typeOverlayIcons[meta] : null : null;
 
         if (overlayIcon == null)
         {

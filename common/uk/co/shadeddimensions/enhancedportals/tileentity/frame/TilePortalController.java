@@ -1,5 +1,6 @@
 package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,9 @@ import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.portal.BlockManager;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink.LinkStatus;
+import uk.co.shadeddimensions.enhancedportals.portal.EntityManager;
 import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
+import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.util.WorldCoordinates;
 
@@ -159,6 +162,10 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 }
 
                 worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, PortalType, 2);
+                
+                TilePortal portal = (TilePortal) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                portal.controller = getChunkCoordinates();
+                CommonProxy.sendUpdatePacketToAllAround(portal);
             }
 
             for (ChunkCoordinates c : blockManager.getRedstoneCoord())
@@ -236,6 +243,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         ParticleColour = tagCompound.getInteger("ParticleColour");
         ParticleType = tagCompound.getInteger("ParticleType");
         PortalType = tagCompound.getInteger("PortalType");
+        portalActive = tagCompound.getBoolean("PortalActive");
 
         NBTTagList list = tagCompound.getTagList("Inventory");
         for (int i = 0; i < list.tagList.size(); i++)
@@ -312,6 +320,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         tagCompound.setInteger("ParticleColour", ParticleColour);
         tagCompound.setInteger("ParticleType", ParticleType);
         tagCompound.setInteger("PortalType", PortalType);
+        tagCompound.setBoolean("PortalActive", portalActive);
 
         NBTTagList list = new NBTTagList();
         for (ItemStack s : inventory)
@@ -327,5 +336,20 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         }
 
         tagCompound.setTag("Inventory", list);
+    }
+
+    public void entityEnteredPortal(Entity entity)
+    {
+        if (blockManager.getNetworkInterfaceCoord() != null)
+        {
+            TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
+            
+            if (network != null && !network.NetworkIdentifier.equals("") && EntityManager.isEntityFitForTravel(entity))
+            {
+                System.out.println("Entity (" + entity.getEntityName() + ") tried to teleport to " + CommonProxy.networkManager.getNextDestination(network.NetworkIdentifier, UniqueIdentifier) + "!");
+            }
+            
+            EntityManager.setEntityPortalCooldown(entity);
+        }
     }
 }

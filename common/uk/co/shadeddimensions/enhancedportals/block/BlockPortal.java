@@ -117,9 +117,17 @@ public class BlockPortal extends BlockEP
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
     {
-        // TODO: teleport
+        if (!world.isRemote)
+        {
+            TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
+
+            if (controller != null)
+            {
+                controller.entityEnteredPortal(entity);
+            }
+        }
     }
 
     @Override
@@ -174,7 +182,7 @@ public class BlockPortal extends BlockEP
             }
 
             int type = 0, colour = 0xB336A1;
-            TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getControllerValidated();
+            TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
 
             if (controller != null)
             {
