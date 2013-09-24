@@ -54,11 +54,11 @@ public class ItemWrench extends ItemEP
             {
                 TileDiallingDevice ni = (TileDiallingDevice) tile;
                 
-                if (ni.getControllerValidated() == null)
+                if (ni.getController() == null)
                 {
                     return false;
                 }
-                else if (ni.getControllerValidated().UniqueIdentifier.equals(""))
+                else if (ni.getController().UniqueIdentifier.equals(""))
                 {
                     if (!world.isRemote)
                     {
@@ -76,11 +76,11 @@ public class ItemWrench extends ItemEP
             {
                 TileNetworkInterface ni = (TileNetworkInterface) tile;
                 
-                if (ni.getControllerValidated() == null)
+                if (ni.getController() == null)
                 {
                     return false;
                 }
-                else if (ni.getControllerValidated().UniqueIdentifier.equals(""))
+                else if (ni.getController().UniqueIdentifier.equals(""))
                 {
                     if (!world.isRemote)
                     {
@@ -101,7 +101,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TilePortalFrame)
             {
                 TilePortalFrame frame = (TilePortalFrame) tile;
-                TilePortalController control = frame.getControllerValidated();
+                TilePortalController control = frame.getController();
                 
                 if (control != null)
                 {

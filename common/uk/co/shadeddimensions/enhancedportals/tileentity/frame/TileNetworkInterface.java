@@ -42,11 +42,11 @@ public class TileNetworkInterface extends TilePortalFrame
         {
             if (!NetworkIdentifier.equals(""))
             {
-                CommonProxy.networkManager.removePortalFromNetwork(getControllerValidated().UniqueIdentifier, NetworkIdentifier);
+                CommonProxy.networkManager.removePortalFromNetwork(getController().UniqueIdentifier, NetworkIdentifier);
             }
             else if (!string.equals(""))
             {
-                CommonProxy.networkManager.addPortalToNetwork(getControllerValidated().UniqueIdentifier, string);
+                CommonProxy.networkManager.addPortalToNetwork(getController().UniqueIdentifier, string);
             }
             
             NetworkIdentifier = string;

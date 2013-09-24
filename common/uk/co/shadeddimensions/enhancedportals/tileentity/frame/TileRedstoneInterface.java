@@ -7,10 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
-import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRedstoneInterfaceData;
@@ -48,17 +45,6 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
             emitting = pulse = false;
             notifyNeighbors();
         }
-    }
-
-    @Override
-    public Icon getTexture(int side, int renderpass)
-    {
-        if (renderpass == 1 && ClientProxy.isWearingGoggles)
-        {
-            return BlockFrame.typeOverlayIcons[1];
-        }
-
-        return super.getTexture(side, renderpass);
     }
 
     @Override
@@ -101,7 +87,7 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
             {
                 if (redstoneInputState > 0 && previousRedstoneInputState == 0)
                 {
-                    TilePortalController c = getControllerValidated();
+                    TilePortalController c = getController();
 
                     if (c != null)
                     {
@@ -117,7 +103,7 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
                 }
                 else if (redstoneInputState == 0 && previousRedstoneInputState > 0)
                 {
-                    TilePortalController c = getControllerValidated();
+                    TilePortalController c = getController();
 
                     if (c != null)
                     {
@@ -137,7 +123,7 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
             {
                 if (previousRedstoneInputState > 0 && redstoneInputState == 0)
                 {
-                    TilePortalController c = getControllerValidated();
+                    TilePortalController c = getController();
 
                     if (state == 2)
                     {

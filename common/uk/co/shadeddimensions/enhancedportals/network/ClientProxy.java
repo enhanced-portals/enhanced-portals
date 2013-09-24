@@ -18,7 +18,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 public class ClientProxy extends CommonProxy
 {
     public static boolean isWearingGoggles = false;
-    public static int renderPass = 0;
     
     @Override
     public void registerRenderers()

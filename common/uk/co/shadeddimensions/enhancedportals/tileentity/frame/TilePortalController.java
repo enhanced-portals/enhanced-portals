@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,10 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
-import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.portal.BlockManager;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink;
@@ -33,7 +29,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
 
     public BlockManager blockManager;
     
-    public boolean hasInitialized;
+    public boolean hasInitialized, portalActive;
 
     ItemStack[] inventory;
 
@@ -41,12 +37,11 @@ public class TilePortalController extends TilePortalFrame implements IInventory
     {
         FrameColour = PortalColour = 0xffffff;
         ParticleColour = 0xB336A1;
-        ParticleType = 0;
-        PortalType = 0;
+        ParticleType = PortalType = 0;
 
         blockManager = new BlockManager();
         
-        hasInitialized = false;
+        hasInitialized = portalActive = false;
         UniqueIdentifier = "";
 
         inventory = new ItemStack[2];
@@ -108,26 +103,6 @@ public class TilePortalController extends TilePortalFrame implements IInventory
     }
 
     @Override
-    public Icon getTexture(int side, int renderpass)
-    {
-        if (renderpass == 1 && ClientProxy.isWearingGoggles)
-        {
-            return BlockFrame.typeOverlayIcons[1];
-        }
-        else
-        {
-            ItemStack s = getStackInSlot(0);
-
-            if (s != null && s.getItemSpriteNumber() == 0 && s.itemID != CommonProxy.blockFrame.blockID)
-            {
-                return Block.blocksList[s.itemID].getIcon(side, s.getItemDamage());
-            }
-        }
-
-        return null;
-    }
-
-    @Override
     public boolean activate(EntityPlayer player)
     {
         if (!worldObj.isRemote)
@@ -162,39 +137,54 @@ public class TilePortalController extends TilePortalFrame implements IInventory
 
     public void createPortal()
     {
-        for (ChunkCoordinates c : blockManager.getPortalsCoord())
+        if (!portalActive)
         {
-            worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, PortalType, 2);
-        }
-
-        for (ChunkCoordinates c : blockManager.getRedstoneCoord())
-        {
-            TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-            if (tile != null && tile instanceof TileRedstoneInterface)
+            for (ChunkCoordinates c : blockManager.getPortalsCoord())
             {
-                TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
-                redstone.portalCreated();
+                if (!worldObj.isAirBlock(c.posX, c.posY, c.posZ))
+                {
+                    worldObj.destroyBlock(c.posX, c.posY, c.posZ, true);
+                }
+                
+                worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, PortalType, 2);
             }
+
+            for (ChunkCoordinates c : blockManager.getRedstoneCoord())
+            {
+                TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+                if (tile != null && tile instanceof TileRedstoneInterface)
+                {
+                    TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
+                    redstone.portalCreated();
+                }
+            }
+            
+            portalActive = true;
         }
     }
 
     public void removePortal()
     {
-        for (ChunkCoordinates c : blockManager.getPortalsCoord())
+        if (portalActive)
         {
-            worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
-        }
-
-        for (ChunkCoordinates c : blockManager.getRedstoneCoord())
-        {
-            TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-            if (tile != null && tile instanceof TileRedstoneInterface)
+            for (ChunkCoordinates c : blockManager.getPortalsCoord())
             {
-                TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
-                redstone.portalRemoved();
+                worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
             }
+    
+            for (ChunkCoordinates c : blockManager.getRedstoneCoord())
+            {
+                TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+    
+                if (tile != null && tile instanceof TileRedstoneInterface)
+                {
+                    TileRedstoneInterface redstone = (TileRedstoneInterface) tile;
+                    redstone.portalRemoved();
+                }
+            }
+            
+            portalActive = false;
         }
     }
 
@@ -216,6 +206,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 UniqueIdentifier = "";
             }
             
+            portalActive = false;
             hasInitialized = false; // For when other blocks get destroyed - allows user to reinit portal
         }
     }

@@ -34,7 +34,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortalFrame frame = (TilePortalFrame) tile;
-        TilePortalController controller = frame.getControllerValidated();
+        TilePortalController controller = frame.getController();
         Tessellator tessellator = Tessellator.instance;
         
         GL11.glPushMatrix();

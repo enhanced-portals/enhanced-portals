@@ -17,15 +17,14 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.enhancedportals.network.ClientProxy;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
@@ -88,7 +87,7 @@ public class BlockFrame extends BlockEP
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
-        Icon frameIcon = frame != null ? frame.getTexture(side, ClientProxy.renderPass) : null;
+        Icon frameIcon = frame != null ? null /* TODO */ : null;
 
         return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
     }

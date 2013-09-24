@@ -2,7 +2,6 @@ package uk.co.shadeddimensions.enhancedportals.tileentity;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -10,8 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
@@ -27,22 +24,19 @@ public class TilePortalFrame extends TileEP implements IInventory
         
     }
 
-    public boolean validateController()
+    public TilePortalController getController()
     {
-        if (controller == null || controller.posY == -1)
-        {
-            return false;
-        }
-        else
+        if (controller != null)
         {
             TileEntity tile = worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ);
-            return tile != null && tile instanceof TilePortalController;
+            
+            if (tile != null && tile instanceof TilePortalController)
+            {
+                return (TilePortalController) tile;
+            }
         }
-    }
-
-    public TilePortalController getControllerValidated()
-    {
-        return validateController() ? (TilePortalController) worldObj.getBlockTileEntity(controller.posX, controller.posY, controller.posZ) : null;
+        
+        return null;
     }
 
     @Override
@@ -59,24 +53,6 @@ public class TilePortalFrame extends TileEP implements IInventory
         super.readFromNBT(tagCompound);
 
         controller = ChunkCoordinateUtils.loadChunkCoord(tagCompound, "controller");
-    }
-
-    @Override
-    public Icon getTexture(int side, int renderpass)
-    {
-        TilePortalController controller = getControllerValidated();
-
-        if (controller != null)
-        {
-            ItemStack s = controller.getStackInSlot(0);
-
-            if (s != null && s.getItemSpriteNumber() == 0 && s.itemID != CommonProxy.blockFrame.blockID)
-            {
-                return Block.blocksList[s.itemID].getIcon(side, s.getItemDamage());
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -102,7 +78,7 @@ public class TilePortalFrame extends TileEP implements IInventory
 
     public void selfBroken()
     {
-        TilePortalController control = getControllerValidated();
+        TilePortalController control = getController();
 
         if (control != null)
         {

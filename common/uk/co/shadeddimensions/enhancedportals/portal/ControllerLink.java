@@ -199,6 +199,8 @@ public class ControllerLink
             }
         }
         
+        controller.portalActive = true;
+        
         return LinkStatus.SUCCESS;
     }
     
