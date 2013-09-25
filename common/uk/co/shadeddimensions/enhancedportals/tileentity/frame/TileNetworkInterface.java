@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
+import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,7 +17,7 @@ public class TileNetworkInterface extends TilePortalFrame
 
     public TileNetworkInterface()
     {
-        NetworkIdentifier = "";
+        NetworkIdentifier = NetworkManager.BLANK_IDENTIFIER;
     }
 
     @Override
@@ -24,11 +25,11 @@ public class TileNetworkInterface extends TilePortalFrame
     {
         if (id == 0)
         {
-            if (!NetworkIdentifier.equals(""))
+            if (!NetworkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
                 CommonProxy.networkManager.removePortalFromNetwork(getController().UniqueIdentifier, NetworkIdentifier);
             }
-            else if (!string.equals(""))
+            else if (!string.equals(NetworkManager.BLANK_IDENTIFIER))
             {
                 CommonProxy.networkManager.addPortalToNetwork(getController().UniqueIdentifier, string);
             }

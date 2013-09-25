@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.lib.GuiIds;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
+import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
@@ -58,7 +59,7 @@ public class ItemWrench extends ItemEP
                 {
                     return false;
                 }
-                else if (ni.getController().UniqueIdentifier.equals(""))
+                else if (ni.getController().UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!world.isRemote)
                     {
@@ -80,7 +81,7 @@ public class ItemWrench extends ItemEP
                 {
                     return false;
                 }
-                else if (ni.getController().UniqueIdentifier.equals(""))
+                else if (ni.getController().UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!world.isRemote)
                     {

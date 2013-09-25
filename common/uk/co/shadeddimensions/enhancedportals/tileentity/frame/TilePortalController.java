@@ -15,6 +15,7 @@ import uk.co.shadeddimensions.enhancedportals.portal.BlockManager;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink;
 import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink.LinkStatus;
 import uk.co.shadeddimensions.enhancedportals.portal.EntityManager;
+import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
@@ -45,7 +46,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         blockManager = new BlockManager();
 
         hasInitialized = portalActive = false;
-        UniqueIdentifier = "";
+        UniqueIdentifier = NetworkManager.BLANK_IDENTIFIER;
 
         inventory = new ItemStack[2];
     }
@@ -94,9 +95,23 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 return;
             }
 
-            if (UniqueIdentifier.equals(""))
+            if (string.equals(NetworkManager.BLANK_IDENTIFIER) && !UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            {
+                TileNetworkInterface ni = blockManager.getNetworkInterface(worldObj);
+                
+                if (ni != null)
+                {
+                    CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, ni.NetworkIdentifier);
+                }
+                
+                CommonProxy.networkManager.removePortal(UniqueIdentifier);
+                UniqueIdentifier = NetworkManager.BLANK_IDENTIFIER;
+                ni.NetworkIdentifier = NetworkManager.BLANK_IDENTIFIER;
+            }
+            else if (UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
                 CommonProxy.networkManager.addNewPortal(string, new WorldCoordinates(xCoord, yCoord, zCoord, player.worldObj.provider.dimensionId));
+                UniqueIdentifier = string;
             }
             else
             {
@@ -109,9 +124,8 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 }
 
                 CommonProxy.networkManager.updateExistingPortal(UniqueIdentifier, string);
+                UniqueIdentifier = string;
             }
-
-            UniqueIdentifier = string;
         }
 
         CommonProxy.sendUpdatePacketToAllAround(this);
@@ -281,21 +295,23 @@ public class TilePortalController extends TilePortalFrame implements IInventory
     {
         if (!worldObj.isRemote)
         {
-            blockManager.destroyAndClearAll(worldObj);
-
-            if (!UniqueIdentifier.equals(""))
+            if (!UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
-                if (blockManager.getNetworkInterfaceCoord() != null)
-                {
-                    CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, blockManager.getNetworkInterface(worldObj).NetworkIdentifier);
-                }
+                TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
 
+                if (network != null)
+                {
+                    CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, network.NetworkIdentifier);
+                    network.NetworkIdentifier = NetworkManager.BLANK_IDENTIFIER;
+                }
+                
                 CommonProxy.networkManager.removePortal(UniqueIdentifier);
-                UniqueIdentifier = "";
+                UniqueIdentifier = NetworkManager.BLANK_IDENTIFIER;
             }
 
+            blockManager.destroyAndClearAll(worldObj);
             portalActive = false;
-            hasInitialized = false; // For when other blocks get destroyed - allows user to reinit portal
+            hasInitialized = false; // For when other blocks get destroyed/added - allows user to reinit portal
         }
     }
 
@@ -344,9 +360,19 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         {
             TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
             
-            if (network != null && !network.NetworkIdentifier.equals("") && EntityManager.isEntityFitForTravel(entity))
+            if (network != null && !network.NetworkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER) && EntityManager.isEntityFitForTravel(entity))
             {
-                System.out.println("Entity (" + entity.getEntityName() + ") tried to teleport to " + CommonProxy.networkManager.getNextDestination(network.NetworkIdentifier, UniqueIdentifier) + "!");
+                String destination = CommonProxy.networkManager.getNextDestination(network.NetworkIdentifier, UniqueIdentifier);
+                
+                if (destination == null || destination.equals(NetworkManager.BLANK_IDENTIFIER))
+                {
+                    System.out.println("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
+                }
+                else
+                {
+                    System.out.println("Entity (" + entity.getEntityName() + ") tried to teleport to " + destination + "!");
+                    EntityManager.teleportEntity(entity, UniqueIdentifier, destination);
+                }
             }
             
             EntityManager.setEntityPortalCooldown(entity);

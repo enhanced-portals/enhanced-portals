@@ -15,9 +15,11 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
@@ -31,6 +33,8 @@ public class NetworkManager
     File dataFile;
     MinecraftServer server;
 
+    public static final String BLANK_IDENTIFIER = "NOT_SET";
+    
     public NetworkManager(FMLServerStartingEvent event)
     {
         portalLocations = new HashMap<String, WorldCoordinates>();
@@ -43,7 +47,7 @@ public class NetworkManager
 
     public void addNewPortal(String UID, WorldCoordinates pos)
     {
-        if (!portalExists(UID))
+        if (!portalExists(UID) && !UID.equals(BLANK_IDENTIFIER))
         {
             portalLocations.put(UID, pos);
         }
@@ -51,7 +55,7 @@ public class NetworkManager
 
     public void addPortalToNetwork(String UID, String network)
     {
-        if (!isPortalInNetwork(UID, network))
+        if (!isPortalInNetwork(UID, network) && !UID.equals(BLANK_IDENTIFIER) && !network.equals(BLANK_IDENTIFIER))
         {
             if (!networkExists(network))
             {
@@ -67,9 +71,26 @@ public class NetworkManager
         return networkExists(UID) ? basicNetwork.get(UID) : new ArrayList<String>();
     }
 
-    public ChunkCoordinates getPortalLocation(String UID)
+    public WorldCoordinates getPortalLocation(String UID)
     {
-        return portalLocations.get(UID);
+        return UID.equals(BLANK_IDENTIFIER) ? null : portalLocations.get(UID);
+    }
+    
+    public TilePortalController getPortalLocationController(String UID)
+    {
+        WorldCoordinates c = getPortalLocation(UID);
+        
+        if (c != null)
+        {
+            TileEntity tile = DimensionManager.getWorld(c.dimension).getBlockTileEntity(c.posX, c.posY, c.posZ);
+            
+            if (tile != null && tile instanceof TilePortalController)
+            {
+                return (TilePortalController) tile;
+            }
+        }
+        
+        return null;
     }
 
     public boolean isPortalInNetwork(String UID, String networkID)
@@ -137,17 +158,20 @@ public class NetworkManager
 
     public boolean networkExists(String UID)
     {
-        return basicNetwork.containsKey(UID);
+        return UID.equals(BLANK_IDENTIFIER) ? false : basicNetwork.containsKey(UID);
     }
 
     public boolean portalExists(String UID)
     {
-        return portalLocations.containsKey(UID);
+        return UID.equals(BLANK_IDENTIFIER) ? false : portalLocations.containsKey(UID);
     }
 
     public void removePortal(String UID)
     {
-        portalLocations.remove(UID);
+        if (!UID.equals(BLANK_IDENTIFIER))
+        {
+            portalLocations.remove(UID);
+        }
     }
 
     public void removePortalFromNetwork(String UID, String network)
@@ -205,7 +229,7 @@ public class NetworkManager
 
     public void updateExistingPortal(String oldUID, String newUID)
     {
-        if (portalExists(oldUID))
+        if (portalExists(oldUID) && !newUID.equals(BLANK_IDENTIFIER))
         {
             portalLocations.put(newUID, portalLocations.get(oldUID));
             removePortal(oldUID);
@@ -214,7 +238,7 @@ public class NetworkManager
 
     public void updateExistingPortal(String oldUID, String newUID, WorldCoordinates newPos)
     {
-        if (portalExists(oldUID))
+        if (portalExists(oldUID) && !newUID.equals(BLANK_IDENTIFIER))
         {
             portalLocations.put(newUID, newPos);
             removePortal(oldUID);

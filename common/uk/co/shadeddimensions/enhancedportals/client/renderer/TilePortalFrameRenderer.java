@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
 import java.awt.Color;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -35,9 +36,22 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
     {
         int x = frame.xCoord, y = frame.yCoord, z = frame.zCoord;
         World world = frame.worldObj;
-        Color c = new Color(frame instanceof TilePortalController ? ((TilePortalController) frame).FrameColour : controller == null ? 0xFFFFFF : controller.FrameColour);
+        
+        Block baseBlock = CommonProxy.blockFrame;
+        int baseMeta = -1;
+        
+        Color c = new Color(controller == null ? 0xFFFFFF : controller.FrameColour);
         float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
 
+        if (controller != null)
+        {
+            if (controller.getStackInSlot(0) != null)
+            {
+                baseBlock = Block.blocksList[controller.getStackInSlot(0).itemID];
+                baseMeta = controller.getStackInSlot(0).getItemDamage();
+            }
+        }
+        
         float f3 = 0.5F;
         float f4 = 1.0F;
         float f5 = 0.8F;
@@ -65,46 +79,46 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         f17 = f5 * blue;
         f18 = f6 * blue;
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y - 1, z, 0))
+        if (baseBlock.shouldSideBeRendered(world, x, y - 1, z, 0))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord - 1, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord - 1, frame.zCoord));
             tessellator.setColorOpaque_F(f10, f13, f16);
-            renderBlocks.renderFaceYNeg(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 0));
+            renderBlocks.renderFaceYNeg(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 0) : baseBlock.getIcon(0, baseMeta));
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y + 1, z, 1))
+        if (baseBlock.shouldSideBeRendered(world, x, y + 1, z, 1))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord + 1, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord + 1, frame.zCoord));
             tessellator.setColorOpaque_F(f7, f8, f9);
-            renderBlocks.renderFaceYPos(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 1));
+            renderBlocks.renderFaceYPos(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 1) : baseBlock.getIcon(1, baseMeta));
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y, z - 1, 2))
+        if (baseBlock.shouldSideBeRendered(world, x, y, z - 1, 2))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord - 1));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord - 1));
             tessellator.setColorOpaque_F(f11, f14, f17);
-            renderBlocks.renderFaceZNeg(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 2));
+            renderBlocks.renderFaceZNeg(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 2) : baseBlock.getIcon(2, baseMeta));
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y, z + 1, 3))
+        if (baseBlock.shouldSideBeRendered(world, x, y, z + 1, 3))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord + 1));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord + 1));
             tessellator.setColorOpaque_F(f11, f14, f17);
-            renderBlocks.renderFaceZPos(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 3));
+            renderBlocks.renderFaceZPos(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 3) : baseBlock.getIcon(3, baseMeta));
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x - 1, y, z, 4))
+        if (baseBlock.shouldSideBeRendered(world, x - 1, y, z, 4))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord - 1, frame.yCoord, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord - 1, frame.yCoord, frame.zCoord));
             tessellator.setColorOpaque_F(f12, f15, f18);
-            renderBlocks.renderFaceXNeg(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 4));
+            renderBlocks.renderFaceXNeg(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 4) : baseBlock.getIcon(4, baseMeta));
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x + 1, y, z, 5))
+        if (baseBlock.shouldSideBeRendered(world, x + 1, y, z, 5))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord + 1, frame.yCoord, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord + 1, frame.yCoord, frame.zCoord));
             tessellator.setColorOpaque_F(f12, f15, f18);
-            renderBlocks.renderFaceXPos(null, 0, 0, 0, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, 5));
+            renderBlocks.renderFaceXPos(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 5) : baseBlock.getIcon(5, baseMeta));
         }
     }
     
@@ -130,7 +144,8 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         int x = frame.xCoord, y = frame.yCoord, z = frame.zCoord, meta = frame.getBlockMetadata();
         World world = frame.worldObj;
         Icon overlayIcon = pass == 1 && isWearingGoggles() ? meta >= 1 ? BlockFrame.typeOverlayIcons[meta] : null : null;
-
+        Block baseBlock = CommonProxy.blockFrame;
+        
         if (overlayIcon == null)
         {
             return;
@@ -164,44 +179,44 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         f17 = f5 * blue;
         f18 = f6 * blue;
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y - 1, z, 0))
+        if (baseBlock.shouldSideBeRendered(world, x, y - 1, z, 0))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord - 1, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord - 1, frame.zCoord));
             tessellator.setColorOpaque_F(f10, f13, f16);
             renderBlocks.renderFaceYNeg(null, 0, 0, 0, overlayIcon);
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y + 1, z, 1))
+        if (baseBlock.shouldSideBeRendered(world, x, y + 1, z, 1))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord + 1, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord + 1, frame.zCoord));
             tessellator.setColorOpaque_F(f7, f8, f9);
             renderBlocks.renderFaceYPos(null, 0, 0, 0, overlayIcon);
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y, z - 1, 2))
+        if (baseBlock.shouldSideBeRendered(world, x, y, z - 1, 2))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord - 1));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord - 1));
             tessellator.setColorOpaque_F(f11, f14, f17);
             renderBlocks.renderFaceZNeg(null, 0, 0, 0, overlayIcon);
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x, y, z + 1, 3))
+        if (baseBlock.shouldSideBeRendered(world, x, y, z + 1, 3))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord + 1));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord + 1));
             tessellator.setColorOpaque_F(f11, f14, f17);
             renderBlocks.renderFaceZPos(null, 0, 0, 0, overlayIcon);
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x - 1, y, z, 4))
+        if (baseBlock.shouldSideBeRendered(world, x - 1, y, z, 4))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord - 1, frame.yCoord, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord - 1, frame.yCoord, frame.zCoord));
             tessellator.setColorOpaque_F(f12, f15, f18);
             renderBlocks.renderFaceXNeg(null, 0, 0, 0, overlayIcon);
         }
 
-        if (CommonProxy.blockFrame.shouldSideBeRendered(world, x + 1, y, z, 5))
+        if (baseBlock.shouldSideBeRendered(world, x + 1, y, z, 5))
         {
-            tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord + 1, frame.yCoord, frame.zCoord));
+            tessellator.setBrightness(baseBlock.getMixedBrightnessForBlock(frame.worldObj, frame.xCoord + 1, frame.yCoord, frame.zCoord));
             tessellator.setColorOpaque_F(f12, f15, f18);
             renderBlocks.renderFaceXPos(null, 0, 0, 0, overlayIcon);
         }
@@ -211,7 +226,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortalFrame frame = (TilePortalFrame) tile;
-        TilePortalController controller = frame.getController();
+        TilePortalController controller = frame instanceof TilePortalController ? (TilePortalController) frame : frame.getController();
         Tessellator tessellator = Tessellator.instance;
 
         GL11.glPushMatrix();

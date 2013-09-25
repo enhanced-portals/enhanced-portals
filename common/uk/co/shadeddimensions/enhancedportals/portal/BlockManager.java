@@ -258,7 +258,7 @@ public class BlockManager
                 return (TileNetworkInterface) tile;
             }
         }
-
+        
         return null;
     }
 

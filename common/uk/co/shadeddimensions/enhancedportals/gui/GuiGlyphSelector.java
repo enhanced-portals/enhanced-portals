@@ -17,6 +17,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
+
 public class GuiGlyphSelector extends Gui
 {
     static final int MAX_COUNT = 9, ITEMS_PER_LINE = 9;
@@ -282,7 +284,7 @@ public class GuiGlyphSelector extends Gui
             }
         }
 
-        return s;
+        return s.length() == 0 ? NetworkManager.BLANK_IDENTIFIER : s;
     }
 
     protected boolean isOnElement(int mouseX, int mouseY, int id)
