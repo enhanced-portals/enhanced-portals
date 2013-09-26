@@ -1,6 +1,7 @@
 package uk.co.shadeddimensions.enhancedportals.network;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.DimensionManager;
@@ -40,6 +41,8 @@ public class CommonProxy
     public static ItemGoggles itemGoggles;
 
     public static NetworkManager networkManager;
+    
+    public static final Logger logger = Logger.getLogger(Reference.NAME);
 
     public static void sendUpdatePacketToAllAround(TileEP tile)
     {
@@ -122,7 +125,7 @@ public class CommonProxy
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");
         EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("If enabled, overwrites the Nether portals mechanics to allow any shape/size.");
-
+        
         EnhancedPortals.config.fillConfigFile(); // Must be last.
     }
 }

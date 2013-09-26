@@ -366,11 +366,11 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 
                 if (destination == null || destination.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
-                    System.out.println("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
+                    CommonProxy.logger.finer("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
                 }
                 else
                 {
-                    System.out.println("Entity (" + entity.getEntityName() + ") tried to teleport to " + destination + "!");
+                    CommonProxy.logger.finer("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination + "!");
                     EntityManager.teleportEntity(entity, UniqueIdentifier, destination);
                 }
             }

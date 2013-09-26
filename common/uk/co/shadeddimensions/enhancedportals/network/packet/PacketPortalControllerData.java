@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -19,6 +20,8 @@ public class PacketPortalControllerData extends MainPacket
     int FrameColour, PortalColour, ParticleColour, ParticleType;
     boolean biometric, dialDevice, networkInterface;
     String uID;
+    
+    int item1ID, item1Meta, item2ID, item2Meta;
 
     public PacketPortalControllerData()
     {
@@ -39,6 +42,26 @@ public class PacketPortalControllerData extends MainPacket
         biometric = tile.blockManager.getBiometricCoord() != null;
         dialDevice = tile.blockManager.getDialDeviceCoord() != null;
         networkInterface = tile.blockManager.getNetworkInterfaceCoord() != null;
+        
+        if (tile.getStackInSlot(0) != null)
+        {
+            item1ID = tile.getStackInSlot(0).itemID;
+            item1Meta = tile.getStackInSlot(0).getItemDamage();
+        }
+        else
+        {
+            item1ID = item1Meta = 0;
+        }
+        
+        if (tile.getStackInSlot(1) != null)
+        {
+            item2ID = tile.getStackInSlot(1).itemID;
+            item2Meta = tile.getStackInSlot(1).getItemDamage();
+        }
+        else
+        {
+            item2ID = item2Meta = 0;
+        }
     }
 
     @Override
@@ -56,6 +79,10 @@ public class PacketPortalControllerData extends MainPacket
         biometric = stream.readBoolean();
         dialDevice = stream.readBoolean();
         networkInterface = stream.readBoolean();
+        item1ID = stream.readInt();
+        item1Meta = stream.readInt();
+        item2ID = stream.readInt();
+        item2Meta = stream.readInt();
 
         return this;
     }
@@ -84,6 +111,16 @@ public class PacketPortalControllerData extends MainPacket
             blockManager.biometric = biometric;
             blockManager.dialDevice = dialDevice;
             blockManager.networkInterface = networkInterface;
+            
+            if (item1ID != 0)
+            {
+                controller.setInventorySlotContents(0, new ItemStack(item1ID, 1, item1Meta));
+            }
+            
+            if (item2ID != 0)
+            {
+                controller.setInventorySlotContents(1, new ItemStack(item2ID, 1, item2Meta));
+            }
         }
     }
 
@@ -102,5 +139,9 @@ public class PacketPortalControllerData extends MainPacket
         stream.writeBoolean(biometric);
         stream.writeBoolean(dialDevice);
         stream.writeBoolean(networkInterface);
+        stream.writeInt(item1ID);
+        stream.writeInt(item1Meta);
+        stream.writeInt(item2ID);
+        stream.writeInt(item2Meta);
     }
 }

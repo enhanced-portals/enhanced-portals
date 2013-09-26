@@ -2,7 +2,9 @@ package uk.co.shadeddimensions.enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotPortalFrameTexture;
+import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
 public class ContainerPortalFrameTexture extends ContainerEnhancedPortals
@@ -31,5 +33,22 @@ public class ContainerPortalFrameTexture extends ContainerEnhancedPortals
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
         return ((TilePortalController) tile).isUseableByPlayer(entityplayer);
+    }
+    
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
+    {
+        ItemStack s = getSlot(slotIndex).getStack();
+        
+        if (StackHelper.isItemStackValidForPortalFrameTexture(s))
+        {
+            ItemStack s2 = s.copy();
+            s2.stackSize = 1;
+            
+            ((TilePortalController) tile).setInventorySlotContents(0, s2);
+            return null;
+        }
+        
+        return super.transferStackInSlot(player, slotIndex);
     }
 }

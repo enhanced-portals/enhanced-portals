@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.enhancedportals.client.renderer;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -64,7 +63,7 @@ public class PortalItemRenderer implements IItemRenderer
     {
         Tessellator tessellator = Tessellator.instance;
 
-        Icon icon = Block.portal.getIcon(0, 0);
+        Icon icon = CommonProxy.blockPortal.getIcon(0, item.getItemDamage());
         renderer.setRenderBoundsFromBlock(CommonProxy.blockFrame);
 
         GL11.glTranslatef(x, y, z);
