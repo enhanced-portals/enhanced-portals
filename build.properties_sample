@@ -1,0 +1,8 @@
+# Copy as build.properties and edit to match your development environment.
+base=D:/development/
+dir.mcp=${base}forge/mcp
+dir.release=${base}release
+dir.source=${base}source/enhanced-portals/common
+dir.resources=${base}source/enhanced-portals/resources
+version.mc=1.6.4
+version.main=1.0.0
