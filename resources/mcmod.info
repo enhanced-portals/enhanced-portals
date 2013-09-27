@@ -3,14 +3,14 @@
   "modid" : "EnhancedPortals3",
   "name" : "EnhancedPortals 3",
   "version" : "@VERSION@",
-  "url" : "http://www.minecraftforum.net/topic/1301217-/",
+  "url" : "http://shadeddimensions.co.uk",
   "credits" : "",
   "authors": [
     "Alz454"
   ],
-  "description": "Create any size and shape portals you want!",
+  "description": "",
   "logoFile" : "",
-  "updateUrl" : "http://www.minecraftforum.net/topic/1301217-/",
+  "updateUrl" : "http://shadeddimensions.co.uk",
   "parent" : "",
   "screenshots": [
   ]

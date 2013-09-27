@@ -3,11 +3,13 @@ package uk.co.shadeddimensions.enhancedportals.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.enhancedportals.container.ContainerPortalTexture;
+import uk.co.shadeddimensions.enhancedportals.gui.GuiModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameController;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.gui.GuiPortalFrameRedstone;
@@ -18,6 +20,7 @@ import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketNetworkInterfaceData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketPortalControllerData;
 import uk.co.shadeddimensions.enhancedportals.network.packet.PacketRedstoneInterfaceData;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
@@ -52,6 +55,10 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiPortalFrameNetworkInterface((TileNetworkInterface) tile);
         }
+        else if (ID == GuiIds.MODULE_MANIPULATOR && tile instanceof TileModuleManipulator)
+        {
+            return new GuiModuleManipulator(player, (TileModuleManipulator) tile);
+        }
 
         return null;
     }
@@ -83,6 +90,10 @@ public class GuiHandler implements IGuiHandler
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile)), (Player) player);
             return new ContainerNetworkInterface((TileNetworkInterface) tile);
+        }
+        else if (ID == GuiIds.MODULE_MANIPULATOR && tile instanceof TileModuleManipulator)
+        {
+            return new ContainerModuleManipulator(player, (TileModuleManipulator) tile);
         }
 
         return null;

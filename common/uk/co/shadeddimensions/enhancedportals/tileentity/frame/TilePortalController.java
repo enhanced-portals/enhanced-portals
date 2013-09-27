@@ -17,6 +17,7 @@ import uk.co.shadeddimensions.enhancedportals.portal.ControllerLink.LinkStatus;
 import uk.co.shadeddimensions.enhancedportals.portal.EntityManager;
 import uk.co.shadeddimensions.enhancedportals.portal.NetworkManager;
 import uk.co.shadeddimensions.enhancedportals.portal.PortalUtils;
+import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.util.WorldCoordinates;
@@ -215,7 +216,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
     @Override
     public String getInvName()
     {
-        return "ep2.portalController";
+        return "tile.ep3.portalFrame.controller.name";
     }
 
     @Override
@@ -237,9 +238,9 @@ public class TilePortalController extends TilePortalFrame implements IInventory
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return true;
+        return i == 0 ? StackHelper.isItemStackValidForPortalFrameTexture(stack) : StackHelper.isItemStackValidForPortalTexture(stack);
     }
 
     @Override
@@ -366,11 +367,11 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 
                 if (destination == null || destination.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
-                    CommonProxy.logger.finer("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
+                    CommonProxy.logger.fine("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
                 }
                 else
                 {
-                    CommonProxy.logger.finer("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination + "!");
+                    CommonProxy.logger.fine("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination + "!");
                     EntityManager.teleportEntity(entity, UniqueIdentifier, destination);
                 }
             }

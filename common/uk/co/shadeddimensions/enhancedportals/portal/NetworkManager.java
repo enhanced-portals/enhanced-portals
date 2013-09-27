@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.enhancedportals.EnhancedPortals;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
@@ -82,7 +83,10 @@ public class NetworkManager
         
         if (c != null)
         {
-            TileEntity tile = DimensionManager.getWorld(c.dimension).getBlockTileEntity(c.posX, c.posY, c.posZ);
+            WorldServer world = DimensionManager.getWorld(c.dimension);            
+            world.theChunkProviderServer.loadChunk(c.posX >> 4, c.posZ >> 4);
+            
+            TileEntity tile = world.getBlockTileEntity(c.posX, c.posY, c.posZ);
             
             if (tile != null && tile instanceof TilePortalController)
             {
@@ -128,13 +132,13 @@ public class NetworkManager
 
         for (Object o : networkTag.getTags())
         {
-            NBTTagList tag = (NBTTagList) o;
+            NBTTagCompound tag = (NBTTagCompound) o;
             ArrayList<String> sList = new ArrayList<String>();
 
-            for (Object ob : tag.tagList)
+            for (Object ob : tag.getTags())
             {
                 NBTTagCompound c = (NBTTagCompound) ob;
-                sList.add(c.getString("ID"));
+                sList.add(c.getName());
             }
 
             basicNetwork.put(tag.getName(), sList);
@@ -202,16 +206,18 @@ public class NetworkManager
 
         for (Entry<String, ArrayList<String>> entry : basicNetwork.entrySet())
         {
-            NBTTagList t = new NBTTagList();
-
-            for (String s : entry.getValue())
+            if (entry.getValue().size() > 0)
             {
-                NBTTagCompound c = new NBTTagCompound();
-                c.setString("ID", s);
-                t.appendTag(c);
-            }
+                NBTTagCompound t = new NBTTagCompound();
 
-            networkTag.setTag(entry.getKey(), t);
+                for (String s : entry.getValue())
+                {
+                    NBTTagCompound c = new NBTTagCompound();
+                    t.setTag(s, c);
+                }
+                
+                networkTag.setTag(entry.getKey(), t);
+            }
         }
 
         mainTag.setTag("PortalLocations", portalTag);
@@ -271,22 +277,36 @@ public class NetworkManager
     
     public String getNextDestination(String network, String UID)
     {
-        ArrayList<String> sList = getNetworkedPortals(network);
-        
-        if (!sList.contains(UID))
-        {
-            return null; // Should never happen, but let's make sure.
-        }
-        
-        int index = sList.indexOf(UID);
-        
-        if (index == sList.size() - 1)
-        {
-            return sList.get(0);
+        if (EnhancedPortals.config.getBoolean("randomTeleportMode"))
+        {       
+            ArrayList<String> sList = getDestinationsExcluding(network, UID);
+            
+            if (sList.size() <= 1)
+            {
+                return null;
+            }
+            
+            return sList.get(new Random().nextInt(sList.size()));
         }
         else
         {
-            return sList.get(index + 1);
+            ArrayList<String> sList = getNetworkedPortals(network);
+            
+            if (!sList.contains(UID))
+            {
+                return null; // Should never happen, but let's make sure.
+            }
+            
+            int index = sList.indexOf(UID);
+            
+            if (index == sList.size() - 1)
+            {
+                return sList.get(0);
+            }
+            else
+            {
+                return sList.get(index + 1);
+            }
         }
     }
 }

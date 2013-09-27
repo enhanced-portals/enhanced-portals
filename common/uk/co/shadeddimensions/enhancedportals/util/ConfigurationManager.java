@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.enhancedportals.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -235,7 +234,7 @@ public class ConfigurationManager
             b = block.getConstructor(int.class, String.class).newInstance(getBlockId(name), name);
             GameRegistry.registerBlock(b, item, name);
         }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -252,7 +251,7 @@ public class ConfigurationManager
             b = block.getConstructor(int.class, String.class).newInstance(getBlockId(name), name);
             GameRegistry.registerBlock(b, name);
         }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -269,7 +268,7 @@ public class ConfigurationManager
             i = item.getConstructor(int.class, String.class).newInstance(getItemId(name), name);
             GameRegistry.registerItem(i, name);
         }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

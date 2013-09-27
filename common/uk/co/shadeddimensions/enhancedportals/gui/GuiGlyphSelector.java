@@ -164,7 +164,7 @@ public class GuiGlyphSelector extends Gui
         {
             int tX = X + i % ITEMS_PER_LINE * 18 + 1, tY = Y + i / ITEMS_PER_LINE * 18 + 1;
 
-            gui.getItemRenderer().renderItemIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), Glyphs.get(i), tX, tY, false);
+            gui.getItemRenderer().renderItemAndEffectIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), Glyphs.get(i), tX, tY);
             gui.getItemRenderer().renderItemOverlayIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), Glyphs.get(i), tX, tY, counter[i] > 0 ? counter[i] + "" : null);
         }
 

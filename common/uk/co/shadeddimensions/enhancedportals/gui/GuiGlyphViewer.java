@@ -43,7 +43,7 @@ public class GuiGlyphViewer extends GuiGlyphSelector
         {
             int tX = X + i % ITEMS_PER_LINE * 18 + 1, tY = Y + i / ITEMS_PER_LINE * 18 + 1;
 
-            gui.getItemRenderer().renderItemIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), glyphs.get(i), tX, tY, false);
+            gui.getItemRenderer().renderItemAndEffectIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), glyphs.get(i), tX, tY);
         }
 
         GL11.glColor4f(1f, 1f, 1f, 1f);

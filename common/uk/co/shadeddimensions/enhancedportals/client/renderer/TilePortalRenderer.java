@@ -9,8 +9,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 
@@ -38,9 +41,10 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         Color c = new Color(controller == null ? 0xFFFFFF : controller.PortalColour);
         float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
 
+        Icon overrideIcon = null;
         Block baseBlock = CommonProxy.blockPortal;
         int baseMeta = 5;
-
+        
         if (controller != null)
         {
             ItemStack stack = controller.getStackInSlot(1);
@@ -48,6 +52,12 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
             if (StackHelper.isStackDye(stack))
             {
                 baseMeta = StackHelper.getDyeColour(stack);
+            }
+            else if (FluidContainerRegistry.isFilledContainer(stack))
+            {
+                Fluid fluid = FluidContainerRegistry.getFluidForFilledItem(stack).getFluid();
+                overrideIcon = fluid.getIcon();
+                bindTexture(fluid.getSpriteNumber() == 0 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
             }
             else if (StackHelper.isItemStackValidForPortalTexture(stack))
             {
@@ -87,42 +97,42 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         {
             // tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y - 1, z));
             tessellator.setColorOpaque_F(f10, f13, f16);
-            renderBlocks.renderFaceYNeg(null, 0, 0, 0, baseBlock.getIcon(0, baseMeta));
+            renderBlocks.renderFaceYNeg(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.getIcon(0, baseMeta));
         }
 
         if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y + 1, z, 1) && world.getBlockId(x, y + 1, z) != CommonProxy.blockPortal.blockID)
         {
             // tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y + 1, z));
             tessellator.setColorOpaque_F(f7, f8, f9);
-            renderBlocks.renderFaceYPos(null, 0, 0, 0, baseBlock.getIcon(1, baseMeta));
+            renderBlocks.renderFaceYPos(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.getIcon(1, baseMeta));
         }
 
         if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y, z - 1, 2) && world.getBlockId(x, y, z - 1) != CommonProxy.blockPortal.blockID)
         {
             // tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y, z - 1));
             tessellator.setColorOpaque_F(f11, f14, f17);
-            renderBlocks.renderFaceZNeg(null, 0, 0, 0, baseBlock.getIcon(2, baseMeta));
+            renderBlocks.renderFaceZNeg(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.getIcon(2, baseMeta));
         }
 
         if (CommonProxy.blockPortal.shouldSideBeRendered(world, x, y, z + 1, 3) && world.getBlockId(x, y, z + 1) != CommonProxy.blockPortal.blockID)
         {
             // tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x, y, z + 1));
             tessellator.setColorOpaque_F(f11, f14, f17);
-            renderBlocks.renderFaceZPos(null, 0, 0, 0, baseBlock.getIcon(3, baseMeta));
+            renderBlocks.renderFaceZPos(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.getIcon(3, baseMeta));
         }
 
         if (CommonProxy.blockPortal.shouldSideBeRendered(world, x - 1, y, z, 4) && world.getBlockId(x - 1, y, z) != CommonProxy.blockPortal.blockID)
         {
             // tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x - 1, y, z));
             tessellator.setColorOpaque_F(f12, f15, f18);
-            renderBlocks.renderFaceXNeg(null, 0, 0, 0, baseBlock.getIcon(4, baseMeta));
+            renderBlocks.renderFaceXNeg(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.getIcon(4, baseMeta));
         }
 
         if (CommonProxy.blockPortal.shouldSideBeRendered(world, x + 1, y, z, 5) && world.getBlockId(x + 1, y, z) != CommonProxy.blockPortal.blockID)
         {
             // tessellator.setBrightness(CommonProxy.blockPortal.getMixedBrightnessForBlock(world, x + 1, y, z));
             tessellator.setColorOpaque_F(f12, f15, f18);
-            renderBlocks.renderFaceXPos(null, 0, 0, 0, baseBlock.getIcon(5, baseMeta));
+            renderBlocks.renderFaceXPos(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.getIcon(5, baseMeta));
         }
     }
 
@@ -142,7 +152,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         bindTexture(TextureMap.locationBlocksTexture);
-
+        
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);
         tessellator.startDrawingQuads();

@@ -35,20 +35,14 @@ public class EntityManager
     {
         TilePortalController controllerDest = CommonProxy.networkManager.getPortalLocationController(UIDTo);
         
-        if ( controllerDest == null)
+        if (controllerDest == null)
         {
-            CommonProxy.logger.finer("Failed to teleport entity - Cannot get TileEntity of exit Portal Controller!");
+            CommonProxy.logger.fine("Failed to teleport entity - Cannot get TileEntity of exit Portal Controller!");
             return;
         }
         
         boolean isDimensionalPortal = entity.worldObj.provider.dimensionId != controllerDest.worldObj.provider.dimensionId;
-        WorldServer destinationWorld = (WorldServer) controllerDest.worldObj;
-        
-        if (isDimensionalPortal)
-        {
-            System.out.println("TODO."); // TODO
-            return;
-        }
+        //WorldServer destinationWorld = (WorldServer) controllerDest.worldObj;
         
         if (!controllerDest.portalActive)
         {
@@ -56,7 +50,7 @@ public class EntityManager
             
             if (!controllerDest.portalActive)
             {
-                CommonProxy.logger.finer("Failed to teleport entity - Could not create an exit portal!");
+                CommonProxy.logger.fine("Failed to teleport entity - Could not create an exit portal!");
                 return;
             }
         }
@@ -65,7 +59,15 @@ public class EntityManager
         
         if (exit == null)
         {
-            CommonProxy.logger.finer("Failed to teleport entity - Could not find a suitable exit location. Entity is too big for the portal!");
+            CommonProxy.logger.fine("Failed to teleport entity - Could not find a suitable exit location. Entity is too big for the portal!");
+            return;
+        }
+        
+        CommonProxy.logger.fine(String.format("Found a suitable exit location for Entity (%s): %s, %s, %s", entity.getEntityName(), exit.posX, exit.posY, exit.posZ));
+        
+        if (isDimensionalPortal)
+        {
+            System.out.println("TODO."); // TODO
             return;
         }
         
@@ -78,9 +80,7 @@ public class EntityManager
             player.playerNetServerHandler.setPlayerLocation(exit.posX + 0.5, exit.posY, exit.posZ + 0.5, entityRotation, player.rotationPitch);
         }
         
-        entity.setLocationAndAngles(exit.posX + 0.5, exit.posY, exit.posZ + 0.5, entityRotation, entity.rotationPitch);        
-        
-        CommonProxy.logger.finer(String.format("Found a suitable exit location for Entity (%s): %s, %s, %s", entity.getEntityName(), exit.posX, exit.posY, exit.posZ));
+        entity.setLocationAndAngles(exit.posX + 0.5, exit.posY, exit.posZ + 0.5, entityRotation, entity.rotationPitch);
     }
     
     private static float getRotation(Entity entity, TilePortalController controller, ChunkCoordinates loc)

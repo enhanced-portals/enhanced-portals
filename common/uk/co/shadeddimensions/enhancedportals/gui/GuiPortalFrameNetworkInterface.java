@@ -18,7 +18,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterf
 
 public class GuiPortalFrameNetworkInterface extends GuiResizable
 {
-    GuiGlyphSelector glyphSelector;
+    GuiGlyphSelectorNetwork glyphSelector;
     GuiGlyphViewer glyphViewer;
 
     TileNetworkInterface networkInterface;
@@ -29,7 +29,7 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
 
         networkInterface = tile;
 
-        glyphSelector = new GuiGlyphSelector(7, 57, 0xffffff, this);
+        glyphSelector = new GuiGlyphSelectorNetwork(7, 57, 0xffffff, this);
         glyphViewer = new GuiGlyphViewer(7, 20, 0xffffff, this, glyphSelector);
 
         glyphSelector.setSelectedToIdentifier(networkInterface.NetworkIdentifier);

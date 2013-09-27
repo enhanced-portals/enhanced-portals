@@ -7,4 +7,5 @@ public class GuiIds
     public static final int PORTAL_TEXTURE = 2;
     public static final int PORTAL_FRAME_TEXTURE = 3;
     public static final int NETWORK_INTERFACE = 4;
+    public static final int MODULE_MANIPULATOR = 5;
 }

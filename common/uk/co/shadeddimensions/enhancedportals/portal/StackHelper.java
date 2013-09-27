@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.enhancedportals.portal;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class StackHelper
@@ -39,7 +40,21 @@ public class StackHelper
     {
         if (stack != null)
         {
-            return stack.getItemSpriteNumber() == 0 || isStackDye(stack);
+            if (stack.getItemSpriteNumber() == 0)
+            {
+                return true;
+            }
+            else
+            {
+                if (FluidContainerRegistry.isFilledContainer(stack))
+                {
+                    return true;
+                }
+                else if (isStackDye(stack))
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -48,5 +63,11 @@ public class StackHelper
     public static boolean isStackDye(ItemStack stack)
     {
         return OreDictionary.getOreName(OreDictionary.getOreID(stack)).startsWith("dye");
+    }
+
+    public static boolean isUpgrade(ItemStack stack)
+    {
+        // TODO
+        return true;
     }
 }

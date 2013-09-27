@@ -13,6 +13,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
@@ -97,6 +98,18 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TileBiometricIdentifier)
             {
                 // TODO
+                return true;
+            }
+            else if (tile instanceof TileModuleManipulator)
+            {
+                TileModuleManipulator module = (TileModuleManipulator) tile;
+                
+                if (module.getController() == null)
+                {
+                    return false;
+                }
+                
+                player.openGui(EnhancedPortals.instance, GuiIds.MODULE_MANIPULATOR, world, x, y, z);
                 return true;
             }
             else if (tile instanceof TilePortalFrame)
