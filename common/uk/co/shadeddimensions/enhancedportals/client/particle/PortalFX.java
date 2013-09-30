@@ -5,6 +5,8 @@ import java.awt.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 
 public class PortalFX extends EntityFX
 {
@@ -88,7 +90,7 @@ public class PortalFX extends EntityFX
 
     private double portalPosZ;
 
-    public PortalFX(World par1World, int ParticleType, int ParticleColour, double par2, double par4, double par6, double par8, double par10, double par12)
+    public PortalFX(World par1World, TilePortalController controller, TileModuleManipulator module, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
         motionX = par8;
@@ -98,6 +100,8 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
+        int ParticleColour = controller != null ? controller.ParticleColour : 0xB336A1, ParticleType = controller != null ? controller.ParticleType : 0;
+        
         if (ParticleColour == 0xB336A1)
         {
             float f = rand.nextFloat() * 0.6F + 0.4F;
@@ -118,6 +122,11 @@ public class PortalFX extends EntityFX
         noClip = true;
 
         setParticleTextureIndex(getParticleIndex(ParticleType));
+        
+        if (module != null)
+        {
+            module.particleCreated(this);
+        }
     }
 
     /**
@@ -183,5 +192,20 @@ public class PortalFX extends EntityFX
         var8 = 1.0F - var8;
         particleScale = portalParticleScale * var8;
         super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
+    }
+
+    public void setParticleRed(float f)
+    {
+        particleRed = f;
+    }
+    
+    public void setParticleGreen(float f)
+    {
+        particleGreen = f;
+    }
+    
+    public void setParticleBlue(float f)
+    {
+        particleBlue = f;
     }
 }

@@ -12,6 +12,18 @@ tile.ep3.portal.name=Portal
 item.ep3.wrench.name=Multitool
 item.ep3.goggles.name=Goggles
 
+# Upgrades
+item.ep3.portalModule.0.name=Particle Destroyer
+item.ep3.portalModule.0.desc=Stops particles from getting created
+item.ep3.portalModule.1.name=Rainbow Particles
+item.ep3.portalModule.1.desc=Every particle will have a random colour
+item.ep3.portalModule.2.name=Portal Silencer
+item.ep3.portalModule.2.desc=Silences the portal
+item.ep3.portalModule.3.name=Momentum [NI]
+item.ep3.portalModule.3.desc=Entities keep their momentum [NI]
+item.ep3.portalModule.4.name=Portal Cloaking
+item.ep3.portalModule.4.desc=Makes the portal completely invisible
+
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3
 

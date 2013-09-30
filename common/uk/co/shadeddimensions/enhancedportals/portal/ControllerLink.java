@@ -12,6 +12,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
@@ -27,7 +28,8 @@ public class ControllerLink
         FAIL_MultipleNetworkIdentifiers, //
         FAIL_MultipleDialDevices, //
         FAIL_NetworkInterfaceAndDialDevice, //
-        FAIL_MultipleBiometric; //
+        FAIL_MultipleBiometric,
+        FAIL_MultipleUpgrade; //
     }
 
     World world;
@@ -64,6 +66,7 @@ public class ControllerLink
         Queue<ChunkCoordinates> networkBlocks = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> dialBlocks = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> biometricBlocks = new LinkedList<ChunkCoordinates>();
+        Queue<ChunkCoordinates> upgradeBlocks = new LinkedList<ChunkCoordinates>();
 
         toProcess.add(controller.getChunkCoordinates());
 
@@ -94,6 +97,10 @@ public class ControllerLink
                 else if (t instanceof TileBiometricIdentifier)
                 {
                     biometricBlocks.add(c);
+                }
+                else if (t instanceof TileModuleManipulator)
+                {
+                    upgradeBlocks.add(c);
                 }
                 else if (t instanceof TilePortalController)
                 {
@@ -128,11 +135,15 @@ public class ControllerLink
         {
             return LinkStatus.FAIL_MultipleBiometric;
         }
+        else if (upgradeBlocks.size() > 1)
+        {
+            return LinkStatus.FAIL_MultipleUpgrade;
+        }
         else if (networkBlocks.size() == 1 && dialBlocks.size() == 1)
         {
             return LinkStatus.FAIL_NetworkInterfaceAndDialDevice;
         }
-
+        
         // everything seems to be OK - lets continue
         controller.blockManager.clearAll();
 
@@ -210,6 +221,19 @@ public class ControllerLink
                 biometric.controller = controller.getChunkCoordinates();
                 controller.blockManager.setBiometric(c);
                 CommonProxy.sendUpdatePacketToAllAround(biometric);
+            }
+        }
+        
+        if (!upgradeBlocks.isEmpty()) // there should only be one of these. (checked above)
+        {
+            ChunkCoordinates c = upgradeBlocks.remove();
+            TileModuleManipulator upgrade = (TileModuleManipulator) world.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+            if (upgrade != null)
+            {
+                upgrade.controller = controller.getChunkCoordinates();
+                controller.blockManager.setModuleManipulator(c);
+                CommonProxy.sendUpdatePacketToAllAround(upgrade);
             }
         }
 

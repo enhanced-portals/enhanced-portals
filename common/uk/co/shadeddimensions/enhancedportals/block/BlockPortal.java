@@ -13,7 +13,10 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
+import uk.co.shadeddimensions.enhancedportals.item.ItemPortalModule;
+import uk.co.shadeddimensions.enhancedportals.portal.ClientBlockManager;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -141,15 +144,17 @@ public class BlockPortal extends BlockEP
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
         int metadata = world.getBlockMetadata(x, y, z);
+        TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
+        TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
 
-        if (metadata >= 6)
-        {
-            return;
-        }
-
-        if (random.nextInt(100) == 0)
+        if (random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS)))
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
+        }
+        
+        if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES))
+        {
+            return;
         }
 
         for (int l = 0; l < 4; ++l)
@@ -181,16 +186,7 @@ public class BlockPortal extends BlockEP
                 d4 = random.nextFloat() * 2.0F * i1;
             }
 
-            int type = 0, colour = 0xB336A1;
-            TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
-
-            if (controller != null)
-            {
-                colour = controller.ParticleColour;
-                type = controller.ParticleType;
-            }
-
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, type, colour, d0, d1, d2, d3, d4, d5));
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, controller, module, d0, d1, d2, d3, d4, d5));
         }
     }
 
@@ -212,6 +208,18 @@ public class BlockPortal extends BlockEP
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
+        TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
+        TilePortalController controller = portal.getController();
+        
+        if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
+        {
+            if (!((ClientBlockManager) controller.blockManager).getModuleManipulatorBa(blockAccess).shouldRenderPortal())
+            {
+                setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
+                return;
+            }
+        }
+        
         int meta = blockAccess.getBlockMetadata(x, y, z);
 
         if (meta == 1) // X

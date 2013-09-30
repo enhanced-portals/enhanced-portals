@@ -11,7 +11,10 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortal;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
@@ -51,12 +54,23 @@ public class PacketRequestData extends MainPacket
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
         }
+        else if (tile instanceof TileModuleManipulator)
+        {
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketModuleManipulator((TileModuleManipulator) tile)), (Player) player);
+        }
+        else if (tile instanceof TileNetworkInterface)
+        {
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile)), (Player) player);
+        }
+        else if (tile instanceof TileRedstoneInterface)
+        {
+            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData((TileRedstoneInterface) tile)), (Player) player);
+        }
         else if (tile instanceof TilePortal)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalData((TilePortal) tile)), (Player) player);
         }
-
-        if (tile instanceof TilePortalFrame) // Needs to be in addition to
+        else if (tile instanceof TilePortalFrame)
         {
             PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
         }

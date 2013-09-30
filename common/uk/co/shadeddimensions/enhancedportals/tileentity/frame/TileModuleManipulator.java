@@ -1,6 +1,11 @@
 package uk.co.shadeddimensions.enhancedportals.tileentity.frame;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import uk.co.shadeddimensions.enhancedportals.api.IPortalModule;
+import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
+import uk.co.shadeddimensions.enhancedportals.item.ItemPortalModule;
 import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
@@ -62,5 +67,83 @@ public class TileModuleManipulator extends TilePortalFrame
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
         return StackHelper.isUpgrade(stack);
+    }
+    
+    public boolean hasModule(ItemPortalModule.PortalModules type)
+    {
+        return hasModule(type.ordinal());
+    }
+    
+    public boolean hasModule(int ID)
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null && i.getItemDamage() == ID)
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public void particleCreated(PortalFX portalFX)
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                ((IPortalModule) i.getItem()).onParticleCreated(this, i, portalFX);
+            }
+        }
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+        
+        NBTTagList list = new NBTTagList();
+        
+        for (ItemStack s : inventory)
+        {
+            if (s != null)
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                s.writeToNBT(compound);
+                list.appendTag(compound);
+            }
+        }
+
+        tagCompound.setTag("Inventory", list);
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+        
+        NBTTagList list = tagCompound.getTagList("Inventory");
+        
+        for (int i = 0; i < list.tagList.size(); i++)
+        {
+            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
+        }
+    }
+
+    public boolean shouldRenderPortal()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 }

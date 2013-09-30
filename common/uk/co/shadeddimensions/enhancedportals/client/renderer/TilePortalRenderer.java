@@ -38,16 +38,16 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     {
         int x = portal.xCoord, y = portal.yCoord, z = portal.zCoord;
         World world = portal.worldObj;
-        Color c = new Color(controller == null ? 0xFFFFFF : controller.PortalColour);
-        float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
-
+        Color c = new Color(0xFFFFFF);
+        
         Icon overrideIcon = null;
         Block baseBlock = CommonProxy.blockPortal;
         int baseMeta = 5;
         
         if (controller != null)
-        {
+        {      
             ItemStack stack = controller.getStackInSlot(1);
+            c = new Color(controller.PortalColour);
 
             if (StackHelper.isStackDye(stack))
             {
@@ -66,6 +66,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
             }
         }
 
+        float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
         float f3 = 0.5F;
         float f4 = 1.0F;
         float f5 = 0.8F;
@@ -141,6 +142,15 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     {
         TilePortal portal = (TilePortal) tile;
         TilePortalController controller = portal.getController();
+        
+        if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
+        {
+            if (!controller.blockManager.getModuleManipulator(tile.worldObj).shouldRenderPortal())
+            {
+                return;
+            }
+        }
+        
         Tessellator tessellator = Tessellator.instance;
         int meta = portal.getBlockMetadata();
 

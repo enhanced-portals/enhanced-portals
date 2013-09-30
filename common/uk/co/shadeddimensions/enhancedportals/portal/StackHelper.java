@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import uk.co.shadeddimensions.enhancedportals.api.IPortalModule;
 
 public class StackHelper
 {
@@ -67,7 +68,6 @@ public class StackHelper
 
     public static boolean isUpgrade(ItemStack stack)
     {
-        // TODO
-        return true;
+        return stack != null && stack.getItem() instanceof IPortalModule;
     }
 }

@@ -46,7 +46,6 @@ public class PacketPortalFrameData extends MainPacket
             TilePortalFrame frame = (TilePortalFrame) tile;
 
             frame.controller = controller;
-            world.markBlockForRenderUpdate(coord.posX, coord.posY, coord.posZ);
         }
     }
 

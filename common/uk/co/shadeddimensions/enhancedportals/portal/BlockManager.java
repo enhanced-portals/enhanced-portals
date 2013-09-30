@@ -11,6 +11,7 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.enhancedportals.util.ChunkCoordinateUtils;
@@ -20,9 +21,11 @@ public class BlockManager
     ArrayList<ChunkCoordinates> portal;
     ArrayList<ChunkCoordinates> portalFrame;
     ArrayList<ChunkCoordinates> redstone;
+    
     ChunkCoordinates biometric;
     ChunkCoordinates dialDevice;
     ChunkCoordinates networkInterface;
+    ChunkCoordinates moduleManipulator;
 
     boolean isProcessing;
 
@@ -31,7 +34,7 @@ public class BlockManager
         portal = new ArrayList<ChunkCoordinates>();
         portalFrame = new ArrayList<ChunkCoordinates>();
         redstone = new ArrayList<ChunkCoordinates>();
-        biometric = dialDevice = networkInterface = null;
+        biometric = dialDevice = networkInterface = moduleManipulator = null;
         isProcessing = false;
     }
 
@@ -67,6 +70,7 @@ public class BlockManager
         clearBiometric();
         clearDialDevice();
         clearNetworkInterface();
+        clearModuleManipulator();
         isProcessing = false;
     }
 
@@ -85,6 +89,11 @@ public class BlockManager
         networkInterface = null;
     }
 
+    public void clearModuleManipulator()
+    {
+        moduleManipulator = null;
+    }
+    
     public void clearPortalFrames()
     {
         portalFrame.clear();
@@ -117,6 +126,7 @@ public class BlockManager
         destroyBiometric(world);
         destroyDiallingDevice(world);
         destroyNetworkInterface(world);
+        destroyModuleManipulator(world);
         isProcessing = false;
     }
 
@@ -163,6 +173,20 @@ public class BlockManager
             if (tile != null)
             {
                 ((TileNetworkInterface) tile).controller = null;
+                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
+            }
+        }
+    }
+    
+    public void destroyModuleManipulator(World world)
+    {
+        if (moduleManipulator != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
+
+            if (tile != null)
+            {
+                ((TileModuleManipulator) tile).controller = null;
                 CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
             }
         }
@@ -266,6 +290,26 @@ public class BlockManager
     {
         return networkInterface;
     }
+    
+    public ChunkCoordinates getModuleManipulatorCoord()
+    {
+        return moduleManipulator;
+    }
+    
+    public TileModuleManipulator getModuleManipulator(World world)
+    {
+        if (moduleManipulator != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
+
+            if (tile != null && tile instanceof TileModuleManipulator)
+            {
+                return (TileModuleManipulator) tile;
+            }
+        }
+        
+        return null;
+    }
 
     public ArrayList<ChunkCoordinates> getPortalFrameCoord()
     {
@@ -290,6 +334,7 @@ public class BlockManager
         biometric = ChunkCoordinateUtils.loadChunkCoord(tag, "biometric");
         dialDevice = ChunkCoordinateUtils.loadChunkCoord(tag, "dialDevice");
         networkInterface = ChunkCoordinateUtils.loadChunkCoord(tag, "networkInterface");
+        moduleManipulator = ChunkCoordinateUtils.loadChunkCoord(tag, "moduleManipulator");
     }
 
     public void saveData(NBTTagCompound tag)
@@ -300,6 +345,7 @@ public class BlockManager
         ChunkCoordinateUtils.saveChunkCoord(tag, biometric, "biometric");
         ChunkCoordinateUtils.saveChunkCoord(tag, dialDevice, "dialDevice");
         ChunkCoordinateUtils.saveChunkCoord(tag, networkInterface, "networkInterface");
+        ChunkCoordinateUtils.saveChunkCoord(tag, moduleManipulator, "moduleManipulator");
     }
 
     public void setBiometric(ChunkCoordinates c)
@@ -315,5 +361,10 @@ public class BlockManager
     public void setNetworkInterface(ChunkCoordinates c)
     {
         networkInterface = c;
+    }
+    
+    public void setModuleManipulator(ChunkCoordinates c)
+    {
+        moduleManipulator = c;
     }
 }

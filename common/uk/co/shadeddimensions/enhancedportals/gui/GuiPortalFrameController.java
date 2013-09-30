@@ -176,7 +176,7 @@ public class GuiPortalFrameController extends GuiResizable
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalComponents"), 8, 44, 0x404040);
         ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
 
-        String s1 = "" + blockManager.portalFrame, s2 = "" + blockManager.redstone, s3 = "" + blockManager.portal, s4 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.networkInterface ? "initialized" : "invalid")), s5 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.dialDevice ? "initialized" : "invalid")), s6 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.biometric ? "initialized" : "invalid"));
+        String s1 = "" + blockManager.portalFrame, s2 = "" + blockManager.redstone, s3 = "" + blockManager.portal, s4 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.networkInterface ? "initialized" : "invalid")), s5 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.dialDevice ? "initialized" : "invalid")), s6 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.biometric ? "initialized" : "invalid")), s7 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.getModuleManipulatorCoord() != null ? "initialized" : "invalid"));
 
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.frameBlocks"), 12, 57, 0x777777);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.redstoneControllers"), 12, 67, 0x777777);
@@ -184,6 +184,7 @@ public class GuiPortalFrameController extends GuiResizable
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.networkInterface"), 12, 87, 0x777777);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.dialDevice"), 12, 97, 0x777777);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.biometric"), 12, 107, 0x777777);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.upgrade"), 12, 117, 0x777777);
 
         fontRenderer.drawString(s1, xSize - 12 - fontRenderer.getStringWidth(s1), 57, 0x404040);
         fontRenderer.drawString(s2, xSize - 12 - fontRenderer.getStringWidth(s2), 67, 0x404040);
@@ -191,6 +192,7 @@ public class GuiPortalFrameController extends GuiResizable
         fontRenderer.drawString(s4, xSize - 12 - fontRenderer.getStringWidth(s4), 87, 0x404040);
         fontRenderer.drawString(s5, xSize - 12 - fontRenderer.getStringWidth(s5), 97, 0x404040);
         fontRenderer.drawString(s6, xSize - 12 - fontRenderer.getStringWidth(s6), 107, 0x404040);
+        fontRenderer.drawString(s7, xSize - 12 - fontRenderer.getStringWidth(s6), 117, 0x404040);
 
         if (par1 >= guiLeft + 7 && par1 <= guiLeft + xSize - 8)
         {

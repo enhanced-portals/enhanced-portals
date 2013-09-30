@@ -18,7 +18,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
-import uk.co.shadeddimensions.enhancedportals.tileentity.TileEP;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
@@ -31,6 +30,47 @@ import uk.co.shadeddimensions.enhancedportals.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEP
 {
+    enum FrameTypes
+    {
+        PORTAL_CONTROLLER(TilePortalController.class),
+        REDSTONE_INTERFACE(TileRedstoneInterface.class),
+        NETWORK_INTERFACE(TileNetworkInterface.class),
+        DIALLING_DEVICE(TileDiallingDevice.class),
+        BIOMETRIC_IDENTIFIER(TileBiometricIdentifier.class),
+        MODULE_MANIPULATOR(TileModuleManipulator.class);
+        
+        private Class<?extends TilePortalFrame> c;
+        
+        private FrameTypes(Class<?extends TilePortalFrame> clas)
+        {
+            c = clas;
+        }
+        
+        public int getID()
+        {
+            return ordinal() + 1;
+        }
+        
+        public TilePortalFrame getTileEntity()
+        {
+            try
+            {
+                return c.newInstance();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            
+            return null;
+        }
+        
+        public static FrameTypes getFrameType(int meta)
+        {
+            return values()[meta - 1];
+        }
+    }
+    
     static final int FRAME_TYPES = 7;
     public static Icon[] typeOverlayIcons = new Icon[FRAME_TYPES];
 
@@ -88,29 +128,9 @@ public class BlockFrame extends BlockEP
         {
             return new TilePortalFrame();
         }
-        else if (metadata == 1)
+        else if (metadata <= FrameTypes.values().length)
         {
-            return new TilePortalController();
-        }
-        else if (metadata == 2)
-        {
-            return new TileRedstoneInterface();
-        }
-        else if (metadata == 3)
-        {
-            return new TileNetworkInterface();
-        }
-        else if (metadata == 4)
-        {
-            return new TileDiallingDevice();
-        }
-        else if (metadata == 5)
-        {
-            return new TileBiometricIdentifier();
-        }
-        else if (metadata == 6)
-        {
-            return new TileModuleManipulator();
+            return FrameTypes.getFrameType(metadata).getTileEntity();
         }
 
         return null;
@@ -125,10 +145,7 @@ public class BlockFrame extends BlockEP
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        TileEP frame = (TileEP) blockAccess.getBlockTileEntity(x, y, z);
-        Icon frameIcon = frame != null ? null /* TODO */: null;
-
-        return frameIcon == null ? connectedTextures.getIconForFace(blockAccess, x, y, z, side) : frameIcon;
+        return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
     }
 
     @Override

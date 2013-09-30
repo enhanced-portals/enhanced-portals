@@ -27,6 +27,7 @@ public abstract class MainPacket
         PORTAL_CONTROLLER_DATA(PacketPortalControllerData.class), //
         PORTAL_REDSTONE_DATA(PacketRedstoneInterfaceData.class), //
         PORTAL_NETWORK_INTERFACE_DATA(PacketNetworkInterfaceData.class), //
+        MODULE_MANIPULATOR(PacketModuleManipulator.class), //
         GUI_BUTTON_PRESSED(PacketGuiButtonPressed.class), //
         GUI_REQUEST(PacketGuiRequest.class), //
         GUI_STRING(PacketGuiString.class), //

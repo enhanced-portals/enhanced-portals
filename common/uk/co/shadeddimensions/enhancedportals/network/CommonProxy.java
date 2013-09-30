@@ -10,7 +10,7 @@ import uk.co.shadeddimensions.enhancedportals.block.BlockFrame;
 import uk.co.shadeddimensions.enhancedportals.block.BlockPortal;
 import uk.co.shadeddimensions.enhancedportals.item.ItemGoggles;
 import uk.co.shadeddimensions.enhancedportals.item.ItemPortalFrame;
-import uk.co.shadeddimensions.enhancedportals.item.ItemUpgrade;
+import uk.co.shadeddimensions.enhancedportals.item.ItemPortalModule;
 import uk.co.shadeddimensions.enhancedportals.item.ItemWrench;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
 import uk.co.shadeddimensions.enhancedportals.network.packet.MainPacket;
@@ -40,7 +40,7 @@ public class CommonProxy
 
     public static ItemWrench itemWrench;
     public static ItemGoggles itemGoggles;
-    public static ItemUpgrade itemUpgrade;
+    public static ItemPortalModule itemUpgrade;
 
     public static NetworkManager networkManager;
     
@@ -97,7 +97,7 @@ public class CommonProxy
     {
         itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, Reference.SHORT_ID + ".wrench");
         itemGoggles = (ItemGoggles) EnhancedPortals.config.registerItem(ItemGoggles.class, Reference.SHORT_ID + ".goggles");
-        itemUpgrade = (ItemUpgrade) EnhancedPortals.config.registerItem(ItemUpgrade.class, Reference.SHORT_ID + ".upgrade");
+        itemUpgrade = (ItemPortalModule) EnhancedPortals.config.registerItem(ItemPortalModule.class, Reference.SHORT_ID + ".portalModule");
     }
 
     public void registerRenderers()
@@ -124,7 +124,7 @@ public class CommonProxy
 
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".goggles");
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".upgrade");
+        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".portalModule");
 
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");

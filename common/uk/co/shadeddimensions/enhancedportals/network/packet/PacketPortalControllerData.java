@@ -18,6 +18,7 @@ public class PacketPortalControllerData extends MainPacket
     ChunkCoordinates coord;
     int attachedFrames, attachedFrameRedstone, attachedPortals;
     int FrameColour, PortalColour, ParticleColour, ParticleType;
+    ChunkCoordinates upgradeLocation;
     boolean biometric, dialDevice, networkInterface;
     String uID;
     
@@ -42,6 +43,7 @@ public class PacketPortalControllerData extends MainPacket
         biometric = tile.blockManager.getBiometricCoord() != null;
         dialDevice = tile.blockManager.getDialDeviceCoord() != null;
         networkInterface = tile.blockManager.getNetworkInterfaceCoord() != null;
+        upgradeLocation = tile.blockManager.getModuleManipulatorCoord();
         
         if (tile.getStackInSlot(0) != null)
         {
@@ -83,6 +85,7 @@ public class PacketPortalControllerData extends MainPacket
         item1Meta = stream.readInt();
         item2ID = stream.readInt();
         item2Meta = stream.readInt();
+        upgradeLocation = readChunkCoordinates(stream);
 
         return this;
     }
@@ -111,6 +114,7 @@ public class PacketPortalControllerData extends MainPacket
             blockManager.biometric = biometric;
             blockManager.dialDevice = dialDevice;
             blockManager.networkInterface = networkInterface;
+            blockManager.setModuleManipulator(upgradeLocation);
             
             if (item1ID != 0)
             {
@@ -143,5 +147,6 @@ public class PacketPortalControllerData extends MainPacket
         stream.writeInt(item1Meta);
         stream.writeInt(item2ID);
         stream.writeInt(item2Meta);
+        writeChunkCoordinates(upgradeLocation, stream);
     }
 }

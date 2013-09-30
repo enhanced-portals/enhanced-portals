@@ -1,9 +1,12 @@
 package uk.co.shadeddimensions.enhancedportals.portal;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileNetworkInterface;
 
 public class ClientBlockManager extends BlockManager
@@ -32,7 +35,7 @@ public class ClientBlockManager extends BlockManager
     {
         return null;
     }
-
+    
     @Override
     public void loadData(NBTTagCompound tag)
     {
@@ -43,5 +46,20 @@ public class ClientBlockManager extends BlockManager
     public void saveData(NBTTagCompound tag)
     {
 
+    }
+
+    public TileModuleManipulator getModuleManipulatorBa(IBlockAccess blockAccess)
+    {
+        if (moduleManipulator != null)
+        {
+            TileEntity tile = blockAccess.getBlockTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
+
+            if (tile != null && tile instanceof TileModuleManipulator)
+            {
+                return (TileModuleManipulator) tile;
+            }
+        }
+        
+        return null;
     }
 }

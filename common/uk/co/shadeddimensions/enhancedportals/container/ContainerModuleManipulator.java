@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.enhancedportals.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import uk.co.shadeddimensions.enhancedportals.gui.slots.SlotPortalModule;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 
 public class ContainerModuleManipulator extends ContainerEnhancedPortals
@@ -12,7 +13,7 @@ public class ContainerModuleManipulator extends ContainerEnhancedPortals
         
         for (int i = 0; i < 9; i++)
         {
-            addSlotToContainer(new Slot(t, i, 8 + i * 18, 22));
+            addSlotToContainer(new SlotPortalModule(t, i, 8 + i * 18, 22));
         }
         
         for (int i = 0; i < 3; i++)
