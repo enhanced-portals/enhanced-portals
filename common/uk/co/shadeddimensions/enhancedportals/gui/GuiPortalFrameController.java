@@ -101,7 +101,7 @@ public class GuiPortalFrameController extends GuiResizable
 
     public GuiPortalFrameController(EntityPlayer play, TilePortalController tile)
     {
-        super(new ContainerPortalFrameController(tile), tile, 176, 126, 176, 146);
+        super(new ContainerPortalFrameController(tile), tile, 176, 133, 176, 146);
 
         controller = tile;
         player = play;
@@ -192,7 +192,7 @@ public class GuiPortalFrameController extends GuiResizable
         fontRenderer.drawString(s4, xSize - 12 - fontRenderer.getStringWidth(s4), 87, 0x404040);
         fontRenderer.drawString(s5, xSize - 12 - fontRenderer.getStringWidth(s5), 97, 0x404040);
         fontRenderer.drawString(s6, xSize - 12 - fontRenderer.getStringWidth(s6), 107, 0x404040);
-        fontRenderer.drawString(s7, xSize - 12 - fontRenderer.getStringWidth(s6), 117, 0x404040);
+        fontRenderer.drawString(s7, xSize - 12 - fontRenderer.getStringWidth(s7), 117, 0x404040);
 
         if (par1 >= guiLeft + 7 && par1 <= guiLeft + xSize - 8)
         {

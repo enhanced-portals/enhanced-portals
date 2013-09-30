@@ -7,11 +7,11 @@ import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipul
 public interface IPortalModule
 {
     /***
-     * Gets the unique ID for this upgrade.
+     * Gets the ID for this upgrade. There is no validation for this -- Multiple upgrades can have the same ID, but may cause issues.
      * @param upgrade The upgrade itself.
-     * @return Unique ID.
+     * @return Identifier
      */
-    public String getUniqueID(ItemStack upgrade);
+    public String getID(ItemStack upgrade);
     
     /***
      * Gets whether or not the upgrade can be installed into this module manipulator.

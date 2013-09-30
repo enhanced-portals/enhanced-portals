@@ -147,12 +147,12 @@ public class BlockPortal extends BlockEP
         TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
         TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
 
-        if (random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS)))
+        if (random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID())))
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
         
-        if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES))
+        if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID()))
         {
             return;
         }

@@ -34,7 +34,7 @@ public class GuiModuleManipulator extends GuiEnhancedPortals
         
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.upgrade.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.upgrade.name")) / 2, -13, 0xFFFFFF);
         
-        fontRenderer.drawString(StatCollector.translateToLocal("Upgrades"), 7, 8, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".modules"), 7, 8, 0x404040);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 7, 70, 0x404040);
     }
 }

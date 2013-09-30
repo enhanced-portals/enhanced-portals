@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import uk.co.shadeddimensions.enhancedportals.api.IPortalModule;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
-import uk.co.shadeddimensions.enhancedportals.item.ItemPortalModule;
 import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.TilePortalFrame;
 
@@ -66,19 +65,14 @@ public class TileModuleManipulator extends TilePortalFrame
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return StackHelper.isUpgrade(stack);
+        return StackHelper.isUpgrade(stack) && !hasModule(((IPortalModule)stack.getItem()).getID(stack));
     }
-    
-    public boolean hasModule(ItemPortalModule.PortalModules type)
-    {
-        return hasModule(type.ordinal());
-    }
-    
-    public boolean hasModule(int ID)
+        
+    public boolean hasModule(String ID)
     {
         for (ItemStack i : inventory)
         {
-            if (i != null && i.getItemDamage() == ID)
+            if (i != null && ((IPortalModule) i.getItem()).getID(i).equals(ID))
             {
                 return true;
             }

@@ -2,13 +2,16 @@ package uk.co.shadeddimensions.enhancedportals.item;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.enhancedportals.api.IPortalModule;
 import uk.co.shadeddimensions.enhancedportals.client.particle.PortalFX;
 import uk.co.shadeddimensions.enhancedportals.lib.Reference;
+import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 
 public class ItemPortalModule extends ItemEP implements IPortalModule
@@ -20,7 +23,16 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
         REMOVE_SOUNDS,
         KEEP_MOMENTUM,
         INVISIBLE_PORTAL;
+
+        public String getUniqueID()
+        {
+            ItemStack s = new ItemStack(CommonProxy.itemUpgrade, 1, ordinal());            
+            return ((IPortalModule) s.getItem()).getID(s);
+        }
     }
+    
+    static Icon baseIcon;
+    static Icon[] overlayIcons = new Icon[PortalModules.values().length];
     
     public ItemPortalModule(int par1, String name)
     {
@@ -29,6 +41,34 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
         setMaxDamage(0);
         setMaxStackSize(32);
         setHasSubtypes(true);
+    }
+    
+    @Override
+    public Icon getIconFromDamageForRenderPass(int damage, int pass)
+    {
+        if (pass == 1)
+        {
+            return overlayIcons[damage];
+        }
+        
+        return baseIcon;
+    }
+    
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        baseIcon = register.registerIcon("enhancedportals:portalModule_base");
+        
+        for (int i = 0; i < overlayIcons.length; i++)
+        {
+            overlayIcons[i] = register.registerIcon("enhancedportals:portalModule_" + i);
+        }
+    }
+    
+    @Override
+    public boolean requiresMultipleRenderPasses()
+    {
+        return true;
     }
     
     @Override
@@ -55,7 +95,7 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
     }
 
     @Override
-    public String getUniqueID(ItemStack upgrade)
+    public String getID(ItemStack upgrade)
     {
         return Reference.SHORT_ID + "." + upgrade.getItemDamage();
     }

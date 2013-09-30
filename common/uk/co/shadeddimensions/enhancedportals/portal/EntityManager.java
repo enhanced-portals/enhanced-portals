@@ -6,7 +6,6 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.enhancedportals.network.CommonProxy;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TilePortalController;
 

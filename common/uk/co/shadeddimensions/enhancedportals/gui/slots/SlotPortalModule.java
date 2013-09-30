@@ -1,12 +1,13 @@
 package uk.co.shadeddimensions.enhancedportals.gui.slots;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.enhancedportals.api.IPortalModule;
 import uk.co.shadeddimensions.enhancedportals.portal.StackHelper;
 import uk.co.shadeddimensions.enhancedportals.tileentity.frame.TileModuleManipulator;
 
-public class SlotPortalModule extends SlotBase
+public class SlotPortalModule extends Slot
 {
     public SlotPortalModule(TileModuleManipulator tile, int slotIndex, int posX, int posY)
     {
@@ -33,6 +34,6 @@ public class SlotPortalModule extends SlotBase
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        return itemStack == null || StackHelper.isUpgrade(itemStack);
+        return itemStack == null || (StackHelper.isUpgrade(itemStack) && !((TileModuleManipulator) inventory).hasModule(((IPortalModule) itemStack.getItem()).getID(itemStack)));
     }
 }

@@ -55,6 +55,7 @@ gui.ep3.controller.networkInterface=Network Interface
 gui.ep3.controller.dialDevice=Dialling Device
 gui.ep3.controller.biometric=Biometric Identifier
 gui.ep3.controller.initialized=Initialized
+gui.ep3.controller.upgrade=Module Manipulator
 gui.ep3.controller.invalid=
 gui.ep3.clickToModify=Click to modify
 gui.ep3.networkIdentifier=Network Identifier
@@ -64,6 +65,7 @@ gui.ep3.networkIdentifier.teleportMode=Teleport Mode
 gui.ep3.networkIdentifier.sequential=Sequential
 gui.ep3.networkIdentifier.random=Random
 gui.ep3.networkIdentifier.notSet=Not Set
+gui.ep3.modules=Modules
 
 # Controller Tips
 gui.ep3.controller.tip.0=You can right-click this tab to get more tips! This also works for other information tabs.
