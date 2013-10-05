@@ -101,7 +101,7 @@ public class PortalFX extends EntityFX
         portalPosZ = posZ = par6;
 
         int ParticleColour = controller != null ? controller.ParticleColour : 0xB336A1, ParticleType = controller != null ? controller.ParticleType : 0;
-        
+
         if (ParticleColour == 0xB336A1)
         {
             float f = rand.nextFloat() * 0.6F + 0.4F;
@@ -122,7 +122,7 @@ public class PortalFX extends EntityFX
         noClip = true;
 
         setParticleTextureIndex(getParticleIndex(ParticleType));
-        
+
         if (module != null)
         {
             module.particleCreated(this);
@@ -194,18 +194,18 @@ public class PortalFX extends EntityFX
         super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
-    public void setParticleRed(float f)
+    public void setParticleBlue(float f)
     {
-        particleRed = f;
+        particleBlue = f;
     }
-    
+
     public void setParticleGreen(float f)
     {
         particleGreen = f;
     }
-    
-    public void setParticleBlue(float f)
+
+    public void setParticleRed(float f)
     {
-        particleBlue = f;
+        particleRed = f;
     }
 }

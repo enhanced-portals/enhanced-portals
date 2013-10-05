@@ -8,7 +8,7 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 public class CreativeTabEP3 extends CreativeTabs
 {
     public static int portalColour = 5;
-    
+
     public CreativeTabEP3()
     {
         super(Reference.ID);

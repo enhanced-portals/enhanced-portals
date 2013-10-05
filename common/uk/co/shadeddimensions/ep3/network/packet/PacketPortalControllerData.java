@@ -21,7 +21,7 @@ public class PacketPortalControllerData extends MainPacket
     ChunkCoordinates upgradeLocation;
     boolean biometric, dialDevice, networkInterface;
     String uID;
-    
+
     int item1ID, item1Meta, item2ID, item2Meta;
 
     public PacketPortalControllerData()
@@ -44,7 +44,7 @@ public class PacketPortalControllerData extends MainPacket
         dialDevice = tile.blockManager.getDialDeviceCoord() != null;
         networkInterface = tile.blockManager.getNetworkInterfaceCoord() != null;
         upgradeLocation = tile.blockManager.getModuleManipulatorCoord();
-        
+
         if (tile.getStackInSlot(0) != null)
         {
             item1ID = tile.getStackInSlot(0).itemID;
@@ -54,7 +54,7 @@ public class PacketPortalControllerData extends MainPacket
         {
             item1ID = item1Meta = 0;
         }
-        
+
         if (tile.getStackInSlot(1) != null)
         {
             item2ID = tile.getStackInSlot(1).itemID;
@@ -115,12 +115,12 @@ public class PacketPortalControllerData extends MainPacket
             blockManager.dialDevice = dialDevice;
             blockManager.networkInterface = networkInterface;
             blockManager.setModuleManipulator(upgradeLocation);
-            
+
             if (item1ID != 0)
             {
                 controller.setInventorySlotContents(0, new ItemStack(item1ID, 1, item1Meta));
             }
-            
+
             if (item2ID != 0)
             {
                 controller.setInventorySlotContents(1, new ItemStack(item2ID, 1, item2Meta));

@@ -28,8 +28,7 @@ public class ControllerLink
         FAIL_MultipleNetworkIdentifiers, //
         FAIL_MultipleDialDevices, //
         FAIL_NetworkInterfaceAndDialDevice, //
-        FAIL_MultipleBiometric,
-        FAIL_MultipleUpgrade; //
+        FAIL_MultipleBiometric, FAIL_MultipleUpgrade; //
     }
 
     World world;
@@ -143,7 +142,7 @@ public class ControllerLink
         {
             return LinkStatus.FAIL_NetworkInterfaceAndDialDevice;
         }
-        
+
         // everything seems to be OK - lets continue
         controller.blockManager.clearAll();
 
@@ -223,7 +222,7 @@ public class ControllerLink
                 CommonProxy.sendUpdatePacketToAllAround(biometric);
             }
         }
-        
+
         if (!upgradeBlocks.isEmpty()) // there should only be one of these. (checked above)
         {
             ChunkCoordinates c = upgradeBlocks.remove();

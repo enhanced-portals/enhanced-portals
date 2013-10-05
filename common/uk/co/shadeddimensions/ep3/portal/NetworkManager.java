@@ -35,7 +35,7 @@ public class NetworkManager
     MinecraftServer server;
 
     public static final String BLANK_IDENTIFIER = "NOT_SET";
-    
+
     public NetworkManager(FMLServerStartingEvent event)
     {
         portalLocations = new HashMap<String, WorldCoordinates>();
@@ -67,33 +67,83 @@ public class NetworkManager
         }
     }
 
+    public ArrayList<String> getDestinationsExcluding(String network, String excludedUid)
+    {
+        ArrayList<String> strList = new ArrayList<String>();
+
+        for (String s : getNetworkedPortals(network))
+        {
+            if (!s.equals(excludedUid))
+            {
+                strList.add(s);
+            }
+        }
+
+        return strList;
+    }
+
     public ArrayList<String> getNetworkedPortals(String UID)
     {
         return networkExists(UID) ? basicNetwork.get(UID) : new ArrayList<String>();
+    }
+
+    public String getNextDestination(String network, String UID)
+    {
+        if (EnhancedPortals.config.getBoolean("randomTeleportMode"))
+        {
+            ArrayList<String> sList = getDestinationsExcluding(network, UID);
+
+            if (sList.size() <= 1)
+            {
+                return null;
+            }
+
+            return sList.get(new Random().nextInt(sList.size()));
+        }
+        else
+        {
+            ArrayList<String> sList = getNetworkedPortals(network);
+
+            if (!sList.contains(UID))
+            {
+                return null; // Should never happen, but let's make sure.
+            }
+
+            int index = sList.indexOf(UID);
+
+            if (index == sList.size() - 1)
+            {
+                return sList.get(0);
+            }
+            else
+            {
+                return sList.get(index + 1);
+            }
+        }
     }
 
     public WorldCoordinates getPortalLocation(String UID)
     {
         return UID.equals(BLANK_IDENTIFIER) ? null : portalLocations.get(UID);
     }
-    
+
     public TilePortalController getPortalLocationController(String UID)
     {
         WorldCoordinates c = getPortalLocation(UID);
-        
+
         if (c != null)
         {
-            WorldServer world = DimensionManager.getWorld(c.dimension);            
+            WorldServer world = DimensionManager.getWorld(c.dimension);
             world.theChunkProviderServer.loadChunk(c.posX >> 4, c.posZ >> 4);
-            
+
             TileEntity tile = world.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            
+
             if (tile != null && tile instanceof TilePortalController)
             {
                 return (TilePortalController) tile;
             }
         }
-        
+
         return null;
     }
 
@@ -215,7 +265,7 @@ public class NetworkManager
                     NBTTagCompound c = new NBTTagCompound();
                     t.setTag(s, c);
                 }
-                
+
                 networkTag.setTag(entry.getKey(), t);
             }
         }
@@ -257,56 +307,6 @@ public class NetworkManager
         {
             removePortal(UID);
             portalLocations.put(UID, newPos);
-        }
-    }
-    
-    public ArrayList<String> getDestinationsExcluding(String network, String excludedUid)
-    {
-        ArrayList<String> strList = new ArrayList<String>();
-        
-        for (String s : getNetworkedPortals(network))
-        {
-            if (!s.equals(excludedUid))
-            {
-                strList.add(s);
-            }
-        }
-        
-        return strList;
-    }
-    
-    public String getNextDestination(String network, String UID)
-    {
-        if (EnhancedPortals.config.getBoolean("randomTeleportMode"))
-        {       
-            ArrayList<String> sList = getDestinationsExcluding(network, UID);
-            
-            if (sList.size() <= 1)
-            {
-                return null;
-            }
-            
-            return sList.get(new Random().nextInt(sList.size()));
-        }
-        else
-        {
-            ArrayList<String> sList = getNetworkedPortals(network);
-            
-            if (!sList.contains(UID))
-            {
-                return null; // Should never happen, but let's make sure.
-            }
-            
-            int index = sList.indexOf(UID);
-            
-            if (index == sList.size() - 1)
-            {
-                return sList.get(0);
-            }
-            else
-            {
-                return sList.get(index + 1);
-            }
         }
     }
 }

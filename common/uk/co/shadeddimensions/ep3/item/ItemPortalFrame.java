@@ -17,6 +17,18 @@ public class ItemPortalFrame extends ItemBlock
         setHasSubtypes(true);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+    {
+        int damage = stack.getItemDamage();
+
+        if (damage > 0)
+        {
+            list.add("Portal Frame Part");
+        }
+    }
+
     @Override
     public Icon getIconFromDamage(int par1)
     {
@@ -68,17 +80,5 @@ public class ItemPortalFrame extends ItemBlock
         }
 
         return super.getUnlocalizedName() + "." + name;
-    }
-    
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
-    {
-        int damage = stack.getItemDamage();
-        
-        if (damage > 0)
-        {
-            list.add("Portal Frame Part");
-        }
     }
 }

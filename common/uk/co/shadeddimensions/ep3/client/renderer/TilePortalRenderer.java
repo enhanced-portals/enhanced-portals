@@ -39,13 +39,13 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         int x = portal.xCoord, y = portal.yCoord, z = portal.zCoord;
         World world = portal.worldObj;
         Color c = new Color(0xFFFFFF);
-        
+
         Icon overrideIcon = null;
         Block baseBlock = CommonProxy.blockPortal;
         int baseMeta = 5;
-        
+
         if (controller != null)
-        {      
+        {
             ItemStack stack = controller.getStackInSlot(1);
             c = new Color(controller.PortalColour);
 
@@ -142,7 +142,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     {
         TilePortal portal = (TilePortal) tile;
         TilePortalController controller = portal.getController();
-        
+
         if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
         {
             if (!controller.blockManager.getModuleManipulator(tile.worldObj).shouldRenderPortal())
@@ -150,7 +150,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
                 return;
             }
         }
-        
+
         Tessellator tessellator = Tessellator.instance;
         int meta = portal.getBlockMetadata();
 
@@ -162,7 +162,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         bindTexture(TextureMap.locationBlocksTexture);
-        
+
         GL11.glTranslatef((float) x, (float) y, (float) z);
         GL11.glScalef(1F, 1F, 1F);
         tessellator.startDrawingQuads();

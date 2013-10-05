@@ -11,12 +11,12 @@ import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 public class TileModuleManipulator extends TilePortalFrame
 {
     ItemStack[] inventory;
-    
+
     public TileModuleManipulator()
     {
         inventory = new ItemStack[9];
     }
-    
+
     @Override
     public ItemStack decrStackSize(int i, int j)
     {
@@ -56,18 +56,6 @@ public class TileModuleManipulator extends TilePortalFrame
         return inventory[i];
     }
 
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        inventory[i] = itemstack;
-    }
-    
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack stack)
-    {
-        return StackHelper.isUpgrade(stack) && !hasModule(((IPortalModule)stack.getItem()).getID(stack));
-    }
-        
     public boolean hasModule(String ID)
     {
         for (ItemStack i : inventory)
@@ -77,8 +65,14 @@ public class TileModuleManipulator extends TilePortalFrame
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack stack)
+    {
+        return StackHelper.isUpgrade(stack) && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
     }
 
     public void particleCreated(PortalFX portalFX)
@@ -91,38 +85,24 @@ public class TileModuleManipulator extends TilePortalFrame
             }
         }
     }
-    
-    @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-        
-        NBTTagList list = new NBTTagList();
-        
-        for (ItemStack s : inventory)
-        {
-            if (s != null)
-            {
-                NBTTagCompound compound = new NBTTagCompound();
-                s.writeToNBT(compound);
-                list.appendTag(compound);
-            }
-        }
 
-        tagCompound.setTag("Inventory", list);
-    }
-    
     @Override
     public void readFromNBT(NBTTagCompound tagCompound)
     {
         super.readFromNBT(tagCompound);
-        
+
         NBTTagList list = tagCompound.getTagList("Inventory");
-        
+
         for (int i = 0; i < list.tagList.size(); i++)
         {
             inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
         }
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        inventory[i] = itemstack;
     }
 
     public boolean shouldRenderPortal()
@@ -137,7 +117,27 @@ public class TileModuleManipulator extends TilePortalFrame
                 }
             }
         }
-        
+
         return true;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+
+        NBTTagList list = new NBTTagList();
+
+        for (ItemStack s : inventory)
+        {
+            if (s != null)
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                s.writeToNBT(compound);
+                list.appendTag(compound);
+            }
+        }
+
+        tagCompound.setTag("Inventory", list);
     }
 }

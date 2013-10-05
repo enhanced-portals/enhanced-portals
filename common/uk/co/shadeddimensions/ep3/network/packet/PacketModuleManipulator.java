@@ -27,10 +27,10 @@ public class PacketModuleManipulator extends MainPacket
     {
         coord = frame.getChunkCoordinates();
         controller = frame.controller;
-        
+
         installedUpgradeIDs = new int[9];
         installedUpgradeMetas = new int[9];
-        
+
         for (int i = 0; i < installedUpgradeIDs.length; i++)
         {
             if (frame.getStackInSlot(i) != null)
@@ -46,7 +46,7 @@ public class PacketModuleManipulator extends MainPacket
     {
         coord = readChunkCoordinates(stream);
         controller = readChunkCoordinates(stream);
-        
+
         for (int i = 0; i < 9; i++)
         {
             installedUpgradeIDs[i] = stream.readInt();
@@ -67,7 +67,7 @@ public class PacketModuleManipulator extends MainPacket
             TileModuleManipulator module = (TileModuleManipulator) tile;
 
             module.controller = controller;
-            
+
             for (int i = 0; i < 9; i++)
             {
                 if (installedUpgradeIDs[i] > 0)
@@ -83,7 +83,7 @@ public class PacketModuleManipulator extends MainPacket
     {
         writeChunkCoordinates(coord, stream);
         writeChunkCoordinates(controller, stream);
-        
+
         for (int i = 0; i < 9; i++)
         {
             stream.writeInt(installedUpgradeIDs[i]);

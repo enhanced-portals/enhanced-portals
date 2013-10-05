@@ -34,21 +34,21 @@ public class ContainerPortalFrameTexture extends ContainerEnhancedPortals
     {
         return ((TilePortalController) tile).isUseableByPlayer(entityplayer);
     }
-    
+
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
         ItemStack s = getSlot(slotIndex).getStack();
-        
+
         if (StackHelper.isItemStackValidForPortalFrameTexture(s))
         {
             ItemStack s2 = s.copy();
             s2.stackSize = 1;
-            
+
             ((TilePortalController) tile).setInventorySlotContents(0, s2);
             return null;
         }
-        
+
         return super.transferStackInSlot(player, slotIndex);
     }
 }

@@ -17,23 +17,23 @@ public class SlotPortalModule extends Slot
     @Override
     public boolean canTakeStack(EntityPlayer entityPlayer)
     {
-        return getStack() == null ? true : ((IPortalModule) getStack().getItem()).canRemoveUpgrade((TileModuleManipulator) inventory, new IPortalModule[] { }, getStack());
+        return getStack() == null ? true : ((IPortalModule) getStack().getItem()).canRemoveUpgrade((TileModuleManipulator) inventory, new IPortalModule[] {}, getStack());
     }
-    
+
+    @Override
+    public boolean isItemValid(ItemStack itemStack)
+    {
+        return itemStack == null || StackHelper.isUpgrade(itemStack) && !((TileModuleManipulator) inventory).hasModule(((IPortalModule) itemStack.getItem()).getID(itemStack));
+    }
+
     @Override
     public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack stack)
     {
         if (getStack() != null)
         {
-            ((IPortalModule) getStack().getItem()).onUpgradeRemoved((TileModuleManipulator) inventory, stack);        
+            ((IPortalModule) getStack().getItem()).onUpgradeRemoved((TileModuleManipulator) inventory, stack);
         }
-        
+
         super.onPickupFromSlot(entityPlayer, stack);
-    }
-    
-    @Override
-    public boolean isItemValid(ItemStack itemStack)
-    {
-        return itemStack == null || (StackHelper.isUpgrade(itemStack) && !((TileModuleManipulator) inventory).hasModule(((IPortalModule) itemStack.getItem()).getID(itemStack)));
     }
 }

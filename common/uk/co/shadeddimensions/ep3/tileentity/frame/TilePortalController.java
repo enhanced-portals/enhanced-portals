@@ -101,12 +101,12 @@ public class TilePortalController extends TilePortalFrame implements IInventory
             if (string.equals(NetworkManager.BLANK_IDENTIFIER) && !UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
                 TileNetworkInterface ni = blockManager.getNetworkInterface(worldObj);
-                
+
                 if (ni != null)
                 {
                     CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, ni.NetworkIdentifier);
                 }
-                
+
                 CommonProxy.networkManager.removePortal(UniqueIdentifier);
                 UniqueIdentifier = NetworkManager.BLANK_IDENTIFIER;
                 ni.NetworkIdentifier = NetworkManager.BLANK_IDENTIFIER;
@@ -179,7 +179,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 }
 
                 worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, PortalType, 2);
-                
+
                 TilePortal portal = (TilePortal) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
                 portal.controller = getChunkCoordinates();
                 CommonProxy.sendUpdatePacketToAllAround(portal);
@@ -207,6 +207,65 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         s.stackSize -= j;
 
         return s;
+    }
+
+    public void entityEnteredPortal(Entity entity)
+    {
+        if (blockManager.getNetworkInterfaceCoord() != null)
+        {
+            if (entity instanceof EntityItem)
+            {
+                EntityItem entityItem = (EntityItem) entity;
+                ItemStack stack = entityItem.getEntityItem();
+
+                if (stack.getItem() instanceof IPortalModule)
+                {
+                    TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
+
+                    if (module != null)
+                    {
+                        if (!module.hasModule(((IPortalModule) stack.getItem()).getID(entityItem.getEntityItem())))
+                        {
+                            ItemStack s = stack.copy();
+                            s.stackSize = 1;
+
+                            module.setInventorySlotContents(5, s);
+                            CommonProxy.sendUpdatePacketToAllAround(module);
+
+                            if (stack.stackSize > 1)
+                            {
+                                entityItem.getEntityItem().stackSize--;
+                            }
+                            else
+                            {
+                                entityItem.setDead();
+                            }
+
+                            return;
+                        }
+                    }
+                }
+            }
+
+            TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
+
+            if (network != null && !network.NetworkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER) && EntityManager.isEntityFitForTravel(entity))
+            {
+                String destination = CommonProxy.networkManager.getNextDestination(network.NetworkIdentifier, UniqueIdentifier);
+
+                if (destination == null || destination.equals(NetworkManager.BLANK_IDENTIFIER))
+                {
+                    CommonProxy.logger.fine("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
+                }
+                else
+                {
+                    CommonProxy.logger.fine("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination + "!");
+                    EntityManager.teleportEntity(entity, UniqueIdentifier, destination);
+                }
+            }
+
+            EntityManager.setEntityPortalCooldown(entity);
+        }
     }
 
     @Override
@@ -307,7 +366,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                     CommonProxy.networkManager.removePortalFromNetwork(UniqueIdentifier, network.NetworkIdentifier);
                     network.NetworkIdentifier = NetworkManager.BLANK_IDENTIFIER;
                 }
-                
+
                 CommonProxy.networkManager.removePortal(UniqueIdentifier);
                 UniqueIdentifier = NetworkManager.BLANK_IDENTIFIER;
             }
@@ -355,64 +414,5 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         }
 
         tagCompound.setTag("Inventory", list);
-    }
-
-    public void entityEnteredPortal(Entity entity)
-    {
-        if (blockManager.getNetworkInterfaceCoord() != null)
-        {
-        	if (entity instanceof EntityItem)
-        	{
-        		EntityItem entityItem = (EntityItem) entity;
-        		ItemStack stack = entityItem.getEntityItem();
-
-        		if (stack.getItem() instanceof IPortalModule)
-        		{
-        			TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
-        			
-        			if (module != null)
-        			{
-        				if (!module.hasModule(((IPortalModule) stack.getItem()).getID(entityItem.getEntityItem())))
-        				{
-        					ItemStack s = stack.copy();
-        					s.stackSize = 1;
-        					
-        					module.setInventorySlotContents(5, s);
-        					CommonProxy.sendUpdatePacketToAllAround(module);
-        					
-        					if (stack.stackSize > 1)
-        					{
-        						entityItem.getEntityItem().stackSize--;
-        					}
-        					else
-        					{
-        						entityItem.setDead();
-        					}
-        					
-        					return;
-        				}
-        			}
-        		}
-        	}
-        	
-            TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
-            
-            if (network != null && !network.NetworkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER) && EntityManager.isEntityFitForTravel(entity))
-            {
-                String destination = CommonProxy.networkManager.getNextDestination(network.NetworkIdentifier, UniqueIdentifier);
-                
-                if (destination == null || destination.equals(NetworkManager.BLANK_IDENTIFIER))
-                {
-                    CommonProxy.logger.fine("Error teleporting Entity (" + entity.getEntityName() + "). Invalid destination (" + destination + ")!");
-                }
-                else
-                {
-                    CommonProxy.logger.fine("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination + "!");
-                    EntityManager.teleportEntity(entity, UniqueIdentifier, destination);
-                }
-            }
-            
-            EntityManager.setEntityPortalCooldown(entity);
-        }
     }
 }

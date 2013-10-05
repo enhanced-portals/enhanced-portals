@@ -16,19 +16,19 @@ public class ItemGoggles extends ItemArmor
         setCreativeTab(Reference.creativeTab);
         setUnlocalizedName(name);
     }
-        
-    @Override
-    public boolean isBookEnchantable(ItemStack itemstack1, ItemStack itemstack2)
-    {
-        return false;
-    }
-    
+
     @Override
     public Icon getIcon(ItemStack stack, int pass)
     {
         return Item.appleGold.getIconFromDamage(0); // TODO
     }
-    
+
+    @Override
+    public boolean isBookEnchantable(ItemStack itemstack1, ItemStack itemstack2)
+    {
+        return false;
+    }
+
     @Override
     public void registerIcons(IconRegister iconRegister)
     {

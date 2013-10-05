@@ -44,7 +44,7 @@ public class CommonProxy
     public static ItemPortalModule itemUpgrade;
 
     public static NetworkManager networkManager;
-    
+
     public static final Logger logger = Logger.getLogger(Reference.NAME);
 
     public static void sendUpdatePacketToAllAround(TileEP tile)
@@ -65,7 +65,7 @@ public class CommonProxy
         }
         else if (tile instanceof TileDiallingDevice)
         {
-            
+
         }
         else if (tile instanceof TileModuleManipulator)
         {
@@ -139,7 +139,7 @@ public class CommonProxy
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");
         EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("[NI] If enabled, overwrites the Nether portals mechanics to allow any shape/size.");
         EnhancedPortals.config.addBoolean("portalsDestroyBlocks", true).addComment("[NI - Forced ON] Portals will destroy blocks that are in their way, if this is enabled. Only applies to blocks placed inside the frame AFTER the portal has been initialized.");
-        
+
         EnhancedPortals.config.fillConfigFile(); // Must be last.
     }
 }

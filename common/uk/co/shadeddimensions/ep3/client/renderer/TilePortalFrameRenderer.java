@@ -32,14 +32,26 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         renderBlocks.renderMaxX = renderBlocks.renderMaxY = renderBlocks.renderMaxZ = 1;
     }
 
+    private boolean isWearingGoggles()
+    {
+        EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
+
+        if (player != null && player.inventory.armorInventory[3] != null)
+        {
+            return player.inventory.armorInventory[3].itemID == CommonProxy.itemGoggles.itemID;
+        }
+
+        return false;
+    }
+
     private void renderFrame(TilePortalFrame frame, TilePortalController controller, Tessellator tessellator)
     {
         int x = frame.xCoord, y = frame.yCoord, z = frame.zCoord;
         World world = frame.worldObj;
-        
+
         Block baseBlock = CommonProxy.blockFrame;
         int baseMeta = -1;
-        
+
         Color c = new Color(controller == null ? 0xFFFFFF : controller.FrameColour);
         float red = c.getRed() / 255f, green = c.getGreen() / 255f, blue = c.getBlue() / 255f;
 
@@ -51,7 +63,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
                 baseMeta = controller.getStackInSlot(0).getItemDamage();
             }
         }
-        
+
         float f3 = 0.5F;
         float f4 = 1.0F;
         float f5 = 0.8F;
@@ -121,18 +133,6 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
             renderBlocks.renderFaceXPos(null, 0, 0, 0, baseMeta == -1 ? baseBlock.getBlockTexture(world, x, y, z, 5) : baseBlock.getIcon(5, baseMeta));
         }
     }
-    
-    private boolean isWearingGoggles()
-    {
-        EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
-        
-        if (player != null && player.inventory.armorInventory[3] != null)
-        {
-            return player.inventory.armorInventory[3].itemID == CommonProxy.itemGoggles.itemID;
-        }
-        
-        return false;
-    }
 
     private void renderFrameOverlay(TilePortalFrame frame, TilePortalController controller, Tessellator tessellator, int pass)
     {
@@ -145,7 +145,7 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
         World world = frame.worldObj;
         Icon overlayIcon = pass == 1 && isWearingGoggles() ? meta >= 1 ? BlockFrame.typeOverlayIcons[meta] : null : null;
         Block baseBlock = CommonProxy.blockFrame;
-        
+
         if (overlayIcon == null)
         {
             return;

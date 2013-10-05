@@ -10,12 +10,12 @@ public class ContainerModuleManipulator extends ContainerEnhancedPortals
     public ContainerModuleManipulator(EntityPlayer player, TileModuleManipulator t)
     {
         super(t.getSizeInventory(), t);
-        
+
         for (int i = 0; i < 9; i++)
         {
             addSlotToContainer(new SlotPortalModule(t, i, 8 + i * 18, 22));
         }
-        
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)

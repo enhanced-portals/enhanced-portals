@@ -32,25 +32,25 @@ public class BlockFrame extends BlockEP
 {
     enum FrameTypes
     {
-        PORTAL_CONTROLLER(TilePortalController.class),
-        REDSTONE_INTERFACE(TileRedstoneInterface.class),
-        NETWORK_INTERFACE(TileNetworkInterface.class),
-        DIALLING_DEVICE(TileDiallingDevice.class),
-        BIOMETRIC_IDENTIFIER(TileBiometricIdentifier.class),
-        MODULE_MANIPULATOR(TileModuleManipulator.class);
-        
-        private Class<?extends TilePortalFrame> c;
-        
-        private FrameTypes(Class<?extends TilePortalFrame> clas)
+        PORTAL_CONTROLLER(TilePortalController.class), REDSTONE_INTERFACE(TileRedstoneInterface.class), NETWORK_INTERFACE(TileNetworkInterface.class), DIALLING_DEVICE(TileDiallingDevice.class), BIOMETRIC_IDENTIFIER(TileBiometricIdentifier.class), MODULE_MANIPULATOR(TileModuleManipulator.class);
+
+        public static FrameTypes getFrameType(int meta)
+        {
+            return values()[meta - 1];
+        }
+
+        private Class<? extends TilePortalFrame> c;
+
+        private FrameTypes(Class<? extends TilePortalFrame> clas)
         {
             c = clas;
         }
-        
+
         public int getID()
         {
             return ordinal() + 1;
         }
-        
+
         public TilePortalFrame getTileEntity()
         {
             try
@@ -61,16 +61,11 @@ public class BlockFrame extends BlockEP
             {
                 e.printStackTrace();
             }
-            
+
             return null;
         }
-        
-        public static FrameTypes getFrameType(int meta)
-        {
-            return values()[meta - 1];
-        }
     }
-    
+
     static final int FRAME_TYPES = 7;
     public static Icon[] typeOverlayIcons = new Icon[FRAME_TYPES];
 

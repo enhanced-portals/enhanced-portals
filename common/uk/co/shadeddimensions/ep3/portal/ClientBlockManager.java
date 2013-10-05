@@ -30,24 +30,6 @@ public class ClientBlockManager extends BlockManager
         return null;
     }
 
-    @Override
-    public TileNetworkInterface getNetworkInterface(World world)
-    {
-        return null;
-    }
-    
-    @Override
-    public void loadData(NBTTagCompound tag)
-    {
-
-    }
-
-    @Override
-    public void saveData(NBTTagCompound tag)
-    {
-
-    }
-
     public TileModuleManipulator getModuleManipulatorBa(IBlockAccess blockAccess)
     {
         if (moduleManipulator != null)
@@ -59,7 +41,25 @@ public class ClientBlockManager extends BlockManager
                 return (TileModuleManipulator) tile;
             }
         }
-        
+
         return null;
+    }
+
+    @Override
+    public TileNetworkInterface getNetworkInterface(World world)
+    {
+        return null;
+    }
+
+    @Override
+    public void loadData(NBTTagCompound tag)
+    {
+
+    }
+
+    @Override
+    public void saveData(NBTTagCompound tag)
+    {
+
     }
 }

@@ -103,12 +103,12 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TileModuleManipulator)
             {
                 TileModuleManipulator module = (TileModuleManipulator) tile;
-                
+
                 if (module.getController() == null)
                 {
                     return false;
                 }
-                
+
                 player.openGui(EnhancedPortals.instance, GuiIds.MODULE_MANIPULATOR, world, x, y, z);
                 return true;
             }

@@ -112,13 +112,13 @@ public class GuiPortalTexture extends GuiResizable
         drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.ParticleType), true);
 
         ItemStack stack = controller.getStackInSlot(1) == null ? new ItemStack(Block.portal, 1) : controller.getStackInSlot(1);
-        
+
         if (StackHelper.isStackDye(stack))
         {
             ItemStack s = new ItemStack(CommonProxy.blockPortal.blockID, 1, StackHelper.getDyeColour(stack));
             stack = s;
         }
-        
+
         GL11.glColor3f(((GuiRGBSlider) buttonList.get(0)).sliderValue, ((GuiRGBSlider) buttonList.get(1)).sliderValue, ((GuiRGBSlider) buttonList.get(2)).sliderValue);
         itemRenderer.renderWithColor = false;
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, stack, guiLeft + xSize - 27, guiTop + 23);

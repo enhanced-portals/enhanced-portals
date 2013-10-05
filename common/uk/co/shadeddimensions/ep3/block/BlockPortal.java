@@ -99,7 +99,7 @@ public class BlockPortal extends BlockEP
     {
         return -1;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4)
@@ -151,7 +151,7 @@ public class BlockPortal extends BlockEP
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
-        
+
         if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID()))
         {
             return;
@@ -210,7 +210,7 @@ public class BlockPortal extends BlockEP
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalController controller = portal.getController();
-        
+
         if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
         {
             if (!((ClientBlockManager) controller.blockManager).getModuleManipulatorBa(blockAccess).shouldRenderPortal())
@@ -219,7 +219,7 @@ public class BlockPortal extends BlockEP
                 return;
             }
         }
-        
+
         int meta = blockAccess.getBlockMetadata(x, y, z);
 
         if (meta == 1) // X

@@ -19,22 +19,18 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES,
-        RAINBOW_PARTICLES,
-        REMOVE_SOUNDS,
-        KEEP_MOMENTUM,
-        INVISIBLE_PORTAL;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL;
 
         public String getUniqueID()
         {
-            ItemStack s = new ItemStack(CommonProxy.itemUpgrade, 1, ordinal());            
+            ItemStack s = new ItemStack(CommonProxy.itemUpgrade, 1, ordinal());
             return ((IPortalModule) s.getItem()).getID(s);
         }
     }
-    
+
     static Icon baseIcon;
     static Icon[] overlayIcons = new Icon[PortalModules.values().length];
-    
+
     public ItemPortalModule(int par1, String name)
     {
         super(par1, true);
@@ -43,73 +39,12 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
         setMaxStackSize(32);
         setHasSubtypes(true);
     }
-    
-    @Override
-    public EnumRarity getRarity(ItemStack itemStack)
-    {
-        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal())
-        {
-            return EnumRarity.epic;
-        }
-        
-        return EnumRarity.common;
-    }
-    
-    @Override
-    public Icon getIconFromDamageForRenderPass(int damage, int pass)
-    {
-        if (pass == 1)
-        {
-            return overlayIcons[damage];
-        }
-        
-        return baseIcon;
-    }
-    
-    @Override
-    public void registerIcons(IconRegister register)
-    {
-        baseIcon = register.registerIcon("enhancedportals:portalModule_base");
-        
-        for (int i = 0; i < overlayIcons.length; i++)
-        {
-            overlayIcons[i] = register.registerIcon("enhancedportals:portalModule_" + i);
-        }
-    }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses()
-    {
-        return true;
-    }
-    
-    @Override
-    public String getUnlocalizedName(ItemStack stack)
-    {
-        return super.getUnlocalizedName() + "." + stack.getItemDamage();
-    }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public void getSubItems(int itemID, CreativeTabs creativeTab, List list)
-    {
-        for (int i = 0; i < PortalModules.values().length; i++)
-        {
-            list.add(new ItemStack(itemID, 1, i));
-        }
-    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
         list.add(StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
-    }
-
-    @Override
-    public String getID(ItemStack upgrade)
-    {
-        return Reference.SHORT_ID + "." + upgrade.getItemDamage();
     }
 
     @Override
@@ -125,27 +60,59 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
     }
 
     @Override
-    public void onUpgradeInstalled(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public boolean disableParticles(TileModuleManipulator moduleManipulator, ItemStack upgrade)
     {
-        
+        return upgrade.getItemDamage() == PortalModules.REMOVE_PARTICLES.ordinal();
     }
 
     @Override
-    public void onUpgradeRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public boolean disablePortalRendering(TileModuleManipulator modulemanipulator, ItemStack upgrade)
     {
-        
+        return upgrade.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal();
     }
 
     @Override
-    public void onPortalCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public Icon getIconFromDamageForRenderPass(int damage, int pass)
     {
-        
+        if (pass == 1)
+        {
+            return overlayIcons[damage];
+        }
+
+        return baseIcon;
     }
 
     @Override
-    public void onPortalRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public String getID(ItemStack upgrade)
     {
-        
+        return Reference.SHORT_ID + "." + upgrade.getItemDamage();
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack)
+    {
+        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal())
+        {
+            return EnumRarity.epic;
+        }
+
+        return EnumRarity.common;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public void getSubItems(int itemID, CreativeTabs creativeTab, List list)
+    {
+        for (int i = 0; i < PortalModules.values().length; i++)
+        {
+            list.add(new ItemStack(itemID, 1, i));
+        }
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack)
+    {
+        return super.getUnlocalizedName() + "." + stack.getItemDamage();
     }
 
     @Override
@@ -160,14 +127,43 @@ public class ItemPortalModule extends ItemEP implements IPortalModule
     }
 
     @Override
-    public boolean disableParticles(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public void onPortalCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade)
     {
-        return upgrade.getItemDamage() == PortalModules.REMOVE_PARTICLES.ordinal();
+
     }
 
     @Override
-    public boolean disablePortalRendering(TileModuleManipulator modulemanipulator, ItemStack upgrade)
+    public void onPortalRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade)
     {
-        return upgrade.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal();
+
+    }
+
+    @Override
+    public void onUpgradeInstalled(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    {
+
+    }
+
+    @Override
+    public void onUpgradeRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    {
+
+    }
+
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        baseIcon = register.registerIcon("enhancedportals:portalModule_base");
+
+        for (int i = 0; i < overlayIcons.length; i++)
+        {
+            overlayIcons[i] = register.registerIcon("enhancedportals:portalModule_" + i);
+        }
+    }
+
+    @Override
+    public boolean requiresMultipleRenderPasses()
+    {
+        return true;
     }
 }

@@ -21,7 +21,7 @@ public class BlockManager
     ArrayList<ChunkCoordinates> portal;
     ArrayList<ChunkCoordinates> portalFrame;
     ArrayList<ChunkCoordinates> redstone;
-    
+
     ChunkCoordinates biometric;
     ChunkCoordinates dialDevice;
     ChunkCoordinates networkInterface;
@@ -84,16 +84,16 @@ public class BlockManager
         dialDevice = null;
     }
 
+    public void clearModuleManipulator()
+    {
+        moduleManipulator = null;
+    }
+
     public void clearNetworkInterface()
     {
         networkInterface = null;
     }
 
-    public void clearModuleManipulator()
-    {
-        moduleManipulator = null;
-    }
-    
     public void clearPortalFrames()
     {
         portalFrame.clear();
@@ -164,20 +164,6 @@ public class BlockManager
         }
     }
 
-    public void destroyNetworkInterface(World world)
-    {
-        if (networkInterface != null)
-        {
-            TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
-
-            if (tile != null)
-            {
-                ((TileNetworkInterface) tile).controller = null;
-                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
-            }
-        }
-    }
-    
     public void destroyModuleManipulator(World world)
     {
         if (moduleManipulator != null)
@@ -187,6 +173,20 @@ public class BlockManager
             if (tile != null)
             {
                 ((TileModuleManipulator) tile).controller = null;
+                CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
+            }
+        }
+    }
+
+    public void destroyNetworkInterface(World world)
+    {
+        if (networkInterface != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
+
+            if (tile != null)
+            {
+                ((TileNetworkInterface) tile).controller = null;
                 CommonProxy.sendUpdatePacketToAllAround((TileEP) tile);
             }
         }
@@ -271,31 +271,6 @@ public class BlockManager
         return dialDevice;
     }
 
-    public TileNetworkInterface getNetworkInterface(World world)
-    {
-        if (networkInterface != null)
-        {
-            TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
-
-            if (tile != null && tile instanceof TileNetworkInterface)
-            {
-                return (TileNetworkInterface) tile;
-            }
-        }
-        
-        return null;
-    }
-
-    public ChunkCoordinates getNetworkInterfaceCoord()
-    {
-        return networkInterface;
-    }
-    
-    public ChunkCoordinates getModuleManipulatorCoord()
-    {
-        return moduleManipulator;
-    }
-    
     public TileModuleManipulator getModuleManipulator(World world)
     {
         if (moduleManipulator != null)
@@ -307,8 +282,33 @@ public class BlockManager
                 return (TileModuleManipulator) tile;
             }
         }
-        
+
         return null;
+    }
+
+    public ChunkCoordinates getModuleManipulatorCoord()
+    {
+        return moduleManipulator;
+    }
+
+    public TileNetworkInterface getNetworkInterface(World world)
+    {
+        if (networkInterface != null)
+        {
+            TileEntity tile = world.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
+
+            if (tile != null && tile instanceof TileNetworkInterface)
+            {
+                return (TileNetworkInterface) tile;
+            }
+        }
+
+        return null;
+    }
+
+    public ChunkCoordinates getNetworkInterfaceCoord()
+    {
+        return networkInterface;
     }
 
     public ArrayList<ChunkCoordinates> getPortalFrameCoord()
@@ -358,13 +358,13 @@ public class BlockManager
         dialDevice = c;
     }
 
-    public void setNetworkInterface(ChunkCoordinates c)
-    {
-        networkInterface = c;
-    }
-    
     public void setModuleManipulator(ChunkCoordinates c)
     {
         moduleManipulator = c;
+    }
+
+    public void setNetworkInterface(ChunkCoordinates c)
+    {
+        networkInterface = c;
     }
 }

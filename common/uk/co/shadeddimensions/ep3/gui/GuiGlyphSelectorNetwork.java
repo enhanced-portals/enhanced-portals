@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
 {
     static ArrayList<ItemStack> networkGlyphs = new ArrayList<ItemStack>();
-    
+
     static
     {
         networkGlyphs.add(new ItemStack(Block.jukebox, 0));
@@ -47,7 +47,7 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         networkGlyphs.add(new ItemStack(Block.dragonEgg, 0, 0));
         networkGlyphs.add(new ItemStack(Block.hardenedClay, 0));
     }
-    
+
     public static ItemStack getGlyph(int id)
     {
         return id >= 0 && id < networkGlyphs.size() ? networkGlyphs.get(id) : null;
@@ -66,16 +66,6 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         return -1;
     }
 
-    public GuiGlyphSelectorNetwork(int x, int y, GuiEnhancedPortals parent)
-    {
-        super(x, y, parent);
-    }
-    
-    public GuiGlyphSelectorNetwork(int x, int y, int color, GuiEnhancedPortals parent)
-    {
-        super(x, y, color, parent);
-    }
-    
     public static ArrayList<ItemStack> getGlyphsFromIdentifier(String identifier)
     {
         ArrayList<ItemStack> list = new ArrayList<ItemStack>();
@@ -104,7 +94,18 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
 
         return list;
     }
-    
+
+    public GuiGlyphSelectorNetwork(int x, int y, GuiEnhancedPortals parent)
+    {
+        super(x, y, parent);
+    }
+
+    public GuiGlyphSelectorNetwork(int x, int y, int color, GuiEnhancedPortals parent)
+    {
+        super(x, y, color, parent);
+    }
+
+    @Override
     public void drawBackground(int mouseX, int mouseY)
     {
         int X = x + gui.getGuiLeft(), Y = y + gui.getGuiTop();
@@ -127,6 +128,7 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         GL11.glColor4f(1f, 1f, 1f, 1f);
     }
 
+    @Override
     public void drawForeground(int mouseX, int mouseY)
     {
         if (isOnSelf(mouseX, mouseY))
@@ -144,6 +146,7 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         }
     }
 
+    @Override
     public void mouseClicked(int mouseX, int mouseY, int button)
     {
         if (canEdit && isOnSelf(mouseX, mouseY))
@@ -175,6 +178,7 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         }
     }
 
+    @Override
     public void randomize(boolean forceMaximum)
     {
         clearSelection();
@@ -189,6 +193,7 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         }
     }
 
+    @Override
     protected void removeAtIndex(int i)
     {
         if (i >= 0 && selectedGlyphs.size() > i && selectedGlyphs.get(i) != null)
@@ -199,6 +204,7 @@ public class GuiGlyphSelectorNetwork extends GuiGlyphSelector
         }
     }
 
+    @Override
     public void setSelectedToIdentifier(String identifier)
     {
         clearSelection();

@@ -53,14 +53,14 @@ public class EnhancedPortals
         proxy.registerRenderers();
 
         MinecraftForge.EVENT_BUS.register(this);
-        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());        
+        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         CreativeTabEP3.portalColour = new Random().nextInt(15) + 1;
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        
+
     }
 
     @EventHandler
@@ -74,7 +74,7 @@ public class EnhancedPortals
     {
         CommonProxy.networkManager = new NetworkManager(event);
     }
-    
+
     @ForgeSubscribe
     public void worldSave(WorldEvent.Save event)
     {

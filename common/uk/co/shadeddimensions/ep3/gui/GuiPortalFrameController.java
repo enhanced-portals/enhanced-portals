@@ -3,8 +3,6 @@ package uk.co.shadeddimensions.ep3.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -12,6 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.lwjgl.opengl.GL11;
+
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
@@ -157,17 +158,17 @@ public class GuiPortalFrameController extends GuiResizable
     {
         glyphSelector.drawBackground(i, j);
     }
-    
+
     @Override
     protected void drawBackgroundShrunk(float f, int i, int j)
     {
-        int leftOffset = (xSize / 2) - ((6 * 18) / 2);
-        
+        int leftOffset = xSize / 2 - 6 * 18 / 2;
+
         getTextureManager().bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(guiLeft + leftOffset, guiTop + 55, 0, 0, 108, 18);
-        
+
         ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
-        
+
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, 1, 5), guiLeft + leftOffset + 1, 103);
         itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, blockManager.portal, 0), guiLeft + leftOffset + 1, 103);
 
@@ -180,14 +181,14 @@ public class GuiPortalFrameController extends GuiResizable
 
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 2), guiLeft + leftOffset + 37, 103);
         itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, blockManager.redstone, 2), guiLeft + leftOffset + 37, 103, blockManager.redstone + "");
-        
+
         GL11.glDisable(GL11.GL_LIGHTING);
 
         int counter = 0;
         for (int k = 0; k < 4; k++)
         {
             ItemStack s = null;
-            
+
             if (k == 0 && blockManager.networkInterface)
             {
                 s = new ItemStack(CommonProxy.blockFrame, 1, 3);
@@ -204,11 +205,11 @@ public class GuiPortalFrameController extends GuiResizable
             {
                 s = new ItemStack(CommonProxy.blockFrame, 1, 6);
             }
-            
+
             if (s != null)
             {
-                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), s, guiLeft + leftOffset + 55 + (18 * counter), 103);
-                
+                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), s, guiLeft + leftOffset + 55 + 18 * counter, 103);
+
                 GL11.glDisable(GL11.GL_LIGHTING);
                 counter++;
             }
@@ -236,8 +237,8 @@ public class GuiPortalFrameController extends GuiResizable
     protected void drawForegroundShrunk(int par1, int par2)
     {
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalComponents"), 8, 42, 0x404040);
-       // ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
-        
+        // ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
+
         /*String s1 = "" + blockManager.portalFrame, s2 = "" + blockManager.redstone, s3 = "" + blockManager.portal, s4 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.networkInterface ? "initialized" : "invalid")), s5 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.dialDevice ? "initialized" : "invalid")), s6 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.biometric ? "initialized" : "invalid")), s7 = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller." + (blockManager.getModuleManipulatorCoord() != null ? "initialized" : "invalid"));
 
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.frameBlocks"), 12, 57, 0x777777);
