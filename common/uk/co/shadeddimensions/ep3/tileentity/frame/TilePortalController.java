@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
-import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.BlockManager;
@@ -215,35 +214,27 @@ public class TilePortalController extends TilePortalFrame implements IInventory
         {
             if (entity instanceof EntityItem)
             {
-                EntityItem entityItem = (EntityItem) entity;
-                ItemStack stack = entityItem.getEntityItem();
+                TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
 
-                if (stack.getItem() instanceof IPortalModule)
+                if (module != null)
                 {
-                    TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
-
-                    if (module != null)
-                    {
-                        if (!module.hasModule(((IPortalModule) stack.getItem()).getID(entityItem.getEntityItem())))
+                    EntityItem entityItem = (EntityItem) entity;
+                    ItemStack stack = entityItem.getEntityItem();
+                    
+                    if (module.installUpgrade(stack))
+                    {                                
+                        if (stack.stackSize > 1)
                         {
-                            ItemStack s = stack.copy();
-                            s.stackSize = 1;
-
-                            module.setInventorySlotContents(5, s);
-                            CommonProxy.sendUpdatePacketToAllAround(module);
-
-                            if (stack.stackSize > 1)
-                            {
-                                entityItem.getEntityItem().stackSize--;
-                            }
-                            else
-                            {
-                                entityItem.setDead();
-                            }
-
-                            return;
+                            entityItem.getEntityItem().stackSize--;
+                            EntityManager.setEntityPortalCooldown(entity);
+                        }
+                        else
+                        {
+                            entityItem.setDead();
                         }
                     }
+
+                    return;
                 }
             }
 
@@ -259,7 +250,7 @@ public class TilePortalController extends TilePortalFrame implements IInventory
                 }
                 else
                 {
-                    CommonProxy.logger.fine("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination + "!");
+                    CommonProxy.logger.fine("Entity (" + entity.getEntityName() + ") is trying to teleport to " + destination);
                     EntityManager.teleportEntity(entity, UniqueIdentifier, destination);
                 }
             }

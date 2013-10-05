@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 
@@ -139,5 +140,33 @@ public class TileModuleManipulator extends TilePortalFrame
         }
 
         tagCompound.setTag("Inventory", list);
+    }
+    
+    public boolean installUpgrade(ItemStack stack)
+    {
+        if (stack == null || !(stack.getItem() instanceof IPortalModule))
+        {
+            return false;
+        }
+        
+        IPortalModule pModule = ((IPortalModule) stack.getItem());
+        
+        if (!hasModule(pModule.getID(stack)) && pModule.canInstallUpgrade(this, new IPortalModule[] { }, stack))
+        {
+            for (int i = 0; i < getSizeInventory(); i++)
+            {
+                if (getStackInSlot(i) == null)
+                {
+                    ItemStack s = stack.copy();
+                    s.stackSize = 1;
+                    
+                    setInventorySlotContents(i, s);
+                    CommonProxy.sendUpdatePacketToAllAround(this);
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 }
