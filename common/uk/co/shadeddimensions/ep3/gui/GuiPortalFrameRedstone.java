@@ -8,10 +8,9 @@ import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.network.packet.MainPacket;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiButtonPressed;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameRedstone extends GuiResizable
 {
@@ -33,7 +32,9 @@ public class GuiPortalFrameRedstone extends GuiResizable
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiButtonPressed(button.id)));
+        GuiPayload payload = new GuiPayload();
+        payload.data.setInteger("id", button.id);
+        ClientProxy.sendGuiPacket(payload);
     }
 
     @Override

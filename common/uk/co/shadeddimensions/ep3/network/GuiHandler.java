@@ -16,17 +16,11 @@ import uk.co.shadeddimensions.ep3.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.ep3.gui.GuiPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.gui.GuiPortalTexture;
 import uk.co.shadeddimensions.ep3.lib.GuiIds;
-import uk.co.shadeddimensions.ep3.network.packet.MainPacket;
-import uk.co.shadeddimensions.ep3.network.packet.PacketNetworkInterfaceData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketPortalControllerData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRedstoneInterfaceData;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -70,12 +64,12 @@ public class GuiHandler implements IGuiHandler
 
         if (ID == GuiIds.PORTAL_CONTROLLER && tile instanceof TilePortalController)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
+            CommonProxy.sendUpdatePacketToPlayer((TilePortalController) tile, player);
             return new ContainerPortalFrameController((TilePortalController) tile);
         }
         else if (ID == GuiIds.PORTAL_REDSTONE && tile instanceof TileRedstoneInterface)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData((TileRedstoneInterface) tile)), (Player) player);
+            CommonProxy.sendUpdatePacketToPlayer((TileRedstoneInterface) tile, player);
             return new ContainerPortalFrameRedstone((TileRedstoneInterface) tile);
         }
         else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
@@ -88,7 +82,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile)), (Player) player);
+            CommonProxy.sendUpdatePacketToPlayer((TileNetworkInterface) tile, player);
             return new ContainerNetworkInterface((TileNetworkInterface) tile);
         }
         else if (ID == GuiIds.MODULE_MANIPULATOR && tile instanceof TileModuleManipulator)

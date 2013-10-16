@@ -141,7 +141,7 @@ public class PortalUtils
                 {
                     if (createPortal(world, c.posX, c.posY, c.posZ, i))
                     {
-                        control.PortalType = i;
+                        control.portalType = i;
                         return true;
                     }
                 }

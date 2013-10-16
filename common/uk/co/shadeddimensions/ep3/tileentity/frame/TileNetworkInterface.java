@@ -1,58 +1,43 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileNetworkInterface extends TilePortalFrame
+public class TileNetworkInterface extends TilePortalPart
 {
-    public String NetworkIdentifier;
-
     @SideOnly(Side.CLIENT)
     public int connectedPortals = 0;
 
-    public TileNetworkInterface()
-    {
-        NetworkIdentifier = NetworkManager.BLANK_IDENTIFIER;
-    }
-
     @Override
-    public void actionPerformed(int id, String string, EntityPlayer player)
+    public int getPowerDrainPerTick()
     {
-        if (id == 0)
+         return 2;
+    }
+    
+    @Override
+    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
+    {
+        if (payload.data.hasKey("id"))
         {
-            if (!NetworkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            TilePortalController controller = getPortalController();
+            
+            if (!controller.networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
-                CommonProxy.networkManager.removePortalFromNetwork(getController().UniqueIdentifier, NetworkIdentifier);
+                CommonProxy.networkManager.removePortalFromNetwork(controller.uniqueIdentifier, controller.networkIdentifier);
             }
-            else if (!string.equals(NetworkManager.BLANK_IDENTIFIER))
+            
+            if (!payload.data.getString("identifier").equals(NetworkManager.BLANK_IDENTIFIER))
             {
-                CommonProxy.networkManager.addPortalToNetwork(getController().UniqueIdentifier, string);
+                CommonProxy.networkManager.addPortalToNetwork(controller.uniqueIdentifier, payload.data.getString("identifier"));
             }
-
-            NetworkIdentifier = string;
+            
+            controller.networkIdentifier = payload.data.getString("identifier");
+            CommonProxy.sendUpdatePacketToAllAround(this);
         }
-
-        CommonProxy.sendUpdatePacketToAllAround(this);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-
-        NetworkIdentifier = tagCompound.getString("NetworkIdentifier");
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-
-        tagCompound.setString("NetworkIdentifier", NetworkIdentifier);
     }
 }

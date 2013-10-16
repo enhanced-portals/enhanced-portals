@@ -1,5 +1,8 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -7,15 +10,21 @@ import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 
-public class TileModuleManipulator extends TilePortalFrame
+public class TileModuleManipulator extends TilePortalPart
 {
     ItemStack[] inventory;
 
     public TileModuleManipulator()
     {
         inventory = new ItemStack[9];
+    }
+    
+    @Override
+    public int getPowerDrainPerTick()
+    {
+        return 3;
     }
 
     @Override
@@ -93,7 +102,6 @@ public class TileModuleManipulator extends TilePortalFrame
         super.readFromNBT(tagCompound);
 
         NBTTagList list = tagCompound.getTagList("Inventory");
-
         for (int i = 0; i < list.tagList.size(); i++)
         {
             inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
@@ -128,7 +136,6 @@ public class TileModuleManipulator extends TilePortalFrame
         super.writeToNBT(tagCompound);
 
         NBTTagList list = new NBTTagList();
-
         for (ItemStack s : inventory)
         {
             if (s != null)
@@ -142,6 +149,23 @@ public class TileModuleManipulator extends TilePortalFrame
         tagCompound.setTag("Inventory", list);
     }
     
+    public IPortalModule[] getInstalledUpgrades()
+    {
+        IPortalModule[] modules = new IPortalModule[getSizeInventory()];
+        
+        for (int i = 0; i < getSizeInventory(); i++)
+        {
+            ItemStack s = getStackInSlot(i);
+            
+            if (s != null)
+            {
+                modules[i] = (IPortalModule) s.getItem();
+            }
+        }
+        
+        return modules;
+    }
+    
     public boolean installUpgrade(ItemStack stack)
     {
         if (stack == null || !(stack.getItem() instanceof IPortalModule))
@@ -151,7 +175,7 @@ public class TileModuleManipulator extends TilePortalFrame
         
         IPortalModule pModule = ((IPortalModule) stack.getItem());
         
-        if (!hasModule(pModule.getID(stack)) && pModule.canInstallUpgrade(this, new IPortalModule[] { }, stack))
+        if (!hasModule(pModule.getID(stack)) && pModule.canInstallUpgrade(this, getInstalledUpgrades(), stack))
         {
             for (int i = 0; i < getSizeInventory(); i++)
             {
@@ -168,5 +192,35 @@ public class TileModuleManipulator extends TilePortalFrame
         }
         
         return false;
+    }
+    
+    @Override
+    public void fillPacket(DataOutputStream stream) throws IOException
+    {
+        super.fillPacket(stream);
+        
+        for (int i = 0; i < getSizeInventory(); i++)
+        {
+            if (getStackInSlot(i) != null)
+            {
+                stream.writeInt(getStackInSlot(i).itemID);
+                stream.writeInt(getStackInSlot(i).getItemDamage());
+            }
+        }
+    }
+    
+    public void usePacket(java.io.DataInputStream stream) throws IOException
+    {
+        super.usePacket(stream);
+        
+        for (int i = 0; i < getSizeInventory(); i++)
+        {
+            int id = stream.readInt(), meta = stream.readInt();
+            
+            if (id != 0)
+            {
+                setInventorySlotContents(i, new ItemStack(id, 1, meta));
+            }
+        }
     }
 }

@@ -14,11 +14,10 @@ import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.ep3.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.network.packet.MainPacket;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiInteger;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameTexture extends GuiResizable
 {
@@ -35,16 +34,27 @@ public class GuiPortalFrameTexture extends GuiResizable
     {
         if (button.id == 10 || button.id == 11)
         {
+            boolean resetSlot = false;
+            
             if (button.id == 11)
             {
                 ((GuiRGBSlider) buttonList.get(0)).sliderValue = 1f;
                 ((GuiRGBSlider) buttonList.get(1)).sliderValue = 1f;
-                ((GuiRGBSlider) buttonList.get(2)).sliderValue = 1f;
-                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 0)));
+                ((GuiRGBSlider) buttonList.get(2)).sliderValue = 1f;                
+                resetSlot = true;
             }
 
             String hex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(0, Integer.parseInt(hex, 16))));
+            
+            GuiPayload payload = new GuiPayload();
+            payload.data.setInteger("frameColour", Integer.parseInt(hex, 16));
+            
+            if (resetSlot)
+            {
+                payload.data.setInteger("resetSlot", 0);
+            }
+            
+            ClientProxy.sendGuiPacket(payload);
         }
     }
 
@@ -88,7 +98,7 @@ public class GuiPortalFrameTexture extends GuiResizable
     {
         super.initGui();
 
-        Color c = new Color(controller.FrameColour);
+        Color c = new Color(controller.frameColour);
         buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
         buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
         buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));

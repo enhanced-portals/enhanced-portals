@@ -19,7 +19,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 
@@ -31,11 +31,69 @@ import uk.co.shadeddimensions.ep3.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.ep3.gui.slots.SlotBase;
 import uk.co.shadeddimensions.ep3.gui.tooltips.ToolTip;
 import uk.co.shadeddimensions.ep3.gui.tooltips.ToolTipLine;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.SessionVars;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public abstract class GuiEnhancedPortals extends GuiContainer
 {
+    protected class OwnerLedger extends Ledger
+    {
+        int headerColour = 0xe1c92f;
+        int subheaderColour = 0xaaafb8;
+        int textColour = 0x000000;
+        
+        public OwnerLedger()
+        {
+            overlayColor = 0x448552;
+            maxHeight += 24;
+        }
+        
+        @Override
+        public void draw(int x, int y)
+        {
+            drawBackground(x, y);
+            
+            if (isFullyOpened())
+            {
+                drawString(fontRenderer, "Permissions", x + 25, y + 8, headerColour);
+                
+                fontRenderer.drawString("Owner: " + EnumChatFormatting.DARK_AQUA + tile.owner, x + 5, y + 21, textColour);
+                fontRenderer.drawString((tile.isOwnerLocked ? "Locked" : "Unlocked"), x + 5, y + 32, textColour);
+            }
+        }
+
+        @Override
+        public ArrayList<String> getTooltip()
+        {
+            ArrayList<String> strList = new ArrayList<String>();
+            
+            if (!isOpen())
+            {
+                strList.add("Permissions");
+                strList.add(EnumChatFormatting.GRAY + "Owner: " + tile.owner);
+                strList.add(EnumChatFormatting.DARK_GRAY + (tile.isOwnerLocked ? "Locked" : "Unlocked"));
+            }
+            
+            return strList;
+        }
+        
+        @Override
+        public boolean handleMouseClicked(int x, int y, int mouseButton)
+        {
+            if (mouseButton == 1 && isFullyOpened() && FMLClientHandler.instance().getClient().thePlayer.getEntityName().equals(tile.owner))
+            {
+                GuiPayload payload = new GuiPayload();
+                payload.data.setBoolean("isOwnerLocked", !tile.isOwnerLocked);
+                ClientProxy.sendGuiPacket(payload);
+            }
+            
+            return super.handleMouseClicked(x, y, mouseButton);
+        }
+    }
+    
     protected abstract class Ledger
     {
         private boolean open;
@@ -351,15 +409,15 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
     protected LedgerManager ledgerManager = new LedgerManager(this);
 
-    protected TileEntity tile;
+    protected TileEnhancedPortals tile;
 
     public GuiEnhancedPortals(ContainerEnhancedPortals container, IInventory inventory)
     {
         super(container);
 
-        if (inventory instanceof TileEntity)
+        if (inventory instanceof TileEnhancedPortals)
         {
-            tile = (TileEntity) inventory;
+            tile = (TileEnhancedPortals) inventory;
         }
 
         initLedgers(inventory);
@@ -406,6 +464,16 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         ledgerManager.drawLedgers(par1, par2);
         GL11.glDisable(GL11.GL_LIGHTING);
+    }
+    
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    {
+        if (tile.isOwnerLocked && !tile.owner.equals(FMLClientHandler.instance().getClient().thePlayer.getEntityName()))
+        {
+            String s = "This device is locked its owner. You will be unable to modify any of its settings.";
+            fontRenderer.drawStringWithShadow(s, (FMLClientHandler.instance().getClient().currentScreen.width / 2) - (fontRenderer.getStringWidth(s) / 2), 5, 0xFF0000);
+        }
     }
 
     protected void drawItemSlotBackground(int x, int y, int w, int h)
@@ -678,6 +746,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
     protected void initLedgers(IInventory inventory)
     {
+        ledgerManager.add(new OwnerLedger());
     }
 
     /**
@@ -695,6 +764,11 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     @Override
     protected void mouseClicked(int par1, int par2, int mouseButton)
     {
+        if (tile.isOwnerLocked && !tile.owner.equals(FMLClientHandler.instance().getClient().thePlayer.getEntityName()))
+        {
+            return;
+        }
+        
         super.mouseClicked(par1, par2, mouseButton);
 
         ledgerManager.handleMouseClicked(par1, par2, mouseButton);

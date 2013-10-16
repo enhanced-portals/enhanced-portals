@@ -39,7 +39,7 @@ public class ItemWrench extends ItemEP
             {
                 TilePortalController controller = (TilePortalController) tile;
 
-                if (!controller.hasInitialized)
+                if (!controller.hasConfigured)
                 {
                     return false;
                 }
@@ -54,13 +54,13 @@ public class ItemWrench extends ItemEP
             }
             else if (tile instanceof TileDiallingDevice)
             {
-                TileDiallingDevice ni = (TileDiallingDevice) tile;
+                TileDiallingDevice dialDevice = (TileDiallingDevice) tile;
 
-                if (ni.getController() == null)
+                if (dialDevice.getPortalController() == null)
                 {
                     return false;
                 }
-                else if (ni.getController().UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+                else if (dialDevice.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!world.isRemote)
                     {
@@ -76,13 +76,13 @@ public class ItemWrench extends ItemEP
             }
             else if (tile instanceof TileNetworkInterface)
             {
-                TileNetworkInterface ni = (TileNetworkInterface) tile;
+                TileNetworkInterface networkInterface = (TileNetworkInterface) tile;
 
-                if (ni.getController() == null)
+                if (networkInterface.getPortalController() == null)
                 {
                     return false;
                 }
-                else if (ni.getController().UniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+                else if (networkInterface.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!world.isRemote)
                     {
@@ -104,7 +104,7 @@ public class ItemWrench extends ItemEP
             {
                 TileModuleManipulator module = (TileModuleManipulator) tile;
 
-                if (module.getController() == null)
+                if (module.getPortalController() == null)
                 {
                     return false;
                 }
@@ -115,7 +115,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TilePortalFrame)
             {
                 TilePortalFrame frame = (TilePortalFrame) tile;
-                TilePortalController control = frame.getController();
+                TilePortalController control = frame.getPortalController();
 
                 if (control != null)
                 {
@@ -126,7 +126,7 @@ public class ItemWrench extends ItemEP
             else if (tile instanceof TilePortal)
             {
                 TilePortal portal = (TilePortal) tile;
-                TilePortalController control = portal.getController();
+                TilePortalController control = portal.getPortalController();
 
                 if (control != null)
                 {

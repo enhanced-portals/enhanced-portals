@@ -15,6 +15,7 @@ import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameNetworkInterface extends GuiResizable
 {
@@ -32,7 +33,7 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
         glyphSelector = new GuiGlyphSelectorNetwork(7, 57, 0xffffff, this);
         glyphViewer = new GuiGlyphViewer(7, 20, 0xffffff, this, glyphSelector);
 
-        glyphSelector.setSelectedToIdentifier(networkInterface.NetworkIdentifier);
+        glyphSelector.setSelectedToIdentifier(networkInterface.getPortalController().networkIdentifier);
     }
 
     @Override
@@ -53,14 +54,16 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
         {
             if (button.id == 0) // Reset Changes
             {
-                glyphSelector.setSelectedToIdentifier(networkInterface.NetworkIdentifier);
+                glyphSelector.setSelectedToIdentifier(networkInterface.getPortalController().networkIdentifier);
 
                 toggleState();
             }
             else if (button.id == 1) // Save Changes
             {
-                ClientProxy.sendGuiPacket(0, glyphViewer.getSelectedIdentifier());
-
+                GuiPayload payload = new GuiPayload();
+                payload.data.setString("networkIdentifier", glyphViewer.getSelectedIdentifier());        
+                ClientProxy.sendGuiPacket(payload);
+                
                 toggleState();
             }
         }

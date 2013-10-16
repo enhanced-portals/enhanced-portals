@@ -47,7 +47,7 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         if (controller != null)
         {
             ItemStack stack = controller.getStackInSlot(1);
-            c = new Color(controller.PortalColour);
+            //c = new Color(controller.PortalColour);
 
             if (StackHelper.isStackDye(stack))
             {
@@ -141,15 +141,15 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
     {
         TilePortal portal = (TilePortal) tile;
-        TilePortalController controller = portal.getController();
+       // TilePortalController controller = portal.getController();
 
-        if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
-        {
-            if (!controller.blockManager.getModuleManipulator(tile.worldObj).shouldRenderPortal())
-            {
-                return;
-            }
-        }
+        //if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
+        //{
+        //    if (!controller.blockManager.getModuleManipulator(tile.worldObj).shouldRenderPortal())
+        //    {
+         //       return;
+        //    }
+        //}
 
         Tessellator tessellator = Tessellator.instance;
         int meta = portal.getBlockMetadata();
@@ -167,8 +167,8 @@ public class TilePortalRenderer extends TileEntitySpecialRenderer
         GL11.glScalef(1F, 1F, 1F);
         tessellator.startDrawingQuads();
 
-        setupPortal(portal, meta);
-        renderPortal(portal, controller, tessellator);
+        //setupPortal(portal, meta);
+        //renderPortal(portal, controller, tessellator);
 
         tessellator.draw();
         GL11.glPopAttrib();

@@ -17,8 +17,8 @@ import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.ClientBlockManager;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameController extends GuiResizable
 {
@@ -115,7 +115,7 @@ public class GuiPortalFrameController extends GuiResizable
         glyphSelector = new GuiGlyphSelector(7, 57, 0xffffff, this);
         glyphViewer = new GuiGlyphViewer(7, 20, 0xffffff, this, glyphSelector);
 
-        glyphSelector.setSelectedToIdentifier(controller.UniqueIdentifier);
+        glyphSelector.setSelectedToIdentifier(controller.uniqueIdentifier);
     }
 
     @Override
@@ -136,12 +136,16 @@ public class GuiPortalFrameController extends GuiResizable
         {
             if (button.id == 0) // Reset Changes
             {
-                glyphSelector.setSelectedToIdentifier(controller.UniqueIdentifier);
+                glyphSelector.setSelectedToIdentifier(controller.uniqueIdentifier);
                 toggleState();
             }
             else if (button.id == 1) // Save Changes
             {
-                ClientProxy.sendGuiPacket(0, glyphViewer.getSelectedIdentifier());
+                GuiPayload payload = new GuiPayload();
+                payload.data.setInteger("id", 0);
+                payload.data.setString("uniqueIdentifier", glyphViewer.getSelectedIdentifier());                
+                ClientProxy.sendGuiPacket(payload);
+                
                 toggleState();
             }
         }
@@ -167,20 +171,18 @@ public class GuiPortalFrameController extends GuiResizable
         getTextureManager().bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(guiLeft + leftOffset, guiTop + 55, 0, 0, 108, 18);
 
-        ClientBlockManager blockManager = (ClientBlockManager) controller.blockManager;
-
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, 1, 5), guiLeft + leftOffset + 1, 103);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, blockManager.portal, 0), guiLeft + leftOffset + 1, 103);
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, controller.intPortal, 0), guiLeft + leftOffset + 1, 103);
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 0), guiLeft + leftOffset + 19, 103);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, blockManager.portalFrame, 0), guiLeft + leftOffset + 19, 103);
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, controller.intBasic, 0), guiLeft + leftOffset + 19, 103);
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 2), guiLeft + leftOffset + 37, 103);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, blockManager.redstone, 2), guiLeft + leftOffset + 37, 103, blockManager.redstone + "");
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, controller.intRedstone, 2), guiLeft + leftOffset + 37, 103, controller.intRedstone + "");
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -189,19 +191,19 @@ public class GuiPortalFrameController extends GuiResizable
         {
             ItemStack s = null;
 
-            if (k == 0 && blockManager.networkInterface)
+            if (k == 0 && controller.boolNetwork)
             {
                 s = new ItemStack(CommonProxy.blockFrame, 1, 3);
             }
-            else if (k == 1 && blockManager.dialDevice)
+            else if (k == 1 && controller.boolDialler)
             {
                 s = new ItemStack(CommonProxy.blockFrame, 1, 4);
             }
-            else if (k == 2 && blockManager.biometric)
+            else if (k == 2 && controller.boolBiometric)
             {
                 s = new ItemStack(CommonProxy.blockFrame, 1, 5);
             }
-            else if (k == 3 && blockManager.getModuleManipulatorCoord() != null)
+            else if (k == 3 && controller.frameModule != null)
             {
                 s = new ItemStack(CommonProxy.blockFrame, 1, 6);
             }

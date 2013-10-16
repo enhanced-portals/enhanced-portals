@@ -17,7 +17,7 @@ public class SlotPortalModule extends Slot
     @Override
     public boolean canTakeStack(EntityPlayer entityPlayer)
     {
-        return getStack() == null ? true : ((IPortalModule) getStack().getItem()).canRemoveUpgrade((TileModuleManipulator) inventory, new IPortalModule[] {}, getStack());
+        return getStack() == null ? true : ((IPortalModule) getStack().getItem()).canRemoveUpgrade((TileModuleManipulator) inventory, ((TileModuleManipulator) inventory).getInstalledUpgrades(), getStack());
     }
 
     @Override

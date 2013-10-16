@@ -4,9 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -14,7 +12,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.portal.ClientBlockManager;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -22,7 +19,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPortal extends BlockEP
+public class BlockPortal extends BlockEnhancedPortals
 {
     public static Icon[] colouredPortalTextures;
 
@@ -34,17 +31,6 @@ public class BlockPortal extends BlockEP
         setUnlocalizedName(name);
         setStepSound(soundGlassFootstep);
         colouredPortalTextures = new Icon[16];
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-    {
-        if (!world.isRemote)
-        {
-            ((TilePortal) world.getBlockTileEntity(x, y, z)).selfBroken();
-        }
-
-        super.breakBlock(world, x, y, z, par5, par6);
     }
 
     @Override
@@ -95,12 +81,6 @@ public class BlockPortal extends BlockEP
     }
 
     @Override
-    public int getRenderType()
-    {
-        return -1;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4)
     {
@@ -114,26 +94,6 @@ public class BlockPortal extends BlockEP
     }
 
     @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-    {
-        return ((TilePortal) par1World.getBlockTileEntity(par2, par3, par4)).activate(par5EntityPlayer);
-    }
-
-    @Override
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-    {
-        if (!world.isRemote)
-        {
-            TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
-
-            if (controller != null)
-            {
-                controller.entityEnteredPortal(entity);
-            }
-        }
-    }
-
-    @Override
     public int quantityDropped(Random par1Random)
     {
         return 0;
@@ -144,8 +104,8 @@ public class BlockPortal extends BlockEP
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
         int metadata = world.getBlockMetadata(x, y, z);
-        TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getController();
-        TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
+        TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
+        TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
 
         if (random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID())))
         {
@@ -209,11 +169,12 @@ public class BlockPortal extends BlockEP
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
-        TilePortalController controller = portal.getController();
-
-        if (controller != null && controller.blockManager.getModuleManipulatorCoord() != null)
-        {
-            if (!((ClientBlockManager) controller.blockManager).getModuleManipulatorBa(blockAccess).shouldRenderPortal())
+        TilePortalController controller = portal.getPortalController();
+        TileModuleManipulator manip = controller.getModuleManipulator();
+        
+        if (controller != null && manip != null)
+        {            
+            if (manip != null && !manip.shouldRenderPortal())
             {
                 setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
                 return;

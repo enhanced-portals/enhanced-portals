@@ -28,7 +28,8 @@ public class ControllerLink
         FAIL_MultipleNetworkIdentifiers, //
         FAIL_MultipleDialDevices, //
         FAIL_NetworkInterfaceAndDialDevice, //
-        FAIL_MultipleBiometric, FAIL_MultipleUpgrade; //
+        FAIL_MultipleBiometric, //
+        FAIL_MultipleUpgrade; //
     }
 
     World world;
@@ -144,7 +145,7 @@ public class ControllerLink
         }
 
         // everything seems to be OK - lets continue
-        controller.blockManager.clearAll();
+        /*controller.blockManager.clearAll();
 
         while (!portalBlocks.isEmpty()) // loop through portal blocks connecting them to controller
         {
@@ -166,6 +167,14 @@ public class ControllerLink
 
             if (frame != null)
             {
+                // TODO: make for all frame blocks                
+                for (int i = 0; i < 6; i++)
+                {
+                    ChunkCoordinates c2 = ChunkCoordinateUtils.offset(c, ForgeDirection.getOrientation(i));
+                    frame.isTouchingPortal[i] = world.getBlockId(c2.posX, c2.posY, c2.posZ) == CommonProxy.blockPortal.blockID;
+                    System.out.println(frame.isTouchingPortal[i]);
+                }
+                
                 frame.controller = controller.getChunkCoordinates();
                 controller.blockManager.addToPortalFrames(c);
                 CommonProxy.sendUpdatePacketToAllAround(frame);
@@ -236,7 +245,7 @@ public class ControllerLink
             }
         }
 
-        controller.portalActive = true;
+        controller.portalActive = true;*/
 
         return LinkStatus.SUCCESS;
     }

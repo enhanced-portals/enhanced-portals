@@ -34,12 +34,13 @@ public class ConfigurationManager
 
     int START_BLOCK_ID = 512, START_ITEM_ID = 5000, MAX_BLOCK_ID = 4096, MAX_ITEM_ID = 32000;
 
-    TreeMap<String, Property> blockIds, itemIds, boolValues, stringValues;
+    TreeMap<String, Property> blockIds, itemIds, boolValues, stringValues, intValues;
     ArrayList<String> blockEntries, itemEntries;
     ArrayList<Integer> usedBlockIds, usedItemIds;
     Map<String, Boolean> boolEntries;
     Map<String, String> stringEntries;
     Map<String, String> commentEntries;
+    Map<String, Integer> intEntries;
 
     public ConfigurationManager(Configuration c)
     {
@@ -50,6 +51,7 @@ public class ConfigurationManager
         itemIds = new TreeMap<String, Property>();
         boolValues = new TreeMap<String, Property>();
         stringValues = new TreeMap<String, Property>();
+        intValues = new TreeMap<String, Property>();
 
         usedBlockIds = new ArrayList<Integer>();
         usedItemIds = new ArrayList<Integer>();
@@ -57,6 +59,7 @@ public class ConfigurationManager
         boolEntries = new HashMap<String, Boolean>();
         stringEntries = new HashMap<String, String>();
         commentEntries = new HashMap<String, String>();
+        intEntries = new HashMap<String, Integer>();
 
         config = c;
         config.load();
@@ -99,6 +102,13 @@ public class ConfigurationManager
     {
         stringEntries.put(name, s);
 
+        return new ConfigProperty(name);
+    }
+    
+    public ConfigProperty addInteger(String name, int i)
+    {
+        intEntries.put(name, i);
+        
         return new ConfigProperty(name);
     }
 
@@ -169,6 +179,12 @@ public class ConfigurationManager
         {
             stringValues.put(entry.getKey(), config.get("string", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
         }
+        
+        // DOUBLE
+        for (Map.Entry<String, Integer> entry : intEntries.entrySet())
+        {
+            intValues.put(entry.getKey(), config.get("double", entry.getKey(), entry.getValue(), getComment(entry.getKey())));
+        }
 
         config.addCustomCategoryComment("block", "All block IDs will attempt to find the first free ID from " + START_BLOCK_ID + " to " + MAX_BLOCK_ID + ", when one is not set below");
         config.addCustomCategoryComment("item", "All item IDs will attempt to find the first free ID from " + START_ITEM_ID + " to " + MAX_ITEM_ID + ", when one is not set below");
@@ -198,6 +214,11 @@ public class ConfigurationManager
         return boolValues.get(string).getBoolean(boolEntries.get(string));
     }
 
+    public int getInteger(String string)
+    {
+        return intValues.get(string).getInt(intEntries.get(string));
+    }
+    
     private String getComment(String id)
     {
         if (commentEntries.containsKey(id))

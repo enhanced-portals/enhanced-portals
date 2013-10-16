@@ -230,7 +230,7 @@ public class NetworkManager
 
     public void removePortalFromNetwork(String UID, String network)
     {
-        if (isPortalInNetwork(UID, network))
+        if ((!BLANK_IDENTIFIER.equals(UID) && !BLANK_IDENTIFIER.equals(network)) && isPortalInNetwork(UID, network))
         {
             getNetworkedPortals(network).remove(UID);
         }

@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class EntityManager
 {
@@ -16,10 +17,10 @@ public class EntityManager
     private static ChunkCoordinates getActualExitLocation(Entity entity, TilePortalController controller)
     {
         int entityHeight = Math.round(entity.height), entityWidth = Math.round(entity.width);
-        boolean horizontal = controller.PortalType == 3;
+        boolean horizontal = controller.portalType == 3;
 
         forloop:
-        for (ChunkCoordinates c : controller.blockManager.getPortalsCoord())
+        for (WorldCoordinates c : controller.getAllPortalBlocks())
         {
             for (int i = 0; i < (horizontal ? Math.round(entityWidth / 2) : entityHeight); i++)
             {
@@ -47,7 +48,7 @@ public class EntityManager
 
     private static float getRotation(Entity entity, TilePortalController controller, ChunkCoordinates loc)
     {
-        int portalOrientation = controller.PortalType;
+        int portalOrientation = controller.portalType;
 
         if (portalOrientation == 1)
         {
@@ -101,11 +102,11 @@ public class EntityManager
         boolean isDimensionalPortal = entity.worldObj.provider.dimensionId != controllerDest.worldObj.provider.dimensionId;
         //WorldServer destinationWorld = (WorldServer) controllerDest.worldObj;
 
-        if (!controllerDest.portalActive)
+        if (!controllerDest.isPortalActive)
         {
             controllerDest.createPortal();
 
-            if (!controllerDest.portalActive)
+            if (!controllerDest.isPortalActive)
             {
                 CommonProxy.logger.fine("Failed to teleport entity - Could not create an exit portal!");
                 return;

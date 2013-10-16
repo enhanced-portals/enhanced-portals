@@ -87,6 +87,7 @@ public class GuiResizable extends GuiEnhancedPortals
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
+        super.drawGuiContainerBackgroundLayer(f, i, j);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/sizableGui.png"));
         GL11.glColor4f(1f, 1f, 1f, 1f);
 

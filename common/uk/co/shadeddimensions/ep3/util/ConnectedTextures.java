@@ -27,12 +27,12 @@ public class ConnectedTextures
         meta = metadata;
     }
 
-    private boolean canConnectTo(int id, int m)
+    protected boolean canConnectTo(int id, int m)
     {
         return id == blockID && meta == m;
     }
 
-    private int[] getBlockIDs(IBlockAccess blockAccess, int x, int y, int z)
+    protected int[] getBlockIDs(IBlockAccess blockAccess, int x, int y, int z)
     {
         int[] blockIds = new int[6];
 
@@ -45,7 +45,7 @@ public class ConnectedTextures
         return blockIds;
     }
 
-    private int[] getBlockMetas(IBlockAccess blockAccess, int x, int y, int z)
+    protected int[] getBlockMetas(IBlockAccess blockAccess, int x, int y, int z)
     {
         int[] blockMetas = new int[6];
 
@@ -65,7 +65,7 @@ public class ConnectedTextures
         return blockMetas;
     }
 
-    private Icon getDownIcon(int[] blockIds, int[] blockMetas)
+    protected Icon getDownIcon(int[] blockIds, int[] blockMetas)
     {
         boolean up = false, down = false, left = false, right = false;
 
@@ -153,7 +153,7 @@ public class ConnectedTextures
         return textures[0];
     }
 
-    private Icon getEastWestIcon(int[] blockIds, int[] blockMetas, int side)
+    protected Icon getEastWestIcon(int[] blockIds, int[] blockMetas, int side)
     {
         boolean up = false, down = false, left = false, right = false;
 
@@ -273,7 +273,7 @@ public class ConnectedTextures
         return textures[0];
     }
 
-    private Icon getNorthSouthIcon(int[] blockIds, int[] blockMetas, int side)
+    protected Icon getNorthSouthIcon(int[] blockIds, int[] blockMetas, int side)
     {
         boolean up = false, down = false, left = false, right = false;
 
@@ -361,7 +361,7 @@ public class ConnectedTextures
         return textures[0];
     }
 
-    private Icon getUpIcon(int[] blockIds, int[] blockMetas)
+    protected Icon getUpIcon(int[] blockIds, int[] blockMetas)
     {
         boolean up = false, down = false, left = false, right = false;
 

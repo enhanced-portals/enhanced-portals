@@ -100,7 +100,7 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        int ParticleColour = controller != null ? controller.ParticleColour : 0xB336A1, ParticleType = controller != null ? controller.ParticleType : 0;
+        int ParticleColour = controller != null ? controller.particleColour : 0xB336A1, ParticleType = controller != null ? controller.particleType : 0;
 
         if (ParticleColour == 0xB336A1)
         {

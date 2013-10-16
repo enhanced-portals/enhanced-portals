@@ -16,12 +16,11 @@ import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.ep3.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.ep3.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.network.packet.MainPacket;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiInteger;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalTexture extends GuiResizable
 {
@@ -32,7 +31,7 @@ public class GuiPortalTexture extends GuiResizable
     {
         super(new ContainerPortalTexture(player, control), control);
         controller = control;
-        pType = control.ParticleType;
+        pType = control.particleType;
     }
 
     @Override
@@ -40,6 +39,8 @@ public class GuiPortalTexture extends GuiResizable
     {
         if (button.id == 10 || button.id == 11)
         {
+            boolean reset = false;
+            
             if (button.id == 11)
             {
                 ((GuiRGBSlider) buttonList.get(0)).sliderValue = 1f;
@@ -50,45 +51,55 @@ public class GuiPortalTexture extends GuiResizable
                 ((GuiRGBSlider) buttonList.get(3)).sliderValue = c.getRed() / 255f;
                 ((GuiRGBSlider) buttonList.get(4)).sliderValue = c.getGreen() / 255f;
                 ((GuiRGBSlider) buttonList.get(5)).sliderValue = c.getBlue() / 255f;
-
-                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(3, 0)));
-                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(4, 1)));
+                
+                reset = true;
             }
 
             String portalColourHex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
             String particleColourHex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue());
 
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(1, Integer.parseInt(portalColourHex, 16))));
-            PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(2, Integer.parseInt(particleColourHex, 16))));
+            GuiPayload payload = new GuiPayload();
+            payload.data.setInteger("portalColour", Integer.parseInt(portalColourHex, 16));
+            payload.data.setInteger("particleColour", Integer.parseInt(particleColourHex, 16));
+            
+            if (reset)
+            {
+                payload.data.setInteger("particleType", 0);
+                payload.data.setInteger("resetSlot", 1);
+            }
+            
+            ClientProxy.sendGuiPacket(payload);
         }
         else if (button.id == 12 || button.id == 13)
         {
             boolean changed = false;
 
-            if (controller.ParticleType > 0 && button.id == 12)
+            if (controller.particleType > 0 && button.id == 12)
             {
-                controller.ParticleType--;
+                controller.particleType--;
                 changed = true;
             }
-            else if (controller.ParticleType < 13 && button.id == 13)
+            else if (controller.particleType < 13 && button.id == 13)
             {
-                controller.ParticleType++;
+                controller.particleType++;
                 changed = true;
             }
-            else if (controller.ParticleType == 0 && button.id == 12)
+            else if (controller.particleType == 0 && button.id == 12)
             {
-                controller.ParticleType = 13;
+                controller.particleType = 13;
                 changed = true;
             }
-            else if (controller.ParticleType == 13 && button.id == 13)
+            else if (controller.particleType == 13 && button.id == 13)
             {
-                controller.ParticleType = 0;
+                controller.particleType = 0;
                 changed = true;
             }
 
             if (changed)
             {
-                PacketDispatcher.sendPacketToServer(MainPacket.makePacket(new PacketGuiInteger(3, controller.ParticleType)));
+                GuiPayload payload = new GuiPayload();
+                payload.data.setInteger("particleType", controller.particleType);                
+                ClientProxy.sendGuiPacket(payload);
             }
         }
     }
@@ -109,7 +120,7 @@ public class GuiPortalTexture extends GuiResizable
         drawTexturedModalRect(guiLeft + xSize - 48, guiTop + 22, 0, 0, 18, 18);
         drawTexturedModalRect(guiLeft + xSize - 28, guiTop + 22, 0, 0, 18, 18);
 
-        drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.ParticleType), true);
+        drawParticle(38, 23, ((GuiRGBSlider) buttonList.get(3)).getValue(), ((GuiRGBSlider) buttonList.get(4)).getValue(), ((GuiRGBSlider) buttonList.get(5)).getValue(), 255, PortalFX.getStaticParticleIndex(controller.particleType), true);
 
         ItemStack stack = controller.getStackInSlot(1) == null ? new ItemStack(Block.portal, 1) : controller.getStackInSlot(1);
 
@@ -146,12 +157,12 @@ public class GuiPortalTexture extends GuiResizable
     {
         super.initGui();
 
-        Color c = new Color(controller.PortalColour);
+        Color c = new Color(controller.portalColour);
         buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
         buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
         buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
 
-        c = new Color(controller.ParticleColour);
+        c = new Color(controller.particleColour);
         buttonList.add(new GuiRGBSlider(3, guiLeft - 79, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
         buttonList.add(new GuiRGBSlider(4, guiLeft - 79, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
         buttonList.add(new GuiRGBSlider(5, guiLeft - 79, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));

@@ -7,78 +7,51 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import cpw.mods.fml.common.network.Player;
 
-public class PacketRequestData extends MainPacket
+public class PacketRequestData extends PacketEnhancedPortals
 {
-    ChunkCoordinates location;
-
+    int x, y, z;
+    
     public PacketRequestData()
     {
-
+        
     }
-
-    public PacketRequestData(int x, int y, int z)
+    
+    public PacketRequestData(TileEnhancedPortals tile)
     {
-        location = new ChunkCoordinates(x, y, z);
+        x = tile.xCoord;
+        y = tile.yCoord;
+        z = tile.zCoord;
+        isChunkDataPacket = true;
     }
-
-    public PacketRequestData(TileEntity tile)
+    
+    @Override
+    public void readPacketData(DataInputStream stream) throws IOException
     {
-        location = new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
+        x = stream.readInt();
+        y = stream.readInt();
+        z = stream.readInt();
     }
 
     @Override
-    public MainPacket consumePacket(DataInputStream stream) throws IOException
+    public void writePacketData(DataOutputStream stream) throws IOException
     {
-        location = readChunkCoordinates(stream);
-        return this;
+        stream.writeInt(x);
+        stream.writeInt(y);
+        stream.writeInt(z);
     }
 
     @Override
-    public void execute(INetworkManager network, EntityPlayer player)
+    public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
-        World world = player.worldObj;
-        TileEntity tile = world.getBlockTileEntity(location.posX, location.posY, location.posZ);
-
-        if (tile instanceof TilePortalController)
+        TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+        
+        if (tile != null && tile instanceof TileEnhancedPortals)
         {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile)), (Player) player);
+            CommonProxy.sendUpdatePacketToPlayer((TileEnhancedPortals) tile, (EntityPlayer) player);
         }
-        else if (tile instanceof TileModuleManipulator)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketModuleManipulator((TileModuleManipulator) tile)), (Player) player);
-        }
-        else if (tile instanceof TileNetworkInterface)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile)), (Player) player);
-        }
-        else if (tile instanceof TileRedstoneInterface)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData((TileRedstoneInterface) tile)), (Player) player);
-        }
-        else if (tile instanceof TilePortal)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalData((TilePortal) tile)), (Player) player);
-        }
-        else if (tile instanceof TilePortalFrame)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile)), (Player) player);
-        }
-    }
-
-    @Override
-    public void generatePacket(DataOutputStream stream) throws IOException
-    {
-        writeChunkCoordinates(location, stream);
     }
 }

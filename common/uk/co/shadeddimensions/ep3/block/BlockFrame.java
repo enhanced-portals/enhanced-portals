@@ -2,19 +2,15 @@ package uk.co.shadeddimensions.ep3.block;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -25,60 +21,26 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
-import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
-import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
 
-public class BlockFrame extends BlockEP
+public class BlockFrame extends BlockEnhancedPortals
 {
-    enum FrameTypes
-    {
-        PORTAL_CONTROLLER(TilePortalController.class), REDSTONE_INTERFACE(TileRedstoneInterface.class), NETWORK_INTERFACE(TileNetworkInterface.class), DIALLING_DEVICE(TileDiallingDevice.class), BIOMETRIC_IDENTIFIER(TileBiometricIdentifier.class), MODULE_MANIPULATOR(TileModuleManipulator.class);
-
-        public static FrameTypes getFrameType(int meta)
-        {
-            return values()[meta - 1];
-        }
-
-        private Class<? extends TilePortalFrame> c;
-
-        private FrameTypes(Class<? extends TilePortalFrame> clas)
-        {
-            c = clas;
-        }
-
-        public int getID()
-        {
-            return ordinal() + 1;
-        }
-
-        public TilePortalFrame getTileEntity()
-        {
-            try
-            {
-                return c.newInstance();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    static final int FRAME_TYPES = 7;
-    public static Icon[] typeOverlayIcons = new Icon[FRAME_TYPES];
-
-    static ConnectedTextures connectedTextures;
+    static int PORTAL_CONTROLLER = 1,
+               REDSTONE_INTERFACE = 2,
+               NETWORK_INTERFACE = 3,
+               DIALLING_DEVICE = 4,
+               BIOMETRIC_IDENTIFIER = 5,
+               MODULE_MANIPULATOR = 6,
+               FLUID = 7,
+               POWER = 8,
+               FRAME_TYPES = 8;
 
     public BlockFrame(int id, String name)
     {
-        super(id, Material.rock, true);
+        super(id, CommonProxy.frameMaterial, true);
         setHardness(10);
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
-        connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", blockID, -1);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -89,13 +51,6 @@ public class BlockFrame extends BlockEP
         {
             list.add(new ItemStack(this, 1, i));
         }
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-    {
-        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).selfBroken();
-        super.breakBlock(world, x, y, z, par5, par6);
     }
 
     @Override
@@ -123,9 +78,29 @@ public class BlockFrame extends BlockEP
         {
             return new TilePortalFrame();
         }
-        else if (metadata <= FrameTypes.values().length)
+        else if (metadata == PORTAL_CONTROLLER)
         {
-            return FrameTypes.getFrameType(metadata).getTileEntity();
+            return new TilePortalController();
+        }
+        else if (metadata == REDSTONE_INTERFACE)
+        {
+            return new TileRedstoneInterface();
+        }
+        else if (metadata == NETWORK_INTERFACE)
+        {
+            return new TileNetworkInterface();
+        }
+        else if (metadata == DIALLING_DEVICE)
+        {
+            return new TileDiallingDevice();
+        }
+        else if (metadata == BIOMETRIC_IDENTIFIER)
+        {
+            return new TileBiometricIdentifier();
+        }
+        else if (metadata == MODULE_MANIPULATOR)
+        {
+            return new TileModuleManipulator();
         }
 
         return null;
@@ -138,15 +113,9 @@ public class BlockFrame extends BlockEP
     }
 
     @Override
-    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
-    }
-
-    @Override
     public Icon getIcon(int side, int meta)
     {
-        return connectedTextures.getNormalIcon();
+        return Block.blockNetherQuartz.getIcon(1, 0); // TODO
     }
 
     @Override
@@ -190,68 +159,14 @@ public class BlockFrame extends BlockEP
     }
 
     @Override
-    public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        return ((TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z)).isProvidingStrongPower(side);
-    }
-
-    @Override
-    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        return ((TilePortalFrame) blockAccess.getBlockTileEntity(x, y, z)).isProvidingWeakPower(side);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-    {
-        return ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).activate(player);
-    }
-
-    @Override
-    public void onBlockAdded(World world, int x, int y, int z)
-    {
-        if (world.isRemote)
-        {
-            return;
-        }
-
-        for (int i = 0; i < 6; i++)
-        {
-            ChunkCoordinates c = ChunkCoordinateUtils.offset(new ChunkCoordinates(x, y, z), ForgeDirection.getOrientation(i));
-
-            if (world.getBlockId(c.posX, c.posY, c.posZ) == CommonProxy.blockFrame.blockID)
-            {
-                ((TilePortalFrame) world.getBlockTileEntity(c.posX, c.posY, c.posZ)).selfBroken();
-            }
-        }
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
-    {
-        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).neighborChanged(id);
-    }
-
-    @Override
     public void registerIcons(IconRegister register)
     {
-        for (int i = 0; i < typeOverlayIcons.length; i++)
-        {
-            typeOverlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
-        }
-
-        connectedTextures.registerIcons(register);
+        // TODO
     }
 
     @Override
     public boolean renderAsNormalBlock()
     {
         return false;
-    }
-
-    @Override
-    public void updateTick(World world, int x, int y, int z, Random random)
-    {
-        ((TilePortalFrame) world.getBlockTileEntity(x, y, z)).scheduledTick(random);
     }
 }

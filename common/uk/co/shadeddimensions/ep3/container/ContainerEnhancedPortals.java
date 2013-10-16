@@ -11,15 +11,15 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.gui.slots.IPhantomSlot;
 import uk.co.shadeddimensions.ep3.gui.slots.SlotBase;
-import uk.co.shadeddimensions.ep3.tileentity.TileEP;
+import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.util.StackHelper;
 
 public abstract class ContainerEnhancedPortals extends Container
 {
-    public TileEP tile;
+    public TileEnhancedPortals tile;
     private int inventorySize;
 
-    public ContainerEnhancedPortals(int inventorySize, TileEP t)
+    public ContainerEnhancedPortals(int inventorySize, TileEnhancedPortals t)
     {
         this.inventorySize = inventorySize;
         tile = t;

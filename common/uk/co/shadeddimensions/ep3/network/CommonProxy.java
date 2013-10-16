@@ -3,25 +3,20 @@ package uk.co.shadeddimensions.ep3.network;
 import java.io.File;
 import java.util.logging.Logger;
 
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
+import uk.co.shadeddimensions.ep3.block.material.FrameMaterial;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.item.ItemPortalFrame;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.network.packet.MainPacket;
-import uk.co.shadeddimensions.ep3.network.packet.PacketModuleManipulator;
-import uk.co.shadeddimensions.ep3.network.packet.PacketNetworkInterfaceData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketPortalControllerData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketPortalData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketPortalFrameData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRedstoneInterfaceData;
+import uk.co.shadeddimensions.ep3.network.packet.PacketTileUpdate;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
-import uk.co.shadeddimensions.ep3.tileentity.TileEP;
+import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
@@ -32,6 +27,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
@@ -44,46 +40,19 @@ public class CommonProxy
     public static ItemPortalModule itemUpgrade;
 
     public static NetworkManager networkManager;
+    
+    public static FrameMaterial frameMaterial = new FrameMaterial();
 
     public static final Logger logger = Logger.getLogger(Reference.NAME);
 
-    public static void sendUpdatePacketToAllAround(TileEP tile)
+    public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
-        Packet250CustomPayload packet = null;
-
-        if (tile instanceof TilePortalController)
-        {
-            packet = MainPacket.makePacket(new PacketPortalControllerData((TilePortalController) tile));
-        }
-        else if (tile instanceof TileRedstoneInterface)
-        {
-            packet = MainPacket.makePacket(new PacketRedstoneInterfaceData((TileRedstoneInterface) tile));
-        }
-        else if (tile instanceof TileNetworkInterface)
-        {
-            packet = MainPacket.makePacket(new PacketNetworkInterfaceData((TileNetworkInterface) tile));
-        }
-        else if (tile instanceof TileDiallingDevice)
-        {
-
-        }
-        else if (tile instanceof TileModuleManipulator)
-        {
-            packet = MainPacket.makePacket(new PacketModuleManipulator((TileModuleManipulator) tile));
-        }
-        else if (tile instanceof TilePortalFrame)
-        {
-            packet = MainPacket.makePacket(new PacketPortalFrameData((TilePortalFrame) tile));
-        }
-        else if (tile instanceof TilePortal)
-        {
-            packet = MainPacket.makePacket(new PacketPortalData((TilePortal) tile));
-        }
-
-        if (packet != null)
-        {
-            PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, packet);
-        }
+        PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
+    }
+    
+    public static void sendUpdatePacketToAllAround(TileEnhancedPortals tile)
+    {
+        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, new PacketTileUpdate(tile).getPacket());
     }
 
     public File getBaseDir()
@@ -140,6 +109,18 @@ public class CommonProxy
         EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("[NI] If enabled, overwrites the Nether portals mechanics to allow any shape/size.");
         EnhancedPortals.config.addBoolean("portalsDestroyBlocks", true).addComment("[NI - Forced ON] Portals will destroy blocks that are in their way, if this is enabled. Only applies to blocks placed inside the frame AFTER the portal has been initialized.");
 
+        EnhancedPortals.config.addInteger("powerCostMultiplier", 1).addComment("Multiplies all power requirements by this value");
+        
         EnhancedPortals.config.fillConfigFile(); // Must be last.
+    }
+    
+    public static boolean isClient()
+    {
+        return FMLCommonHandler.instance().getEffectiveSide().isClient();
+    }
+    
+    public static boolean isServer()
+    {
+        return !isClient();
     }
 }

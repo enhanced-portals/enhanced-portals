@@ -1,21 +1,17 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.network.packet.MainPacket;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRedstoneInterfaceData;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
-public class TileRedstoneInterface extends TilePortalFrame implements IInventory
+public class TileRedstoneInterface extends TilePortalPart
 {
     public boolean output;
 
@@ -32,70 +28,55 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
     }
 
     @Override
-    public void buttonPressed(int id, EntityPlayer player)
+    public int getPowerDrainPerTick()
     {
-        boolean sendPacket = false;
-
-        if (id == 0)
+        return 1;
+    }
+    
+    @Override
+    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
+    {
+        super.guiActionPerformed(payload, player);
+        
+        if (payload.data.hasKey("id"))
         {
-            output = !output;
-            setState((byte) 0);
-            sendPacket = true;
-        }
-        else if (id == 1)
-        {
-            if (output)
+            if (payload.data.getInteger("id") == 0)
             {
-                if (state + 1 < MAX_OUTPUT_STATE)
+                output = !output;
+                setState((byte) 0);
+    
+                CommonProxy.sendUpdatePacketToPlayer(this, player);
+            }
+            else if (payload.data.getInteger("id") == 1)
+            {
+                if (output)
                 {
-                    setState((byte) (state + 1));
+                    if (state + 1 < MAX_OUTPUT_STATE)
+                    {
+                        setState((byte) (state + 1));
+                    }
+                    else
+                    {
+                        setState((byte) 0);
+                    }
                 }
                 else
                 {
-                    setState((byte) 0);
+                    if (state + 1 < MAX_INPUT_STATE)
+                    {
+                        setState((byte) (state + 1));
+                    }
+                    else
+                    {
+                        setState((byte) 0);
+                    }
                 }
+    
+                CommonProxy.sendUpdatePacketToPlayer(this, player);
             }
-            else
-            {
-                if (state + 1 < MAX_INPUT_STATE)
-                {
-                    setState((byte) (state + 1));
-                }
-                else
-                {
-                    setState((byte) 0);
-                }
-            }
-
-            sendPacket = true;
-        }
-
-        if (sendPacket)
-        {
-            PacketDispatcher.sendPacketToPlayer(MainPacket.makePacket(new PacketRedstoneInterfaceData(this)), (Player) player);
         }
     }
-
-    @Override
-    public void closeChest()
-    {
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        return null;
-    }
-
-    @Override
-    public void entityTouch(Entity entity)
-    {
-        if (output && state == 4)
-        {
-            pulseRedstone();
-        }
-    }
-
+    
     private byte getHighestPowerState()
     {
         byte current = 0;
@@ -114,53 +95,11 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
         return current;
     }
 
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return "ep2.tileFrameRedstoneController";
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return 0;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
     public byte getState()
     {
         return state;
     }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
-        return false;
-    }
-
+    
     @Override
     public int isProvidingStrongPower(int side)
     {
@@ -182,15 +121,9 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
 
         return super.isProvidingWeakPower(side);
     }
-
+    
     @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void neighborChanged(int id)
+    public void onNeighborBlockChange(int id)
     {
         if (worldObj.isRemote)
         {
@@ -205,7 +138,7 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
             {
                 if (redstoneInputState > 0 && previousRedstoneInputState == 0)
                 {
-                    TilePortalController c = getController();
+                    TilePortalController c = getPortalController();
 
                     if (c != null)
                     {
@@ -221,7 +154,7 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
                 }
                 else if (redstoneInputState == 0 && previousRedstoneInputState > 0)
                 {
-                    TilePortalController c = getController();
+                    TilePortalController c = getPortalController();
 
                     if (c != null)
                     {
@@ -241,7 +174,7 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
             {
                 if (previousRedstoneInputState > 0 && redstoneInputState == 0)
                 {
-                    TilePortalController c = getController();
+                    TilePortalController c = getPortalController();
 
                     if (state == 2)
                     {
@@ -267,11 +200,6 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
             ForgeDirection d = ForgeDirection.getOrientation(i);
             worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, CommonProxy.blockFrame.blockID);
         }
-    }
-
-    @Override
-    public void openChest()
-    {
     }
 
     public void portalCreated()
@@ -341,18 +269,13 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
     }
 
     @Override
-    public void scheduledTick(Random random)
+    public void updateTick(Random random)
     {
         if (pulse)
         {
             pulse = false;
             notifyNeighbors();
         }
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
     }
 
     public void setState(byte newState)
@@ -376,5 +299,22 @@ public class TileRedstoneInterface extends TilePortalFrame implements IInventory
         tagCompound.setByte("state", state);
         tagCompound.setBoolean("emitting", emitting);
         tagCompound.setBoolean("pulse", pulse);
+    }
+    
+    @Override
+    public void fillPacket(DataOutputStream stream) throws IOException
+    {
+        super.fillPacket(stream);
+        
+        stream.writeBoolean(output);
+        stream.writeByte(state);
+    }
+    
+    public void usePacket(java.io.DataInputStream stream) throws IOException
+    {
+        super.usePacket(stream);
+        
+        output = stream.readBoolean();
+        setState(stream.readByte());
     }
 }
