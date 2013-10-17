@@ -4,263 +4,289 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.WorldServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
+import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class PortalUtils
 {
-    // TODO: Rewrite to be better.
-
-    private static void addTouchingBlocks(ChunkCoordinates c, Queue<ChunkCoordinates> queue, int meta)
+    static final int MAXIMUM_CHANCES = 10;
+    
+    /***
+     * Checks to see if the specified block is a portal part.
+     */
+    private static boolean isPortalPart(World world, int x, int y, int z)
     {
-        if (meta >= 6)
-        {
-            meta -= 6;
-        }
-
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-
-            if (meta == 1 && (i == 2 || i == 3))
-            {
-                continue;
-            }
-            else if (meta == 2 && (i == 4 || i == 5))
-            {
-                continue;
-            }
-            else if (meta == 3 && (i == 0 || i == 1))
-            {
-                continue;
-            }
-
-            queue.add(offsetCoordinate(c, d));
-        }
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        
+        return isPortalPart(tile);
     }
-
-    private static boolean checkTension(WorldServer world, int meta, ChunkCoordinates c)
+    
+    /***
+     * Checks to see if the specified block is a portal part.
+     */
+    private static boolean isPortalPart(TileEntity tile)
     {
-        if (meta >= 6)
-        {
-            meta -= 6;
-        }
-
-        int[] blockIDs = new int[6];
-
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            ChunkCoordinates c2 = offsetCoordinate(c, d);
-
-            blockIDs[i] = world.getBlockId(c2.posX, c2.posY, c2.posZ);
-        }
-
-        if (meta == 1)
-        {
-            return isValidPortalPart(blockIDs[0]) && isValidPortalPart(blockIDs[1]) && isValidPortalPart(blockIDs[4]) && isValidPortalPart(blockIDs[5]);
-        }
-        else if (meta == 2)
-        {
-            return isValidPortalPart(blockIDs[0]) && isValidPortalPart(blockIDs[1]) && isValidPortalPart(blockIDs[2]) && isValidPortalPart(blockIDs[3]);
-        }
-        else if (meta == 3)
-        {
-            return isValidPortalPart(blockIDs[2]) && isValidPortalPart(blockIDs[3]) && isValidPortalPart(blockIDs[4]) && isValidPortalPart(blockIDs[5]);
-        }
-
-        return false;
+        return tile != null && tile instanceof TilePortalPart;
     }
-
-    private static boolean createPortal(WorldServer world, int x, int y, int z, int meta)
+    
+    /***
+     * Creates a portal from the specified portal controller.
+     */
+    public static boolean createPortalFrom(TilePortalController controller)
     {
-        int USED_CHANCES = 0, MAX_CHANCES = 16;
-        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
-        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
-        toProcess.add(new ChunkCoordinates(x, y, z));
-
-        while (!toProcess.isEmpty())
+        if (CommonProxy.isClient() || controller.isPortalActive)
         {
-            ChunkCoordinates cur = toProcess.remove();
-
-            if (!addedBlocks.contains(cur) && (world.isAirBlock(cur.posX, cur.posY, cur.posZ) || Block.blocksList[world.getBlockId(cur.posX, cur.posY, cur.posZ)].isBlockReplaceable(world, cur.posX, cur.posY, cur.posZ)))
+            return false;
+        }
+                
+        for (WorldCoordinates w : controller.portals)
+        {
+            if (!controller.worldObj.isAirBlock(w.posX, w.posY, w.posZ))
             {
-                int sides = getSides(world, cur, meta);
-
-                if (sides == -1)
+                int id = controller.worldObj.getBlockId(w.posX, w.posY, w.posZ), metadata = controller.worldObj.getBlockMetadata(w.posX, w.posY, w.posZ);
+                
+                if (id != Block.bedrock.blockID)
                 {
-                    removePortal(world, addedBlocks);
-                    return false;
-                }
-                else if (sides < 2 && USED_CHANCES < MAX_CHANCES)
-                {
-                    USED_CHANCES++;
-                    sides += 2;
-                }
-
-                if (sides >= 2)
-                {
-                    addedBlocks.add(cur);
-                    world.setBlock(cur.posX, cur.posY, cur.posZ, CommonProxy.blockPortal.blockID, meta, 2);
-                    addTouchingBlocks(cur, toProcess, meta);
+                    controller.worldObj.playAuxSFX(2001, w.posX, w.posY, w.posZ, id + (metadata << 12));
+                    Block.blocksList[id].dropBlockAsItem(controller.worldObj, w.posX, w.posY, w.posZ, metadata, 0);
                 }
             }
+            
+            controller.worldObj.setBlock(w.posX, w.posY, w.posZ, CommonProxy.blockPortal.blockID, controller.portalType, 2);
         }
-
-        Queue<ChunkCoordinates> portalBlocks = duplicateQueue(addedBlocks);
-
-        while (!portalBlocks.isEmpty())
-        {
-            ChunkCoordinates cur = portalBlocks.remove();
-
-            if (!checkTension(world, meta, cur))
-            {
-                removePortal(world, addedBlocks);
-                return false;
-            }
-        }
-
+        
+        controller.setPortalActive(true);
         return true;
     }
-
-    public static boolean createPortalForController(TilePortalController control)
+    
+    /***
+     * Creates a portal at the specified location.
+     */
+    public static boolean createPortalAt(WorldCoordinates w, int portalDirection)
     {
-        WorldServer world = (WorldServer) control.worldObj;
-
-        for (int k = 0; k < 6; k++)
-        {
-            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
-
-            if (world.isAirBlock(c.posX, c.posY, c.posZ))
-            {
-                for (int i = 1; i < 4; i++)
-                {
-                    if (createPortal(world, c.posX, c.posY, c.posZ, i))
-                    {
-                        control.portalType = i;
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private static Queue<ChunkCoordinates> duplicateQueue(Queue<ChunkCoordinates> queue)
-    {
-        Queue<ChunkCoordinates> q = new LinkedList<ChunkCoordinates>();
-
-        for (ChunkCoordinates c : queue)
-        {
-            q.add(c);
-        }
-
-        return q;
-    }
-
-    private static int getSides(WorldServer world, ChunkCoordinates coord, int meta)
-    {
-        if (meta >= 6)
-        {
-            meta -= 6;
-        }
-
-        int counter = 0;
-
-        for (int i = 0; i < 6; i++)
-        {
-            ChunkCoordinates c = offsetCoordinate(coord, ForgeDirection.getOrientation(i));
-            int id = world.getBlockId(c.posX, c.posY, c.posZ);
-
-            if (isValidPortalPart(id))
-            {
-                counter++;
-            }
-            else if (id != 0)
-            {
-                if (meta == 1 && (i == 2 || i == 3))
-                {
-                    continue;
-                }
-                else if (meta == 2 && (i == 4 || i == 5))
-                {
-                    continue;
-                }
-                else if (meta == 3 && (i == 0 || i == 1))
-                {
-                    continue;
-                }
-
-                return -1;
-            }
-        }
-
-        return counter;
-    }
-
-    private static boolean isValidPortalPart(int id)
-    {
-        return id == CommonProxy.blockFrame.blockID || id == CommonProxy.blockPortal.blockID;
-    }
-
-    private static ChunkCoordinates offsetCoordinate(ChunkCoordinates coord, ForgeDirection dir)
-    {
-        return new ChunkCoordinates(coord.posX + dir.offsetX, coord.posY + dir.offsetY, coord.posZ + dir.offsetZ);
-    }
-
-    private static void removePortal(WorldServer world, int x, int y, int z)
-    {
-        Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
-        Queue<ChunkCoordinates> addedBlocks = new LinkedList<ChunkCoordinates>();
-        toProcess.add(new ChunkCoordinates(x, y, z));
-
+        World world = w.getWorld();
+        Queue<WorldCoordinates> processed = new LinkedList<WorldCoordinates>();
+        Queue<WorldCoordinates> toProcess = new LinkedList<WorldCoordinates>();
+        int chances = 0;
+ 
+        toProcess.add(w);
+        
         while (!toProcess.isEmpty())
         {
-            ChunkCoordinates cur = toProcess.remove();
-
-            if (!addedBlocks.contains(cur) && world.getBlockId(cur.posX, cur.posY, cur.posZ) == CommonProxy.blockPortal.blockID)
+            WorldCoordinates c = toProcess.remove();
+            
+            if (!processed.contains(c))
             {
-                addedBlocks.add(cur);
-                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
-                addTouchingBlocks(cur, toProcess, 0);
-            }
-        }
-    }
-
-    private static void removePortal(WorldServer world, Queue<ChunkCoordinates> blocks)
-    {
-        while (!blocks.isEmpty())
-        {
-            ChunkCoordinates cur = blocks.remove();
-            int id = world.getBlockId(cur.posX, cur.posY, cur.posZ);
-
-            if (id == CommonProxy.blockPortal.blockID)
-            {
-                world.setBlockToAir(cur.posX, cur.posY, cur.posZ);
-            }
-        }
-    }
-
-    public static void removePortalForController(TilePortalController control)
-    {
-        WorldServer world = (WorldServer) control.worldObj;
-
-        for (int k = 0; k < 6; k++)
-        {
-            ChunkCoordinates c = ChunkCoordinateUtils.offset(control.getChunkCoordinates(), ForgeDirection.getOrientation(k));
-
-            if (world.isAirBlock(c.posX, c.posY, c.posZ))
-            {
-                for (int i = 1; i < 4; i++)
+                if (world.isAirBlock(c.posX, c.posY, c.posZ))
                 {
-                    removePortal(world, c.posX, c.posY, c.posZ);
+                    int sides = getAllSides(c, portalDirection);
+                    
+                    if (sides < 2)
+                    {
+                        if (chances < MAXIMUM_CHANCES)
+                        {
+                            chances++;
+                            sides += 2;
+                        }
+                        else
+                        {
+                            removeFailedPortal(world, processed);
+                            return false;
+                        }
+                    }
+                    
+                    if (sides >= 2)
+                    {
+                        processed.add(c);
+                        world.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, portalDirection, 2);
+                        addNearbyBlocks(c, portalDirection, toProcess);
+                    }
+                }
+                else if (!isPortalPart(world, c.posX, c.posY, c.posZ))
+                {
+                    removeFailedPortal(world, processed);
+                    return false;
                 }
             }
         }
+        
+        return true;
     }
+    
+    /***
+     * Ghosts a portal at the specified location.
+     */
+    public static Queue<WorldCoordinates> ghostPortalAt(WorldCoordinates w, int portalDirection)
+    {
+        World world = w.getWorld();
+        Queue<WorldCoordinates> processed = new LinkedList<WorldCoordinates>();
+        Queue<WorldCoordinates> toProcess = new LinkedList<WorldCoordinates>();
+        Queue<WorldCoordinates> ghostedPortals = new LinkedList<WorldCoordinates>();
+        int chances = 0;
+ 
+        toProcess.add(w);
+        
+        while (!toProcess.isEmpty())
+        {
+            WorldCoordinates c = toProcess.remove();
+            
+            if (!processed.contains(c))
+            {
+                if (world.isAirBlock(c.posX, c.posY, c.posZ))
+                {
+                    int sides = getAllGhostedSides(c, portalDirection, ghostedPortals);
+                    
+                    if (sides < 2)
+                    {
+                        if (chances < MAXIMUM_CHANCES)
+                        {
+                            chances++;
+                            sides += 2;
+                        }
+                        else
+                        {
+                            return new LinkedList<WorldCoordinates>();
+                        }
+                    }
+                    
+                    if (sides >= 2)
+                    {
+                        processed.add(c);
+                        ghostedPortals.add(c);
+                        addNearbyBlocks(c, portalDirection, toProcess);
+                    }
+                }
+                else if (!isPortalPart(world, c.posX, c.posY, c.posZ))
+                {
+                    return new LinkedList<WorldCoordinates>();
+                }
+            }
+        }
+        
+        return ghostedPortals;
+    }
+    
+    /***
+     * Counts the sides that are touching portal parts.
+     */
+    private static int getAllSides(WorldCoordinates w, int portalDirection)
+    {
+        int sides = 0;
+        
+        for (int i = 0; i < 6; i++)
+        {
+            WorldCoordinates c = w.offset(ForgeDirection.getOrientation(i));
+            
+            if (portalDirection == 1 && (i == 2 || i == 3))
+            {
+                continue;
+            }
+            else if (portalDirection == 2 && (i == 4 || i == 5))
+            {
+                continue;
+            }
+            else if (portalDirection == 3 && (i == 0 || i == 1))
+            {
+                continue;
+            }
+            
+            if (isPortalPart(c.getBlockTileEntity()))
+            {
+                sides++;
+            }
+        }
+        
+        return sides;
+    }
+    
+    /***
+     * Counts the sides that are touching ghosted portal parts.
+     */
+    private static int getAllGhostedSides(WorldCoordinates w, int portalDirection, Queue<WorldCoordinates> ghostedParts)
+    {
+        int sides = 0;
+        
+        for (int i = 0; i < 6; i++)
+        {
+            WorldCoordinates c = w.offset(ForgeDirection.getOrientation(i));
+            
+            if (portalDirection == 1 && (i == 2 || i == 3))
+            {
+                continue;
+            }
+            else if (portalDirection == 2 && (i == 4 || i == 5))
+            {
+                continue;
+            }
+            else if (portalDirection == 3 && (i == 0 || i == 1))
+            {
+                continue;
+            }
+            
+            if (ghostedParts.contains(c) || isPortalPart(c.getBlockTileEntity()))
+            {
+                sides++;
+            }
+        }
+        
+        return sides;
+    }
+    
+    /***
+     * Adds all the touching blocks to the processing queue.
+     */
+    public static void addNearbyBlocks(WorldCoordinates w, int portalDirection, Queue<WorldCoordinates> q)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+
+            if (portalDirection == 1 && (i == 2 || i == 3))
+            {
+                continue;
+            }
+            else if (portalDirection == 2 && (i == 4 || i == 5))
+            {
+                continue;
+            }
+            else if (portalDirection == 3 && (i == 0 || i == 1))
+            {
+                continue;
+            }
+
+            q.add(w.offset(d));
+        }
+    }
+    
+    /***
+     * Removes an active portal from the specified portal controller.
+     */
+    public static void removePortalFrom(TilePortalController controller)
+    {
+        if (CommonProxy.isClient() || !controller.isPortalActive)
+        {
+            return;
+        }
+        
+        for (WorldCoordinates w : controller.portals)
+        {
+            controller.worldObj.setBlockToAir(w.posX, w.posY, w.posZ);
+        }
+        
+        controller.setPortalActive(false);
+    }
+    
+    private static void removeFailedPortal(World world, Queue<WorldCoordinates> processed)
+    {
+        while (!processed.isEmpty())
+        {
+            WorldCoordinates c = processed.remove();            
+            world.setBlockToAir(c.posX, c.posY, c.posZ);
+        }
+    }    
 }

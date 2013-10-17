@@ -12,12 +12,6 @@ public class TileNetworkInterface extends TilePortalPart
 {
     @SideOnly(Side.CLIENT)
     public int connectedPortals = 0;
-
-    @Override
-    public int getPowerDrainPerTick()
-    {
-         return 2;
-    }
     
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)

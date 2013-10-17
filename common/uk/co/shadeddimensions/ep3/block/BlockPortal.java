@@ -170,7 +170,7 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalController controller = portal.getPortalController();
-        TileModuleManipulator manip = controller.getModuleManipulator();
+        TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
         
         if (controller != null && manip != null)
         {            

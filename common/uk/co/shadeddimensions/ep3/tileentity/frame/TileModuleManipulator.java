@@ -20,12 +20,6 @@ public class TileModuleManipulator extends TilePortalPart
     {
         inventory = new ItemStack[9];
     }
-    
-    @Override
-    public int getPowerDrainPerTick()
-    {
-        return 3;
-    }
 
     @Override
     public ItemStack decrStackSize(int i, int j)

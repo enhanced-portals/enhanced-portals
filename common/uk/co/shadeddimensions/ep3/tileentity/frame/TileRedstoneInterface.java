@@ -26,12 +26,6 @@ public class TileRedstoneInterface extends TilePortalPart
         state = 0;
         emitting = pulse = false;
     }
-
-    @Override
-    public int getPowerDrainPerTick()
-    {
-        return 1;
-    }
     
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)

@@ -3,9 +3,9 @@ package uk.co.shadeddimensions.ep3.item;
 import net.minecraft.item.Item;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 
-public class ItemEP extends Item
+public class ItemEnhancedPortals extends Item
 {
-    public ItemEP(int par1, boolean tab)
+    public ItemEnhancedPortals(int par1, boolean tab)
     {
         super(par1);
 

@@ -18,7 +18,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 
-public class ItemWrench extends ItemEP
+public class ItemWrench extends ItemEnhancedPortals
 {
     public ItemWrench(int id, String name) // TODO: Needs a better name, "wrench" doesn't really describe what it does.
     {

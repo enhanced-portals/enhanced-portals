@@ -47,11 +47,21 @@ public class CommonProxy
 
     public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
+        if (CommonProxy.isClient())
+        {
+            return;
+        }
+        
         PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
     }
     
     public static void sendUpdatePacketToAllAround(TileEnhancedPortals tile)
     {
+        if (CommonProxy.isClient())
+        {
+            return;
+        }
+        
         PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, new PacketTileUpdate(tile).getPacket());
     }
 

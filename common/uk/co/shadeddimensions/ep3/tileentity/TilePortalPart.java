@@ -85,11 +85,6 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     {
         return portalController != null ? (TilePortalController) portalController.getBlockTileEntity() : null;
     }
-    
-    public int getPowerDrainPerTick()
-    {
-        return 0;
-    }
 
     /* IInventory */
     

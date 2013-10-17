@@ -15,7 +15,7 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 
-public class ItemPortalModule extends ItemEP implements IPortalModule
+public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModule
 {
     public static enum PortalModules
     {

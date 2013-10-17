@@ -1,19 +1,27 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
+import ibxm.Module;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.TileFluidHandler;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
+import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
@@ -24,15 +32,13 @@ public class TilePortalController extends TilePortalPart
 {
     public List<WorldCoordinates> frameBasic, frameRedstone, frameFluid, framePower, portals;
     public WorldCoordinates frameModule, frameDialler, frameNetwork, frameBiometric;
-    public int powerCost;
     public boolean hasConfigured;
     public boolean isPortalActive;
     public String uniqueIdentifier, networkIdentifier;
     
     public int frameColour;
     public int portalColour, portalType;
-    public int particleColour;
-    public int particleType;
+    public int particleColour, particleType;
     
     ItemStack[] inventory;
     
@@ -64,7 +70,6 @@ public class TilePortalController extends TilePortalPart
         frameDialler = null;
         frameNetwork = null;
         frameBiometric = null;
-        powerCost = 0;
         hasConfigured = false;
         
         frameColour = portalColour = 0xffffff;
@@ -81,12 +86,6 @@ public class TilePortalController extends TilePortalPart
     {
         return this;
     }
-
-    @Override
-    public int getPowerDrainPerTick()
-    {
-        return 3;
-    }
     
     public void configure(List<WorldCoordinates> tiles)
     {
@@ -94,6 +93,8 @@ public class TilePortalController extends TilePortalPart
         {
             return;
         }
+        
+        System.out.println("Configuring " + tiles.size() + " blocks!");
         
         frameBasic.clear();
         frameRedstone.clear();
@@ -104,18 +105,47 @@ public class TilePortalController extends TilePortalPart
         frameDialler = null;
         frameNetwork = null;
         frameBiometric = null;
-        powerCost = getPowerDrainPerTick();
         
         for (WorldCoordinates c : tiles)
         {
             TilePortalPart tile = (TilePortalPart) c.getBlockTileEntity();
             
-            powerCost += tile.getPowerDrainPerTick();
-            
-            // TODO: init frame block and add to correct frame list, init and add portals to portal lists
+            if (tile == null)
+            {
+                portals.add(c);
+            }
+            else
+            {
+                if (tile instanceof TilePortalFrame)
+                {
+                    frameBasic.add(c);
+                }
+                else if (tile instanceof TileRedstoneInterface)
+                {
+                    frameRedstone.add(c);
+                }
+                else if (tile instanceof TileModuleManipulator)
+                {
+                    frameModule = c;
+                }
+                else if (tile instanceof TileDiallingDevice)
+                {
+                    frameDialler = c;
+                }
+                else if (tile instanceof TileNetworkInterface)
+                {
+                    frameNetwork = c;
+                }
+                else if (tile instanceof TileBiometricIdentifier)
+                {
+                    frameBiometric = c;
+                }
+                
+                tile.portalController = getWorldCoordinates();
+                CommonProxy.sendUpdatePacketToAllAround(tile);
+            }
         }
         
-        powerCost *= EnhancedPortals.config.getInteger("powerCostMultiplier");
         hasConfigured = true;
     }
     
@@ -124,9 +154,9 @@ public class TilePortalController extends TilePortalPart
     {
         super.fillPacket(stream);
         
-        stream.writeInt(powerCost);
         stream.writeBoolean(hasConfigured);
         
+        stream.writeInt(portals.size());
         stream.writeInt(frameBasic.size());
         stream.writeInt(frameRedstone.size());
         stream.writeInt(frameFluid.size());
@@ -178,9 +208,9 @@ public class TilePortalController extends TilePortalPart
     {
         super.usePacket(stream);
         
-        powerCost = stream.readInt();
         hasConfigured = stream.readBoolean();
         
+        intPortal = stream.readInt();
         intBasic = stream.readInt();
         intRedstone = stream.readInt();
         intFluid = stream.readInt();
@@ -218,7 +248,6 @@ public class TilePortalController extends TilePortalPart
     {
         super.writeToNBT(tag);
         
-        tag.setInteger("powerCost", powerCost);
         tag.setBoolean("hasConfigured", hasConfigured);
         
         tag.setString("uniqueIdentifier", uniqueIdentifier);
@@ -254,7 +283,6 @@ public class TilePortalController extends TilePortalPart
     {
         super.readFromNBT(tag);
         
-        powerCost = tag.getInteger("powerCost");
         hasConfigured = tag.getBoolean("hasConfigured");
         uniqueIdentifier = tag.getString("uniqueIdentifier");
         networkIdentifier = tag.getString("networkIdentifier");
@@ -284,8 +312,119 @@ public class TilePortalController extends TilePortalPart
     @Override
     public boolean activate(EntityPlayer player)
     {
-        // TODO init portal
+        if (CommonProxy.isClient() || hasConfigured)
+        {
+            return false;
+        }
         
+        System.out.println("Configuring controller...");
+
+        Queue<WorldCoordinates> portalBlocks = new LinkedList<WorldCoordinates>();
+
+        outerloop:
+            for (int j = 0; j < 6; j++)
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    portalBlocks = PortalUtils.ghostPortalAt(getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
+
+                    if (!portalBlocks.isEmpty())
+                    {
+                        break outerloop;
+                    }
+                }
+            }
+
+        System.out.println("Found " + portalBlocks.size() + " portal blocks!");
+        
+        if (!portalBlocks.isEmpty())
+        {
+            List<WorldCoordinates> portalParts = new ArrayList<WorldCoordinates>();
+            Queue<WorldCoordinates> toProcess = new LinkedList<WorldCoordinates>();
+            Queue<WorldCoordinates> processed = new LinkedList<WorldCoordinates>();
+            toProcess.add(getWorldCoordinates());
+
+            int biometricCounter = 0, dialCounter = 0, networkCounter = 0, moduleCounter = 0;
+            
+            while (!toProcess.isEmpty())
+            {
+                WorldCoordinates c = toProcess.remove();
+
+                if (!processed.contains(c))
+                {
+                    processed.add(c);
+                    TileEntity t = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+                    if (portalBlocks.contains(c) || t instanceof TilePortalPart)
+                    {
+                        if (t != null)
+                        {
+                            if (t instanceof TileNetworkInterface)
+                            {
+                                if (networkCounter == 1)
+                                {
+                                    // TODO: ERROR MESSAGE
+                                    return false;
+                                }
+                                else if (dialCounter == 1)
+                                {
+                                    // TODO: ERROR MESSAGE
+                                    return false;
+                                }
+                                
+                                networkCounter++;
+                            }
+                            else if (t instanceof TileDiallingDevice)
+                            {
+                                if (dialCounter == 1)
+                                {
+                                    // TODO: ERROR MESSAGE
+                                    return false;
+                                }
+                                else if (networkCounter == 1)
+                                {
+                                    // TODO: ERROR MESSAGE
+                                    return false;
+                                }
+                                
+                                dialCounter++;
+                            }
+                            else if (t instanceof TileBiometricIdentifier)
+                            {
+                                if (biometricCounter == 1)
+                                {
+                                    // TODO: ERROR MESSAGE
+                                    return false;
+                                }
+                                
+                                biometricCounter++;
+                            }
+                            else if (t instanceof TileModuleManipulator)
+                            {
+                                if (moduleCounter == 1)
+                                {
+                                    // TODO: ERROR MESSAGE
+                                    return false;
+                                }
+                                
+                                moduleCounter++;
+                            }
+                            else if (t instanceof TilePortalController && processed.size() > 1)
+                            {
+                                // ERROR MESSAGE
+                                return false;
+                            }
+                        }
+                        
+                        portalParts.add(c);
+                        PortalUtils.addNearbyBlocks(c, 0, toProcess);
+                    }
+                }
+            }
+
+            configure(portalParts);
+        }
+                
         return false;
     }
     
@@ -297,12 +436,12 @@ public class TilePortalController extends TilePortalPart
     
     public void createPortal()
     {
-        // TODO
+        PortalUtils.createPortalFrom(this);
     }
     
     public void removePortal()
     {
-        // TODO
+        PortalUtils.removePortalFrom(this);
     }
     
     public TileModuleManipulator getModuleManipulator()
@@ -365,5 +504,13 @@ public class TilePortalController extends TilePortalPart
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
         return i == 0 ? StackHelper.isItemStackValidForPortalFrameTexture(stack) : StackHelper.isItemStackValidForPortalTexture(stack);
+    }
+
+    public void setPortalActive(boolean b)
+    {
+        isPortalActive = b;
+        
+        // TODO notify all redstone identifiers
+        CommonProxy.sendUpdatePacketToAllAround(this);
     }
 }

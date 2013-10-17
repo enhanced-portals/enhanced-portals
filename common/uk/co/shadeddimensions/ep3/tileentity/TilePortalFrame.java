@@ -4,13 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
 public class TilePortalFrame extends TilePortalPart
-{
-    @Override
-    public int getPowerDrainPerTick()
-    {
-        return 1;
-    }
-    
+{    
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {

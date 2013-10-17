@@ -286,6 +286,8 @@ public class GuiPortalFrameController extends GuiResizable
     @Override
     protected void initLedgers(IInventory inventory)
     {
+        super.initLedgers(inventory);
+        
         ledgerManager.add(new TipLedger());
     }
 
