@@ -9,6 +9,7 @@ import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
+import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalFrame;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
@@ -35,6 +36,7 @@ public class CommonProxy
     public static BlockPortal blockPortal;
 
     public static ItemWrench itemWrench;
+    public static ItemPaintbrush itemPaintbrush;    
     public static ItemGoggles itemGoggles;
     public static ItemPortalModule itemUpgrade;
 
@@ -81,6 +83,7 @@ public class CommonProxy
     public void registerItems()
     {
         itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, Reference.SHORT_ID + ".wrench");
+        itemPaintbrush = (ItemPaintbrush) EnhancedPortals.config.registerItem(ItemPaintbrush.class, Reference.SHORT_ID + ".paintbrush");
         itemGoggles = (ItemGoggles) EnhancedPortals.config.registerItem(ItemGoggles.class, Reference.SHORT_ID + ".goggles");
         itemUpgrade = (ItemPortalModule) EnhancedPortals.config.registerItem(ItemPortalModule.class, Reference.SHORT_ID + ".portalModule");
     }
@@ -110,6 +113,7 @@ public class CommonProxy
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".goggles");
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".portalModule");
+        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".paintbrush");
 
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");

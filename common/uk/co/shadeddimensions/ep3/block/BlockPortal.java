@@ -2,8 +2,8 @@ package uk.co.shadeddimensions.ep3.block;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -21,8 +21,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPortal extends BlockEnhancedPortals
 {
-    public static Icon[] colouredPortalTextures;
-
     public BlockPortal(int id, String name)
     {
         super(id, Material.portal, false);
@@ -30,7 +28,6 @@ public class BlockPortal extends BlockEnhancedPortals
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundGlassFootstep);
-        colouredPortalTextures = new Icon[16];
     }
 
     @Override
@@ -60,7 +57,7 @@ public class BlockPortal extends BlockEnhancedPortals
     @Override
     public Icon getIcon(int side, int meta)
     {
-        return colouredPortalTextures[meta];
+        return Block.portal.getIcon(side, meta);
     }
 
     @Override
@@ -147,15 +144,6 @@ public class BlockPortal extends BlockEnhancedPortals
             }
 
             FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, controller, module, d0, d1, d2, d3, d4, d5));
-        }
-    }
-
-    @Override
-    public void registerIcons(IconRegister iconRegister)
-    {
-        for (int i = 0; i < colouredPortalTextures.length; i++)
-        {
-            colouredPortalTextures[i] = iconRegister.registerIcon("enhancedportals:colouredPortal_" + i);
         }
     }
 

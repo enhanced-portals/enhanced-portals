@@ -12,48 +12,44 @@ import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.gui.slider.GuiBetterSlider;
-import uk.co.shadeddimensions.ep3.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
-public class GuiPortalFrameTexture extends GuiResizable
+public class GuiPortalFrameTexture extends GuiColourInterface
 {
     TilePortalController controller;
 
     public GuiPortalFrameTexture(EntityPlayer player, TilePortalController control)
     {
-        super(new ContainerPortalFrameTexture(player, control), control);
+        super(new ContainerPortalFrameTexture(player, control), control, new Color(control.frameColour));
         controller = control;
     }
 
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        if (button.id == 10 || button.id == 11)
+        if (button.id == saveButton.id)
         {
-            boolean resetSlot = false;
-            
-            if (button.id == 11)
-            {
-                ((GuiRGBSlider) buttonList.get(0)).sliderValue = 1f;
-                ((GuiRGBSlider) buttonList.get(1)).sliderValue = 1f;
-                ((GuiRGBSlider) buttonList.get(2)).sliderValue = 1f;                
-                resetSlot = true;
-            }
-
-            String hex = String.format("%02x%02x%02x", ((GuiRGBSlider) buttonList.get(0)).getValue(), ((GuiRGBSlider) buttonList.get(1)).getValue(), ((GuiRGBSlider) buttonList.get(2)).getValue());
+            String hex = String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
             
             GuiPayload payload = new GuiPayload();
             payload.data.setInteger("frameColour", Integer.parseInt(hex, 16));
+            ClientProxy.sendGuiPacket(payload);
+        }
+        else if (button.id == resetButton.id)
+        {
+            redSlider.sliderValue = 1f;
+            greenSlider.sliderValue = 1f;
+            blueSlider.sliderValue = 1f;
             
-            if (resetSlot)
-            {
-                payload.data.setInteger("resetSlot", 0);
-            }
+            String hex = String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
             
+            GuiPayload payload = new GuiPayload();
+            payload.data.setInteger("frameColour", Integer.parseInt(hex, 16));
+            payload.data.setInteger("resetSlot", 0);            
             ClientProxy.sendGuiPacket(payload);
         }
     }
@@ -63,8 +59,6 @@ public class GuiPortalFrameTexture extends GuiResizable
     {
         super.drawGuiContainerBackgroundLayer(f, i, j);
 
-        drawTab(guiLeft + xSize, guiTop + 10, 87, 97, 0.4f, 0.4f, 1f);
-
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(guiLeft + 7, guiTop + 83, 0, 0, 162, 54);
@@ -72,7 +66,7 @@ public class GuiPortalFrameTexture extends GuiResizable
         drawTexturedModalRect(guiLeft + xSize / 2 - 20, guiTop + 20, 0, 0, 18, 18);
         drawTexturedModalRect(guiLeft + xSize / 2 - 0, guiTop + 20, 0, 0, 18, 18);
 
-        GL11.glColor3f(((GuiRGBSlider) buttonList.get(0)).sliderValue, ((GuiRGBSlider) buttonList.get(1)).sliderValue, ((GuiRGBSlider) buttonList.get(2)).sliderValue);
+        GL11.glColor3f(redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
         itemRenderer.renderWithColor = false;
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, controller.getStackInSlot(0) == null ? new ItemStack(CommonProxy.blockFrame, 1) : controller.getStackInSlot(0), guiLeft + xSize / 2 + 1, guiTop + 21);
         itemRenderer.renderWithColor = true;
@@ -88,23 +82,6 @@ public class GuiPortalFrameTexture extends GuiResizable
 
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".texture"), 8, 8, 0x404040);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
-
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour"), xSize + 6, 18, 0xe1c92f);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-
-        Color c = new Color(controller.frameColour);
-        buttonList.add(new GuiRGBSlider(0, guiLeft + xSize + 5, guiTop + 32, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f));
-        buttonList.add(new GuiRGBSlider(1, guiLeft + xSize + 5, guiTop + 56, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f));
-        buttonList.add(new GuiRGBSlider(2, guiLeft + xSize + 5, guiTop + 80, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f));
-
-        buttonList.add(new GuiButton(10, guiLeft + xSize - 75 - 7, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
-        buttonList.add(new GuiButton(11, guiLeft + 8, guiTop + 45, 75, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset")));
     }
 
     @Override

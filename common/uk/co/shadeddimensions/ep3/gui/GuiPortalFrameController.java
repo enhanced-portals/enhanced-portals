@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
@@ -22,83 +21,6 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameController extends GuiResizable
 {
-    class TipLedger extends Ledger
-    {
-        int headerColour = 0xe1c92f;
-        int subheaderColour = 0xaaafb8;
-        int textColour = 0x000000;
-        int currentTip = 0;
-
-        @SuppressWarnings("rawtypes")
-        public TipLedger()
-        {
-            overlayColor = 0x5396da;
-
-            if (maxHeight == 24)
-            {
-                List list = getMinecraft().fontRenderer.listFormattedStringToWidth(getTip(), maxWidth - 16);
-                maxHeight = 24 + list.size() * getMinecraft().fontRenderer.FONT_HEIGHT + 5;
-            }
-        }
-
-        @Override
-        public void draw(int x, int y)
-        {
-            drawBackground(x, y);
-
-            if (isFullyOpened())
-            {
-                drawString(fontRenderer, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".didYouKnow"), x + 20, y + 8, headerColour);
-
-                fontRenderer.drawSplitString(getTip(), x + 8, y + 22, maxWidth - 16, textColour);
-            }
-        }
-
-        private String getTip()
-        {
-            if (currentTip >= 0 && currentTip <= 2)
-            {
-                return StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.tip." + currentTip);
-            }
-            else
-            {
-                currentTip = 0;
-                return StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".controller.tip.0");
-            }
-        }
-
-        @Override
-        public ArrayList<String> getTooltip()
-        {
-            ArrayList<String> strList = new ArrayList<String>();
-
-            if (!isOpen())
-            {
-                strList.add("Useful Tips");
-            }
-
-            return strList;
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public boolean handleMouseClicked(int x, int y, int mouseButton)
-        {
-            if (mouseButton == 1)
-            {
-                currentTip++;
-
-                List list = fontRenderer.listFormattedStringToWidth(getTip(), maxWidth - 16);
-                maxHeight = 24 + list.size() * fontRenderer.FONT_HEIGHT + 5;
-                setFullyOpen();
-
-                return true;
-            }
-
-            return super.handleMouseClicked(x, y, mouseButton);
-        }
-    }
-
     GuiGlyphSelector glyphSelector;
     GuiGlyphViewer glyphViewer;
 
@@ -281,14 +203,6 @@ public class GuiPortalFrameController extends GuiResizable
         buttonList.add(new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save")));
 
         updateButtons();
-    }
-
-    @Override
-    protected void initLedgers(IInventory inventory)
-    {
-        super.initLedgers(inventory);
-        
-        ledgerManager.add(new TipLedger());
     }
 
     @Override

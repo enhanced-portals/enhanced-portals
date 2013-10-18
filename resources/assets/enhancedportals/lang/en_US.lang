@@ -9,7 +9,8 @@ tile.ep3.portalFrame.upgrade.name=Module Manipulator
 tile.ep3.portal.name=Portal
 
 # Items
-item.ep3.wrench.name=Multitool
+item.ep3.wrench.name=Wrench
+item.ep3.paintbrush.name=Nanobrush
 item.ep3.goggles.name=Goggles
 
 # Upgrades
@@ -66,11 +67,6 @@ gui.ep3.networkIdentifier.sequential=Sequential
 gui.ep3.networkIdentifier.random=Random
 gui.ep3.networkIdentifier.notSet=Not Set
 gui.ep3.modules=Modules
-
-# Controller Tips
-gui.ep3.controller.tip.0=You can right-click this tab to get more tips! This also works for other information tabs.
-gui.ep3.controller.tip.1=You can hold SHIFT while selecting Glyphs to get additional options.
-gui.ep3.controller.tip.2=Holding SHIFT and CONTROL will force the Random button to use all 9 Glyphs.
 
 # Redstone States (Titles)
 gui.ep3.redstone.output.portalCreated=Portal Created

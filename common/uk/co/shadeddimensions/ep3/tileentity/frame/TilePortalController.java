@@ -335,6 +335,12 @@ public class TilePortalController extends TilePortalPart
             sendUpdatePacket = true;
         }
 
+        if (payload.data.hasKey("frameColour"))
+        {
+            frameColour = payload.data.getInteger("frameColour");
+            sendUpdatePacket = true;
+        }
+        
         // TODO
         
         if (sendUpdatePacket)

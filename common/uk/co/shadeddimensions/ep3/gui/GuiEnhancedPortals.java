@@ -58,7 +58,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
             
             if (isFullyOpened())
             {
-                drawString(fontRenderer, "Permissions", x + 25, y + 8, headerColour);
+                drawString(fontRenderer, "Permissions", x + 20, y + 8, headerColour);
                 
                 fontRenderer.drawString("Owner: " + EnumChatFormatting.DARK_AQUA + tile.owner, x + 5, y + 21, textColour);
                 fontRenderer.drawString((tile.isOwnerLocked ? "Locked" : "Unlocked"), x + 5, y + 32, textColour);
@@ -131,7 +131,6 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
         protected void drawIcon(Icon icon, int x, int y)
         {
-
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
             drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
         }
@@ -150,7 +149,6 @@ public abstract class GuiEnhancedPortals extends GuiContainer
 
         public boolean intersectsWith(int mouseX, int mouseY, int shiftX, int shiftY)
         {
-
             if (mouseX >= shiftX && mouseX <= shiftX + currentWidth && mouseY >= shiftY && mouseY <= shiftY + getHeight())
             {
                 return true;
@@ -250,7 +248,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
                     continue;
                 }
 
-                ledger.draw(xSize, xPos);
+                ledger.draw(xSize + guiLeft, xPos + guiTop);
                 xPos += ledger.getHeight();
             }
 
@@ -267,7 +265,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
                     return;
                 }
 
-                drawTooltipText(tooltip, startX - 10, startY + 10, fontRenderer);
+                drawTooltipText(tooltip, startX - 10 + guiLeft, startY + 10 + guiTop, fontRenderer);
             }
         }
 
@@ -462,8 +460,8 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        ledgerManager.drawLedgers(par1, par2);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        //ledgerManager.drawLedgers(par1, par2);
+        //GL11.glDisable(GL11.GL_LIGHTING);
     }
     
     @Override
@@ -471,9 +469,12 @@ public abstract class GuiEnhancedPortals extends GuiContainer
     {
         if (tile.isOwnerLocked && !tile.owner.equals(FMLClientHandler.instance().getClient().thePlayer.getEntityName()))
         {
-            String s = "This device is locked its owner. You will be unable to modify any of its settings.";
+            String s = "This device is locked by its owner. You will be unable to modify any of its settings.";
             fontRenderer.drawStringWithShadow(s, (FMLClientHandler.instance().getClient().currentScreen.width / 2) - (fontRenderer.getStringWidth(s) / 2), 5, 0xFF0000);
         }
+        
+        ledgerManager.drawLedgers(i, j);
+        GL11.glDisable(GL11.GL_LIGHTING);
     }
 
     protected void drawItemSlotBackground(int x, int y, int w, int h)
