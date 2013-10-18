@@ -8,12 +8,28 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import uk.co.shadeddimensions.ep3.api.IPortalTool;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TilePortalPart extends TileEnhancedPortals implements IInventory
 {
     public WorldCoordinates portalController;
+    
+    @Override
+    public boolean activate(EntityPlayer player)
+    {
+        ItemStack s = player.inventory.getCurrentItem();
+        
+        if (s != null && s.getItem() instanceof IPortalTool)
+        {
+            ((IPortalTool) s.getItem()).openGui(this, s, player.isSneaking(), player);            
+            return true;
+        }
+        
+        return false;
+    }
     
     @Override
     public void writeToNBT(NBTTagCompound tag)
@@ -85,9 +101,19 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     {
         return portalController != null ? (TilePortalController) portalController.getBlockTileEntity() : null;
     }
+    
+    @Override
+    public void validate()
+    {
+        super.validate();
+        
+        if (worldObj.isRemote)
+        {
+            ClientProxy.requestTileData(this);
+        }
+    }
 
     /* IInventory */
-    
     @Override
     public int getSizeInventory()
     {

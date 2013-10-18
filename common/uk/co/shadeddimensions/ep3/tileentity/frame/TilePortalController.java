@@ -1,7 +1,5 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
-import ibxm.Module;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.TileFluidHandler;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
@@ -87,7 +84,7 @@ public class TilePortalController extends TilePortalPart
         return this;
     }
     
-    public void configure(List<WorldCoordinates> tiles)
+    public void configure(List<WorldCoordinates> tiles, int pType)
     {
         if (CommonProxy.isClient() || hasConfigured)
         {
@@ -146,6 +143,7 @@ public class TilePortalController extends TilePortalPart
             }
         }
         
+        portalType = pType;
         hasConfigured = true;
     }
     
@@ -284,6 +282,7 @@ public class TilePortalController extends TilePortalPart
         super.readFromNBT(tag);
         
         hasConfigured = tag.getBoolean("hasConfigured");
+        
         uniqueIdentifier = tag.getString("uniqueIdentifier");
         networkIdentifier = tag.getString("networkIdentifier");
         
@@ -306,20 +305,61 @@ public class TilePortalController extends TilePortalPart
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
+        super.guiActionPerformed(payload, player);
+        boolean sendUpdatePacket = false;
+        
+        if (payload.data.hasKey("uniqueIdentifier"))
+        {
+            String identifier = payload.data.getString("uniqueIdentifier");
+            
+            if (identifier.equals(NetworkManager.BLANK_IDENTIFIER) && !uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER)) // If the identifier is blank and previously it wasn't
+            {
+                CommonProxy.networkManager.removePortal(uniqueIdentifier);
+            }
+            else if (!identifier.equals(NetworkManager.BLANK_IDENTIFIER) && uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER)) // If the identifier isn't blank and previously it was
+            {
+                CommonProxy.networkManager.addNewPortal(identifier, getWorldCoordinates());
+            }
+            else if (!identifier.equals(NetworkManager.BLANK_IDENTIFIER) && !uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER)) // If the identifier isn't blank and previously it wasn't
+            {
+                CommonProxy.networkManager.updateExistingPortal(uniqueIdentifier, identifier);
+                
+                if (!networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER)) // Remove old identifier from network and add the new one
+                {
+                    CommonProxy.networkManager.removePortalFromNetwork(uniqueIdentifier, networkIdentifier);
+                    CommonProxy.networkManager.addPortalToNetwork(identifier, networkIdentifier);
+                }
+            }
+            
+            uniqueIdentifier = identifier;
+            sendUpdatePacket = true;
+        }
+
         // TODO
+        
+        if (sendUpdatePacket)
+        {
+            CommonProxy.sendUpdatePacketToAllAround(this);
+        }
     }
     
     @Override
     public boolean activate(EntityPlayer player)
     {
+        if (super.activate(player))
+        {
+            return true;
+        }
+        
         if (CommonProxy.isClient() || hasConfigured)
         {
             return false;
         }
-        
+                
         System.out.println("Configuring controller...");
 
         Queue<WorldCoordinates> portalBlocks = new LinkedList<WorldCoordinates>();
+        int pType = 0;
 
         outerloop:
             for (int j = 0; j < 6; j++)
@@ -330,6 +370,7 @@ public class TilePortalController extends TilePortalPart
 
                     if (!portalBlocks.isEmpty())
                     {
+                        pType = i;
                         break outerloop;
                     }
                 }
@@ -422,7 +463,7 @@ public class TilePortalController extends TilePortalPart
                 }
             }
 
-            configure(portalParts);
+            configure(portalParts, pType);
         }
                 
         return false;
@@ -446,7 +487,7 @@ public class TilePortalController extends TilePortalPart
     
     public TileModuleManipulator getModuleManipulator()
     {
-        return (TileModuleManipulator) worldObj.getBlockTileEntity(frameModule.posX, frameModule.posY, frameModule.posZ);
+        return frameModule != null ? (TileModuleManipulator) worldObj.getBlockTileEntity(frameModule.posX, frameModule.posY, frameModule.posZ) : null;
     }
 
     public List<WorldCoordinates> getAllPortalBlocks()

@@ -2,15 +2,14 @@ package uk.co.shadeddimensions.ep3.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.GuiIds;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -18,124 +17,84 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 
-public class ItemWrench extends ItemEnhancedPortals
+public class ItemWrench extends ItemPortalTool
 {
-    public ItemWrench(int id, String name) // TODO: Needs a better name, "wrench" doesn't really describe what it does.
+    public ItemWrench(int id, String name)
     {
-        super(id, true);
-        setUnlocalizedName(name);
-        maxStackSize = 1;
-        setMaxDamage(0);
+        super(id, true, name);
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+    public void openGui(TilePortalPart portalPart, ItemStack stack, boolean isSneaking, EntityPlayer player)
     {
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-        if (tile != null)
+        if (portalPart instanceof TilePortalController)
         {
-            if (tile instanceof TilePortalController)
-            {
-                TilePortalController controller = (TilePortalController) tile;
+            player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
+        }
+        else if (portalPart instanceof TileRedstoneInterface)
+        {
+            player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
+        }
+        else if (portalPart instanceof TileDiallingDevice)
+        {
+            TileDiallingDevice dialDevice = (TileDiallingDevice) portalPart;
 
-                if (!controller.hasConfigured)
+            if (dialDevice.getPortalController() != null && dialDevice.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            {
+                if (!portalPart.worldObj.isRemote)
                 {
-                    return false;
+                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".dialDevice.noUidSet"));
                 }
 
-                player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_FRAME_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, x, y, z);
-                return true;
+                return;
             }
-            else if (tile instanceof TileRedstoneInterface)
+
+            // TODO
+        }
+        else if (portalPart instanceof TileNetworkInterface)
+        {
+            TileNetworkInterface networkInterface = (TileNetworkInterface) portalPart;
+
+            if (networkInterface.getPortalController() != null && networkInterface.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, world, x, y, z);
-                return true;
+                if (!portalPart.worldObj.isRemote)
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".networkInterface.noUidSet"));
+                }
+
+                return;
             }
-            else if (tile instanceof TileDiallingDevice)
+
+            player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
+        }
+        else if (portalPart instanceof TileBiometricIdentifier)
+        {
+            // TODO
+        }
+        else if (portalPart instanceof TileModuleManipulator)
+        {
+            if (((TileModuleManipulator) portalPart).getPortalController() != null)
             {
-                TileDiallingDevice dialDevice = (TileDiallingDevice) tile;
-
-                if (dialDevice.getPortalController() == null)
-                {
-                    return false;
-                }
-                else if (dialDevice.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
-                {
-                    if (!world.isRemote)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".dialDevice.noUidSet"));
-                    }
-
-                    return false;
-                }
-
-                // TODO
-
-                return true;
-            }
-            else if (tile instanceof TileNetworkInterface)
-            {
-                TileNetworkInterface networkInterface = (TileNetworkInterface) tile;
-
-                if (networkInterface.getPortalController() == null)
-                {
-                    return false;
-                }
-                else if (networkInterface.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
-                {
-                    if (!world.isRemote)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".networkInterface.noUidSet"));
-                    }
-
-                    return false;
-                }
-
-                player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, world, x, y, z);
-                return true;
-            }
-            else if (tile instanceof TileBiometricIdentifier)
-            {
-                // TODO
-                return true;
-            }
-            else if (tile instanceof TileModuleManipulator)
-            {
-                TileModuleManipulator module = (TileModuleManipulator) tile;
-
-                if (module.getPortalController() == null)
-                {
-                    return false;
-                }
-
-                player.openGui(EnhancedPortals.instance, GuiIds.MODULE_MANIPULATOR, world, x, y, z);
-                return true;
-            }
-            else if (tile instanceof TilePortalFrame)
-            {
-                TilePortalFrame frame = (TilePortalFrame) tile;
-                TilePortalController control = frame.getPortalController();
-
-                if (control != null)
-                {
-                    player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_FRAME_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, control.xCoord, control.yCoord, control.zCoord);
-                    return true;
-                }
-            }
-            else if (tile instanceof TilePortal)
-            {
-                TilePortal portal = (TilePortal) tile;
-                TilePortalController control = portal.getPortalController();
-
-                if (control != null)
-                {
-                    player.openGui(EnhancedPortals.instance, player.isSneaking() ? GuiIds.PORTAL_TEXTURE : GuiIds.PORTAL_CONTROLLER, world, control.xCoord, control.yCoord, control.zCoord);
-                    return true;
-                }
+                player.openGui(EnhancedPortals.instance, GuiIds.MODULE_MANIPULATOR, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
             }
         }
+        else if (portalPart instanceof TilePortalFrame)
+        {
+            TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
 
-        return false;
+            if (control != null)
+            {
+                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+            }
+        }
+        else if (portalPart instanceof TilePortal)
+        {
+            TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
+
+            if (control != null)
+            {
+                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+            }
+        }
     }
 }

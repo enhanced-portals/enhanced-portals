@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
@@ -58,6 +59,14 @@ public class PortalUtils
             }
             
             controller.worldObj.setBlock(w.posX, w.posY, w.posZ, CommonProxy.blockPortal.blockID, controller.portalType, 2);
+            
+            TilePortal portal = (TilePortal) controller.worldObj.getBlockTileEntity(w.posX, w.posY, w.posZ);
+            portal.portalController = controller.getWorldCoordinates();
+        }
+        
+        for (WorldCoordinates w : controller.portals)
+        {
+            CommonProxy.sendUpdatePacketToAllAround((TilePortal) controller.worldObj.getBlockTileEntity(w.posX, w.posY, w.posZ));
         }
         
         controller.setPortalActive(true);

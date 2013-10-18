@@ -14,6 +14,19 @@ public class TileNetworkInterface extends TilePortalPart
     public int connectedPortals = 0;
     
     @Override
+    public boolean activate(EntityPlayer player)
+    {
+        if (super.activate(player))
+        {
+            return true;
+        }
+        
+        // Do stuff
+        
+        return false;
+    }
+    
+    @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         if (payload.data.hasKey("id"))

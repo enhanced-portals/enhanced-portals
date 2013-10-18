@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
@@ -23,7 +24,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 
 public class BlockFrame extends BlockEnhancedPortals
-{
+{    
     static int PORTAL_CONTROLLER = 1,
                REDSTONE_INTERFACE = 2,
                NETWORK_INTERFACE = 3,
@@ -33,11 +34,13 @@ public class BlockFrame extends BlockEnhancedPortals
                FLUID = 7,
                POWER = 8,
                FRAME_TYPES = 8;
+    
+    public static Icon[] overlayIcons;
 
     public BlockFrame(int id, String name)
     {
-        super(id, CommonProxy.frameMaterial, true);
-        setHardness(10);
+        super(id, Material.rock, true);
+        setHardness(5);
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
@@ -161,7 +164,12 @@ public class BlockFrame extends BlockEnhancedPortals
     @Override
     public void registerIcons(IconRegister register)
     {
-        // TODO
+        overlayIcons = new Icon[FRAME_TYPES];
+        
+        for (int i = 0; i < overlayIcons.length; i++)
+        {
+            overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + (i + 1));
+        }
     }
 
     @Override

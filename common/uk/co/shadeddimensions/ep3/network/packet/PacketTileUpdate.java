@@ -50,7 +50,7 @@ public class PacketTileUpdate extends PacketEnhancedPortals
     public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         TileEntity t = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
-        
+                
         if (t != null && t instanceof TileEnhancedPortals)
         {            
             try

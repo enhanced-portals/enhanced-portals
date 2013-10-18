@@ -200,4 +200,21 @@ public class BlockPortal extends BlockEnhancedPortals
             setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
         }
     }
+    
+    @Override
+    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        if (blockAccess.getBlockMaterial(x, y, z) == Material.portal)
+        {
+            return false;
+        }
+        
+        return super.shouldSideBeRendered(blockAccess, x, y, z, side);
+    }
+    
+    @Override
+    public void setBlockBoundsForItemRender()
+    {
+        setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
+    }
 }

@@ -8,7 +8,6 @@ import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
-import uk.co.shadeddimensions.ep3.block.material.FrameMaterial;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.item.ItemPortalFrame;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
@@ -40,8 +39,6 @@ public class CommonProxy
     public static ItemPortalModule itemUpgrade;
 
     public static NetworkManager networkManager;
-    
-    public static FrameMaterial frameMaterial = new FrameMaterial();
 
     public static final Logger logger = Logger.getLogger(Reference.NAME);
 

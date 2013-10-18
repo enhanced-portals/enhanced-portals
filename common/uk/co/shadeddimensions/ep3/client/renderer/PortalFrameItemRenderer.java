@@ -8,6 +8,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class PortalFrameItemRenderer implements IItemRenderer
@@ -93,9 +94,9 @@ public class PortalFrameItemRenderer implements IItemRenderer
         renderer.renderFaceXPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
         tessellator.draw();
 
-        /*if (item.getItemDamage() >= 1) // TODO
+        if (item.getItemDamage() >= 1)
         {
-            icon = BlockFrame.typeOverlayIcons[item.getItemDamage()];
+            icon = BlockFrame.overlayIcons[item.getItemDamage() - 1];
 
             tessellator.startDrawingQuads();
             tessellator.setNormal(0.0F, -1F, 0.0F);
@@ -121,7 +122,7 @@ public class PortalFrameItemRenderer implements IItemRenderer
             tessellator.setNormal(1.0F, 0.0F, 0.0F);
             renderer.renderFaceXPos(CommonProxy.blockFrame, 0.0D, 0.0D, 0.0D, icon);
             tessellator.draw();
-        }*/
+        }
     }
 
     @Override
