@@ -12,6 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -56,8 +57,32 @@ public class BlockPortal extends BlockEnhancedPortals
 
     @Override
     public Icon getIcon(int side, int meta)
-    {
+    {        
         return Block.portal.getIcon(side, meta);
+    }
+    
+    @Override
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
+        TilePortalController controller = portal.getPortalController();
+        
+        if (controller != null)
+        {
+            if (controller.customPortalTexture != -1)
+            {
+                if (ClientProxy.customPortalTextures.size() > controller.customPortalTexture && (Icon) ClientProxy.customPortalTextures.values().toArray()[controller.customPortalTexture] != null)
+                {
+                    return (Icon) ClientProxy.customPortalTextures.values().toArray()[controller.customPortalTexture];
+                }
+            }
+            else if (controller.getStackInSlot(1) != null)
+            {
+                return Block.blocksList[controller.getStackInSlot(1).itemID].getIcon(side, controller.getStackInSlot(1).getItemDamage());
+            }
+        }
+        
+        return Block.portal.getIcon(side, 0);
     }
 
     @Override

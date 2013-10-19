@@ -33,8 +33,8 @@ public class TilePortalController extends TilePortalPart
     public boolean isPortalActive;
     public String uniqueIdentifier, networkIdentifier;
     
-    public int frameColour;
-    public int portalColour, portalType;
+    public int frameColour, customFrameTexture;
+    public int portalColour, customPortalTexture, portalType;
     public int particleColour, particleType;
     
     ItemStack[] inventory;
@@ -74,6 +74,7 @@ public class TilePortalController extends TilePortalPart
         particleType = portalType = 0;
         
         uniqueIdentifier = networkIdentifier = NetworkManager.BLANK_IDENTIFIER;
+        customFrameTexture = customPortalTexture = -1;
         
         inventory = new ItemStack[2];
     }
@@ -173,6 +174,9 @@ public class TilePortalController extends TilePortalPart
         stream.writeInt(particleType);
         stream.writeInt(portalType);
         
+        stream.writeInt(customPortalTexture);
+        stream.writeInt(customFrameTexture);
+        
         if (frameModule != null)
         {
             stream.writeInt(frameModule.posX);
@@ -227,6 +231,9 @@ public class TilePortalController extends TilePortalPart
         particleType = stream.readInt();
         portalType = stream.readInt();
         
+        customPortalTexture = stream.readInt();
+        customFrameTexture = stream.readInt();
+        
         WorldCoordinates c = new WorldCoordinates(stream.readInt(), stream.readInt(), stream.readInt(), worldObj.provider.dimensionId);        
         frameModule = c.posY > -1 ? c : null;
         
@@ -257,6 +264,8 @@ public class TilePortalController extends TilePortalPart
         tag.setInteger("particleType", particleType);
         tag.setInteger("portalType", portalType);
         tag.setBoolean("isPortalActive", isPortalActive);
+        tag.setInteger("customPortalTexture", customPortalTexture);
+        tag.setInteger("customFrameTexture", customFrameTexture);
         
         NBTTagList list = new NBTTagList();
         for (ItemStack s : inventory)
@@ -292,6 +301,8 @@ public class TilePortalController extends TilePortalPart
         particleType = tag.getInteger("particleType");
         portalType = tag.getInteger("portalType");
         isPortalActive = tag.getBoolean("isPortalActive");
+        customPortalTexture = tag.getInteger("customPortalTexture");
+        customFrameTexture = tag.getInteger("customFrameTexture");
         
         NBTTagList list = tag.getTagList("inventory");
         for (int i = 0; i < list.tagList.size(); i++)
@@ -338,6 +349,18 @@ public class TilePortalController extends TilePortalPart
         if (payload.data.hasKey("frameColour"))
         {
             frameColour = payload.data.getInteger("frameColour");
+            sendUpdatePacket = true;
+        }
+        
+        if (payload.data.hasKey("customFrameTexture"))
+        {
+            customFrameTexture = payload.data.getInteger("customFrameTexture");
+            sendUpdatePacket = true;
+        }
+        
+        if (payload.data.hasKey("customPortalTexture"))
+        {
+            customPortalTexture = payload.data.getInteger("customPortalTexture");
             sendUpdatePacket = true;
         }
         

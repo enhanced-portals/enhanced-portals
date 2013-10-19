@@ -2,12 +2,14 @@ package uk.co.shadeddimensions.ep3;
 
 import java.util.Random;
 
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import uk.co.shadeddimensions.ep3.creativetab.CreativeTabEP3;
 import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
@@ -27,6 +29,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(name = Reference.NAME, modid = Reference.ID, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, acceptedMinecraftVersions = Reference.MC_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, serverPacketHandlerSpec = @SidedPacketHandler(channels = Reference.SHORT_ID, packetHandler = PacketHandlerServer.class), clientPacketHandlerSpec = @SidedPacketHandler(channels = Reference.SHORT_ID, packetHandler = PacketHandlerClient.class))
@@ -83,6 +87,19 @@ public class EnhancedPortals
         if (!event.world.isRemote)
         {
             CommonProxy.networkManager.saveAllData();
+        }
+    }
+    
+    @ForgeSubscribe
+    @SideOnly(Side.CLIENT)
+    public void textureHook(TextureStitchEvent.Pre event)
+    {
+        if (event.map.textureType == 0)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                ClientProxy.customPortalTextures.put("colouredPortal_" + i, event.map.registerIcon("enhancedportals:customPortal/colouredPortal_" + i));
+            }
         }
     }
 }

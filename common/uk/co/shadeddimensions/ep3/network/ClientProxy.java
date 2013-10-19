@@ -1,7 +1,9 @@
 package uk.co.shadeddimensions.ep3.network;
 
 import java.io.File;
+import java.util.HashMap;
 
+import net.minecraft.util.Icon;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.renderer.PortalFrameItemRenderer;
@@ -16,6 +18,9 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
+    public static HashMap<String, Icon> customPortalFrameTextures = new HashMap<String, Icon>();
+    public static HashMap<String, Icon> customPortalTextures = new HashMap<String, Icon>();
+    
     @Override
     public File getWorldDir()
     {

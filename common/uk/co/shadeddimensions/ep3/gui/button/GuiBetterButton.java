@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBetterButton extends GuiButton
 {
-    public static final String BUTTON_TEXTURES = "gui/buttons.png";
+    public static final String BUTTON_TEXTURES = "textures/gui/buttons.png";
     protected final IButtonTextureSet texture;
     private ToolTip toolTip;
 
@@ -40,7 +40,7 @@ public class GuiBetterButton extends GuiButton
 
     protected void bindButtonTextures(Minecraft minecraft)
     {
-        minecraft.renderEngine.bindTexture(new ResourceLocation(BUTTON_TEXTURES));
+        minecraft.renderEngine.bindTexture(new ResourceLocation("enhancedportals", BUTTON_TEXTURES));
     }
 
     @Override
