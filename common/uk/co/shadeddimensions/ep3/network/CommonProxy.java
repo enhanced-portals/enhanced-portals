@@ -69,6 +69,11 @@ public class CommonProxy
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
     }
 
+    public File getResourcePacksDir()
+    {
+        return new File(getBaseDir(), "resourcepacks");
+    }
+    
     public File getWorldDir()
     {
         return new File(getBaseDir(), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());

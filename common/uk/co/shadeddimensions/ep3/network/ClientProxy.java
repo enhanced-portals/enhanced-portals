@@ -1,9 +1,11 @@
 package uk.co.shadeddimensions.ep3.network;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.ArrayList;
 
+import net.minecraft.client.resources.ReloadableResourceManager;
 import net.minecraft.util.Icon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.renderer.PortalFrameItemRenderer;
@@ -13,14 +15,15 @@ import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
-    public static HashMap<String, Icon> customPortalFrameTextures = new HashMap<String, Icon>();
-    public static HashMap<String, Icon> customPortalTextures = new HashMap<String, Icon>();
-    
+    public static ArrayList<Icon> customPortalFrameTextures = new ArrayList<Icon>();
+    public static ArrayList<Icon> customPortalTextures = new ArrayList<Icon>();
+        
     @Override
     public File getWorldDir()
     {
@@ -42,5 +45,20 @@ public class ClientProxy extends CommonProxy
     public static void requestTileData(TileEnhancedPortals tile)
     {
         PacketDispatcher.sendPacketToServer(new PacketRequestData(tile).getPacket());
+    }
+    
+    public static boolean resourceExists(String file)
+    {
+        ReloadableResourceManager resourceManager = (ReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
+        
+        try
+        {
+            resourceManager.getResource(new ResourceLocation("enhancedportals", file));            
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }

@@ -59,9 +59,9 @@ public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
 
             if (controller.customFrameTexture != -1)
             {
-                if (ClientProxy.customPortalFrameTextures.size() > controller.customFrameTexture && (Icon) ClientProxy.customPortalFrameTextures.values().toArray()[controller.customFrameTexture] != null)
+                if (ClientProxy.customPortalFrameTextures.size() > controller.customFrameTexture && (Icon) ClientProxy.customPortalFrameTextures.get(controller.customFrameTexture) != null)
                 {
-                    overrideIcon = (Icon) ClientProxy.customPortalFrameTextures.values().toArray()[controller.customFrameTexture];
+                    overrideIcon = (Icon) ClientProxy.customPortalFrameTextures.get(controller.customFrameTexture);
                 }
             }
             else if (controller.getStackInSlot(0) != null)

@@ -120,7 +120,7 @@ public class GuiColourInterface extends GuiEnhancedPortals
         blueSlider = new GuiRGBSlider(102, guiLeft + xSize + 5, guiTop + 81, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f);
         
         saveButton = new GuiButton(110, guiLeft + xSize + 5, guiTop + 105, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save"));
-        resetButton = new GuiButton(111, guiLeft + xSize + 67, guiTop + 105, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset"));
+        resetButton = new GuiButton(111, guiLeft + xSize + 68, guiTop + 105, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset"));
         
         buttonList.add(redSlider);
         buttonList.add(greenSlider);

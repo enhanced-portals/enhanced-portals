@@ -6,7 +6,7 @@ package uk.co.shadeddimensions.ep3.gui.button;
 
 public enum StandardButtonTextureSets implements IButtonTextureSet
 {
-    LARGE_BUTTON(0, 0, 20, 200), SMALL_BUTTON(0, 80, 15, 200);
+    LARGE_BUTTON(0, 0, 20, 200), SMALL_BUTTON(0, 80, 15, 200), BACK_BUTTON(224, 96, 16, 16), FORWARD_BUTTON(240, 96, 16, 16);
     private final int x, y, height, width;
 
     private StandardButtonTextureSets(int x, int y, int height, int width)

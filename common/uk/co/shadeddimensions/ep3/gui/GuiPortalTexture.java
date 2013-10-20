@@ -4,17 +4,16 @@ import java.awt.Color;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
-import uk.co.shadeddimensions.ep3.gui.button.GuiButtonSmall;
+import uk.co.shadeddimensions.ep3.gui.button.GuiBetterButton;
+import uk.co.shadeddimensions.ep3.gui.button.StandardButtonTextureSets;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
@@ -23,6 +22,8 @@ public class GuiPortalTexture extends GuiColourInterface
     TilePortalController controller;
     GuiIconList scrollList;
     int id;
+    
+    GuiBetterButton backButton, forwardButton;
 
     public GuiPortalTexture(EntityPlayer player, TilePortalController control)
     {
@@ -56,24 +57,31 @@ public class GuiPortalTexture extends GuiColourInterface
             payload.data.setInteger("resetSlot", 0);            
             ClientProxy.sendGuiPacket(payload);
         }
-        else if (button.id == 1)
+        else if (button.id == backButton.id)
         {
-            if (controller.customPortalTexture == -1)
+            if (scrollList.page >= 1)
             {
-                button.displayString = "Custom";
-                id = controller.customPortalTexture = scrollList.selectedIcon = 0;
-                scrollList.isActive = true;
-            }
-            else
-            {
-                button.displayString = "Block";
-                id = controller.customPortalTexture = scrollList.selectedIcon = -1;
-                scrollList.isActive = false;
+                scrollList.page--;
+                forwardButton.enabled = true;
             }
             
-            GuiPayload payload = new GuiPayload();
-            payload.data.setInteger("customPortalTexture", id);
-            ClientProxy.sendGuiPacket(payload);
+            if (scrollList.page == 0)
+            {
+                button.enabled = false;
+            }
+        }
+        else if (button.id == forwardButton.id)
+        {
+            if (scrollList.page < (scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customPortalFrameTextures.size()) / 27)
+            {
+                scrollList.page++;
+                backButton.enabled = true;
+            }
+            
+            if (scrollList.page >= ((scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customPortalFrameTextures.size()) / 27))
+            {
+                button.enabled = false;
+            }
         }
     }
     
@@ -82,11 +90,16 @@ public class GuiPortalTexture extends GuiColourInterface
     public void initGui()
     {
         super.initGui();
-        
-        
+                
         scrollList.selectedIcon = id = controller.customPortalTexture;
-        scrollList.isActive = controller.customPortalTexture > -1;
-        buttonList.add(new GuiButtonSmall(1, guiLeft + xSize - 57, guiTop + 65, 50, scrollList.isActive ? "Custom" : "Block"));
+        backButton = new GuiBetterButton(1, guiLeft + xSize - 38, guiTop + 64, 16, StandardButtonTextureSets.BACK_BUTTON, "");
+        forwardButton = new GuiBetterButton(2, guiLeft + xSize - 22, guiTop + 64, 16, StandardButtonTextureSets.FORWARD_BUTTON, "");
+        
+        buttonList.add(backButton);
+        buttonList.add(forwardButton);
+        
+        backButton.enabled = scrollList.page > 0;
+        forwardButton.enabled = scrollList.page < ((scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customPortalFrameTextures.size()) / 27);
     }
 
     @Override
@@ -95,17 +108,11 @@ public class GuiPortalTexture extends GuiColourInterface
         super.drawGuiContainerBackgroundLayer(f, i, j);
         scrollList.drawBackground();
         
-        drawTabFlipped(guiLeft - 26, guiTop + 10, 26, 50, 1f, 1f, 1f);
+        drawTabFlipped(guiLeft - 27, guiTop + 10, 27, 30, 1f, 1f, 1f);
         
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
-        drawTexturedModalRect(guiLeft - 21, guiTop + 36, 0, 0, 18, 18);
-
-        GL11.glColor3f(redSlider.sliderValue, greenSlider.sliderValue, blueSlider.sliderValue);
-        itemRenderer.renderWithColor = false;
-        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, controller.getStackInSlot(0) == null ? new ItemStack(CommonProxy.blockPortal, 1) : controller.getStackInSlot(0), guiLeft - 20, guiTop + 16);
-        itemRenderer.renderWithColor = true;
-        GL11.glColor3f(1f, 1f, 1f);
+        drawTexturedModalRect(guiLeft - 21, guiTop + 16, 0, 0, 18, 18);
     }
 
     @Override
@@ -115,8 +122,6 @@ public class GuiPortalTexture extends GuiColourInterface
 
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".portalTexture")) / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
-        
-        scrollList.drawForeground(par1, par2);
     }
     
     @Override

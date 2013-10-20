@@ -12,7 +12,7 @@ public class GuiIconList extends Gui
     int posX, posY, width, height;
     GuiEnhancedPortals parent;
     boolean isPortalTexture;
-    int selectedIcon;
+    public int selectedIcon, page;
     public boolean isActive;
     
     public GuiIconList(int x, int y, int w, int h, GuiEnhancedPortals gui, boolean portalTexture)
@@ -24,7 +24,7 @@ public class GuiIconList extends Gui
         parent = gui;
         isPortalTexture = portalTexture;
         selectedIcon = -1;
-        isActive = false;
+        isActive = true;
     }
     
     public void drawBackground()
@@ -37,54 +37,70 @@ public class GuiIconList extends Gui
         parent.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);        
         for (int i = 0; i < 27; i++)
         {
-            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= i : ClientProxy.customPortalFrameTextures.size() <= i)
+            int ic = (page * 27) + i;
+            int x = parent.getGuiLeft() + posX + 2 + (i % 9) * 18;
+            int y = parent.getGuiTop() + posY + 2 + (i / 9) * 18;
+            
+            if (selectedIcon == ic)
+            {
+                parent.drawRectangle(x - 1, y - 1, 18, 18, 0x88FFFFFF, false);
+            }
+
+            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= ic : ClientProxy.customPortalFrameTextures.size() <= ic)
             {
                 break;
             }
             
-            int x = parent.getGuiLeft() + posX + 2 + (i % 9) * 18;
-            int y = parent.getGuiTop() + posY + 2 + (i / 9) * 18;
-            
-            if (selectedIcon == i)
+            if (ic < 0)
             {
-                parent.drawRectangle(x - 1, y - 1, 18, 18, 0x88FFFFFF, false);
+                continue;
             }
             
-            drawTexturedModelRectFromIcon(x, y, (Icon)(isPortalTexture ? ClientProxy.customPortalTextures.values().toArray()[i] : ClientProxy.customPortalFrameTextures.values().toArray()[i]), 16, 16);
+            drawTexturedModelRectFromIcon(x, y, (Icon)(isPortalTexture ? ClientProxy.customPortalTextures.get(ic) : ClientProxy.customPortalFrameTextures.get(ic)), 16, 16);
         }
         
         if (isPortalTexture ? ClientProxy.customPortalTextures.isEmpty() : ClientProxy.customPortalFrameTextures.isEmpty())
         {
-            parent.getFontRenderer().drawSplitString("Read the manual or the website for information on how to use the custom texture feature.", parent.getGuiLeft() + posX + 5, parent.getGuiTop() + posY + 5, width - 10, 0xFFFFFFFF);
+            parent.getFontRenderer().drawSplitString("No custom icons found.", parent.getGuiLeft() + posX + 5, parent.getGuiTop() + posY + 5, width - 10, 0xFFFFFFFF);
         }
     }
-    
-    public void drawForeground(int mouseX, int mouseY)
-    {
-        if (!isActive)
-        {
-            parent.drawRectangle(posX, posY, width, height, 0xAA000000, false);
-        }
-    }
-    
+        
     public void mouseClicked(int x, int y, int button)
     {
         if (isActive)
         {
-            for (int i = 0; i < 27; i++)
+            if (x >= parent.getGuiLeft() + posX && x <= parent.getGuiLeft() + posX + width && y >= parent.getGuiTop() + posY && y <= parent.getGuiTop() + posY + height)
             {
-                int x2 = parent.getGuiLeft() + posX + 2 + (i % 9) * 18;
-                int y2 = parent.getGuiTop() + posY + 2 + (i / 9) * 18;
-                
-                if (x >= x2 && x <= x2 + 18 && y >= y2 && y <= y2 + 18)
+                if (button == 1)
                 {
-                    if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= i : ClientProxy.customPortalFrameTextures.size() <= i)
+                    selectedIcon = -1;
+                }
+                else if (button == 0)
+                {
+                    for (int i = 0; i < 27; i++)
                     {
-                        return;
+                        int x2 = parent.getGuiLeft() + posX + 2 + (i % 9) * 18;
+                        int y2 = parent.getGuiTop() + posY + 2 + (i / 9) * 18;
+                        
+                        if (x >= x2 && x <= x2 + 18 && y >= y2 && y <= y2 + 18)
+                        {
+                            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= i : ClientProxy.customPortalFrameTextures.size() <= i)
+                            {
+                                return;
+                            }
+                            
+                            if (selectedIcon == (page * 27) + i)
+                            {
+                                selectedIcon = -1;
+                            }
+                            else
+                            {
+                                selectedIcon = (page * 27) + i;
+                            }
+                            
+                            return;
+                        }
                     }
-                    
-                    selectedIcon = i;
-                    return;
                 }
             }
         }

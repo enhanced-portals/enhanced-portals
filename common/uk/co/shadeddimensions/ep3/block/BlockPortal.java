@@ -71,9 +71,9 @@ public class BlockPortal extends BlockEnhancedPortals
         {
             if (controller.customPortalTexture != -1)
             {
-                if (ClientProxy.customPortalTextures.size() > controller.customPortalTexture && (Icon) ClientProxy.customPortalTextures.values().toArray()[controller.customPortalTexture] != null)
+                if (ClientProxy.customPortalTextures.size() > controller.customPortalTexture && (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture) != null)
                 {
-                    return (Icon) ClientProxy.customPortalTextures.values().toArray()[controller.customPortalTexture];
+                    return (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture);
                 }
             }
             else if (controller.getStackInSlot(1) != null)

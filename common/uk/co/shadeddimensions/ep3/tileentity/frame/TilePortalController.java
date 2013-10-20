@@ -352,6 +352,12 @@ public class TilePortalController extends TilePortalPart
             sendUpdatePacket = true;
         }
         
+        if (payload.data.hasKey("portalColour"))
+        {
+            portalColour = payload.data.getInteger("portalColour");
+            sendUpdatePacket = true;
+        }
+        
         if (payload.data.hasKey("customFrameTexture"))
         {
             customFrameTexture = payload.data.getInteger("customFrameTexture");
@@ -361,6 +367,12 @@ public class TilePortalController extends TilePortalPart
         if (payload.data.hasKey("customPortalTexture"))
         {
             customPortalTexture = payload.data.getInteger("customPortalTexture");
+            sendUpdatePacket = true;
+        }
+        
+        if (payload.data.hasKey("resetSlot"))
+        {
+            setInventorySlotContents(payload.data.getInteger("resetSlot"), null);
             sendUpdatePacket = true;
         }
         

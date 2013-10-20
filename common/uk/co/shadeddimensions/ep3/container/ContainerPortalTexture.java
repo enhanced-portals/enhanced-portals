@@ -13,7 +13,7 @@ public class ContainerPortalTexture extends ContainerEnhancedPortals
     {
         super(frame.getSizeInventory(), frame);
 
-        addSlotToContainer(new SlotPortalTexture(frame, 1, -20, 37));
+        addSlotToContainer(new SlotPortalTexture(frame, 1, -20, 17));
 
         for (int i = 0; i < 3; i++)
         {
