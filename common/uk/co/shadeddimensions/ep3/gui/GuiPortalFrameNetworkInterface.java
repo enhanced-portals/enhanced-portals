@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
+import uk.co.shadeddimensions.ep3.gui.elements.GuiGlyphSelectorNetwork;
+import uk.co.shadeddimensions.ep3.gui.elements.GuiGlyphViewer;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;

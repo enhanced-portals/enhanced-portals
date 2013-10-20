@@ -8,9 +8,10 @@ import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
+import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
-import uk.co.shadeddimensions.ep3.item.ItemPortalFrame;
+import uk.co.shadeddimensions.ep3.item.ItemFrame;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Reference;
@@ -19,6 +20,7 @@ import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -34,6 +36,7 @@ public class CommonProxy
 {
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
+    public static BlockStabilizer blockStabilizer;
 
     public static ItemWrench itemWrench;
     public static ItemPaintbrush itemPaintbrush;    
@@ -81,8 +84,9 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemPortalFrame.class, Reference.SHORT_ID + ".portalFrame");
+        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemFrame.class, Reference.SHORT_ID + ".portalFrame");
         blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, Reference.SHORT_ID + ".portal");
+        blockStabilizer = (BlockStabilizer) EnhancedPortals.config.registerBlock(BlockStabilizer.class, Reference.SHORT_ID + ".stabilizer");
     }
 
     public void registerItems()
@@ -108,12 +112,14 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDiallingDevice");
         GameRegistry.registerTileEntity(TileBiometricIdentifier.class, "epBiometricIdentifier");
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epModuleManipulator");
+        GameRegistry.registerTileEntity(TileStabilizer.class, "epStabilizer");
     }
 
     public void setupConfiguration()
     {
         EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portal");
         EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portalFrame");
+        EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".stabilizer");
 
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".goggles");
@@ -138,5 +144,10 @@ public class CommonProxy
     public static boolean isServer()
     {
         return !isClient();
+    }
+
+    public void miscSetup()
+    {
+        
     }
 }

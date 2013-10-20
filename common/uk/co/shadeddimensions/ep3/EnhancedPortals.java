@@ -57,6 +57,7 @@ public class EnhancedPortals
         proxy.registerTileEntities();
         proxy.registerItems();
         proxy.registerRenderers();
+        proxy.miscSetup();
 
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
@@ -66,7 +67,7 @@ public class EnhancedPortals
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-
+        
     }
 
     @EventHandler

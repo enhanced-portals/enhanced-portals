@@ -1,7 +1,8 @@
-package uk.co.shadeddimensions.ep3.gui;
+package uk.co.shadeddimensions.ep3.gui.elements;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.gui.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -11,7 +12,7 @@ public class GuiIconList extends Gui
 {
     int posX, posY, width, height;
     GuiEnhancedPortals parent;
-    boolean isPortalTexture;
+    public boolean isPortalTexture;
     public int selectedIcon, page;
     public boolean isActive;
     
@@ -33,8 +34,8 @@ public class GuiIconList extends Gui
         parent.drawRectangle(posX + 1, posY + 1, width - 2, height - 2, 0xFF777777, true);
         
         GL11.glColor3f(1f, 1f, 1f);
+        parent.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         
-        parent.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);        
         for (int i = 0; i < 27; i++)
         {
             int ic = (page * 27) + i;

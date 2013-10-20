@@ -7,6 +7,7 @@ tile.ep3.portalFrame.dialDevice.name=Dialling Device
 tile.ep3.portalFrame.biometric.name=Biometric Identifier
 tile.ep3.portalFrame.upgrade.name=Module Manipulator
 tile.ep3.portal.name=Portal
+tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
 
 # Items
 item.ep3.wrench.name=Wrench
@@ -32,6 +33,7 @@ itemGroup.EnhancedPortals3=EnhancedPortals 3
 gui.ep3.texture=Texture
 gui.ep3.portalTexture=Portal Texture
 gui.ep3.portalFrameTexture=Portal Frame Texture
+gui.ep3.particleTexture=Particle Texture
 gui.ep3.button.reset=Reset
 gui.ep3.button.save=Save
 gui.ep3.button.input=Input

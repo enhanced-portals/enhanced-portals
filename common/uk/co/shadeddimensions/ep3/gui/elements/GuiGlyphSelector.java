@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.gui;
+package uk.co.shadeddimensions.ep3.gui.elements;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import uk.co.shadeddimensions.ep3.gui.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 
 public class GuiGlyphSelector extends Gui
@@ -111,7 +112,7 @@ public class GuiGlyphSelector extends Gui
 
     protected GuiEnhancedPortals gui;
 
-    protected boolean canEdit;
+    public boolean canEdit;
 
     public GuiGlyphSelector(int x, int y, GuiEnhancedPortals parent)
     {

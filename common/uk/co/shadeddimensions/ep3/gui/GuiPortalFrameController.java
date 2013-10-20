@@ -13,6 +13,8 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
+import uk.co.shadeddimensions.ep3.gui.elements.GuiGlyphSelector;
+import uk.co.shadeddimensions.ep3.gui.elements.GuiGlyphViewer;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;

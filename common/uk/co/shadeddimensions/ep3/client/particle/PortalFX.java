@@ -5,84 +5,12 @@ import java.awt.Color;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
 public class PortalFX extends EntityFX
 {
-    public static int getParticleIndex(int ParticleType)
-    {
-        switch (ParticleType)
-        {
-            default:
-            case 0:
-                return (int) (Math.random() * 8.0D);
-
-            case 1:
-                return 32;
-
-            case 2:
-                return 48 + (int) (2 * Math.random());
-
-            case 3:
-                return 64;
-
-            case 4:
-                return 65;
-
-            case 5:
-                return 66;
-
-            case 6:
-                return 80;
-
-            case 7:
-                return 81;
-
-            case 8:
-                return 82;
-
-            case 9:
-                return 83;
-
-            case 10:
-                return 97;
-
-            case 11:
-                return 128 + (int) (8 * Math.random());
-
-            case 12:
-                return 144 + (int) (8 * Math.random());
-
-            case 13:
-                return 160 + (int) (8 * Math.random());
-        }
-    }
-
-    public static int getStaticParticleIndex(int ParticleType)
-    {
-        switch (ParticleType)
-        {
-            case 0:
-                return 7;
-
-            case 2:
-                return 49;
-
-            case 11:
-                return 129;
-
-            case 12:
-                return 145;
-
-            case 13:
-                return 161;
-
-            default:
-                return getParticleIndex(ParticleType);
-        }
-    }
-
     private float portalParticleScale;
     private double portalPosX;
 
@@ -121,7 +49,7 @@ public class PortalFX extends EntityFX
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
 
-        setParticleTextureIndex(getParticleIndex(ParticleType));
+        setParticleTextureIndex(ClientProxy.particleSets.get(ParticleType)[ClientProxy.random.nextInt(ClientProxy.particleSets.get(ParticleType).length)]);
 
         if (module != null)
         {

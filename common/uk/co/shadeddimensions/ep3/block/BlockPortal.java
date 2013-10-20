@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -229,5 +230,11 @@ public class BlockPortal extends BlockEnhancedPortals
     public void setBlockBoundsForItemRender()
     {
         setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
+    }
+    
+    @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        
     }
 }

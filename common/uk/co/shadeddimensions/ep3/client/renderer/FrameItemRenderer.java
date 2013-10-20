@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
-public class PortalFrameItemRenderer implements IItemRenderer
+public class FrameItemRenderer implements IItemRenderer
 {
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

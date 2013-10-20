@@ -5,11 +5,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
+import uk.co.shadeddimensions.ep3.container.ContainerParticleTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.ep3.gui.GuiModuleManipulator;
+import uk.co.shadeddimensions.ep3.gui.GuiParticleTexture;
 import uk.co.shadeddimensions.ep3.gui.GuiPortalFrameController;
 import uk.co.shadeddimensions.ep3.gui.GuiPortalFrameNetworkInterface;
 import uk.co.shadeddimensions.ep3.gui.GuiPortalFrameRedstone;
@@ -45,6 +47,10 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiPortalTexture(player, (TilePortalController) tile);
         }
+        else if (ID == GuiIds.PARTICLE_TEXTURE && tile instanceof TilePortalController)
+        {
+            return new GuiParticleTexture((TilePortalController) tile);
+        }
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
         {
             return new GuiPortalFrameNetworkInterface((TileNetworkInterface) tile);
@@ -79,6 +85,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
         {
             return new ContainerPortalTexture(player, (TilePortalController) tile);
+        }
+        else if (ID == GuiIds.PARTICLE_TEXTURE && tile instanceof TilePortalController)
+        {
+            return new ContainerParticleTexture((TilePortalController) tile);
         }
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
         {

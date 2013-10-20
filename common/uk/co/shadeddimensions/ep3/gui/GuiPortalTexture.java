@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.ep3.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.ep3.gui.button.StandardButtonTextureSets;
+import uk.co.shadeddimensions.ep3.gui.elements.GuiIconList;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -54,7 +55,7 @@ public class GuiPortalTexture extends GuiColourInterface
             
             GuiPayload payload = new GuiPayload();
             payload.data.setInteger("portalColour", Integer.parseInt(hex, 16));
-            payload.data.setInteger("resetSlot", 0);            
+            payload.data.setInteger("resetSlot", 1);            
             ClientProxy.sendGuiPacket(payload);
         }
         else if (button.id == backButton.id)

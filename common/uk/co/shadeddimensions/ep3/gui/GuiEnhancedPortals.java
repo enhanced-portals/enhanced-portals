@@ -477,7 +477,7 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         GL11.glDisable(GL11.GL_LIGHTING);
     }
 
-    protected void drawItemSlotBackground(int x, int y, int w, int h)
+    public void drawItemSlotBackground(int x, int y, int w, int h)
     {
         drawRectangle(x, y, w - 1, h, 0xFF8b8b8b, true); // background
         drawRectangle(x, y, w - 1, 1, 0xFF373737, true); // top
@@ -502,13 +502,13 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         drawTexturedModalRect(x, y, textureIndex % 16 * 16, textureIndex / 16 * 16, 16, 16);
     }
 
-    protected void drawParticle(int x, int y, int colour, int texture, boolean offset)
+    public void drawParticle(int x, int y, int colour, int texture, boolean offset)
     {
         Color c = new Color(colour);
         drawParticle(x, y, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), texture, offset);
     }
 
-    protected void drawRectangle(int x, int y, int w, int h, int colour, boolean offset)
+    public void drawRectangle(int x, int y, int w, int h, int colour, boolean offset)
     {
         if (offset)
         {

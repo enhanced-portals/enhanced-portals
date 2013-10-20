@@ -21,6 +21,18 @@ public class ChunkCoordinateUtils
 
         return t.getInteger("Y") == -1 ? null : new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
     }
+    
+    public static WorldCoordinates loadWorldCoord(NBTTagCompound tagCompound, String string)
+    {
+        if (tagCompound.getTag(string) == null)
+        {
+            return null;
+        }
+
+        NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
+
+        return t.getInteger("Y") == -1 ? null : new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
+    }
 
     public static ArrayList<ChunkCoordinates> loadChunkCoordList(NBTTagCompound tag, String name)
     {
@@ -33,6 +45,22 @@ public class ChunkCoordinateUtils
             NBTTagCompound t = (NBTTagCompound) o;
 
             list.add(new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z")));
+        }
+
+        return list;
+    }
+    
+    public static ArrayList<WorldCoordinates> loadWorldCoordList(NBTTagCompound tag, String name)
+    {
+        ArrayList<WorldCoordinates> list = new ArrayList<WorldCoordinates>();
+
+        NBTTagList tagList = tag.getTagList(name);
+
+        for (Object o : tagList.tagList)
+        {
+            NBTTagCompound t = (NBTTagCompound) o;
+
+            list.add(new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D")));
         }
 
         return list;
@@ -57,6 +85,22 @@ public class ChunkCoordinateUtils
 
         tagCompound.setTag(string, t);
     }
+    
+    public static void saveWorldCoord(NBTTagCompound tagCompound, WorldCoordinates c, String string)
+    {
+        if (c == null)
+        {
+            return;
+        }
+
+        NBTTagCompound t = new NBTTagCompound();
+        t.setInteger("X", c.posX);
+        t.setInteger("Y", c.posY);
+        t.setInteger("Z", c.posZ);
+        t.setInteger("D", c.dimension);
+
+        tagCompound.setTag(string, t);
+    }
 
     public static void saveChunkCoordList(NBTTagCompound tag, List<ChunkCoordinates> list, String name)
     {
@@ -68,6 +112,24 @@ public class ChunkCoordinateUtils
             t.setInteger("X", c.posX);
             t.setInteger("Y", c.posY);
             t.setInteger("Z", c.posZ);
+
+            tagList.appendTag(t);
+        }
+
+        tag.setTag(name, tagList);
+    }
+    
+    public static void saveWorldCoordList(NBTTagCompound tag, List<WorldCoordinates> list, String name)
+    {
+        NBTTagList tagList = new NBTTagList();
+
+        for (WorldCoordinates c : list)
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setInteger("X", c.posX);
+            t.setInteger("Y", c.posY);
+            t.setInteger("Z", c.posZ);
+            t.setInteger("D", c.dimension);
 
             tagList.appendTag(t);
         }

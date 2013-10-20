@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
-public class ItemPortalFrame extends ItemBlock
+public class ItemFrame extends ItemBlock
 {
-    public ItemPortalFrame(int par1)
+    public ItemFrame(int par1)
     {
         super(par1);
         setMaxDamage(0);

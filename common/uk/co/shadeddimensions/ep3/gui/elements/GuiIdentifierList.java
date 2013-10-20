@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.gui;
+package uk.co.shadeddimensions.ep3.gui.elements;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
+
+import uk.co.shadeddimensions.ep3.gui.GuiEnhancedPortals;
 
 public class GuiIdentifierList extends Gui
 {

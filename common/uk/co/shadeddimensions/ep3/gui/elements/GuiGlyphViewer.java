@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.gui;
+package uk.co.shadeddimensions.ep3.gui.elements;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -9,6 +9,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+
+import uk.co.shadeddimensions.ep3.gui.GuiEnhancedPortals;
 
 public class GuiGlyphViewer extends GuiGlyphSelector
 {

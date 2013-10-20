@@ -22,11 +22,11 @@ import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import cpw.mods.fml.client.FMLClientHandler;
 
-public class TilePortalFrameRenderer extends TileEntitySpecialRenderer
+public class TileFrameRenderer extends TileEntitySpecialRenderer
 {
     private RenderBlocks renderBlocks;
 
-    public TilePortalFrameRenderer()
+    public TileFrameRenderer()
     {
         renderBlocks = new RenderBlocks();
 

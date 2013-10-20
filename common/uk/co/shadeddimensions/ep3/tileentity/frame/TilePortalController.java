@@ -20,6 +20,7 @@ import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.relauncher.Side;
@@ -282,7 +283,13 @@ public class TilePortalController extends TilePortalPart
 
         tag.setTag("inventory", list);
         
-        // TODO Save lists
+        ChunkCoordinateUtils.saveWorldCoordList(tag, portals, "portals");
+        ChunkCoordinateUtils.saveWorldCoordList(tag, frameBasic, "frameBasic");
+        ChunkCoordinateUtils.saveWorldCoordList(tag, frameRedstone, "frameRedstone");
+        ChunkCoordinateUtils.saveWorldCoord(tag, frameBiometric, "frameBiometric");
+        ChunkCoordinateUtils.saveWorldCoord(tag, frameDialler, "frameDialler");
+        ChunkCoordinateUtils.saveWorldCoord(tag, frameModule, "frameModule");
+        ChunkCoordinateUtils.saveWorldCoord(tag, frameNetwork, "frameNetwork");
     }
     
     @Override
@@ -310,7 +317,13 @@ public class TilePortalController extends TilePortalPart
             inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
         }
         
-        // TODO Load lists
+        portals = ChunkCoordinateUtils.loadWorldCoordList(tag, "portals");
+        frameBasic = ChunkCoordinateUtils.loadWorldCoordList(tag, "frameBasic");
+        frameRedstone = ChunkCoordinateUtils.loadWorldCoordList(tag, "frameRedstone");
+        frameBiometric = ChunkCoordinateUtils.loadWorldCoord(tag, "frameBiometric");
+        frameDialler = ChunkCoordinateUtils.loadWorldCoord(tag, "frameDialler");
+        frameModule = ChunkCoordinateUtils.loadWorldCoord(tag, "frameModule");
+        frameNetwork = ChunkCoordinateUtils.loadWorldCoord(tag, "frameNetwork");
     }
     
     @Override
@@ -358,6 +371,18 @@ public class TilePortalController extends TilePortalPart
             sendUpdatePacket = true;
         }
         
+        if (payload.data.hasKey("particleColour"))
+        {
+            particleColour = payload.data.getInteger("particleColour");
+            sendUpdatePacket = true;
+        }
+        
+        if (payload.data.hasKey("particleType"))
+        {
+            particleType = payload.data.getInteger("particleType");
+            sendUpdatePacket = true;
+        }
+        
         if (payload.data.hasKey("customFrameTexture"))
         {
             customFrameTexture = payload.data.getInteger("customFrameTexture");
@@ -375,9 +400,7 @@ public class TilePortalController extends TilePortalPart
             setInventorySlotContents(payload.data.getInteger("resetSlot"), null);
             sendUpdatePacket = true;
         }
-        
-        // TODO
-        
+                
         if (sendUpdatePacket)
         {
             CommonProxy.sendUpdatePacketToAllAround(this);
