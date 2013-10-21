@@ -12,11 +12,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 public class PortalFX extends EntityFX
 {
     private float portalParticleScale;
-    private double portalPosX;
-
-    private double portalPosY;
-
-    private double portalPosZ;
+    private double portalPosX, portalPosY, portalPosZ;
 
     public PortalFX(World par1World, TilePortalController controller, TileModuleManipulator module, double par2, double par4, double par6, double par8, double par10, double par12)
     {

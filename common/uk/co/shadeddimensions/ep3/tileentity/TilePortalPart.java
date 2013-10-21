@@ -4,10 +4,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.api.IPortalTool;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -16,6 +19,32 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 public class TilePortalPart extends TileEnhancedPortals implements IInventory
 {
     public WorldCoordinates portalController;
+    
+    @Override
+    public void breakBlock(int oldBlockID, int oldMetadata)
+    {
+        TilePortalController controller = getPortalController();
+
+        if (controller != null)
+        {
+            controller.partBroken();
+        }
+    }
+    
+    @Override
+    public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            WorldCoordinates c = getWorldCoordinates().offset(ForgeDirection.getOrientation(i));            
+            TileEntity tile = c.getBlockTileEntity();
+            
+            if (tile != null && tile instanceof TilePortalPart)
+            {
+                ((TilePortalPart) tile).breakBlock(0, 0);
+            }
+        }
+    }
     
     @Override
     public boolean activate(EntityPlayer player)

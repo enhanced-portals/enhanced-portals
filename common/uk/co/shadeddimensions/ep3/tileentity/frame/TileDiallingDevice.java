@@ -13,8 +13,6 @@ public class TileDiallingDevice extends TilePortalPart
             return true;
         }
         
-        // Do stuff
-        
         return false;
     }
 }

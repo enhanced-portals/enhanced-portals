@@ -9,8 +9,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import uk.co.shadeddimensions.ep3.gui.slots.IPhantomSlot;
-import uk.co.shadeddimensions.ep3.gui.slots.SlotBase;
+import uk.co.shadeddimensions.ep3.client.gui.slots.IPhantomSlot;
+import uk.co.shadeddimensions.ep3.client.gui.slots.SlotBase;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.util.StackHelper;
 

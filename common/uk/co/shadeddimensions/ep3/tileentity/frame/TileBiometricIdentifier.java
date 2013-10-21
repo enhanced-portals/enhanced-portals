@@ -13,8 +13,6 @@ public class TileBiometricIdentifier extends TilePortalPart
             return true;
         }
         
-        // Do stuff
-        
         return false;
     }
 }

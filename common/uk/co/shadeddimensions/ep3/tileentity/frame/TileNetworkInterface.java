@@ -21,8 +21,6 @@ public class TileNetworkInterface extends TilePortalPart
             return true;
         }
         
-        // Do stuff
-        
         return false;
     }
     

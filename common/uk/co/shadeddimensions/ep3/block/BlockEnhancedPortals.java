@@ -47,7 +47,7 @@ public class BlockEnhancedPortals extends BlockContainer
     @Override
     public void breakBlock(World world, int x, int y, int z, int oldBlockID, int oldMetadata)
     {
-        ((TileEnhancedPortals) world.getBlockTileEntity(x, y, z)).breakBlock(oldBlockID, oldMetadata);    
+        ((TileEnhancedPortals) world.getBlockTileEntity(x, y, z)).breakBlock(oldBlockID, oldMetadata);
         super.breakBlock(world, x, y, z, oldBlockID, oldMetadata);
     }
     

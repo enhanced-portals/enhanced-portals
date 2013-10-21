@@ -13,7 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
@@ -29,9 +31,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TilePortalController extends TilePortalPart
 {
     public List<WorldCoordinates> frameBasic, frameRedstone, frameFluid, framePower, portals;
-    public WorldCoordinates frameModule, frameDialler, frameNetwork, frameBiometric;
-    public boolean hasConfigured;
-    public boolean isPortalActive;
+    public WorldCoordinates frameModule, frameDialler, frameNetwork, frameBiometric, bridgeStabilizer;
+    public boolean hasConfigured, waitingForCard, isPortalActive, processing;
     public String uniqueIdentifier, networkIdentifier;
     
     public int frameColour, customFrameTexture;
@@ -68,7 +69,8 @@ public class TilePortalController extends TilePortalPart
         frameDialler = null;
         frameNetwork = null;
         frameBiometric = null;
-        hasConfigured = false;
+        bridgeStabilizer = null;
+        hasConfigured = waitingForCard = processing = false;
         
         frameColour = portalColour = 0xffffff;
         particleColour = 0xB336A1;
@@ -104,6 +106,7 @@ public class TilePortalController extends TilePortalPart
         frameDialler = null;
         frameNetwork = null;
         frameBiometric = null;
+        bridgeStabilizer = null;
         
         for (WorldCoordinates c : tiles)
         {
@@ -165,6 +168,7 @@ public class TilePortalController extends TilePortalPart
         stream.writeBoolean(frameDialler != null);
         stream.writeBoolean(frameNetwork != null);
         stream.writeBoolean(frameBiometric != null);
+        stream.writeBoolean(waitingForCard);
         
         stream.writeUTF(uniqueIdentifier);
         stream.writeUTF(networkIdentifier);
@@ -222,6 +226,7 @@ public class TilePortalController extends TilePortalPart
         boolDialler = stream.readBoolean();
         boolNetwork = stream.readBoolean();
         boolBiometric = stream.readBoolean();
+        waitingForCard = stream.readBoolean();
         
         uniqueIdentifier = stream.readUTF();
         networkIdentifier = stream.readUTF();
@@ -258,6 +263,7 @@ public class TilePortalController extends TilePortalPart
         
         tag.setString("uniqueIdentifier", uniqueIdentifier);
         tag.setString("networkIdentifier", networkIdentifier);
+        tag.setBoolean("waitingForCard", waitingForCard);
         
         tag.setInteger("frameColour", frameColour);
         tag.setInteger("portalColour", portalColour);
@@ -290,6 +296,7 @@ public class TilePortalController extends TilePortalPart
         ChunkCoordinateUtils.saveWorldCoord(tag, frameDialler, "frameDialler");
         ChunkCoordinateUtils.saveWorldCoord(tag, frameModule, "frameModule");
         ChunkCoordinateUtils.saveWorldCoord(tag, frameNetwork, "frameNetwork");
+        ChunkCoordinateUtils.saveWorldCoord(tag, bridgeStabilizer, "bridgeStabilizer");
     }
     
     @Override
@@ -301,6 +308,7 @@ public class TilePortalController extends TilePortalPart
         
         uniqueIdentifier = tag.getString("uniqueIdentifier");
         networkIdentifier = tag.getString("networkIdentifier");
+        waitingForCard = tag.getBoolean("waitingForCard");
         
         frameColour = tag.getInteger("frameColour");
         portalColour = tag.getInteger("portalColour");
@@ -324,6 +332,7 @@ public class TilePortalController extends TilePortalPart
         frameDialler = ChunkCoordinateUtils.loadWorldCoord(tag, "frameDialler");
         frameModule = ChunkCoordinateUtils.loadWorldCoord(tag, "frameModule");
         frameNetwork = ChunkCoordinateUtils.loadWorldCoord(tag, "frameNetwork");
+        bridgeStabilizer = ChunkCoordinateUtils.loadWorldCoord(tag, "bridgeStabilizer");
     }
     
     @Override
@@ -468,12 +477,12 @@ public class TilePortalController extends TilePortalPart
                             {
                                 if (networkCounter == 1)
                                 {
-                                    // TODO: ERROR MESSAGE
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleNetworkInterfaces"));
                                     return false;
                                 }
                                 else if (dialCounter == 1)
                                 {
-                                    // TODO: ERROR MESSAGE
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.networkInterfaceAndDialDevice"));
                                     return false;
                                 }
                                 
@@ -483,12 +492,12 @@ public class TilePortalController extends TilePortalPart
                             {
                                 if (dialCounter == 1)
                                 {
-                                    // TODO: ERROR MESSAGE
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleDiallingDevices"));
                                     return false;
                                 }
                                 else if (networkCounter == 1)
                                 {
-                                    // TODO: ERROR MESSAGE
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.networkInterfaceAndDialDevice"));
                                     return false;
                                 }
                                 
@@ -498,7 +507,7 @@ public class TilePortalController extends TilePortalPart
                             {
                                 if (biometricCounter == 1)
                                 {
-                                    // TODO: ERROR MESSAGE
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleBiometricIdentifiers"));
                                     return false;
                                 }
                                 
@@ -508,7 +517,7 @@ public class TilePortalController extends TilePortalPart
                             {
                                 if (moduleCounter == 1)
                                 {
-                                    // TODO: ERROR MESSAGE
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleModuleManipulators"));
                                     return false;
                                 }
                                 
@@ -516,7 +525,7 @@ public class TilePortalController extends TilePortalPart
                             }
                             else if (t instanceof TilePortalController && processed.size() > 1)
                             {
-                                // ERROR MESSAGE
+                                player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleControllers"));
                                 return false;
                             }
                         }
@@ -529,6 +538,10 @@ public class TilePortalController extends TilePortalPart
 
             configure(portalParts, pType);
         }
+        else
+        {
+            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.noPortals"));
+        }
                 
         return false;
     }
@@ -536,7 +549,7 @@ public class TilePortalController extends TilePortalPart
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
-        // TODO destroy portal
+        partBroken();
     }
     
     public void createPortal()
@@ -615,7 +628,87 @@ public class TilePortalController extends TilePortalPart
     {
         isPortalActive = b;
         
-        // TODO notify all redstone identifiers
+        for (WorldCoordinates c : frameRedstone)
+        {
+            if (b)
+            {
+                ((TileRedstoneInterface) c.getBlockTileEntity()).portalCreated();
+            }
+            else
+            {
+                ((TileRedstoneInterface) c.getBlockTileEntity()).portalRemoved();
+            }
+        }
+        
         CommonProxy.sendUpdatePacketToAllAround(this);
+    }
+        
+    public void partBroken()
+    {
+        if (!processing && hasConfigured)
+        {
+            processing = true;
+            
+            for (WorldCoordinates c : frameBasic)
+            {
+                TilePortalFrame frame = (TilePortalFrame) c.getBlockTileEntity();
+                frame.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(frame);
+            }
+            
+            for (WorldCoordinates c : frameRedstone)
+            {
+                TileRedstoneInterface frame = (TileRedstoneInterface) c.getBlockTileEntity();
+                frame.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(frame);
+            }
+            
+            for (WorldCoordinates c : portals)
+            {
+                worldObj.setBlock(c.posX, c.posY, c.posZ, 0, 0, 2);
+            }
+            
+            if (frameModule != null)
+            {
+                TileModuleManipulator frame = (TileModuleManipulator) frameModule.getBlockTileEntity();
+                frame.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(frame);
+            }
+            
+            if (frameDialler != null)
+            {
+                TileDiallingDevice frame = (TileDiallingDevice) frameDialler.getBlockTileEntity();
+                frame.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(frame);
+            }
+            
+            if (frameNetwork != null)
+            {
+                TileNetworkInterface frame = (TileNetworkInterface) frameNetwork.getBlockTileEntity();
+                frame.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(frame);
+            }
+            
+            if (frameBiometric != null)
+            {
+                TileBiometricIdentifier frame = (TileBiometricIdentifier) frameBiometric.getBlockTileEntity();
+                frame.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(frame);
+            }
+            
+            frameBasic.clear();
+            frameRedstone.clear();
+            portals.clear();
+            frameModule = null;
+            frameDialler = null;
+            frameNetwork = null;
+            frameBiometric = null;
+            
+            isPortalActive = false;
+            hasConfigured = false;
+            processing = false;
+            
+            CommonProxy.sendUpdatePacketToAllAround(this);
+        }
     }
 }

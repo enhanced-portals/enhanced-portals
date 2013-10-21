@@ -1,8 +1,5 @@
 package uk.co.shadeddimensions.ep3.tileentity;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,10 +21,8 @@ public class TilePortal extends TilePortalPart
     }
     
     @Override
-    public void usePacket(DataInputStream stream) throws IOException
+    public void breakBlock(int oldBlockID, int oldMetadata)
     {
-        super.usePacket(stream);
         
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 }

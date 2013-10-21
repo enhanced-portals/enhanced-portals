@@ -26,12 +26,9 @@ public class StackHelper
 
     public static boolean isItemStackValidForPortalFrameTexture(ItemStack stack)
     {
-        if (stack != null)
+        if (stack != null && stack.getItemSpriteNumber() == 0)
         {
-            if (stack.getItemSpriteNumber() == 0)
-            {
-                return Block.blocksList[stack.itemID].isOpaqueCube();
-            }
+            return Block.blocksList[stack.itemID].isOpaqueCube();
         }
 
         return false;
@@ -45,16 +42,9 @@ public class StackHelper
             {
                 return true;
             }
-            else
+            else if (FluidContainerRegistry.isFilledContainer(stack))
             {
-                if (FluidContainerRegistry.isFilledContainer(stack))
-                {
-                    return true;
-                }
-                else if (isStackDye(stack))
-                {
-                    return true;
-                }
+                return true;
             }
         }
 

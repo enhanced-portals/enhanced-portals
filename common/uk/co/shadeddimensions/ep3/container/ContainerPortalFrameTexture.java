@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import uk.co.shadeddimensions.ep3.gui.slots.SlotPortalFrameTexture;
+import uk.co.shadeddimensions.ep3.client.gui.slots.SlotPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
