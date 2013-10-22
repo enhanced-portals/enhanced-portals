@@ -9,17 +9,18 @@ import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
-import uk.co.shadeddimensions.ep3.item.ItemGoggles;
-import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemFrame;
+import uk.co.shadeddimensions.ep3.item.ItemGoggles;
+import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
+import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTileUpdate;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
+import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
@@ -42,6 +43,7 @@ public class CommonProxy
     public static ItemPaintbrush itemPaintbrush;    
     public static ItemGoggles itemGoggles;
     public static ItemPortalModule itemUpgrade;
+    public static ItemLocationCard itemLocationCard;
 
     public static NetworkManager networkManager;
 
@@ -94,6 +96,7 @@ public class CommonProxy
         itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, Reference.SHORT_ID + ".wrench");
         itemPaintbrush = (ItemPaintbrush) EnhancedPortals.config.registerItem(ItemPaintbrush.class, Reference.SHORT_ID + ".paintbrush");
         itemGoggles = (ItemGoggles) EnhancedPortals.config.registerItem(ItemGoggles.class, Reference.SHORT_ID + ".goggles");
+        itemLocationCard = (ItemLocationCard) EnhancedPortals.config.registerItem(ItemLocationCard.class, Reference.SHORT_ID + ".locationCard");
         itemUpgrade = (ItemPortalModule) EnhancedPortals.config.registerItem(ItemPortalModule.class, Reference.SHORT_ID + ".portalModule");
     }
 
@@ -105,7 +108,7 @@ public class CommonProxy
     public void registerTileEntities()
     {
         GameRegistry.registerTileEntity(TilePortal.class, "epPortal");
-        GameRegistry.registerTileEntity(TilePortalFrame.class, "epPortalFrame");
+        GameRegistry.registerTileEntity(TileFrame.class, "epPortalFrame");
         GameRegistry.registerTileEntity(TilePortalController.class, "epPortalController");
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRedstoneInterface");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNetworkInterface");
@@ -123,9 +126,10 @@ public class CommonProxy
 
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".goggles");
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".portalModule");
         EnhancedPortals.config.addItem(Reference.SHORT_ID + ".paintbrush");
-
+        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".locationCard");
+        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".portalModule");
+        
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("randomTeleportMode", false).addComment("[Network Interface] If enabled, changes the default sequential teleport mode to random.");
         EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("[NI] If enabled, overwrites the Nether portals mechanics to allow any shape/size.");

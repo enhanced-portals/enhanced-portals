@@ -98,7 +98,7 @@ public class EnhancedPortals
         if (event.map.textureType == 0)
         {
             ClientProxy.customPortalTextures.clear();
-            ClientProxy.customPortalFrameTextures.clear();
+            ClientProxy.customFrameTextures.clear();
             
             int counter = 0;
             
@@ -114,7 +114,7 @@ public class EnhancedPortals
             while (ClientProxy.resourceExists("textures/blocks/customFrame/" + String.format("%02d", counter) + ".png"))
             {
                 CommonProxy.logger.info("Registered custom frame Icon: " + String.format("%02d", counter) + ".png");
-                ClientProxy.customPortalFrameTextures.add(event.map.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));                
+                ClientProxy.customFrameTextures.add(event.map.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));                
                 counter++;
             }
         }

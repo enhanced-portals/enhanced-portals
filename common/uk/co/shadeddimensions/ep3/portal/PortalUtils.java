@@ -40,7 +40,7 @@ public class PortalUtils
      */
     public static boolean createPortalFrom(TilePortalController controller)
     {
-        if (CommonProxy.isClient() || controller.isPortalActive || controller.processing)
+        if (CommonProxy.isClient() || controller.isPortalActive || controller.processing || !controller.hasConfigured)
         {
             return false;
         }
@@ -277,7 +277,7 @@ public class PortalUtils
      */
     public static void removePortalFrom(TilePortalController controller)
     {
-        if (CommonProxy.isClient() || !controller.isPortalActive || controller.processing)
+        if (CommonProxy.isClient() || !controller.isPortalActive || controller.processing || !controller.hasConfigured)
         {
             return;
         }

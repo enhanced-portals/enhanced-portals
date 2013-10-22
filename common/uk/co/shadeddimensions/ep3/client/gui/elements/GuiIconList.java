@@ -47,7 +47,7 @@ public class GuiIconList extends Gui
                 parent.drawRectangle(x - 1, y - 1, 18, 18, 0x88FFFFFF, false);
             }
 
-            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= ic : ClientProxy.customPortalFrameTextures.size() <= ic)
+            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= ic : ClientProxy.customFrameTextures.size() <= ic)
             {
                 break;
             }
@@ -57,10 +57,10 @@ public class GuiIconList extends Gui
                 continue;
             }
             
-            drawTexturedModelRectFromIcon(x, y, (Icon)(isPortalTexture ? ClientProxy.customPortalTextures.get(ic) : ClientProxy.customPortalFrameTextures.get(ic)), 16, 16);
+            drawTexturedModelRectFromIcon(x, y, (Icon)(isPortalTexture ? ClientProxy.customPortalTextures.get(ic) : ClientProxy.customFrameTextures.get(ic)), 16, 16);
         }
         
-        if (isPortalTexture ? ClientProxy.customPortalTextures.isEmpty() : ClientProxy.customPortalFrameTextures.isEmpty())
+        if (isPortalTexture ? ClientProxy.customPortalTextures.isEmpty() : ClientProxy.customFrameTextures.isEmpty())
         {
             parent.getFontRenderer().drawSplitString("No custom icons found.", parent.getGuiLeft() + posX + 5, parent.getGuiTop() + posY + 5, width - 10, 0xFFFFFFFF);
         }
@@ -85,7 +85,7 @@ public class GuiIconList extends Gui
                         
                         if (x >= x2 && x <= x2 + 18 && y >= y2 && y <= y2 + 18)
                         {
-                            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= i : ClientProxy.customPortalFrameTextures.size() <= i)
+                            if (isPortalTexture ? ClientProxy.customPortalTextures.size() <= i : ClientProxy.customFrameTextures.size() <= i)
                             {
                                 return;
                             }

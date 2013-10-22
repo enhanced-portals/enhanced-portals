@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.api.IPortalTool;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
@@ -53,8 +52,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
         
         if (s != null && s.getItem() instanceof IPortalTool)
         {
-            ((IPortalTool) s.getItem()).openGui(this, s, player.isSneaking(), player);            
-            return true;
+            return ((IPortalTool) s.getItem()).openGui(this, s, player.isSneaking(), player);
         }
         
         return false;
@@ -131,17 +129,6 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
         return portalController != null ? (TilePortalController) portalController.getBlockTileEntity() : null;
     }
     
-    @Override
-    public void validate()
-    {
-        super.validate();
-        
-        if (worldObj.isRemote)
-        {
-            ClientProxy.requestTileData(this);
-        }
-    }
-
     /* IInventory */
     @Override
     public int getSizeInventory()

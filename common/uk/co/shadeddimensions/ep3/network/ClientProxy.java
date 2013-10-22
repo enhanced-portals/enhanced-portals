@@ -22,7 +22,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
-    public static ArrayList<Icon> customPortalFrameTextures = new ArrayList<Icon>();
+    public static ArrayList<Icon> customFrameTextures = new ArrayList<Icon>();
     public static ArrayList<Icon> customPortalTextures = new ArrayList<Icon>();
     public static ArrayList<int[]> particleSets = new ArrayList<int[]>();
     public static Random random = new Random();
@@ -59,7 +59,7 @@ public class ClientProxy extends CommonProxy
 
     @Override
     public void registerRenderers()
-    {
+    {        
         ClientRegistry.bindTileEntitySpecialRenderer(TilePortalPart.class, new TileFrameRenderer());
         MinecraftForgeClient.registerItemRenderer(blockFrame.blockID, new FrameItemRenderer());
     }

@@ -23,6 +23,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPortal extends BlockEnhancedPortals
 {
+    Icon texture;
+    
     public BlockPortal(int id, String name)
     {
         super(id, Material.portal, false);
@@ -59,7 +61,7 @@ public class BlockPortal extends BlockEnhancedPortals
     @Override
     public Icon getIcon(int side, int meta)
     {        
-        return Block.portal.getIcon(side, meta);
+        return texture;
     }
     
     @Override
@@ -83,7 +85,7 @@ public class BlockPortal extends BlockEnhancedPortals
             }
         }
         
-        return Block.portal.getIcon(side, 0);
+        return texture;
     }
 
     @Override
@@ -178,7 +180,7 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         return false;
     }
-
+    
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
@@ -235,6 +237,6 @@ public class BlockPortal extends BlockEnhancedPortals
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        
+        texture = iconRegister.registerIcon("enhancedportals:portal");
     }
 }

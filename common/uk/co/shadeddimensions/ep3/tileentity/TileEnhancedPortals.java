@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
@@ -108,5 +109,16 @@ public class TileEnhancedPortals extends TileEntity
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         stream.writeBoolean(hasPower);
+    }
+    
+    @Override
+    public void validate()
+    {
+        super.validate();
+        
+        if (worldObj.isRemote)
+        {
+            ClientProxy.requestTileData(this);
+        }
     }
 }

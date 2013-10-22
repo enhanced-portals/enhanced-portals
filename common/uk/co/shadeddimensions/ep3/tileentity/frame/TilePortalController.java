@@ -20,7 +20,7 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
@@ -73,7 +73,7 @@ public class TilePortalController extends TilePortalPart
         hasConfigured = waitingForCard = processing = false;
         
         frameColour = portalColour = 0xffffff;
-        particleColour = 0xB336A1;
+        particleColour = 0x0077D8;
         particleType = portalType = 0;
         
         uniqueIdentifier = networkIdentifier = NetworkManager.BLANK_IDENTIFIER;
@@ -88,7 +88,7 @@ public class TilePortalController extends TilePortalPart
         return this;
     }
     
-    public void configure(List<WorldCoordinates> tiles, int pType)
+    public void configure(List<WorldCoordinates> tiles, int pType, EntityPlayer player)
     {
         if (CommonProxy.isClient() || hasConfigured)
         {
@@ -118,7 +118,7 @@ public class TilePortalController extends TilePortalPart
             }
             else
             {
-                if (tile instanceof TilePortalFrame)
+                if (tile instanceof TileFrame)
                 {
                     frameBasic.add(c);
                 }
@@ -149,7 +149,8 @@ public class TilePortalController extends TilePortalPart
         }
         
         portalType = pType;
-        hasConfigured = true;
+        waitingForCard = true;
+        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.nextStage"));
     }
     
     @Override
@@ -424,6 +425,16 @@ public class TilePortalController extends TilePortalPart
             return true;
         }
         
+        if (!hasConfigured && waitingForCard && CommonProxy.isServer())
+        {
+            if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID != CommonProxy.itemLocationCard.itemID)
+            {
+                player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.nextStage"));
+            }           
+            
+            return false;
+        }
+        
         if (CommonProxy.isClient() || hasConfigured)
         {
             return false;
@@ -536,7 +547,7 @@ public class TilePortalController extends TilePortalPart
                 }
             }
 
-            configure(portalParts, pType);
+            configure(portalParts, pType, player);
         }
         else
         {
@@ -651,7 +662,7 @@ public class TilePortalController extends TilePortalPart
             
             for (WorldCoordinates c : frameBasic)
             {
-                TilePortalFrame frame = (TilePortalFrame) c.getBlockTileEntity();
+                TileFrame frame = (TileFrame) c.getBlockTileEntity();
                 frame.portalController = null;
                 CommonProxy.sendUpdatePacketToAllAround(frame);
             }

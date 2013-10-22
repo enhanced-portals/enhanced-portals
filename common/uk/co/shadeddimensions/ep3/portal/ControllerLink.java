@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -109,7 +109,7 @@ public class ControllerLink
                         return LinkStatus.FAIL_MultipleControllers;
                     }
                 }
-                else if (t instanceof TilePortalFrame)
+                else if (t instanceof TileFrame)
                 {
                     frameBlocks.add(c);
                 }

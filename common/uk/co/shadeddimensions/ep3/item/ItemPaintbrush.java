@@ -32,25 +32,32 @@ public class ItemPaintbrush extends ItemPortalTool
     }
 
     @Override
-    public void openGui(TilePortalPart portalPart, ItemStack stack, boolean isSneaking, EntityPlayer player)
+    public boolean openGui(TilePortalPart portalPart, ItemStack stack, boolean isSneaking, EntityPlayer player)
     {
-        if (portalPart instanceof TilePortal)
+        if (super.openGui(portalPart, stack, isSneaking, player))
         {
-            TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
-
-            if (control != null)
+            if (portalPart instanceof TilePortal)
             {
-                player.openGui(EnhancedPortals.instance, isSneaking ? GuiIds.PARTICLE_TEXTURE : GuiIds.PORTAL_TEXTURE, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
-            }
-        }
-        else
-        {
-            TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
+                TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
 
-            if (control != null)
-            {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_FRAME_TEXTURE, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+                if (control != null)
+                {
+                    player.openGui(EnhancedPortals.instance, isSneaking ? GuiIds.PARTICLE_TEXTURE : GuiIds.PORTAL_TEXTURE, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+                }
             }
+            else
+            {
+                TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
+
+                if (control != null)
+                {
+                    player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_FRAME_TEXTURE, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+                }
+            }
+            
+            return true;
         }
+
+        return false;
     }
 }

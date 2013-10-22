@@ -294,18 +294,7 @@ public class TileRedstoneInterface extends TilePortalPart
         tagCompound.setBoolean("emitting", emitting);
         tagCompound.setBoolean("pulse", pulse);
     }
-    
-    @Override
-    public boolean activate(EntityPlayer player)
-    {
-        if (super.activate(player))
-        {
-            return true;
-        }
-                
-        return false;
-    }
-        
+            
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {

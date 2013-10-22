@@ -6,5 +6,5 @@ import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 
 public abstract interface IPortalTool
 {
-    public abstract void openGui(TilePortalPart portalPart, ItemStack stack, boolean isSneaking, EntityPlayer player);
+    public abstract boolean openGui(TilePortalPart portalPart, ItemStack stack, boolean isSneaking, EntityPlayer player);
 }

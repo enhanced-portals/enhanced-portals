@@ -13,6 +13,7 @@ tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
 item.ep3.wrench.name=Wrench
 item.ep3.paintbrush.name=Nanobrush
 item.ep3.goggles.name=Goggles
+item.ep3.locationCard.name=DBS Location Card
 
 # Upgrades
 item.ep3.portalModule.0.name=Particle Destroyer
@@ -25,6 +26,8 @@ item.ep3.portalModule.3.name=Momentum [NI]
 item.ep3.portalModule.3.desc=Entities keep their momentum [NI]
 item.ep3.portalModule.4.name=Portal Cloaking
 item.ep3.portalModule.4.desc=Makes the portal completely invisible
+item.ep3.portalModule.5.name=Particle Shader
+item.ep3.portalModule.5.desc=Particles randomly spawn lighter or darker
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3
@@ -101,4 +104,6 @@ ep3.chat.error.multipleModuleManipulators=Failed to create a portal: You cannot 
 ep3.chat.error.multipleControllers=Failed to create a portal: You cannot have multiple Portal Controllers
 ep3.chat.error.noPortals=Failed to create a portal at this location. Check that this location is valid for a portal
 ep3.chat.error.noUidSet=You cannot add this portal to a network until you have set a Unique Identifier
-ep3.chat.success=Successfully initialized a portal
+ep3.chat.error.voidLinkCard=This link card no longer links to a valid DBS
+ep3.chat.nextStage=Please insert a DBS Location Card to continue
+ep3.chat.success=Successfully initialized the portal

@@ -38,9 +38,9 @@ public class GuiParticleTexture extends GuiColourInterface
         }
         else if (button.id == resetButton.id)
         {
-            redSlider.sliderValue = 1f;
-            greenSlider.sliderValue = 1f;
-            blueSlider.sliderValue = 1f;
+            redSlider.sliderValue = 0f;
+            greenSlider.sliderValue = 119 / 255f;
+            blueSlider.sliderValue = 216 / 255f;
             
             String hex = String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue());
             

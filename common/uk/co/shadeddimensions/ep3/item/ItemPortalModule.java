@@ -12,6 +12,7 @@ import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 
@@ -19,7 +20,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES;
 
         public String getUniqueID()
         {
@@ -123,6 +124,28 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
             particle.setParticleRed((float) Math.random());
             particle.setParticleGreen((float) Math.random());
             particle.setParticleBlue((float) Math.random());
+        }
+        else if (upgrade.getItemDamage() == PortalModules.TINTSHADE_PARTICLES.ordinal())
+        {
+            float particleRed = particle.getParticleRed(), particleGreen = particle.getParticleGreen(), particleBlue = particle.getParticleBlue();
+            int i = ClientProxy.random.nextInt(3);
+            
+            if (i == 0)
+            {
+                particleRed *= (particleRed / 4) * 3;
+                particleGreen *= (particleGreen / 4) * 3;
+                particleBlue *= (particleBlue / 4) * 3;
+            }
+            else if (i == 1)
+            {
+                particleRed = (255 - particleRed) * ((particleRed / 4) * 3);
+                particleGreen = (255 - particleGreen) * ((particleGreen / 4) * 3);
+                particleBlue = (255 - particleBlue) * ((particleBlue / 4) * 3);
+            }
+            
+            particle.setParticleRed(particleRed);
+            particle.setParticleGreen(particleGreen);
+            particle.setParticleBlue(particleBlue);
         }
     }
 

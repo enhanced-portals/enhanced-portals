@@ -3,7 +3,6 @@ package uk.co.shadeddimensions.ep3.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,16 +11,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEnhancedPortals
 {    
@@ -31,11 +32,10 @@ public class BlockFrame extends BlockEnhancedPortals
                DIALLING_DEVICE = 4,
                BIOMETRIC_IDENTIFIER = 5,
                MODULE_MANIPULATOR = 6,
-               FLUID = 7,
-               POWER = 8,
-               FRAME_TYPES = 8;
+               FRAME_TYPES = 7;
     
     public static Icon[] overlayIcons;
+    static ConnectedTextures connectedTextures;
 
     public BlockFrame(int id, String name)
     {
@@ -44,6 +44,7 @@ public class BlockFrame extends BlockEnhancedPortals
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
+        connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", id, -1);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -79,7 +80,7 @@ public class BlockFrame extends BlockEnhancedPortals
     {
         if (metadata == 0)
         {
-            return new TilePortalFrame();
+            return new TileFrame();
         }
         else if (metadata == PORTAL_CONTROLLER)
         {
@@ -118,9 +119,15 @@ public class BlockFrame extends BlockEnhancedPortals
     @Override
     public Icon getIcon(int side, int meta)
     {
-        return Block.blockNetherQuartz.getIcon(1, 0); // TODO
+        return connectedTextures.getNormalIcon();
     }
 
+    @Override
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
+    }
+    
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
@@ -170,6 +177,8 @@ public class BlockFrame extends BlockEnhancedPortals
         {
             overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + (i + 1));
         }
+        
+        connectedTextures.registerIcons(register);
     }
 
     @Override

@@ -3,7 +3,6 @@ package uk.co.shadeddimensions.ep3.tileentity.frame;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -188,18 +187,7 @@ public class TileModuleManipulator extends TilePortalPart
         
         return false;
     }
-    
-    @Override
-    public boolean activate(EntityPlayer player)
-    {
-        if (super.activate(player))
-        {
-            return true;
-        }
         
-        return false;
-    }
-    
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {

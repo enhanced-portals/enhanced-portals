@@ -73,13 +73,13 @@ public class GuiPortalTexture extends GuiColourInterface
         }
         else if (button.id == forwardButton.id)
         {
-            if (scrollList.page < (scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customPortalFrameTextures.size()) / 27)
+            if (scrollList.page < (scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customFrameTextures.size()) / 27)
             {
                 scrollList.page++;
                 backButton.enabled = true;
             }
             
-            if (scrollList.page >= ((scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customPortalFrameTextures.size()) / 27))
+            if (scrollList.page >= ((scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customFrameTextures.size()) / 27))
             {
                 button.enabled = false;
             }
@@ -100,7 +100,7 @@ public class GuiPortalTexture extends GuiColourInterface
         buttonList.add(forwardButton);
         
         backButton.enabled = scrollList.page > 0;
-        forwardButton.enabled = scrollList.page < ((scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customPortalFrameTextures.size()) / 27);
+        forwardButton.enabled = scrollList.page < ((scrollList.isPortalTexture ? ClientProxy.customPortalTextures.size() : ClientProxy.customFrameTextures.size()) / 27);
     }
 
     @Override

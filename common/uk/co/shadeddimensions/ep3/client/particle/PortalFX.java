@@ -24,23 +24,13 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        int ParticleColour = controller != null ? controller.particleColour : 0xB336A1, ParticleType = controller != null ? controller.particleType : 0;
+        int ParticleColour = controller != null ? controller.particleColour : 0x0077D8, ParticleType = controller != null ? controller.particleType : 0;
 
-        if (ParticleColour == 0xB336A1)
-        {
-            float f = rand.nextFloat() * 0.6F + 0.4F;
-            particleRed = particleGreen = particleBlue = 1.0F * f;
-            particleGreen *= 0.3F;
-            particleRed *= 0.9F;
-        }
-        else
-        {
-            Color c = new Color(ParticleColour);
-            particleRed = c.getRed() / 255f;
-            particleGreen = c.getGreen() / 255f;
-            particleBlue = c.getBlue() / 255f;
-        }
-
+        Color c = new Color(ParticleColour);
+        particleRed = c.getRed() / 255f;
+        particleGreen = c.getGreen() / 255f;
+        particleBlue = c.getBlue() / 255f;
+        
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
@@ -131,5 +121,20 @@ public class PortalFX extends EntityFX
     public void setParticleRed(float f)
     {
         particleRed = f;
+    }
+    
+    public float getParticleBlue()
+    {
+        return particleBlue;
+    }
+
+    public float getParticleGreen()
+    {
+        return particleGreen;
+    }
+
+    public float getParticleRed()
+    {
+        return particleRed;
     }
 }
