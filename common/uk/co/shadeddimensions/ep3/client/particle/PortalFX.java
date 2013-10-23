@@ -107,34 +107,4 @@ public class PortalFX extends EntityFX
         particleScale = portalParticleScale * var8;
         super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
-
-    public void setParticleBlue(float f)
-    {
-        particleBlue = f;
-    }
-
-    public void setParticleGreen(float f)
-    {
-        particleGreen = f;
-    }
-
-    public void setParticleRed(float f)
-    {
-        particleRed = f;
-    }
-    
-    public float getParticleBlue()
-    {
-        return particleBlue;
-    }
-
-    public float getParticleGreen()
-    {
-        return particleGreen;
-    }
-
-    public float getParticleRed()
-    {
-        return particleRed;
-    }
 }

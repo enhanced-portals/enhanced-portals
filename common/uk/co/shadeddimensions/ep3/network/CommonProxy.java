@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -66,7 +68,17 @@ public class CommonProxy
             return;
         }
         
-        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, new PacketTileUpdate(tile).getPacket());
+        sendPacketToAllAround(tile, new PacketTileUpdate(tile).getPacket());
+    }
+    
+    public static void sendPacketToAllAround(TileEntity tile, Packet250CustomPayload packet)
+    {
+        if (CommonProxy.isClient())
+        {
+            return;
+        }
+        
+        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, packet);
     }
 
     public File getBaseDir()

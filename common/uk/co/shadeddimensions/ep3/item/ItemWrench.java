@@ -72,8 +72,9 @@ public class ItemWrench extends ItemPortalTool
             else if (portalPart instanceof TileNetworkInterface)
             {
                 TileNetworkInterface networkInterface = (TileNetworkInterface) portalPart;
+                TilePortalController controller = networkInterface != null ? networkInterface.getPortalController() : null;
     
-                if (networkInterface.getPortalController() != null && networkInterface.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+                if (controller != null && controller.uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!portalPart.worldObj.isRemote)
                     {
@@ -83,7 +84,7 @@ public class ItemWrench extends ItemPortalTool
                     return true;
                 }
     
-                player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
+                player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
             }
             else if (portalPart instanceof TileBiometricIdentifier)
             {

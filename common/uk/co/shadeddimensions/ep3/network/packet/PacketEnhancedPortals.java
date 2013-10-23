@@ -20,7 +20,8 @@ public abstract class PacketEnhancedPortals
     {
         PacketRequestData(PacketRequestData.class),
         PacketTileUpdate(PacketTileUpdate.class),
-        PacketGuiData(PacketGuiData.class);
+        PacketGuiData(PacketGuiData.class),
+        PacketPortalCreated(PacketPortalCreated.class);
         
         Class<? extends PacketEnhancedPortals> clazz;
         

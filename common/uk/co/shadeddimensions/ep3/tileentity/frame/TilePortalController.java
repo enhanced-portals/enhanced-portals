@@ -22,6 +22,7 @@ import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
@@ -33,7 +34,7 @@ public class TilePortalController extends TilePortalPart
     public List<WorldCoordinates> frameBasic, frameRedstone, frameFluid, framePower, portals;
     public WorldCoordinates frameModule, frameDialler, frameNetwork, frameBiometric, bridgeStabilizer;
     public boolean hasConfigured, waitingForCard, isPortalActive, processing;
-    public String uniqueIdentifier, networkIdentifier;
+    public String uniqueIdentifier, networkIdentifier, portalDestination;
     
     public int frameColour, customFrameTexture;
     public int portalColour, customPortalTexture, portalType;
@@ -264,6 +265,12 @@ public class TilePortalController extends TilePortalPart
         
         tag.setString("uniqueIdentifier", uniqueIdentifier);
         tag.setString("networkIdentifier", networkIdentifier);
+        
+        if (portalDestination != null)
+        {
+            tag.setString("portalDestination", portalDestination);
+        }
+        
         tag.setBoolean("waitingForCard", waitingForCard);
         
         tag.setInteger("frameColour", frameColour);
@@ -309,6 +316,12 @@ public class TilePortalController extends TilePortalPart
         
         uniqueIdentifier = tag.getString("uniqueIdentifier");
         networkIdentifier = tag.getString("networkIdentifier");
+        
+        if (tag.hasKey("portalDestination"))
+        {
+            portalDestination = tag.getString("portalDestination");
+        }
+        
         waitingForCard = tag.getBoolean("waitingForCard");
         
         frameColour = tag.getInteger("frameColour");
@@ -367,6 +380,29 @@ public class TilePortalController extends TilePortalPart
             
             uniqueIdentifier = identifier;
             sendUpdatePacket = true;
+        }
+
+        if (payload.data.hasKey("networkIdentifier"))
+        {
+            String identifier = payload.data.getString("networkIdentifier");
+            System.out.println(identifier);
+            
+            if (identifier.equals(NetworkManager.BLANK_IDENTIFIER) && !networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            {
+                CommonProxy.networkManager.removePortalFromNetwork(uniqueIdentifier, networkIdentifier);
+            }
+            else if (!identifier.equals(NetworkManager.BLANK_IDENTIFIER) && !networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            {
+                CommonProxy.networkManager.removePortalFromNetwork(uniqueIdentifier, networkIdentifier);
+                CommonProxy.networkManager.addPortalToNetwork(uniqueIdentifier, identifier);
+            }
+            else if (!identifier.equals(NetworkManager.BLANK_IDENTIFIER) && networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            {
+                CommonProxy.networkManager.addPortalToNetwork(uniqueIdentifier, identifier);
+            }
+            
+            networkIdentifier = identifier;
+            sendUpdatePacket = true;            
         }
 
         if (payload.data.hasKey("frameColour"))
@@ -563,14 +599,54 @@ public class TilePortalController extends TilePortalPart
         partBroken();
     }
     
+    /***
+     * Creates a portal using the set network identifier.
+     */
     public void createPortal()
     {
+        if (portalDestination == null && !networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+        {
+            TileStabilizer stabilizer = (TileStabilizer) bridgeStabilizer.getBlockTileEntity();
+            
+            stabilizer.setupNewConnection(uniqueIdentifier, CommonProxy.networkManager.getNextDestination(networkIdentifier, uniqueIdentifier));
+        }
+        
+       // if (portalDestination != null)
+      //  {
+            //PortalUtils.createPortalFrom(this);
+       // }
+    }
+    
+    /***
+     * Creates a portal using the specified destination portal.
+     */
+    public void createPortal(String destPortal)
+    {
+        portalDestination = destPortal;
         PortalUtils.createPortalFrom(this);
     }
     
+    /***
+     * Removes a portal and resets the destination portal.
+     */
     public void removePortal()
     {
+        if (portalDestination != null)
+        {
+            TileStabilizer stabilizer = (TileStabilizer) bridgeStabilizer.getBlockTileEntity();
+            
+            stabilizer.terminateExistingConnection(uniqueIdentifier, portalDestination);
+            return;
+        }
+        
         PortalUtils.removePortalFrom(this);
+        portalDestination = null;
+    }
+    
+    public void removePortalStabilizer()
+    {
+        PortalUtils.removePortalFrom(this);
+        portalDestination = null;
     }
     
     public TileModuleManipulator getModuleManipulator()

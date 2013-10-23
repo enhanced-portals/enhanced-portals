@@ -10,13 +10,12 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphSelectorNetwork;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphViewer;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameNetworkInterface extends GuiResizable
@@ -24,18 +23,18 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
     GuiGlyphSelectorNetwork glyphSelector;
     GuiGlyphViewer glyphViewer;
 
-    TileNetworkInterface networkInterface;
+    TilePortalController portalController;
 
-    public GuiPortalFrameNetworkInterface(TileNetworkInterface tile)
+    public GuiPortalFrameNetworkInterface(TilePortalController tile)
     {
         super(new ContainerNetworkInterface(tile), tile, 176, 85, 176, 143);
 
-        networkInterface = tile;
+        portalController = tile;
 
         glyphSelector = new GuiGlyphSelectorNetwork(7, 57, 0xffffff, this);
         glyphViewer = new GuiGlyphViewer(7, 20, 0xffffff, this, glyphSelector);
 
-        glyphSelector.setSelectedToIdentifier(networkInterface.getPortalController().networkIdentifier);
+        glyphSelector.setSelectedToIdentifier(portalController.networkIdentifier);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
         {
             if (button.id == 0) // Reset Changes
             {
-                glyphSelector.setSelectedToIdentifier(networkInterface.getPortalController().networkIdentifier);
+                glyphSelector.setSelectedToIdentifier(portalController.networkIdentifier);
 
                 toggleState();
             }
@@ -121,13 +120,13 @@ public class GuiPortalFrameNetworkInterface extends GuiResizable
             }
         }
 
-        String s = EnhancedPortals.config.getBoolean("randomTeleportMode") ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.random") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.sequential"), s1 = networkInterface.connectedPortals == -1 ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.notSet") : "" + networkInterface.connectedPortals;
+        //String s = EnhancedPortals.config.getBoolean("randomTeleportMode") ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.random") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.sequential"), s1 = portalController.connectedPortals == -1 ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.notSet") : "" + portalController.connectedPortals;
 
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.connectedPortals"), 12, 57, 0x777777);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".networkIdentifier.teleportMode"), 12, 67, 0x777777);
 
-        fontRenderer.drawString(s1, xSize - 12 - fontRenderer.getStringWidth(s1), 57, 0x404040);
-        fontRenderer.drawString(s, xSize - 12 - fontRenderer.getStringWidth(s), 67, 0x404040);
+        //fontRenderer.drawString(s1, xSize - 12 - fontRenderer.getStringWidth(s1), 57, 0x404040);
+        //fontRenderer.drawString(s, xSize - 12 - fontRenderer.getStringWidth(s), 67, 0x404040);
     }
 
     @SuppressWarnings("unchecked")

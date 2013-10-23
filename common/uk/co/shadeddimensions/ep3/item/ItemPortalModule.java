@@ -121,13 +121,11 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     {
         if (upgrade.getItemDamage() == PortalModules.RAINBOW_PARTICLES.ordinal())
         {
-            particle.setParticleRed((float) Math.random());
-            particle.setParticleGreen((float) Math.random());
-            particle.setParticleBlue((float) Math.random());
+            particle.setRBGColorF((float) Math.random(), (float) Math.random(), (float) Math.random());
         }
         else if (upgrade.getItemDamage() == PortalModules.TINTSHADE_PARTICLES.ordinal())
         {
-            float particleRed = particle.getParticleRed(), particleGreen = particle.getParticleGreen(), particleBlue = particle.getParticleBlue();
+            float particleRed = particle.getRedColorF(), particleGreen = particle.getGreenColorF(), particleBlue = particle.getBlueColorF();
             int i = ClientProxy.random.nextInt(3);
             
             if (i == 0)
@@ -143,9 +141,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
                 particleBlue = (255 - particleBlue) * ((particleBlue / 4) * 3);
             }
             
-            particle.setParticleRed(particleRed);
-            particle.setParticleGreen(particleGreen);
-            particle.setParticleBlue(particleBlue);
+            particle.setRBGColorF(particleRed, particleGreen, particleBlue);
         }
     }
 

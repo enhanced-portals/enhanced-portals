@@ -19,7 +19,6 @@ import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.ep3.lib.GuiIds;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -51,9 +50,9 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiParticleTexture((TilePortalController) tile);
         }
-        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalController)
         {
-            return new GuiPortalFrameNetworkInterface((TileNetworkInterface) tile);
+            return new GuiPortalFrameNetworkInterface((TilePortalController) tile);
         }
         else if (ID == GuiIds.MODULE_MANIPULATOR && tile instanceof TileModuleManipulator)
         {
@@ -90,10 +89,10 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerParticleTexture((TilePortalController) tile);
         }
-        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TileNetworkInterface)
+        else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalController)
         {
-            CommonProxy.sendUpdatePacketToPlayer((TileNetworkInterface) tile, player);
-            return new ContainerNetworkInterface((TileNetworkInterface) tile);
+            CommonProxy.sendUpdatePacketToPlayer((TilePortalController) tile, player);
+            return new ContainerNetworkInterface((TilePortalController) tile);
         }
         else if (ID == GuiIds.MODULE_MANIPULATOR && tile instanceof TileModuleManipulator)
         {

@@ -69,6 +69,7 @@ public class PortalUtils
             CommonProxy.sendUpdatePacketToAllAround((TilePortal) controller.worldObj.getBlockTileEntity(w.posX, w.posY, w.posZ));
         }
         
+        //CommonProxy.sendPacketToAllAround(controller, new PacketPortalCreated(controller).getPacket());
         controller.setPortalActive(true);
         return true;
     }
