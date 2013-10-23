@@ -56,8 +56,9 @@ public class ItemWrench extends ItemPortalTool
             else if (portalPart instanceof TileDiallingDevice)
             {
                 TileDiallingDevice dialDevice = (TileDiallingDevice) portalPart;
+                TilePortalController controller = dialDevice != null ? dialDevice.getPortalController() : null;
     
-                if (dialDevice.getPortalController() != null && dialDevice.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+                /*if (controller != null && controller.uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!portalPart.worldObj.isRemote)
                     {
@@ -66,6 +67,10 @@ public class ItemWrench extends ItemPortalTool
     
                     return true;
                 }
+                else if (controller == null || !controller.hasConfigured)
+                {
+                    return true;
+                }*/
     
                 // TODO
             }
@@ -74,7 +79,7 @@ public class ItemWrench extends ItemPortalTool
                 TileNetworkInterface networkInterface = (TileNetworkInterface) portalPart;
                 TilePortalController controller = networkInterface != null ? networkInterface.getPortalController() : null;
     
-                if (controller != null && controller.uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+                /*if (controller != null && controller.uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
                 {
                     if (!portalPart.worldObj.isRemote)
                     {
@@ -83,6 +88,10 @@ public class ItemWrench extends ItemPortalTool
     
                     return true;
                 }
+                else if (controller == null || !controller.hasConfigured)
+                {
+                    return true;
+                }*/
     
                 player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
             }
@@ -101,7 +110,7 @@ public class ItemWrench extends ItemPortalTool
             {
                 TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
     
-                if (control != null)
+                if (control != null && control.hasConfigured)
                 {
                     player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
                 }
@@ -110,7 +119,7 @@ public class ItemWrench extends ItemPortalTool
             {
                 TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
     
-                if (control != null)
+                if (control != null && control.hasConfigured)
                 {
                     player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
                 }

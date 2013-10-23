@@ -8,305 +8,297 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class NetworkManager
 {
-    // UID , Location
-    Map<String, WorldCoordinates> portalLocations;
-    // UID , Portals UIDs
-    Map<String, ArrayList<String>> basicNetwork;
+    /*** Stores locations of all portals ***/
+    HashMap<GlyphIdentifier, WorldCoordinates> portalCoordinates;
+
+    /*** Reverse lookup for {@link portalCoordinates} ***/
+    HashMap<WorldCoordinates, GlyphIdentifier> portalCoordinatesReverse; // note: doesn't need to be saved seperately
+
+    /***Portal Identifier, Network Identifier.
+     * Used for looking up which portal is in which network, quickly. ***/
+    HashMap<GlyphIdentifier, GlyphIdentifier> portalNetworks; // note: doesn't need to be saved seperately
+
+    /*** Network Identifier, Portal Identifier List.
+     * Used for looking up all portals in a network,
+     * without searching every entry in {@link portalNetworks} ***/
+    HashMap<GlyphIdentifier, ArrayList<GlyphIdentifier>> networkedPortals;
 
     File dataFile;
     MinecraftServer server;
 
-    public static final String BLANK_IDENTIFIER = "NOT_SET";
-
     public NetworkManager(FMLServerStartingEvent event)
     {
-        portalLocations = new HashMap<String, WorldCoordinates>();
-        basicNetwork = new HashMap<String, ArrayList<String>>();
+        portalCoordinates = new HashMap<GlyphIdentifier, WorldCoordinates>();
+        portalCoordinatesReverse = new HashMap<WorldCoordinates, GlyphIdentifier>();
+        portalNetworks = new HashMap<GlyphIdentifier, GlyphIdentifier>();
+        networkedPortals = new HashMap<GlyphIdentifier, ArrayList<GlyphIdentifier>>();
         server = event.getServer();
         dataFile = new File(EnhancedPortals.proxy.getWorldDir(), Reference.NAME + ".dat");
 
-        loadAllData();
-    }
-
-    public void addNewPortal(String UID, WorldCoordinates pos)
-    {
-        if (!portalExists(UID) && !UID.equals(BLANK_IDENTIFIER))
-        {
-            portalLocations.put(UID, pos);
-        }
-    }
-
-    public void addPortalToNetwork(String UID, String network)
-    {
-        if (!isPortalInNetwork(UID, network) && !UID.equals(BLANK_IDENTIFIER) && !network.equals(BLANK_IDENTIFIER))
-        {
-            if (!networkExists(network))
-            {
-                basicNetwork.put(network, new ArrayList<String>());
-            }
-
-            getNetworkedPortals(network).add(UID);
-        }
-    }
-
-    public ArrayList<String> getDestinationsExcluding(String network, String excludedUid)
-    {
-        ArrayList<String> strList = new ArrayList<String>();
-
-        for (String s : getNetworkedPortals(network))
-        {
-            if (!s.equals(excludedUid))
-            {
-                strList.add(s);
-            }
-        }
-
-        return strList;
-    }
-
-    public ArrayList<String> getNetworkedPortals(String UID)
-    {
-        return networkExists(UID) ? basicNetwork.get(UID) : new ArrayList<String>();
-    }
-
-    public String getNextDestination(String network, String UID)
-    {
-        if (EnhancedPortals.config.getBoolean("randomTeleportMode"))
-        {
-            ArrayList<String> sList = getDestinationsExcluding(network, UID);
-
-            if (sList.size() <= 1)
-            {
-                return null;
-            }
-
-            return sList.get(new Random().nextInt(sList.size()));
-        }
-        else
-        {
-            ArrayList<String> sList = getNetworkedPortals(network);
-
-            if (!sList.contains(UID))
-            {
-                return null; // Should never happen, but let's make sure.
-            }
-
-            int index = sList.indexOf(UID);
-
-            if (index == sList.size() - 1)
-            {
-                return sList.get(0);
-            }
-            else
-            {
-                return sList.get(index + 1);
-            }
-        }
-    }
-
-    public WorldCoordinates getPortalLocation(String UID)
-    {
-        return UID.equals(BLANK_IDENTIFIER) ? null : portalLocations.get(UID);
-    }
-
-    public TilePortalController getPortalLocationController(String UID)
-    {
-        WorldCoordinates c = getPortalLocation(UID);
-
-        if (c != null)
-        {
-            WorldServer world = DimensionManager.getWorld(c.dimension);
-            world.theChunkProviderServer.loadChunk(c.posX >> 4, c.posZ >> 4);
-
-            TileEntity tile = world.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-            if (tile != null && tile instanceof TilePortalController)
-            {
-                return (TilePortalController) tile;
-            }
-        }
-
-        return null;
-    }
-
-    public boolean isPortalInNetwork(String UID, String networkID)
-    {
-        return getNetworkedPortals(networkID).contains(UID);
-    }
-
-    public void loadAllData()
-    {
-        makeFile();
-        NBTTagCompound mainTag = null;
-
         try
         {
-            mainTag = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(dataFile)));
+            loadAllData();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
 
-        if (mainTag == null)
+    public void loadAllData() throws Exception
+    {
+        if (makeFile())
         {
             return;
         }
-
-        NBTTagCompound portalTag = (NBTTagCompound) mainTag.getTag("PortalLocations");
-        NBTTagCompound networkTag = (NBTTagCompound) mainTag.getTag("Networks");
-
-        for (Object o : portalTag.getTags())
+        
+        NBTTagCompound baseTag = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(dataFile)));
+        
+        if (baseTag == null)
         {
-            NBTTagCompound tag = (NBTTagCompound) o;
-            portalLocations.put(tag.getName(), new WorldCoordinates(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D")));
+            return;
         }
-
-        for (Object o : networkTag.getTags())
+        
+        NBTTagList portalLocations = baseTag.getTagList("PortalLocations");
+        NBTTagList portalNetworks = baseTag.getTagList("PortalNetworks");
+        
+        for (Object o : portalLocations.tagList)
         {
-            NBTTagCompound tag = (NBTTagCompound) o;
-            ArrayList<String> sList = new ArrayList<String>();
-
-            for (Object ob : tag.getTags())
+            NBTTagCompound t = (NBTTagCompound) o;
+            
+            addPortal(new GlyphIdentifier(t), new WorldCoordinates(t));
+        }
+        
+        for (Object o : portalNetworks.tagList)
+        {
+            NBTTagCompound t = (NBTTagCompound) o;
+            NBTTagList l = t.getTagList("Portals");
+            
+            GlyphIdentifier identifier = new GlyphIdentifier(t);
+            
+            for (Object obj : l.tagList)
             {
-                NBTTagCompound c = (NBTTagCompound) ob;
-                sList.add(c.getName());
+                NBTTagCompound tag = (NBTTagCompound) obj;                
+                addPortalToNetwork(new GlyphIdentifier(tag), identifier);
+                
             }
-
-            basicNetwork.put(tag.getName(), sList);
         }
     }
 
-    private void makeFile()
+    private boolean makeFile()
     {
         try
         {
             if (!dataFile.exists())
             {
                 dataFile.createNewFile();
+                return true;
             }
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+        
+        return false;
     }
 
-    public boolean networkExists(String UID)
-    {
-        return UID.equals(BLANK_IDENTIFIER) ? false : basicNetwork.containsKey(UID);
-    }
-
-    public boolean portalExists(String UID)
-    {
-        return UID.equals(BLANK_IDENTIFIER) ? false : portalLocations.containsKey(UID);
-    }
-
-    public void removePortal(String UID)
-    {
-        if (!UID.equals(BLANK_IDENTIFIER))
-        {
-            portalLocations.remove(UID);
-        }
-    }
-
-    public void removePortalFromNetwork(String UID, String network)
-    {
-        if ((!BLANK_IDENTIFIER.equals(UID) && !BLANK_IDENTIFIER.equals(network)) && isPortalInNetwork(UID, network))
-        {
-            getNetworkedPortals(network).remove(UID);
-        }
-    }
 
     public void saveAllData()
     {
         makeFile();
-        NBTTagCompound mainTag = new NBTTagCompound();
-        NBTTagCompound portalTag = new NBTTagCompound();
-        NBTTagCompound networkTag = new NBTTagCompound();
-
-        for (Entry<String, WorldCoordinates> entry : portalLocations.entrySet())
+        
+        NBTTagCompound baseTag = new NBTTagCompound();
+        NBTTagList portalLocations = new NBTTagList();
+        NBTTagList portalNetworks = new NBTTagList();
+        
+        for (Entry<GlyphIdentifier, WorldCoordinates> entry : portalCoordinates.entrySet())
         {
             NBTTagCompound t = new NBTTagCompound();
-            t.setInteger("X", entry.getValue().posX);
-            t.setInteger("Y", entry.getValue().posY);
-            t.setInteger("Z", entry.getValue().posZ);
-            t.setInteger("D", entry.getValue().dimension);
-
-            portalTag.setTag(entry.getKey(), t);
+            entry.getKey().writeToNBT(t);
+            entry.getValue().writeToNBT(t);
+            
+            portalLocations.appendTag(t);
         }
-
-        for (Entry<String, ArrayList<String>> entry : basicNetwork.entrySet())
+        
+        for (Entry<GlyphIdentifier, ArrayList<GlyphIdentifier>> entry : networkedPortals.entrySet())
         {
-            if (entry.getValue().size() > 0)
+            NBTTagCompound t = new NBTTagCompound();
+            NBTTagList list = new NBTTagList();
+            
+            entry.getKey().writeToNBT(t);
+                        
+            for (GlyphIdentifier i : entry.getValue())
             {
-                NBTTagCompound t = new NBTTagCompound();
-
-                for (String s : entry.getValue())
-                {
-                    NBTTagCompound c = new NBTTagCompound();
-                    t.setTag(s, c);
-                }
-
-                networkTag.setTag(entry.getKey(), t);
-            }
+                NBTTagCompound c = new NBTTagCompound();
+                i.writeToNBT(c);
+                list.appendTag(c);
+            }     
+            
+            t.setTag("Portals", list);
+            portalNetworks.appendTag(t);
         }
-
-        mainTag.setTag("PortalLocations", portalTag);
-        mainTag.setTag("Networks", networkTag);
-
+        
+        baseTag.setTag("PortalLocations", portalLocations);
+        baseTag.setTag("PortalNetworks", portalNetworks);
+        
         try
         {
-            NBTBase.writeNamedTag(mainTag, new DataOutputStream(new FileOutputStream(dataFile)));
+            NBTBase.writeNamedTag(baseTag, new DataOutputStream(new FileOutputStream(dataFile)));
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
     }
 
-    public void updateExistingPortal(String oldUID, String newUID)
+    /***
+     * Gets the unique identifier of the specified controller
+     * @return Null if one is not set
+     */
+    public GlyphIdentifier getPortalIdentifier(WorldCoordinates w)
     {
-        if (portalExists(oldUID) && !newUID.equals(BLANK_IDENTIFIER))
-        {
-            portalLocations.put(newUID, portalLocations.get(oldUID));
-            removePortal(oldUID);
-        }
+        return w == null ? null : portalCoordinatesReverse.get(w);
     }
 
-    public void updateExistingPortal(String oldUID, String newUID, WorldCoordinates newPos)
+    /***
+     * Gets the network identifier of the specified controller
+     * @return Null if one is not set
+     */
+    public GlyphIdentifier getPortalNetwork(GlyphIdentifier g)
     {
-        if (portalExists(oldUID) && !newUID.equals(BLANK_IDENTIFIER))
-        {
-            portalLocations.put(newUID, newPos);
-            removePortal(oldUID);
-        }
+        return g == null ? null : portalNetworks.get(g);
     }
 
-    public void updateExistingPortal(String UID, WorldCoordinates newPos)
+    public boolean hasIdentifier(WorldCoordinates w)
     {
-        if (portalExists(UID))
+        return w == null ? null : portalCoordinates.containsValue(w);
+    }
+
+    public boolean hasNetwork(GlyphIdentifier g)
+    {
+        return g == null ? null : networkedPortals.containsKey(g);
+    }
+
+    /***
+     * Gets the world coordinates of the specified controller
+     * @return Null if one is not found
+     */
+    public WorldCoordinates getPortalLocation(GlyphIdentifier g)
+    {
+        return g == null ? null : portalCoordinates.get(g);
+    }
+
+    /***
+     * Adds a new portal to the system
+     */
+    public void addPortal(GlyphIdentifier g, WorldCoordinates w)
+    {
+        if (getPortalIdentifier(w) != null || getPortalLocation(g) != null)
         {
-            removePortal(UID);
-            portalLocations.put(UID, newPos);
+            return;
         }
+
+        portalCoordinates.put(g, w);
+        portalCoordinatesReverse.put(w, g);
+    }
+
+    /***
+     * Removes a portal
+     */
+    public void removePortal(GlyphIdentifier g)
+    {        
+        removePortal(g, getPortalLocation(g));
+    }
+
+    /***
+     * Removes a portal
+     */
+    public void removePortal(WorldCoordinates w)
+    {
+        removePortal(getPortalIdentifier(w), w);
+    }
+
+    /***
+     * Removes a portal
+     */
+    public void removePortal(GlyphIdentifier g, WorldCoordinates w)
+    {        
+        if (g == null || w == null)
+        {
+            return;
+        }
+
+        GlyphIdentifier n = getPortalNetwork(g);
+        
+        if (n != null)
+        {
+            removePortalFromNetwork(g, n);
+        }
+        
+        portalCoordinates.remove(g);
+        portalCoordinatesReverse.remove(w);
+    }
+    
+    /***
+     * Removes a portal from a network
+     */
+    public void removePortalFromNetwork(GlyphIdentifier portal, GlyphIdentifier network)
+    {
+        if (portal == null || network == null || getPortalNetwork(portal) != null)
+        {
+            return;
+        }
+        
+        getNetwork(network).remove(portal);
+        portalNetworks.remove(portal);
+    }
+    
+    /***
+     * Adds a portal to a network
+     */
+    public void addPortalToNetwork(GlyphIdentifier portal, GlyphIdentifier network)
+    {
+        if (portal == null || network == null || getPortalNetwork(portal) != null)
+        {
+            return;
+        }
+        
+        getNetwork(network).add(portal);
+        portalNetworks.put(portal, network);
+    }
+    
+    /***
+     * Creates a new network if one does not already exist
+     */
+    private void addNetwork(GlyphIdentifier network)
+    {
+        if (networkedPortals.get(network) == null)
+        {
+            networkedPortals.put(network, new ArrayList<GlyphIdentifier>());
+        }
+    }
+    
+    /***
+     * Retrieves all the portals for the specified network. Will create a network if one does not already exist
+     */
+    private ArrayList<GlyphIdentifier> getNetwork(GlyphIdentifier network)
+    {
+        addNetwork(network);
+        
+        return networkedPortals.get(network);
     }
 }

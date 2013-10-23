@@ -1,5 +1,6 @@
 package uk.co.shadeddimensions.ep3.util;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -33,6 +34,11 @@ public class WorldCoordinates extends ChunkCoordinates
         dimension = coord.dimension;
     }
     
+    public WorldCoordinates(NBTTagCompound tag)
+    {
+        this(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D"));
+    }
+    
     public int getBlockId()
     {
         return DimensionManager.getWorld(dimension).getBlockId(posX, posY, posZ);
@@ -62,5 +68,13 @@ public class WorldCoordinates extends ChunkCoordinates
     public String toString()
     {
         return String.format("WorldCoordinates (X %s, Y %s, Z %s, D %s)", posX, posY, posZ, dimension);
+    }
+
+    public void writeToNBT(NBTTagCompound t)
+    {
+        t.setInteger("X", posX);
+        t.setInteger("Y", posY);
+        t.setInteger("Z", posZ);
+        t.setInteger("D", dimension);
     }
 }

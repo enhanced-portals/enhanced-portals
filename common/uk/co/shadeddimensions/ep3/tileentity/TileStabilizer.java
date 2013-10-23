@@ -42,6 +42,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
      */
     public boolean canAcceptNewConnection()
     {        
+        System.out.println(String.format("Active Connections: %s, Max Connections: %s", activeConnections.size() * 2, MAX_ACTIVE_PORTALS_PER_ROW * rows));
         return (activeConnections.size() * 2) + 2 <= MAX_ACTIVE_PORTALS_PER_ROW * rows;
     }
     
@@ -107,6 +108,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         if (cA == null || cB == null)
         {
             // cry
+            System.out.println(cA + ", " + cB);
             
             if (activeConnections.containsKey(portalA))
             {
@@ -162,8 +164,6 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
     @Override
     public boolean activate(EntityPlayer player)
     {
-        System.out.println(rows);
-        
         if (CommonProxy.isClient() || hasConfigured || player.inventory.getCurrentItem() == null || player.inventory.getCurrentItem().getItem().itemID != CommonProxy.itemWrench.itemID)
         {
             return false;
@@ -254,6 +254,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         super.writeToNBT(tag);
         
         tag.setBoolean("hasConfigured", hasConfigured);
+        tag.setInteger("rows", rows);
         ChunkCoordinateUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
         
         if (!blockList.isEmpty())
@@ -268,6 +269,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         super.readFromNBT(tag);
         
         hasConfigured = tag.getBoolean("hasConfigured");
+        rows = tag.getInteger("rows");
         mainBlock = ChunkCoordinateUtils.loadChunkCoord(tag, "mainBlock");
         
         if (tag.hasKey("blockList"))

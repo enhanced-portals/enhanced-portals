@@ -20,7 +20,7 @@ public class TileNetworkInterface extends TilePortalPart
         {
             TilePortalController controller = getPortalController();
             
-            if (!controller.networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            /*if (!controller.networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
                 CommonProxy.networkManager.removePortalFromNetwork(controller.uniqueIdentifier, controller.networkIdentifier);
             }
@@ -31,7 +31,7 @@ public class TileNetworkInterface extends TilePortalPart
             }
             
             controller.networkIdentifier = payload.data.getString("identifier");
-            CommonProxy.sendUpdatePacketToAllAround(this);
+            CommonProxy.sendUpdatePacketToAllAround(this);*/
         }
     }
 }

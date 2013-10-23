@@ -170,13 +170,16 @@ public class TileRedstoneInterface extends TilePortalPart
                 {
                     TilePortalController c = getPortalController();
 
-                    if (state == 2)
+                    if (c != null)
                     {
-                        c.createPortal();
-                    }
-                    else if (state == 3)
-                    {
-                        c.removePortal();
+                        if (state == 2)
+                        {
+                            c.createPortal();
+                        }
+                        else if (state == 3)
+                        {
+                            c.removePortal();
+                        }
                     }
                 }
             }
