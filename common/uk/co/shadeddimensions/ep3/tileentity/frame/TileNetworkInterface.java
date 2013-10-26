@@ -1,8 +1,6 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import cpw.mods.fml.relauncher.Side;
@@ -18,9 +16,9 @@ public class TileNetworkInterface extends TilePortalPart
     {
         if (payload.data.hasKey("id"))
         {
-            TilePortalController controller = getPortalController();
+            /*TilePortalController controller = getPortalController();
             
-            /*if (!controller.networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
+            if (!controller.networkIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
             {
                 CommonProxy.networkManager.removePortalFromNetwork(controller.uniqueIdentifier, controller.networkIdentifier);
             }

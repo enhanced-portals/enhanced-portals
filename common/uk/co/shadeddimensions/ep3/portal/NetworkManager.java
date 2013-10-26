@@ -14,37 +14,39 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class NetworkManager
 {
     /*** Stores locations of all portals ***/
-    HashMap<GlyphIdentifier, WorldCoordinates> portalCoordinates;
+    HashMap<String, WorldCoordinates> portalCoordinates;
 
     /*** Reverse lookup for {@link portalCoordinates} ***/
-    HashMap<WorldCoordinates, GlyphIdentifier> portalCoordinatesReverse; // note: doesn't need to be saved seperately
+    HashMap<WorldCoordinates, String> portalCoordinatesReverse; // note: doesn't need to be saved seperately
 
     /***Portal Identifier, Network Identifier.
      * Used for looking up which portal is in which network, quickly. ***/
-    HashMap<GlyphIdentifier, GlyphIdentifier> portalNetworks; // note: doesn't need to be saved seperately
+    HashMap<String, String> portalNetworks; // note: doesn't need to be saved seperately
 
     /*** Network Identifier, Portal Identifier List.
      * Used for looking up all portals in a network,
      * without searching every entry in {@link portalNetworks} ***/
-    HashMap<GlyphIdentifier, ArrayList<GlyphIdentifier>> networkedPortals;
+    HashMap<String, ArrayList<String>> networkedPortals;
 
     File dataFile;
     MinecraftServer server;
 
     public NetworkManager(FMLServerStartingEvent event)
     {
-        portalCoordinates = new HashMap<GlyphIdentifier, WorldCoordinates>();
-        portalCoordinatesReverse = new HashMap<WorldCoordinates, GlyphIdentifier>();
-        portalNetworks = new HashMap<GlyphIdentifier, GlyphIdentifier>();
-        networkedPortals = new HashMap<GlyphIdentifier, ArrayList<GlyphIdentifier>>();
+        portalCoordinates = new HashMap<String, WorldCoordinates>();
+        portalCoordinatesReverse = new HashMap<WorldCoordinates, String>();
+        portalNetworks = new HashMap<String, String>();
+        networkedPortals = new HashMap<String, ArrayList<String>>();
         server = event.getServer();
         dataFile = new File(EnhancedPortals.proxy.getWorldDir(), Reference.NAME + ".dat");
 
@@ -64,36 +66,36 @@ public class NetworkManager
         {
             return;
         }
-        
+
         NBTTagCompound baseTag = (NBTTagCompound) NBTBase.readNamedTag(new DataInputStream(new FileInputStream(dataFile)));
-        
+
         if (baseTag == null)
         {
             return;
         }
-        
+
         NBTTagList portalLocations = baseTag.getTagList("PortalLocations");
         NBTTagList portalNetworks = baseTag.getTagList("PortalNetworks");
-        
+
         for (Object o : portalLocations.tagList)
         {
             NBTTagCompound t = (NBTTagCompound) o;
-            
+
             addPortal(new GlyphIdentifier(t), new WorldCoordinates(t));
         }
-        
+
         for (Object o : portalNetworks.tagList)
         {
             NBTTagCompound t = (NBTTagCompound) o;
             NBTTagList l = t.getTagList("Portals");
-            
+
             GlyphIdentifier identifier = new GlyphIdentifier(t);
-            
+
             for (Object obj : l.tagList)
             {
                 NBTTagCompound tag = (NBTTagCompound) obj;                
                 addPortalToNetwork(new GlyphIdentifier(tag), identifier);
-                
+
             }
         }
     }
@@ -112,7 +114,7 @@ public class NetworkManager
         {
             e.printStackTrace();
         }
-        
+
         return false;
     }
 
@@ -120,41 +122,46 @@ public class NetworkManager
     public void saveAllData()
     {
         makeFile();
-        
+
         NBTTagCompound baseTag = new NBTTagCompound();
         NBTTagList portalLocations = new NBTTagList();
         NBTTagList portalNetworks = new NBTTagList();
-        
-        for (Entry<GlyphIdentifier, WorldCoordinates> entry : portalCoordinates.entrySet())
+
+        for (Entry<String, WorldCoordinates> entry : portalCoordinates.entrySet())
         {
             NBTTagCompound t = new NBTTagCompound();
-            entry.getKey().writeToNBT(t);
+            t.setString("GlyphIdentifier", entry.getKey());
             entry.getValue().writeToNBT(t);
-            
+
             portalLocations.appendTag(t);
         }
-        
-        for (Entry<GlyphIdentifier, ArrayList<GlyphIdentifier>> entry : networkedPortals.entrySet())
+
+        for (Entry<String, ArrayList<String>> entry : networkedPortals.entrySet())
         {
+            if (entry.getValue().isEmpty())
+            {
+                continue;
+            }
+            
             NBTTagCompound t = new NBTTagCompound();
             NBTTagList list = new NBTTagList();
-            
-            entry.getKey().writeToNBT(t);
-                        
-            for (GlyphIdentifier i : entry.getValue())
+
+            t.setString("GlyphIdentifier", entry.getKey());
+
+            for (String i : entry.getValue())
             {
                 NBTTagCompound c = new NBTTagCompound();
-                i.writeToNBT(c);
+                c.setString("GlyphIdentifier", i);
                 list.appendTag(c);
             }     
-            
+
             t.setTag("Portals", list);
             portalNetworks.appendTag(t);
         }
-        
+
         baseTag.setTag("PortalLocations", portalLocations);
         baseTag.setTag("PortalNetworks", portalNetworks);
-        
+
         try
         {
             NBTBase.writeNamedTag(baseTag, new DataOutputStream(new FileOutputStream(dataFile)));
@@ -171,7 +178,14 @@ public class NetworkManager
      */
     public GlyphIdentifier getPortalIdentifier(WorldCoordinates w)
     {
-        return w == null ? null : portalCoordinatesReverse.get(w);
+        if (w == null)
+        {
+            return null;
+        }
+        
+        String ID = portalCoordinatesReverse.get(w);
+        
+        return ID == null ? null : new GlyphIdentifier(portalCoordinatesReverse.get(w));
     }
 
     /***
@@ -180,7 +194,14 @@ public class NetworkManager
      */
     public GlyphIdentifier getPortalNetwork(GlyphIdentifier g)
     {
-        return g == null ? null : portalNetworks.get(g);
+        if (g == null)
+        {
+            return null;
+        }
+        
+        String ID = portalNetworks.get(g.getGlyphString());
+                
+        return ID == null ? null : new GlyphIdentifier(portalNetworks.get(g.getGlyphString()));
     }
 
     public boolean hasIdentifier(WorldCoordinates w)
@@ -190,7 +211,12 @@ public class NetworkManager
 
     public boolean hasNetwork(GlyphIdentifier g)
     {
-        return g == null ? null : networkedPortals.containsKey(g);
+        return g == null ? null : portalNetworks.containsKey(g.getGlyphString());
+    }
+    
+    public boolean hasNetwork(WorldCoordinates w)
+    {
+        return w == null ? null : hasNetwork(getPortalIdentifier(w));
     }
 
     /***
@@ -199,7 +225,7 @@ public class NetworkManager
      */
     public WorldCoordinates getPortalLocation(GlyphIdentifier g)
     {
-        return g == null ? null : portalCoordinates.get(g);
+        return g == null ? null : portalCoordinates.get(g.getGlyphString());
     }
 
     /***
@@ -212,15 +238,15 @@ public class NetworkManager
             return;
         }
 
-        portalCoordinates.put(g, w);
-        portalCoordinatesReverse.put(w, g);
+        portalCoordinates.put(g.getGlyphString(), w);
+        portalCoordinatesReverse.put(w, g.getGlyphString());
     }
 
     /***
      * Removes a portal
      */
     public void removePortal(GlyphIdentifier g)
-    {        
+    {
         removePortal(g, getPortalLocation(g));
     }
 
@@ -243,30 +269,30 @@ public class NetworkManager
         }
 
         GlyphIdentifier n = getPortalNetwork(g);
-        
+
         if (n != null)
         {
             removePortalFromNetwork(g, n);
         }
-        
+
         portalCoordinates.remove(g);
         portalCoordinatesReverse.remove(w);
     }
-    
+
     /***
      * Removes a portal from a network
      */
     public void removePortalFromNetwork(GlyphIdentifier portal, GlyphIdentifier network)
     {
-        if (portal == null || network == null || getPortalNetwork(portal) != null)
+        if (portal == null || network == null)
         {
             return;
         }
-        
-        getNetwork(network).remove(portal);
-        portalNetworks.remove(portal);
+
+        getNetwork(network).remove(portal.getGlyphString());
+        portalNetworks.remove(portal.getGlyphString());
     }
-    
+
     /***
      * Adds a portal to a network
      */
@@ -274,31 +300,75 @@ public class NetworkManager
     {
         if (portal == null || network == null || getPortalNetwork(portal) != null)
         {
+            System.out.println("VOID");
             return;
         }
-        
-        getNetwork(network).add(portal);
-        portalNetworks.put(portal, network);
+
+        getNetwork(network).add(portal.getGlyphString());
+        portalNetworks.put(portal.getGlyphString(), network.getGlyphString());
     }
-    
+
     /***
      * Creates a new network if one does not already exist
      */
     private void addNetwork(GlyphIdentifier network)
     {
-        if (networkedPortals.get(network) == null)
+        if (networkedPortals.get(network.getGlyphString()) == null)
         {
-            networkedPortals.put(network, new ArrayList<GlyphIdentifier>());
+            networkedPortals.put(network.getGlyphString(), new ArrayList<String>());
         }
     }
-    
+
     /***
      * Retrieves all the portals for the specified network. Will create a network if one does not already exist
      */
-    private ArrayList<GlyphIdentifier> getNetwork(GlyphIdentifier network)
+    private ArrayList<String> getNetwork(GlyphIdentifier network)
     {
         addNetwork(network);
         
-        return networkedPortals.get(network);
+        return networkedPortals.get(network.getGlyphString());
+    }
+
+    /***
+     * Gets the portal controller for the specified portal identifier
+     */
+    public TilePortalController getPortalController(GlyphIdentifier portal)
+    {
+        WorldCoordinates w = getPortalLocation(portal);
+
+        if (w == null)
+        {
+            return null;
+        }
+
+        TileEntity tile = w.getBlockTileEntity();
+
+        if (tile == null || !(tile instanceof TilePortalController))
+        {
+            return null;
+        }
+
+        return (TilePortalController) tile;
+    }
+
+    public GlyphIdentifier getDestination(GlyphIdentifier identifier, GlyphIdentifier portalNetwork)
+    {
+        ArrayList<String> network = getNetwork(portalNetwork);        
+        int index = network.indexOf(identifier.getGlyphString());
+        
+        if (index == network.size() - 1)
+        {
+            return new GlyphIdentifier(network.get(0));
+        }
+        else
+        {
+            return new GlyphIdentifier(network.get(index + 1));
+        }
+    }
+
+    public int getNetworkSize(GlyphIdentifier nID)
+    {
+        ArrayList<String> list = getNetwork(nID);        
+        return list.isEmpty() ? -1 : list.size();
     }
 }

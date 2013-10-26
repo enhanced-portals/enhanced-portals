@@ -2,12 +2,14 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.lib.Reference;
@@ -17,6 +19,8 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class ItemLocationCard extends ItemEnhancedPortals
 {
+    Icon texture;
+    
     public ItemLocationCard(int id, String name)
     {
         super(id, true);
@@ -142,5 +146,17 @@ public class ItemLocationCard extends ItemEnhancedPortals
         }
         
         return super.onItemRightClick(stack, world, player);
+    }
+    
+    @Override
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
+    }
+    
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        texture = register.registerIcon("enhancedportals:locationCard");
     }
 }

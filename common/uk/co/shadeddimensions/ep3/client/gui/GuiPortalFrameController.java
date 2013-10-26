@@ -12,8 +12,8 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphSelector;
-import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphViewer;
+import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierSelector;
+import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierViewer;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
@@ -23,9 +23,9 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiPortalFrameController extends GuiResizable
 {
-    GuiGlyphSelector glyphSelector;
-    GuiGlyphViewer glyphViewer;
-
+    GuiGlyphIdentifierSelector glyphSelector;
+    GuiGlyphIdentifierViewer glyphViewer;
+    
     TilePortalController controller;
     EntityPlayer player;
 
@@ -35,11 +35,10 @@ public class GuiPortalFrameController extends GuiResizable
 
         controller = tile;
         player = play;
-
-        glyphSelector = new GuiGlyphSelector(7, 57, 0xffffff, this);
-        glyphViewer = new GuiGlyphViewer(7, 20, 0xffffff, this, glyphSelector);
-
-        glyphSelector.setSelectedToIdentifier(controller.uniqueIdentifier);
+        
+        glyphSelector = new GuiGlyphIdentifierSelector(7, 57, this);
+        glyphViewer = new GuiGlyphIdentifierViewer(7, 20, this, glyphSelector);
+        glyphSelector.setGlyphsToIdentifier(controller.getUniqueIdentifier());
     }
 
     @Override
@@ -60,14 +59,14 @@ public class GuiPortalFrameController extends GuiResizable
         {
             if (button.id == 0) // Reset Changes
             {
-                glyphSelector.setSelectedToIdentifier(controller.uniqueIdentifier);
+                glyphSelector.setGlyphsToIdentifier(controller.getUniqueIdentifier());
                 toggleState();
             }
             else if (button.id == 1) // Save Changes
             {
                 GuiPayload payload = new GuiPayload();
                 payload.data.setInteger("id", 0);
-                payload.data.setString("uniqueIdentifier", glyphViewer.getSelectedIdentifier());                
+                payload.data.setString("uniqueIdentifier", glyphSelector.getSelectedIdentifier().getGlyphString());                
                 ClientProxy.sendGuiPacket(payload);
                 
                 toggleState();
@@ -148,7 +147,7 @@ public class GuiPortalFrameController extends GuiResizable
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.controller.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.controller.name")) / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".uniqueIdentifier"), 8, 8, 0x404040);
 
-        glyphViewer.drawForeground(par1, par2);
+        //glyphViewer.drawForeground(par1, par2);
     }
 
     @Override
@@ -157,6 +156,8 @@ public class GuiPortalFrameController extends GuiResizable
         fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".glyphs"), 8, 44, 0x404040);
 
         glyphSelector.drawForeground(par1, par2);
+        
+        //glyphSelector.drawForeground(par1, par2);
     }
 
     @Override
@@ -210,8 +211,8 @@ public class GuiPortalFrameController extends GuiResizable
     @Override
     protected void mouseClickExpanded(int par1, int par2, int mouseButton)
     {
-        glyphViewer.mouseClicked(par1, par2, mouseButton);
         glyphSelector.mouseClicked(par1, par2, mouseButton);
+        glyphViewer.mouseClicked(par1, par2, mouseButton);
     }
 
     @Override
@@ -243,8 +244,8 @@ public class GuiPortalFrameController extends GuiResizable
     {
         ((GuiButton) buttonList.get(0)).drawButton = expanded;
         ((GuiButton) buttonList.get(1)).drawButton = expanded;
-        glyphSelector.setEditable(expanded);
-        glyphViewer.setEditable(expanded);
+        //glyphSelector.setEditable(expanded);
+        //glyphViewer.setEditable(expanded);
     }
 
     @Override
