@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -44,20 +45,32 @@ public class PortalUtils
         {
             return false;
         }
-                
+
         for (WorldCoordinates w : controller.portals)
         {
             if (!controller.worldObj.isAirBlock(w.posX, w.posY, w.posZ))
             {
+                if (!EnhancedPortals.config.getBoolean("portalsDestroyBlocks"))
+                {
+                    return false;
+                }
+                
                 int id = controller.worldObj.getBlockId(w.posX, w.posY, w.posZ), metadata = controller.worldObj.getBlockMetadata(w.posX, w.posY, w.posZ);
                 
-                if (id != Block.bedrock.blockID)
+                if (id == Block.bedrock.blockID) // Stop users from being able to break out of the world with portals
+                {
+                    return false;
+                }
+                else
                 {
                     controller.worldObj.playAuxSFX(2001, w.posX, w.posY, w.posZ, id + (metadata << 12));
                     Block.blocksList[id].dropBlockAsItem(controller.worldObj, w.posX, w.posY, w.posZ, metadata, 0);
                 }
             }
-            
+        }
+        
+        for (WorldCoordinates w : controller.portals)
+        {
             controller.worldObj.setBlock(w.posX, w.posY, w.posZ, CommonProxy.blockPortal.blockID, controller.portalType, 2);
             
             TilePortal portal = (TilePortal) controller.worldObj.getBlockTileEntity(w.posX, w.posY, w.posZ);

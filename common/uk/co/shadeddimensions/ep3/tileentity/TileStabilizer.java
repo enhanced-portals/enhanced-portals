@@ -5,10 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
@@ -58,7 +60,6 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
     {
         if (activeConnections.containsKey(portalA) || activeConnections.containsValue(portalB) || !hasEnoughPowerToStart() || !canAcceptNewConnection())
         {
-            // TODO Error out
             return false;
         }
         else if (!hasEnoughPowerToStart())
@@ -70,28 +71,22 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
 
         if (cA == null || cB == null)
         {
-            System.out.println(cA + " " + cB);
-            // cry
             return false;
         }
         else if (cA.isPortalActive || cB.isPortalActive) // Make sure both portals are inactive
         {
-            // TODO moan
             return false;
         }
         else if (!cA.hasConfigured || cA.waitingForCard || !cB.hasConfigured || cB.waitingForCard) // Make sure they're set up correctly...
         {
-            // TODO cry
             return false;
         }
         else if (cA.isPortalActive || cB.isPortalActive)
         {
-            // TODO moan
             return false;
         }
         else if (!cA.bridgeStabilizer.equals(cB.bridgeStabilizer)) // And make sure they're on the same DBS
         {
-            // TODO moan
             return false;
         }
 
@@ -99,7 +94,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         {
             return false;
         }
-        else if (!PortalUtils.createPortalFrom(cB))
+        else if (!PortalUtils.createPortalFrom(cB)) // Make sure both portals can be created
         {
             PortalUtils.removePortalFrom(cA);
             return false;
@@ -110,7 +105,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
 
         if (activeConnections.size() == 1)
         {
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 1);
+            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 1); // Schedule tick for power drain
         }
 
         return true;
@@ -122,17 +117,16 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
     public void terminateExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
     {
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
-
+        
         if (cA == null || cB == null)
         {
-            // cry
-            System.out.println(cA + ", " + cB);
             removeExistingConnection(portalA, portalB);
             return;
         }
-        else if (activeConnections.containsKey(portalA.getGlyphString()) && activeConnections.get(portalA.getGlyphString()).equals(portalB.getGlyphString()))
+        else if ((activeConnections.containsKey(portalA.getGlyphString()) && activeConnections.get(portalA.getGlyphString()).equals(portalB.getGlyphString())) ||
+                 (activeConnectionsReverse.containsKey(portalA.getGlyphString()) && activeConnectionsReverse.get(portalA.getGlyphString()).equals(portalB.getGlyphString())))
         {
-            // Make sure we're terminating the correct connection
+            // Make sure we're terminating the correct connection, also don't mind that we're terminating it from the other side that we started it from
             PortalUtils.removePortalFrom(cA);
             PortalUtils.removePortalFrom(cB);
 
@@ -278,6 +272,21 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         {
             ChunkCoordinateUtils.saveChunkCoordList(tag, blockList, "blockList");
         }
+        
+        if (!activeConnections.isEmpty())
+        {
+            NBTTagList c = new NBTTagList();
+            
+            for (Entry<String, String> entry : activeConnections.entrySet())
+            {
+                NBTTagCompound t = new NBTTagCompound();
+                t.setString("Key", entry.getKey());
+                t.setString("Value", entry.getValue());
+                c.appendTag(t);
+            }
+            
+            tag.setTag("activeConnections", c);
+        }
     }
 
     @Override
@@ -292,6 +301,21 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         if (tag.hasKey("blockList"))
         {
             blockList = ChunkCoordinateUtils.loadChunkCoordList(tag, "blockList");
+        }
+        
+        if (tag.hasKey("activeConnections"))
+        {
+            NBTTagList c = tag.getTagList("activeConnections");
+            
+            for (Object obj : c.tagList)
+            {
+                NBTTagCompound t = (NBTTagCompound) obj;
+                
+                String A = t.getString("Key"), B = t.getString("Value");
+                
+                activeConnections.put(A, B);
+                activeConnectionsReverse.put(B, A);
+            }
         }
     }
 
@@ -364,10 +388,10 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
     @Override
     public void updateTick(Random random)
     {
-        if (activeConnections.size() > 0)
+        if (activeConnections.size() > 0) // Make sure we're only ticking while we have active connections
         {
             // if has enough for stable drain, do it
-            // else if has enough for unstable drain, do it -- 75% with 20% risk, 50% with 50% risk, 20% with 75% risk 10% with 90% risk 9% or lower - fail
+            // else if has enough for unstable drain, do it -- 75% with 20% risk, 50% with 50% risk, 40% with 75% risk 25% with 90% risk
             // else if not enough, terminate all connections
 
             //System.out.println(String.format("Draining %s power", activeConnections.size() * 100));

@@ -140,4 +140,11 @@ public class GuiPortalTexture extends GuiColourInterface
             ClientProxy.sendGuiPacket(payload);
         }
     }
+    
+    @Override
+    public void onGuiClosed()
+    {
+        controller.worldObj.markBlockForRenderUpdate(controller.xCoord, controller.yCoord, controller.zCoord);        
+        super.onGuiClosed();
+    }
 }

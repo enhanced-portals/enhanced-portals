@@ -6,11 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
@@ -72,6 +74,8 @@ public class BlockPortal extends BlockEnhancedPortals
         
         if (controller != null)
         {
+            ItemStack stack = controller.getStackInSlot(1);
+            
             if (controller.customPortalTexture != -1)
             {
                 if (ClientProxy.customPortalTextures.size() > controller.customPortalTexture && (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture) != null)
@@ -79,9 +83,16 @@ public class BlockPortal extends BlockEnhancedPortals
                     return (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture);
                 }
             }
-            else if (controller.getStackInSlot(1) != null)
+            else if (stack != null)
             {
-                return Block.blocksList[controller.getStackInSlot(1).itemID].getIcon(side, controller.getStackInSlot(1).getItemDamage());
+                if (FluidContainerRegistry.isFilledContainer(stack))
+                {
+                    return FluidContainerRegistry.getFluidForFilledItem(stack).getFluid().getIcon();
+                }
+                else
+                {
+                    return Block.blocksList[stack.itemID].getIcon(side, stack.getItemDamage());
+                }
             }
         }
         
@@ -238,5 +249,19 @@ public class BlockPortal extends BlockEnhancedPortals
     public void registerIcons(IconRegister iconRegister)
     {
         texture = iconRegister.registerIcon("enhancedportals:portal");
+    }
+    
+    @Override
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
+    {
+        TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
+        TilePortalController controller = portal.getPortalController();
+        
+        if (controller != null)
+        {
+            return controller.portalColour;
+        }
+        
+        return super.colorMultiplier(blockAccess, x, y, z);
     }
 }
