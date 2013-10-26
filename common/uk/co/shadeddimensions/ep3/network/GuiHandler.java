@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.ep3.network;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.client.gui.GuiDBS;
 import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
 import uk.co.shadeddimensions.ep3.client.gui.GuiParticleTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameController;
@@ -10,6 +11,7 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameNetworkInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalTexture;
+import uk.co.shadeddimensions.ep3.container.ContainerDBS;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.container.ContainerParticleTexture;
@@ -18,6 +20,7 @@ import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameRedstone;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.ep3.lib.GuiIds;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
@@ -58,6 +61,15 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiModuleManipulator(player, (TileModuleManipulator) tile);
         }
+        else if (ID == GuiIds.DBS && tile instanceof TileStabilizer)
+        {
+            TileStabilizer dbs = (TileStabilizer) tile;
+            
+            if (dbs.hasConfigured)
+            {
+                return new GuiDBS(dbs.getMainBlock());
+            }
+        }
 
         return null;
     }
@@ -97,6 +109,16 @@ public class GuiHandler implements IGuiHandler
         else if (ID == GuiIds.MODULE_MANIPULATOR && tile instanceof TileModuleManipulator)
         {
             return new ContainerModuleManipulator(player, (TileModuleManipulator) tile);
+        }
+        else if (ID == GuiIds.DBS && tile instanceof TileStabilizer)
+        {
+            TileStabilizer dbs = (TileStabilizer) tile;
+
+            if (dbs.hasConfigured)
+            {
+                CommonProxy.sendUpdatePacketToPlayer(dbs.getMainBlock(), player);
+                return new ContainerDBS(dbs.getMainBlock());
+            }
         }
 
         return null;

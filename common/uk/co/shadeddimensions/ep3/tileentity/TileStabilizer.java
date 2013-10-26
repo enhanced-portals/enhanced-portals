@@ -10,6 +10,8 @@ import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -23,8 +25,10 @@ import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
+public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage, IInventory
 {
     static final int MAX_ACTIVE_PORTALS_PER_ROW = 2;
 
@@ -35,6 +39,9 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
 
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
+    
+    @SideOnly(Side.CLIENT)
+    public int intActiveConnections;
 
     public TileStabilizer()
     {
@@ -327,6 +334,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         super.fillPacket(stream);
 
         stream.writeBoolean(hasConfigured);
+        stream.writeInt(activeConnections.size());
 
         if (mainBlock != null)
         {
@@ -374,7 +382,8 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
     {
         super.usePacket(stream);
 
-        hasConfigured = stream.readBoolean();        
+        hasConfigured = stream.readBoolean();
+        intActiveConnections = stream.readInt() * 2;
         ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
 
         if (c.posX == -1)
@@ -424,5 +433,74 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         }
         
         EntityManager.setEntityPortalCooldown(entity);
+    }
+
+    /* IInventory */
+    @Override
+    public int getSizeInventory()
+    {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void openChest()
+    { }
+
+    @Override
+    public void closeChest()
+    { }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return false;
     }
 }

@@ -25,7 +25,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
     {
         super(id, true);
         setUnlocalizedName(name);
-        setMaxStackSize(64);
+        setMaxStackSize(1);
     }
     
     public static boolean hasDBSLocation(ItemStack s)
@@ -77,7 +77,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
     
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-    {
+    {        
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         
         if (tile != null && tile instanceof TileStabilizer && !hasDBSLocation(stack))
@@ -85,20 +85,8 @@ public class ItemLocationCard extends ItemEnhancedPortals
             TileStabilizer bridge = (TileStabilizer) tile;
             
             if (bridge.hasConfigured && bridge.getMainBlock() != null)
-            {
-                player.inventory.getCurrentItem().stackSize--;
-
-                if (player.inventory.getCurrentItem().stackSize == 0)
-                {
-                    player.inventory.mainInventory[player.inventory.currentItem] = null;
-                }
-                
-                ItemStack s = stack.copy();
-                s.stackSize = 1;
-                
-                setDBSLocation(s, bridge.getMainBlock().getWorldCoordinates());
-                
-                player.inventory.addItemStackToInventory(s);
+            {                
+                setDBSLocation(stack, bridge.getMainBlock().getWorldCoordinates());                
                 return true;
             }
         }
@@ -117,13 +105,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
                     controller.waitingForCard = false;
                     controller.hasConfigured = true;
                     
-                    player.inventory.getCurrentItem().stackSize--;
-
-                    if (player.inventory.getCurrentItem().stackSize == 0)
-                    {
-                        player.inventory.mainInventory[player.inventory.currentItem] = null;
-                    }
-                    
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
                     player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.success"));
                 }
                 else
@@ -131,6 +113,8 @@ public class ItemLocationCard extends ItemEnhancedPortals
                     clearDBSLocation(stack);
                     player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.voidLinkCard"));
                 }
+                
+                return true;
             }
         }
         
