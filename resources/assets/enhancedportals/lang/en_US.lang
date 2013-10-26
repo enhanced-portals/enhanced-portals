@@ -93,6 +93,7 @@ gui.ep3.redstone.input.portalOnPulse.desc=Creates a portal when recieving a reds
 gui.ep3.redstone.input.noPortalOnPulse.desc=Removes a portal when recieving a redstone pulse, the portal will not get recreated
 
 # Chat
+ep3.chat.error.noUidSet=You must set a Unique Identifier before doing this
 ep3.chat.error.multipleNetworkInterfaces=Failed to create a portal: You cannot have multiple Network Interfaces
 ep3.chat.error.networkInterfaceAndDialDevice=Failed to create a portal: You cannot have a Dialling Device and a Network Interface
 ep3.chat.error.multipleDiallingDevices=Failed to create a portal: You cannot have multiple Dialling Devices
@@ -100,7 +101,6 @@ ep3.chat.error.multipleBiometricIdentifiers=Failed to create a portal: You canno
 ep3.chat.error.multipleModuleManipulators=Failed to create a portal: You cannot have multiple Module Manipulators
 ep3.chat.error.multipleControllers=Failed to create a portal: You cannot have multiple Portal Controllers
 ep3.chat.error.noPortals=Failed to create a portal at this location. Check that this location is valid for a portal
-ep3.chat.error.noUidSet=You cannot add this portal to a network until you have set a Unique Identifier
 ep3.chat.error.voidLinkCard=This link card no longer links to a valid DBS
 ep3.chat.nextStage=Please insert a DBS Location Card to continue
 ep3.chat.success=Successfully initialized the portal

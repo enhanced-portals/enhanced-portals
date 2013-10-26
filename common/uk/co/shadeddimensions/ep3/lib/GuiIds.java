@@ -10,4 +10,5 @@ public class GuiIds
     public static final int MODULE_MANIPULATOR = 5;
     public static final int PARTICLE_TEXTURE = 6;
     public static final int DBS = 7;
+    public static final int DIALLING_DEVICE = 8;
 }

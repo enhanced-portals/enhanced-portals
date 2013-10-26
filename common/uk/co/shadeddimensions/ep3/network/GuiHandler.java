@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDBS;
+import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
 import uk.co.shadeddimensions.ep3.client.gui.GuiParticleTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameController;
@@ -12,6 +13,7 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameRedstone;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerDBS;
+import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.container.ContainerParticleTexture;
@@ -21,6 +23,7 @@ import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
 import uk.co.shadeddimensions.ep3.lib.GuiIds;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
@@ -68,6 +71,16 @@ public class GuiHandler implements IGuiHandler
             if (dbs.hasConfigured)
             {
                 return new GuiDBS(dbs.getMainBlock());
+            }
+        }
+        else if (ID == GuiIds.DIALLING_DEVICE && tile instanceof TileDiallingDevice)
+        {
+            TileDiallingDevice dialler = (TileDiallingDevice) tile;
+            TilePortalController controller = dialler.getPortalController();
+            
+            if (controller != null)
+            {
+                return new GuiDiallingDevice(controller);
             }
         }
 
@@ -118,6 +131,16 @@ public class GuiHandler implements IGuiHandler
             {
                 CommonProxy.sendUpdatePacketToPlayer(dbs.getMainBlock(), player);
                 return new ContainerDBS(dbs.getMainBlock());
+            }
+        }
+        else if (ID == GuiIds.DIALLING_DEVICE && tile instanceof TileDiallingDevice)
+        {
+            TileDiallingDevice dialler = (TileDiallingDevice) tile;
+            TilePortalController controller = dialler.getPortalController();
+            
+            if (controller != null)
+            {
+                return new ContainerDiallingDevice(controller);
             }
         }
 
