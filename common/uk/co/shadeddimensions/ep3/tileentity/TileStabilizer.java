@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,6 +17,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.api.IPowerStorage;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -398,5 +400,29 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
 
             worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 1);
         }
+    }
+
+    public void onEntityEnterPortal(GlyphIdentifier uID, Entity entity)
+    {
+        if (EntityManager.isEntityFitForTravel(entity))
+        {
+            GlyphIdentifier exit = null;
+
+            if (activeConnections.containsKey(uID.getGlyphString()))
+            {
+                exit = new GlyphIdentifier(activeConnections.get(uID.getGlyphString()));
+            }
+            else if (activeConnectionsReverse.containsKey(uID.getGlyphString()))
+            {
+                exit = new GlyphIdentifier(activeConnectionsReverse.get(uID.getGlyphString()));
+            }
+
+            if (exit != null)
+            {
+                EntityManager.teleportEntity(entity, uID, exit);
+            }
+        }
+        
+        EntityManager.setEntityPortalCooldown(entity);
     }
 }

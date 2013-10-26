@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -866,5 +867,20 @@ public class TilePortalController extends TilePortalPart
          }
          
          return CommonProxy.networkManager.getPortalNetwork(getUniqueIdentifier());
+     }
+     
+     public void onEntityEnterPortal(Entity entity)
+     {
+         GlyphIdentifier uID = getUniqueIdentifier();
+         
+         if (uID == null)
+         {
+             return;
+         }
+         else
+         {
+             TileStabilizer dbs = getStabilizer();
+             dbs.onEntityEnterPortal(uID, entity);
+         }
      }
 }

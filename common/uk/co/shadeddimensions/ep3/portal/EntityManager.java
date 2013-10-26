@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -88,9 +89,9 @@ public class EntityManager
         }
     }
 
-    public static void teleportEntity(Entity entity, String UIDFrom, String UIDTo)
+    public static void teleportEntity(Entity entity, GlyphIdentifier entryID, GlyphIdentifier exitID)
     {
-        /*TilePortalController controllerDest = CommonProxy.networkManager.getPortalLocationController(UIDTo);
+        TilePortalController controllerDest = CommonProxy.networkManager.getPortalController(exitID);
 
         if (controllerDest == null)
         {
@@ -137,6 +138,6 @@ public class EntityManager
             player.playerNetServerHandler.setPlayerLocation(exit.posX + 0.5, exit.posY, exit.posZ + 0.5, entityRotation, player.rotationPitch);
         }
 
-        entity.setLocationAndAngles(exit.posX + 0.5, exit.posY, exit.posZ + 0.5, entityRotation, entity.rotationPitch);*/
+        entity.setLocationAndAngles(exit.posX + 0.5, exit.posY, exit.posZ + 0.5, entityRotation, entity.rotationPitch);
     }
 }
