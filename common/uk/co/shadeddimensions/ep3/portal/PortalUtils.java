@@ -65,6 +65,7 @@ public class PortalUtils
                 {
                     controller.worldObj.playAuxSFX(2001, w.posX, w.posY, w.posZ, id + (metadata << 12));
                     Block.blocksList[id].dropBlockAsItem(controller.worldObj, w.posX, w.posY, w.posZ, metadata, 0);
+                    controller.worldObj.setBlockToAir(w.posX, w.posY, w.posZ);
                 }
             }
         }

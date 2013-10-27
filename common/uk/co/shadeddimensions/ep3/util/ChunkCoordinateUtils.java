@@ -40,9 +40,9 @@ public class ChunkCoordinateUtils
 
         NBTTagList tagList = tag.getTagList(name);
 
-        for (Object o : tagList.tagList)
+        for (int i = 0; i < tagList.tagCount(); i++)
         {
-            NBTTagCompound t = (NBTTagCompound) o;
+            NBTTagCompound t = (NBTTagCompound) tagList.tagAt(i);
 
             list.add(new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z")));
         }
@@ -56,9 +56,9 @@ public class ChunkCoordinateUtils
 
         NBTTagList tagList = tag.getTagList(name);
 
-        for (Object o : tagList.tagList)
+        for (int i = 0; i < tagList.tagCount(); i++)
         {
-            NBTTagCompound t = (NBTTagCompound) o;
+            NBTTagCompound t = (NBTTagCompound) tagList.tagAt(i);
 
             list.add(new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D")));
         }

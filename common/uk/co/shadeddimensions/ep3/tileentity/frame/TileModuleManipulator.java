@@ -96,9 +96,9 @@ public class TileModuleManipulator extends TilePortalPart
         super.readFromNBT(tagCompound);
 
         NBTTagList list = tagCompound.getTagList("Inventory");
-        for (int i = 0; i < list.tagList.size(); i++)
+        for (int i = 0; i < list.tagCount(); i++)
         {
-            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
+            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagAt(i));
         }
     }
 

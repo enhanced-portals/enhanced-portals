@@ -1,6 +1,7 @@
 package uk.co.shadeddimensions.ep3.client.gui.elements;
 
 import net.minecraft.util.ResourceLocation;
+import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
 
 public class GuiGlyphIdentifierViewer extends GuiGlyphIdentifierSelector
@@ -24,7 +25,7 @@ public class GuiGlyphIdentifierViewer extends GuiGlyphIdentifierSelector
         {
             int xPos = parent.getGuiLeft() + x + (i % GLYPHS_PER_ROW) * 18, yPos = parent.getGuiTop() + y + (i / GLYPHS_PER_ROW) * 18, glyph = selector.selectedGlyphs.get(i);
             
-            if (isMouseOver(i, mouseX, mouseY))
+            if (isMouseOver(i, mouseX, mouseY) && (!(selector.parent instanceof GuiDiallingDevice) || !((GuiDiallingDevice) selector.parent).showOverlay))
             {
                 parent.drawRectangle(xPos + 1, yPos + 1, 16, 16, 0xAAFFFFFF, false);
             }

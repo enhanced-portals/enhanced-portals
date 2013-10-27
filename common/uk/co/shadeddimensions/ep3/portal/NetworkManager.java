@@ -77,25 +77,24 @@ public class NetworkManager
         NBTTagList portalLocations = baseTag.getTagList("PortalLocations");
         NBTTagList portalNetworks = baseTag.getTagList("PortalNetworks");
 
-        for (Object o : portalLocations.tagList)
+        for (int i = 0; i < portalLocations.tagCount(); i++)
         {
-            NBTTagCompound t = (NBTTagCompound) o;
-
+            NBTTagCompound t = (NBTTagCompound) portalLocations.tagAt(i);
+            
             addPortal(new GlyphIdentifier(t), new WorldCoordinates(t));
         }
 
-        for (Object o : portalNetworks.tagList)
+        for (int i = 0; i < portalNetworks.tagCount(); i++)
         {
-            NBTTagCompound t = (NBTTagCompound) o;
+            NBTTagCompound t = (NBTTagCompound) portalLocations.tagAt(i);
             NBTTagList l = t.getTagList("Portals");
 
             GlyphIdentifier identifier = new GlyphIdentifier(t);
 
-            for (Object obj : l.tagList)
+            for (int j = 0; j < l.tagCount(); j++)
             {
-                NBTTagCompound tag = (NBTTagCompound) obj;                
+                NBTTagCompound tag = (NBTTagCompound) l.tagAt(j);                
                 addPortalToNetwork(new GlyphIdentifier(tag), identifier);
-
             }
         }
     }

@@ -316,9 +316,9 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
         {
             NBTTagList c = tag.getTagList("activeConnections");
             
-            for (Object obj : c.tagList)
+            for (int i = 0; i < c.tagCount(); i++)
             {
-                NBTTagCompound t = (NBTTagCompound) obj;
+                NBTTagCompound t = (NBTTagCompound) c.tagAt(i);
                 
                 String A = t.getString("Key"), B = t.getString("Value");
                 

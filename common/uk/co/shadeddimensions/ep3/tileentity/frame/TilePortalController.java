@@ -324,9 +324,9 @@ public class TilePortalController extends TilePortalPart
         customFrameTexture = tag.getInteger("customFrameTexture");
 
         NBTTagList list = tag.getTagList("inventory");
-        for (int i = 0; i < list.tagList.size(); i++)
+        for (int i = 0; i < list.tagCount(); i++)
         {
-            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
+            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagAt(i));
         }
 
         portals = ChunkCoordinateUtils.loadWorldCoordList(tag, "portals");

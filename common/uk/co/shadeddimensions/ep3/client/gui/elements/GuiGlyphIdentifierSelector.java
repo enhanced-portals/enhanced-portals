@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3.client.gui.elements;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
+import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -54,7 +55,7 @@ public class GuiGlyphIdentifierSelector extends Gui
         for (int i = 0; i < MAX_GLYPHS; i++)
         {
             int xPos = parent.getGuiLeft() + x + (i % GLYPHS_PER_ROW) * 18, yPos = parent.getGuiTop() + y + (i / GLYPHS_PER_ROW) * 18;            
-            boolean hover = isMouseOver(i, mouseX, mouseY);
+            boolean hover = isMouseOver(i, mouseX, mouseY) && (!(parent instanceof GuiDiallingDevice) || !((GuiDiallingDevice) parent).showOverlay);
             
             if (hover)
             {
