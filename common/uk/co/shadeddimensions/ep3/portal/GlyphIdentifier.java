@@ -16,6 +16,16 @@ public class GlyphIdentifier
     {
         glyphs = new ArrayList<Integer>();
     }
+    
+    public GlyphIdentifier(GlyphIdentifier i)
+    {
+        glyphs = new ArrayList<Integer>(i.glyphs.size());
+        
+        for (int I : i.glyphs)
+        {
+            glyphs.add(I);
+        }
+    }
 
     public GlyphIdentifier(int[] Glyphs)
     {

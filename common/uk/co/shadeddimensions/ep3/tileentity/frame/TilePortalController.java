@@ -345,6 +345,15 @@ public class TilePortalController extends TilePortalPart
         super.guiActionPerformed(payload, player);
         boolean sendUpdatePacket = false;
 
+        if (payload.data.hasKey("DialRequest"))
+        {
+            dialRequest(new GlyphIdentifier(payload.data.getString("DialRequest")));
+        }
+        else if (payload.data.hasKey("DialTerminateRequest"))
+        {
+            removePortal();
+        }
+        
         if (payload.data.hasKey("uniqueIdentifier"))
         {
             GlyphIdentifier id = new GlyphIdentifier(payload.data.getString("uniqueIdentifier"));
@@ -408,6 +417,28 @@ public class TilePortalController extends TilePortalPart
                     CommonProxy.networkManager.addPortalToNetwork(uID, id);
                     sendUpdatePacket = true;
                 }
+            }
+        }
+        
+        if (payload.data.hasKey("GlyphName") && payload.data.hasKey("Glyphs"))
+        {
+            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
+            
+            if (dial != null)
+            {
+                dial.glyphList.add(dial.new GlyphElement(payload.data.getString("GlyphName"), new GlyphIdentifier(payload.data.getString("Glyphs"))));
+                CommonProxy.sendUpdatePacketToAllAround(dial);
+            }
+        }
+        
+        if (payload.data.hasKey("DeleteGlyph"))
+        {
+            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
+            
+            if (dial != null)
+            {
+                dial.glyphList.remove(payload.data.getInteger("DeleteGlyph"));
+                CommonProxy.sendUpdatePacketToAllAround(dial);
             }
         }
         
@@ -622,6 +653,25 @@ public class TilePortalController extends TilePortalPart
         return null;
     }
     
+    public void dialRequest(GlyphIdentifier id)
+    {
+        if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && frameDialler != null)
+        {
+            TileStabilizer dbs = getStabilizer();
+            
+            if (dbs == null || !dbs.hasConfigured)
+            {
+                bridgeStabilizer = null;
+                waitingForCard = true;
+                hasConfigured = false;
+                CommonProxy.sendUpdatePacketToAllAround(this);
+                return;
+            }
+
+            dbs.setupNewConnection(getUniqueIdentifier(), id);
+        }
+    }
+    
     /***
      * Creates a portal using the set network, if available. Called via redstone interface.
      */
@@ -660,9 +710,10 @@ public class TilePortalController extends TilePortalPart
             return;
         }
 
-        if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && CommonProxy.networkManager.hasNetwork(getWorldCoordinates()))
+        if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()))
         {
             TileStabilizer dbs = getStabilizer();
+            GlyphIdentifier identifier = CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
             
             if (dbs == null || !dbs.hasConfigured)
             {
@@ -673,8 +724,15 @@ public class TilePortalController extends TilePortalPart
                 return;
             }
             
-            GlyphIdentifier identifier = CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates()), dest = CommonProxy.networkManager.getDestination(identifier, CommonProxy.networkManager.getPortalNetwork(identifier));
-            dbs.terminateExistingConnection(identifier, dest);
+            if (frameDialler != null)
+            {
+                dbs.terminateExistingConnection(identifier);
+            }
+            else if (frameNetwork != null && CommonProxy.networkManager.hasNetwork(getWorldCoordinates()))
+            {                
+                GlyphIdentifier dest = CommonProxy.networkManager.getDestination(identifier, CommonProxy.networkManager.getPortalNetwork(identifier));
+                dbs.terminateExistingConnection(identifier, dest);
+            }
         }
     }
 

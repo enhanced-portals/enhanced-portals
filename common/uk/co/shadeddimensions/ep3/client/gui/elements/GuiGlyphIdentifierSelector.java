@@ -27,7 +27,7 @@ public class GuiGlyphIdentifierSelector extends Gui
     
     public GlyphIdentifier getSelectedIdentifier()
     {
-        return selectedGlyphs;
+        return new GlyphIdentifier(selectedGlyphs);
     }
     
     public void setGlyphsToIdentifier(GlyphIdentifier identifier)
@@ -36,8 +36,12 @@ public class GuiGlyphIdentifierSelector extends Gui
         {
             identifier = new GlyphIdentifier();
         }
+        else
+        {
+            identifier = new GlyphIdentifier(identifier); // Duplicate it, so we're not editing the same identifier
+        }
         
-        selectedGlyphs = identifier;        
+        selectedGlyphs = identifier;
         counter = new int[MAX_GLYPHS];
         
         for (int i : selectedGlyphs.getGlyphs())

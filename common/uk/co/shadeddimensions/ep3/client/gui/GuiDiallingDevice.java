@@ -11,14 +11,19 @@ import org.lwjgl.opengl.GL11;
 import uk.co.shadeddimensions.ep3.client.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierSelector;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierViewer;
+import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphPage;
 import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiDiallingDevice extends GuiEnhancedPortals
 {
     TilePortalController controller;
     GuiGlyphIdentifierSelector glyphSelector;
     GuiGlyphIdentifierViewer glyphViewer;
+    GuiGlyphPage glyphPage;
     GuiBetterButton cancelButton, acceptButton;
     GuiTextField textField;
     public boolean showOverlay = false;
@@ -32,7 +37,8 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         xSize = 256;
         ySize = 200;        
         glyphSelector = new GuiGlyphIdentifierSelector(7, 140, this);
-        glyphViewer = new GuiGlyphIdentifierViewer(7, 120, this, glyphSelector);
+        glyphViewer = new GuiGlyphIdentifierViewer(7, 104, this, glyphSelector);
+        glyphPage = new GuiGlyphPage(7, 20, xSize - 14, 80, this, (TileDiallingDevice) controller.frameDialler.getBlockTileEntity());
         warningMessage = "";
         warningTimer = 0;
     }
@@ -48,6 +54,7 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
                 
         glyphSelector.drawBackground(i, j);
         glyphViewer.drawBackground(i, j);
+        glyphPage.drawBackground(i, j);
         
         if (showOverlay)
         {
@@ -69,7 +76,7 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile.ep3.portalFrame.dialDevice.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile.ep3.portalFrame.dialDevice.name")) / 2, -13, showOverlay ? 0x444444 : 0xFFFFFF);
         
         fontRenderer.drawString("Stored Identifiers", 7, 7, showOverlay ? 0x222222 : 0x404040);
-        fontRenderer.drawString("Glyphs", 7, 107, showOverlay ? 0x222222 : 0x404040);
+        fontRenderer.drawString("Glyphs", 7, 127, showOverlay ? 0x222222 : 0x404040);
         
         if (showOverlay)
         {
@@ -78,7 +85,7 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         
         if (warningTimer > 0)
         {
-            fontRenderer.drawString(warningMessage, xSize - 10 - fontRenderer.getStringWidth(warningMessage), 107, 0xFF0000);
+            fontRenderer.drawString(warningMessage, xSize - 10 - fontRenderer.getStringWidth(warningMessage), 128, 0xFF0000);
         }
     }
     
@@ -102,8 +109,12 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
             return;
         }
         
-        glyphSelector.mouseClicked(par1, par2, mouseButton);
-        glyphViewer.mouseClicked(par1, par2, mouseButton);
+        if (!controller.isPortalActive)
+        {
+            glyphSelector.mouseClicked(par1, par2, mouseButton);
+            glyphViewer.mouseClicked(par1, par2, mouseButton);
+            glyphPage.mouseClicked(par1, par2, mouseButton);
+        }
         
         super.mouseClicked(par1, par2, mouseButton);
     }
@@ -115,10 +126,10 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         super.initGui();
         
         cancelButton = new GuiBetterButton(10, guiLeft + 20, guiTop + 70, 100, "Cancel");
-        acceptButton = new GuiBetterButton(10, guiLeft + xSize - 22 - 100, guiTop + 70, 100, "Accept");
+        acceptButton = new GuiBetterButton(11, guiLeft + xSize - 22 - 100, guiTop + 70, 100, "Accept");
         textField = new GuiTextField(fontRenderer, guiLeft + 20, guiTop + 47, xSize - 42, 20);
         
-        buttonList.add(new GuiBetterButton(0, guiLeft + 175, guiTop + 120, 75, "Dial"));
+        buttonList.add(new GuiBetterButton(1, guiLeft + 175, guiTop + 103, 75, controller.isPortalActive ? "Terminate" : "Dial"));
         buttonList.add(new GuiBetterButton(2, guiLeft + 175, guiTop + 150, 75, "Add"));
         buttonList.add(new GuiBetterButton(3, guiLeft + 175, guiTop + 173, 75, "Clear"));
         buttonList.add(cancelButton);
@@ -138,9 +149,28 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
     }
     
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
+    protected void actionPerformed(GuiButton button)
     {
-        if (par1GuiButton.id == 2)
+        if (button.id == 1) // DIAL
+        {
+            if (controller.isPortalActive)
+            {
+                GuiPayload payload = new GuiPayload();
+                payload.data.setBoolean("DialTerminateRequest", true);
+                ClientProxy.sendGuiPacket(payload);
+            }
+            else if (glyphSelector.getSelectedIdentifier().size() > 0)
+            {
+                GuiPayload payload = new GuiPayload();
+                payload.data.setString("DialRequest", glyphSelector.getSelectedIdentifier().getGlyphString());
+                ClientProxy.sendGuiPacket(payload);
+            }
+            else
+            {
+                setWarningMessage(0);
+            }
+        }
+        else if (button.id == 2) // ADD
         {
             if (glyphSelector.getSelectedIdentifier().size() == 0)
             {
@@ -150,16 +180,25 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
             
             toggleState();
         }
-        else if (par1GuiButton.id == 3)
+        else if (button.id == 3) // CLEAR
         {
             glyphSelector.clearSelection();
+            glyphPage.selectedGlyph = -1;
         }
-        else if (par1GuiButton.id == cancelButton.id)
+        else if (button.id == cancelButton.id) // CANCEL
         {
             toggleState();
         }
-        else if (par1GuiButton.id == acceptButton.id)
+        else if (button.id == acceptButton.id) // ACCEPT
         {
+            if (!textField.getText().equals("") && glyphSelector.getSelectedIdentifier().size() > 0)
+            {
+                GuiPayload payload = new GuiPayload();
+                payload.data.setString("GlyphName", textField.getText());
+                payload.data.setString("Glyphs", glyphSelector.getSelectedIdentifier().getGlyphString());
+                ClientProxy.sendGuiPacket(payload);
+            }
+            
             toggleState();
         }
     }
@@ -179,6 +218,8 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         {
             warningTimer--;
         }
+        
+        ((GuiBetterButton) buttonList.get(0)).displayString = controller.isPortalActive ? "Terminate" : "Dial";
     }
     
     @Override
@@ -202,5 +243,17 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         cancelButton.drawButton = acceptButton.drawButton = showOverlay;
         Keyboard.enableRepeatEvents(showOverlay);
         ((GuiBetterButton) buttonList.get(0)).enabled = ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = !showOverlay;
+    }
+    
+    public void selectionChanged(int newSelection)
+    {
+        glyphSelector.clearSelection();
+        
+        if (newSelection >= glyphPage.getList().size())
+        {
+            return;
+        }
+        
+        glyphSelector.setGlyphsToIdentifier(glyphPage.getList().get(newSelection).identifier);
     }
 }

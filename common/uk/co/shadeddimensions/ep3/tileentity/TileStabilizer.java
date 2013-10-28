@@ -125,6 +125,11 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
      */
     public void terminateExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
     {
+        if (portalA == null || portalB == null)
+        {
+            return;
+        }
+        
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
         
         if (cA == null || cB == null)
@@ -141,6 +146,25 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
 
             removeExistingConnection(portalA, portalB);
         }
+    }
+    
+    /***
+     * Terminates both portals and removes them from the active connection list. Used by dialling devices when the exit location is not known by the controller.
+     */
+    public void terminateExistingConnection(GlyphIdentifier identifier)
+    {
+        GlyphIdentifier portalA = new GlyphIdentifier(identifier), portalB = null;
+        
+        if (activeConnections.containsKey(identifier.getGlyphString()))
+        {
+            portalB = new GlyphIdentifier(activeConnections.get(identifier.getGlyphString()));
+        }
+        else if (activeConnectionsReverse.containsKey(identifier.getGlyphString()))
+        {
+            portalB = new GlyphIdentifier(activeConnectionsReverse.get(identifier.getGlyphString()));
+        }
+        
+        terminateExistingConnection(portalA, portalB);
     }
 
     /***

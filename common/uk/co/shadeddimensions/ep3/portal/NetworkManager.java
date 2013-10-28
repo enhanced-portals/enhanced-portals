@@ -86,7 +86,7 @@ public class NetworkManager
 
         for (int i = 0; i < portalNetworks.tagCount(); i++)
         {
-            NBTTagCompound t = (NBTTagCompound) portalLocations.tagAt(i);
+            NBTTagCompound t = (NBTTagCompound) portalNetworks.tagAt(i);
             NBTTagList l = t.getTagList("Portals");
 
             GlyphIdentifier identifier = new GlyphIdentifier(t);
