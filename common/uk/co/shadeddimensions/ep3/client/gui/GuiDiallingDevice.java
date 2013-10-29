@@ -16,6 +16,7 @@ import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiDiallingDevice extends GuiEnhancedPortals
@@ -212,6 +213,27 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         {
             textField.updateCursorCounter();
             warningTimer = 0;
+        }
+        else
+        {
+            boolean found = false;
+            
+            for (int i = 0; i < glyphPage.getList().size(); i++)
+            {
+                GlyphElement e = glyphPage.getList().get(i);
+                
+                if (e.identifier.equals(glyphSelector.getSelectedIdentifier()))
+                {
+                    glyphPage.selectedGlyph = i;
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found)
+            {
+                glyphPage.selectedGlyph = -1;
+            }
         }
         
         if (warningTimer > 0)

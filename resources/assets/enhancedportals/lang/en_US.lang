@@ -12,7 +12,7 @@ tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
 # Items
 item.ep3.wrench.name=Wrench
 item.ep3.paintbrush.name=Nanobrush
-item.ep3.goggles.name=Goggles
+item.ep3.goggles.name=Glasses
 item.ep3.locationCard.name=DBS Location Card
 
 # Upgrades

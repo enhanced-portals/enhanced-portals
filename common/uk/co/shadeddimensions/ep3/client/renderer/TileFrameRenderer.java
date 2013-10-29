@@ -107,7 +107,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             tessellator.setColorOpaque_F(f10, f13, f16);
             renderBlocks.renderFaceYNeg(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.blockID != CommonProxy.blockFrame.blockID ? baseBlock.getIcon(0, baseMeta) : baseBlock.getBlockTexture(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord, 0));
             
-            if (isWearingGoggles() && meta >= 1 && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord - 1, frame.zCoord) != CommonProxy.blockPortal.blockID)
+            if (((isWearingGoggles() && meta >= 1) || meta == 4) && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord - 1, frame.zCoord) != CommonProxy.blockPortal.blockID)
             {
                 renderBlocks.renderFaceYNeg(null, 0, 0, 0, BlockFrame.overlayIcons[meta - 1]);
             }
@@ -119,7 +119,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             tessellator.setColorOpaque_F(f7, f8, f9);
             renderBlocks.renderFaceYPos(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.blockID != CommonProxy.blockFrame.blockID ? baseBlock.getIcon(1, baseMeta) : baseBlock.getBlockTexture(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord, 1));
             
-            if (isWearingGoggles() && meta >= 1 && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord + 1, frame.zCoord) != CommonProxy.blockPortal.blockID)
+            if (((isWearingGoggles() && meta >= 1) || meta == 4) && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord + 1, frame.zCoord) != CommonProxy.blockPortal.blockID)
             {
                 renderBlocks.renderFaceYPos(null, 0, 0, 0, BlockFrame.overlayIcons[meta - 1]);
             }
@@ -131,7 +131,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             tessellator.setColorOpaque_F(f11, f14, f17);
             renderBlocks.renderFaceZNeg(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.blockID != CommonProxy.blockFrame.blockID ? baseBlock.getIcon(2, baseMeta) : baseBlock.getBlockTexture(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord, 2));
             
-            if (isWearingGoggles() && meta >= 1 && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord, frame.zCoord - 1) != CommonProxy.blockPortal.blockID)
+            if (((isWearingGoggles() && meta >= 1) || meta == 4) && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord, frame.zCoord - 1) != CommonProxy.blockPortal.blockID)
             {
                 renderBlocks.renderFaceZNeg(null, 0, 0, 0, BlockFrame.overlayIcons[meta - 1]);
             }
@@ -143,7 +143,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             tessellator.setColorOpaque_F(f11, f14, f17);
             renderBlocks.renderFaceZPos(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.blockID != CommonProxy.blockFrame.blockID ? baseBlock.getIcon(3, baseMeta) : baseBlock.getBlockTexture(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord, 3));
             
-            if (isWearingGoggles() && meta >= 1 && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord, frame.zCoord + 1) != CommonProxy.blockPortal.blockID)
+            if (((isWearingGoggles() && meta >= 1) || meta == 4) && frame.worldObj.getBlockId(frame.xCoord, frame.yCoord, frame.zCoord + 1) != CommonProxy.blockPortal.blockID)
             {
                 renderBlocks.renderFaceZPos(null, 0, 0, 0, BlockFrame.overlayIcons[meta - 1]);
             }
@@ -155,7 +155,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             tessellator.setColorOpaque_F(f12, f15, f18);
             renderBlocks.renderFaceXNeg(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.blockID != CommonProxy.blockFrame.blockID ? baseBlock.getIcon(4, baseMeta) : baseBlock.getBlockTexture(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord, 4));
             
-            if (isWearingGoggles() && meta >= 1 && frame.worldObj.getBlockId(frame.xCoord - 1, frame.yCoord, frame.zCoord) != CommonProxy.blockPortal.blockID)
+            if (((isWearingGoggles() && meta >= 1) || meta == 4) && frame.worldObj.getBlockId(frame.xCoord - 1, frame.yCoord, frame.zCoord) != CommonProxy.blockPortal.blockID)
             {
                 renderBlocks.renderFaceXNeg(null, 0, 0, 0, BlockFrame.overlayIcons[meta - 1]);
             }
@@ -167,7 +167,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             tessellator.setColorOpaque_F(f12, f15, f18);
             renderBlocks.renderFaceXPos(null, 0, 0, 0, overrideIcon != null ? overrideIcon : baseBlock.blockID != CommonProxy.blockFrame.blockID ? baseBlock.getIcon(5, baseMeta) : baseBlock.getBlockTexture(frame.worldObj, frame.xCoord, frame.yCoord, frame.zCoord, 5));
             
-            if (isWearingGoggles() && meta >= 1 && frame.worldObj.getBlockId(frame.xCoord + 1, frame.yCoord, frame.zCoord) != CommonProxy.blockPortal.blockID)
+            if (((isWearingGoggles() && meta >= 1) || meta == 4) && frame.worldObj.getBlockId(frame.xCoord + 1, frame.yCoord, frame.zCoord) != CommonProxy.blockPortal.blockID)
             {
                 renderBlocks.renderFaceXPos(null, 0, 0, 0, BlockFrame.overlayIcons[meta - 1]);
             }

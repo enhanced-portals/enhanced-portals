@@ -67,7 +67,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
      */
     public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
     {
-        if (activeConnections.containsKey(portalA) || activeConnections.containsValue(portalB) || !hasEnoughPowerToStart() || !canAcceptNewConnection())
+        if (activeConnections.containsKey(portalA.getGlyphString()) || activeConnections.containsValue(portalB.getGlyphString()) || !hasEnoughPowerToStart() || !canAcceptNewConnection())
         {
             return false;
         }
@@ -173,6 +173,8 @@ public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage
     public void removeExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
     {
         activeConnections.remove(portalA.getGlyphString());
+        activeConnections.remove(portalB.getGlyphString());
+        activeConnectionsReverse.remove(portalA.getGlyphString());
         activeConnectionsReverse.remove(portalB.getGlyphString());
     }
 

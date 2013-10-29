@@ -17,7 +17,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 public class GuiGlyphPage extends Gui
 {
     public int selectedGlyph;
-    int x, y, w, h, page;
+    int x, y, w, h, nudge;
     GuiEnhancedPortals parent;
     TileDiallingDevice dialler;
     
@@ -28,7 +28,7 @@ public class GuiGlyphPage extends Gui
         w = width;
         h = height;
         parent = gui;
-        page = 0;
+        nudge = 0;
         selectedGlyph = -1;
         dialler = dial;
     }
@@ -44,7 +44,7 @@ public class GuiGlyphPage extends Gui
         parent.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/buttons.png"));
         for (int i = 0; i < 5; i++)
         {
-            int glyph = (page * 5) + i;
+            int glyph = nudge + i;
             
             if (glyph >= dialler.glyphList.size())
             {
@@ -64,12 +64,12 @@ public class GuiGlyphPage extends Gui
             drawTexturedModalRect(parent.getGuiLeft() + x + 201, parent.getGuiTop() + y + (i * 16), 200, isMouseOverSmall(i, mX, mY) ? 140 : 125, 15, 15);
         }
         
-        drawTexturedModalRect(parent.getGuiLeft() + x + 227, parent.getGuiTop() + y, 200, page > 0 ? 65 : 50, 15, 15);
-        drawTexturedModalRect(parent.getGuiLeft() + x + 227, parent.getGuiTop() + y + (4 * 16), 200, dialler.glyphList.size() > 5 ? 20 : 5, 15, 15);
+        drawTexturedModalRect(parent.getGuiLeft() + x + 227, parent.getGuiTop() + y, 200, nudge > 0 ? 65 : 50, 15, 15);
+        drawTexturedModalRect(parent.getGuiLeft() + x + 227, parent.getGuiTop() + y + (4 * 16), 200, dialler.glyphList.size() > 5 + nudge ? 20 : 5, 15, 15);
         
         for (int i = 0; i < 5; i++)
         {
-            int glyph = (page * 5) + i;
+            int glyph = nudge + i;
             
             if (glyph >= dialler.glyphList.size())
             {
@@ -92,11 +92,17 @@ public class GuiGlyphPage extends Gui
         return mX >= X && mX <= X + 15 && mY >= Y && mY <= Y + 15;
     }
     
+    public boolean isMouseOverSmall(int xPos, int yPos, int mX, int mY)
+    {
+        int X = xPos + parent.getGuiLeft(), Y = yPos + parent.getGuiTop();        
+        return mX >= X && mX <= X + 15 && mY >= Y && mY <= Y + 15;
+    }
+    
     public void mouseClicked(int mX, int mY, int mouseButton)
     {
         for (int i = 0; i < 5; i++)
         {
-            int glyph = (page * 5) + i;
+            int glyph = nudge + i;
             
             if (isMouseOver(i, mX, mY) && mouseButton == 0)
             {
@@ -129,6 +135,14 @@ public class GuiGlyphPage extends Gui
                 {
                     ((GuiDiallingDevice) parent).selectionChanged(glyph);
                 }
+            }
+            else if (isMouseOverSmall(x + 227, y, mX, mY) && mouseButton == 0 && nudge > 0)
+            {
+                nudge--;
+            }
+            else if (isMouseOverSmall(x + 227, y + (4 * 16), mX, mY) && mouseButton == 0 && dialler.glyphList.size() > 5 + nudge)
+            {
+                nudge++;
             }
         }
     }
