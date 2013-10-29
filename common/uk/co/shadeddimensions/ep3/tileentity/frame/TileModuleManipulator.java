@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagList;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.StackHelper;
 
 public class TileModuleManipulator extends TilePortalPart
 {

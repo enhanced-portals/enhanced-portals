@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.client.gui.slots.SlotPortalFrameTexture;
-import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.util.StackHelper;
 
 public class ContainerPortalFrameTexture extends ContainerEnhancedPortals
 {

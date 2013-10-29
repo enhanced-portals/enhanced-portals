@@ -89,8 +89,7 @@ public class EnhancedPortals
         if (event.map.textureType == 0)
         {
             ClientProxy.customPortalTextures.clear();
-            ClientProxy.customFrameTextures.clear();
-            
+            ClientProxy.customFrameTextures.clear();            
             int counter = 0;
             
             while (ClientProxy.resourceExists("textures/blocks/customPortal/" + String.format("%02d", counter) + ".png"))

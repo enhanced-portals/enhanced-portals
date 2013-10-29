@@ -17,7 +17,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.api.IPowerStorage;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -28,7 +27,7 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileStabilizer extends TileEnhancedPortals implements IPowerStorage, IInventory
+public class TileStabilizer extends TileEnhancedPortals implements IInventory
 {
     static final int MAX_ACTIVE_PORTALS_PER_ROW = 2;
 

@@ -26,8 +26,8 @@
 		
 		<replace dir="${dir.mcp}\src\minecraft\" token="@VERSION@" value="${version.main}" />
 		
-		<replace dir="${dir.mcp}\src\minecraft\uk\co\shadeddimensions\enhancedportals\" token="@VERSION@" value="${version.main}" />
-		<replace dir="${dir.mcp}\src\minecraft\uk\co\shadeddimensions\enhancedportals\" token="@BUILD_NUMBER@" value="${build_number}" />
+		<replace dir="${dir.mcp}\src\minecraft\uk\co\shadeddimensions\ep3\" token="@VERSION@" value="${version.main}" />
+		<replace dir="${dir.mcp}\src\minecraft\uk\co\shadeddimensions\ep3\" token="@BUILD_NUMBER@" value="${build_number}" />
 	</target>
 	
 	<target name="recompile">
