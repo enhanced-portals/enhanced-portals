@@ -20,7 +20,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, GHOST_FRAME;
 
         public String getUniqueID()
         {
@@ -46,6 +46,11 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
         list.add(StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
+        
+        if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
+        {
+            list.add(StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
+        }
     }
 
     @Override
@@ -169,6 +174,12 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 
     }
 
+    @Override
+    public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i)
+    {
+        return i.getItemDamage() == PortalModules.GHOST_FRAME.ordinal();
+    }
+    
     @Override
     public void registerIcons(IconRegister register)
     {

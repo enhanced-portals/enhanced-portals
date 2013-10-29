@@ -94,4 +94,9 @@ public interface IPortalModule
      * @param upgrade
      */
     public void onUpgradeRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade);
+
+    /***
+     * Should this upgrade ghost the portal frame
+     */
+    public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i);
 }

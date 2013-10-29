@@ -35,7 +35,7 @@ public class TilePortalController extends TilePortalPart
     public List<WorldCoordinates> frameBasic, frameRedstone, frameFluid, framePower, portals;
     public WorldCoordinates frameModule, frameDialler, frameNetwork, frameBiometric, bridgeStabilizer;
     public boolean hasConfigured, waitingForCard, isPortalActive, processing;
-    
+
     @SideOnly(Side.CLIENT)
     public GlyphIdentifier uniqueID;
     @SideOnly(Side.CLIENT)
@@ -117,42 +117,43 @@ public class TilePortalController extends TilePortalPart
 
         for (WorldCoordinates c : tiles)
         {
-            TilePortalPart tile = (TilePortalPart) c.getBlockTileEntity();
+            TileEntity t = c.getBlockTileEntity();
 
-            if (tile == null)
+            if (!(t instanceof TilePortalPart))
             {
                 portals.add(c);
+                continue;
             }
-            else
-            {
-                if (tile instanceof TileFrame)
-                {
-                    frameBasic.add(c);
-                }
-                else if (tile instanceof TileRedstoneInterface)
-                {
-                    frameRedstone.add(c);
-                }
-                else if (tile instanceof TileModuleManipulator)
-                {
-                    frameModule = c;
-                }
-                else if (tile instanceof TileDiallingDevice)
-                {
-                    frameDialler = c;
-                }
-                else if (tile instanceof TileNetworkInterface)
-                {
-                    frameNetwork = c;
-                }
-                else if (tile instanceof TileBiometricIdentifier)
-                {
-                    frameBiometric = c;
-                }
 
-                tile.portalController = getWorldCoordinates();
-                CommonProxy.sendUpdatePacketToAllAround(tile);
+            TilePortalPart tile = (TilePortalPart) t;
+
+            if (tile instanceof TileFrame)
+            {
+                frameBasic.add(c);
             }
+            else if (tile instanceof TileRedstoneInterface)
+            {
+                frameRedstone.add(c);
+            }
+            else if (tile instanceof TileModuleManipulator)
+            {
+                frameModule = c;
+            }
+            else if (tile instanceof TileDiallingDevice)
+            {
+                frameDialler = c;
+            }
+            else if (tile instanceof TileNetworkInterface)
+            {
+                frameNetwork = c;
+            }
+            else if (tile instanceof TileBiometricIdentifier)
+            {
+                frameBiometric = c;
+            }
+
+            tile.portalController = getWorldCoordinates();
+            CommonProxy.sendUpdatePacketToAllAround(tile);
         }
 
         portalType = pType;
@@ -164,7 +165,7 @@ public class TilePortalController extends TilePortalPart
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         super.fillPacket(stream);
-        
+
         GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
 
         stream.writeBoolean(hasConfigured);
@@ -353,7 +354,7 @@ public class TilePortalController extends TilePortalPart
         {
             removePortal();
         }
-        
+
         if (payload.data.hasKey("uniqueIdentifier"))
         {
             GlyphIdentifier id = new GlyphIdentifier(payload.data.getString("uniqueIdentifier"));
@@ -362,29 +363,29 @@ public class TilePortalController extends TilePortalPart
             {
                 id = new GlyphIdentifier(); // If we do, void this request
             }
-            
+
             if (hasUniqueIdentifier()) // If already have an identifier
             {
                 GlyphIdentifier networkIdentifier = null;
-                
+
                 if (hasNetworkIdentifier()) // Check to see if it's in a network
                 {
                     networkIdentifier = getNetworkIdentifier();
                     CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), networkIdentifier); // Remove it if it is
                 }
-                
+
                 CommonProxy.networkManager.removePortal(getWorldCoordinates()); // Remove the old identifier
-                
+
                 if (id.size() > 0) // If the new identifier isn't blank
                 {
                     CommonProxy.networkManager.addPortal(id, getWorldCoordinates()); // Add it
-                    
+
                     if (networkIdentifier != null)
                     {
                         CommonProxy.networkManager.addPortalToNetwork(id, networkIdentifier); // Re-add it to the network, if it was in one
                     }
                 }
-                
+
                 sendUpdatePacket = true;
             }
             else if (id.size() > 0) // Otherwise if the new identifier isn't blank
@@ -393,7 +394,7 @@ public class TilePortalController extends TilePortalPart
                 sendUpdatePacket = true;
             }
         }
-        
+
         if (payload.data.hasKey("networkIdentifier"))
         {
             GlyphIdentifier id = new GlyphIdentifier(payload.data.getString("networkIdentifier"));
@@ -405,13 +406,13 @@ public class TilePortalController extends TilePortalPart
             else
             {
                 GlyphIdentifier uID = getUniqueIdentifier();
-                
+
                 if (hasNetworkIdentifier())
                 {
                     CommonProxy.networkManager.removePortalFromNetwork(uID, getNetworkIdentifier());
                     sendUpdatePacket = true;
                 }
-                
+
                 if (id.size() > 0)
                 {
                     CommonProxy.networkManager.addPortalToNetwork(uID, id);
@@ -419,29 +420,29 @@ public class TilePortalController extends TilePortalPart
                 }
             }
         }
-        
+
         if (payload.data.hasKey("GlyphName") && payload.data.hasKey("Glyphs"))
         {
             TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-            
+
             if (dial != null)
             {
                 dial.glyphList.add(dial.new GlyphElement(payload.data.getString("GlyphName"), new GlyphIdentifier(payload.data.getString("Glyphs"))));
                 CommonProxy.sendUpdatePacketToAllAround(dial);
             }
         }
-        
+
         if (payload.data.hasKey("DeleteGlyph"))
         {
             TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-            
+
             if (dial != null)
             {
                 dial.glyphList.remove(payload.data.getInteger("DeleteGlyph"));
                 CommonProxy.sendUpdatePacketToAllAround(dial);
             }
         }
-        
+
         if (payload.data.hasKey("frameColour"))
         {
             frameColour = payload.data.getInteger("frameColour");
@@ -642,23 +643,23 @@ public class TilePortalController extends TilePortalPart
         {
             return null;
         }
-        
+
         TileEntity t = bridgeStabilizer.getBlockTileEntity();
-        
+
         if (t instanceof TileStabilizer)
         {
             return (TileStabilizer) t;
         }
-        
+
         return null;
     }
-    
+
     public void dialRequest(GlyphIdentifier id)
     {
         if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && frameDialler != null)
         {
             TileStabilizer dbs = getStabilizer();
-            
+
             if (dbs == null || !dbs.hasConfigured)
             {
                 bridgeStabilizer = null;
@@ -671,7 +672,7 @@ public class TilePortalController extends TilePortalPart
             dbs.setupNewConnection(getUniqueIdentifier(), id);
         }
     }
-    
+
     /***
      * Creates a portal using the set network, if available. Called via redstone interface.
      */
@@ -685,7 +686,7 @@ public class TilePortalController extends TilePortalPart
         if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && CommonProxy.networkManager.hasNetwork(getWorldCoordinates()))
         {
             TileStabilizer dbs = getStabilizer();
-            
+
             if (dbs == null || !dbs.hasConfigured)
             {
                 bridgeStabilizer = null;
@@ -714,7 +715,7 @@ public class TilePortalController extends TilePortalPart
         {
             TileStabilizer dbs = getStabilizer();
             GlyphIdentifier identifier = CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
-            
+
             if (dbs == null || !dbs.hasConfigured)
             {
                 bridgeStabilizer = null;
@@ -723,7 +724,7 @@ public class TilePortalController extends TilePortalPart
                 CommonProxy.sendUpdatePacketToAllAround(this);
                 return;
             }
-            
+
             if (frameDialler != null)
             {
                 dbs.terminateExistingConnection(identifier);
@@ -880,7 +881,7 @@ public class TilePortalController extends TilePortalPart
 
             CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), getNetworkIdentifier());
             CommonProxy.networkManager.removePortal(getWorldCoordinates());
-            
+
             isPortalActive = false;
             hasConfigured = false;
             processing = false;
@@ -903,42 +904,42 @@ public class TilePortalController extends TilePortalPart
      * Gets this controllers unique identifier.
      * @return Null if one is not set
      */
-     public GlyphIdentifier getUniqueIdentifier()
-     {
-         if (CommonProxy.isClient())
-         {
-             return uniqueID;
-         }
-         
-         return CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
-     }
+    public GlyphIdentifier getUniqueIdentifier()
+    {
+        if (CommonProxy.isClient())
+        {
+            return uniqueID;
+        }
 
-     /***
-      * Gets this controllers network identifier.
-      * @return Null if one is not set
-      */
-     public GlyphIdentifier getNetworkIdentifier()
-     {
-         if (CommonProxy.isClient())
-         {
-             return networkID;
-         }
-         
-         return CommonProxy.networkManager.getPortalNetwork(getUniqueIdentifier());
-     }
-     
-     public void onEntityEnterPortal(Entity entity)
-     {
-         GlyphIdentifier uID = getUniqueIdentifier();
-         
-         if (uID == null)
-         {
-             return;
-         }
-         else
-         {
-             TileStabilizer dbs = getStabilizer();
-             dbs.onEntityEnterPortal(uID, entity);
-         }
-     }
+        return CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
+    }
+
+    /***
+     * Gets this controllers network identifier.
+     * @return Null if one is not set
+     */
+    public GlyphIdentifier getNetworkIdentifier()
+    {
+        if (CommonProxy.isClient())
+        {
+            return networkID;
+        }
+
+        return CommonProxy.networkManager.getPortalNetwork(getUniqueIdentifier());
+    }
+
+    public void onEntityEnterPortal(Entity entity)
+    {
+        GlyphIdentifier uID = getUniqueIdentifier();
+
+        if (uID == null)
+        {
+            return;
+        }
+        else
+        {
+            TileStabilizer dbs = getStabilizer();
+            dbs.onEntityEnterPortal(uID, entity);
+        }
+    }
 }

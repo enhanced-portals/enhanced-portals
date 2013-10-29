@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.renderer.FrameItemRenderer;
+import uk.co.shadeddimensions.ep3.client.renderer.PortalItemRenderer;
 import uk.co.shadeddimensions.ep3.client.renderer.TileFrameRenderer;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
@@ -62,6 +63,7 @@ public class ClientProxy extends CommonProxy
     {        
         ClientRegistry.bindTileEntitySpecialRenderer(TilePortalPart.class, new TileFrameRenderer());
         MinecraftForgeClient.registerItemRenderer(blockFrame.blockID, new FrameItemRenderer());
+        MinecraftForgeClient.registerItemRenderer(blockPortal.blockID, new PortalItemRenderer());
     }
 
     public static void sendGuiPacket(GuiPayload payload)

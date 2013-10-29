@@ -117,6 +117,12 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
+    public int getRenderType()
+    {
+        return -1;
+    }
+    
+    @Override
     @SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4)
     {

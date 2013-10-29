@@ -28,6 +28,9 @@ item.ep3.portalModule.4.name=Portal Cloaking
 item.ep3.portalModule.4.desc=Makes the portal completely invisible
 item.ep3.portalModule.5.name=Particle Shader
 item.ep3.portalModule.5.desc=Particles randomly spawn lighter or darker
+item.ep3.portalModule.6.name=Ghost Frame
+item.ep3.portalModule.6.desc=Makes the portal frame transparent
+item.ep3.portalModule.6.desc2=Allows you to walk through the frame
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3

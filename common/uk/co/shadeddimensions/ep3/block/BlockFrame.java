@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -165,7 +167,7 @@ public class BlockFrame extends BlockEnhancedPortals
     @Override
     public boolean isOpaqueCube()
     {
-        return true;
+        return false;
     }
 
     @Override
@@ -185,5 +187,34 @@ public class BlockFrame extends BlockEnhancedPortals
     public boolean renderAsNormalBlock()
     {
         return false;
+    }
+    
+    @Override
+    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int par2, int par3, int par4, int par5)
+    {
+        return blockAccess.getBlockId(par2, par3, par4) == blockID ? false : super.shouldSideBeRendered(blockAccess, par2, par3, par4, par5);
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    {
+        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
+        
+        if (tile != null)
+        {
+            TilePortalController controller = ((TilePortalPart) tile).getPortalController();
+            
+            if (controller != null)
+            {
+                TileModuleManipulator m = controller.getModuleManipulator();
+                
+                if (m != null)
+                {
+                    return m.isFrameGhost() ? par1World.getBlockId(par2, par3 + 1, par4) != CommonProxy.blockPortal.blockID ? null : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4) : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+                }
+            }
+        }
+        
+        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 }

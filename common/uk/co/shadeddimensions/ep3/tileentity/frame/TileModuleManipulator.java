@@ -221,5 +221,39 @@ public class TileModuleManipulator extends TilePortalPart
                 setInventorySlotContents(i, new ItemStack(id, 1, meta));
             }
         }
+        
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+    }
+
+    public boolean isFrameGhost()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).ghostPortalFrame(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    public boolean isPortalInvisible()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
