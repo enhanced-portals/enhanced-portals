@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
@@ -45,11 +46,12 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        list.add(StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
+        list.add("Portal Module");        
+        list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
         
-        if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
+        if (stack.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal() || stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
         {
-            list.add(StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
+            list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
         }
     }
 
@@ -97,9 +99,13 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public EnumRarity getRarity(ItemStack itemStack)
     {
-        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal())
+        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal() || itemStack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
         {
             return EnumRarity.epic;
+        }
+        else if (itemStack.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal())
+        {
+            return EnumRarity.rare;
         }
 
         return EnumRarity.common;

@@ -3,7 +3,6 @@ package uk.co.shadeddimensions.ep3.util;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
@@ -42,7 +41,7 @@ public class WorldCoordinates extends ChunkCoordinates
     
     public int getBlockId()
     {        
-        WorldServer world = DimensionManager.getWorld(dimension);
+        WorldServer world = getWorld();
         
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
@@ -54,7 +53,7 @@ public class WorldCoordinates extends ChunkCoordinates
     
     public int getBlockMetadata()
     {        
-        WorldServer world = DimensionManager.getWorld(dimension);
+        WorldServer world = getWorld();
         
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
@@ -66,7 +65,18 @@ public class WorldCoordinates extends ChunkCoordinates
     
     public TileEntity getBlockTileEntity()
     {
-        WorldServer world = DimensionManager.getWorld(dimension);
+        WorldServer world = getWorld();
+        
+        if (world == null)
+        {
+            DimensionManager.initDimension(dimension);
+            world = DimensionManager.getWorld(dimension);
+            
+            if (world == null)
+            {
+                return null; // How?
+            }
+        }
         
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
@@ -75,15 +85,28 @@ public class WorldCoordinates extends ChunkCoordinates
         
         return world.getBlockTileEntity(posX, posY, posZ);
     }
-    
+        
     public WorldCoordinates offset(ForgeDirection orientation)
     {
         return new WorldCoordinates(posX + orientation.offsetX, posY + orientation.offsetY, posZ + orientation.offsetZ, dimension);
     }
 
-    public World getWorld()
+    public WorldServer getWorld()
     {
-        return DimensionManager.getWorld(dimension);
+        WorldServer world = DimensionManager.getWorld(dimension);
+        
+        if (world == null)
+        {
+            DimensionManager.initDimension(dimension);
+            world = DimensionManager.getWorld(dimension);
+            
+            if (world == null)
+            {
+                return null; // How?
+            }
+        }
+        
+        return world;
     }
     
     @Override

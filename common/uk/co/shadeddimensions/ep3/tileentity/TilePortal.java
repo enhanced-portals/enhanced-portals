@@ -34,7 +34,7 @@ public class TilePortal extends TilePortalPart
         
         if (controller != null && controller.hasConfigured && controller.isPortalActive)
         {
-            controller.onEntityEnterPortal(entity);
+            controller.onEntityEnterPortal(entity, this);
         }
     }
 }

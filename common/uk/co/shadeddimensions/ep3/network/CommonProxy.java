@@ -16,6 +16,7 @@ import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
+import uk.co.shadeddimensions.ep3.item.ItemStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTileUpdate;
@@ -100,7 +101,7 @@ public class CommonProxy
     {
         blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemFrame.class, Reference.SHORT_ID + ".portalFrame");
         blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, Reference.SHORT_ID + ".portal");
-        blockStabilizer = (BlockStabilizer) EnhancedPortals.config.registerBlock(BlockStabilizer.class, Reference.SHORT_ID + ".stabilizer");
+        blockStabilizer = (BlockStabilizer) EnhancedPortals.config.registerBlock(BlockStabilizer.class, ItemStabilizer.class, Reference.SHORT_ID + ".stabilizer");
     }
 
     public void registerItems()
@@ -145,7 +146,8 @@ public class CommonProxy
         EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
         EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("[NI] If enabled, overwrites the Nether portals mechanics to allow any shape/size/horizontal.");
         EnhancedPortals.config.addBoolean("portalsDestroyBlocks", true).addComment("Portals will destroy blocks that are in their way, if this is enabled. Only applies to blocks placed inside the frame AFTER the portal has been initialized.");
-
+        EnhancedPortals.config.addBoolean("fasterPortalCooldown", false).addComment("Sets every entities portal cooldown period to 10 ticks (The same as a player). Boats, Minecarts and Horses will always be forced to 10 ticks regardless of this setting.");
+        
         EnhancedPortals.config.addInteger("powerCostMultiplier", 1).addComment("Multiplies all power requirements by this value");
         
         EnhancedPortals.config.fillConfigFile(); // Must be last.

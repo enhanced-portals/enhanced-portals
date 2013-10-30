@@ -274,7 +274,7 @@ public class NetworkManager
             removePortalFromNetwork(g, n);
         }
 
-        portalCoordinates.remove(g);
+        portalCoordinates.remove(g.getGlyphString());
         portalCoordinatesReverse.remove(w);
     }
 

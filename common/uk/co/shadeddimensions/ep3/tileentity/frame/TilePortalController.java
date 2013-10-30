@@ -21,6 +21,7 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
@@ -878,10 +879,25 @@ public class TilePortalController extends TilePortalPart
             frameDialler = null;
             frameNetwork = null;
             frameBiometric = null;
+            
+            if (hasNetworkIdentifier())
+            {
+                TileStabilizer dbs = getStabilizer();
+                
+                if (dbs != null)
+                {
+                    dbs.terminateExistingConnection(getUniqueIdentifier()); // Make sure to terminate any active connections
+                }
+                
+                CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), getNetworkIdentifier()); // Then remove it from the network
+            }
+            
+            if (hasUniqueIdentifier())
+            {
+                CommonProxy.networkManager.removePortal(getWorldCoordinates()); // And free up the coords and UID
+            }
 
-            CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), getNetworkIdentifier());
-            CommonProxy.networkManager.removePortal(getWorldCoordinates());
-
+            bridgeStabilizer = null;
             isPortalActive = false;
             hasConfigured = false;
             processing = false;
@@ -928,7 +944,7 @@ public class TilePortalController extends TilePortalPart
         return CommonProxy.networkManager.getPortalNetwork(getUniqueIdentifier());
     }
 
-    public void onEntityEnterPortal(Entity entity)
+    public void onEntityEnterPortal(Entity entity, TilePortal portal)
     {
         GlyphIdentifier uID = getUniqueIdentifier();
 
@@ -939,7 +955,7 @@ public class TilePortalController extends TilePortalPart
         else
         {
             TileStabilizer dbs = getStabilizer();
-            dbs.onEntityEnterPortal(uID, entity);
+            dbs.onEntityEnterPortal(uID, entity, portal);
         }
     }
 }

@@ -436,7 +436,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
         }
     }
 
-    public void onEntityEnterPortal(GlyphIdentifier uID, Entity entity)
+    public void onEntityEnterPortal(GlyphIdentifier uID, Entity entity, TilePortal portal)
     {
         if (EntityManager.isEntityFitForTravel(entity))
         {
@@ -453,7 +453,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
 
             if (exit != null)
             {
-                EntityManager.teleportEntity(entity, uID, exit);
+                EntityManager.teleportEntity(entity, uID, exit, portal);
             }
         }
         
