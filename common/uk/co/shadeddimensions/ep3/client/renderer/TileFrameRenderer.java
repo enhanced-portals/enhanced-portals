@@ -56,13 +56,13 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
 
         if (controller != null)
         {
-            c = new Color(controller.frameColour);
+            c = new Color(controller.activeTextureData.getFrameColour());
 
-            if (controller.customFrameTexture != -1)
+            if (controller.activeTextureData.hasCustomFrameTexture())
             {
-                if (ClientProxy.customFrameTextures.size() > controller.customFrameTexture && (Icon) ClientProxy.customFrameTextures.get(controller.customFrameTexture) != null)
+                if (ClientProxy.customFrameTextures.size() > controller.activeTextureData.getCustomFrameTexture() && (Icon) ClientProxy.customFrameTextures.get(controller.activeTextureData.getCustomFrameTexture()) != null)
                 {
-                    overrideIcon = (Icon) ClientProxy.customFrameTextures.get(controller.customFrameTexture);
+                    overrideIcon = (Icon) ClientProxy.customFrameTextures.get(controller.activeTextureData.getCustomFrameTexture());
                 }
             }
             else if (controller.getStackInSlot(0) != null)
@@ -191,13 +191,13 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
 
         if (controller != null)
         {
-            c = new Color(controller.portalColour);
+            c = new Color(controller.activeTextureData.getPortalColour());
 
-            if (controller.customPortalTexture != -1)
+            if (controller.activeTextureData.hasCustomPortalTexture())
             {
-                if (ClientProxy.customPortalTextures.size() > controller.customPortalTexture && (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture) != null)
+                if (ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
                 {
-                    overrideIcon = (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture);
+                    overrideIcon = (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
                 }
             }
             else if (controller.getStackInSlot(1) != null)

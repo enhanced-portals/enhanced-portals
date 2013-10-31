@@ -76,11 +76,11 @@ public class BlockPortal extends BlockEnhancedPortals
         {
             ItemStack stack = controller.getStackInSlot(1);
             
-            if (controller.customPortalTexture != -1)
+            if (controller.activeTextureData.hasCustomPortalTexture())
             {
-                if (ClientProxy.customPortalTextures.size() > controller.customPortalTexture && (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture) != null)
+                if (ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
                 {
-                    return (Icon) ClientProxy.customPortalTextures.get(controller.customPortalTexture);
+                    return (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
                 }
             }
             else if (stack != null)
@@ -265,7 +265,7 @@ public class BlockPortal extends BlockEnhancedPortals
         
         if (controller != null)
         {
-            return controller.portalColour;
+            return controller.activeTextureData.getPortalColour();
         }
         
         return super.colorMultiplier(blockAccess, x, y, z);

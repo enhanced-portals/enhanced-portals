@@ -28,7 +28,7 @@ public class GuiPortalTexture extends GuiColourInterface
 
     public GuiPortalTexture(EntityPlayer player, TilePortalController control)
     {
-        super(new ContainerPortalTexture(player, control), control, new Color(control.portalColour));
+        super(new ContainerPortalTexture(player, control), control, new Color(control.activeTextureData.getPortalColour()));
         controller = control;
         scrollList = new GuiIconList(guiLeft + 6, guiTop + 6, 164, 56, this, true);
         id = -1;
@@ -92,7 +92,7 @@ public class GuiPortalTexture extends GuiColourInterface
     {
         super.initGui();
                 
-        scrollList.selectedIcon = id = controller.customPortalTexture;
+        scrollList.selectedIcon = id = controller.activeTextureData.getCustomPortalTexture();
         backButton = new GuiBetterButton(1, guiLeft + xSize - 38, guiTop + 64, 16, StandardButtonTextureSets.BACK_BUTTON, "");
         forwardButton = new GuiBetterButton(2, guiLeft + xSize - 22, guiTop + 64, 16, StandardButtonTextureSets.FORWARD_BUTTON, "");
         

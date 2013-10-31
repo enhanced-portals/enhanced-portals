@@ -23,6 +23,7 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
+import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -64,7 +65,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
      * Sets up a new connection between two portals.
      * @return True if connection was successfully established.
      */
-    public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
+    public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB, PortalTextureManager textureManager)
     {
         if (activeConnections.containsKey(portalA.getGlyphString()) || activeConnections.containsValue(portalB.getGlyphString()) || !hasEnoughPowerToStart() || !canAcceptNewConnection())
         {
@@ -97,17 +98,27 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
         {
             return false;
         }
-
+        
+        if (textureManager != null)
+        {
+            cA.swapTextureData(textureManager);
+            cB.swapTextureData(textureManager);
+        }
+        
         if (!PortalUtils.createPortalFrom(cA))
         {
+            cA.revertTextureData();
+            cB.revertTextureData();
             return false;
         }
         else if (!PortalUtils.createPortalFrom(cB)) // Make sure both portals can be created
         {
             PortalUtils.removePortalFrom(cA);
+            cA.revertTextureData();
+            cB.revertTextureData();
             return false;
         }
-
+        
         activeConnections.put(portalA.getGlyphString(), portalB.getGlyphString());
         activeConnectionsReverse.put(portalB.getGlyphString(), portalA.getGlyphString());
 
@@ -133,6 +144,16 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
         
         if (cA == null || cB == null)
         {
+            if (cA != null)
+            {
+                cA.revertTextureData();
+            }
+            
+            if (cB != null)
+            {
+                cB.revertTextureData();
+            }
+            
             removeExistingConnection(portalA, portalB);
             return;
         }
@@ -142,6 +163,8 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
             // Make sure we're terminating the correct connection, also don't mind that we're terminating it from the other side that we started it from
             PortalUtils.removePortalFrom(cA);
             PortalUtils.removePortalFrom(cB);
+            cA.revertTextureData();
+            cB.revertTextureData();
 
             removeExistingConnection(portalA, portalB);
         }

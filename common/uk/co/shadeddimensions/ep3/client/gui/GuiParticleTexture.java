@@ -19,7 +19,7 @@ public class GuiParticleTexture extends GuiColourInterface
     
     public GuiParticleTexture(TilePortalController control)
     {
-        super(new ContainerParticleTexture(control), control, new Color(control.particleColour));
+        super(new ContainerParticleTexture(control), control, new Color(control.activeTextureData.getParticleColour()));
         controller = control;
         particleList = new GuiParticleList(guiLeft + 6, guiTop + 6, 164, 154, this);
         id = 0;
@@ -71,7 +71,7 @@ public class GuiParticleTexture extends GuiColourInterface
     {
         super.initGui();
         
-        particleList.selected = id = controller.particleType;
+        particleList.selected = id = controller.activeTextureData.getParticleType();
     }
     
     @Override

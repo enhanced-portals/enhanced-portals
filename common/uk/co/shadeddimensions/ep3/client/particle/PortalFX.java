@@ -24,7 +24,7 @@ public class PortalFX extends EntityFX
         portalPosY = posY = par4;
         portalPosZ = posZ = par6;
 
-        int ParticleColour = controller != null ? controller.particleColour : 0x0077D8, ParticleType = controller != null ? controller.particleType : 0;
+        int ParticleColour = controller != null ? controller.activeTextureData.getParticleColour() : 0x0077D8, ParticleType = controller != null ? controller.activeTextureData.getParticleType() : 0;
 
         Color c = new Color(ParticleColour);
         particleRed = c.getRed() / 255f;

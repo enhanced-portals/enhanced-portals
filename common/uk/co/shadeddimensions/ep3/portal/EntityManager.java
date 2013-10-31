@@ -269,7 +269,7 @@ public class EntityManager
         }
         
         entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entityYaw, entity.rotationPitch);
-                
+        
         if (entity instanceof EntityMinecart) // Stops the minecart from derping about. TODO: Figure out a solution which isn't this.
         {
             entity.motionX = 0;
@@ -279,12 +279,10 @@ public class EntityManager
         
         if (mount != null) // Remount any mounted entities
         {
-            if (entity instanceof EntityPlayerMP)
+            if (!(entity instanceof EntityPlayerMP)) // Player re-mounting is derpy.
             {
-                world.updateEntityWithOptionalForce(entity, true);
+                entity.mountEntity(mount);
             }
-            
-            entity.mountEntity(mount);
         }
         
         return entity;

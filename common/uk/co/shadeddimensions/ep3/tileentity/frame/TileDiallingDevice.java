@@ -14,6 +14,7 @@ import uk.co.shadeddimensions.ep3.lib.GuiIds;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 
 public class TileDiallingDevice extends TilePortalPart
 {
@@ -21,11 +22,24 @@ public class TileDiallingDevice extends TilePortalPart
     {
         public String name;
         public GlyphIdentifier identifier;
+        public PortalTextureManager texture;
         
         public GlyphElement(String n, GlyphIdentifier i)
         {
             name = n;
             identifier = i;
+            texture = null;
+        }
+        
+        public GlyphElement(String n, GlyphIdentifier i, PortalTextureManager t)
+        {
+            this(n, i);
+            texture = t;
+        }
+        
+        public boolean hasSpecificTexture()
+        {
+            return texture != null;
         }
     }
     
@@ -71,8 +85,15 @@ public class TileDiallingDevice extends TilePortalPart
         for (int i = 0; i < glyphList.size(); i++)
         {
             NBTTagCompound t = new NBTTagCompound();
-            t.setString("Name", glyphList.get(i).name);
-            t.setString("Identifier", glyphList.get(i).identifier.getGlyphString());
+            GlyphElement e = glyphList.get(i);
+            t.setString("Name", e.name);
+            t.setString("Identifier", e.identifier.getGlyphString());
+            
+            if (e.hasSpecificTexture())
+            {
+                e.texture.writeToNBT(t, "texture");
+            }
+            
             list.appendTag(t);
         }
         
@@ -87,8 +108,20 @@ public class TileDiallingDevice extends TilePortalPart
         
         for (int i = 0; i < list.tagCount(); i++)
         {
-            NBTTagCompound t = (NBTTagCompound) list.tagAt(i);            
-            glyphList.add(new GlyphElement(t.getString("Name"), new GlyphIdentifier(t.getString("Identifier"))));
+            NBTTagCompound t = (NBTTagCompound) list.tagAt(i);
+            String name = t.getString("Name"), glyph = t.getString("Identifier");
+            
+            if (t.hasKey("texture"))
+            {
+                PortalTextureManager tex = new PortalTextureManager();
+                tex.readFromNBT(t, "texture");
+                
+                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph), tex));
+            }
+            else
+            {
+                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph)));
+            }
         }
     }
     
