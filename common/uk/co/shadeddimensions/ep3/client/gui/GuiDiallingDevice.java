@@ -39,7 +39,7 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         ySize = 200;        
         glyphSelector = new GuiGlyphIdentifierSelector(7, 140, this);
         glyphViewer = new GuiGlyphIdentifierViewer(7, 104, this, glyphSelector);
-        glyphPage = new GuiGlyphPage(7, 20, xSize - 14, 80, this, (TileDiallingDevice) controller.frameDialler.getBlockTileEntity());
+        glyphPage = new GuiGlyphPage(4, 20, xSize - 14, 80, this, (TileDiallingDevice) controller.frameDialler.getBlockTileEntity());
         warningMessage = "";
         warningTimer = 0;
     }
@@ -52,7 +52,7 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         GL11.glColor4f(1f, 1f, 1f, 1F);
         getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-                
+             
         glyphSelector.drawBackground(i, j);
         glyphViewer.drawBackground(i, j);
         glyphPage.drawBackground(i, j);
@@ -63,7 +63,7 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
             
             GL11.glColor4f(1f, 1f, 1f, 1F);
             getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png"));
-            drawTexturedModalRect(guiLeft + 14, guiTop + 40, 0, ySize, xSize, 56);
+            drawTexturedModalRect(guiLeft + 14, guiTop + 40, 0, ySize, xSize - 30, 56);
             
             textField.drawTextBox();
         }
@@ -137,7 +137,8 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         buttonList.add(acceptButton);
         
         cancelButton.drawButton = acceptButton.drawButton = showOverlay;
-        ((GuiBetterButton) buttonList.get(0)).enabled = ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = !showOverlay;
+        ((GuiBetterButton) buttonList.get(0)).enabled = !showOverlay;
+        ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = !showOverlay && !controller.isPortalActive;
     }
     
     private void setWarningMessage(int type)
@@ -159,12 +160,14 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
                 GuiPayload payload = new GuiPayload();
                 payload.data.setBoolean("DialTerminateRequest", true);
                 ClientProxy.sendGuiPacket(payload);
+                ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = true;
             }
             else if (glyphSelector.getSelectedIdentifier().size() > 0)
             {
                 GuiPayload payload = new GuiPayload();
                 payload.data.setString("DialRequest", glyphSelector.getSelectedIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
+                ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = false;
             }
             else
             {
@@ -264,7 +267,8 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
         textField.setText("Name");
         cancelButton.drawButton = acceptButton.drawButton = showOverlay;
         Keyboard.enableRepeatEvents(showOverlay);
-        ((GuiBetterButton) buttonList.get(0)).enabled = ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = !showOverlay;
+        ((GuiBetterButton) buttonList.get(0)).enabled = !showOverlay;
+        ((GuiBetterButton) buttonList.get(1)).enabled = ((GuiBetterButton) buttonList.get(2)).enabled = !showOverlay && !controller.isPortalActive;
     }
     
     public void selectionChanged(int newSelection)

@@ -7,11 +7,16 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.lib.GuiIds;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.packet.PacketTextureData;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class GuiGlyphPage extends Gui
@@ -61,11 +66,12 @@ public class GuiGlyphPage extends Gui
             drawTexturedModalRect(parent.getGuiLeft() + x, parent.getGuiTop() + y + (i * 16), 0, isMouseOver(i, mX, mY) || isSelected ? 110 : 95, 200, 15);
             
             GL11.glColor3f(1f, 1f, 1f);
-            drawTexturedModalRect(parent.getGuiLeft() + x + 201, parent.getGuiTop() + y + (i * 16), 200, isMouseOverSmall(i, mX, mY) ? 140 : 125, 15, 15);
+            drawTexturedModalRect(parent.getGuiLeft() + x + 201, parent.getGuiTop() + y + (i * 16), 200, isMouseOverSmall(i, mX, mY) ? 170 : 155, 15, 15);
+            drawTexturedModalRect(parent.getGuiLeft() + x + 217, parent.getGuiTop() + y + (i * 16), 200, isMouseOverSmall2(i, mX, mY) ? 140 : 125, 15, 15);
         }
         
-        drawTexturedModalRect(parent.getGuiLeft() + x + 227, parent.getGuiTop() + y, 200, nudge > 0 ? 65 : 50, 15, 15);
-        drawTexturedModalRect(parent.getGuiLeft() + x + 227, parent.getGuiTop() + y + (4 * 16), 200, dialler.glyphList.size() > 5 + nudge ? 20 : 5, 15, 15);
+        drawTexturedModalRect(parent.getGuiLeft() + x + 233, parent.getGuiTop() + y, 200, nudge > 0 ? 65 : 50, 15, 15);
+        drawTexturedModalRect(parent.getGuiLeft() + x + 233, parent.getGuiTop() + y + (4 * 16), 200, dialler.glyphList.size() > 5 + nudge ? 20 : 5, 15, 15);
         
         for (int i = 0; i < 5; i++)
         {
@@ -89,6 +95,12 @@ public class GuiGlyphPage extends Gui
     public boolean isMouseOverSmall(int id, int mX, int mY)
     {
         int X = x + parent.getGuiLeft() + 201, Y = y + (id * 16) + parent.getGuiTop();        
+        return mX >= X && mX <= X + 15 && mY >= Y && mY <= Y + 15;
+    }
+    
+    public boolean isMouseOverSmall2(int id, int mX, int mY)
+    {
+        int X = x + parent.getGuiLeft() + 217, Y = y + (id * 16) + parent.getGuiTop();        
         return mX >= X && mX <= X + 15 && mY >= Y && mY <= Y + 15;
     }
     
@@ -125,6 +137,18 @@ public class GuiGlyphPage extends Gui
                 {
                     return;
                 }
+                                
+                TilePortalController controller = dialler.getPortalController();
+                ClientProxy.editingDialEntry = glyph;
+                PacketDispatcher.sendPacketToServer(new PacketTextureData(glyph, dialler.xCoord, dialler.yCoord, dialler.zCoord).getPacket());
+                parent.getMinecraft().thePlayer.openGui(EnhancedPortals.instance, GuiIds.TEXTURES_DIAL, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
+            }
+            else if (isMouseOverSmall2(i, mX, mY) && mouseButton == 0)
+            {
+                if (i >= dialler.glyphList.size())
+                {
+                    return;
+                }
                 
                 GuiPayload p = new GuiPayload();
                 p.data.setInteger("DeleteGlyph", i);
@@ -136,11 +160,11 @@ public class GuiGlyphPage extends Gui
                     ((GuiDiallingDevice) parent).selectionChanged(glyph);
                 }
             }
-            else if (isMouseOverSmall(x + 227, y, mX, mY) && mouseButton == 0 && nudge > 0)
+            else if (isMouseOverSmall(x + 233, y, mX, mY) && mouseButton == 0 && nudge > 0)
             {
                 nudge--;
             }
-            else if (isMouseOverSmall(x + 227, y + (4 * 16), mX, mY) && mouseButton == 0 && dialler.glyphList.size() > 5 + nudge)
+            else if (isMouseOverSmall(x + 233, y + (4 * 16), mX, mY) && mouseButton == 0 && dialler.glyphList.size() > 5 + nudge)
             {
                 nudge++;
             }

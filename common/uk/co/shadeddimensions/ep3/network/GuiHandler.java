@@ -6,21 +6,17 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDBS;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
-import uk.co.shadeddimensions.ep3.client.gui.GuiParticleTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameController;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameNetworkInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameRedstone;
-import uk.co.shadeddimensions.ep3.client.gui.GuiPortalFrameTexture;
-import uk.co.shadeddimensions.ep3.client.gui.GuiPortalTexture;
+import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerDBS;
 import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
-import uk.co.shadeddimensions.ep3.container.ContainerParticleTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameRedstone;
-import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameTexture;
-import uk.co.shadeddimensions.ep3.container.ContainerPortalTexture;
+import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.lib.GuiIds;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
@@ -44,17 +40,17 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiPortalFrameRedstone(player, (TileRedstoneInterface) tile);
         }
-        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
+        else if (ID == GuiIds.TEXTURES_FRAME && tile instanceof TilePortalController)
         {
-            return new GuiPortalFrameTexture(player, (TilePortalController) tile);
+            return new GuiTexture((TilePortalController) tile, player, 0, true);
         }
-        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
+        else if (ID == GuiIds.TEXTURES_PORTAL && tile instanceof TilePortalController)
         {
-            return new GuiPortalTexture(player, (TilePortalController) tile);
+            return new GuiTexture((TilePortalController) tile, player, 1, true);
         }
-        else if (ID == GuiIds.PARTICLE_TEXTURE && tile instanceof TilePortalController)
+        else if (ID == GuiIds.TEXTURES_PARTICLE && tile instanceof TilePortalController)
         {
-            return new GuiParticleTexture((TilePortalController) tile);
+            return new GuiTexture((TilePortalController) tile, player, 2, true);
         }
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalController)
         {
@@ -67,7 +63,7 @@ public class GuiHandler implements IGuiHandler
         else if (ID == GuiIds.DBS && tile instanceof TileStabilizer)
         {
             TileStabilizer dbs = (TileStabilizer) tile;
-            
+
             if (dbs.hasConfigured)
             {
                 return new GuiDBS(dbs.getMainBlock());
@@ -77,11 +73,19 @@ public class GuiHandler implements IGuiHandler
         {
             TileDiallingDevice dialler = (TileDiallingDevice) tile;
             TilePortalController controller = dialler.getPortalController();
-            
+
             if (controller != null)
             {
                 return new GuiDiallingDevice(controller);
             }
+        }
+        else if (ID == GuiIds.DIALLING_DEVICE && tile instanceof TilePortalController)
+        {
+            return new GuiDiallingDevice((TilePortalController) tile);
+        }
+        else if (ID == GuiIds.TEXTURES_DIAL && tile instanceof TilePortalController)
+        {
+            return new GuiTexture((TilePortalController) tile, player, 0, false);
         }
 
         return null;
@@ -102,17 +106,17 @@ public class GuiHandler implements IGuiHandler
             CommonProxy.sendUpdatePacketToPlayer((TileRedstoneInterface) tile, player);
             return new ContainerPortalFrameRedstone((TileRedstoneInterface) tile);
         }
-        else if (ID == GuiIds.PORTAL_FRAME_TEXTURE && tile instanceof TilePortalController)
+        else if (ID == GuiIds.TEXTURES_FRAME && tile instanceof TilePortalController)
         {
-            return new ContainerPortalFrameTexture(player, (TilePortalController) tile);
+            return new ContainerTexture((TilePortalController) tile, player);
         }
-        else if (ID == GuiIds.PORTAL_TEXTURE && tile instanceof TilePortalController)
+        else if (ID == GuiIds.TEXTURES_PORTAL && tile instanceof TilePortalController)
         {
-            return new ContainerPortalTexture(player, (TilePortalController) tile);
+            return new ContainerTexture((TilePortalController) tile, player);
         }
-        else if (ID == GuiIds.PARTICLE_TEXTURE && tile instanceof TilePortalController)
+        else if (ID == GuiIds.TEXTURES_PARTICLE && tile instanceof TilePortalController)
         {
-            return new ContainerParticleTexture((TilePortalController) tile);
+            return new ContainerTexture((TilePortalController) tile, player);
         }
         else if (ID == GuiIds.NETWORK_INTERFACE && tile instanceof TilePortalController)
         {
@@ -137,11 +141,19 @@ public class GuiHandler implements IGuiHandler
         {
             TileDiallingDevice dialler = (TileDiallingDevice) tile;
             TilePortalController controller = dialler.getPortalController();
-            
+
             if (controller != null)
             {
                 return new ContainerDiallingDevice(controller);
             }
+        }
+        else if (ID == GuiIds.DIALLING_DEVICE && tile instanceof TilePortalController)
+        {
+            return new ContainerDiallingDevice((TilePortalController) tile);
+        }
+        else if (ID == GuiIds.TEXTURES_DIAL && tile instanceof TilePortalController)
+        {
+            return new ContainerTexture((TilePortalController) tile, player);
         }
 
         return null;

@@ -27,7 +27,6 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphEleme
 import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
-import uk.co.shadeddimensions.ep3.util.StackHelper;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -313,6 +312,19 @@ public class TilePortalController extends TilePortalPart
             removePortal();
             return;
         }
+        
+        if (payload.data.hasKey("SetDialTexture") && payload.data.hasKey("TextureData"))
+        {
+            PortalTextureManager ptm = new PortalTextureManager();
+            ptm.readFromNBT(payload.data, "TextureData");
+            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
+            
+            if (dial != null)
+            {
+                System.out.println("Set data!");
+                dial.glyphList.get(payload.data.getInteger("SetDialTexture")).texture = ptm;
+            }
+        }
 
         if (payload.data.hasKey("uniqueIdentifier"))
         {
@@ -405,48 +417,68 @@ public class TilePortalController extends TilePortalPart
         if (payload.data.hasKey("frameColour"))
         {
             activeTextureData.setFrameColour(payload.data.getInteger("frameColour"));
-            //frameColour = payload.data.getInteger("frameColour");
             sendUpdatePacket = true;
         }
 
         if (payload.data.hasKey("portalColour"))
         {
             activeTextureData.setPortalColour(payload.data.getInteger("portalColour"));
-            //portalColour = payload.data.getInteger("portalColour");
             sendUpdatePacket = true;
         }
 
         if (payload.data.hasKey("particleColour"))
         {
             activeTextureData.setParticleColour(payload.data.getInteger("particleColour"));
-            //particleColour = payload.data.getInteger("particleColour");
             sendUpdatePacket = true;
         }
 
         if (payload.data.hasKey("particleType"))
         {
             activeTextureData.setParticleType(payload.data.getInteger("particleType"));
-            //particleType = payload.data.getInteger("particleType");
             sendUpdatePacket = true;
         }
 
         if (payload.data.hasKey("customFrameTexture"))
         {
             activeTextureData.setCustomFrameTexture(payload.data.getInteger("customFrameTexture"));
-            //customFrameTexture = payload.data.getInteger("customFrameTexture");
             sendUpdatePacket = true;
         }
 
         if (payload.data.hasKey("customPortalTexture"))
         {
             activeTextureData.setCustomPortalTexture(payload.data.getInteger("customPortalTexture"));
-            //customPortalTexture = payload.data.getInteger("customPortalTexture");
             sendUpdatePacket = true;
         }
 
         if (payload.data.hasKey("resetSlot"))
         {
-            setInventorySlotContents(payload.data.getInteger("resetSlot"), null);
+            int slot = payload.data.getInteger("resetSlot");
+            
+            if (slot == 0)
+            {
+                activeTextureData.setFrameItem(null);
+            }
+            else if (slot == 1)
+            {
+                activeTextureData.setPortalItem(null);
+            }
+            
+            sendUpdatePacket = true;
+        }
+        
+        if (payload.data.hasKey("portalItemID"))            
+        {
+            int id = payload.data.getInteger("portalItemID"), meta = payload.data.getInteger("portalItemMeta");
+            ItemStack s = id == 0 ? null : new ItemStack(id, 1, meta);
+            activeTextureData.setPortalItem(s);
+            sendUpdatePacket = true;
+        }
+        
+        if (payload.data.hasKey("frameItemID"))
+        {
+            int id = payload.data.getInteger("frameItemID"), meta = payload.data.getInteger("frameItemMeta");
+            ItemStack s = id == 0 ? null : new ItemStack(id, 1, meta);
+            activeTextureData.setFrameItem(s);
             sendUpdatePacket = true;
         }
 
@@ -773,7 +805,7 @@ public class TilePortalController extends TilePortalPart
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return i == 0 ? StackHelper.isItemStackValidForPortalFrameTexture(stack) : StackHelper.isItemStackValidForPortalTexture(stack);
+        return false;
     }
 
     public void setPortalActive(boolean b)

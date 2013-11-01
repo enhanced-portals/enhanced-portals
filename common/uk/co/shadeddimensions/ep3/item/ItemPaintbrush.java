@@ -42,7 +42,7 @@ public class ItemPaintbrush extends ItemPortalTool
 
                 if (control != null)
                 {
-                    player.openGui(EnhancedPortals.instance, isSneaking ? GuiIds.PARTICLE_TEXTURE : GuiIds.PORTAL_TEXTURE, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+                    player.openGui(EnhancedPortals.instance, isSneaking ? GuiIds.TEXTURES_PARTICLE : GuiIds.TEXTURES_PORTAL, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
                 }
             }
             else
@@ -51,7 +51,7 @@ public class ItemPaintbrush extends ItemPortalTool
 
                 if (control != null)
                 {
-                    player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_FRAME_TEXTURE, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
+                    player.openGui(EnhancedPortals.instance, GuiIds.TEXTURES_FRAME, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
                 }
             }
             

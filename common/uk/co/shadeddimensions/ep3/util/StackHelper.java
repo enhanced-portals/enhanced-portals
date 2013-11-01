@@ -4,11 +4,9 @@
 
 package uk.co.shadeddimensions.ep3.util;
 
-import uk.co.shadeddimensions.ep3.api.IPortalModule;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import uk.co.shadeddimensions.ep3.api.IPortalModule;
 
 public class StackHelper
 {
@@ -205,33 +203,6 @@ public class StackHelper
         }
 
         return 5;
-    }
-
-    public static boolean isItemStackValidForPortalFrameTexture(ItemStack stack)
-    {
-        if (stack != null && stack.getItemSpriteNumber() == 0)
-        {
-            return Block.blocksList[stack.itemID].isOpaqueCube();
-        }
-
-        return false;
-    }
-
-    public static boolean isItemStackValidForPortalTexture(ItemStack stack)
-    {
-        if (stack != null)
-        {
-            if (stack.getItemSpriteNumber() == 0)
-            {
-                return true;
-            }
-            else if (FluidContainerRegistry.isFilledContainer(stack))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public static boolean isStackDye(ItemStack stack)

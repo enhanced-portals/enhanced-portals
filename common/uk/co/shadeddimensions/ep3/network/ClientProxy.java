@@ -17,12 +17,16 @@ import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
+    public static int editingDialEntry = -1;
+    public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
+    
     public static ArrayList<Icon> customFrameTextures = new ArrayList<Icon>();
     public static ArrayList<Icon> customPortalTextures = new ArrayList<Icon>();
     public static ArrayList<int[]> particleSets = new ArrayList<int[]>();
