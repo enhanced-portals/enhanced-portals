@@ -321,7 +321,6 @@ public class TilePortalController extends TilePortalPart
             
             if (dial != null)
             {
-                System.out.println("Set data!");
                 dial.glyphList.get(payload.data.getInteger("SetDialTexture")).texture = ptm;
             }
         }

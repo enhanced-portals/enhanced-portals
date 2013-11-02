@@ -27,11 +27,11 @@ public class NetworkManager
     HashMap<String, WorldCoordinates> portalCoordinates;
 
     /*** Reverse lookup for {@link portalCoordinates} ***/
-    HashMap<WorldCoordinates, String> portalCoordinatesReverse; // note: doesn't need to be saved seperately
+    HashMap<WorldCoordinates, String> portalCoordinatesReverse;
 
     /***Portal Identifier, Network Identifier.
      * Used for looking up which portal is in which network, quickly. ***/
-    HashMap<String, String> portalNetworks; // note: doesn't need to be saved seperately
+    HashMap<String, String> portalNetworks;
 
     /*** Network Identifier, Portal Identifier List.
      * Used for looking up all portals in a network,
@@ -163,7 +163,9 @@ public class NetworkManager
 
         try
         {
-            NBTBase.writeNamedTag(baseTag, new DataOutputStream(new FileOutputStream(dataFile)));
+            DataOutputStream s = new DataOutputStream(new FileOutputStream(dataFile));
+            NBTBase.writeNamedTag(baseTag, s);
+            s.close();
         }
         catch (Exception e)
         {

@@ -101,13 +101,8 @@ public class BlockPortal extends BlockEnhancedPortals
 
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
-    {
-        if (world.getBlockMetadata(x, y, z) < 6)
-        {
-            return 14;
-        }
-
-        return 0;
+    {        
+        return 14;
     }
 
     @Override

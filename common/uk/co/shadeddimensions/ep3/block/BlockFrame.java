@@ -200,7 +200,7 @@ public class BlockFrame extends BlockEnhancedPortals
     {
         TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
         
-        if (tile != null)
+        if (tile != null && tile instanceof TilePortalPart)
         {
             TilePortalController controller = ((TilePortalPart) tile).getPortalController();
             
