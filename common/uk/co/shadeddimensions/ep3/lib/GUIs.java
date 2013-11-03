@@ -24,15 +24,15 @@ import com.google.common.base.Throwables;
 
 public enum GUIs
 {
-    PortalController(GuiPortalController.class, ContainerPortalController.class, true),
-    RedstoneInterface(GuiRedstoneInterface.class, ContainerRedstoneInterface.class, true),
-    NetworkInterface(GuiNetworkInterface.class, ContainerNetworkInterface.class, false),
-    ModuleManipulator(GuiModuleManipulator.class, ContainerModuleManipulator.class, false),
-    DimensionalBridgeStabilizer(GuiDimensionalBridgeStabilizer.class, ContainerDimensionalBridgeStabilizer.class, true),
-    DiallingDevice(GuiDiallingDevice.class, ContainerDiallingDevice.class, true),
-    TexturesFrame(GuiTexture.class, ContainerTexture.class, true, 0, true),
-    TexturesPortal(GuiTexture.class, ContainerTexture.class, true, 1, true),
-    TexturesParticle(GuiTexture.class, ContainerTexture.class, true, 2, true),
+    PortalController(GuiPortalController.class, ContainerPortalController.class, true), //
+    RedstoneInterface(GuiRedstoneInterface.class, ContainerRedstoneInterface.class, true), //
+    NetworkInterface(GuiNetworkInterface.class, ContainerNetworkInterface.class, false), //
+    ModuleManipulator(GuiModuleManipulator.class, ContainerModuleManipulator.class, false), //
+    DimensionalBridgeStabilizer(GuiDimensionalBridgeStabilizer.class, ContainerDimensionalBridgeStabilizer.class, true), //
+    DiallingDevice(GuiDiallingDevice.class, ContainerDiallingDevice.class, true), //
+    TexturesFrame(GuiTexture.class, ContainerTexture.class, true, 0, true), //
+    TexturesPortal(GuiTexture.class, ContainerTexture.class, true, 1, true), //
+    TexturesParticle(GuiTexture.class, ContainerTexture.class, true, 2, true), //
     TexturesDiallingDevice(GuiTexture.class, ContainerTexture.class, true, 0, false);
 
     Class<? extends GuiEnhancedPortals> clientGUI;

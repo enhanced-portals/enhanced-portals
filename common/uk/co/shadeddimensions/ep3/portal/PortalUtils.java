@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -50,7 +49,7 @@ public class PortalUtils
         {
             if (!controller.worldObj.isAirBlock(w.posX, w.posY, w.posZ))
             {
-                if (!EnhancedPortals.config.getBoolean("portalsDestroyBlocks"))
+                if (!CommonProxy.portalsDestroyBlocks)
                 {
                     return false;
                 }

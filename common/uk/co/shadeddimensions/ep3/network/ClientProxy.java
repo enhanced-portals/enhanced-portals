@@ -12,10 +12,12 @@ import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.renderer.FrameItemRenderer;
 import uk.co.shadeddimensions.ep3.client.renderer.PortalItemRenderer;
 import uk.co.shadeddimensions.ep3.client.renderer.TileFrameRenderer;
+import uk.co.shadeddimensions.ep3.client.renderer.TileStabilizerRenderer;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -66,6 +68,7 @@ public class ClientProxy extends CommonProxy
     public void registerRenderers()
     {        
         ClientRegistry.bindTileEntitySpecialRenderer(TilePortalPart.class, new TileFrameRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileStabilizer.class, new TileStabilizerRenderer());
         MinecraftForgeClient.registerItemRenderer(blockFrame.blockID, new FrameItemRenderer());
         MinecraftForgeClient.registerItemRenderer(blockPortal.blockID, new PortalItemRenderer());
     }

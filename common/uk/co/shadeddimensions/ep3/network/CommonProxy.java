@@ -1,11 +1,15 @@
 package uk.co.shadeddimensions.ep3.network;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -39,6 +43,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
+    static final int START_BLOCK_ID = 512, START_ITEM_ID = 5000, MAX_BLOCK_ID = 4095, MAX_ITEM_ID = 32000;
+    
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
     public static BlockStabilizer blockStabilizer;
@@ -52,6 +58,12 @@ public class CommonProxy
     public static NetworkManager networkManager;
 
     public static final Logger logger = Logger.getLogger(Reference.NAME);
+    public static Configuration config;
+    
+    int portalID, frameID, stabilizerID; // Block IDs 
+    int wrenchID, gogglesID, paintbrushID, locationCardID, portalModuleID; // Item IDs
+    public static boolean showExtendedRedstoneInformation, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, requirePower; // Bools
+    public static double buildCraftPowerMultiplier, industrialCraftPowerMultiplier, thermalExpansionPowerMultiplier; // Doubles
 
     public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
@@ -100,18 +112,32 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        blockFrame = (BlockFrame) EnhancedPortals.config.registerBlock(BlockFrame.class, ItemFrame.class, Reference.SHORT_ID + ".portalFrame");
-        blockPortal = (BlockPortal) EnhancedPortals.config.registerBlock(BlockPortal.class, Reference.SHORT_ID + ".portal");
-        blockStabilizer = (BlockStabilizer) EnhancedPortals.config.registerBlock(BlockStabilizer.class, ItemStabilizer.class, Reference.SHORT_ID + ".stabilizer");
-    }
+        blockFrame = new BlockFrame(frameID, "ep3.portalFrame");
+        GameRegistry.registerBlock(blockFrame, ItemFrame.class, "ep3.portalFrame");
+        
+        blockPortal = new BlockPortal(portalID, "ep3.portal");
+        GameRegistry.registerBlock(blockPortal, "ep3.portal");
+        
+        blockStabilizer = new BlockStabilizer(stabilizerID, "ep3.stabilizer");
+        GameRegistry.registerBlock(blockStabilizer, ItemStabilizer.class, "ep3.stabilizer");
+}
 
     public void registerItems()
     {
-        itemWrench = (ItemWrench) EnhancedPortals.config.registerItem(ItemWrench.class, Reference.SHORT_ID + ".wrench");
-        itemPaintbrush = (ItemPaintbrush) EnhancedPortals.config.registerItem(ItemPaintbrush.class, Reference.SHORT_ID + ".paintbrush");
-        itemGoggles = (ItemGoggles) EnhancedPortals.config.registerItem(ItemGoggles.class, Reference.SHORT_ID + ".goggles");
-        itemLocationCard = (ItemLocationCard) EnhancedPortals.config.registerItem(ItemLocationCard.class, Reference.SHORT_ID + ".locationCard");
-        itemUpgrade = (ItemPortalModule) EnhancedPortals.config.registerItem(ItemPortalModule.class, Reference.SHORT_ID + ".portalModule");
+        itemWrench = new ItemWrench(wrenchID, "ep3.wrench");
+        GameRegistry.registerItem(itemWrench, "ep3.wrench");
+        
+        itemPaintbrush = new ItemPaintbrush(paintbrushID, "ep3.paintbrush");
+        GameRegistry.registerItem(itemPaintbrush, "ep3.paintbrush");
+        
+        itemGoggles = new ItemGoggles(gogglesID, "ep3.goggles");
+        GameRegistry.registerItem(itemGoggles, "ep3.goggles");
+        
+        itemLocationCard = new ItemLocationCard(locationCardID, "ep3.locationCard");
+        GameRegistry.registerItem(itemLocationCard, "ep3.locationCard");
+        
+        itemUpgrade = new ItemPortalModule(portalModuleID, "ep3.portalModule");
+        GameRegistry.registerItem(itemUpgrade, "ep3.portalModule");
     }
 
     public void registerRenderers()
@@ -134,24 +160,111 @@ public class CommonProxy
 
     public void setupConfiguration()
     {
-        EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portal");
-        EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".portalFrame");
-        EnhancedPortals.config.addBlock(Reference.SHORT_ID + ".stabilizer");
-
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".wrench");
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".goggles");
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".paintbrush");
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".locationCard");
-        EnhancedPortals.config.addItem(Reference.SHORT_ID + ".portalModule");
+        config.load();
         
-        EnhancedPortals.config.addBoolean("showExtendedRedstoneInformation", false).addComment("[Redstone Interface] If enabled, shows a description of what the specific redstone mode does.");
-        EnhancedPortals.config.addBoolean("customNetherPortals", false).addComment("[NI] If enabled, overwrites the Nether portals mechanics to allow any shape/size/horizontal.");
-        EnhancedPortals.config.addBoolean("portalsDestroyBlocks", true).addComment("Portals will destroy blocks that are in their way, if this is enabled. Only applies to blocks placed inside the frame AFTER the portal has been initialized.");
-        EnhancedPortals.config.addBoolean("fasterPortalCooldown", false).addComment("Sets every entities portal cooldown period to 10 ticks (The same as a player). Boats, Minecarts and Horses will always be forced to 10 ticks regardless of this setting.");
+        ////////////// BLOCK IDS /////////////////
+        portalID = resolveFreeBlockID("Portal");
+        frameID = resolveFreeBlockID("Frame");
+        stabilizerID = resolveFreeBlockID("DimensionalBridgeStabilizer");
         
-        EnhancedPortals.config.addInteger("powerCostMultiplier", 1).addComment("Multiplies all power requirements by this value");
+        ////////////// ITEM IDS /////////////////
+        wrenchID = resolveFreeItemID("Wrench");
+        gogglesID = resolveFreeItemID("Glasses");
+        paintbrushID = resolveFreeItemID("Paintbrush");
+        locationCardID  = resolveFreeItemID("LocationCard");
+        portalModuleID = resolveFreeItemID("PortalModule");
         
-        EnhancedPortals.config.fillConfigFile(); // Must be last.
+        ///////////////// REDSTONE INTERFACE /////////////////
+        showExtendedRedstoneInformation = config.get("Redstone Interface", "ShowExtendedRedstoneInformation", false, "If enabled, shows a description of what the specific redstone mode does").getBoolean(true);
+        
+        ///////////////// VANILLA OVERRIDES /////////////////
+        customNetherPortals = config.get("Vanilla Overrides", "CustomNetherPortals", false, "If enabled, overwrites the Nether portals mechanics to allow any shape/size/horizontal portals").getBoolean(false);
+        
+        ///////////////// PORTAL /////////////////
+        portalsDestroyBlocks = config.get("Portal", "PortalsDestroyBlocks", true, "Portals will destroy blocks that are in their way, if this is enabled. Only applies to blocks placed inside the frame AFTER the portal has been initialized").getBoolean(true);
+        fasterPortalCooldown = config.get("Portal", "FasterPortalCooldown", false, "Sets every entities portal cooldown period to 10 ticks (The same as a player). Boats, Minecarts and Horses will always be forced to 10 ticks regardless of this setting. Only affects mobs using EP portals").getBoolean(false);
+        
+        ///////////////// POWER /////////////////
+        requirePower = config.get("Power", "RequirePower", true).getBoolean(true);
+        buildCraftPowerMultiplier = config.get("Power", "BuildCraftPowerMultiplier", 1.0).getDouble(1.0);
+        industrialCraftPowerMultiplier = config.get("Power", "IndustrialCraftPowerMultiplier", 1.0).getDouble(1.0);
+        thermalExpansionPowerMultiplier = config.get("Power", "ThermalExpansionPowerMultiplier", 1.0).getDouble(1.0);
+        
+        ///////////////// CATEGORY COMMENTS /////////////////
+        config.addCustomCategoryComment("Power", "All power multipliers must be 0.0 or higher.");
+        
+        config.save();
+    }
+    
+    int resolveFreeBlockID(String entry)
+    {
+        if (!config.hasKey("Block", entry))
+        {
+            for (int i = START_BLOCK_ID; i < MAX_BLOCK_ID; i++)
+            {
+                if (Block.blocksList[i] == null && !hasUsed(0, i))
+                {
+                    setUsed(0, i);
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            return config.getCategory("Block").get(entry).getInt();
+        }
+        
+        return -1;
+    }
+    
+    int resolveFreeItemID(String entry)
+    {
+        if (!config.hasKey("Item", entry))
+        {
+            for (int i = START_ITEM_ID; i < MAX_ITEM_ID; i++)
+            {
+                if (Item.itemsList[i] == null && !hasUsed(1, i))
+                {
+                    setUsed(1, i);
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            return config.getCategory("Item").get(entry).getInt();
+        }
+        
+        return -1;
+    }
+    
+    ArrayList<Integer> usedBlocks = new ArrayList<Integer>();
+    ArrayList<Integer> usedItems = new ArrayList<Integer>();
+    
+    boolean hasUsed(int i, int j)
+    {
+        if (i == 0)
+        {
+            return usedBlocks.contains(j);
+        }
+        else if (i == 1)
+        {
+            return usedItems.contains(j);
+        }
+                
+        return false;
+    }
+    
+    void setUsed(int i, int j)
+    {
+        if (i == 0)
+        {
+            usedBlocks.add(j);
+        }
+        else if (i == 1)
+        {
+            usedItems.add(j);
+        }
     }
     
     public static boolean isClient()

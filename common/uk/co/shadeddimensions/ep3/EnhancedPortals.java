@@ -12,7 +12,6 @@ import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
-import uk.co.shadeddimensions.ep3.util.ConfigurationManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -32,8 +31,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, serverPacketHandlerSpec = @SidedPacketHandler(channels = Reference.SHORT_ID, packetHandler = PacketHandlerServer.class), clientPacketHandlerSpec = @SidedPacketHandler(channels = Reference.SHORT_ID, packetHandler = PacketHandlerClient.class))
 public class EnhancedPortals
 {
-    public static ConfigurationManager config;
-
     @Instance(Reference.ID)
     public static EnhancedPortals instance;
 
@@ -44,7 +41,6 @@ public class EnhancedPortals
     public void init(FMLInitializationEvent event)
     {
         CommonProxy.logger.setParent(FMLLog.getLogger());
-        proxy.setupConfiguration();
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();
@@ -64,7 +60,8 @@ public class EnhancedPortals
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        config = new ConfigurationManager(new Configuration(event.getSuggestedConfigurationFile()));
+        CommonProxy.config = new Configuration(event.getSuggestedConfigurationFile());
+        proxy.setupConfiguration();
     }
 
     @EventHandler

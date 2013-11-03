@@ -5,11 +5,11 @@ import java.util.List;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.base.GuiResizable;
 import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
@@ -51,7 +51,7 @@ public class GuiRedstoneInterface extends GuiResizable
 
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
 
-        if (MAX_HEIGHT > 58 && !isChanging && EnhancedPortals.config.getBoolean("showExtendedRedstoneInformation"))
+        if (MAX_HEIGHT > 58 && !isChanging && CommonProxy.showExtendedRedstoneInformation)
         {
             fontRenderer.drawSplitString(expandedText, 8, 55, xSize - 16, 0x404040);
         }
@@ -108,7 +108,7 @@ public class GuiRedstoneInterface extends GuiResizable
                 break;
         }
 
-        if (EnhancedPortals.config.getBoolean("showExtendedRedstoneInformation"))
+        if (CommonProxy.showExtendedRedstoneInformation)
         {
             if (!expandedText.equals(oldText))
             {
