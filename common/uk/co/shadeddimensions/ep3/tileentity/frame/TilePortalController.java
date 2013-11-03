@@ -23,11 +23,10 @@ import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
-import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -247,14 +246,14 @@ public class TilePortalController extends TilePortalPart
             inactiveTextureData.writeToNBT(tag, "inactiveTextureData");
         }
 
-        ChunkCoordinateUtils.saveWorldCoordList(tag, portals, "portals");
-        ChunkCoordinateUtils.saveWorldCoordList(tag, frameBasic, "frameBasic");
-        ChunkCoordinateUtils.saveWorldCoordList(tag, frameRedstone, "frameRedstone");
-        ChunkCoordinateUtils.saveWorldCoord(tag, frameBiometric, "frameBiometric");
-        ChunkCoordinateUtils.saveWorldCoord(tag, frameDialler, "frameDialler");
-        ChunkCoordinateUtils.saveWorldCoord(tag, frameModule, "frameModule");
-        ChunkCoordinateUtils.saveWorldCoord(tag, frameNetwork, "frameNetwork");
-        ChunkCoordinateUtils.saveWorldCoord(tag, bridgeStabilizer, "bridgeStabilizer");
+        WorldUtils.saveWorldCoordList(tag, portals, "portals");
+        WorldUtils.saveWorldCoordList(tag, frameBasic, "frameBasic");
+        WorldUtils.saveWorldCoordList(tag, frameRedstone, "frameRedstone");
+        WorldUtils.saveWorldCoord(tag, frameBiometric, "frameBiometric");
+        WorldUtils.saveWorldCoord(tag, frameDialler, "frameDialler");
+        WorldUtils.saveWorldCoord(tag, frameModule, "frameModule");
+        WorldUtils.saveWorldCoord(tag, frameNetwork, "frameNetwork");
+        WorldUtils.saveWorldCoord(tag, bridgeStabilizer, "bridgeStabilizer");
     }
 
     @Override
@@ -274,14 +273,14 @@ public class TilePortalController extends TilePortalPart
             inactiveTextureData.readFromNBT(tag, "inactiveTextureData");
         }
 
-        portals = ChunkCoordinateUtils.loadWorldCoordList(tag, "portals");
-        frameBasic = ChunkCoordinateUtils.loadWorldCoordList(tag, "frameBasic");
-        frameRedstone = ChunkCoordinateUtils.loadWorldCoordList(tag, "frameRedstone");
-        frameBiometric = ChunkCoordinateUtils.loadWorldCoord(tag, "frameBiometric");
-        frameDialler = ChunkCoordinateUtils.loadWorldCoord(tag, "frameDialler");
-        frameModule = ChunkCoordinateUtils.loadWorldCoord(tag, "frameModule");
-        frameNetwork = ChunkCoordinateUtils.loadWorldCoord(tag, "frameNetwork");
-        bridgeStabilizer = ChunkCoordinateUtils.loadWorldCoord(tag, "bridgeStabilizer");
+        portals = WorldUtils.loadWorldCoordList(tag, "portals");
+        frameBasic = WorldUtils.loadWorldCoordList(tag, "frameBasic");
+        frameRedstone = WorldUtils.loadWorldCoordList(tag, "frameRedstone");
+        frameBiometric = WorldUtils.loadWorldCoord(tag, "frameBiometric");
+        frameDialler = WorldUtils.loadWorldCoord(tag, "frameDialler");
+        frameModule = WorldUtils.loadWorldCoord(tag, "frameModule");
+        frameNetwork = WorldUtils.loadWorldCoord(tag, "frameNetwork");
+        bridgeStabilizer = WorldUtils.loadWorldCoord(tag, "bridgeStabilizer");
     }
 
     @Override
@@ -289,42 +288,7 @@ public class TilePortalController extends TilePortalPart
     {
         super.guiActionPerformed(payload, player);
         boolean sendUpdatePacket = false;
-
-        if (payload.data.hasKey("DialRequest"))
-        {
-            String id = payload.data.getString("DialRequest");
-            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-            
-            for (GlyphElement el : dial.glyphList)
-            {
-                if (el.identifier.getGlyphString().equals(id))
-                {
-                    dialRequest(new GlyphIdentifier(id), el.texture);
-                    return;
-                }
-            }
-            
-            dialRequest(new GlyphIdentifier(id));
-            return;
-        }
-        else if (payload.data.hasKey("DialTerminateRequest"))
-        {
-            removePortal();
-            return;
-        }
         
-        if (payload.data.hasKey("SetDialTexture") && payload.data.hasKey("TextureData"))
-        {
-            PortalTextureManager ptm = new PortalTextureManager();
-            ptm.readFromNBT(payload.data, "TextureData");
-            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-            
-            if (dial != null)
-            {
-                dial.glyphList.get(payload.data.getInteger("SetDialTexture")).texture = ptm;
-            }
-        }
-
         if (payload.data.hasKey("uniqueIdentifier"))
         {
             GlyphIdentifier id = new GlyphIdentifier(payload.data.getString("uniqueIdentifier"));
@@ -388,28 +352,6 @@ public class TilePortalController extends TilePortalPart
                     CommonProxy.networkManager.addPortalToNetwork(uID, id);
                     sendUpdatePacket = true;
                 }
-            }
-        }
-
-        if (payload.data.hasKey("GlyphName") && payload.data.hasKey("Glyphs"))
-        {
-            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-
-            if (dial != null)
-            {
-                dial.glyphList.add(dial.new GlyphElement(payload.data.getString("GlyphName"), new GlyphIdentifier(payload.data.getString("Glyphs"))));
-                CommonProxy.sendUpdatePacketToAllAround(dial);
-            }
-        }
-
-        if (payload.data.hasKey("DeleteGlyph"))
-        {
-            TileDiallingDevice dial = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-
-            if (dial != null)
-            {
-                dial.glyphList.remove(payload.data.getInteger("DeleteGlyph"));
-                CommonProxy.sendUpdatePacketToAllAround(dial);
             }
         }
 
@@ -915,12 +857,12 @@ public class TilePortalController extends TilePortalPart
 
     public boolean hasUniqueIdentifier()
     {
-        return CommonProxy.networkManager.hasIdentifier(getWorldCoordinates());
+        return CommonProxy.isClient() ? uniqueID != null : CommonProxy.networkManager.hasIdentifier(getWorldCoordinates());
     }
 
     public boolean hasNetworkIdentifier()
     {
-        return hasUniqueIdentifier() ? CommonProxy.networkManager.hasNetwork(getUniqueIdentifier()) : false;
+        return CommonProxy.isClient() ? networkID != null : hasUniqueIdentifier() ? CommonProxy.networkManager.hasNetwork(getUniqueIdentifier()) : false;
     }
 
     /***

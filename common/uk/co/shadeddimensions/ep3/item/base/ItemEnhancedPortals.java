@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.item;
+package uk.co.shadeddimensions.ep3.item.base;
 
 import net.minecraft.item.Item;
 import uk.co.shadeddimensions.ep3.lib.Reference;

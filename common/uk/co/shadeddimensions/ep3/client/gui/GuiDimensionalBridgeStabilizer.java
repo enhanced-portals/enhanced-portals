@@ -1,21 +1,23 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.container.ContainerDBS;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 
-public class GuiDBS extends GuiEnhancedPortals
+public class GuiDimensionalBridgeStabilizer extends GuiEnhancedPortals
 {
     TileStabilizer DBS;
     
-    public GuiDBS(TileStabilizer stabilizer)
+    public GuiDimensionalBridgeStabilizer(TileStabilizer stabilizer, EntityPlayer player)
     {
-        super(new ContainerDBS(stabilizer), stabilizer);
+        super(new ContainerDimensionalBridgeStabilizer(stabilizer, player), stabilizer);
         DBS = stabilizer;
         ySize = 31;
     }

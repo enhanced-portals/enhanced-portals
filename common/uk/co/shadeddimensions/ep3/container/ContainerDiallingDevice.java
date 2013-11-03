@@ -1,11 +1,11 @@
 package uk.co.shadeddimensions.ep3.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 
 public class ContainerDiallingDevice extends ContainerEnhancedPortals
 {
-    public ContainerDiallingDevice(TilePortalController t)
+    public ContainerDiallingDevice(TileDiallingDevice t, EntityPlayer player)
     {
         super(t.getSizeInventory(), t);
     }
@@ -13,6 +13,6 @@ public class ContainerDiallingDevice extends ContainerEnhancedPortals
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TilePortalController) tile).isUseableByPlayer(entityplayer);
+        return ((TileDiallingDevice) tile).isUseableByPlayer(entityplayer);
     }
 }

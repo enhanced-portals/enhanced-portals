@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiResizable;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierSelector;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierViewer;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
@@ -18,16 +20,16 @@ import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
-public class GuiPortalFrameNetworkInterface extends GuiResizable
+public class GuiNetworkInterface extends GuiResizable
 {
     GuiGlyphIdentifierSelector glyphSelector;
     GuiGlyphIdentifierViewer glyphViewer;
 
     TilePortalController portalController;
 
-    public GuiPortalFrameNetworkInterface(TilePortalController tile)
+    public GuiNetworkInterface(TilePortalController tile, EntityPlayer player)
     {
-        super(new ContainerNetworkInterface(tile), tile, 176, 75, 176, 143);
+        super(new ContainerNetworkInterface(tile, player), tile, 176, 75, 176, 143);
         portalController = tile;
         glyphSelector = new GuiGlyphIdentifierSelector(7, 57, this);
         glyphViewer = new GuiGlyphIdentifierViewer(7, 20, this, glyphSelector);

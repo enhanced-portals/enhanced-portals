@@ -12,16 +12,17 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiResizable;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierSelector;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierViewer;
-import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameController;
+import uk.co.shadeddimensions.ep3.container.ContainerPortalController;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
-public class GuiPortalFrameController extends GuiResizable
+public class GuiPortalController extends GuiResizable
 {
     GuiGlyphIdentifierSelector glyphSelector;
     GuiGlyphIdentifierViewer glyphViewer;
@@ -29,9 +30,9 @@ public class GuiPortalFrameController extends GuiResizable
     TilePortalController controller;
     EntityPlayer player;
 
-    public GuiPortalFrameController(EntityPlayer play, TilePortalController tile)
+    public GuiPortalController(TilePortalController tile, EntityPlayer play)
     {
-        super(new ContainerPortalFrameController(tile), tile, 176, 83, 176, 146);
+        super(new ContainerPortalController(tile, play), tile, 176, 83, 176, 146);
 
         controller = tile;
         player = play;
@@ -94,18 +95,18 @@ public class GuiPortalFrameController extends GuiResizable
         getTextureManager().bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(guiLeft + leftOffset, guiTop + 55, 0, 0, 108, 18);
 
-        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, 1, 5), guiLeft + leftOffset + 1, 103);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, controller.intPortal, 0), guiLeft + leftOffset + 1, 103);
+        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, 1, 5), guiLeft + leftOffset + 1, guiTop + 56);
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockPortal, controller.intPortal, 0), guiLeft + leftOffset + 1, guiTop + 56);
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
-        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 0), guiLeft + leftOffset + 19, 103);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, controller.intBasic, 0), guiLeft + leftOffset + 19, 103);
+        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 0), guiLeft + leftOffset + 19, guiTop + 56);
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, controller.intBasic, 0), guiLeft + leftOffset + 19, guiTop + 56);
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
-        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 2), guiLeft + leftOffset + 37, 103);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, controller.intRedstone, 2), guiLeft + leftOffset + 37, 103, controller.intRedstone + "");
+        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, 1, 2), guiLeft + leftOffset + 37, guiTop + 56);
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, getTextureManager(), new ItemStack(CommonProxy.blockFrame, controller.intRedstone, 2), guiLeft + leftOffset + 37, guiTop + 56, controller.intRedstone + "");
 
         GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -133,7 +134,7 @@ public class GuiPortalFrameController extends GuiResizable
 
             if (s != null)
             {
-                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), s, guiLeft + leftOffset + 55 + 18 * counter, 103);
+                itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, getTextureManager(), s, guiLeft + leftOffset + 55 + 18 * counter, guiTop + 56);
 
                 GL11.glDisable(GL11.GL_LIGHTING);
                 counter++;

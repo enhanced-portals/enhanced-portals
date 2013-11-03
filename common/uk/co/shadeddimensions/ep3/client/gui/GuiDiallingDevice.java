@@ -2,12 +2,14 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierSelector;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiGlyphIdentifierViewer;
@@ -22,6 +24,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 public class GuiDiallingDevice extends GuiEnhancedPortals
 {
     TilePortalController controller;
+    TileDiallingDevice dial;
     GuiGlyphIdentifierSelector glyphSelector;
     GuiGlyphIdentifierViewer glyphViewer;
     GuiGlyphPage glyphPage;
@@ -31,15 +34,15 @@ public class GuiDiallingDevice extends GuiEnhancedPortals
     String warningMessage;
     int warningTimer;
     
-    public GuiDiallingDevice(TilePortalController control)
+    public GuiDiallingDevice(TileDiallingDevice dialler, EntityPlayer player)
     {
-        super(new ContainerDiallingDevice(control), control);
-        controller = control;
+        super(new ContainerDiallingDevice(dialler, player), dialler);
+        controller = dialler.getPortalController();
         xSize = 256;
         ySize = 200;        
         glyphSelector = new GuiGlyphIdentifierSelector(7, 140, this);
         glyphViewer = new GuiGlyphIdentifierViewer(7, 104, this, glyphSelector);
-        glyphPage = new GuiGlyphPage(4, 20, xSize - 14, 80, this, (TileDiallingDevice) controller.frameDialler.getBlockTileEntity());
+        glyphPage = new GuiGlyphPage(4, 20, xSize - 14, 80, this, dialler);
         warningMessage = "";
         warningTimer = 0;
     }

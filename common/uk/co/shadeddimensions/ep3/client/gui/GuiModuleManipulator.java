@@ -6,6 +6,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -14,9 +15,9 @@ public class GuiModuleManipulator extends GuiEnhancedPortals
 {
     TileModuleManipulator module;
 
-    public GuiModuleManipulator(EntityPlayer player, TileModuleManipulator t)
+    public GuiModuleManipulator(TileModuleManipulator t, EntityPlayer player)
     {
-        super(new ContainerModuleManipulator(player, t), t);
+        super(new ContainerModuleManipulator(t, player), t);
         module = t;
     }
 

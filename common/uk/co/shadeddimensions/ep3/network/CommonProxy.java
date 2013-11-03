@@ -18,6 +18,7 @@ import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTileUpdate;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
@@ -166,5 +167,15 @@ public class CommonProxy
     public void miscSetup()
     {
         
+    }
+    
+    public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
+    {
+        openGui(player, gui.ordinal(), tile);
+    }
+    
+    public static void openGui(EntityPlayer player, int id, TileEnhancedPortals tile)
+    {        
+        player.openGui(EnhancedPortals.instance, id, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
     }
 }

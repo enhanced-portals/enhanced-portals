@@ -2,7 +2,7 @@ package uk.co.shadeddimensions.ep3.client.gui.elements;
 
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
-import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 
 public class GuiGlyphIdentifierViewer extends GuiGlyphIdentifierSelector
 {

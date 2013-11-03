@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 
 public class GuiParticleList

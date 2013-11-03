@@ -7,7 +7,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 
 public class ContainerModuleManipulator extends ContainerEnhancedPortals
 {
-    public ContainerModuleManipulator(EntityPlayer player, TileModuleManipulator t)
+    public ContainerModuleManipulator(TileModuleManipulator t, EntityPlayer player)
     {
         super(t.getSizeInventory(), t);
 

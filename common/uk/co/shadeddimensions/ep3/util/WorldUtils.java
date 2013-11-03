@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 
-public class ChunkCoordinateUtils
+public class WorldUtils
 {
     public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)
     {

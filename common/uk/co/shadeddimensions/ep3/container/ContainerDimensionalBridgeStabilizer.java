@@ -3,9 +3,9 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 
-public class ContainerDBS extends ContainerEnhancedPortals
+public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPortals
 {
-    public ContainerDBS(TileStabilizer t)
+    public ContainerDimensionalBridgeStabilizer(TileStabilizer t, EntityPlayer player)
     {
         super(t.getSizeInventory(), t);
     }

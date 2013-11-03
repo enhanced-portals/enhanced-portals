@@ -2,7 +2,7 @@ package uk.co.shadeddimensions.ep3.client.gui.elements;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureMap;

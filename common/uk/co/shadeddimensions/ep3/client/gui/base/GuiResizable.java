@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.client.gui;
+package uk.co.shadeddimensions.ep3.client.gui.base;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
@@ -10,8 +10,8 @@ import uk.co.shadeddimensions.ep3.container.ContainerEnhancedPortals;
 public class GuiResizable extends GuiEnhancedPortals
 {
     static final int RESIZE_RATE = 2;
-    int MAX_HEIGHT, MAX_WIDTH, MIN_HEIGHT, MIN_WIDTH, CURRENT_HEIGHT, CURRENT_WIDTH;
-    boolean expanded, expanding, isChanging;
+    protected int MAX_HEIGHT, MAX_WIDTH, MIN_HEIGHT, MIN_WIDTH, CURRENT_HEIGHT, CURRENT_WIDTH;
+    protected boolean expanded, expanding, isChanging;
 
     public GuiResizable(ContainerEnhancedPortals container, IInventory inventory)
     {

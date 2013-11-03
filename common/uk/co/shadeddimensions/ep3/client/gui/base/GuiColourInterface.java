@@ -1,9 +1,7 @@
-package uk.co.shadeddimensions.ep3.client.gui;
+package uk.co.shadeddimensions.ep3.client.gui.base;
 
 import java.awt.Color;
 import java.util.ArrayList;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -11,6 +9,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.lwjgl.opengl.GL11;
+
 import uk.co.shadeddimensions.ep3.client.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.ep3.client.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.container.ContainerEnhancedPortals;

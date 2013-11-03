@@ -5,7 +5,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
 public class ContainerNetworkInterface extends ContainerEnhancedPortals
 {
-    public ContainerNetworkInterface(TilePortalController t)
+    public ContainerNetworkInterface(TilePortalController t, EntityPlayer player)
     {
         super(t.getSizeInventory(), t);
     }

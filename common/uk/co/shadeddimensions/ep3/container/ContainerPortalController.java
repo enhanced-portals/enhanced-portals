@@ -3,9 +3,9 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
-public class ContainerPortalFrameController extends ContainerEnhancedPortals
+public class ContainerPortalController extends ContainerEnhancedPortals
 {
-    public ContainerPortalFrameController(TilePortalController tile)
+    public ContainerPortalController(TilePortalController tile, EntityPlayer player)
     {
         super(tile.getSizeInventory(), tile);
     }

@@ -22,7 +22,7 @@ import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.ChunkCoordinateUtils;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.relauncher.Side;
@@ -323,11 +323,11 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
 
         tag.setBoolean("hasConfigured", hasConfigured);
         tag.setInteger("rows", rows);
-        ChunkCoordinateUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
+        WorldUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
 
         if (!blockList.isEmpty())
         {
-            ChunkCoordinateUtils.saveChunkCoordList(tag, blockList, "blockList");
+            WorldUtils.saveChunkCoordList(tag, blockList, "blockList");
         }
         
         if (!activeConnections.isEmpty())
@@ -353,11 +353,11 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
 
         hasConfigured = tag.getBoolean("hasConfigured");
         rows = tag.getInteger("rows");
-        mainBlock = ChunkCoordinateUtils.loadChunkCoord(tag, "mainBlock");
+        mainBlock = WorldUtils.loadChunkCoord(tag, "mainBlock");
 
         if (tag.hasKey("blockList"))
         {
-            blockList = ChunkCoordinateUtils.loadChunkCoordList(tag, "blockList");
+            blockList = WorldUtils.loadChunkCoordList(tag, "blockList");
         }
         
         if (tag.hasKey("activeConnections"))

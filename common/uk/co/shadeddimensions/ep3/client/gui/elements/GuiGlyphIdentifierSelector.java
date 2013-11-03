@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.ep3.client.gui.elements;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
-import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 

@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 
 public class GuiFakeItemSlot extends Gui
 {

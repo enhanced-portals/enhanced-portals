@@ -6,21 +6,22 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
-import uk.co.shadeddimensions.ep3.container.ContainerPortalFrameRedstone;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiResizable;
+import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
-public class GuiPortalFrameRedstone extends GuiResizable
+public class GuiRedstoneInterface extends GuiResizable
 {
     TileRedstoneInterface redstone;
     EntityPlayer player;
     String expandedText, oldText;
 
-    public GuiPortalFrameRedstone(EntityPlayer play, TileRedstoneInterface tile)
+    public GuiRedstoneInterface(TileRedstoneInterface tile, EntityPlayer play)
     {
-        super(new ContainerPortalFrameRedstone(tile), tile, 176, 58);
+        super(new ContainerRedstoneInterface(tile, play), tile, 176, 58);
 
         redstone = tile;
         player = play;

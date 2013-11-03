@@ -2,7 +2,7 @@
  * Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
 
-package uk.co.shadeddimensions.ep3.client.gui;
+package uk.co.shadeddimensions.ep3.client.gui.base;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;

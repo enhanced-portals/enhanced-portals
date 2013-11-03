@@ -6,14 +6,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiColourInterface;
 import uk.co.shadeddimensions.ep3.client.gui.button.GuiBetterButton;
 import uk.co.shadeddimensions.ep3.client.gui.button.StandardButtonTextureSets;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiFakeItemSlot;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiIconList;
 import uk.co.shadeddimensions.ep3.client.gui.elements.GuiParticleList;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
-import uk.co.shadeddimensions.ep3.lib.GuiIds;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -282,13 +282,12 @@ public class GuiTexture extends GuiColourInterface
         {
             if (button.id == mainCancelButton.id)
             {
-                getMinecraft().thePlayer.openGui(EnhancedPortals.instance, GuiIds.DIALLING_DEVICE, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
+                ClientProxy.openGui(getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
             }
             else if (button.id == mainSaveButton.id)
             {
                 if (ClientProxy.editingDialEntry == -1)
                 {
-                    System.out.println("Invalid dial entry ID");
                     return;
                 }
                 
@@ -297,7 +296,7 @@ public class GuiTexture extends GuiColourInterface
                 ClientProxy.dialEntryTexture.writeToNBT(payload.data, "TextureData");
                 ClientProxy.sendGuiPacket(payload);
                 ClientProxy.editingDialEntry = -1;
-                getMinecraft().thePlayer.openGui(EnhancedPortals.instance, GuiIds.DIALLING_DEVICE, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
+                ClientProxy.openGui(getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
             }
         }
     }

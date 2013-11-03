@@ -7,17 +7,16 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
-import uk.co.shadeddimensions.ep3.client.gui.GuiEnhancedPortals;
-import uk.co.shadeddimensions.ep3.lib.GuiIds;
+import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTextureData;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiGlyphPage extends Gui
 {
@@ -137,11 +136,10 @@ public class GuiGlyphPage extends Gui
                 {
                     return;
                 }
-                                
-                TilePortalController controller = dialler.getPortalController();
+                
                 ClientProxy.editingDialEntry = glyph;
                 PacketDispatcher.sendPacketToServer(new PacketTextureData(glyph, dialler.xCoord, dialler.yCoord, dialler.zCoord).getPacket());
-                parent.getMinecraft().thePlayer.openGui(EnhancedPortals.instance, GuiIds.TEXTURES_DIAL, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
+                CommonProxy.openGui(parent.getMinecraft().thePlayer, GUIs.TexturesDiallingDevice, dialler.getPortalController());
             }
             else if (isMouseOverSmall2(i, mX, mY) && mouseButton == 0)
             {
