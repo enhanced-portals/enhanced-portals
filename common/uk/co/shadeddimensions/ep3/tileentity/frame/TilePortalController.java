@@ -17,6 +17,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
@@ -684,6 +685,11 @@ public class TilePortalController extends TilePortalPart
     {
         return frameModule != null ? (TileModuleManipulator) worldObj.getBlockTileEntity(frameModule.posX, frameModule.posY, frameModule.posZ) : null;
     }
+    
+    public TileBiometricIdentifier getBiometricIdentifier()
+    {
+        return frameBiometric != null ? (TileBiometricIdentifier) worldObj.getBlockTileEntity(frameBiometric.posX, frameBiometric.posY, frameBiometric.posZ) : null;
+    }
 
     public List<WorldCoordinates> getAllPortalBlocks()
     {
@@ -903,6 +909,17 @@ public class TilePortalController extends TilePortalPart
         }
         else
         {
+            TileBiometricIdentifier bio = getBiometricIdentifier();
+            
+            if (bio != null)
+            {
+                if (!bio.canEntityBeSent(entity))
+                {
+                    EntityManager.setEntityPortalCooldown(entity);
+                    return;
+                }
+            }
+            
             TileStabilizer dbs = getStabilizer();
             dbs.onEntityEnterPortal(uID, entity, portal);
         }

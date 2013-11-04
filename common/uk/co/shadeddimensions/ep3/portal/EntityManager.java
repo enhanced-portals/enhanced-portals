@@ -18,6 +18,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
@@ -137,19 +138,19 @@ public class EntityManager
         {
             if (controller.worldObj.isBlockOpaqueCube(loc.posX, loc.posY, loc.posZ + 1))
             {
-                return 180f;
+                return 180f; // 2
             }
 
-            return 0f;
+            return 0f; // 0
         }
         else if (controller.portalType == 2)
         {
             if (controller.worldObj.isBlockOpaqueCube(loc.posX - 1, loc.posY, loc.posZ))
             {
-                return -90f;
+                return -90f; // 3
             }
 
-            return 90f;
+            return 90f; // 1
         }
 
         return entity.rotationYaw;
@@ -187,7 +188,7 @@ public class EntityManager
 
     public static void setEntityPortalCooldown(Entity entity)
     {
-        if (CommonProxy.fasterPortalCooldown || (entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse))
+        if (CommonProxy.fasterPortalCooldown || (entity instanceof EntityPlayer || entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse))
         {
             entity.timeUntilPortal = PLAYER_COOLDOWN_RATE;
         }
@@ -210,6 +211,17 @@ public class EntityManager
         {
             CommonProxy.logger.fine("Failed to teleport entity - Portal is not active!");
             return;
+        }
+        
+        TileBiometricIdentifier bio = controllerDest.getBiometricIdentifier();
+        
+        if (bio != null)
+        {
+            if (!bio.canEntityBeRecieved(entity))
+            {
+                setEntityPortalCooldown(entity);
+                return;
+            }
         }
 
         ChunkCoordinates exit = getActualExitLocation(entity, controllerDest);
