@@ -71,7 +71,7 @@ public class TilePortalController extends TilePortalPart
         {
             return;
         }
-        
+
         activeTextureData = new PortalTextureManager(inactiveTextureData);
         inactiveTextureData = null;
         CommonProxy.sendUpdatePacketToAllAround(this);
@@ -85,12 +85,10 @@ public class TilePortalController extends TilePortalPart
 
     public void configure(List<WorldCoordinates> tiles, int pType, EntityPlayer player)
     {
-        if (CommonProxy.isClient() || hasConfigured)
+        if (worldObj.isRemote || hasConfigured)
         {
             return;
         }
-
-        System.out.println("Configuring " + tiles.size() + " blocks!");
 
         frameBasic.clear();
         frameRedstone.clear();
@@ -289,7 +287,7 @@ public class TilePortalController extends TilePortalPart
     {
         super.guiActionPerformed(payload, player);
         boolean sendUpdatePacket = false;
-        
+
         if (payload.data.hasKey("uniqueIdentifier"))
         {
             GlyphIdentifier id = new GlyphIdentifier(payload.data.getString("uniqueIdentifier"));
@@ -395,7 +393,7 @@ public class TilePortalController extends TilePortalPart
         if (payload.data.hasKey("resetSlot"))
         {
             int slot = payload.data.getInteger("resetSlot");
-            
+
             if (slot == 0)
             {
                 activeTextureData.setFrameItem(null);
@@ -404,10 +402,10 @@ public class TilePortalController extends TilePortalPart
             {
                 activeTextureData.setPortalItem(null);
             }
-            
+
             sendUpdatePacket = true;
         }
-        
+
         if (payload.data.hasKey("portalItemID"))            
         {
             int id = payload.data.getInteger("portalItemID"), meta = payload.data.getInteger("portalItemMeta");
@@ -415,7 +413,7 @@ public class TilePortalController extends TilePortalPart
             activeTextureData.setPortalItem(s);
             sendUpdatePacket = true;
         }
-        
+
         if (payload.data.hasKey("frameItemID"))
         {
             int id = payload.data.getInteger("frameItemID"), meta = payload.data.getInteger("frameItemMeta");
@@ -448,12 +446,10 @@ public class TilePortalController extends TilePortalPart
             return false;
         }
 
-        if (CommonProxy.isClient() || hasConfigured)
+        if (worldObj.isRemote || hasConfigured)
         {
             return false;
         }
-
-        System.out.println("Configuring controller...");
 
         Queue<WorldCoordinates> portalBlocks = new LinkedList<WorldCoordinates>();
         int pType = 0;
@@ -472,8 +468,6 @@ public class TilePortalController extends TilePortalPart
                     }
                 }
             }
-
-        System.out.println("Found " + portalBlocks.size() + " portal blocks!");
 
         if (!portalBlocks.isEmpty())
         {
@@ -597,7 +591,7 @@ public class TilePortalController extends TilePortalPart
     {
         dialRequest(id, null);
     }
-    
+
     public void dialRequest(GlyphIdentifier id, PortalTextureManager m)
     {
         if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && frameDialler != null)
@@ -622,7 +616,7 @@ public class TilePortalController extends TilePortalPart
      */
     public void createPortal()
     {
-        if (CommonProxy.isClient())
+        if (worldObj.isRemote)
         {
             return;
         }
@@ -650,7 +644,7 @@ public class TilePortalController extends TilePortalPart
      */
     public void removePortal()
     {
-        if (CommonProxy.isClient())
+        if (worldObj.isRemote)
         {
             return;
         }
@@ -685,7 +679,7 @@ public class TilePortalController extends TilePortalPart
     {
         return frameModule != null ? (TileModuleManipulator) worldObj.getBlockTileEntity(frameModule.posX, frameModule.posY, frameModule.posZ) : null;
     }
-    
+
     public TileBiometricIdentifier getBiometricIdentifier()
     {
         return frameBiometric != null ? (TileBiometricIdentifier) worldObj.getBlockTileEntity(frameBiometric.posX, frameBiometric.posY, frameBiometric.posZ) : null;
@@ -776,9 +770,26 @@ public class TilePortalController extends TilePortalPart
 
     public void partBroken()
     {
-        if (!processing && hasConfigured)
+        if (!processing && hasConfigured && !worldObj.isRemote)
         {
             processing = true;
+            
+            if (hasUniqueIdentifier())
+            {
+                TileStabilizer dbs = getStabilizer();
+                
+                if (dbs != null)
+                {
+                    dbs.terminateExistingConnection(getUniqueIdentifier()); // Make sure to terminate any active connections
+                }
+                
+                if (hasNetworkIdentifier())
+                {
+                    CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), getNetworkIdentifier()); // Then remove it from the network
+                }
+                
+                CommonProxy.networkManager.removePortal(getWorldCoordinates()); // And free up the coords and UID
+            }
 
             for (WorldCoordinates c : frameBasic)
             {
@@ -794,9 +805,12 @@ public class TilePortalController extends TilePortalPart
                 CommonProxy.sendUpdatePacketToAllAround(frame);
             }
 
-            for (WorldCoordinates c : portals)
+            if (isPortalActive)
             {
-                worldObj.setBlock(c.posX, c.posY, c.posZ, 0, 0, 2);
+                for (WorldCoordinates c : portals)
+                {
+                    worldObj.setBlock(c.posX, c.posY, c.posZ, 0, 0, 2);
+                }
             }
 
             if (frameModule != null)
@@ -834,24 +848,6 @@ public class TilePortalController extends TilePortalPart
             frameDialler = null;
             frameNetwork = null;
             frameBiometric = null;
-
-            if (hasNetworkIdentifier())
-            {
-                TileStabilizer dbs = getStabilizer();
-
-                if (dbs != null)
-                {
-                    dbs.terminateExistingConnection(getUniqueIdentifier()); // Make sure to terminate any active connections
-                }
-
-                CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), getNetworkIdentifier()); // Then remove it from the network
-            }
-
-            if (hasUniqueIdentifier())
-            {
-                CommonProxy.networkManager.removePortal(getWorldCoordinates()); // And free up the coords and UID
-            }
-
             bridgeStabilizer = null;
             isPortalActive = false;
             hasConfigured = false;
@@ -863,12 +859,12 @@ public class TilePortalController extends TilePortalPart
 
     public boolean hasUniqueIdentifier()
     {
-        return CommonProxy.isClient() ? uniqueID != null : CommonProxy.networkManager.hasIdentifier(getWorldCoordinates());
+        return worldObj.isRemote ? uniqueID != null : CommonProxy.networkManager.hasIdentifier(getWorldCoordinates());
     }
 
     public boolean hasNetworkIdentifier()
     {
-        return CommonProxy.isClient() ? networkID != null : hasUniqueIdentifier() ? CommonProxy.networkManager.hasNetwork(getUniqueIdentifier()) : false;
+        return worldObj.isRemote ? networkID != null : hasUniqueIdentifier() ? CommonProxy.networkManager.hasNetwork(getUniqueIdentifier()) : false;
     }
 
     /***
@@ -877,7 +873,7 @@ public class TilePortalController extends TilePortalPart
      */
     public GlyphIdentifier getUniqueIdentifier()
     {
-        if (CommonProxy.isClient())
+        if (worldObj.isRemote)
         {
             return uniqueID;
         }
@@ -891,7 +887,7 @@ public class TilePortalController extends TilePortalPart
      */
     public GlyphIdentifier getNetworkIdentifier()
     {
-        if (CommonProxy.isClient())
+        if (worldObj.isRemote)
         {
             return networkID;
         }
@@ -910,7 +906,7 @@ public class TilePortalController extends TilePortalPart
         else
         {
             TileBiometricIdentifier bio = getBiometricIdentifier();
-            
+
             if (bio != null)
             {
                 if (!bio.canEntityBeSent(entity))
@@ -919,7 +915,7 @@ public class TilePortalController extends TilePortalPart
                     return;
                 }
             }
-            
+
             TileStabilizer dbs = getStabilizer();
             dbs.onEntityEnterPortal(uID, entity, portal);
         }

@@ -34,12 +34,7 @@ public class TileEnhancedPortals extends TileEntity
     {
         return new WorldCoordinates(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
     }
-    
-    public void guiButtonPressed(int buttonID, EntityPlayer player)
-    {
         
-    }
-    
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         

@@ -124,7 +124,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
                 }
                 else if (this instanceof TileBiometricIdentifier)
                 {
-                    // TODO
+                    CommonProxy.openGui(player, GUIs.BiometricIdentifier, this);
                 }
                 else if (this instanceof TileModuleManipulator)
                 {

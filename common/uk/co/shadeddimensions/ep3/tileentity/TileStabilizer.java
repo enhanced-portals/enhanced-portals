@@ -141,16 +141,18 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
         }
         
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
-        
+ 
         if (cA == null || cB == null)
         {
             if (cA != null)
             {
+                PortalUtils.removePortalFrom(cA);
                 cA.revertTextureData();
             }
             
             if (cB != null)
             {
+                PortalUtils.removePortalFrom(cB);
                 cB.revertTextureData();
             }
             
@@ -175,6 +177,11 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
      */
     public void terminateExistingConnection(GlyphIdentifier identifier)
     {
+        if (identifier == null || identifier.isEmpty())
+        {
+            return;
+        }
+        
         GlyphIdentifier portalA = new GlyphIdentifier(identifier), portalB = null;
         
         if (activeConnections.containsKey(identifier.getGlyphString()))

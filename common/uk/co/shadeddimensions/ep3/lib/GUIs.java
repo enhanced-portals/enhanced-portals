@@ -1,6 +1,7 @@
 package uk.co.shadeddimensions.ep3.lib;
 
 import net.minecraft.entity.player.EntityPlayer;
+import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
@@ -9,6 +10,7 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiPortalController;
 import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
 import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
+import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.container.ContainerEnhancedPortals;
@@ -33,7 +35,8 @@ public enum GUIs
     TexturesFrame(GuiTexture.class, ContainerTexture.class, true, 0, true), //
     TexturesPortal(GuiTexture.class, ContainerTexture.class, true, 1, true), //
     TexturesParticle(GuiTexture.class, ContainerTexture.class, true, 2, true), //
-    TexturesDiallingDevice(GuiTexture.class, ContainerTexture.class, true, 0, false);
+    TexturesDiallingDevice(GuiTexture.class, ContainerTexture.class, true, 0, false), //
+    BiometricIdentifier(GuiBiometricIdentifier.class, ContainerBiometricIdentifier.class, true);
 
     Class<? extends GuiEnhancedPortals> clientGUI;
     Class<? extends ContainerEnhancedPortals> serverGUI;

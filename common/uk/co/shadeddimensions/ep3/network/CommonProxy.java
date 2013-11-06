@@ -4,9 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
@@ -163,26 +161,26 @@ public class CommonProxy
         config.load();
         
         ////////////// BLOCK IDS /////////////////
-        portalID = resolveFreeBlockID("Portal");
-        frameID = resolveFreeBlockID("Frame");
-        stabilizerID = resolveFreeBlockID("DimensionalBridgeStabilizer");
+        portalID = config.getBlock("Portal", 2512).getInt(2512);
+        frameID = config.getBlock("Frame", 2513).getInt(2513);
+        stabilizerID = config.getBlock("DimensionalBridgeStabilizer", 2514).getInt(2514);
         
         ////////////// ITEM IDS /////////////////
-        wrenchID = resolveFreeItemID("Wrench");
-        gogglesID = resolveFreeItemID("Glasses");
-        paintbrushID = resolveFreeItemID("Paintbrush");
-        locationCardID  = resolveFreeItemID("LocationCard");
-        portalModuleID = resolveFreeItemID("PortalModule");
+        wrenchID = config.getItem("Wrench", 10512).getInt(10512);
+        gogglesID = config.getItem("Glasses", 10513).getInt(10513);
+        paintbrushID = config.getItem("Paintbrush", 10514).getInt(10514);
+        locationCardID  = config.getItem("LocationCard", 10516).getInt(10516);
+        portalModuleID = config.getItem("PortalModule", 10517).getInt(10517);
         
         ///////////////// REDSTONE INTERFACE /////////////////
-        showExtendedRedstoneInformation = config.get("Redstone Interface", "ShowExtendedRedstoneInformation", false, "If enabled, shows a description of what the specific redstone mode does").getBoolean(true);
+        showExtendedRedstoneInformation = config.get("RedstoneInterface", "ShowExtendedRedstoneInformation", false, "If enabled, shows a description of what the specific redstone mode does").getBoolean(true);
         
         ///////////////// VANILLA OVERRIDES /////////////////
-        customNetherPortals = config.get("Vanilla Overrides", "CustomNetherPortals", false, "If enabled, overwrites the Nether portals mechanics to allow any shape/size/horizontal portals").getBoolean(false);
+        customNetherPortals = config.get("VanillaOverrides", "CustomNetherPortals", false, "If enabled, overwrites the Nether portals mechanics to allow any shape/size/horizontal portals").getBoolean(false);
         
         ///////////////// PORTAL /////////////////
         portalsDestroyBlocks = config.get("Portal", "PortalsDestroyBlocks", true, "Portals will destroy blocks that are in their way, if this is enabled. Only applies to blocks placed inside the frame AFTER the portal has been initialized").getBoolean(true);
-        fasterPortalCooldown = config.get("Portal", "FasterPortalCooldown", false, "Sets every entities portal cooldown period to 10 ticks (The same as a player). Boats, Minecarts and Horses will always be forced to 10 ticks regardless of this setting. Only affects mobs using EP portals").getBoolean(false);
+        fasterPortalCooldown = config.get("Portal", "FasterPortalCooldown", false, "Sets every entities portal cooldown period to 10 ticks (The same as a player). Boats, Minecarts and Horses will always be forced to 10 ticks regardless of this setting").getBoolean(false);
         
         ///////////////// POWER /////////////////
         requirePower = config.get("Power", "RequirePower", true).getBoolean(true);
@@ -194,48 +192,6 @@ public class CommonProxy
         config.addCustomCategoryComment("Power", "All power multipliers must be 0.0 or higher.");
         
         config.save();
-    }
-    
-    int resolveFreeBlockID(String entry)
-    {
-        if (!config.hasKey("Block", entry))
-        {
-            for (int i = START_BLOCK_ID; i < MAX_BLOCK_ID; i++)
-            {
-                if (Block.blocksList[i] == null && !hasUsed(0, i))
-                {
-                    setUsed(0, i);
-                    return i;
-                }
-            }
-        }
-        else
-        {
-            return config.getCategory("Block").get(entry).getInt();
-        }
-        
-        return -1;
-    }
-    
-    int resolveFreeItemID(String entry)
-    {
-        if (!config.hasKey("Item", entry))
-        {
-            for (int i = START_ITEM_ID; i < MAX_ITEM_ID; i++)
-            {
-                if (Item.itemsList[i] == null && !hasUsed(1, i))
-                {
-                    setUsed(1, i);
-                    return i;
-                }
-            }
-        }
-        else
-        {
-            return config.getCategory("Item").get(entry).getInt();
-        }
-        
-        return -1;
     }
     
     ArrayList<Integer> usedBlocks = new ArrayList<Integer>();

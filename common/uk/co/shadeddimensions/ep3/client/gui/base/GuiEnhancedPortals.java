@@ -552,7 +552,12 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         drawTexturedModalRect(x + w - 4, y + h - 4, 256 - 4, 256 - 4, 4, 4); // Bottom Right
         drawTexturedModalRect(x, y + h - 4, 0, 256 - 4, w - 4, 4); // Bottom
     }
-
+    
+    public void drawHoverText(List<String> list, int x, int y)
+    {
+        drawHoveringText(list, x, y, getFontRenderer());
+    }
+    
     private void drawToolTips(ToolTip toolTips, int mouseX, int mouseY)
     {
         if (toolTips.size() > 0)
@@ -703,5 +708,36 @@ public abstract class GuiEnhancedPortals extends GuiContainer
         super.mouseClicked(par1, par2, mouseButton);
 
         ledgerManager.handleMouseClicked(par1, par2, mouseButton);
+    }
+    
+    public void drawTinyButton(int x, int y, boolean isMouseOver, boolean offset, float r, float g, float b, int buttonType, boolean active)
+    {
+        x = offset ? getGuiLeft() + x : x;
+        y = offset ? getGuiTop() + y : y;
+        
+        getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/buttons.png"));
+        GL11.glColor3f(r, g, b);
+        
+        int textureX = buttonType * 15, textureY = 155 + (isMouseOver ? 15 : 0) - (active ? 0 : isMouseOver ? 30 : 15);
+        drawTexturedModalRect(x, y, textureX, textureY, 15, 15);
+    }
+    
+    public void drawSmallButton(int x, int y, int w, boolean isMouseOver, boolean offset, float r, float g, float b)
+    {
+        x = offset ? getGuiLeft() + x : x;
+        y = offset ? getGuiTop() + y : y;
+        
+        getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/buttons.png"));
+        GL11.glColor3f(r, g, b);
+        
+        if (w == 200)
+        {
+            drawTexturedModalRect(x, y, 0, isMouseOver ? 110 : 95, 200, 15);
+        }
+        else if (w < 200)
+        {
+            drawTexturedModalRect(x, y, 0, isMouseOver ? 110 : 95, w - 10, 15);
+            drawTexturedModalRect(x + w - 10, y, 190, isMouseOver ? 110 : 95, 10, 15);
+        }
     }
 }
