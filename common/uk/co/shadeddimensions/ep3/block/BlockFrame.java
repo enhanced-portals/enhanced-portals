@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.ep3.block;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.material.Material;
@@ -47,16 +46,6 @@ public class BlockFrame extends BlockEnhancedPortals
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
         connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", id, -1);
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public void addCreativeItems(ArrayList list)
-    {
-        for (int i = 0; i < FRAME_TYPES; i++)
-        {
-            list.add(new ItemStack(this, 1, i));
-        }
     }
 
     @Override

@@ -60,8 +60,7 @@ public class EnhancedPortals
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        CommonProxy.config = new Configuration(event.getSuggestedConfigurationFile());
-        proxy.setupConfiguration();
+        proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
     }
 
     @EventHandler

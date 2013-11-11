@@ -1,6 +1,8 @@
 package uk.co.shadeddimensions.ep3.lib;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDimensionalBridgeStabilizer;
@@ -8,16 +10,16 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
 import uk.co.shadeddimensions.ep3.client.gui.GuiNetworkInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalController;
 import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
+import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
-import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
-import uk.co.shadeddimensions.ep3.container.ContainerEnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalController;
 import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
+import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
@@ -36,22 +38,23 @@ public enum GUIs
     TexturesPortal(GuiTexture.class, ContainerTexture.class, true, 1, true), //
     TexturesParticle(GuiTexture.class, ContainerTexture.class, true, 2, true), //
     TexturesDiallingDevice(GuiTexture.class, ContainerTexture.class, true, 0, false), //
-    BiometricIdentifier(GuiBiometricIdentifier.class, ContainerBiometricIdentifier.class, true);
+    BiometricIdentifier(GuiBiometricIdentifier.class, ContainerBiometricIdentifier.class, true), //
+    Scanner(GuiScanner.class, ContainerScanner.class, false);
 
-    Class<? extends GuiEnhancedPortals> clientGUI;
-    Class<? extends ContainerEnhancedPortals> serverGUI;
+    Class<? extends GuiContainer> clientGUI;
+    Class<? extends Container> serverGUI;
     boolean sendPacketFirst;
     int guiType = -1;
     boolean guiSetting;
 
-    private GUIs(Class<? extends GuiEnhancedPortals> gui, Class<? extends ContainerEnhancedPortals> container, boolean sendPacket)
+    private GUIs(Class<? extends GuiContainer> gui, Class<? extends Container> container, boolean sendPacket)
     {
         clientGUI = gui;
         serverGUI = container;
         sendPacketFirst = sendPacket;
     }
 
-    private GUIs(Class<? extends GuiEnhancedPortals> gui, Class<? extends ContainerEnhancedPortals> container, boolean sendPacket, int guitype, boolean guisetting)
+    private GUIs(Class<? extends GuiContainer> gui, Class<? extends Container> container, boolean sendPacket, int guitype, boolean guisetting)
     {
         clientGUI = gui;
         serverGUI = container;
@@ -60,7 +63,7 @@ public enum GUIs
         guiSetting = guisetting;
     }
 
-    public GuiEnhancedPortals getClientGui(TileEnhancedPortals tile, EntityPlayer player)
+    public GuiContainer getClientGui(TileEnhancedPortals tile, EntityPlayer player)
     {
         try
         {
@@ -88,7 +91,7 @@ public enum GUIs
         return null;
     }
 
-    public ContainerEnhancedPortals getServerGui(TileEnhancedPortals tile, EntityPlayer player)
+    public Container getServerGui(TileEnhancedPortals tile, EntityPlayer player)
     {
         try
         {

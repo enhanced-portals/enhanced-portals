@@ -130,7 +130,11 @@ public class GuiEntityList extends GuiScrollList
     @Override
     protected void drawBackgroundEnd()
     {
-        if ((isSending ? biometricIdentifier.sendingEntityTypes : biometricIdentifier.recievingEntityTypes).isEmpty())
+        if (!isSending && !biometricIdentifier.hasSeperateLists)
+        {
+            parent.getFontRenderer().drawSplitString("To set up seperate lists for sending and recieving, activate this list below.", parent.getGuiLeft() + x + 5, parent.getGuiTop() + y + 5, w - 5, 0x000000);
+        }
+        else if ((isSending ? biometricIdentifier.sendingEntityTypes : biometricIdentifier.recievingEntityTypes).isEmpty())
         {
             parent.getFontRenderer().drawSplitString("No entries found", parent.getGuiLeft() + x + 5, parent.getGuiTop() + y + 5, w - 5, 0x000000);
         }
@@ -156,23 +160,23 @@ public class GuiEntityList extends GuiScrollList
                     
                     if (type == 0)
                     {
-                        strList.add("Any entities called");
+                        strList.add("Anything called");
                         strList.add(EnumChatFormatting.GRAY + " " + list.get(l1).name);
                     }
                     else if (type == 1)
                     {
-                        strList.add("Any entities of the type");
+                        strList.add("Anything of the type");
                         strList.add(EnumChatFormatting.GRAY + " " + EntityList.classToStringMapping.get(list.get(l1).clas));
                     }
                     else if (type == 2)
                     {
                         String s = (String) EntityList.classToStringMapping.get(list.get(l1).clas.getSuperclass());
-                        strList.add("Any entities of the type");
+                        strList.add("Anything of the type");
                         strList.add(EnumChatFormatting.GRAY + " " + (s == null ? "Unknown" : s));
                     }
                     else if (type == 3)
                     {
-                        strList.add("Any entities called");
+                        strList.add("Anything called");
                         strList.add(EnumChatFormatting.GRAY + " " + list.get(l1).name);
                         strList.add("With the type of");
                         strList.add(EnumChatFormatting.GRAY + " " + EntityList.classToStringMapping.get(list.get(l1).clas));
@@ -184,11 +188,11 @@ public class GuiEntityList extends GuiScrollList
                     
                     if (type == 0)
                     {
-                        strList.add(EnumChatFormatting.GRAY + " Entity Name");
+                        strList.add(EnumChatFormatting.GRAY + " Name");
                     }
                     else if (type == 1)
                     {
-                        strList.add(EnumChatFormatting.GRAY + " Entity Type");
+                        strList.add(EnumChatFormatting.GRAY + " Type");
                     }
                     else if (type == 2)
                     {
@@ -196,8 +200,8 @@ public class GuiEntityList extends GuiScrollList
                     }
                     else if (type == 3)
                     {
-                        strList.add(EnumChatFormatting.GRAY + " Entity Name");
-                        strList.add(EnumChatFormatting.GRAY + " Entity Type");
+                        strList.add(EnumChatFormatting.GRAY + " Name");
+                        strList.add(EnumChatFormatting.GRAY + " Type");
                     }
                 }
                 

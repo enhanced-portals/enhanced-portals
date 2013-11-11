@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
@@ -115,5 +116,23 @@ public class TileEnhancedPortals extends TileEntity
         {
             ClientProxy.requestTileData(this);
         }
+    }
+    
+    protected byte getHighestPowerState()
+    {
+        byte current = 0;
+
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            byte c = (byte) worldObj.getIndirectPowerLevelTo(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, i);
+
+            if (c > current)
+            {
+                current = c;
+            }
+        }
+
+        return current;
     }
 }

@@ -176,4 +176,16 @@ public class TileDiallingDevice extends TilePortalPart
             }
         }
     }
+
+    public ArrayList<GlyphElement> copyGlyphList()
+    {
+        ArrayList<GlyphElement> list = new ArrayList<GlyphElement>();
+        
+        for(GlyphElement e : glyphList)
+        {
+            list.add(new GlyphElement(e.name, e.identifier, e.texture));
+        }
+        
+        return list;
+    }
 }

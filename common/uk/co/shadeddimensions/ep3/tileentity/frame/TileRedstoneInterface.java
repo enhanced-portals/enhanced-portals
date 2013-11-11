@@ -71,24 +71,6 @@ public class TileRedstoneInterface extends TilePortalPart
         }
     }
     
-    private byte getHighestPowerState()
-    {
-        byte current = 0;
-
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            byte c = (byte) worldObj.getIndirectPowerLevelTo(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, i);
-
-            if (c > current)
-            {
-                current = c;
-            }
-        }
-
-        return current;
-    }
-
     public byte getState()
     {
         return state;

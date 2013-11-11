@@ -558,4 +558,18 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
     {
         return false;
     }
+
+    public GlyphIdentifier getConnectedPortal(GlyphIdentifier uniqueIdentifier)
+    {
+        if (activeConnections.containsKey(uniqueIdentifier.getGlyphString()))
+        {
+            return new GlyphIdentifier(activeConnections.get(uniqueIdentifier.getGlyphString()));
+        }
+        else if (activeConnectionsReverse.containsKey(uniqueIdentifier.getGlyphString()))
+        {
+            return new GlyphIdentifier(activeConnectionsReverse.get(uniqueIdentifier.getGlyphString()));
+        }
+        
+        return null;
+    }
 }

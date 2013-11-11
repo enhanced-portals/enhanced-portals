@@ -253,16 +253,8 @@ public class BlockPortal extends BlockEnhancedPortals
     }
     
     @Override
-    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
+    public boolean canCollideCheck(int par1, boolean par2)
     {
-        TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
-        TilePortalController controller = portal.getPortalController();
-        
-        if (controller != null)
-        {
-            return controller.activeTextureData.getPortalColour();
-        }
-        
-        return super.colorMultiplier(blockAccess, x, y, z);
+        return true;
     }
 }

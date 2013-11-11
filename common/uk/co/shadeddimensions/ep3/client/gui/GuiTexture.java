@@ -2,161 +2,287 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import java.awt.Color;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.client.gui.base.GuiColourInterface;
-import uk.co.shadeddimensions.ep3.client.gui.button.GuiBetterButton;
-import uk.co.shadeddimensions.ep3.client.gui.button.StandardButtonTextureSets;
-import uk.co.shadeddimensions.ep3.client.gui.elements.GuiFakeItemSlot;
-import uk.co.shadeddimensions.ep3.client.gui.elements.GuiIconList;
-import uk.co.shadeddimensions.ep3.client.gui.elements.GuiParticleList;
+import uk.co.shadeddimensions.ep3.client.gui.element.ElementFakeItemSlot;
+import uk.co.shadeddimensions.ep3.client.gui.element.ElementFakeTab;
+import uk.co.shadeddimensions.ep3.client.gui.element.ElementIconScrollList;
+import uk.co.shadeddimensions.ep3.client.gui.element.ElementParticleScrollList;
+import uk.co.shadeddimensions.ep3.client.gui.slider.GuiBetterSlider;
+import uk.co.shadeddimensions.ep3.client.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
+import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import cofh.gui.GuiBase;
+import cofh.gui.element.ElementBase;
+import cofh.gui.element.TabBase;
+import cofh.util.StringHelper;
 
-public class GuiTexture extends GuiColourInterface
+public class GuiTexture extends GuiBase implements IElementHandler
 {
-    TilePortalController controller;
-    int screenState, tabScroll, tabWidth;
-    String[] tabText;
-    boolean editController;
-    
-    GuiIconList frameList, portalList;
-    GuiParticleList particleList;
-    GuiBetterButton backButton, forwardButton, mainCancelButton, mainSaveButton;
-    GuiFakeItemSlot frameItem, portalItem;
-    
-    public GuiTexture(TilePortalController t, EntityPlayer p, int startScreen, boolean editControl)
+    class CustomIconTab extends TabBase
     {
-        super(new ContainerTexture(t, p), t);
-        controller = t;
-        tabText = new String[] { "Frame", "Portal", "Particles" };
-        screenState = startScreen;
-        tabScroll = tabWidth = getMinecraft().fontRenderer.getStringWidth(tabText[screenState]) + 10;        
-        frameList = new GuiIconList(guiLeft + 6, guiTop + 6, 164, 56, this, false);
-        portalList = new GuiIconList(guiLeft + 6, guiTop + 6, 164, 56, this, true);
-        particleList = new GuiParticleList(guiLeft + 6, guiTop + 6, 164, 56, this);
-        frameItem = new GuiFakeItemSlot(152, 64, null, this);
-        portalItem = new GuiFakeItemSlot(152, 64, null, this);
-        editController = editControl;
-    }
-    
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
-        super.drawGuiContainerBackgroundLayer(f, i, j);
-        
-        for (int k = 0; k < 3; k++)
+        public CustomIconTab(GuiBase gui)
         {
-            boolean isActive = screenState == k;
-            float colour = isActive ? 1f : 0.6f;
-            int offset = isActive ? tabScroll : 0;
+            super(gui, 0);
+            backgroundColor = 0xa51e6f;
+            maxHeight += StringHelper.getSplitStringHeight(fontRenderer, "Double click on an option to select it.\n\nDouble click on it again or right click to deselect.\n\nClick and drag up/down to scroll the list.", maxWidth - 8) + 5;
+        }
+
+        @Override
+        public void draw()
+        {
+            drawBackground();
             
-            drawTabFlipped(guiLeft - 25 - offset, guiTop + 10 + (27 * k), 25 + offset, 26, colour, colour, colour);
+            // draw icon here
             
-            if (isActive && tabScroll >= tabWidth)
+            if (isFullyOpened())
             {
-                fontRenderer.drawString(tabText[k], guiLeft + 2 - offset, guiTop + 19 + (27 * k), 0x000000);
+                fontRenderer.drawStringWithShadow("Custom Icon", posX + 24 - maxWidth, posY + 6, 0xe1c92f);
+                fontRenderer.drawSplitString("Double click on an option to select it.\n\nDouble click on it again or right click to deselect.\n\nClick and drag up/down to scroll the list.", posX + 7 - maxWidth, posY + 20, maxWidth - 8, 0xFFFFFF);
             }
         }
-                
-        itemRenderer.renderItemAndEffectIntoGUI(getFontRenderer(), getMinecraft().renderEngine, new ItemStack(CommonProxy.blockFrame), guiLeft - 19 - (screenState == 0 ? tabScroll : 0), guiTop + 15);
-        itemRenderer.renderItemAndEffectIntoGUI(getFontRenderer(), getMinecraft().renderEngine, new ItemStack(CommonProxy.blockPortal), guiLeft - 19 - (screenState == 1 ? tabScroll : 0), guiTop + 42);
-        drawParticle(guiLeft - 19 - (screenState == 2 ? tabScroll : 0), guiTop + 69, 0x0077D8, 7, false);
-        
-        if (screenState == 0)
+
+        @Override
+        public String getTooltip()
         {
-            frameList.drawBackground();
-            frameItem.drawBackground(i, j);
-        }
-        else if (screenState == 1)
-        {
-            portalList.drawBackground();
-            portalItem.drawBackground(i, j);
-        }
-        else if (screenState == 2)
-        {
-            particleList.drawBackground();
-        }
-        
-        if (tabScroll < tabWidth)
-        {
-            tabScroll += 2;
+            return isFullyOpened() ? null : "Custom Icon";
         }
     }
     
-    @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    class FacadeTab extends TabBase
     {
-        super.drawGuiContainerForegroundLayer(par1, par2);
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + "." + (screenState == 0 ? "portalFrameTexture" : screenState == 1 ? "portalTexture" : "particleTexture")), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + "." + (screenState == 0 ? "portalFrameTexture" : screenState == 1 ? "portalTexture" : "particleTexture"))) / 2, -13, 0xFFFFFF);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 70, 0x404040);
+        public FacadeTab(GuiBase gui)
+        {
+            super(gui, 0);
+            backgroundColor = 0x8c35a3;
+            maxHeight += StringHelper.getSplitStringHeight(fontRenderer, "If you set a Facade, the portal part will take the texture of that block.\n\nFacades will get overwritten by any custom icons.", maxWidth - 8) + 5;
+        }
+
+        @Override
+        public void draw()
+        {
+            drawBackground();
+            
+            // draw icon here
+            
+            if (isFullyOpened())
+            {
+                fontRenderer.drawStringWithShadow("Facade", posX + 24 - maxWidth, posY + 6, 0xe1c92f);
+                fontRenderer.drawSplitString("If you set a Facade, the portal part will take the texture of that block.\n\nFacades will get overwritten by any custom icons.", posX + 7 - maxWidth, posY + 20, maxWidth - 8, 0xFFFFFF);
+            }
+        }
+
+        @Override
+        public String getTooltip()
+        {
+            return isFullyOpened() ? null : "Facade";
+        }
     }
     
+    class ColourTab extends TabBase
+    {
+        public ColourTab(GuiBase gui)
+        {
+            super(gui);
+            backgroundColor = 0x5396da;
+            maxHeight += 90;
+        }
+
+        @Override
+        public void draw()
+        {
+            drawBackground();            
+            drawIcon(ItemPaintbrush.texture, posX + 2, posY + 4, 1);
+            
+            if (isFullyOpened())
+            {
+                fontRenderer.drawStringWithShadow("Colour", posX + 24, posY + 7, 0xe1c92f);
+            }
+
+            redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = isFullyOpened();
+        }
+        
+        @Override
+        public boolean handleMouseClicked(int x, int y, int mouseButton)
+        {
+            if (y > posY - 10)
+            {
+                return true;
+            }
+            
+            return false;
+        }
+
+        @Override
+        public String getTooltip()
+        {
+            return null;
+        }
+    }
+    
+    TilePortalController controller;
+    int screenState;
+    boolean editController;
+    GuiButton colourResetButton, colourSaveButton, mainCancelButton, mainSaveButton;
+    GuiRGBSlider redSlider, greenSlider, blueSlider;
+    ColourTab colourTab;
+    
+    ElementIconScrollList frameList, portalList, particleList;
+    ElementFakeItemSlot fakeItem;
+    ElementFakeTab frameTab, portalTab, particleTab;
+
+    public GuiTexture(TilePortalController t, EntityPlayer p, int startScreen, boolean editControl)
+    {
+        super(new ContainerTexture(t, p), new ResourceLocation("enhancedportals", "textures/gui/colourInterface.png"));
+        ySize += 10;
+        controller = t;
+        screenState = startScreen;
+        editController = editControl;
+    }
+
     @SuppressWarnings("unchecked")
-    @Override
     public void initGui()
     {
         super.initGui();
+
+        fakeItem = new ElementFakeItemSlot(this, 151, 74);
+        fakeItem.setVisible(screenState != 2);
+        fakeItem.setItem(screenState == 0 ? getTextureManager().getFrameItem() : getTextureManager().getPortalItem());
+
+        frameList = new ElementIconScrollList(this, texture, 6, 18, 180, 54, ClientProxy.customFrameTextures);
+        frameList.setVisible(screenState == 0);
+        frameList.setSelected(getTextureManager().getCustomFrameTexture());
+
+        portalList = new ElementIconScrollList(this, texture, 6, 18, 180, 54, ClientProxy.customPortalTextures);
+        portalList.setVisible(screenState == 1);
+        portalList.setSelected(getTextureManager().getCustomPortalTexture());
+
+        particleList = new ElementParticleScrollList(this, texture, 6, 18, 180, 54, ClientProxy.particleSets);
+        particleList.setVisible(screenState == 2);
+        particleList.setSelected(getTextureManager().getParticleType());
+
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         
-        frameList.selectedIcon = (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getCustomFrameTexture();
-        portalList.selectedIcon = (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getCustomPortalTexture();
-        particleList.selected = (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getParticleType();
+        frameTab = new ElementFakeTab(this, 5, -18, "Frame", screenState == 0);
+        portalTab = new ElementFakeTab(this, 20 + fontRenderer.getStringWidth("Frame"), -18, "Portal", screenState == 1);
+        particleTab = new ElementFakeTab(this, 35 + fontRenderer.getStringWidth("Frame") + fontRenderer.getStringWidth("Portal"), -18, "Particle", screenState == 2);
         
-        backButton = new GuiBetterButton(1, guiLeft + xSize - 62, guiTop + 64, 16, StandardButtonTextureSets.BACK_BUTTON, "");
-        forwardButton = new GuiBetterButton(2, guiLeft + xSize - 45, guiTop + 64, 16, StandardButtonTextureSets.FORWARD_BUTTON, "");
-        buttonList.add(backButton);
-        buttonList.add(forwardButton);
+        addElement(frameList);
+        addElement(portalList);
+        addElement(particleList);
+        addElement(fakeItem);
+        addElement(frameTab);
+        addElement(portalTab);
+        addElement(particleTab);
         
-        backButton.enabled = screenState == 0 ? frameList.page > 0 : screenState == 1 ? portalList.page > 0 : particleList.page > 0;
-        forwardButton.enabled = (screenState == 0 ? frameList.page : screenState == 1 ? portalList.page : particleList.page) < ((screenState == 0 ? ClientProxy.customFrameTextures.size() : screenState == 1 ? ClientProxy.customPortalTextures.size() : ClientProxy.particleSets.size()) / 27);
-   
-        Color c = new Color(screenState == 0 ? (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getFrameColour() : screenState == 1 ?(editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getPortalColour() : (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getParticleColour());
-        redSlider.sliderValue = c.getRed() / 255f;
-        greenSlider.sliderValue = c.getGreen() / 255f;
-        blueSlider.sliderValue = c.getBlue() / 255f;
+        colourTab = new ColourTab(this);
         
-        frameItem.stack = (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getFrameItem();
-        portalItem.stack = (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getPortalItem();
+        addTab(new CustomIconTab(this));
+        addTab(new FacadeTab(this));
+        addTab(colourTab);
+        
+        // Sliders
+        Color c = new Color(screenState == 0 ? getTextureManager().getFrameColour() : screenState == 1 ? getTextureManager().getPortalColour() : getTextureManager().getParticleColour());
+        redSlider = new GuiRGBSlider(100, guiLeft + xSize + 5, guiTop + 27, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f);
+        greenSlider = new GuiRGBSlider(101, guiLeft + xSize + 5, guiTop + 48, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f);
+        blueSlider = new GuiRGBSlider(102, guiLeft + xSize + 5, guiTop + 69, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f);
+        
+        buttonList.add(redSlider);
+        buttonList.add(greenSlider);
+        buttonList.add(blueSlider);
+        
+        // Buttons
+        colourSaveButton = new GuiButton(110, guiLeft + xSize + 5, guiTop + 90, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save"));
+        colourResetButton = new GuiButton(111, guiLeft + xSize + 68, guiTop + 90, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset"));
+        
+        buttonList.add(colourSaveButton);
+        buttonList.add(colourResetButton);
         
         if (!editController)
         {
-            mainCancelButton = new GuiBetterButton(10, guiLeft, guiTop + ySize + 7, 75, "Cancel");
-            mainSaveButton = new GuiBetterButton(11, guiLeft + xSize - 75, guiTop + ySize + 7, 75, "Save");
-            
+            mainCancelButton = new GuiButton(10, guiLeft, guiTop + ySize + 3, 75, 20, "Cancel");
+            mainSaveButton = new GuiButton(11, guiLeft + xSize - 75, guiTop + ySize + 3, 75, 20, "Save");
+
             buttonList.add(mainCancelButton);
             buttonList.add(mainSaveButton);
+        }
+        
+        redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = colourTab.isFullyOpened();
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
+    {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
+    }
+
+    protected void drawGuiContainerForegroundLayer(int x, int y)
+    {
+        fontRenderer.drawString("Custom Icon", 8, 6, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 82, 0x404040);
+
+        if (screenState != 2)
+        {
+            fontRenderer.drawString("Facade", xSize - 28 - fontRenderer.getStringWidth("Facade"), 79, 0x404040);
+        }
+        
+        super.drawGuiContainerForegroundLayer(x, y);
+    }
+
+    private PortalTextureManager getTextureManager()
+    {
+        return editController ? controller.activeTextureData : ClientProxy.dialEntryTexture;
+    }
+    
+    @Override
+    protected void mouseMovedOrUp(int par1, int par2, int par3)
+    {
+        super.mouseMovedOrUp(par1, par2, par3);
+
+        if (par3 == 0)
+        {
+            for (Object o : buttonList)
+            {
+                if (o instanceof GuiBetterSlider)
+                {
+                    GuiBetterSlider slider = (GuiBetterSlider) o;
+                    slider.mouseReleased(par1, par2);
+                }
+            }
         }
     }
     
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        super.actionPerformed(button);
-        
-        if (button.id == saveButton.id)
+        if (button.id == colourSaveButton.id)
         {
             int hex = Integer.parseInt(String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()), 16);
-            
+
             if (screenState == 0)
             {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setFrameColour(hex);
+                getTextureManager().setFrameColour(hex);
             }
             else if (screenState == 1)
             {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setPortalColour(hex);
+                getTextureManager().setPortalColour(hex);
             }
             else if (screenState == 2)
             {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setParticleColour(hex);
+                getTextureManager().setParticleColour(hex);
             }
-            
+
             if (editController)
             {
                 GuiPayload payload = new GuiPayload();
@@ -164,29 +290,29 @@ public class GuiTexture extends GuiColourInterface
                 ClientProxy.sendGuiPacket(payload);
             }
         }
-        else if (button.id == resetButton.id)
+        else if (button.id == colourResetButton.id)
         {
             int colour = 0xffffff;
-            
+
             if (screenState == 0)
             {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setFrameColour(0xffffff);
+                getTextureManager().setFrameColour(colour);
             }
             else if (screenState == 1)
             {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setPortalColour(0xffffff);
+                getTextureManager().setPortalColour(colour);
             }
             else if (screenState == 2)
             {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setParticleColour(0x0077D8);
                 colour = 0x0077D8;
+                getTextureManager().setParticleColour(colour);
             }
-            
+
             Color c = new Color(colour);
             redSlider.sliderValue = c.getRed() / 255f;
             greenSlider.sliderValue = c.getGreen() / 255f;
             blueSlider.sliderValue = c.getBlue() / 255f;
-            
+
             if (editController)
             {
                 GuiPayload payload = new GuiPayload();
@@ -194,95 +320,11 @@ public class GuiTexture extends GuiColourInterface
                 ClientProxy.sendGuiPacket(payload);
             }
         }
-        else if (button.id == backButton.id)
-        {
-            if (screenState == 0)
-            {
-                if (frameList.page >= 1)
-                {
-                    frameList.page--;
-                    forwardButton.enabled = true;
-                }
-                
-                if (frameList.page == 0)
-                {
-                    button.enabled = false;
-                }
-            }
-            else if (screenState == 1)
-            {
-                if (portalList.page >= 1)
-                {
-                    portalList.page--;
-                    forwardButton.enabled = true;
-                }
-                
-                if (portalList.page == 0)
-                {
-                    button.enabled = false;
-                }
-            }
-            else if (screenState == 2)
-            {
-                if (particleList.page >= 1)
-                {
-                    particleList.page--;
-                    forwardButton.enabled = true;
-                }
-                
-                if (particleList.page == 0)
-                {
-                    button.enabled = false;
-                }
-            }
-        }
-        else if (button.id == forwardButton.id)
-        {
-            if (screenState == 0)
-            {
-                if (frameList.page < ClientProxy.customFrameTextures.size() / 27)
-                {
-                    frameList.page++;
-                    backButton.enabled = true;
-                }
-                
-                if (frameList.page >= ClientProxy.customFrameTextures.size() / 27)
-                {
-                    button.enabled = false;
-                }
-            }
-            else if (screenState == 1)
-            {
-                if (portalList.page < ClientProxy.customPortalTextures.size() / 27)
-                {
-                    portalList.page++;
-                    backButton.enabled = true;
-                }
-                
-                if (portalList.page >= ClientProxy.customPortalTextures.size() / 27)
-                {
-                    button.enabled = false;
-                }
-            }
-            else if (screenState == 2)
-            {
-                if (particleList.page < ClientProxy.particleSets.size() / 27)
-                {
-                    particleList.page++;
-                    backButton.enabled = true;
-                }
-                
-                if (particleList.page >= ClientProxy.particleSets.size() / 27)
-                {
-                    button.enabled = false;
-                }
-            }
-        }
         else if (!editController)
         {
             if (button.id == mainCancelButton.id)
             {
-                ClientProxy.openGui(getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
+                ClientProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
             }
             else if (button.id == mainSaveButton.id)
             {
@@ -290,121 +332,131 @@ public class GuiTexture extends GuiColourInterface
                 {
                     return;
                 }
-                
+
                 GuiPayload payload = new GuiPayload();
                 payload.data.setInteger("SetDialTexture", ClientProxy.editingDialEntry);
                 ClientProxy.dialEntryTexture.writeToNBT(payload.data, "TextureData");
                 ClientProxy.sendGuiPacket(payload);
                 ClientProxy.editingDialEntry = -1;
-                ClientProxy.openGui(getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
+                ClientProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
             }
         }
     }
     
     @Override
-    protected void mouseClicked(int mX, int mY, int mouseButton)
+    public void onElementChanged(ElementBase element, Object data)
     {
-        if (mX >= guiLeft - 25 && mX <= guiLeft)
+        if (element instanceof ElementIconScrollList)
         {
-            for (int i = 0; i < 3; i++)
+            GuiPayload payload = null;
+            
+            if (screenState == 0)
             {
-                if (mY >= guiTop + 10 + (27 * i) && mY <= guiTop + 10 + (27 * i) + 26 && screenState != i)
-                {
-                    screenState = i;
-                    tabScroll = 0;
-                    tabWidth = fontRenderer.getStringWidth(tabText[screenState]) + 10;
-                    backButton.enabled = screenState == 0 ? frameList.page > 0 : screenState == 1 ? portalList.page > 0 : particleList.page > 0;
-                    forwardButton.enabled = (screenState == 0 ? frameList.page : screenState == 1 ? portalList.page : particleList.page) < ((screenState == 0 ? ClientProxy.customFrameTextures.size() : screenState == 1 ? ClientProxy.customPortalTextures.size() : ClientProxy.particleSets.size()) / 27);
-                    
-                    Color c = new Color(screenState == 0 ? (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getFrameColour() : screenState == 1 ? (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getPortalColour() : (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getParticleColour());
-                    redSlider.sliderValue = c.getRed() / 255f;
-                    greenSlider.sliderValue = c.getGreen() / 255f;
-                    blueSlider.sliderValue = c.getBlue() / 255f;
-                    
-                    return;
-                }
+                getTextureManager().setCustomFrameTexture((int) data);
+                
+                payload = new GuiPayload();
+                payload.data.setInteger("customFrameTexture", (int) data);
+            }
+            else if (screenState == 1)
+            {
+                getTextureManager().setCustomPortalTexture((int) data);
+                
+                payload = new GuiPayload();
+                payload.data.setInteger("customPortalTexture", (int) data);
+            }
+            else if (screenState == 2)
+            {
+                getTextureManager().setParticleType((int) data);
+                
+                payload = new GuiPayload();
+                payload.data.setInteger("particleType", (int) data);
+            }
+            
+            if (payload != null)
+            {
+                ClientProxy.sendGuiPacket(payload);
             }
         }
+        else if (element instanceof ElementFakeItemSlot)
+        {
+            GuiPayload payload = null;
+            
+            if (screenState == 0)
+            {
+                ItemStack s = (ItemStack) data;
+                payload = new GuiPayload();
+                
+                getTextureManager().setFrameItem(s);
+                
+                if (s == null)
+                {
+                    payload.data.setInteger("frameItemID", 0);
+                    payload.data.setInteger("frameItemMeta", 0);
+                }
+                else
+                {
+                    payload.data.setInteger("frameItemID", s.itemID);
+                    payload.data.setInteger("frameItemMeta", s.getItemDamage());
+                }
+            }
+            else if (screenState == 1)
+            {
+                ItemStack s = (ItemStack) data;
+                payload = new GuiPayload();
+                
+                getTextureManager().setPortalItem(s);
+                
+                if (s == null)
+                {
+                    payload.data.setInteger("portalItemID", 0);
+                    payload.data.setInteger("portalItemMeta", 0);
+                }
+                else
+                {
+                    payload.data.setInteger("portalItemID", s.itemID);
+                    payload.data.setInteger("portalItemMeta", s.getItemDamage());
+                }
+            }
+            
+            if (payload != null)
+            {
+                ClientProxy.sendGuiPacket(payload);
+            }
+        }
+        else if (element instanceof ElementFakeTab)
+        {
+            if (element.equals(frameTab))
+            {
+                setScreenState(0);
+            }
+            else if (element.equals(portalTab))
+            {
+                setScreenState(1);
+            }
+            if (element.equals(particleTab))
+            {
+                setScreenState(2);
+            }
+        }
+    }
+    
+    private void setScreenState(int state)
+    {
+        screenState = state;
         
-        if (screenState == 0)
-        {
-            frameList.mouseClicked(mX, mY, mouseButton);
-            
-            if (frameList.selectedIcon != (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getCustomFrameTexture())
-            {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setCustomFrameTexture(frameList.selectedIcon);
-                
-                if (editController)
-                {
-                    GuiPayload payload = new GuiPayload();
-                    payload.data.setInteger("customFrameTexture", frameList.selectedIcon);
-                    ClientProxy.sendGuiPacket(payload);
-                }
-            }
-            else if (frameItem.mouseClicked(mX, mY, mouseButton, getMinecraft().thePlayer.inventory.getItemStack()))
-            {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setFrameItem(getMinecraft().thePlayer.inventory.getItemStack());
-                
-                if (editController)
-                {
-                    ItemStack i = controller.activeTextureData.getFrameItem();
-                    
-                    GuiPayload payload = new GuiPayload();
-                    payload.data.setInteger("frameItemID", i != null ? i.itemID : 0);
-                    payload.data.setInteger("frameItemMeta", i != null ? i.getItemDamage() : 0);
-                    ClientProxy.sendGuiPacket(payload);
-                }
-                return;
-            }
-        }
-        else if (screenState == 1)
-        {
-            portalList.mouseClicked(mX, mY, mouseButton);
-            
-            if (portalList.selectedIcon != (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getCustomPortalTexture())
-            {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setCustomPortalTexture(portalList.selectedIcon);
-                
-                if (editController)
-                {
-                    GuiPayload payload = new GuiPayload();
-                    payload.data.setInteger("customPortalTexture", portalList.selectedIcon);
-                    ClientProxy.sendGuiPacket(payload);
-                }
-            }
-            else if (portalItem.mouseClicked(mX, mY, mouseButton, getMinecraft().thePlayer.inventory.getItemStack()))
-            {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setPortalItem(getMinecraft().thePlayer.inventory.getItemStack());
-                
-                if (editController)
-                {
-                    ItemStack i = controller.activeTextureData.getPortalItem();
-                    
-                    GuiPayload payload = new GuiPayload();
-                    payload.data.setInteger("portalItemID", i != null ? i.itemID : 0);
-                    payload.data.setInteger("portalItemMeta", i != null ? i.getItemDamage() : 0);
-                    ClientProxy.sendGuiPacket(payload);
-                }
-                return;
-            }
-        }
-        else if (screenState == 2)
-        {
-            particleList.mouseClicked(mX, mY, mouseButton);
-            
-            if (particleList.selected != (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).getParticleType())
-            {
-                (editController ? controller.activeTextureData : ClientProxy.dialEntryTexture).setParticleType(particleList.selected);
-                
-                if (editController)
-                {
-                    GuiPayload payload = new GuiPayload();
-                    payload.data.setInteger("particleType", particleList.selected);
-                    ClientProxy.sendGuiPacket(payload);
-                }
-            }
-        }
+        frameTab.setActive(state == 0);
+        portalTab.setActive(state == 1);
+        particleTab.setActive(state == 2);
+        fakeItem.setVisible(screenState != 2);
+        frameList.setVisible(screenState == 0);
+        portalList.setVisible(screenState == 1);
+        particleList.setVisible(screenState == 2);
         
-        super.mouseClicked(mX, mY, mouseButton);
+        fakeItem.setItem(screenState == 0 ? getTextureManager().getFrameItem() : getTextureManager().getPortalItem());
+        
+        Color c = new Color(screenState == 0 ? getTextureManager().getFrameColour() : screenState == 1 ? getTextureManager().getPortalColour() : getTextureManager().getParticleColour());
+        redSlider.sliderValue = c.getRed() / 255f;
+        greenSlider.sliderValue = c.getGreen() / 255f;
+        blueSlider.sliderValue = c.getBlue() / 255f;
     }
 }

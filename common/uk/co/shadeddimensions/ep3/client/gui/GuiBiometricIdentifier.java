@@ -23,7 +23,7 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
 {
     TileBiometricIdentifier biometric;
     GuiEntityList sendingList, recievingList;
-    GuiBetterButton leftButton, rightButton;
+    GuiBetterButton leftButton, rightButton, activateRecieveList;
     ToolTip allowTip, disallowTip;
 
     public GuiBiometricIdentifier(TileBiometricIdentifier tile, EntityPlayer player)
@@ -62,6 +62,7 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
         fontRenderer.drawString("Recieving", xSize - 7 - fontRenderer.getStringWidth("Recieving"), 6, 0x404040);
         fontRenderer.drawString("ID Card", 28, ySize - 20, 0x404040);
         fontRenderer.drawString("ID Card", 273 - fontRenderer.getStringWidth("ID Card"), ySize - 20, 0x404040);
+        fontRenderer.drawString(biometric.isActive ? "Active" : "Inactive", xSize / 2 - fontRenderer.getStringWidth(biometric.isActive ? "Active" : "Inactive") / 2, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
     }
     
     @Override
@@ -73,6 +74,8 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
         leftButton.setToolTip(biometric.notFoundSend ? allowTip : disallowTip);
         rightButton.displayString = biometric.notFoundRecieve ? "Allow" : "Disallow";
         rightButton.setToolTip(biometric.notFoundRecieve ? allowTip : disallowTip);
+        rightButton.enabled = biometric.hasSeperateLists;
+        activateRecieveList.displayString = biometric.hasSeperateLists ? "Deactivate" : "Activate";
     }
 
     @SuppressWarnings("unchecked")
@@ -85,22 +88,25 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
         
         disallowTip = new ToolTip();
         disallowTip.add(new ToolTipLine(EnumChatFormatting.RED + "Not Allowing", -1));
-        disallowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "Any entity that is not", -1));
+        disallowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "Anything that is not", -1));
         disallowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "on the above list", -1));
         
         allowTip = new ToolTip();
         allowTip.add(new ToolTipLine(EnumChatFormatting.GREEN + "Allowing", -1));
-        allowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "Any entity that is not", -1));
+        allowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "Anything that is not", -1));
         allowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "on the above list", -1));
 
         leftButton = new GuiBetterButton(0, guiLeft + 7, guiTop + 117, 60, biometric.notFoundSend ? "Allow" : "Disallow");
         rightButton = new GuiBetterButton(1, guiLeft + xSize - 67, guiTop + 117, 60, biometric.notFoundRecieve ? "Allow" : "Disallow");
+        activateRecieveList = new GuiBetterButton(2, guiLeft + xSize - 67, guiTop + 138, 60, biometric.hasSeperateLists ? "Deactivate" : "Activate");
         
         leftButton.setToolTip(biometric.notFoundSend ? allowTip : disallowTip);
         rightButton.setToolTip(biometric.notFoundRecieve ? allowTip : disallowTip);
+        rightButton.enabled = biometric.hasSeperateLists;
 
         buttonList.add(leftButton);
         buttonList.add(rightButton);
+        buttonList.add(activateRecieveList);
     }
 
     @Override
@@ -118,6 +124,12 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
             GuiPayload payload = new GuiPayload();
             payload.data.setBoolean("list", false);
             payload.data.setBoolean("default", false);
+            ClientProxy.sendGuiPacket(payload);
+        }
+        else if (button.id == 2)
+        {
+            GuiPayload payload = new GuiPayload();
+            payload.data.setBoolean("toggleSeperateLists", false);
             ClientProxy.sendGuiPacket(payload);
         }
     }

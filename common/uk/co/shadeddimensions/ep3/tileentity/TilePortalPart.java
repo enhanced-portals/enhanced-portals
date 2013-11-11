@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
@@ -59,6 +60,11 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     {
         ItemStack s = player.inventory.getCurrentItem();
 
+        if (s != null && s.getItem() instanceof ItemSynchronizer)
+        {
+            return false;
+        }
+        
         if ((s != null && s.getItem() instanceof ItemPortalTool) || this instanceof TileDiallingDevice)
         {
             TilePortalController controller = getPortalController();
