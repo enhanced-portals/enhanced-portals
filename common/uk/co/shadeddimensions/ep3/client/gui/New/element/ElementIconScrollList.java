@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.client.gui.element;
+package uk.co.shadeddimensions.ep3.client.gui.New.element;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Mouse;
 
-import uk.co.shadeddimensions.ep3.client.gui.IElementHandler;
+import uk.co.shadeddimensions.ep3.client.gui.New.IElementHandler;
 import cofh.gui.GuiBase;
 import cofh.gui.element.ElementBase;
 

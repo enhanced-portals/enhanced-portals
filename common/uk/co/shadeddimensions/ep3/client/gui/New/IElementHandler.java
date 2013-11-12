@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.client.gui;
+package uk.co.shadeddimensions.ep3.client.gui.New;
 
 import cofh.gui.element.ElementBase;
 

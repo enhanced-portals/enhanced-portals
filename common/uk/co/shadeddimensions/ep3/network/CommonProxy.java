@@ -67,7 +67,7 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean showExtendedRedstoneInformation, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, requirePower; // Bools
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, requirePower; // Bools
     public static double buildCraftPowerMultiplier, industrialCraftPowerMultiplier, thermalExpansionPowerMultiplier; // Doubles
 
     public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
@@ -192,7 +192,7 @@ public class CommonProxy
         configuration.addItemEntry("Synchronizer");
         configuration.addItemEntry("PortalModule");
 
-        showExtendedRedstoneInformation = configuration.get("Misc", "ShowExtendedRedstoneInformation", false);
+        useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
         customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);
 
         portalsDestroyBlocks = configuration.get("Portal", "PortalsDestroyBlocks", true);

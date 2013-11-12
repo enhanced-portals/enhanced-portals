@@ -1,18 +1,18 @@
-package uk.co.shadeddimensions.ep3.client.gui;
+package uk.co.shadeddimensions.ep3.client.gui.New;
 
 import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementFakeItemSlot;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementFakeTab;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementIconScrollList;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementParticleScrollList;
+import uk.co.shadeddimensions.ep3.client.gui.New.element.ElementFakeItemSlot;
+import uk.co.shadeddimensions.ep3.client.gui.New.element.ElementFakeTab;
+import uk.co.shadeddimensions.ep3.client.gui.New.element.ElementIconScrollList;
+import uk.co.shadeddimensions.ep3.client.gui.New.element.ElementParticleScrollList;
 import uk.co.shadeddimensions.ep3.client.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.ep3.client.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
@@ -20,76 +20,16 @@ import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cofh.gui.GuiBase;
 import cofh.gui.element.ElementBase;
 import cofh.gui.element.TabBase;
-import cofh.util.StringHelper;
 
 public class GuiTexture extends GuiBase implements IElementHandler
-{
-    class CustomIconTab extends TabBase
-    {
-        public CustomIconTab(GuiBase gui)
-        {
-            super(gui, 0);
-            backgroundColor = 0xa51e6f;
-            maxHeight += StringHelper.getSplitStringHeight(fontRenderer, "Double click on an option to select it.\n\nDouble click on it again or right click to deselect.\n\nClick and drag up/down to scroll the list.", maxWidth - 8) + 5;
-        }
-
-        @Override
-        public void draw()
-        {
-            drawBackground();
-            
-            // draw icon here
-            
-            if (isFullyOpened())
-            {
-                fontRenderer.drawStringWithShadow("Custom Icon", posX + 24 - maxWidth, posY + 6, 0xe1c92f);
-                fontRenderer.drawSplitString("Double click on an option to select it.\n\nDouble click on it again or right click to deselect.\n\nClick and drag up/down to scroll the list.", posX + 7 - maxWidth, posY + 20, maxWidth - 8, 0xFFFFFF);
-            }
-        }
-
-        @Override
-        public String getTooltip()
-        {
-            return isFullyOpened() ? null : "Custom Icon";
-        }
-    }
-    
-    class FacadeTab extends TabBase
-    {
-        public FacadeTab(GuiBase gui)
-        {
-            super(gui, 0);
-            backgroundColor = 0x8c35a3;
-            maxHeight += StringHelper.getSplitStringHeight(fontRenderer, "If you set a Facade, the portal part will take the texture of that block.\n\nFacades will get overwritten by any custom icons.", maxWidth - 8) + 5;
-        }
-
-        @Override
-        public void draw()
-        {
-            drawBackground();
-            
-            // draw icon here
-            
-            if (isFullyOpened())
-            {
-                fontRenderer.drawStringWithShadow("Facade", posX + 24 - maxWidth, posY + 6, 0xe1c92f);
-                fontRenderer.drawSplitString("If you set a Facade, the portal part will take the texture of that block.\n\nFacades will get overwritten by any custom icons.", posX + 7 - maxWidth, posY + 20, maxWidth - 8, 0xFFFFFF);
-            }
-        }
-
-        @Override
-        public String getTooltip()
-        {
-            return isFullyOpened() ? null : "Facade";
-        }
-    }
-    
+{    
     class ColourTab extends TabBase
     {
         public ColourTab(GuiBase gui)
@@ -171,12 +111,10 @@ public class GuiTexture extends GuiBase implements IElementHandler
         particleList = new ElementParticleScrollList(this, texture, 6, 18, 180, 54, ClientProxy.particleSets);
         particleList.setVisible(screenState == 2);
         particleList.setSelected(getTextureManager().getParticleType());
-
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         
-        frameTab = new ElementFakeTab(this, 5, -18, "Frame", screenState == 0);
-        portalTab = new ElementFakeTab(this, 20 + fontRenderer.getStringWidth("Frame"), -18, "Portal", screenState == 1);
-        particleTab = new ElementFakeTab(this, 35 + fontRenderer.getStringWidth("Frame") + fontRenderer.getStringWidth("Portal"), -18, "Particle", screenState == 2);
+        frameTab = new ElementFakeTab(this, -22, 5, "Frame", new ItemStack(CommonProxy.blockFrame), screenState == 0);
+        portalTab = new ElementFakeTab(this, -22, 26, "Portal", new ItemStack(CommonProxy.blockPortal), screenState == 1);
+        particleTab = new ElementFakeTab(this, -22, 47, "Particle", new ItemStack(Item.blazePowder), screenState == 2);
         
         addElement(frameList);
         addElement(portalList);
@@ -187,9 +125,6 @@ public class GuiTexture extends GuiBase implements IElementHandler
         addElement(particleTab);
         
         colourTab = new ColourTab(this);
-        
-        addTab(new CustomIconTab(this));
-        addTab(new FacadeTab(this));
         addTab(colourTab);
         
         // Sliders

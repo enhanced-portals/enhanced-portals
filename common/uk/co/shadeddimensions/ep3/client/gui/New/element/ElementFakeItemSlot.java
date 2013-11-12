@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.client.gui.element;
+package uk.co.shadeddimensions.ep3.client.gui.New.element;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.IElementHandler;
+import uk.co.shadeddimensions.ep3.client.gui.New.IElementHandler;
 import cofh.gui.GuiBase;
 import cofh.gui.element.ElementBase;
 

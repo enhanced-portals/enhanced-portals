@@ -1,33 +1,25 @@
-package uk.co.shadeddimensions.ep3.client.gui;
-
-import java.util.List;
+package uk.co.shadeddimensions.ep3.client.gui.New;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.client.gui.base.GuiResizable;
 import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import cofh.gui.GuiBase;
 
-public class GuiRedstoneInterface extends GuiResizable
-{
+public class GuiRedstoneInterface extends GuiBase
+{    
     TileRedstoneInterface redstone;
-    EntityPlayer player;
-    String expandedText, oldText;
 
     public GuiRedstoneInterface(TileRedstoneInterface tile, EntityPlayer play)
     {
-        super(new ContainerRedstoneInterface(tile, play), tile, 176, 58);
-
+        super(new ContainerRedstoneInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
         redstone = tile;
-        player = play;
-        expandedText = oldText = "";
-
-        ySize += 40;
+        ySize = 58;
     }
 
     @Override
@@ -50,11 +42,6 @@ public class GuiRedstoneInterface extends GuiResizable
         super.drawGuiContainerForegroundLayer(par1, par2);
 
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
-
-        if (MAX_HEIGHT > 58 && !isChanging && CommonProxy.showExtendedRedstoneInformation)
-        {
-            fontRenderer.drawSplitString(expandedText, 8, 55, xSize - 16, 0x404040);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -67,7 +54,6 @@ public class GuiRedstoneInterface extends GuiResizable
         buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 30, xSize - 16, 20, ""));
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void updateScreen()
     {
@@ -78,64 +64,25 @@ public class GuiRedstoneInterface extends GuiResizable
 
         switch (redstone.getState())
         {
-            default:
-                expandedText = "";
-                break;
-
             case 0:
                 stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalCreated" : "input.portalOnSignal"));
-                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalCreated.desc" : "input.portalOnSignal.desc"));
                 break;
 
             case 1:
                 stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalRemoved" : "input.portalNoSignal"));
-                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalRemoved.desc" : "input.portalNoSignal.desc"));
                 break;
 
             case 2:
                 stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalActive" : "input.portalOnPulse"));
-                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalActive.desc" : "input.portalOnPulse.desc"));
                 break;
 
             case 3:
                 stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalInactive" : "input.noPortalOnPulse"));
-                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalInactive.desc" : "input.noPortalOnPulse.desc"));
                 break;
 
             case 4:
                 stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone.output.entityTouch");
-                expandedText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone.output.entityTouch.desc");
                 break;
-        }
-
-        if (CommonProxy.showExtendedRedstoneInformation)
-        {
-            if (!expandedText.equals(oldText))
-            {
-                oldText = expandedText;
-                List list = getMinecraft().fontRenderer.listFormattedStringToWidth(expandedText, xSize - 16);
-                int tmpHeight = 58 + list.size() * getMinecraft().fontRenderer.FONT_HEIGHT + 5;
-
-                if (MAX_HEIGHT != tmpHeight)
-                {
-                    MAX_HEIGHT = tmpHeight;
-
-                    if (CURRENT_HEIGHT > MAX_HEIGHT)
-                    {
-                        MIN_HEIGHT = MAX_HEIGHT;
-                        expanding = false;
-                    }
-                    else
-                    {
-                        expanding = true;
-                    }
-
-                    if (!isChanging)
-                    {
-                        isChanging = true;
-                    }
-                }
-            }
         }
 
         ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.output") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.input");

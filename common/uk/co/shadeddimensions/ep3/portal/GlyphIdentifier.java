@@ -223,4 +223,19 @@ public class GlyphIdentifier
     {
         glyphs.remove(index);
     }
+
+    public void removeLast(int glyph)
+    {
+        if (hasGlyph(glyph))
+        {
+            for (int i = size() - 1; i >= 0; i--)
+            {
+                if (get(i) == glyph)
+                {
+                    remove(i);
+                    break;
+                }
+            }
+        }
+    }
 }

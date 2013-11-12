@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.client.gui.element;
+package uk.co.shadeddimensions.ep3.client.gui.New.element;
 
 import java.util.ArrayList;
 
