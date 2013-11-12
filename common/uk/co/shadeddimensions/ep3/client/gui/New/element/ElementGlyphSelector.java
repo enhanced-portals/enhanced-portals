@@ -147,4 +147,15 @@ public class ElementGlyphSelector extends ElementBase
     {
         return null;
     }
+
+    public void removeGlyph(int index)
+    {
+        if (index >= 0 && index < identifier.size())
+        {
+            int glyph = identifier.get(index);
+            theCount--;
+            counter[glyph]--;
+            identifier.remove(index);
+        }
+    }
 }

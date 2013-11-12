@@ -6,6 +6,7 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
@@ -14,19 +15,20 @@ public class PortalFX extends EntityFX
     private float portalParticleScale;
     private double portalPosX, portalPosY, portalPosZ;
 
-    public PortalFX(World par1World, TilePortalController controller, TileModuleManipulator module, double par2, double par4, double par6, double par8, double par10, double par12)
+    private ParticleSet particle;
+    private int nextFrame = 1;
+    
+    public PortalFX(World par1World, TilePortalController controller, TileModuleManipulator module, double portalX, double portalY, double portalZ, double xMotion, double yMotion, double zMotion)
     {
-        super(par1World, par2, par4, par6, par8, par10, par12);
-        motionX = par8;
-        motionY = par10;
-        motionZ = par12;
-        portalPosX = posX = par2;
-        portalPosY = posY = par4;
-        portalPosZ = posZ = par6;
-
-        int ParticleColour = controller != null ? controller.activeTextureData.getParticleColour() : 0x0077D8, ParticleType = controller != null ? controller.activeTextureData.getParticleType() : 0;
-
-        Color c = new Color(ParticleColour);
+        super(par1World, portalX, portalY, portalZ, xMotion, yMotion, zMotion);
+        motionX = xMotion;
+        motionY = yMotion;
+        motionZ = zMotion;
+        portalPosX = posX = portalX;
+        portalPosY = posY = portalY;
+        portalPosZ = posZ = portalZ;
+        
+        Color c = new Color(controller != null ? controller.activeTextureData.getParticleColour() : 0x0077D8);
         particleRed = c.getRed() / 255f;
         particleGreen = c.getGreen() / 255f;
         particleBlue = c.getBlue() / 255f;
@@ -34,8 +36,9 @@ public class PortalFX extends EntityFX
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
-
-        setParticleTextureIndex(ClientProxy.particleSets.get(ParticleType)[ClientProxy.random.nextInt(ClientProxy.particleSets.get(ParticleType).length)]);
+        particle = ClientProxy.particleSets.get(controller != null ? controller.activeTextureData.getParticleType() : 0);
+        
+        setParticleTextureIndex(particle.type == 0 ? particle.frames[ClientProxy.random.nextInt(particle.frames.length)] : particle.frames[0]);
 
         if (module != null)
         {
@@ -91,6 +94,25 @@ public class PortalFX extends EntityFX
         posY = portalPosY + motionY * var1 + (1.0F - var2);
         posZ = portalPosZ + motionZ * var1;
 
+        if (particle.type > 0 && particleAge % 5 == 1)
+        {
+            if (nextFrame >= particle.frames.length)
+            {
+                if (particle.type == 2)
+                {
+                    nextFrame = 0;
+                }
+                else
+                {
+                    setDead();
+                    return;
+                }
+            }
+            
+            setParticleTextureIndex(particle.frames[nextFrame]);
+            nextFrame++;
+        }
+        
         if (particleAge++ >= particleMaxAge)
         {
             setDead();

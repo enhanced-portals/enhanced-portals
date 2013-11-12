@@ -1,41 +1,59 @@
 package uk.co.shadeddimensions.ep3.client.gui.New.element;
 
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Mouse;
 
+import uk.co.shadeddimensions.ep3.client.gui.New.IElementHandler;
 import cofh.gui.GuiBase;
 import cofh.gui.element.ElementBase;
 
-public abstract class ElementScrollListBase extends ElementBase
+public class ElementScrollListBase extends ElementBase
 {
-    protected int selected, top, left;
+    protected int actualSelected, selected, top, left;
     protected float scrolled, initialClickY;
     protected long lastClickTimer;
+    protected ResourceLocation texture;
+    @SuppressWarnings("rawtypes")
+    protected ArrayList list;
 
-    public ElementScrollListBase(GuiBase gui, int posX, int posY, int width, int height)
+    public ElementScrollListBase(GuiBase gui, ResourceLocation t, int posX, int posY, int width, int height)
     {
         super(gui, posX, posY);
         sizeX = width;
         sizeY = height;
-        selected = -1;
+        selected = actualSelected = -1;
         scrolled = 0f;
         initialClickY = -2f;
         top = gui.getGuiTop() + posY;
         left = gui.getGuiLeft() + posX;
+        texture = t;
+    }
+    
+    public void setSelected(int i)
+    {   
+        actualSelected = i;
     }
 
     @Override
     public void draw()
     {
-        int mouseX = gui.getMouseX(), mouseY = gui.getMouseY();
+        if (!isVisible())
+        {
+            return;
+        }
+        
+        int mouseX = gui.getMouseX() + gui.getGuiLeft(), mouseY = gui.getMouseY() + gui.getGuiTop();
         drawBackground();
 
         for (int i = 0; i < getElementCount(); i++)
         {
             if (isElementVisible(i))
             {
-                drawElement(i, left, top + (i * (getEntryHeight() + getEntrySpacing())) - (int)scrolled, selected == i, mouseX, mouseY);
+                drawElement(i, left, top + (i * (getEntrySize() + getEntrySpacing())) - (int)scrolled + 1, actualSelected == i, mouseX, mouseY);
             }
         }
 
@@ -48,16 +66,16 @@ public abstract class ElementScrollListBase extends ElementBase
                 if (mouseY >= top && mouseY <= top + sizeY && mouseX >= left && mouseX <= left + sizeX)
                 {
                     int k1 = mouseY - top + (int) scrolled;
-                    int l1 = k1 / (getEntryHeight() + getEntrySpacing());
+                    int entry = k1 / (getEntrySize() + getEntrySpacing());
 
-                    if (l1 >= 0 && l1 < getElementCount())
+                    if (entry >= 0 && entry < getElementCount())
                     {
-                        if (l1 == selected && Minecraft.getSystemTime() - lastClickTimer < 250L)
+                        if (entry == selected && Minecraft.getSystemTime() - lastClickTimer < 250L)
                         {
-                            elementClicked(l1, mouseX, mouseY);
+                            entrySelected(entry, mouseX, mouseY);
                         }
                         
-                        selected = l1;
+                        selected = entry;
                         lastClickTimer = Minecraft.getSystemTime();
                     }
 
@@ -91,30 +109,64 @@ public abstract class ElementScrollListBase extends ElementBase
         drawForeground();
     }
 
+    protected void entrySelected(int entry, int mouseX, int mouseY)
+    {
+        actualSelected = entry;
+        notifyParent();
+    }
+
     /***
      * Gets drawn before all the elements in the list
      */
-    protected abstract void drawBackground();
+    protected void drawBackground()
+    {
+        
+    }
 
     /***
      * Gets drawn after all the elements in the list, after drawing the overlays
      */
-    protected abstract void drawForeground();
+    protected void drawForeground()
+    {
+        if (getElementCount() == 0)
+        {
+            Minecraft.getMinecraft().fontRenderer.drawString("No entries found", posX + 5, posY + 3, 0x999999);
+        }
+    }
 
     /***
      * Gets drawn after all the elements in the list, to hide ones that shouldn't be visible
      */
-    protected abstract void drawOverlays();
+    protected void drawOverlays()
+    {
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        gui.drawTexturedModalRect(posX, posY - getEntrySize(), posX - gui.getGuiLeft(), posY - gui.getGuiTop() - getEntrySize(), sizeX, getEntrySize());
+        gui.drawTexturedModalRect(posX, posY + sizeY, posX - gui.getGuiLeft(), posY - gui.getGuiTop() + sizeY, sizeX, getEntrySize());
+    }
 
-    protected abstract void elementClicked(int i, int mouseX, int mouseY);
-    protected abstract void drawElement(int i, int x, int y, boolean isSelected, int mouseX, int mouseY);
-    protected abstract int getElementCount();
-    protected abstract int getEntryHeight();
-    protected abstract int getEntrySpacing();
+    protected void drawElement(int i, int x, int y, boolean isSelected, int mouseX, int mouseY)
+    {
+        
+    }
+    
+    protected int getElementCount()
+    {
+        return list != null ? list.size() : 0;
+    }
+    
+    protected int getEntrySize()
+    {
+        return 30;
+    }
+    
+    protected int getEntrySpacing()
+    {
+        return 1;
+    }
 
     protected void restrictScrollAmount()
     {
-        int i = getElementCount() * (getEntryHeight() + getEntrySpacing());
+        int i = getElementCount() * (getEntrySize() + getEntrySpacing());
 
         if (i < 0)
         {
@@ -126,21 +178,29 @@ public abstract class ElementScrollListBase extends ElementBase
             scrolled = 0f;
         }
 
-        if (scrolled >= (float) i - getEntryHeight() - getEntrySpacing())
+        if (scrolled >= (float) i - getEntrySize() - getEntrySpacing())
         {
-            scrolled = (float) i - getEntryHeight() - getEntrySpacing();
+            scrolled = (float) i - getEntrySize() - getEntrySpacing();
         }
     }
 
     protected boolean isElementVisible(int i)
     {
-        int yPos = (i * (getEntryHeight() + getEntrySpacing()));
-        return (yPos - scrolled >= -getEntryHeight()) && (yPos - scrolled + getEntryHeight() < sizeY + getEntryHeight()) ? true : false;
+        int yPos = (i * (getEntrySize() + getEntrySpacing()));
+        return (yPos - scrolled >= -getEntrySize()) && (yPos - scrolled + getEntrySize() < sizeY + getEntrySize()) ? true : false;
     }
 
     @Override
     public String getTooltip()
     {
         return null;
+    }
+    
+    protected void notifyParent()
+    {
+        if (gui instanceof IElementHandler)
+        {
+            ((IElementHandler) gui).onElementChanged(this, actualSelected);
+        }
     }
 }
