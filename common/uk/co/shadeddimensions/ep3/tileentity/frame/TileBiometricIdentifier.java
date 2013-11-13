@@ -59,7 +59,7 @@ public class TileBiometricIdentifier extends TilePortalPart
         {
             return true;
         }
-        
+
         boolean wasFound = false;
 
         for (EntityPair pair : sendingEntityTypes)
@@ -70,7 +70,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
             else if (pair.fuzzy == 1 && pair.clas.isInstance(entity))
@@ -79,7 +79,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
             else if (pair.fuzzy == 2 && pair.clas.getSuperclass().isInstance(entity))
@@ -88,7 +88,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
             else if (pair.fuzzy == 3 && pair.name.equals(entity.getEntityName()) && pair.clas.isInstance(entity))
@@ -97,7 +97,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
         }
@@ -122,7 +122,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
             else if (pair.fuzzy == 1 && pair.clas.isInstance(entity))
@@ -131,7 +131,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
             else if (pair.fuzzy == 2 && pair.clas.getSuperclass().isInstance(entity))
@@ -140,7 +140,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
             else if (pair.fuzzy == 3 && pair.name.equals(entity.getEntityName()) && pair.clas.isInstance(entity))
@@ -149,7 +149,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 {
                     return true;
                 }
-                
+
                 wasFound = true;
             }
         }
@@ -231,23 +231,25 @@ public class TileBiometricIdentifier extends TilePortalPart
         String n = t.getString("name");
         byte f = t.getByte("fuzzy");
         boolean b = t.getBoolean("inverted");
-        int entityID = t.getInteger("class");
+        int entityID = t.getInteger("id");
+        Class<? extends Entity> clazz = EntityList.getClassFromID(entityID);
 
-        return new EntityPair(n, EntityList.getClassFromID(entityID), f, b);
+        return clazz == null ? null : new EntityPair(n, clazz, f, b);
     }
 
     void writeEntityPairToNBT(NBTTagList list, EntityPair p)
     {
-        NBTTagCompound t = new NBTTagCompound();
-        t.setString("name", p.name);
-        t.setByte("fuzzy", p.fuzzy);
         if (EntityList.classToIDMapping.get(p.clas) != null)
         {
-            t.setInteger("class", Integer.parseInt(EntityList.classToIDMapping.get(p.clas).toString()));
-        }
-        t.setBoolean("inverted", p.inverted);
+            NBTTagCompound t = new NBTTagCompound();
+            
+            t.setString("name", p.name);
+            t.setByte("fuzzy", p.fuzzy);
+            t.setBoolean("inverted", p.inverted);
+            t.setInteger("id", Integer.parseInt(EntityList.classToIDMapping.get(p.clas).toString()));
 
-        list.appendTag(t);
+            list.appendTag(t);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -282,10 +284,10 @@ public class TileBiometricIdentifier extends TilePortalPart
                 e.printStackTrace();
                 return;
             }
-            
+
             sendingEntityTypes.add(new EntityPair(name, c, fuzzy, b));
         }
-        
+
         if (hasSeperateLists)
         {
             size = stream.readByte();
@@ -307,7 +309,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                     e.printStackTrace();
                     return;
                 }
-                
+
                 recievingEntityTypes.add(new EntityPair(name, c, fuzzy, b));
             }
         }
@@ -345,28 +347,28 @@ public class TileBiometricIdentifier extends TilePortalPart
             }
         }
     }
-    
+
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         super.guiActionPerformed(payload, player);
-        
+
         if (payload.data.hasKey("list"))
         {
             boolean list = payload.data.getBoolean("list");
-            
+
             if (payload.data.hasKey("invert"))
             {
                 int id = payload.data.getInteger("invert");
-                
+
                 (list ? sendingEntityTypes : recievingEntityTypes).get(id).inverted = !(list ? sendingEntityTypes : recievingEntityTypes).get(id).inverted;
             }
             else if (payload.data.hasKey("type"))
             {
                 int id = payload.data.getInteger("type");
-                
+
                 (list ? sendingEntityTypes : recievingEntityTypes).get(id).fuzzy++;
-                
+
                 if ((list ? sendingEntityTypes : recievingEntityTypes).get(id).fuzzy > 3)
                 {
                     (list ? sendingEntityTypes : recievingEntityTypes).get(id).fuzzy = 0;
@@ -375,7 +377,7 @@ public class TileBiometricIdentifier extends TilePortalPart
             else if (payload.data.hasKey("remove"))
             {
                 int id = payload.data.getInteger("remove");
-                
+
                 (list ? sendingEntityTypes : recievingEntityTypes).remove(id);
             }
             else if (payload.data.hasKey("default"))
@@ -389,7 +391,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                     notFoundRecieve = !notFoundRecieve;
                 }
             }
-            
+
             CommonProxy.sendUpdatePacketToAllAround(this);
         }
         else if (payload.data.hasKey("toggleSeperateLists"))
@@ -398,7 +400,7 @@ public class TileBiometricIdentifier extends TilePortalPart
             CommonProxy.sendUpdatePacketToAllAround(this);
         }
     }
-    
+
     @Override
     public void onNeighborBlockChange(int blockID)
     {
@@ -408,24 +410,24 @@ public class TileBiometricIdentifier extends TilePortalPart
     public ArrayList<EntityPair> copySendingEntityTypes()
     {
         ArrayList<EntityPair> list = new ArrayList<EntityPair>();
-        
+
         for (EntityPair pair : sendingEntityTypes)
         {
             list.add(new EntityPair(pair.name, pair.clas, pair.fuzzy, pair.inverted));
         }
-        
+
         return list;
     }
 
     public ArrayList<EntityPair> copyRecievingEntityTypes()
     {
         ArrayList<EntityPair> list = new ArrayList<EntityPair>();
-        
+
         for (EntityPair pair : recievingEntityTypes)
         {
             list.add(new EntityPair(pair.name, pair.clas, pair.fuzzy, pair.inverted));
         }
-        
+
         return list;
     }
 }

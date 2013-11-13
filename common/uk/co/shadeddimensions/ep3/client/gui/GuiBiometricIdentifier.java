@@ -1,61 +1,55 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
-import uk.co.shadeddimensions.ep3.client.gui.button.GuiBetterButton;
-import uk.co.shadeddimensions.ep3.client.gui.scroll.GuiEntityList;
-import uk.co.shadeddimensions.ep3.client.gui.tooltips.ToolTip;
-import uk.co.shadeddimensions.ep3.client.gui.tooltips.ToolTipLine;
+import uk.co.shadeddimensions.ep3.client.gui.element.ElementDialDeviceScrollList;
+import uk.co.shadeddimensions.ep3.client.gui.element.ElementEntityFilterList;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import cofh.gui.GuiBase;
+import cofh.gui.element.ElementBase;
 
-public class GuiBiometricIdentifier extends GuiEnhancedPortals
+public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
 {
     TileBiometricIdentifier biometric;
-    GuiEntityList sendingList, recievingList;
-    GuiBetterButton leftButton, rightButton, activateRecieveList;
-    ToolTip allowTip, disallowTip;
+    GuiButton leftButton, rightButton, activateRecieveList;
+    ElementEntityFilterList sendList, recieveList;
 
     public GuiBiometricIdentifier(TileBiometricIdentifier tile, EntityPlayer player)
     {
-        super(new ContainerBiometricIdentifier(tile, player), tile);
+        super(new ContainerBiometricIdentifier(tile, player));
         xSize = 300;
         ySize = 200;
         biometric = tile;
-        sendingList = new GuiEntityList(this, 7, 17, 120, 95, tile, true, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"));
-        recievingList = new GuiEntityList(this, xSize - 127, 17, 120, 95, tile, false, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"));
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        super.drawGuiContainerBackgroundLayer(f, i, j);
-        GL11.glColor4f(1f, 1f, 1f, 1f);
+        updateElements();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/biometric.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 256, ySize);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"));
         drawTexturedModalRect(guiLeft + 150, guiTop, 0, 0, 150, ySize);
 
-        sendingList.drawBackground(i, j);
-        recievingList.drawBackground(i, j);
+        drawElements();
+        drawTabs();
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        sendingList.drawForeground(par1, par2);
-        recievingList.drawForeground(par1, par2);
 
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.biometric.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.biometric.name")) / 2, -13, 0xFFFFFF);
         fontRenderer.drawString("Sending", 7, 6, 0x404040);
@@ -71,9 +65,7 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
         super.updateScreen();
         
         leftButton.displayString = biometric.notFoundSend ? "Allow" : "Disallow";
-        leftButton.setToolTip(biometric.notFoundSend ? allowTip : disallowTip);
         rightButton.displayString = biometric.notFoundRecieve ? "Allow" : "Disallow";
-        rightButton.setToolTip(biometric.notFoundRecieve ? allowTip : disallowTip);
         rightButton.enabled = biometric.hasSeperateLists;
         activateRecieveList.displayString = biometric.hasSeperateLists ? "Deactivate" : "Activate";
     }
@@ -83,30 +75,20 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
     public void initGui()
     {
         super.initGui();
-        sendingList.init();
-        recievingList.init();
         
-        disallowTip = new ToolTip();
-        disallowTip.add(new ToolTipLine(EnumChatFormatting.RED + "Not Allowing", -1));
-        disallowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "Anything that is not", -1));
-        disallowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "on the above list", -1));
-        
-        allowTip = new ToolTip();
-        allowTip.add(new ToolTipLine(EnumChatFormatting.GREEN + "Allowing", -1));
-        allowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "Anything that is not", -1));
-        allowTip.add(new ToolTipLine(EnumChatFormatting.WHITE + "on the above list", -1));
-
-        leftButton = new GuiBetterButton(0, guiLeft + 7, guiTop + 117, 60, biometric.notFoundSend ? "Allow" : "Disallow");
-        rightButton = new GuiBetterButton(1, guiLeft + xSize - 67, guiTop + 117, 60, biometric.notFoundRecieve ? "Allow" : "Disallow");
-        activateRecieveList = new GuiBetterButton(2, guiLeft + xSize - 67, guiTop + 138, 60, biometric.hasSeperateLists ? "Deactivate" : "Activate");
-        
-        leftButton.setToolTip(biometric.notFoundSend ? allowTip : disallowTip);
-        rightButton.setToolTip(biometric.notFoundRecieve ? allowTip : disallowTip);
+        leftButton = new GuiButton(0, guiLeft + 7, guiTop + 117, 60, 20, biometric.notFoundSend ? "Allow" : "Disallow");
+        rightButton = new GuiButton(1, guiLeft + xSize - 67, guiTop + 117, 60, 20, biometric.notFoundRecieve ? "Allow" : "Disallow");
+        activateRecieveList = new GuiButton(2, guiLeft + xSize - 67, guiTop + 138, 60, 20, biometric.hasSeperateLists ? "Deactivate" : "Activate");
         rightButton.enabled = biometric.hasSeperateLists;
 
         buttonList.add(leftButton);
         buttonList.add(rightButton);
         buttonList.add(activateRecieveList);
+        
+        sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 7, 17, 120, 95, true);
+        recieveList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"), biometric, xSize - 127, 17, 120, 95, false);
+        addElement(sendList);
+        addElement(recieveList);
     }
 
     @Override
@@ -131,6 +113,43 @@ public class GuiBiometricIdentifier extends GuiEnhancedPortals
             GuiPayload payload = new GuiPayload();
             payload.data.setBoolean("toggleSeperateLists", false);
             ClientProxy.sendGuiPacket(payload);
+        }
+    }
+
+    @Override
+    public void onElementChanged(ElementBase element, Object data)
+    {
+        if (element instanceof ElementDialDeviceScrollList)
+        {
+            int[] obj = (int[]) data;
+            int list = obj[0], type = obj[1], entry = obj[2];
+            
+            if (type == 0 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
+            {
+                // invert
+                GuiPayload p = new GuiPayload();
+                p.data.setBoolean("list", list == 0);
+                p.data.setInteger("invert", entry);
+                ClientProxy.sendGuiPacket(p);
+            }
+            else if (type == 1 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
+            {
+                // mode
+                GuiPayload p = new GuiPayload();
+                p.data.setBoolean("list", list == 0);
+                p.data.setInteger("type", entry);
+                ClientProxy.sendGuiPacket(p);
+            }
+            else if (type == 2 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
+            {
+                // remove                
+                GuiPayload p = new GuiPayload();
+                p.data.setBoolean("list", list == 0);
+                p.data.setInteger("remove", entry);
+                ClientProxy.sendGuiPacket(p);
+            }
+            
+            Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
         }
     }
 }

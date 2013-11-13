@@ -3,30 +3,19 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
-import uk.co.shadeddimensions.ep3.client.gui.base.GuiEnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
+import cofh.gui.GuiBase;
 
-public class GuiModuleManipulator extends GuiEnhancedPortals
+public class GuiModuleManipulator extends GuiBase
 {
     TileModuleManipulator module;
 
     public GuiModuleManipulator(TileModuleManipulator t, EntityPlayer player)
     {
-        super(new ContainerModuleManipulator(t, player), t);
+        super(new ContainerModuleManipulator(t, player), new ResourceLocation("enhancedportals", "textures/gui/moduleManipulator.png"));
         module = t;
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
-        GL11.glColor4f(1f, 1f, 1f, 1F);
-        getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/moduleManipulator.png"));
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
     @Override

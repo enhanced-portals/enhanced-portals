@@ -10,7 +10,6 @@ import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.util.StackHelper;
 
 public class TileModuleManipulator extends TilePortalPart
 {
@@ -76,7 +75,7 @@ public class TileModuleManipulator extends TilePortalPart
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return StackHelper.isUpgrade(stack) && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
+        return (stack != null && stack.getItem() instanceof IPortalModule) && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
     }
 
     public void particleCreated(PortalFX portalFX)

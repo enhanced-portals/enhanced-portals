@@ -339,7 +339,13 @@ public class TilePortalController extends TilePortalPart
             else
             {
                 GlyphIdentifier uID = getUniqueIdentifier();
-
+                TileStabilizer dbs = getStabilizer();
+                
+                if (dbs != null)
+                {
+                    dbs.terminateExistingConnection(getUniqueIdentifier());
+                }
+                
                 if (hasNetworkIdentifier())
                 {
                     CommonProxy.networkManager.removePortalFromNetwork(uID, getNetworkIdentifier());
