@@ -11,7 +11,7 @@ import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -61,7 +61,7 @@ public class ItemSynchronizer extends ItemPortalTool
                 return false;
             }
 
-            TileStabilizer stabilizer = controller.getStabilizer();
+            TileStabilizerMain stabilizer = controller.getStabilizer();
 
             if (stabilizer != null)
             {

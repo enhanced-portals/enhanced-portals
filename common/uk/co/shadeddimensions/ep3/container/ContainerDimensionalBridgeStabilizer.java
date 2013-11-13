@@ -1,11 +1,11 @@
 package uk.co.shadeddimensions.ep3.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 
 public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPortals
 {
-    public ContainerDimensionalBridgeStabilizer(TileStabilizer t, EntityPlayer player)
+    public ContainerDimensionalBridgeStabilizer(TileStabilizerMain t, EntityPlayer player)
     {
         super(t.getSizeInventory(), t);
     }
@@ -13,6 +13,6 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TileStabilizer) tile).isUseableByPlayer(entityplayer);
+        return ((TileStabilizerMain) tile).isUseableByPlayer(entityplayer);
     }
 }

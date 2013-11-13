@@ -35,6 +35,7 @@ import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TileScanner;
 import uk.co.shadeddimensions.ep3.tileentity.TileScannerFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -49,6 +50,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
+    public static final int REDSTONE_FLUX_COST = 500;
+    public static final int REDSTONE_FLUX_TIMER = 20;
+    
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
     public static BlockStabilizer blockStabilizer;
@@ -67,36 +71,26 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, requirePower; // Bools
-    public static double buildCraftPowerMultiplier, industrialCraftPowerMultiplier, thermalExpansionPowerMultiplier; // Doubles
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown; // Bools
+    public static int redstoneFluxPowerMultiplier; // Ints
 
+    public static void sendPacketToAllAroundTiny(TileEnhancedPortals tile)
+    {
+        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 15, tile.worldObj.provider.dimensionId, new PacketTileUpdate(tile).getPacket());
+    }
+    
     public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
-        if (CommonProxy.isClient())
-        {
-            return;
-        }
-
         PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
     }
 
     public static void sendUpdatePacketToAllAround(TileEnhancedPortals tile)
     {
-        if (CommonProxy.isClient())
-        {
-            return;
-        }
-
         sendPacketToAllAround(tile, new PacketTileUpdate(tile).getPacket());
     }
 
     public static void sendPacketToAllAround(TileEntity tile, Packet250CustomPayload packet)
     {
-        if (CommonProxy.isClient())
-        {
-            return;
-        }
-
         PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, packet);
     }
 
@@ -170,6 +164,7 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileBiometricIdentifier.class, "epBiometricIdentifier");
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epModuleManipulator");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epStabilizer");
+        GameRegistry.registerTileEntity(TileStabilizerMain.class, "epStabilizerMain");
         GameRegistry.registerTileEntity(TileScanner.class, "epScanner");
         GameRegistry.registerTileEntity(TileScannerFrame.class, "epScannerFrame");
     }
@@ -198,11 +193,13 @@ public class CommonProxy
         portalsDestroyBlocks = configuration.get("Portal", "PortalsDestroyBlocks", true);
         fasterPortalCooldown = configuration.get("Portal", "FasterPortalCooldown", false);
 
-        requirePower = configuration.get("Power", "RequirePower", true);
-        buildCraftPowerMultiplier = configuration.get("Power", "BuildCraftPowerMultiplier", 1);
-        industrialCraftPowerMultiplier = configuration.get("Power", "IndustrialCraftPowerMultiplier", 1);
-        thermalExpansionPowerMultiplier = configuration.get("Power", "ThermalExpansionPowerMultiplier", 1);
-
+        redstoneFluxPowerMultiplier = configuration.get("Power", "PowerMultiplier", 1);
+        
+        if (redstoneFluxPowerMultiplier < 0)
+        {
+            redstoneFluxPowerMultiplier = 0;
+        }
+        
         configuration.init();
     }
 

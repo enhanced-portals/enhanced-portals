@@ -23,7 +23,7 @@ import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
@@ -339,7 +339,7 @@ public class TilePortalController extends TilePortalPart
             else
             {
                 GlyphIdentifier uID = getUniqueIdentifier();
-                TileStabilizer dbs = getStabilizer();
+                TileStabilizerMain dbs = getStabilizer();
                 
                 if (dbs != null)
                 {
@@ -576,7 +576,7 @@ public class TilePortalController extends TilePortalPart
         partBroken();
     }
 
-    public TileStabilizer getStabilizer()
+    public TileStabilizerMain getStabilizer()
     {
         if (bridgeStabilizer == null)
         {
@@ -585,9 +585,9 @@ public class TilePortalController extends TilePortalPart
 
         TileEntity t = bridgeStabilizer.getBlockTileEntity();
 
-        if (t instanceof TileStabilizer)
+        if (t instanceof TileStabilizerMain)
         {
-            return (TileStabilizer) t;
+            return (TileStabilizerMain) t;
         }
 
         return null;
@@ -602,9 +602,9 @@ public class TilePortalController extends TilePortalPart
     {
         if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && frameDialler != null)
         {
-            TileStabilizer dbs = getStabilizer();
+            TileStabilizerMain dbs = getStabilizer();
 
-            if (dbs == null || !dbs.hasConfigured)
+            if (dbs == null)
             {
                 bridgeStabilizer = null;
                 waitingForCard = true;
@@ -629,9 +629,9 @@ public class TilePortalController extends TilePortalPart
 
         if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && CommonProxy.networkManager.hasNetwork(getWorldCoordinates()))
         {
-            TileStabilizer dbs = getStabilizer();
+            TileStabilizerMain dbs = getStabilizer();
 
-            if (dbs == null || !dbs.hasConfigured)
+            if (dbs == null)
             {
                 bridgeStabilizer = null;
                 waitingForCard = true;
@@ -657,10 +657,10 @@ public class TilePortalController extends TilePortalPart
 
         if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()))
         {
-            TileStabilizer dbs = getStabilizer();
+            TileStabilizerMain dbs = getStabilizer();
             GlyphIdentifier identifier = CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
 
-            if (dbs == null || !dbs.hasConfigured)
+            if (dbs == null)
             {
                 bridgeStabilizer = null;
                 waitingForCard = true;
@@ -782,7 +782,7 @@ public class TilePortalController extends TilePortalPart
             
             if (hasUniqueIdentifier())
             {
-                TileStabilizer dbs = getStabilizer();
+                TileStabilizerMain dbs = getStabilizer();
                 
                 if (dbs != null)
                 {
@@ -922,7 +922,7 @@ public class TilePortalController extends TilePortalPart
                 }
             }
 
-            TileStabilizer dbs = getStabilizer();
+            TileStabilizerMain dbs = getStabilizer();
             dbs.onEntityEnterPortal(uID, entity, portal);
         }
     }

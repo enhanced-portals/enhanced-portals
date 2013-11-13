@@ -1,235 +1,41 @@
 package uk.co.shadeddimensions.ep3.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Random;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.EntityManager;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.portal.PortalUtils;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.WorldUtils;
-import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
+import cofh.api.energy.IEnergyHandler;
 
-public class TileStabilizer extends TileEnhancedPortals implements IInventory
+public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandler
 {
-    static final int MAX_ACTIVE_PORTALS_PER_ROW = 2;
-
-    int rows = 2;
-    public boolean hasConfigured;
-    ArrayList<ChunkCoordinates> blockList;
     ChunkCoordinates mainBlock;
-
-    HashMap<String, String> activeConnections;
-    HashMap<String, String> activeConnectionsReverse;
-    
-    @SideOnly(Side.CLIENT)
-    public int intActiveConnections;
+    int rows;
 
     public TileStabilizer()
     {
         mainBlock = null;
-        hasConfigured = false;
-        blockList = new ArrayList<ChunkCoordinates>();
-        activeConnections = new HashMap<String, String>();
-        activeConnectionsReverse = new HashMap<String, String>();
-    }
-
-    /***
-     * Whether or not this stabilizer can create a new connection
-     */
-    public boolean canAcceptNewConnection()
-    {        
-        System.out.println(String.format("Active Connections: %s, Max Connections: %s", activeConnections.size() * 2, MAX_ACTIVE_PORTALS_PER_ROW * rows));
-        return (activeConnections.size() * 2) + 2 <= MAX_ACTIVE_PORTALS_PER_ROW * rows;
-    }
-
-    /***
-     * Sets up a new connection between two portals.
-     * @return True if connection was successfully established.
-     */
-    public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB, PortalTextureManager textureManager)
-    {
-        if (activeConnections.containsKey(portalA.getGlyphString()) || activeConnections.containsValue(portalB.getGlyphString()) || !hasEnoughPowerToStart() || !canAcceptNewConnection())
-        {
-            return false;
-        }
-        else if (!hasEnoughPowerToStart())
-        {
-            return false;
-        }
-
-        TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
-
-        if (cA == null || cB == null)
-        {
-            return false;
-        }
-        else if (cA.isPortalActive || cB.isPortalActive) // Make sure both portals are inactive
-        {
-            return false;
-        }
-        else if (!cA.hasConfigured || cA.waitingForCard || !cB.hasConfigured || cB.waitingForCard) // Make sure they're set up correctly...
-        {
-            return false;
-        }
-        else if (cA.isPortalActive || cB.isPortalActive)
-        {
-            return false;
-        }
-        else if (!cA.bridgeStabilizer.equals(cB.bridgeStabilizer)) // And make sure they're on the same DBS
-        {
-            return false;
-        }
-        
-        if (textureManager != null)
-        {
-            cA.swapTextureData(textureManager);
-            cB.swapTextureData(textureManager);
-        }
-        
-        if (!PortalUtils.createPortalFrom(cA))
-        {
-            cA.revertTextureData();
-            cB.revertTextureData();
-            return false;
-        }
-        else if (!PortalUtils.createPortalFrom(cB)) // Make sure both portals can be created
-        {
-            PortalUtils.removePortalFrom(cA);
-            cA.revertTextureData();
-            cB.revertTextureData();
-            return false;
-        }
-        
-        activeConnections.put(portalA.getGlyphString(), portalB.getGlyphString());
-        activeConnectionsReverse.put(portalB.getGlyphString(), portalA.getGlyphString());
-
-        if (activeConnections.size() == 1)
-        {
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 1); // Schedule tick for power drain
-        }
-
-        return true;
-    }
-
-    /***
-     * Terminates both portals and removes them from the active connection list.
-     */
-    public void terminateExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
-    {
-        if (portalA == null || portalB == null)
-        {
-            return;
-        }
-        
-        TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
- 
-        if (cA == null || cB == null)
-        {
-            if (cA != null)
-            {
-                PortalUtils.removePortalFrom(cA);
-                cA.revertTextureData();
-            }
-            
-            if (cB != null)
-            {
-                PortalUtils.removePortalFrom(cB);
-                cB.revertTextureData();
-            }
-            
-            removeExistingConnection(portalA, portalB);
-            return;
-        }
-        else if ((activeConnections.containsKey(portalA.getGlyphString()) && activeConnections.get(portalA.getGlyphString()).equals(portalB.getGlyphString())) ||
-                 (activeConnectionsReverse.containsKey(portalA.getGlyphString()) && activeConnectionsReverse.get(portalA.getGlyphString()).equals(portalB.getGlyphString())))
-        {
-            // Make sure we're terminating the correct connection, also don't mind that we're terminating it from the other side that we started it from
-            PortalUtils.removePortalFrom(cA);
-            PortalUtils.removePortalFrom(cB);
-            cA.revertTextureData();
-            cB.revertTextureData();
-
-            removeExistingConnection(portalA, portalB);
-        }
-    }
-    
-    /***
-     * Terminates both portals and removes them from the active connection list. Used by dialling devices when the exit location is not known by the controller.
-     */
-    public void terminateExistingConnection(GlyphIdentifier identifier)
-    {
-        if (identifier == null || identifier.isEmpty())
-        {
-            return;
-        }
-        
-        GlyphIdentifier portalA = new GlyphIdentifier(identifier), portalB = null;
-        
-        if (activeConnections.containsKey(identifier.getGlyphString()))
-        {
-            portalB = new GlyphIdentifier(activeConnections.get(identifier.getGlyphString()));
-        }
-        else if (activeConnectionsReverse.containsKey(identifier.getGlyphString()))
-        {
-            portalB = new GlyphIdentifier(activeConnectionsReverse.get(identifier.getGlyphString()));
-        }
-        
-        terminateExistingConnection(portalA, portalB);
-    }
-
-    /***
-     * Removes a connection from the active list.
-     */
-    public void removeExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
-    {
-        activeConnections.remove(portalA.getGlyphString());
-        activeConnections.remove(portalB.getGlyphString());
-        activeConnectionsReverse.remove(portalA.getGlyphString());
-        activeConnectionsReverse.remove(portalB.getGlyphString());
-    }
-
-    /***
-     * Gets whether or not this stabilizer has enough power to keep the portal open for at least one tick.
-     */
-    boolean hasEnoughPowerToStart()
-    {
-        // TODO
-
-        return true;
     }
 
     /***
      * Gets the block that does all the processing for this multiblock.
      * If that block is self, will return self.
      */
-    public TileStabilizer getMainBlock()
+    public TileStabilizerMain getMainBlock()
     {
         if (mainBlock != null)
         {
             TileEntity tile = worldObj.getBlockTileEntity(mainBlock.posX, mainBlock.posY, mainBlock.posZ);
 
-            if (tile != null && tile instanceof TileStabilizer)
+            if (tile != null && tile instanceof TileStabilizerMain)
             {
-                return (TileStabilizer) tile;
+                return (TileStabilizerMain) tile;
             }
         }
 
@@ -239,9 +45,25 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
     @Override
     public boolean activate(EntityPlayer player)
     {
-        if (CommonProxy.isClient() || hasConfigured || player.inventory.getCurrentItem() == null || player.inventory.getCurrentItem().getItem().itemID != CommonProxy.itemWrench.itemID)
+        if (worldObj.isRemote || player.inventory.getCurrentItem() == null || player.inventory.getCurrentItem().getItem().itemID != CommonProxy.itemWrench.itemID)
         {
+            if (!worldObj.isRemote)
+            {
+                receiveEnergy(ForgeDirection.UP, 13247, false);
+            }
+            
             return false;
+        }
+
+        if (mainBlock != null)
+        {
+            TileStabilizerMain main = getMainBlock();
+
+            if (main != null)
+            {
+                CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, main);
+                return true;
+            }
         }
 
         WorldCoordinates topLeft = getWorldCoordinates();
@@ -273,13 +95,14 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
             for (ChunkCoordinates c : blocks)
             {
                 TileStabilizer t = (TileStabilizer) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-                t.hasConfigured = true;
                 t.mainBlock = topLeft;
-                t.rows = rows;
-                CommonProxy.sendUpdatePacketToAllAround(t);
             }
 
-            getMainBlock().blockList = blocks;
+            worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, CommonProxy.blockStabilizer.blockID, 1, 3);
+
+            TileStabilizerMain main = (TileStabilizerMain) topLeft.getBlockTileEntity();
+            main.blockList = blocks;
+            main.rows = rows;
         }
 
         return true;
@@ -327,249 +150,85 @@ public class TileStabilizer extends TileEnhancedPortals implements IInventory
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-
-        tag.setBoolean("hasConfigured", hasConfigured);
-        tag.setInteger("rows", rows);
         WorldUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
-
-        if (!blockList.isEmpty())
-        {
-            WorldUtils.saveChunkCoordList(tag, blockList, "blockList");
-        }
-        
-        if (!activeConnections.isEmpty())
-        {
-            NBTTagList c = new NBTTagList();
-            
-            for (Entry<String, String> entry : activeConnections.entrySet())
-            {
-                NBTTagCompound t = new NBTTagCompound();
-                t.setString("Key", entry.getKey());
-                t.setString("Value", entry.getValue());
-                c.appendTag(t);
-            }
-            
-            tag.setTag("activeConnections", c);
-        }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-
-        hasConfigured = tag.getBoolean("hasConfigured");
-        rows = tag.getInteger("rows");
         mainBlock = WorldUtils.loadChunkCoord(tag, "mainBlock");
-
-        if (tag.hasKey("blockList"))
-        {
-            blockList = WorldUtils.loadChunkCoordList(tag, "blockList");
-        }
-        
-        if (tag.hasKey("activeConnections"))
-        {
-            NBTTagList c = tag.getTagList("activeConnections");
-            
-            for (int i = 0; i < c.tagCount(); i++)
-            {
-                NBTTagCompound t = (NBTTagCompound) c.tagAt(i);
-                
-                String A = t.getString("Key"), B = t.getString("Value");
-                
-                activeConnections.put(A, B);
-                activeConnectionsReverse.put(B, A);
-            }
-        }
-    }
-
-    @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
-    {
-        super.fillPacket(stream);
-
-        stream.writeBoolean(hasConfigured);
-        stream.writeInt(activeConnections.size());
-
-        if (mainBlock != null)
-        {
-            stream.writeInt(mainBlock.posX);
-            stream.writeInt(mainBlock.posY);
-            stream.writeInt(mainBlock.posZ);
-        }
-        else
-        {
-            stream.writeInt(0);
-            stream.writeInt(-1);
-            stream.writeInt(0);
-        }
-    }
-
-    public void deconstruct()
-    {        
-        for (ChunkCoordinates c : blockList)
-        {
-            TileStabilizer t = (TileStabilizer) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            t.hasConfigured = false;
-            t.mainBlock = null;
-            CommonProxy.sendUpdatePacketToAllAround(t);
-        }
     }
 
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
-        if (hasConfigured)
+        TileStabilizerMain main = getMainBlock();
+
+        if (main == null)
         {
-            TileStabilizer main = getMainBlock();
-
-            if (main == null)
-            {
-                return;
-            }
-
-            main.deconstruct();
-        }
-    }
-
-    @Override
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        super.usePacket(stream);
-
-        hasConfigured = stream.readBoolean();
-        intActiveConnections = stream.readInt() * 2;
-        ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
-
-        if (c.posX == -1)
-        {
-            c = null;
+            return;
         }
 
-        mainBlock = c;
-
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        main.deconstruct();
     }
 
+    /* IEnergyHandler */
     @Override
-    public void updateTick(Random random)
+    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
     {
-        if (activeConnections.size() > 0) // Make sure we're only ticking while we have active connections
+        TileStabilizerMain main = getMainBlock();
+
+        if (main == null)
         {
-            // if has enough for stable drain, do it
-            // else if has enough for unstable drain, do it -- 75% with 20% risk, 50% with 50% risk, 40% with 75% risk 25% with 90% risk
-            // else if not enough, terminate all connections
-
-            //System.out.println(String.format("Draining %s power", activeConnections.size() * 100));
-
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 1);
+            return 0;
         }
+
+        return main.receiveEnergy(from, maxReceive, simulate);
     }
 
-    public void onEntityEnterPortal(GlyphIdentifier uID, Entity entity, TilePortal portal)
+    @Override
+    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
     {
-        if (EntityManager.isEntityFitForTravel(entity))
+        TileStabilizerMain main = getMainBlock();
+
+        if (main == null)
         {
-            GlyphIdentifier exit = null;
-
-            if (activeConnections.containsKey(uID.getGlyphString()))
-            {
-                exit = new GlyphIdentifier(activeConnections.get(uID.getGlyphString()));
-            }
-            else if (activeConnectionsReverse.containsKey(uID.getGlyphString()))
-            {
-                exit = new GlyphIdentifier(activeConnectionsReverse.get(uID.getGlyphString()));
-            }
-
-            if (exit != null)
-            {
-                EntityManager.teleportEntity(entity, uID, exit, portal);
-            }
+            return 0;
         }
-        
-        EntityManager.setEntityPortalCooldown(entity);
-    }
 
-    /* IInventory */
-    @Override
-    public int getSizeInventory()
-    {
-        return 0;
+        return main.extractEnergy(from, maxExtract, simulate);
     }
 
     @Override
-    public ItemStack getStackInSlot(int i)
+    public boolean canInterface(ForgeDirection from)
     {
-        return null;
+        return getMainBlock() != null;
     }
 
     @Override
-    public ItemStack decrStackSize(int i, int j)
+    public int getEnergyStored(ForgeDirection from)
     {
-        return null;
-    }
+        TileStabilizerMain main = getMainBlock();
 
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 0;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void openChest()
-    { }
-
-    @Override
-    public void closeChest()
-    { }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
-        return false;
-    }
-
-    public GlyphIdentifier getConnectedPortal(GlyphIdentifier uniqueIdentifier)
-    {
-        if (activeConnections.containsKey(uniqueIdentifier.getGlyphString()))
+        if (main == null)
         {
-            return new GlyphIdentifier(activeConnections.get(uniqueIdentifier.getGlyphString()));
+            return 0;
         }
-        else if (activeConnectionsReverse.containsKey(uniqueIdentifier.getGlyphString()))
+
+        return main.getEnergyStored(from);
+    }
+
+    @Override
+    public int getMaxEnergyStored(ForgeDirection from)
+    {
+        TileStabilizerMain main = getMainBlock();
+
+        if (main == null)
         {
-            return new GlyphIdentifier(activeConnectionsReverse.get(uniqueIdentifier.getGlyphString()));
+            return 0;
         }
-        
-        return null;
+
+        return main.getMaxEnergyStored(from);
     }
 }

@@ -18,12 +18,10 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TileEnhancedPortals extends TileEntity
-{
-    boolean hasPower;
-    
+{    
     public TileEnhancedPortals()
     {
-        hasPower = false;
+        
     }
     
     public ChunkCoordinates getChunkCoordinates()
@@ -85,26 +83,22 @@ public class TileEnhancedPortals extends TileEntity
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-        
-        tag.setBoolean("hasPower", hasPower);
     }
     
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        
-        hasPower = tag.getBoolean("hasPower");
     }
     
     public void usePacket(DataInputStream stream) throws IOException
     {
-        hasPower = stream.readBoolean();
+
     }
     
     public void fillPacket(DataOutputStream stream) throws IOException
     {
-        stream.writeBoolean(hasPower);
+
     }
     
     @Override
