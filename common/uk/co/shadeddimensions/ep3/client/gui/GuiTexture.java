@@ -287,24 +287,24 @@ public class GuiTexture extends GuiBase implements IElementHandler
             
             if (screenState == 0)
             {
-                getTextureManager().setCustomFrameTexture((int) data);
+                getTextureManager().setCustomFrameTexture(Integer.parseInt(data.toString()));
                 
                 payload = new GuiPayload();
-                payload.data.setInteger("customFrameTexture", (int) data);
+                payload.data.setInteger("customFrameTexture", Integer.parseInt(data.toString()));
             }
             else if (screenState == 1)
             {
-                getTextureManager().setCustomPortalTexture((int) data);
+                getTextureManager().setCustomPortalTexture(Integer.parseInt(data.toString()));
                 
                 payload = new GuiPayload();
-                payload.data.setInteger("customPortalTexture", (int) data);
+                payload.data.setInteger("customPortalTexture", Integer.parseInt(data.toString()));
             }
             else if (screenState == 2)
             {
-                getTextureManager().setParticleType((int) data);
+                getTextureManager().setParticleType(Integer.parseInt(data.toString()));
                 
                 payload = new GuiPayload();
-                payload.data.setInteger("particleType", (int) data);
+                payload.data.setInteger("particleType", Integer.parseInt(data.toString()));
             }
             
             if (payload != null)
