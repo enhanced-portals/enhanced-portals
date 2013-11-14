@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import net.minecraft.entity.EntityEggInfo;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +17,8 @@ import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.block.BlockScanner;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
+import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
+import uk.co.shadeddimensions.ep3.entity.mob.MobEnderman;
 import uk.co.shadeddimensions.ep3.item.ItemDecoration;
 import uk.co.shadeddimensions.ep3.item.ItemFrame;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
@@ -46,6 +50,7 @@ import cofh.util.ConfigHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
@@ -73,6 +78,9 @@ public class CommonProxy
 
     public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown; // Bools
     public static int redstoneFluxPowerMultiplier; // Ints
+    
+    public static int MobEnderman, MobCreeper;
+    public static int Dimension;
 
     public static void sendPacketToAllAroundTiny(TileEnhancedPortals tile)
     {
@@ -168,6 +176,36 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileScanner.class, "epScanner");
         GameRegistry.registerTileEntity(TileScannerFrame.class, "epScannerFrame");
     }
+    
+    public void registerEntities()
+    {
+        EntityRegistry.registerModEntity(MobEnderman.class, "enderman", MobEnderman, EnhancedPortals.instance, 64, 1, true);
+        registerEntityEgg(MobEnderman.class, 0xFF0000, 0xFF00FF);
+        
+        EntityRegistry.registerModEntity(MobCreeper.class, "creeper", MobCreeper, EnhancedPortals.instance, 64, 1, true);
+        registerEntityEgg(MobCreeper.class, 0xFF0000, 0x00FF00);
+    }
+    
+    public static int eggIdCounter = 300;
+    
+    static int getUniqueEggId()
+    {
+        do
+        {
+            eggIdCounter++;
+        }
+        while (EntityList.getStringFromID(eggIdCounter) != null);
+        
+        return eggIdCounter;
+    }
+    
+    @SuppressWarnings("unchecked")
+    static void registerEntityEgg(Class<?> entity, int c, int c2)
+    {
+        int id = getUniqueEggId();
+        EntityList.IDtoClassMapping.put(id, entity);
+        EntityList.entityEggs.put(id, new EntityEggInfo(id, c, c2));
+    }
 
     public void setupConfiguration(Configuration theConfig)
     {
@@ -194,6 +232,11 @@ public class CommonProxy
         fasterPortalCooldown = configuration.get("Portal", "FasterPortalCooldown", false);
 
         redstoneFluxPowerMultiplier = configuration.get("Power", "PowerMultiplier", 1);
+        
+        MobEnderman = configuration.get("Mobs", "EndermanID", 0);
+        MobCreeper = configuration.get("Mobs", "CreeperID", 1);
+        
+        Dimension = configuration.get("World", "DimensionID", -10);
         
         if (redstoneFluxPowerMultiplier < 0)
         {

@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3;
 
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
@@ -12,6 +13,7 @@ import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
+import uk.co.shadeddimensions.ep3.world.EPWorldProvider;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -44,11 +46,14 @@ public class EnhancedPortals
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();
+        proxy.registerEntities();
         proxy.registerRenderers();
         proxy.miscSetup();
 
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+        DimensionManager.registerProviderType(CommonProxy.Dimension, EPWorldProvider.class, false);
+        DimensionManager.registerDimension(CommonProxy.Dimension, CommonProxy.Dimension);
     }
 
     @EventHandler

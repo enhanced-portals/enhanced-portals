@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.client.renderer;
+package uk.co.shadeddimensions.ep3.client.renderer.tile;
 
 import java.awt.Color;
 

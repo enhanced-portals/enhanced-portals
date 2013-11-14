@@ -9,9 +9,13 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.DimensionManager;
-import uk.co.shadeddimensions.ep3.client.renderer.FrameItemRenderer;
-import uk.co.shadeddimensions.ep3.client.renderer.PortalItemRenderer;
-import uk.co.shadeddimensions.ep3.client.renderer.TileFrameRenderer;
+import uk.co.shadeddimensions.ep3.client.renderer.entity.RenderCreeper;
+import uk.co.shadeddimensions.ep3.client.renderer.entity.RenderEnderman;
+import uk.co.shadeddimensions.ep3.client.renderer.tile.FrameItemRenderer;
+import uk.co.shadeddimensions.ep3.client.renderer.tile.PortalItemRenderer;
+import uk.co.shadeddimensions.ep3.client.renderer.tile.TileFrameRenderer;
+import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
+import uk.co.shadeddimensions.ep3.entity.mob.MobEnderman;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
@@ -20,6 +24,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
@@ -89,6 +94,8 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TilePortalPart.class, new TileFrameRenderer());
         MinecraftForgeClient.registerItemRenderer(blockFrame.blockID, new FrameItemRenderer());
         MinecraftForgeClient.registerItemRenderer(blockPortal.blockID, new PortalItemRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(MobEnderman.class, new RenderEnderman());
+        RenderingRegistry.registerEntityRenderingHandler(MobCreeper.class, new RenderCreeper());
     }
 
     public static void sendGuiPacket(GuiPayload payload)

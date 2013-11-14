@@ -212,9 +212,9 @@ public class EntityManager
             CommonProxy.logger.fine("Failed to teleport entity - Portal is not active!");
             return;
         }
-        
+
         TileBiometricIdentifier bio = controllerDest.getBiometricIdentifier();
-        
+
         if (bio != null)
         {
             if (!bio.canEntityBeRecieved(entity))
@@ -236,6 +236,128 @@ public class EntityManager
             CommonProxy.logger.fine(String.format("Found a suitable exit location for Entity (%s): %s, %s, %s", entity.getEntityName(), exit.posX, exit.posY, exit.posZ));
             teleportEntity(entity, exit, (WorldServer) controllerDest.worldObj, getRotation(entity, controllerDest, exit), controllerDest.portalType, portal);
         }
+    }
+
+    public static void teleportEntity(Entity entity, WorldCoordinates location)
+    {
+        teleportEntityBasic(entity, new ChunkCoordinates(location.posX, location.posY, location.posZ), location.getWorld());
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static Entity teleportEntityBasic(Entity entity, ChunkCoordinates location, WorldServer world)
+    {
+        double offsetY = entity instanceof EntityMinecart ? 0.4 : 0;
+        boolean dimensionalTravel = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
+        Entity mount = entity.ridingEntity;
+
+        if (mount != null) // If the entity is riding another entity
+        {
+            entity.mountEntity(null); // Dismount
+            mount = teleportEntityBasic(mount, location, world); // Then send the mounted entity first. Store it for later use
+        }
+
+        entity.worldObj.updateEntityWithOptionalForce(entity, false);
+
+        if (entity instanceof EntityPlayerMP)
+        {
+            EntityPlayerMP player = (EntityPlayerMP) entity;            
+            player.closeScreen(); // Close any open GUI screen.
+
+            if (dimensionalTravel)
+            {
+                player.dimension = world.provider.dimensionId; // Update the player's dimension
+                player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) world.difficultySetting, world.provider.terrainType, world.provider.getHeight(), player.theItemInWorldManager.getGameType())); // Send a respawn packet to the player
+                ((WorldServer) player.worldObj).getPlayerManager().removePlayer(player); // Remove the player from the world
+            }
+        }
+
+        if (dimensionalTravel)
+        {
+            removeEntityFromWorld(entity, (WorldServer) entity.worldObj); // Remove the entity from the world
+        }
+
+        entity.motionX = entity.motionY = entity.motionZ = 0;
+
+        world.getChunkProvider().loadChunk(location.posX >> 4, location.posZ >> 4); // Make sure the chunk is loaded
+        entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entity.rotationYaw, entity.rotationPitch);
+
+        if (dimensionalTravel)
+        {
+            if (!(entity instanceof EntityPlayer))
+            {
+                NBTTagCompound nbt = new NBTTagCompound();
+                entity.isDead = false;
+                entity.writeToNBTOptional(nbt); // Save all entity data to NBT, including it's ID
+                entity.isDead = true;
+
+                entity = EntityList.createEntityFromNBT(nbt, world); // Make a new entity from the NBT data in the new world
+
+                if (entity == null)
+                {
+                    return null; // If we failed, quit
+                }
+
+                entity.dimension = world.provider.dimensionId; // Update it's dimension
+            }
+
+            world.spawnEntityInWorld(entity); // Spawn it in the new world
+            entity.setWorld(world); // Set the entities world to the new one
+        }
+
+        entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entity.rotationYaw, entity.rotationPitch);
+        world.updateEntityWithOptionalForce(entity, false);
+        entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entity.rotationYaw, entity.rotationPitch);
+
+        if (entity instanceof EntityPlayerMP)
+        {
+            EntityPlayerMP player = (EntityPlayerMP) entity;
+
+            if (dimensionalTravel)
+            {
+                player.mcServer.getConfigurationManager().func_72375_a(player, world); // ??
+            }
+
+            player.playerNetServerHandler.setPlayerLocation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entity.rotationYaw, entity.rotationPitch); // Update the players location -- make sure the client gets this data too
+        }
+
+        world.updateEntityWithOptionalForce(entity, false);
+
+        if (entity instanceof EntityPlayerMP && dimensionalTravel)
+        {
+            EntityPlayerMP player = (EntityPlayerMP) entity;
+
+            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, world); // Make sure the client has the correct time & weather
+            player.mcServer.getConfigurationManager().syncPlayerInventory(player); // And make sure their inventory isn't out of sync
+
+            Iterator iterator = player.getActivePotionEffects().iterator();
+
+            while (iterator.hasNext()) // Sync up any potion effects the player may have
+            {
+                PotionEffect effect = (PotionEffect) iterator.next();
+                player.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(player.entityId, effect));
+            }
+
+            player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel)); // Sync up their xp
+        }
+
+        entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entity.rotationYaw, entity.rotationPitch);
+
+        if (entity instanceof EntityMinecart) // Stops the minecart from derping about. TODO: Figure out a solution which isn't this.
+        {
+            entity.motionX = 0;
+            entity.motionY = 0;
+            entity.motionZ = 0;
+        }
+
+        if (mount != null) // Remount any mounted entities
+        {
+            if (!(entity instanceof EntityPlayerMP)) // Player re-mounting is derpy.
+            {
+                entity.mountEntity(mount);
+            }
+        }
+
+        return entity;
     }
 
     @SuppressWarnings("rawtypes")
@@ -353,5 +475,13 @@ public class EntityManager
         }
 
         return entity;
+    }
+
+    public static void teleportEntityToDimension(Entity par1Entity)
+    {
+        WorldCoordinates location = new WorldCoordinates(0, 0, 0, CommonProxy.Dimension);
+        location.posY = location.getWorld().getTopSolidOrLiquidBlock(location.posX, location.posZ);
+        
+        teleportEntity(par1Entity, location);
     }
 }

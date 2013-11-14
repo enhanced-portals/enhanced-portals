@@ -1,12 +1,8 @@
 package uk.co.shadeddimensions.ep3.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,11 +17,13 @@ import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyStorage;
+import cofh.util.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,7 +34,9 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     ArrayList<ChunkCoordinates> blockList;
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
-    int powerState, rows;
+    public int powerState;
+    ItemStack inventory;
+    int rows, tickTimer;
     EnergyStorage energyStorage;
     public int instability = 0;
     
@@ -111,12 +111,6 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
         activeConnections.put(portalA.getGlyphString(), portalB.getGlyphString());
         activeConnectionsReverse.put(portalB.getGlyphString(), portalA.getGlyphString());
-
-        if (activeConnections.size() == 1)
-        {
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 1); // Schedule tick for power drain
-        }
-
         return true;
     }
 
@@ -215,48 +209,53 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     }
 
     @Override
-    public void updateTick(Random random)
+    public void updateEntity()
     {
-        if (activeConnections.size() > 0 && CommonProxy.redstoneFluxPowerMultiplier > 0) // Make sure we're only ticking while we have active connections
+        if (activeConnections.size() > 0 && CommonProxy.redstoneFluxPowerMultiplier > 0 && tickTimer >= CommonProxy.REDSTONE_FLUX_TIMER)
         {
             int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * (activeConnections.size() * CommonProxy.REDSTONE_FLUX_COST);
 
-            if (extractEnergy(null, powerRequirement, true) == powerRequirement) // Simulate the full power requirement
+            if (powerState == 0 && extractEnergy(null, powerRequirement, true) == powerRequirement) // Simulate the full power requirement
             {
                 extractEnergy(null, powerRequirement, false);
                 instability = 0;
             }
-            else if (extractEnergy(null, (int) (powerRequirement * 0.8), true) == (int) (powerRequirement * 0.8)) // Otherwise, try it at 80%
+            else if ((powerState == 1 || powerState == 0) && extractEnergy(null, (int) (powerRequirement * 0.8), true) == (int) (powerRequirement * 0.8)) // Otherwise, try it at 80%
             {
                 extractEnergy(null, (int) (powerRequirement * 0.8), false);
                 instability = 20;
             }
-            else if (extractEnergy(null, (int) (powerRequirement * 0.5), true) == (int) (powerRequirement * 0.5)) // Otherwise, try it at 50%
+            else if ((powerState == 2 || powerState == 0) && extractEnergy(null, (int) (powerRequirement * 0.5), true) == (int) (powerRequirement * 0.5)) // Otherwise, try it at 50%
             {
                 extractEnergy(null, (int) (powerRequirement * 0.5), false);
                 instability = 50;
             }
-            else if (extractEnergy(null, (int) (powerRequirement * 0.3), true) == (int) (powerRequirement * 0.3)) // Otherwise, try it at 30%
+            else if ((powerState == 3 || powerState == 0) && extractEnergy(null, (int) (powerRequirement * 0.3), true) == (int) (powerRequirement * 0.3)) // Otherwise, try it at 30%
             {
                 extractEnergy(null, (int) (powerRequirement * 0.3), false);
                 instability = 70;
             }
-            else
+            else // Fail
             {
-                for (int i = activeConnections.size() - 1; i > -1; i--)
+                for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list
                 {
                     terminateExistingConnection(new GlyphIdentifier(activeConnections.values().toArray(new String[activeConnections.size()])[i]));
                 }
 
                 instability = 0;
-                return; // Don't schedule another tick
             }
-
-            CommonProxy.sendPacketToAllAroundTiny(this);
-            worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, CommonProxy.REDSTONE_FLUX_TIMER);
+            
+            tickTimer = -1;
         }
+        
+        if (inventory != null && ((IEnergyContainerItem) inventory.getItem()).getEnergyStored(inventory) > 0)
+        {
+            energyStorage.receiveEnergy(((IEnergyContainerItem) inventory.getItem()).extractEnergy(inventory, 100, false), false);
+        }
+        
+        tickTimer++;
     }
-
+    
     public void onEntityEnterPortal(GlyphIdentifier uID, Entity entity, TilePortal portal)
     {
         if (EntityManager.isEntityFitForTravel(entity))
@@ -319,6 +318,13 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
             tag.setTag("activeConnections", c);
         }
+        
+        if (inventory != null)
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            inventory.writeToNBT(t);
+            tag.setTag("inventory", t);
+        }
     }
 
     @Override
@@ -345,24 +351,20 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                 activeConnectionsReverse.put(B, A);
             }
         }
+        
+        if (tag.hasKey("inventory"))
+        {
+            inventory = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inventory"));
+        }
     }
 
     @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
+    public void validate()
     {
-        stream.writeInt(activeConnections.size());
-        stream.writeInt(getEnergyStored(null));
-        stream.writeInt(instability);
+        // Don't call super - we don't need to send any packets.
+        this.tileEntityInvalid = false;
     }
-
-    @Override
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        intActiveConnections = stream.readInt();
-        energyStorage.setEnergyStored(stream.readInt());
-        instability = stream.readInt();
-    }
-
+    
     public void deconstruct()
     {
         for (ChunkCoordinates c : blockList)
@@ -374,9 +376,23 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         worldObj.setBlock(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 0, 3);
     }
 
-    public IEnergyStorage getIEnergyStorage()
+    public EnergyStorage getEnergyStorage()
     {
         return energyStorage;
+    }
+    
+    @Override
+    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
+    {
+        if (payload.data.hasKey("button"))
+        {
+            powerState++;
+            
+            if (powerState > 3)
+            {
+                powerState = 0;
+            }
+        }
     }
 
     /* IEnergyHandler */
@@ -410,37 +426,38 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     @Override
     public int getSizeInventory()
     {
-        return 0;
+        return 1;
     }
 
     @Override
     public ItemStack getStackInSlot(int i)
     {
-        return null;
+        return inventory;
     }
 
     @Override
     public ItemStack decrStackSize(int i, int j)
     {
-        return null;
+        inventory.stackSize--;
+        return inventory;
     }
 
     @Override
     public ItemStack getStackInSlotOnClosing(int i)
     {
-        return null;
+        return inventory;
     }
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
-
+        inventory = itemstack;
     }
 
     @Override
     public String getInvName()
     {
-        return null;
+        return "tile.ep3.stabilizer.name";
     }
 
     @Override
@@ -452,7 +469,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     @Override
     public int getInventoryStackLimit()
     {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -460,14 +477,21 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         return true;
     }
+    
     @Override
     public void openChest() { }
+    
     @Override
     public void closeChest() { }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return false;
+        return EnergyHelper.isEnergyContainerItem(itemstack);
+    }
+
+    public int getActiveConnections()
+    {
+        return activeConnections != null ? activeConnections.size() : -1;
     }
 }

@@ -50,11 +50,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
         list.add("Portal Module");        
         list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
         
-        if (stack.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal())
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
-        }
-        else if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
+        if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
         {
             list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
             list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc3"));
