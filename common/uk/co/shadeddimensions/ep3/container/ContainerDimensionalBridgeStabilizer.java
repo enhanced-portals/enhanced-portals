@@ -12,7 +12,7 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     
     public ContainerDimensionalBridgeStabilizer(TileStabilizerMain t, EntityPlayer player)
     {
-        super(t.getSizeInventory(), t);
+        super(t);
         
         addSlotToContainer(new SlotEnergy(t, 0, 152, 58));
         

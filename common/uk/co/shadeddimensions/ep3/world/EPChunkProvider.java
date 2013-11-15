@@ -122,18 +122,18 @@ public class EPChunkProvider implements IChunkProvider
         ravineGenerator = TerrainGen.getModdedMapGen(ravineGenerator, RAVINE);
     }
 
-    public EPChunkProvider(World world, long worldSeed, boolean isMapFeaturesEnabled)
+    public EPChunkProvider(World world, long worldSeed)
     {
         this.worldObj = world;
-        this.mapFeaturesEnabled = isMapFeaturesEnabled;
+        this.mapFeaturesEnabled = false;
         this.rand = new Random(worldSeed);
-        this.noiseGen1 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.noiseGen2 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.noiseGen3 = new NoiseGeneratorOctaves(this.rand, 8);
-        this.noiseGen4 = new NoiseGeneratorOctaves(this.rand, 4);
-        this.noiseGen5 = new NoiseGeneratorOctaves(this.rand, 10);
-        this.noiseGen6 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.mobSpawnerNoise = new NoiseGeneratorOctaves(this.rand, 8);
+        this.noiseGen1 = new NoiseGeneratorOctaves(this.rand, 16); // 16
+        this.noiseGen2 = new NoiseGeneratorOctaves(this.rand, 8); // 16
+        this.noiseGen3 = new NoiseGeneratorOctaves(this.rand, 4); // 8
+        this.noiseGen4 = new NoiseGeneratorOctaves(this.rand, 4); // 4
+        this.noiseGen5 = new NoiseGeneratorOctaves(this.rand, 10); // 10
+        this.noiseGen6 = new NoiseGeneratorOctaves(this.rand, 16); // 16
+        this.mobSpawnerNoise = new NoiseGeneratorOctaves(this.rand, 8); // 8
 
         NoiseGeneratorOctaves[] noiseGens = {noiseGen1, noiseGen2, noiseGen3, noiseGen4, noiseGen5, noiseGen6, mobSpawnerNoise};
         noiseGens = TerrainGen.getModdedNoiseGenerators(world, this.rand, noiseGens);
@@ -340,7 +340,7 @@ public class EPChunkProvider implements IChunkProvider
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
         this.replaceBlocksForBiome(par1, par2, abyte, this.biomesForGeneration);
         this.caveGenerator.generate(this, this.worldObj, par1, par2, abyte);
-        this.ravineGenerator.generate(this, this.worldObj, par1, par2, abyte);
+        //this.ravineGenerator.generate(this, this.worldObj, par1, par2, abyte);
 
         if (this.mapFeaturesEnabled)
         {

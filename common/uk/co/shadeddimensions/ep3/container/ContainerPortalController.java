@@ -7,7 +7,7 @@ public class ContainerPortalController extends ContainerEnhancedPortals
 {
     public ContainerPortalController(TilePortalController tile, EntityPlayer player)
     {
-        super(tile.getSizeInventory(), tile);
+        super(tile);
     }
 
     @Override

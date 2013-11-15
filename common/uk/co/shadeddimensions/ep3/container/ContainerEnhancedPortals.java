@@ -1,11 +1,9 @@
-/**
-* Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
- */
-
 package uk.co.shadeddimensions.ep3.container;
 
+import cofh.gui.slot.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
@@ -13,164 +11,150 @@ import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 public abstract class ContainerEnhancedPortals extends Container
 {
     public TileEnhancedPortals tile;
-    private int inventorySize;
 
-    public ContainerEnhancedPortals(int inventorySize, TileEnhancedPortals t)
+    public ContainerEnhancedPortals(TileEnhancedPortals t)
     {
-        this.inventorySize = inventorySize;
         tile = t;
-    }
-
-    public int getInventorySize()
-    {
-        return inventorySize;
-    }
-
-    private boolean canStacksMerge(ItemStack stack1, ItemStack stack2)
-    {
-        if (stack1 == null || stack2 == null)
-        {
-            return false;
-        }
-        else if (!stack1.isItemEqual(stack2))
-        {
-            return false;
-        }
-        else if (!ItemStack.areItemStackTagsEqual(stack1, stack2))
-        {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    protected boolean shiftItemStack(ItemStack stackToShift, int start, int end)
-    {
-        boolean changed = false;
-
-        if (stackToShift.isStackable())
-        {
-            for (int slotIndex = start; stackToShift.stackSize > 0 && slotIndex < end; slotIndex++)
-            {
-                Slot slot = (Slot) inventorySlots.get(slotIndex);
-                ItemStack stackInSlot = slot.getStack();
-
-                if (stackInSlot != null && canStacksMerge(stackInSlot, stackToShift))
-                {
-                    int resultingStackSize = stackInSlot.stackSize + stackToShift.stackSize;
-                    int max = Math.min(stackToShift.getMaxStackSize(), slot.getSlotStackLimit());
-
-                    if (resultingStackSize <= max)
-                    {
-                        stackToShift.stackSize = 0;
-                        stackInSlot.stackSize = resultingStackSize;
-                        slot.onSlotChanged();
-                        changed = true;
-                    }
-                    else if (stackInSlot.stackSize < max)
-                    {
-                        stackToShift.stackSize -= max - stackInSlot.stackSize;
-                        stackInSlot.stackSize = max;
-                        slot.onSlotChanged();
-                        changed = true;
-                    }
-                }
-            }
-        }
-        if (stackToShift.stackSize > 0)
-        {
-            for (int slotIndex = start; stackToShift.stackSize > 0 && slotIndex < end; slotIndex++)
-            {
-                Slot slot = (Slot) inventorySlots.get(slotIndex);
-                ItemStack stackInSlot = slot.getStack();
-
-                if (stackInSlot == null)
-                {
-                    int max = Math.min(stackToShift.getMaxStackSize(), slot.getSlotStackLimit());
-                    stackInSlot = stackToShift.copy();
-                    stackInSlot.stackSize = Math.min(stackToShift.stackSize, max);
-                    stackToShift.stackSize -= stackInSlot.stackSize;
-                    slot.putStack(stackInSlot);
-                    slot.onSlotChanged();
-                    changed = true;
-                }
-            }
-        }
-        return changed;
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
-        ItemStack originalStack = null;
-        Slot slot = (Slot) inventorySlots.get(slotIndex);
-        int numSlots = inventorySlots.size();
+        int inventorySize = ((IInventory) tile).getSizeInventory();
+        ItemStack stack = null;
+        Slot slotObject = (Slot) inventorySlots.get(slotIndex);
 
-        if (slot != null && slot.getHasStack())
+        if (slotObject != null && slotObject.getHasStack())
         {
-            ItemStack stackInSlot = slot.getStack();
-            originalStack = stackInSlot.copy();
+            ItemStack stackInSlot = slotObject.getStack();
+            stack = stackInSlot.copy();
 
-            if (slotIndex >= numSlots - 9 * 4 && tryShiftItem(stackInSlot, numSlots))
+            if (slotIndex < inventorySize)
             {
-                // NOOP
-            }
-            else if (slotIndex >= numSlots - 9 * 4 && slotIndex < numSlots - 9)
-            {
-                if (!shiftItemStack(stackInSlot, numSlots - 9, numSlots))
+                if (!this.mergeItemStack(stackInSlot, 0, 35, true))
                 {
                     return null;
                 }
             }
-            else if (slotIndex >= numSlots - 9 && slotIndex < numSlots)
-            {
-                if (!shiftItemStack(stackInSlot, numSlots - 9 * 4, numSlots - 9))
-                {
-                    return null;
-                }
-            }
-            else if (!shiftItemStack(stackInSlot, numSlots - 9 * 4, numSlots))
+            else if (!this.mergeItemStack(stackInSlot, 0, inventorySize, false))
             {
                 return null;
             }
 
-            slot.onSlotChange(stackInSlot, originalStack);
-
-            if (stackInSlot.stackSize <= 0)
+            if (stackInSlot.stackSize == 0)
             {
-                slot.putStack(null);
+                slotObject.putStack(null);
             }
             else
             {
-                slot.onSlotChanged();
+                slotObject.onSlotChanged();
             }
-            if (stackInSlot.stackSize == originalStack.stackSize)
+
+            if (stackInSlot.stackSize == stack.stackSize)
             {
                 return null;
             }
 
-            slot.onPickupFromSlot(player, stackInSlot);
+            slotObject.onPickupFromSlot(player, stackInSlot);
         }
-
-        return originalStack;
+        
+        return stack;
     }
-
-    private boolean tryShiftItem(ItemStack stackToShift, int numSlots)
+    
+    @Override
+    protected boolean mergeItemStack(ItemStack par1ItemStack, int par2, int par3, boolean par4)
     {
-        for (int machineIndex = 0; machineIndex < numSlots - 9 * 4; machineIndex++)
-        {
-            Slot slot = (Slot) inventorySlots.get(machineIndex);
+        boolean flag1 = false;
+        int k = par2;
 
-            if (!slot.isItemValid(stackToShift))
+        if (par4)
+        {
+            k = par3 - 1;
+        }
+
+        Slot slot;
+        ItemStack itemstack1;
+
+        if (par1ItemStack.isStackable())
+        {
+            while (par1ItemStack.stackSize > 0 && (!par4 && k < par3 || par4 && k >= par2))
             {
-                continue;
-            }
-            if (shiftItemStack(stackToShift, machineIndex, machineIndex + 1))
-            {
-                return true;
+                slot = (Slot)this.inventorySlots.get(k);                
+                itemstack1 = slot.getStack();
+
+                if (itemstack1 != null && itemstack1.itemID == par1ItemStack.itemID && (!par1ItemStack.getHasSubtypes() || par1ItemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(par1ItemStack, itemstack1))
+                {
+                    int l = itemstack1.stackSize + par1ItemStack.stackSize;
+
+                    if (l <= par1ItemStack.getMaxStackSize())
+                    {
+                        par1ItemStack.stackSize = 0;
+                        itemstack1.stackSize = l;
+                        slot.onSlotChanged();
+                        flag1 = true;
+                    }
+                    else if (itemstack1.stackSize < par1ItemStack.getMaxStackSize())
+                    {
+                        par1ItemStack.stackSize -= par1ItemStack.getMaxStackSize() - itemstack1.stackSize;
+                        itemstack1.stackSize = par1ItemStack.getMaxStackSize();
+                        slot.onSlotChanged();
+                        flag1 = true;
+                    }
+                }
+
+                if (par4)
+                {
+                    --k;
+                }
+                else
+                {
+                    ++k;
+                }
             }
         }
 
-        return false;
+        if (par1ItemStack.stackSize > 0)
+        {
+            if (par4)
+            {
+                k = par3 - 1;
+            }
+            else
+            {
+                k = par2;
+            }
+
+            while (!par4 && k < par3 || par4 && k >= par2)
+            {
+                slot = (Slot)this.inventorySlots.get(k);
+                
+                if (slot instanceof SlotOutput)
+                {
+                    break;
+                }
+                
+                itemstack1 = slot.getStack();
+
+                if (itemstack1 == null)
+                {
+                    slot.putStack(par1ItemStack.copy());
+                    slot.onSlotChanged();
+                    par1ItemStack.stackSize = 0;
+                    flag1 = true;
+                    break;
+                }
+
+                if (par4)
+                {
+                    --k;
+                }
+                else
+                {
+                    ++k;
+                }
+            }
+        }
+
+        return flag1;
     }
 }

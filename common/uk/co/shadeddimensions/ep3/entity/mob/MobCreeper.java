@@ -5,10 +5,8 @@ import net.minecraft.world.World;
 
 public class MobCreeper extends EntityCreeper
 {
-
     public MobCreeper(World par1World)
     {
         super(par1World);
     }
-
 }

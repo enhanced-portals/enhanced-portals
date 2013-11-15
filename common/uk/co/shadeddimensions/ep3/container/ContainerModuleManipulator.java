@@ -9,7 +9,7 @@ public class ContainerModuleManipulator extends ContainerEnhancedPortals
 {
     public ContainerModuleManipulator(TileModuleManipulator t, EntityPlayer player)
     {
-        super(t.getSizeInventory(), t);
+        super(t);
 
         for (int i = 0; i < 9; i++)
         {

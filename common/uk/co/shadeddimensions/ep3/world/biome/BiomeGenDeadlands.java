@@ -1,10 +1,17 @@
 package uk.co.shadeddimensions.ep3.world.biome;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import java.util.Random;
 
-public class BiomeGenWasteland extends BiomeGenBase
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.SpawnListEntry;
+import net.minecraft.world.gen.feature.WorldGenerator;
+import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
+import uk.co.shadeddimensions.ep3.world.worldgen.WorldGenDeadlands;
+
+public class BiomeGenDeadlands extends BiomeGenBase
 {    
-    public BiomeGenWasteland(int par1)
+    @SuppressWarnings("unchecked")
+    public BiomeGenDeadlands(int par1)
     {
         super(par1);
         theBiomeDecorator.bigMushroomsPerChunk = 0;
@@ -17,13 +24,27 @@ public class BiomeGenWasteland extends BiomeGenBase
         theBiomeDecorator.reedsPerChunk = 0;
         theBiomeDecorator.sandPerChunk = 0;
         theBiomeDecorator.sandPerChunk2 = 0;
-        theBiomeDecorator.treesPerChunk = 0;
+        theBiomeDecorator.treesPerChunk = -999;
         theBiomeDecorator.waterlilyPerChunk = 0;
+        theBiomeDecorator.generateLakes = false;
+        
+        spawnableCreatureList.clear();
+        spawnableCaveCreatureList.clear();
+        spawnableMonsterList.clear();
+        spawnableWaterCreatureList.clear();
+        
+        spawnableMonsterList.add(new SpawnListEntry(MobCreeper.class, 30, 1, 4));
         
         setDisableRain();
-        setBiomeName("Wasteland");
+        setBiomeName("Deadlands");
     }
 
+    @Override
+    public WorldGenerator getRandomWorldGenForGrass(Random par1Random)
+    {
+        return new WorldGenDeadlands();
+    }
+    
     @Override
     public int getBiomeFoliageColor()
     {

@@ -7,7 +7,7 @@ public class ContainerDiallingDevice extends ContainerEnhancedPortals
 {
     public ContainerDiallingDevice(TileDiallingDevice t, EntityPlayer player)
     {
-        super(t.getSizeInventory(), t);
+        super(t);
     }
 
     @Override

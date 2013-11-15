@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -93,5 +94,23 @@ public class BlockScanner extends BlockEnhancedPortals
     public int damageDropped(int par1)
     {
         return par1;
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    {
+        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
+        
+        if (tile != null && tile instanceof TileScannerFrame)
+        {
+            TileScanner main = ((TileScannerFrame) tile).getScanner();
+            
+            if (main != null && main.isActive)
+            {
+                return AxisAlignedBB.getAABBPool().getAABB((double)par2 + this.minX, (double)par3 + this.minY, (double)par4 + this.minZ, (double)par2 + this.maxX, (double)par3 + this.maxY + 0.5, (double)par4 + this.maxZ);
+            }
+        }
+        
+        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 }

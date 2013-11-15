@@ -7,7 +7,7 @@ public class ContainerNetworkInterface extends ContainerEnhancedPortals
 {
     public ContainerNetworkInterface(TilePortalController t, EntityPlayer player)
     {
-        super(t.getSizeInventory(), t);
+        super(t);
     }
 
     @Override

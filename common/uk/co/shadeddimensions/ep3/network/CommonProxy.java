@@ -1,7 +1,6 @@
 package uk.co.shadeddimensions.ep3.network;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import net.minecraft.entity.EntityEggInfo;
@@ -20,6 +19,7 @@ import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
 import uk.co.shadeddimensions.ep3.entity.mob.MobEnderman;
 import uk.co.shadeddimensions.ep3.item.ItemDecoration;
+import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
 import uk.co.shadeddimensions.ep3.item.ItemFrame;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
@@ -70,6 +70,7 @@ public class CommonProxy
     public static ItemPortalModule itemUpgrade;
     public static ItemLocationCard itemLocationCard;
     public static ItemSynchronizer itemSynchronizer;
+    public static ItemEntityCard itemEntityCard;
 
     public static NetworkManager networkManager;
 
@@ -154,6 +155,9 @@ public class CommonProxy
 
         itemSynchronizer = new ItemSynchronizer(configuration.getItemId("Synchronizer"), "ep3.synchronizer");
         GameRegistry.registerItem(itemSynchronizer, "ep3.synchronizer");
+        
+        itemEntityCard = new ItemEntityCard(configuration.getItemId("EntityCard"), "ep3.entityCard");
+        GameRegistry.registerItem(itemEntityCard, "ep3.entityCard");
     }
 
     public void registerRenderers()
@@ -223,6 +227,7 @@ public class CommonProxy
         configuration.addItemEntry("Paintbrush");
         configuration.addItemEntry("LocationCard");
         configuration.addItemEntry("Synchronizer");
+        configuration.addItemEntry("EntityCard");
         configuration.addItemEntry("PortalModule");
 
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
@@ -245,45 +250,6 @@ public class CommonProxy
         }
         
         configuration.init();
-    }
-
-    ArrayList<Integer> usedBlocks = new ArrayList<Integer>();
-    ArrayList<Integer> usedItems = new ArrayList<Integer>();
-
-    boolean hasUsed(int i, int j)
-    {
-        if (i == 0)
-        {
-            return usedBlocks.contains(j);
-        }
-        else if (i == 1)
-        {
-            return usedItems.contains(j);
-        }
-
-        return false;
-    }
-
-    void setUsed(int i, int j)
-    {
-        if (i == 0)
-        {
-            usedBlocks.add(j);
-        }
-        else if (i == 1)
-        {
-            usedItems.add(j);
-        }
-    }
-
-    public static boolean isClient()
-    {
-        return FMLCommonHandler.instance().getEffectiveSide().isClient();
-    }
-
-    public static boolean isServer()
-    {
-        return !isClient();
     }
 
     public void miscSetup()

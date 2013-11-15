@@ -7,7 +7,7 @@ public class ContainerRedstoneInterface extends ContainerEnhancedPortals
 {
     public ContainerRedstoneInterface(TileRedstoneInterface tile, EntityPlayer player)
     {
-        super(tile.getSizeInventory(), tile);
+        super(tile);
     }
 
     @Override

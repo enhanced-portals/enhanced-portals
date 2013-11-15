@@ -442,12 +442,12 @@ public class TilePortalController extends TilePortalPart
             return true;
         }
 
-        if (!hasConfigured && waitingForCard && CommonProxy.isServer())
+        if (!hasConfigured && waitingForCard && !worldObj.isRemote)
         {
             if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID != CommonProxy.itemLocationCard.itemID)
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.nextStage"));
-            }           
+            }
 
             return false;
         }

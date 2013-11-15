@@ -405,9 +405,9 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         if (entity instanceof EntityLivingBase)
         {
-            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
-            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
-            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 200, 1);
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 200, 1);
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 200, 1);
 
             blindness.setCurativeItems(new ArrayList<ItemStack>());
             hunger.setCurativeItems(new ArrayList<ItemStack>());
@@ -430,9 +430,23 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
             hunger.setCurativeItems(new ArrayList<ItemStack>());
             poison.setCurativeItems(new ArrayList<ItemStack>());
 
-            int effect = rand.nextInt(3);            
-            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
-            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
+            int effect = rand.nextInt(3);
+            
+            if (effect == 0)
+            {
+                ((EntityLivingBase) entity).addPotionEffect(blindness);
+                ((EntityLivingBase) entity).addPotionEffect(hunger);
+            }
+            else if (effect == 1)
+            {
+                ((EntityLivingBase) entity).addPotionEffect(blindness);
+                ((EntityLivingBase) entity).addPotionEffect(poison);
+            }
+            else
+            {
+                ((EntityLivingBase) entity).addPotionEffect(poison);
+                ((EntityLivingBase) entity).addPotionEffect(hunger);
+            }
         }
     }
 
@@ -440,9 +454,9 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         if (entity instanceof EntityLivingBase)
         {
-            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
-            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
-            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 600, 1);
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 600, 1);
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 600, 1);
 
             blindness.setCurativeItems(new ArrayList<ItemStack>());
             hunger.setCurativeItems(new ArrayList<ItemStack>());

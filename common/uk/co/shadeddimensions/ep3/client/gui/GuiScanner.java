@@ -10,27 +10,15 @@ public class GuiScanner extends GuiBase
 {
     public GuiScanner(TileScanner scanner, EntityPlayer player)
     {
-        super(new ContainerScanner(scanner, player), new ResourceLocation("enhancedportals", "textures/gui/colourInterface.png"));
-        ySize += 10;
+        super(new ContainerScanner(scanner, player), new ResourceLocation("enhancedportals", "textures/gui/scanner.png"));
     }
-// TODO
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
-    {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        
-    }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
         super.drawGuiContainerForegroundLayer(x, y);
         
-    }
-    
-    @Override
-    public void initGui()
-    {
-        super.initGui();
+        fontRenderer.drawString("Scanner", 7, 7, 0x404040);
+        fontRenderer.drawString("Inventory", 7, 70, 0x404040);
     }
 }

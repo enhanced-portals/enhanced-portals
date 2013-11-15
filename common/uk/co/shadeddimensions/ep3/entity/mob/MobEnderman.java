@@ -22,10 +22,10 @@ public class MobEnderman extends EntityEnderman
         return this.worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
     }
     @Override
-    protected void updateEntityActionState()
+    public void onUpdate()
     {
-        super.updateEntityActionState();
-
+        super.onUpdate();
+        
         if (teleportTimer > -1)
         {
             teleportTimer++;

@@ -24,6 +24,6 @@ public class EPWorldProvider extends WorldProvider
     @Override
     public IChunkProvider createChunkGenerator()
     {
-        return new EPChunkProvider(worldObj, worldObj.getSeed(), false);
+        return new EPChunkProvider(worldObj, worldObj.getSeed());
     }
 }

@@ -8,7 +8,7 @@ public class ContainerBiometricIdentifier extends ContainerEnhancedPortals
 {
     public ContainerBiometricIdentifier(TileBiometricIdentifier t, EntityPlayer player)
     {
-        super(t.getSizeInventory(), t);
+        super(t);
         
         for (int i = 0; i < 3; i++)
         {
