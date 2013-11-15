@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagList;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.StackHelper;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 
 public class TileModuleManipulator extends TilePortalPart
@@ -76,7 +75,7 @@ public class TileModuleManipulator extends TilePortalPart
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return StackHelper.isUpgrade(stack) && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
+        return (stack != null && stack.getItem() instanceof IPortalModule) && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
     }
 
     public void particleCreated(PortalFX portalFX)
@@ -96,9 +95,9 @@ public class TileModuleManipulator extends TilePortalPart
         super.readFromNBT(tagCompound);
 
         NBTTagList list = tagCompound.getTagList("Inventory");
-        for (int i = 0; i < list.tagList.size(); i++)
+        for (int i = 0; i < list.tagCount(); i++)
         {
-            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagList.get(i));
+            inventory[i] = ItemStack.loadItemStackFromNBT((NBTTagCompound) list.tagAt(i));
         }
     }
 
@@ -221,5 +220,39 @@ public class TileModuleManipulator extends TilePortalPart
                 setInventorySlotContents(i, new ItemStack(id, 1, meta));
             }
         }
+        
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+    }
+
+    public boolean isFrameGhost()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).ghostPortalFrame(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    public boolean isPortalInvisible()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

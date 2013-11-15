@@ -12,17 +12,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TileEnhancedPortals extends TileEntity
-{
-    boolean hasPower;
-    
+{    
     public TileEnhancedPortals()
     {
-        hasPower = false;
+        
     }
     
     public ChunkCoordinates getChunkCoordinates()
@@ -34,12 +33,7 @@ public class TileEnhancedPortals extends TileEntity
     {
         return new WorldCoordinates(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
     }
-    
-    public void guiButtonPressed(int buttonID, EntityPlayer player)
-    {
         
-    }
-    
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         
@@ -89,26 +83,22 @@ public class TileEnhancedPortals extends TileEntity
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-        
-        tag.setBoolean("hasPower", hasPower);
     }
     
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        
-        hasPower = tag.getBoolean("hasPower");
     }
     
     public void usePacket(DataInputStream stream) throws IOException
     {
-        hasPower = stream.readBoolean();
+
     }
     
     public void fillPacket(DataOutputStream stream) throws IOException
     {
-        stream.writeBoolean(hasPower);
+
     }
     
     @Override
@@ -120,5 +110,23 @@ public class TileEnhancedPortals extends TileEntity
         {
             ClientProxy.requestTileData(this);
         }
+    }
+    
+    protected byte getHighestPowerState()
+    {
+        byte current = 0;
+
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            byte c = (byte) worldObj.getIndirectPowerLevelTo(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, i);
+
+            if (c > current)
+            {
+                current = c;
+            }
+        }
+
+        return current;
     }
 }

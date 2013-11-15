@@ -1,13 +1,11 @@
 package uk.co.shadeddimensions.ep3;
 
-import java.util.Random;
-
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import uk.co.shadeddimensions.ep3.creativetab.CreativeTabEP3;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -15,8 +13,7 @@ import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
-import uk.co.shadeddimensions.ep3.util.ConfigurationManager;
-import uk.co.shadeddimensions.ep3.util.CustomIconManager;
+import uk.co.shadeddimensions.ep3.world.EPWorldProvider;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -36,9 +33,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, serverPacketHandlerSpec = @SidedPacketHandler(channels = Reference.SHORT_ID, packetHandler = PacketHandlerServer.class), clientPacketHandlerSpec = @SidedPacketHandler(channels = Reference.SHORT_ID, packetHandler = PacketHandlerClient.class))
 public class EnhancedPortals
 {
-    public static ConfigurationManager config;
-    public static CustomIconManager customPortalIcons, customPortalFrameIcons;
-
     @Instance(Reference.ID)
     public static EnhancedPortals instance;
 
@@ -48,20 +42,18 @@ public class EnhancedPortals
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        customPortalIcons = new CustomIconManager();
-        customPortalFrameIcons = new CustomIconManager();
-
         CommonProxy.logger.setParent(FMLLog.getLogger());
-        proxy.setupConfiguration();
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();
+        proxy.registerEntities();
         proxy.registerRenderers();
         proxy.miscSetup();
 
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-        CreativeTabEP3.portalColour = new Random().nextInt(15) + 1;
+        DimensionManager.registerProviderType(CommonProxy.Dimension, EPWorldProvider.class, false);
+        DimensionManager.registerDimension(CommonProxy.Dimension, CommonProxy.Dimension);
     }
 
     @EventHandler
@@ -73,7 +65,7 @@ public class EnhancedPortals
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        config = new ConfigurationManager(new Configuration(event.getSuggestedConfigurationFile()));
+        proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
     }
 
     @EventHandler
@@ -98,8 +90,7 @@ public class EnhancedPortals
         if (event.map.textureType == 0)
         {
             ClientProxy.customPortalTextures.clear();
-            ClientProxy.customFrameTextures.clear();
-            
+            ClientProxy.customFrameTextures.clear();            
             int counter = 0;
             
             while (ClientProxy.resourceExists("textures/blocks/customPortal/" + String.format("%02d", counter) + ".png"))

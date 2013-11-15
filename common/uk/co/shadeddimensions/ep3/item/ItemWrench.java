@@ -3,37 +3,30 @@ package uk.co.shadeddimensions.ep3.item;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
-import uk.co.shadeddimensions.ep3.lib.GuiIds;
-import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.portal.NetworkManager;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
+import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
+import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 
 public class ItemWrench extends ItemPortalTool
 {
     Icon texture;
-    
+
     public ItemWrench(int id, String name)
     {
         super(id, true, name);
     }
-    
+
     @Override
     public Icon getIconFromDamage(int par1)
     {
         return texture;
     }
-    
+
     @Override
     public void registerIcons(IconRegister register)
     {
@@ -41,83 +34,31 @@ public class ItemWrench extends ItemPortalTool
     }
 
     @Override
-    public boolean openGui(TilePortalPart portalPart, ItemStack stack, boolean isSneaking, EntityPlayer player)
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
-        if (super.openGui(portalPart, stack, isSneaking, player))
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+        if (tile != null && tile instanceof TileStabilizer)
         {
-            if (portalPart instanceof TilePortalController)
+            TileStabilizerMain dbs = ((TileStabilizer) tile).getMainBlock();
+
+            if (dbs != null)
             {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
+                CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, dbs);
+                return true;
             }
-            else if (portalPart instanceof TileRedstoneInterface)
-            {
-                player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_REDSTONE, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
-            }
-            else if (portalPart instanceof TileDiallingDevice)
-            {
-                TileDiallingDevice dialDevice = (TileDiallingDevice) portalPart;
-    
-                if (dialDevice.getPortalController() != null && dialDevice.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
-                {
-                    if (!portalPart.worldObj.isRemote)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".dialDevice.noUidSet"));
-                    }
-    
-                    return true;
-                }
-    
-                // TODO
-            }
-            else if (portalPart instanceof TileNetworkInterface)
-            {
-                TileNetworkInterface networkInterface = (TileNetworkInterface) portalPart;
-    
-                if (networkInterface.getPortalController() != null && networkInterface.getPortalController().uniqueIdentifier.equals(NetworkManager.BLANK_IDENTIFIER))
-                {
-                    if (!portalPart.worldObj.isRemote)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("chat." + Reference.SHORT_ID + ".networkInterface.noUidSet"));
-                    }
-    
-                    return true;
-                }
-    
-                player.openGui(EnhancedPortals.instance, GuiIds.NETWORK_INTERFACE, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
-            }
-            else if (portalPart instanceof TileBiometricIdentifier)
-            {
-                // TODO
-            }
-            else if (portalPart instanceof TileModuleManipulator)
-            {
-                if (((TileModuleManipulator) portalPart).getPortalController() != null)
-                {
-                    player.openGui(EnhancedPortals.instance, GuiIds.MODULE_MANIPULATOR, portalPart.worldObj, portalPart.xCoord, portalPart.yCoord, portalPart.zCoord);
-                }
-            }
-            else if (portalPart instanceof TileFrame)
-            {
-                TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
-    
-                if (control != null)
-                {
-                    player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
-                }
-            }
-            else if (portalPart instanceof TilePortal)
-            {
-                TilePortalController control = ((TilePortalPart) portalPart).getPortalController();
-    
-                if (control != null)
-                {
-                    player.openGui(EnhancedPortals.instance, GuiIds.PORTAL_CONTROLLER, portalPart.worldObj, control.xCoord, control.yCoord, control.zCoord);
-                }
-            }
-            
-            return true;
         }
-        
-        return false;
+        else if (tile != null && tile instanceof TileStabilizerMain)
+        {
+            TileStabilizerMain dbs = (TileStabilizerMain) tile;
+
+            if (dbs != null)
+            {
+                CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, dbs);
+                return true;
+            }
+        }
+
+        return super.onItemUse(stack, player, world, x, y, z, par7, par8, par9, par10);
     }
 }

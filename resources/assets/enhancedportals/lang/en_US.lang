@@ -12,7 +12,7 @@ tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
 # Items
 item.ep3.wrench.name=Wrench
 item.ep3.paintbrush.name=Nanobrush
-item.ep3.goggles.name=Goggles
+item.ep3.goggles.name=Glasses
 item.ep3.locationCard.name=DBS Location Card
 
 # Upgrades
@@ -22,12 +22,16 @@ item.ep3.portalModule.1.name=Rainbow Particles
 item.ep3.portalModule.1.desc=Every particle will have a random colour
 item.ep3.portalModule.2.name=Portal Silencer
 item.ep3.portalModule.2.desc=Silences the portal
-item.ep3.portalModule.3.name=Momentum [NI]
-item.ep3.portalModule.3.desc=Entities keep their momentum [NI]
+item.ep3.portalModule.3.name=Momentum
+item.ep3.portalModule.3.desc=Entities keep their momentum
 item.ep3.portalModule.4.name=Portal Cloaking
 item.ep3.portalModule.4.desc=Makes the portal completely invisible
 item.ep3.portalModule.5.name=Particle Shader
 item.ep3.portalModule.5.desc=Particles randomly spawn lighter or darker
+item.ep3.portalModule.6.name=Ethereal Frame
+item.ep3.portalModule.6.desc=Makes the portal frame transparent
+item.ep3.portalModule.6.desc2=Allows you to walk through the frame
+item.ep3.portalModule.6.desc3=Glows but does not give off light
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3
@@ -66,10 +70,7 @@ gui.ep3.controller.invalid=
 gui.ep3.clickToModify=Click to modify
 gui.ep3.networkIdentifier=Network Identifier
 gui.ep3.networkInfo=Network Information
-gui.ep3.networkIdentifier.connectedPortals=Connected Portals
-gui.ep3.networkIdentifier.teleportMode=Teleport Mode
-gui.ep3.networkIdentifier.sequential=Sequential
-gui.ep3.networkIdentifier.random=Random
+gui.ep3.networkIdentifier.networkedPortals=Networked Portals
 gui.ep3.networkIdentifier.notSet=Not Set
 gui.ep3.modules=Modules
 
@@ -78,7 +79,7 @@ gui.ep3.redstone.output.portalCreated=Portal Created
 gui.ep3.redstone.output.portalRemoved=Portal Removed
 gui.ep3.redstone.output.portalActive=Portal Active
 gui.ep3.redstone.output.portalInactive=Portal Inactive
-gui.ep3.redstone.output.entityTouch=Entity Touch
+gui.ep3.redstone.output.entityTouch=Entity Touch [NI]
 gui.ep3.redstone.input.portalOnSignal=Create Portal on Signal
 gui.ep3.redstone.input.portalNoSignal=Create Portal with no Signal
 gui.ep3.redstone.input.portalOnPulse=Create Portal on Pulse
@@ -96,6 +97,7 @@ gui.ep3.redstone.input.portalOnPulse.desc=Creates a portal when recieving a reds
 gui.ep3.redstone.input.noPortalOnPulse.desc=Removes a portal when recieving a redstone pulse, the portal will not get recreated
 
 # Chat
+ep3.chat.error.noUidSet=You must set a Unique Identifier before doing this
 ep3.chat.error.multipleNetworkInterfaces=Failed to create a portal: You cannot have multiple Network Interfaces
 ep3.chat.error.networkInterfaceAndDialDevice=Failed to create a portal: You cannot have a Dialling Device and a Network Interface
 ep3.chat.error.multipleDiallingDevices=Failed to create a portal: You cannot have multiple Dialling Devices
@@ -103,7 +105,6 @@ ep3.chat.error.multipleBiometricIdentifiers=Failed to create a portal: You canno
 ep3.chat.error.multipleModuleManipulators=Failed to create a portal: You cannot have multiple Module Manipulators
 ep3.chat.error.multipleControllers=Failed to create a portal: You cannot have multiple Portal Controllers
 ep3.chat.error.noPortals=Failed to create a portal at this location. Check that this location is valid for a portal
-ep3.chat.error.noUidSet=You cannot add this portal to a network until you have set a Unique Identifier
 ep3.chat.error.voidLinkCard=This link card no longer links to a valid DBS
 ep3.chat.nextStage=Please insert a DBS Location Card to continue
 ep3.chat.success=Successfully initialized the portal

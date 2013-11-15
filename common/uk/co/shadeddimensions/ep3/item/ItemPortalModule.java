@@ -7,10 +7,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
+import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -20,7 +22,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, GHOST_FRAME;
 
         public String getUniqueID()
         {
@@ -45,7 +47,14 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        list.add(StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
+        list.add("Portal Module");        
+        list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
+        
+        if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
+        {
+            list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
+            list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc3"));
+        }
     }
 
     @Override
@@ -92,9 +101,13 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public EnumRarity getRarity(ItemStack itemStack)
     {
-        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal())
+        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal() || itemStack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
         {
             return EnumRarity.epic;
+        }
+        else if (itemStack.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal())
+        {
+            return EnumRarity.rare;
         }
 
         return EnumRarity.common;
@@ -121,13 +134,11 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     {
         if (upgrade.getItemDamage() == PortalModules.RAINBOW_PARTICLES.ordinal())
         {
-            particle.setParticleRed((float) Math.random());
-            particle.setParticleGreen((float) Math.random());
-            particle.setParticleBlue((float) Math.random());
+            particle.setRBGColorF((float) Math.random(), (float) Math.random(), (float) Math.random());
         }
         else if (upgrade.getItemDamage() == PortalModules.TINTSHADE_PARTICLES.ordinal())
         {
-            float particleRed = particle.getParticleRed(), particleGreen = particle.getParticleGreen(), particleBlue = particle.getParticleBlue();
+            float particleRed = particle.getRedColorF(), particleGreen = particle.getGreenColorF(), particleBlue = particle.getBlueColorF();
             int i = ClientProxy.random.nextInt(3);
             
             if (i == 0)
@@ -143,9 +154,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
                 particleBlue = (255 - particleBlue) * ((particleBlue / 4) * 3);
             }
             
-            particle.setParticleRed(particleRed);
-            particle.setParticleGreen(particleGreen);
-            particle.setParticleBlue(particleBlue);
+            particle.setRBGColorF(particleRed, particleGreen, particleBlue);
         }
     }
 
@@ -173,6 +182,12 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 
     }
 
+    @Override
+    public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i)
+    {
+        return i.getItemDamage() == PortalModules.GHOST_FRAME.ordinal();
+    }
+    
     @Override
     public void registerIcons(IconRegister register)
     {

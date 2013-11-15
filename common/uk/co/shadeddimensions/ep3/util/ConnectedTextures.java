@@ -26,6 +26,24 @@ public class ConnectedTextures
         blockID = blockId;
         meta = metadata;
     }
+    
+    public ConnectedTextures(ConnectedTextures connectedTextures, int b, int m)
+    {
+        textures = connectedTextures.textures;
+        loc = connectedTextures.loc;
+        blockID = b;
+        meta = m;
+    }
+
+    public void setBlockID(int id)
+    {
+        blockID = id;
+    }
+    
+    public void setMetadata(int metadata)
+    {
+        meta = metadata;
+    }
 
     protected boolean canConnectTo(int id, int m)
     {

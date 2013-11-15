@@ -40,24 +40,37 @@ public class PortalUtils
      */
     public static boolean createPortalFrom(TilePortalController controller)
     {
-        if (CommonProxy.isClient() || controller.isPortalActive || controller.processing || !controller.hasConfigured)
+        if (controller.worldObj.isRemote || controller.isPortalActive || controller.processing || !controller.hasConfigured)
         {
             return false;
         }
-                
+
         for (WorldCoordinates w : controller.portals)
         {
             if (!controller.worldObj.isAirBlock(w.posX, w.posY, w.posZ))
             {
+                if (!CommonProxy.portalsDestroyBlocks)
+                {
+                    return false;
+                }
+                
                 int id = controller.worldObj.getBlockId(w.posX, w.posY, w.posZ), metadata = controller.worldObj.getBlockMetadata(w.posX, w.posY, w.posZ);
                 
-                if (id != Block.bedrock.blockID)
+                if (id == Block.bedrock.blockID) // Stop users from being able to break out of the world with portals
+                {
+                    return false;
+                }
+                else
                 {
                     controller.worldObj.playAuxSFX(2001, w.posX, w.posY, w.posZ, id + (metadata << 12));
                     Block.blocksList[id].dropBlockAsItem(controller.worldObj, w.posX, w.posY, w.posZ, metadata, 0);
+                    controller.worldObj.setBlockToAir(w.posX, w.posY, w.posZ);
                 }
             }
-            
+        }
+        
+        for (WorldCoordinates w : controller.portals)
+        {
             controller.worldObj.setBlock(w.posX, w.posY, w.posZ, CommonProxy.blockPortal.blockID, controller.portalType, 2);
             
             TilePortal portal = (TilePortal) controller.worldObj.getBlockTileEntity(w.posX, w.posY, w.posZ);
@@ -69,6 +82,7 @@ public class PortalUtils
             CommonProxy.sendUpdatePacketToAllAround((TilePortal) controller.worldObj.getBlockTileEntity(w.posX, w.posY, w.posZ));
         }
         
+        //CommonProxy.sendPacketToAllAround(controller, new PacketPortalCreated(controller).getPacket());
         controller.setPortalActive(true);
         return true;
     }
@@ -277,7 +291,7 @@ public class PortalUtils
      */
     public static void removePortalFrom(TilePortalController controller)
     {
-        if (CommonProxy.isClient() || !controller.isPortalActive || controller.processing || !controller.hasConfigured)
+        if (controller.worldObj.isRemote || !controller.isPortalActive || controller.processing || !controller.hasConfigured)
         {
             return;
         }

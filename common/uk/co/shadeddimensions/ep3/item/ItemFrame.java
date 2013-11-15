@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -80,5 +81,15 @@ public class ItemFrame extends ItemBlock
         }
 
         return super.getUnlocalizedName() + "." + name;
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            list.add(new ItemStack(CommonProxy.blockFrame.blockID, 1, i));
+        }
     }
 }

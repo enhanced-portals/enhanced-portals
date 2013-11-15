@@ -1,8 +1,9 @@
 package uk.co.shadeddimensions.ep3.util;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -33,34 +34,92 @@ public class WorldCoordinates extends ChunkCoordinates
         dimension = coord.dimension;
     }
     
-    public int getBlockId()
+    public WorldCoordinates(NBTTagCompound tag)
     {
-        return DimensionManager.getWorld(dimension).getBlockId(posX, posY, posZ);
+        this(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D"));
+    }
+    
+    public int getBlockId()
+    {        
+        WorldServer world = getWorld();
+        
+        if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
+        {
+            world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        }
+        
+        return world.getBlockId(posX, posY, posZ);
     }
     
     public int getBlockMetadata()
-    {
-        return DimensionManager.getWorld(dimension).getBlockMetadata(posX, posY, posZ);
+    {        
+        WorldServer world = getWorld();
+        
+        if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
+        {
+            world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        }
+        
+        return world.getBlockMetadata(posX, posY, posZ);
     }
     
     public TileEntity getBlockTileEntity()
     {
-        return DimensionManager.getWorld(dimension).getBlockTileEntity(posX, posY, posZ);
+        WorldServer world = getWorld();
+        
+        if (world == null)
+        {
+            DimensionManager.initDimension(dimension);
+            world = DimensionManager.getWorld(dimension);
+            
+            if (world == null)
+            {
+                return null; // How?
+            }
+        }
+        
+        if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
+        {
+            world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        }
+        
+        return world.getBlockTileEntity(posX, posY, posZ);
     }
-
+        
     public WorldCoordinates offset(ForgeDirection orientation)
     {
         return new WorldCoordinates(posX + orientation.offsetX, posY + orientation.offsetY, posZ + orientation.offsetZ, dimension);
     }
 
-    public World getWorld()
+    public WorldServer getWorld()
     {
-        return DimensionManager.getWorld(dimension);
+        WorldServer world = DimensionManager.getWorld(dimension);
+        
+        if (world == null)
+        {
+            DimensionManager.initDimension(dimension);
+            world = DimensionManager.getWorld(dimension);
+            
+            if (world == null)
+            {
+                return null; // How?
+            }
+        }
+        
+        return world;
     }
     
     @Override
     public String toString()
     {
         return String.format("WorldCoordinates (X %s, Y %s, Z %s, D %s)", posX, posY, posZ, dimension);
+    }
+
+    public void writeToNBT(NBTTagCompound t)
+    {
+        t.setInteger("X", posX);
+        t.setInteger("Y", posY);
+        t.setInteger("Z", posZ);
+        t.setInteger("D", dimension);
     }
 }

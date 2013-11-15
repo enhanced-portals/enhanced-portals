@@ -1,18 +1,14 @@
 /**
- * Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
+* Derived from BuildCraft released under the MMPL https://github.com/BuildCraft/BuildCraft http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
 
 package uk.co.shadeddimensions.ep3.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import uk.co.shadeddimensions.ep3.client.gui.slots.IPhantomSlot;
-import uk.co.shadeddimensions.ep3.client.gui.slots.SlotBase;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
-import uk.co.shadeddimensions.ep3.util.StackHelper;
 
 public abstract class ContainerEnhancedPortals extends Container
 {
@@ -25,63 +21,29 @@ public abstract class ContainerEnhancedPortals extends Container
         tile = t;
     }
 
-    protected void adjustPhantomSlot(Slot slot, int mouseButton, int modifier)
-    {
-        if (!((IPhantomSlot) slot).canAdjust())
-        {
-            return;
-        }
-
-        ItemStack stackSlot = slot.getStack();
-        int stackSize;
-
-        if (modifier == 1)
-        {
-            stackSize = mouseButton == 0 ? (stackSlot.stackSize + 1) / 2 : stackSlot.stackSize * 2;
-        }
-        else
-        {
-            stackSize = mouseButton == 0 ? stackSlot.stackSize - 1 : stackSlot.stackSize + 1;
-        }
-
-        if (stackSize > slot.getSlotStackLimit())
-        {
-            stackSize = slot.getSlotStackLimit();
-        }
-
-        stackSlot.stackSize = stackSize;
-
-        if (stackSlot.stackSize <= 0)
-        {
-            slot.putStack((ItemStack) null);
-        }
-    }
-
-    protected void fillPhantomSlot(Slot slot, ItemStack stackHeld, int mouseButton, int modifier)
-    {
-        if (!((IPhantomSlot) slot).canAdjust())
-        {
-            return;
-        }
-
-        int stackSize = mouseButton == 0 ? stackHeld.stackSize : 1;
-
-        if (stackSize > slot.getSlotStackLimit())
-        {
-            stackSize = slot.getSlotStackLimit();
-        }
-
-        ItemStack phantomStack = stackHeld.copy();
-        phantomStack.stackSize = stackSize;
-
-        slot.putStack(phantomStack);
-    }
-
     public int getInventorySize()
     {
         return inventorySize;
     }
 
+    private boolean canStacksMerge(ItemStack stack1, ItemStack stack2)
+    {
+        if (stack1 == null || stack2 == null)
+        {
+            return false;
+        }
+        else if (!stack1.isItemEqual(stack2))
+        {
+            return false;
+        }
+        else if (!ItemStack.areItemStackTagsEqual(stack1, stack2))
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
     protected boolean shiftItemStack(ItemStack stackToShift, int start, int end)
     {
         boolean changed = false;
@@ -93,7 +55,7 @@ public abstract class ContainerEnhancedPortals extends Container
                 Slot slot = (Slot) inventorySlots.get(slotIndex);
                 ItemStack stackInSlot = slot.getStack();
 
-                if (stackInSlot != null && StackHelper.instance().canStacksMerge(stackInSlot, stackToShift))
+                if (stackInSlot != null && canStacksMerge(stackInSlot, stackToShift))
                 {
                     int resultingStackSize = stackInSlot.stackSize + stackToShift.stackSize;
                     int max = Math.min(stackToShift.getMaxStackSize(), slot.getSlotStackLimit());
@@ -135,70 +97,6 @@ public abstract class ContainerEnhancedPortals extends Container
             }
         }
         return changed;
-    }
-
-    @Override
-    public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player)
-    {
-        Slot slot = slotNum < 0 ? null : (Slot) inventorySlots.get(slotNum);
-
-        if (slot instanceof IPhantomSlot)
-        {
-            return slotClickPhantom(slot, mouseButton, modifier, player);
-        }
-
-        return super.slotClick(slotNum, mouseButton, modifier, player);
-    }
-
-    private ItemStack slotClickPhantom(Slot slot, int mouseButton, int modifier, EntityPlayer player)
-    {
-        ItemStack stack = null;
-
-        if (mouseButton == 2)
-        {
-            if (((IPhantomSlot) slot).canAdjust())
-            {
-                slot.putStack(null);
-            }
-        }
-        else if (mouseButton == 0 || mouseButton == 1)
-        {
-            InventoryPlayer playerInv = player.inventory;
-            slot.onSlotChanged();
-            ItemStack stackSlot = slot.getStack();
-            ItemStack stackHeld = playerInv.getItemStack();
-
-            if (stackSlot != null)
-            {
-                stack = stackSlot.copy();
-            }
-
-            if (stackSlot == null)
-            {
-                if (stackHeld != null && slot.isItemValid(stackHeld))
-                {
-                    fillPhantomSlot(slot, stackHeld, mouseButton, modifier);
-                }
-            }
-            else if (stackHeld == null)
-            {
-                adjustPhantomSlot(slot, mouseButton, modifier);
-                slot.onPickupFromSlot(player, playerInv.getItemStack());
-            }
-            else if (slot.isItemValid(stackHeld))
-            {
-                if (StackHelper.instance().canStacksMerge(stackSlot, stackHeld))
-                {
-                    adjustPhantomSlot(slot, mouseButton, modifier);
-                }
-                else
-                {
-                    fillPhantomSlot(slot, stackHeld, mouseButton, modifier);
-                }
-            }
-        }
-
-        return stack;
     }
 
     @Override
@@ -263,14 +161,6 @@ public abstract class ContainerEnhancedPortals extends Container
         {
             Slot slot = (Slot) inventorySlots.get(machineIndex);
 
-            if (slot instanceof SlotBase && !((SlotBase) slot).canShift())
-            {
-                continue;
-            }
-            if (slot instanceof IPhantomSlot)
-            {
-                continue;
-            }
             if (!slot.isItemValid(stackToShift))
             {
                 continue;
