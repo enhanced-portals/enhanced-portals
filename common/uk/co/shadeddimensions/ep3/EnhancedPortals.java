@@ -14,6 +14,7 @@ import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.world.EPWorldProvider;
+import uk.co.shadeddimensions.ep3.world.biome.Biomes;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -49,6 +50,7 @@ public class EnhancedPortals
         proxy.registerEntities();
         proxy.registerRenderers();
         proxy.miscSetup();
+        Biomes.initBiomes();
 
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());

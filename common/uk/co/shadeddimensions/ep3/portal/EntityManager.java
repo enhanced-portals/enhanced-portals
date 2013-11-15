@@ -468,7 +468,7 @@ public class EntityManager
 
         if (mount != null) // Remount any mounted entities
         {
-            if (!(entity instanceof EntityPlayerMP)) // Player re-mounting is derpy.
+            if (!(entity instanceof EntityPlayerMP)) // Player re-mounting is derpy. (skip it for now)
             {
                 entity.mountEntity(mount);
             }
@@ -480,6 +480,9 @@ public class EntityManager
     public static void teleportEntityToDimension(Entity par1Entity)
     {
         WorldCoordinates location = new WorldCoordinates(0, 0, 0, CommonProxy.Dimension);
+        ChunkCoordinates spawn = location.getWorld().getSpawnPoint();
+        location.posX = spawn.posX;
+        location.posZ = spawn.posZ;
         location.posY = location.getWorld().getTopSolidOrLiquidBlock(location.posX, location.posZ);
         
         teleportEntity(par1Entity, location);

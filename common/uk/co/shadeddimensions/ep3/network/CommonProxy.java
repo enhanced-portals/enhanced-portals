@@ -80,7 +80,7 @@ public class CommonProxy
     public static int redstoneFluxPowerMultiplier; // Ints
     
     public static int MobEnderman, MobCreeper;
-    public static int Dimension;
+    public static int Dimension, WastelandID;
 
     public static void sendPacketToAllAroundTiny(TileEnhancedPortals tile)
     {
@@ -237,6 +237,7 @@ public class CommonProxy
         MobCreeper = configuration.get("Mobs", "CreeperID", 1);
         
         Dimension = configuration.get("World", "DimensionID", -10);
+        WastelandID = configuration.get("World", "WastelandID", 50);
         
         if (redstoneFluxPowerMultiplier < 0)
         {

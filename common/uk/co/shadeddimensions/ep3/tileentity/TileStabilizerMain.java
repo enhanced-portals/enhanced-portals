@@ -1,15 +1,22 @@
 package uk.co.shadeddimensions.ep3.tileentity;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -19,6 +26,7 @@ import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
@@ -39,7 +47,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     int rows, tickTimer;
     EnergyStorage energyStorage;
     public int instability = 0;
-    
+    Random rand = new Random();
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
 
@@ -192,10 +200,15 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     }
 
     /***
-     * Gets whether or not this stabilizer has enough power to keep the portal open for at least one tick.
+     * Gets whether or not this stabilizer has enough power to keep the portal open for at least one second.
      */
     boolean hasEnoughPowerToStart()
     {
+        if (CommonProxy.redstoneFluxPowerMultiplier == 0)
+        {
+            return true;
+        }
+
         int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * (1 * CommonProxy.REDSTONE_FLUX_COST);
         return extractEnergy(null, (int) (powerRequirement * 0.3), true) == (int) (powerRequirement * 0.3);
     }
@@ -244,22 +257,51 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
                 instability = 0;
             }
-            
+
             tickTimer = -1;
         }
-        
+
         if (inventory != null && ((IEnergyContainerItem) inventory.getItem()).getEnergyStored(inventory) > 0)
         {
             energyStorage.receiveEnergy(((IEnergyContainerItem) inventory.getItem()).extractEnergy(inventory, 100, false), false);
         }
-        
+
         tickTimer++;
     }
-    
+
     public void onEntityEnterPortal(GlyphIdentifier uID, Entity entity, TilePortal portal)
     {
         if (EntityManager.isEntityFitForTravel(entity))
         {
+            byte instabilityLevel = -1;
+
+            if (instability > 0)
+            {
+                if (rand.nextInt(100) < instability)
+                {
+                    if (instability == 20)
+                    {
+                        // teleport somewhere close
+                        addLowInstabilityEffects(entity);
+                        instabilityLevel = (byte) rand.nextInt(2); // 0 or 1
+                    }
+                    else if (instability == 50)
+                    {
+                        // teleport somewhere further away
+                        addMediumInstabilityEffects(entity);
+                        instabilityLevel = (byte) (10 + rand.nextInt(2)); // 10 or 11
+                        System.out.println(instabilityLevel);
+                    }
+                    else if (instability == 70)
+                    {
+                        // dimension
+                        addHighInstabilityEffects(entity);
+                        EntityManager.teleportEntityToDimension(entity);
+                        return;
+                    }
+                }
+            }
+
             GlyphIdentifier exit = null;
 
             if (activeConnections.containsKey(uID.getGlyphString()))
@@ -273,11 +315,101 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
             if (exit != null)
             {
+                TilePortalController controller = CommonProxy.networkManager.getPortalController(exit);
+
+                if (instabilityLevel == 0)
+                {
+                    WorldCoordinates coord = new WorldCoordinates(controller.xCoord + (rand.nextBoolean() ? rand.nextInt(32) : -rand.nextInt(32)), controller.yCoord, controller.zCoord + (rand.nextBoolean() ? rand.nextInt(32) : -rand.nextInt(32)), controller.worldObj.provider.dimensionId);
+                    coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
+                    
+                    EntityManager.teleportEntity(entity, coord);
+                    return;
+                }
+                else if (instabilityLevel == 10 || instabilityLevel == 11)
+                {
+                    WorldCoordinates coord = new WorldCoordinates(controller.xCoord + (rand.nextBoolean() ? -32 - rand.nextInt(128) : 32 + rand.nextInt(128)), controller.yCoord, controller.zCoord + (rand.nextBoolean() ? - 32 - rand.nextInt(128) : 32 + rand.nextInt(128)), controller.worldObj.provider.dimensionId);
+
+                    if (instabilityLevel == 10)
+                    {
+                        coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
+                    }
+                    else
+                    {
+                        coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + (instabilityLevel == 11 ? rand.nextInt(10) : 0);
+                    }
+                    
+                    EntityManager.teleportEntity(entity, coord);
+                    return;
+                }
+
                 EntityManager.teleportEntity(entity, uID, exit, portal);
+
+                if (instabilityLevel == 1)
+                {
+                    if (controller.portalType == 1)
+                    {
+                        entity.motionX = 0;
+                        entity.motionZ = entity.rotationYaw == 0 ? 1 : -1;
+                        entity.motionY = 1;
+                        entity.velocityChanged = true;
+                    }
+                    else if (controller.portalType == 2)
+                    {
+                        entity.motionX = entity.rotationYaw == 90 ? -1 : 1;
+                        entity.motionZ = 0;
+                        entity.motionY = 1;
+                        entity.velocityChanged = true;
+                    }
+                }
             }
         }
 
         EntityManager.setEntityPortalCooldown(entity);
+    }
+
+    void addLowInstabilityEffects(Entity entity)
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+
+            ((EntityLivingBase) entity).addPotionEffect(blindness);
+        }
+    }
+
+    void addMediumInstabilityEffects(Entity entity)
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+
+            ((EntityLivingBase) entity).addPotionEffect(blindness);
+            ((EntityLivingBase) entity).addPotionEffect(hunger);
+        }
+    }
+
+    void addHighInstabilityEffects(Entity entity)
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+
+            ((EntityLivingBase) entity).addPotionEffect(blindness);
+            ((EntityLivingBase) entity).addPotionEffect(hunger);
+            ((EntityLivingBase) entity).addPotionEffect(poison);
+        }
     }
 
     public GlyphIdentifier getConnectedPortal(GlyphIdentifier uniqueIdentifier)
@@ -318,7 +450,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
             tag.setTag("activeConnections", c);
         }
-        
+
         if (inventory != null)
         {
             NBTTagCompound t = new NBTTagCompound();
@@ -351,7 +483,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                 activeConnectionsReverse.put(B, A);
             }
         }
-        
+
         if (tag.hasKey("inventory"))
         {
             inventory = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("inventory"));
@@ -359,12 +491,30 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     }
 
     @Override
+    public void fillPacket(DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(activeConnections.size());
+        stream.writeInt(powerState);
+        stream.writeInt(instability);
+        stream.writeInt(energyStorage.getEnergyStored());
+    }
+
+    @Override
+    public void usePacket(DataInputStream stream) throws IOException
+    {
+        intActiveConnections = stream.readInt();
+        powerState = stream.readInt();
+        instability = stream.readInt();
+        energyStorage.setEnergyStored(stream.readInt());
+    }
+
+    @Override
     public void validate()
     {
-        // Don't call super - we don't need to send any packets.
+        // Don't call super - we don't need to send any packets here
         this.tileEntityInvalid = false;
     }
-    
+
     public void deconstruct()
     {
         for (ChunkCoordinates c : blockList)
@@ -380,14 +530,14 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         return energyStorage;
     }
-    
+
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         if (payload.data.hasKey("button"))
         {
             powerState++;
-            
+
             if (powerState > 3)
             {
                 powerState = 0;
@@ -477,10 +627,10 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         return true;
     }
-    
+
     @Override
     public void openChest() { }
-    
+
     @Override
     public void closeChest() { }
 
