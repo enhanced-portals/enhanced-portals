@@ -273,35 +273,6 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         if (EntityManager.isEntityFitForTravel(entity))
         {
-            byte instabilityLevel = -1;
-
-            if (instability > 0)
-            {
-                if (rand.nextInt(100) < instability)
-                {
-                    if (instability == 20)
-                    {
-                        // teleport somewhere close
-                        addLowInstabilityEffects(entity);
-                        instabilityLevel = (byte) rand.nextInt(2); // 0 or 1
-                    }
-                    else if (instability == 50)
-                    {
-                        // teleport somewhere further away
-                        addMediumInstabilityEffects(entity);
-                        instabilityLevel = (byte) (10 + rand.nextInt(2)); // 10 or 11
-                        System.out.println(instabilityLevel);
-                    }
-                    else if (instability == 70)
-                    {
-                        // dimension
-                        addHighInstabilityEffects(entity);
-                        EntityManager.teleportEntityToDimension(entity);
-                        return;
-                    }
-                }
-            }
-
             GlyphIdentifier exit = null;
 
             if (activeConnections.containsKey(uID.getGlyphString()))
@@ -313,54 +284,117 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                 exit = new GlyphIdentifier(activeConnectionsReverse.get(uID.getGlyphString()));
             }
 
-            if (exit != null)
+            if (exit == null)
             {
-                TilePortalController controller = CommonProxy.networkManager.getPortalController(exit);
+                return;
+            }
 
-                if (instabilityLevel == 0)
+            TilePortalController controller = CommonProxy.networkManager.getPortalController(exit);
+
+            if (instability > 0)
+            {
+                if (rand.nextInt(100) < instability)
                 {
-                    WorldCoordinates coord = new WorldCoordinates(controller.xCoord + (rand.nextBoolean() ? rand.nextInt(32) : -rand.nextInt(32)), controller.yCoord, controller.zCoord + (rand.nextBoolean() ? rand.nextInt(32) : -rand.nextInt(32)), controller.worldObj.provider.dimensionId);
-                    coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
-                    
-                    EntityManager.teleportEntity(entity, coord);
-                    return;
+                    if (instability == 20) // Low Instability - 3 Effects
+                    {
+                        int effect = rand.nextInt(3);
+
+                        if (effect == 0) // Teleport somewhere close
+                        {
+                            WorldCoordinates coord = controller.getWorldCoordinates();
+                            coord.posX += rand.nextBoolean() ? (1 + rand.nextInt(31)) : -(1 + rand.nextInt(31));
+                            coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
+                            coord.posZ += rand.nextBoolean() ? (1 + rand.nextInt(31)) : -(1 + rand.nextInt(31));
+
+                            EntityManager.teleportEntity(entity, coord);
+                        }
+                        else if (effect == 1) // Get thrown out of the portal (before entering)
+                        {
+                            int portalType = portal.getBlockMetadata();
+
+                            if (portalType == 1)
+                            {
+                                entity.motionX = 0;
+                                entity.motionZ = entity.posZ > portal.zCoord ? 1 : -1;
+                                entity.motionY = 1;
+                                entity.velocityChanged = true;
+                            }
+                            else if (portalType == 2)
+                            {
+                                entity.motionX = entity.posX < portal.xCoord ? -1 : 1;
+                                entity.motionZ = 0;
+                                entity.motionY = 1;
+                                entity.velocityChanged = true;
+                            }
+                            else if (portalType == 3)
+                            {
+                                entity.motionY = entity.posY < portal.yCoord ? -1 : 1;
+                                entity.motionZ = 0;
+                                entity.motionX = 0;
+                                entity.velocityChanged = true;
+                            }
+                        }
+                        else if (effect == 2) // Get thrown out of the portal (after teleporting)
+                        {
+                            EntityManager.teleportEntity(entity, uID, exit, portal);
+
+                            if (controller.portalType == 1)
+                            {
+                                entity.motionX = 0;
+                                entity.motionZ = entity.rotationYaw == 0 ? -1 : 1;
+                                entity.motionY = 1;
+                                entity.velocityChanged = true;
+                            }
+                            else if (controller.portalType == 2)
+                            {
+                                entity.motionX = entity.rotationYaw == 90 ? -1 : 1;
+                                entity.motionZ = 0;
+                                entity.motionY = 1;
+                                entity.velocityChanged = true;
+                            }
+                            else if (controller.portalType == 3)
+                            {
+                                entity.motionY = 1;
+                                entity.motionZ = 0;
+                                entity.motionX = 0;
+                                entity.velocityChanged = true;
+                            }
+                        }
+
+                        addLowInstabilityEffects(entity);
+                    }
+                    else if (instability == 50) // Medium Instability - 2 Effects
+                    {                        
+                        WorldCoordinates coord = controller.getWorldCoordinates();
+                        coord.posX += rand.nextBoolean() ? (1 + rand.nextInt(127)) : -(1 + rand.nextInt(127));
+                        coord.posZ += rand.nextBoolean() ? (1 + rand.nextInt(127)) : -(1 + rand.nextInt(127));
+
+                        if (rand.nextInt(2) == 0) // Teleport somewhere fairly nearby -- on the ground
+                        {
+                            coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
+                        }
+                        else // Teleport somewhere fairly nearby -- in the air
+                        {
+                            coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + rand.nextInt(10);
+                        }
+
+                        EntityManager.teleportEntity(entity, coord);
+                        addMediumInstabilityEffects(entity);
+                    }
+                    else if (instability == 70) // High Instability - 1 Effect
+                    {
+                        EntityManager.teleportEntityToDimension(entity); // Teleport to dimension
+                        addHighInstabilityEffects(entity);
+                    }
                 }
-                else if (instabilityLevel == 10 || instabilityLevel == 11)
+                else
                 {
-                    WorldCoordinates coord = new WorldCoordinates(controller.xCoord + (rand.nextBoolean() ? -32 - rand.nextInt(128) : 32 + rand.nextInt(128)), controller.yCoord, controller.zCoord + (rand.nextBoolean() ? - 32 - rand.nextInt(128) : 32 + rand.nextInt(128)), controller.worldObj.provider.dimensionId);
-
-                    if (instabilityLevel == 10)
-                    {
-                        coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
-                    }
-                    else
-                    {
-                        coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + (instabilityLevel == 11 ? rand.nextInt(10) : 0);
-                    }
-                    
-                    EntityManager.teleportEntity(entity, coord);
-                    return;
+                    EntityManager.teleportEntity(entity, uID, exit, portal); // Random missed the instability - teleport normally
                 }
-
-                EntityManager.teleportEntity(entity, uID, exit, portal);
-
-                if (instabilityLevel == 1)
-                {
-                    if (controller.portalType == 1)
-                    {
-                        entity.motionX = 0;
-                        entity.motionZ = entity.rotationYaw == 0 ? 1 : -1;
-                        entity.motionY = 1;
-                        entity.velocityChanged = true;
-                    }
-                    else if (controller.portalType == 2)
-                    {
-                        entity.motionX = entity.rotationYaw == 90 ? -1 : 1;
-                        entity.motionZ = 0;
-                        entity.motionY = 1;
-                        entity.velocityChanged = true;
-                    }
-                }
+            }
+            else
+            {
+                EntityManager.teleportEntity(entity, uID, exit, portal); // No instability effects - teleport normally
             }
         }
 
@@ -372,9 +406,15 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         if (entity instanceof EntityLivingBase)
         {
             PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
-            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
 
-            ((EntityLivingBase) entity).addPotionEffect(blindness);
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+
+            int effect = rand.nextInt(3);            
+            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
         }
     }
 
@@ -383,13 +423,16 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         if (entity instanceof EntityLivingBase)
         {
             PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
-            blindness.setCurativeItems(new ArrayList<ItemStack>());
-
             PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
-            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
 
-            ((EntityLivingBase) entity).addPotionEffect(blindness);
-            ((EntityLivingBase) entity).addPotionEffect(hunger);
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+
+            int effect = rand.nextInt(3);            
+            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
+            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
         }
     }
 
@@ -398,14 +441,13 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         if (entity instanceof EntityLivingBase)
         {
             PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
-            blindness.setCurativeItems(new ArrayList<ItemStack>());
-
             PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
-            hunger.setCurativeItems(new ArrayList<ItemStack>());
-
             PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
-            poison.setCurativeItems(new ArrayList<ItemStack>());
 
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+            
             ((EntityLivingBase) entity).addPotionEffect(blindness);
             ((EntityLivingBase) entity).addPotionEffect(hunger);
             ((EntityLivingBase) entity).addPotionEffect(poison);
