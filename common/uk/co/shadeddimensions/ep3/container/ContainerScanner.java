@@ -1,22 +1,31 @@
 package uk.co.shadeddimensions.ep3.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TileScanner;
 import cofh.gui.slot.SlotOutput;
 import cofh.gui.slot.SlotSpecificItem;
 
-public class ContainerScanner extends ContainerEnhancedPortals
+public class ContainerScanner extends Container
 {
-    public ContainerScanner(TileScanner scanner, EntityPlayer player)
+    EntityPlayer thePlayer;
+    ItemStack stack;
+    public InventoryScanner scannerInventory;
+    public boolean hasChanged;
+
+    public ContainerScanner(InventoryScanner scanner, EntityPlayer player, ItemStack s)
     {
-        super(scanner);
-        
+        thePlayer = player;
+        scannerInventory = scanner;
+        hasChanged = false;
+        stack = s;
+
         addSlotToContainer(new SlotSpecificItem(scanner, 0, 56, 35, new ItemStack(CommonProxy.itemEntityCard)));
         addSlotToContainer(new SlotOutput(scanner, 1, 116, 35));
-        
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -32,8 +41,32 @@ public class ContainerScanner extends ContainerEnhancedPortals
     }
     
     @Override
+    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
+    {
+        hasChanged = true;
+        return null;
+    }
+
+    @Override
+    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+    {
+        hasChanged = true;
+        return super.slotClick(par1, par2, par3, par4EntityPlayer);
+    }
+    
+    @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return ((TileScanner) tile).isUseableByPlayer(entityplayer);
+        return true;
+    }
+    
+    public void saveToNBT(ItemStack stack)
+    {
+        if (!stack.hasTagCompound())
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        
+        scannerInventory.saveContentsToNBT(stack.getTagCompound());
     }
 }

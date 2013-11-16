@@ -30,7 +30,7 @@ public class ItemDecoration extends ItemBlock
     @Override
     public Icon getIconFromDamage(int meta)
     {
-        return meta == 0 ? CommonProxy.blockFrame.getIcon(0, 0) : meta == 1 ? CommonProxy.blockScanner.getIcon(0, 1) : null;
+        return meta == 0 ? CommonProxy.blockFrame.getIcon(0, 0) : meta == 1 ? CommonProxy.blockStabilizer.getIcon(0, 1) : null;
     }
     
     @Override
@@ -51,7 +51,7 @@ public class ItemDecoration extends ItemBlock
         }
         else if (meta == 1)
         {
-            name = "scanner";
+            name = "stabilizer";
         }
         
         return super.getUnlocalizedName() + "." + name;

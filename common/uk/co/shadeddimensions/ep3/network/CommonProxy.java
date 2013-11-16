@@ -14,7 +14,6 @@ import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
-import uk.co.shadeddimensions.ep3.block.BlockScanner;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
 import uk.co.shadeddimensions.ep3.entity.mob.MobEnderman;
@@ -22,10 +21,10 @@ import uk.co.shadeddimensions.ep3.item.ItemDecoration;
 import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
 import uk.co.shadeddimensions.ep3.item.ItemFrame;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
+import uk.co.shadeddimensions.ep3.item.ItemHandheldScanner;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.item.ItemScanner;
 import uk.co.shadeddimensions.ep3.item.ItemStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
@@ -36,8 +35,6 @@ import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TileScanner;
-import uk.co.shadeddimensions.ep3.tileentity.TileScannerFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
@@ -61,7 +58,6 @@ public class CommonProxy
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
     public static BlockStabilizer blockStabilizer;
-    public static BlockScanner blockScanner;
     public static BlockDecoration blockDecoration;
 
     public static ItemWrench itemWrench;
@@ -71,6 +67,7 @@ public class CommonProxy
     public static ItemLocationCard itemLocationCard;
     public static ItemSynchronizer itemSynchronizer;
     public static ItemEntityCard itemEntityCard;
+    public static ItemHandheldScanner itemScanner;
 
     public static NetworkManager networkManager;
 
@@ -129,9 +126,6 @@ public class CommonProxy
         blockStabilizer = new BlockStabilizer(configuration.getBlockId("DimensionalBridgeStabilizer"), "ep3.stabilizer");
         GameRegistry.registerBlock(blockStabilizer, ItemStabilizer.class, "ep3.stabilizer");
 
-        blockScanner = new BlockScanner(configuration.getBlockId("Scanner"), "ep3.scanner");
-        GameRegistry.registerBlock(blockScanner, ItemScanner.class, "ep3.scanner");
-
         blockDecoration = new BlockDecoration(configuration.getBlockId("Decoration"), "ep3.decoration");
         GameRegistry.registerBlock(blockDecoration, ItemDecoration.class, "ep3.decoration");
     }
@@ -158,6 +152,9 @@ public class CommonProxy
         
         itemEntityCard = new ItemEntityCard(configuration.getItemId("EntityCard"), "ep3.entityCard");
         GameRegistry.registerItem(itemEntityCard, "ep3.entityCard");
+        
+        itemScanner = new ItemHandheldScanner(configuration.getItemId("HandheldScanner"), "ep3.handheldScanner");
+        GameRegistry.registerItem(itemScanner, "ep3.handheldScanner");
     }
 
     public void registerRenderers()
@@ -177,8 +174,6 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epModuleManipulator");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epStabilizer");
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epStabilizerMain");
-        GameRegistry.registerTileEntity(TileScanner.class, "epScanner");
-        GameRegistry.registerTileEntity(TileScannerFrame.class, "epScannerFrame");
     }
     
     public void registerEntities()
@@ -219,7 +214,6 @@ public class CommonProxy
         configuration.addBlockEntry("Portal");
         configuration.addBlockEntry("Frame");
         configuration.addBlockEntry("DimensionalBridgeStabilizer");
-        configuration.addBlockEntry("Scanner");
         configuration.addBlockEntry("Decoration");
 
         configuration.addItemEntry("Wrench");
@@ -228,6 +222,7 @@ public class CommonProxy
         configuration.addItemEntry("LocationCard");
         configuration.addItemEntry("Synchronizer");
         configuration.addItemEntry("EntityCard");
+        configuration.addItemEntry("HandheldScanner");
         configuration.addItemEntry("PortalModule");
 
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);

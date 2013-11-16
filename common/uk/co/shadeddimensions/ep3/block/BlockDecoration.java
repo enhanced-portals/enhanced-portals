@@ -46,7 +46,7 @@ public class BlockDecoration extends Block
     {
         connectedTextures = new ConnectedTextures[2];
         connectedTextures[0] = new ConnectedTextures(BlockFrame.connectedTextures, blockID, 0);
-        connectedTextures[1] = new ConnectedTextures(BlockScanner.connectedTextures, blockID, 1);
+        connectedTextures[1] = new ConnectedTextures(BlockStabilizer.connectedTextures, blockID, 1);
     }
     
     @Override
