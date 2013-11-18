@@ -1,5 +1,8 @@
 package uk.co.shadeddimensions.ep3.util;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 
-public class WorldUtils
+public class GeneralUtils
 {
     public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)
     {
@@ -135,5 +139,38 @@ public class WorldUtils
         }
 
         tag.setTag(name, tagList);
+    }
+    
+    public static void writeChunkCoord(DataOutputStream stream, ChunkCoordinates c) throws IOException
+    {
+        if (c == null)
+        {
+            stream.writeInt(0);
+            stream.writeInt(-1);
+            stream.writeInt(0);
+        }
+        else
+        {
+            stream.writeInt(c.posX);
+            stream.writeInt(c.posY);
+            stream.writeInt(c.posZ);
+        }
+    }
+    
+    public static ChunkCoordinates readChunkCoord(DataInputStream stream) throws IOException
+    {
+        ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
+                
+        return c.posY == -1 ? null : c;
+    }
+    
+    public static void writeGlyphIdentifier(DataOutputStream stream, GlyphIdentifier i) throws IOException
+    {
+        stream.writeUTF(i == null ? "" : i.getGlyphString());
+    }
+    
+    public static GlyphIdentifier readGlyphIdentifier(DataInputStream stream) throws IOException
+    {
+        return new GlyphIdentifier(stream.readUTF());
     }
 }

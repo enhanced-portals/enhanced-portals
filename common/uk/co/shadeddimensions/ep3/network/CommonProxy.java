@@ -33,12 +33,12 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTileUpdate;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
-import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -52,7 +52,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
-    public static final int REDSTONE_FLUX_COST = 500;
+    public static final int REDSTONE_FLUX_COST = 10000;
     public static final int REDSTONE_FLUX_TIMER = 20;
     
     public static BlockFrame blockFrame;
@@ -74,8 +74,8 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown; // Bools
-    public static int redstoneFluxPowerMultiplier; // Ints
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown;
+    public static int redstoneFluxPowerMultiplier;
     
     public static int MobEnderman, MobCreeper;
     public static int Dimension, WastelandID;

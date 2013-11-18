@@ -71,7 +71,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
                 baseMeta = controller.getStackInSlot(0).getItemDamage();
             }
 
-            TileModuleManipulator m = controller.getModuleManipulator();
+            TileModuleManipulator m = controller.blockManager.getModuleManipulator(controller.worldObj);
 
             if (m != null && m.isFrameGhost())
             {
@@ -206,7 +206,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
                 baseMeta = controller.getStackInSlot(1).getItemDamage();
             }
 
-            TileModuleManipulator m = controller.getModuleManipulator();
+            TileModuleManipulator m = controller.blockManager.getModuleManipulator(controller.worldObj);
 
             if (m != null && m.isPortalInvisible())
             {

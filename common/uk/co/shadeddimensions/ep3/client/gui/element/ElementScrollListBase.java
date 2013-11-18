@@ -131,7 +131,7 @@ public class ElementScrollListBase extends ElementBase
     {
         if (getElementCount() == 0)
         {
-            Minecraft.getMinecraft().fontRenderer.drawString("No entries found", posX + 5, posY + 3, 0x404040);
+            Minecraft.getMinecraft().fontRenderer.drawString("No entries found", posX + 10, posY + 7, 0xAAAAAA);
         }
 
         GL11.glColor4f(1f, 1f, 1f, 1f);

@@ -60,6 +60,7 @@ public class MobEnderman extends EntityEnderman
         else
         {
             super.attackEntity(par1Entity, par2);
+            teleportRandomly();
         }
     }
 }

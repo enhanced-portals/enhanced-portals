@@ -7,16 +7,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class ItemLocationCard extends ItemEnhancedPortals
@@ -27,7 +27,6 @@ public class ItemLocationCard extends ItemEnhancedPortals
     {
         super(id, true);
         setUnlocalizedName(name);
-        setMaxStackSize(1);
     }
 
     public static boolean hasDBSLocation(ItemStack s)
@@ -78,74 +77,54 @@ public class ItemLocationCard extends ItemEnhancedPortals
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-    {        
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-        if (tile != null && !hasDBSLocation(stack))
-        {
-            if (tile instanceof TileStabilizerMain)
-            {
-                TileStabilizerMain bridge = (TileStabilizerMain) tile;
-
-                if (bridge != null)
-                {                
-                    setDBSLocation(stack, bridge.getWorldCoordinates());                
-                    return true;
-                }
-            }
-            else if (tile instanceof TileStabilizer)
-            {
-                TileStabilizer bridge = (TileStabilizer) tile;
-                TileStabilizerMain main = bridge.getMainBlock();
-                
-                if (main != null)
-                {
-                    setDBSLocation(stack, main.getWorldCoordinates());                
-                    return true;
-                }
-            }
-        }
-        else if (tile != null && tile instanceof TilePortalController && hasDBSLocation(stack))
-        {
-            TilePortalController controller = (TilePortalController) tile;
-
-            if (!controller.hasConfigured && controller.waitingForCard)
-            {
-                WorldCoordinates w = ItemLocationCard.getDBSLocation(stack);
-                TileEntity t = w.getBlockTileEntity();
-
-                if (t != null && t instanceof TileStabilizerMain)
-                {
-                    controller.bridgeStabilizer = w;
-                    controller.waitingForCard = false;
-                    controller.hasConfigured = true;
-
-                    player.inventory.mainInventory[player.inventory.currentItem] = null;
-                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.success"));
-                }
-                else
-                {
-                    clearDBSLocation(stack);
-                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.voidLinkCard"));
-                }
-
-                return true;
-            }
-        }
-
-        return super.onItemUse(stack, player, world, x, y, z, par7, par8, par9, par10);
-    }
-
-    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         if (player.isSneaking() && hasDBSLocation(stack))
         {
             clearDBSLocation(stack);
+            return stack;
+        }
+        else
+        {
+            MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world,player, true);
+            
+            if (movingobjectposition == null)
+            {
+                return stack;
+            }
+            else
+            {
+                if (movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
+                {
+                    TileEntity tile = world.getBlockTileEntity(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
+                    
+                    if (tile != null && tile instanceof TileStabilizer)
+                    {
+                        tile = ((TileStabilizer) tile).getMainBlock();
+                    }
+                    
+                    if (tile != null && tile instanceof TileStabilizerMain)
+                    {
+                        ItemStack s = new ItemStack(CommonProxy.itemLocationCard, 1);
+                        setDBSLocation(s, ((TileStabilizerMain) tile).getWorldCoordinates());
+                        
+                       if (--stack.stackSize <= 0)
+                       {
+                           return s;
+                       }
+                       
+                       if (!player.inventory.addItemStackToInventory(s))
+                       {
+                           player.dropPlayerItem(s);
+                       }
+                       
+                       return stack;
+                    }
+                }
+            }
         }
 
-        return super.onItemRightClick(stack, world, player);
+        return stack;
     }
 
     @Override

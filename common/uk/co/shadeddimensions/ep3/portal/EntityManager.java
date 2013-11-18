@@ -19,6 +19,7 @@ import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
@@ -32,7 +33,7 @@ public class EntityManager
         boolean horizontal = controller.portalType == 3;
 
         forloop:
-            for (WorldCoordinates c : controller.getAllPortalBlocks())
+            for (ChunkCoordinates c : controller.blockManager.getPortals())
             {
                 for (int i = 0; i < (horizontal ? Math.round(entityWidth / 2) : entityHeight); i++)
                 {
@@ -200,7 +201,7 @@ public class EntityManager
 
     public static void teleportEntity(Entity entity, GlyphIdentifier entryID, GlyphIdentifier exitID, TilePortal portal)
     {
-        TilePortalController /*controllerEntry = CommonProxy.networkManager.getPortalController(entryID),*/ controllerDest = CommonProxy.networkManager.getPortalController(exitID);
+        TilePortalController controllerEntry = CommonProxy.networkManager.getPortalController(entryID), controllerDest = CommonProxy.networkManager.getPortalController(exitID);
 
         if (controllerDest == null)
         {
@@ -213,7 +214,7 @@ public class EntityManager
             return;
         }
 
-        TileBiometricIdentifier bio = controllerDest.getBiometricIdentifier();
+        TileBiometricIdentifier bio = controllerDest.blockManager.getBiometricIdentifier(controllerDest.worldObj);
 
         if (bio != null)
         {
@@ -233,8 +234,16 @@ public class EntityManager
         }
         else
         {
+            boolean keepMomentum = false;
+            TileModuleManipulator manip = controllerEntry.blockManager.getModuleManipulator(controllerEntry.worldObj);
+
+            if (manip != null)
+            {
+                keepMomentum = manip.shouldKeepMomentumOnTeleport();
+            }
+
             CommonProxy.logger.fine(String.format("Found a suitable exit location for Entity (%s): %s, %s, %s", entity.getEntityName(), exit.posX, exit.posY, exit.posZ));
-            teleportEntity(entity, exit, (WorldServer) controllerDest.worldObj, getRotation(entity, controllerDest, exit), controllerDest.portalType, portal);
+            teleportEntity(entity, exit, (WorldServer) controllerDest.worldObj, getRotation(entity, controllerDest, exit), controllerDest.portalType, portal, keepMomentum);
         }
     }
 
@@ -342,13 +351,6 @@ public class EntityManager
 
         entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, entity.rotationYaw, entity.rotationPitch);
 
-        if (entity instanceof EntityMinecart) // Stops the minecart from derping about. TODO: Figure out a solution which isn't this.
-        {
-            entity.motionX = 0;
-            entity.motionY = 0;
-            entity.motionZ = 0;
-        }
-
         if (mount != null) // Remount any mounted entities
         {
             if (!(entity instanceof EntityPlayerMP)) // Player re-mounting is derpy.
@@ -361,7 +363,7 @@ public class EntityManager
     }
 
     @SuppressWarnings("rawtypes")
-    public static Entity teleportEntity(Entity entity, ChunkCoordinates location, WorldServer world, float exitYaw, int exitPortalType, TilePortal portal)
+    public static Entity teleportEntity(Entity entity, ChunkCoordinates location, WorldServer world, float exitYaw, int exitPortalType, TilePortal portal, boolean keepMomentum)
     {
         double offsetY = entity instanceof EntityMinecart ? 0.4 : 0;
         boolean dimensionalTravel = entity.worldObj.provider.dimensionId != world.provider.dimensionId;
@@ -370,7 +372,7 @@ public class EntityManager
         if (mount != null) // If the entity is riding another entity
         {
             entity.mountEntity(null); // Dismount
-            mount = teleportEntity(mount, location, world, exitYaw, exitPortalType, portal); // Then send the mounted entity first. Store it for later use
+            mount = teleportEntity(mount, location, world, exitYaw, exitPortalType, portal, keepMomentum); // Then send the mounted entity first. Store it for later use
         }
 
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
@@ -393,7 +395,14 @@ public class EntityManager
             removeEntityFromWorld(entity, (WorldServer) entity.worldObj); // Remove the entity from the world
         }
 
-        handleMomentum(entity, portal, exitPortalType == 3 && world.isAirBlock(location.posX, location.posY - 1, location.posZ) ? 4 : exitPortalType, exitYaw);
+        if (keepMomentum)
+        {
+            handleMomentum(entity, portal, exitPortalType == 3 && world.isAirBlock(location.posX, location.posY - 1, location.posZ) ? 4 : exitPortalType, exitYaw);
+        }
+        else
+        {
+            entity.motionX = entity.motionY = entity.motionZ = 0;
+        }
 
         world.getChunkProvider().loadChunk(location.posX >> 4, location.posZ >> 4); // Make sure the chunk is loaded
         entity.setPositionAndRotation(location.posX + 0.5, location.posY + offsetY, location.posZ + 0.5, exitYaw, entity.rotationPitch);
@@ -484,7 +493,7 @@ public class EntityManager
         location.posX = spawn.posX;
         location.posZ = spawn.posZ;
         location.posY = location.getWorld().getTopSolidOrLiquidBlock(location.posX, location.posZ);
-        
+
         teleportEntity(par1Entity, location);
     }
 }

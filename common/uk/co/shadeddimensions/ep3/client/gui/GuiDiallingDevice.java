@@ -47,6 +47,7 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
         ySize = 200;
         warningMessage = "";
         warningTimer = 0;
+        drawInventory = false;
     }
 
     @Override

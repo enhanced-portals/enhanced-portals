@@ -61,7 +61,7 @@ public class ItemSynchronizer extends ItemPortalTool
                 return false;
             }
 
-            TileStabilizerMain stabilizer = controller.getStabilizer();
+            TileStabilizerMain stabilizer = controller.blockManager.getDimensionalBridgeStabilizerTile();
 
             if (stabilizer != null)
             {
@@ -81,7 +81,7 @@ public class ItemSynchronizer extends ItemPortalTool
 
                 if (tile instanceof TileBiometricIdentifier)
                 {
-                    TileBiometricIdentifier thisIdentifier = (TileBiometricIdentifier) tile, pairedIdentifier = pairedController.getBiometricIdentifier();
+                    TileBiometricIdentifier thisIdentifier = (TileBiometricIdentifier) tile, pairedIdentifier = pairedController.blockManager.getBiometricIdentifier(world);
                     
                     if (pairedIdentifier != null)
                     {
@@ -97,12 +97,7 @@ public class ItemSynchronizer extends ItemPortalTool
                 }
                 else if (tile instanceof TileDiallingDevice)
                 {
-                    if (pairedController.frameDialler == null)
-                    {
-                        return false;
-                    }
-                    
-                    TileDiallingDevice thisDialler = (TileDiallingDevice) tile, pairedDialler = (TileDiallingDevice) pairedController.frameDialler.getBlockTileEntity();
+                    TileDiallingDevice thisDialler = (TileDiallingDevice) tile, pairedDialler = (TileDiallingDevice) pairedController.blockManager.getDialDevice(world);
                     
                     if (pairedDialler != null)
                     {

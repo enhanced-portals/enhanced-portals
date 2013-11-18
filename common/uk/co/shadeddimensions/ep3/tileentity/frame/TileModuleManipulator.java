@@ -255,4 +255,20 @@ public class TileModuleManipulator extends TilePortalPart
 
         return false;
     }
+
+    public boolean shouldKeepMomentumOnTeleport()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).keepMomentumOnTeleport(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
 }

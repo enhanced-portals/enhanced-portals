@@ -108,11 +108,13 @@ public class GuiHandler implements IGuiHandler
             TileEntity tile = world.getBlockTileEntity(x, y, z);
             
             if (ID == GUIs.PortalController.ordinal())
-            {                
+            {
+                CommonProxy.sendUpdatePacketToPlayer((TilePortalController) tile, player);
                 return new ContainerPortalController((TilePortalController) tile, player);
             }
             else if (ID == GUIs.RedstoneInterface.ordinal())
-            {                
+            {
+                CommonProxy.sendUpdatePacketToPlayer((TileRedstoneInterface) tile, player);
                 return new ContainerRedstoneInterface((TileRedstoneInterface) tile, player);
             }
             else if (ID == GUIs.NetworkInterface.ordinal())
@@ -125,6 +127,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.DimensionalBridgeStabilizer.ordinal())
             {
+                CommonProxy.sendUpdatePacketToPlayer((TileStabilizerMain) tile, player);
                 return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
             }
             else if (ID == GUIs.DiallingDevice.ordinal())
@@ -148,7 +151,8 @@ public class GuiHandler implements IGuiHandler
                 return new ContainerTexture((TilePortalController) tile, player);
             }
             else if (ID == GUIs.BiometricIdentifier.ordinal())
-            {                
+            {
+                CommonProxy.sendUpdatePacketToPlayer((TileBiometricIdentifier) tile, player);
                 return new ContainerBiometricIdentifier((TileBiometricIdentifier) tile, player);
             }
         }

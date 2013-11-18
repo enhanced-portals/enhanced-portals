@@ -142,7 +142,7 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         int metadata = world.getBlockMetadata(x, y, z);
         TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
-        TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
+        TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
 
         if (random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID())))
         {
@@ -198,7 +198,7 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalController controller = portal.getPortalController();
-        TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
+        TileModuleManipulator manip = controller == null ? null : controller.blockManager.getModuleManipulator(controller.worldObj);
         
         if (controller != null && manip != null)
         {            

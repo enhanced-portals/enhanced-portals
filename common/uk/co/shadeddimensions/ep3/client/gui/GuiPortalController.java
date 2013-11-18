@@ -31,7 +31,7 @@ public class GuiPortalController extends GuiBase
     public GuiPortalController(TilePortalController tile, EntityPlayer play)
     {
         super(new ContainerPortalController(tile, play), new ResourceLocation("enhancedportals", "textures/gui/portalController.png"));
-
+        drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;

@@ -16,6 +16,7 @@ public class GuiModuleManipulator extends GuiBase
     {
         super(new ContainerModuleManipulator(t, player), new ResourceLocation("enhancedportals", "textures/gui/moduleManipulator.png"));
         module = t;
+        drawInventory = false;
     }
 
     @Override

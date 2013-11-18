@@ -2,6 +2,8 @@ package uk.co.shadeddimensions.ep3.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import uk.co.shadeddimensions.ep3.client.gui.slot.SlotBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 
 public class ContainerBiometricIdentifier extends ContainerEnhancedPortals
@@ -9,6 +11,9 @@ public class ContainerBiometricIdentifier extends ContainerEnhancedPortals
     public ContainerBiometricIdentifier(TileBiometricIdentifier t, EntityPlayer player)
     {
         super(t);
+        
+        addSlotToContainer(new SlotBiometricIdentifier(t, 0, 8, 176));
+        addSlotToContainer(new SlotBiometricIdentifier(t, 1, 276, 176));
         
         for (int i = 0; i < 3; i++)
         {
@@ -28,5 +33,11 @@ public class ContainerBiometricIdentifier extends ContainerEnhancedPortals
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
         return ((TileBiometricIdentifier) tile).isUseableByPlayer(entityplayer);
+    }
+    
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
+    {
+        return null;
     }
 }

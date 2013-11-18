@@ -24,6 +24,7 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
         super(new ContainerDimensionalBridgeStabilizer(stabilizer, player), new ResourceLocation("enhancedportals", "textures/gui/dimensionalBridgeStabilizer.png"));
         DBS = stabilizer;
         ySize = 176;
+        drawInventory = false;
     }
     
     @Override
@@ -46,7 +47,7 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
         String s1 = "" + (DBS.intActiveConnections * 2), s2 = powerCost + " RF", s3 = instability + "%";
         fontRenderer.drawString(s1, xSize - 27 - fontRenderer.getStringWidth(s1), 17, 0x404040);
         fontRenderer.drawString(s2, xSize - 27 - fontRenderer.getStringWidth(s2), 27, 0x404040);
-        fontRenderer.drawString(s3, xSize - 27 - fontRenderer.getStringWidth(s3), 37, instability == 0 ? 0x00DD00 : instability == 20 ? 0xDD6644 : 0xDD0000);
+        fontRenderer.drawString(s3, xSize - 27 - fontRenderer.getStringWidth(s3), 37, instability == 0 ? 0x00DD00 : instability == 20 ? 0xDD6644 : instability == 50 ? 0xDD4422 : 0xFF0000);
     }
     
     @SuppressWarnings("unchecked")

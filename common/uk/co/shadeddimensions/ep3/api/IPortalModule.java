@@ -99,4 +99,6 @@ public interface IPortalModule
      * Should this upgrade ghost the portal frame
      */
     public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i);
+
+    public boolean keepMomentumOnTeleport(TileModuleManipulator tileModuleManipulator, ItemStack i);
 }

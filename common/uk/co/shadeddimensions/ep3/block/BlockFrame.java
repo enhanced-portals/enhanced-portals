@@ -15,10 +15,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -32,8 +32,9 @@ public class BlockFrame extends BlockEnhancedPortals
                NETWORK_INTERFACE = 3,
                DIALLING_DEVICE = 4,
                BIOMETRIC_IDENTIFIER = 5,
-               MODULE_MANIPULATOR = 6,
-               FRAME_TYPES = 7;
+               MODULE_MANIPULATOR = 6;
+
+    public static int FRAME_TYPES = 7;
     
     public static Icon[] overlayIcons;
     static ConnectedTextures connectedTextures;
@@ -195,7 +196,7 @@ public class BlockFrame extends BlockEnhancedPortals
             
             if (controller != null)
             {
-                TileModuleManipulator m = controller.getModuleManipulator();
+                TileModuleManipulator m = controller.blockManager.getModuleManipulator(par1World);
                 
                 if (m != null)
                 {

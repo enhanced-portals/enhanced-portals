@@ -104,7 +104,7 @@ public class PortalTextureManager
         }
     }
     
-    public void writePacket(DataOutputStream stream) throws IOException
+    public void writeToPacket(DataOutputStream stream) throws IOException
     {
         stream.writeInt(frameColour);
         stream.writeInt(portalColour);

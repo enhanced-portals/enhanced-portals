@@ -204,4 +204,10 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     {
         return true;
     }
+
+    @Override
+    public boolean keepMomentumOnTeleport(TileModuleManipulator tileModuleManipulator, ItemStack i)
+    {
+        return i.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal();
+    }
 }

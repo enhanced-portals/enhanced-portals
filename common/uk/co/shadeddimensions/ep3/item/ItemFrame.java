@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemFrame extends ItemBlock
@@ -78,6 +79,10 @@ public class ItemFrame extends ItemBlock
             case 6:
                 name = "upgrade";
                 break;
+                
+            case 7:
+                name = "energy";
+                break;
         }
 
         return super.getUnlocalizedName() + "." + name;
@@ -87,7 +92,7 @@ public class ItemFrame extends ItemBlock
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
     {
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < BlockFrame.FRAME_TYPES; i++)
         {
             list.add(new ItemStack(CommonProxy.blockFrame.blockID, 1, i));
         }

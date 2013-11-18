@@ -1,17 +1,22 @@
 package uk.co.shadeddimensions.ep3.client.gui.element;
 
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.client.gui.IElementHandler;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier.EntityPair;
+import uk.co.shadeddimensions.ep3.util.EntityData;
+import uk.co.shadeddimensions.ep3.util.GuiUtils;
 import cofh.gui.GuiBase;
 
 public class ElementEntityFilterList extends ElementDialDeviceScrollList
 {
+    ArrayList<String> tooltip;
     TileBiometricIdentifier biometric;
     boolean sendList;
 
@@ -20,16 +25,30 @@ public class ElementEntityFilterList extends ElementDialDeviceScrollList
         super(gui, texture, null, posX, posY, width, height);
         biometric = bio;
         sendList = isSendList;
+        tooltip = new ArrayList<String>();
+    }
+    
+    @Override
+    public void draw()
+    {
+        tooltip = new ArrayList<String>();
+        super.draw();
     }
 
     @Override
     protected void drawElement(int i, int x, int y, boolean isSelected, int mouseX, int mouseY)
     {
         boolean yMouse = mouseY >= y && mouseY <= y + getEntrySize();
-        boolean mouseOverMain = yMouse && mouseX >= x + 5 && mouseX <= x + sizeX - 38, mouseOverTexture = yMouse && mouseX >= x + sizeX - 36 && mouseX <= x + sizeX - 22, mouseOverRemove = yMouse && mouseX >= x + sizeX - 20 && mouseX <= x + sizeX - 6;
+        boolean mouseOverMain = yMouse && mouseX >= x + 5 && mouseX <= x + sizeX - 38, mouseOverMode = yMouse && mouseX >= x + sizeX - 36 && mouseX <= x + sizeX - 22, mouseOverRemove = yMouse && mouseX >= x + sizeX - 20 && mouseX <= x + sizeX - 6;
         float colour = isSelected ? 0.7f : 1f;
         int mainButtonWidth = sizeX - 37, halfButtonWidth = mainButtonWidth / 2;
-        EntityPair pair = (sendList ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).get(i);
+        EntityData data = (sendList ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).get(i);
+        String s = data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : (data.EntityDisplayName + (data.shouldCheckNameAndClass() ? " (" + EntityData.getClassDisplayName(data) + ")" : ""));
+        
+        if (s.length() > 20)
+        {
+            s = s.substring(0, 17) + "...";
+        }
         
         GL11.glColor3f(colour, colour, colour);
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/buttons.png"));
@@ -38,24 +57,45 @@ public class ElementEntityFilterList extends ElementDialDeviceScrollList
         
         GL11.glColor3f(1f, 1f, 1f);
         gui.drawTexturedModalRect(x + sizeX - 20, y, 45, mouseOverRemove ? 170 : 155, 15, 15);
-        gui.drawTexturedModalRect(x + sizeX - 36, y, 30, mouseOverTexture ? 170 : 155, 15, 15);
+        gui.drawTexturedModalRect(x + sizeX - 36, y, 30, mouseOverMode ? 170 : 155, 15, 15);
         
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(pair.name, x + 10, y + 3, pair.inverted ? 0xFF0000 : 0x00FF00);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("" + pair.fuzzy, x + 89, y + 3, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(s, x + 10, y + 3, data.isInverted ? 0xFF0000 : 0x00FF00);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("" + data.checkType, x + sizeX - 31, y + 3, 0xFFFFFF);
         GL11.glColor3f(1f, 1f, 1f);
+        
+        if (mouseOverMain)
+        {
+            tooltip.add(data.isInverted ? EnumChatFormatting.RED + "Disallowing" : EnumChatFormatting.GREEN + "Allowing");
+            tooltip.add(data.shouldCheckClass() ? "Anything of the type:" : "Anything called:");
+            tooltip.add(EnumChatFormatting.GRAY + " " + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.EntityDisplayName));
+            
+            if (data.shouldCheckNameAndClass())
+            {
+                tooltip.add("With the type of:");
+                tooltip.add(EnumChatFormatting.GRAY + " " + EntityData.getClassDisplayName(data));
+            }
+        }
+        else if (mouseOverMode)
+        {
+            if (data.checkType == 0)
+            {
+                tooltip.add("Match name");
+            }
+            else if (data.checkType == 1)
+            {
+                tooltip.add("Match type");
+            }
+            else 
+            {
+                tooltip.add("Match type and name");
+            }
+        }
     }
-    
+
     protected void drawForeground()
     {
-        if (!sendList && !biometric.hasSeperateLists)
-        {
-            Minecraft.getMinecraft().fontRenderer.drawSplitString("To set up seperate lists for sending and recieving, activate this list below", posX + 5, posY + 3, sizeX, 0x404040);
-        }
-        else if (getElementCount() == 0)
-        {
-            Minecraft.getMinecraft().fontRenderer.drawString("No entries found", posX + 5, posY + 3, 0x404040);
-        }
-        
+        GuiUtils.getInstance().drawHoveringText(tooltip, gui.getMouseX() + posX, gui.getMouseY() + posY);
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glColor3f(1f, 1f, 1f);
     }
     

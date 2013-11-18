@@ -89,6 +89,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
         controller = t;
         screenState = startScreen;
         editController = editControl;
+        drawInventory = false;
     }
 
     @SuppressWarnings("unchecked")

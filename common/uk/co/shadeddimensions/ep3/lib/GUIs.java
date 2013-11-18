@@ -13,5 +13,6 @@ public enum GUIs
     TexturesParticle,
     TexturesDiallingDevice,
     BiometricIdentifier,
-    Scanner;
+    Scanner,
+    EnergyInterface;
 }

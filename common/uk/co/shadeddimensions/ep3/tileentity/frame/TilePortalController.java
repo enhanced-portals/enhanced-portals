@@ -3,9 +3,6 @@ package uk.co.shadeddimensions.ep3.tileentity.frame;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import net.minecraft.entity.Entity;
@@ -13,50 +10,66 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import net.minecraft.util.ChunkCoordinates;
+import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
-import uk.co.shadeddimensions.ep3.tileentity.TileFrame;
+import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
+import uk.co.shadeddimensions.ep3.util.BlockManager;
+import uk.co.shadeddimensions.ep3.util.ClientBlockManager;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
-import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TilePortalController extends TilePortalPart
 {
-    public List<WorldCoordinates> frameBasic, frameRedstone, frameFluid, framePower, portals;
-    public WorldCoordinates frameModule, frameDialler, frameNetwork, frameBiometric, bridgeStabilizer;
-    public boolean hasConfigured, waitingForCard, isPortalActive, processing;
-    public int portalType;
-    public PortalTextureManager activeTextureData, inactiveTextureData;
+    public PortalTextureManager activeTextureData;
+    PortalTextureManager inactiveTextureData;
+    public BlockManager blockManager;
+    byte portalState;
+    public byte portalType;
+    public boolean isPortalActive;
+    public boolean processing;
 
     @SideOnly(Side.CLIENT)
     public GlyphIdentifier uniqueID, networkID;
+
     @SideOnly(Side.CLIENT)
-    public int intBasic, intRedstone, intFluid, intPower, intPortal, connectedPortals;
-    @SideOnly(Side.CLIENT)
-    public boolean boolDialler, boolNetwork, boolBiometric;
+    public int connectedPortals;
 
     public TilePortalController()
     {
-        frameBasic = new ArrayList<WorldCoordinates>();
-        frameRedstone = new ArrayList<WorldCoordinates>();
-        frameFluid = new ArrayList<WorldCoordinates>();
-        framePower = new ArrayList<WorldCoordinates>();
-        portals = new ArrayList<WorldCoordinates>();
-        bridgeStabilizer = null;
-        hasConfigured = waitingForCard = processing = false;
+        blockManager = new BlockManager();
+        portalType = 0;
+        connectedPortals = -1;
+        portalState = -1;
         activeTextureData = new PortalTextureManager();
         inactiveTextureData = null;
+        isPortalActive = processing = false;
+    }
+
+    /***
+     * Checks whether or not this portal has already filled it's BlockManager.
+     */
+    public boolean isPortalInitialized()
+    {
+        return portalState == 0;
+    }
+
+    /***
+     * Checks to see if this portal is ready for use.
+     */
+    public boolean isFullyInitialized()
+    {
+        return portalState == 1;
     }
 
     public void swapTextureData(PortalTextureManager newManager)
@@ -83,103 +96,16 @@ public class TilePortalController extends TilePortalPart
         return this;
     }
 
-    public void configure(List<WorldCoordinates> tiles, int pType, EntityPlayer player)
-    {
-        if (worldObj.isRemote || hasConfigured)
-        {
-            return;
-        }
-
-        frameBasic.clear();
-        frameRedstone.clear();
-        frameFluid.clear();
-        framePower.clear();
-        portals.clear();
-        frameModule = null;
-        frameDialler = null;
-        frameNetwork = null;
-        frameBiometric = null;
-        bridgeStabilizer = null;
-
-        for (WorldCoordinates c : tiles)
-        {
-            TileEntity t = c.getBlockTileEntity();
-
-            if (!(t instanceof TilePortalPart))
-            {
-                portals.add(c);
-                continue;
-            }
-
-            TilePortalPart tile = (TilePortalPart) t;
-
-            if (tile instanceof TileFrame)
-            {
-                frameBasic.add(c);
-            }
-            else if (tile instanceof TileRedstoneInterface)
-            {
-                frameRedstone.add(c);
-            }
-            else if (tile instanceof TileModuleManipulator)
-            {
-                frameModule = c;
-            }
-            else if (tile instanceof TileDiallingDevice)
-            {
-                frameDialler = c;
-            }
-            else if (tile instanceof TileNetworkInterface)
-            {
-                frameNetwork = c;
-            }
-            else if (tile instanceof TileBiometricIdentifier)
-            {
-                frameBiometric = c;
-            }
-
-            tile.portalController = getWorldCoordinates();
-            CommonProxy.sendUpdatePacketToAllAround(tile);
-        }
-
-        portalType = pType;
-        waitingForCard = true;
-        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.nextStage"));
-    }
-
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
-        super.fillPacket(stream);
-        GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
-        stream.writeBoolean(hasConfigured);
-        stream.writeUTF(uID != null ? uID.getGlyphString() : "");
-        stream.writeUTF(nID != null ? nID.getGlyphString() : "");
-        stream.writeInt(portals.size());
-        stream.writeInt(frameBasic.size());
-        stream.writeInt(frameRedstone.size());
-        stream.writeInt(frameFluid.size());
-        stream.writeInt(framePower.size());
-        stream.writeInt(nID != null ? CommonProxy.networkManager.getNetworkSize(nID) : -1);
-        stream.writeBoolean(frameDialler != null);
-        stream.writeBoolean(frameNetwork != null);
-        stream.writeBoolean(frameBiometric != null);
-        stream.writeBoolean(waitingForCard);
-        stream.writeInt(portalType);        
-        activeTextureData.writePacket(stream);
-
-        if (frameModule != null)
-        {
-            stream.writeInt(frameModule.posX);
-            stream.writeInt(frameModule.posY);
-            stream.writeInt(frameModule.posZ);
-        }
-        else
-        {
-            stream.writeInt(0);
-            stream.writeInt(-1);
-            stream.writeInt(0);
-        }
+        GeneralUtils.writeGlyphIdentifier(stream, getUniqueIdentifier());
+        GeneralUtils.writeGlyphIdentifier(stream, getNetworkIdentifier());
+        blockManager.writeToPacket(stream);
+        activeTextureData.writeToPacket(stream);
+        stream.writeByte(portalState);
+        stream.writeByte(portalType);
+        stream.writeBoolean(isPortalActive);
 
         for (int i = 0; i < getSizeInventory(); i++)
         {
@@ -199,24 +125,13 @@ public class TilePortalController extends TilePortalPart
     @Override
     public void usePacket(DataInputStream stream) throws IOException
     {
-        super.usePacket(stream);
-        hasConfigured = stream.readBoolean();
-        uniqueID = new GlyphIdentifier(stream);
-        networkID = new GlyphIdentifier(stream);
-        intPortal = stream.readInt();
-        intBasic = stream.readInt();
-        intRedstone = stream.readInt();
-        intFluid = stream.readInt();
-        intPower = stream.readInt();
-        connectedPortals = stream.readInt();
-        boolDialler = stream.readBoolean();
-        boolNetwork = stream.readBoolean();
-        boolBiometric = stream.readBoolean();
-        waitingForCard = stream.readBoolean();
-        portalType = stream.readInt();
+        uniqueID = GeneralUtils.readGlyphIdentifier(stream);
+        networkID = GeneralUtils.readGlyphIdentifier(stream);
+        blockManager = new ClientBlockManager().readFromPacket(stream);
         activeTextureData.usePacket(stream);
-        WorldCoordinates c = new WorldCoordinates(stream.readInt(), stream.readInt(), stream.readInt(), worldObj.provider.dimensionId);        
-        frameModule = c.posY > -1 ? c : null;
+        portalState = stream.readByte();
+        portalType = stream.readByte();
+        isPortalActive = stream.readBoolean();
 
         for (int i = 0; i < getSizeInventory(); i++)
         {
@@ -230,56 +145,34 @@ public class TilePortalController extends TilePortalPart
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag)
+    public void writeToNBT(NBTTagCompound tagCompound)
     {
-        super.writeToNBT(tag);
-
-        tag.setBoolean("hasConfigured", hasConfigured);
-        tag.setBoolean("waitingForCard", waitingForCard);
-        tag.setInteger("portalType", portalType);
-        tag.setBoolean("isPortalActive", isPortalActive);        
-        activeTextureData.writeToNBT(tag, "activeTextureData");
+        super.writeToNBT(tagCompound);
+        blockManager.writeToNBT(tagCompound);
+        tagCompound.setByte("PortalState", portalState);
+        tagCompound.setByte("PortalType", portalType);
+        activeTextureData.writeToNBT(tagCompound, "ActiveTextureData");
 
         if (inactiveTextureData != null)
         {
-            inactiveTextureData.writeToNBT(tag, "inactiveTextureData");
+            inactiveTextureData.writeToNBT(tagCompound, "InactiveTextureData");
         }
-
-        WorldUtils.saveWorldCoordList(tag, portals, "portals");
-        WorldUtils.saveWorldCoordList(tag, frameBasic, "frameBasic");
-        WorldUtils.saveWorldCoordList(tag, frameRedstone, "frameRedstone");
-        WorldUtils.saveWorldCoord(tag, frameBiometric, "frameBiometric");
-        WorldUtils.saveWorldCoord(tag, frameDialler, "frameDialler");
-        WorldUtils.saveWorldCoord(tag, frameModule, "frameModule");
-        WorldUtils.saveWorldCoord(tag, frameNetwork, "frameNetwork");
-        WorldUtils.saveWorldCoord(tag, bridgeStabilizer, "bridgeStabilizer");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag)
+    public void readFromNBT(NBTTagCompound tagCompound)
     {
-        super.readFromNBT(tag);
+        super.readFromNBT(tagCompound);
+        blockManager.readFromNBT(tagCompound);
+        portalState = tagCompound.getByte("PortalState");
+        portalType = tagCompound.getByte("PortalType");
+        activeTextureData.readFromNBT(tagCompound, "ActiveTextureData");
 
-        hasConfigured = tag.getBoolean("hasConfigured");
-        waitingForCard = tag.getBoolean("waitingForCard");
-        portalType = tag.getInteger("portalType");
-        isPortalActive = tag.getBoolean("isPortalActive");        
-        activeTextureData.readFromNBT(tag, "activeTextureData");
-
-        if (tag.hasKey("inactiveTextureData"))
+        if (tagCompound.hasKey("InactiveTextureData"))
         {
             inactiveTextureData = new PortalTextureManager();
-            inactiveTextureData.readFromNBT(tag, "inactiveTextureData");
+            inactiveTextureData.readFromNBT(tagCompound, "InactiveTextureData");
         }
-
-        portals = WorldUtils.loadWorldCoordList(tag, "portals");
-        frameBasic = WorldUtils.loadWorldCoordList(tag, "frameBasic");
-        frameRedstone = WorldUtils.loadWorldCoordList(tag, "frameRedstone");
-        frameBiometric = WorldUtils.loadWorldCoord(tag, "frameBiometric");
-        frameDialler = WorldUtils.loadWorldCoord(tag, "frameDialler");
-        frameModule = WorldUtils.loadWorldCoord(tag, "frameModule");
-        frameNetwork = WorldUtils.loadWorldCoord(tag, "frameNetwork");
-        bridgeStabilizer = WorldUtils.loadWorldCoord(tag, "bridgeStabilizer");
     }
 
     @Override
@@ -339,13 +232,13 @@ public class TilePortalController extends TilePortalPart
             else
             {
                 GlyphIdentifier uID = getUniqueIdentifier();
-                TileStabilizerMain dbs = getStabilizer();
-                
+                TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
+
                 if (dbs != null)
                 {
                     dbs.terminateExistingConnection(getUniqueIdentifier());
                 }
-                
+
                 if (hasNetworkIdentifier())
                 {
                     CommonProxy.networkManager.removePortalFromNetwork(uID, getNetworkIdentifier());
@@ -435,162 +328,203 @@ public class TilePortalController extends TilePortalPart
     }
 
     @Override
-    public boolean activate(EntityPlayer player)
-    {
-        if (super.activate(player))
-        {
-            return true;
-        }
-
-        if (!hasConfigured && waitingForCard && !worldObj.isRemote)
-        {
-            if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID != CommonProxy.itemLocationCard.itemID)
-            {
-                player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.nextStage"));
-            }
-
-            return false;
-        }
-
-        if (worldObj.isRemote || hasConfigured)
-        {
-            return false;
-        }
-
-        Queue<WorldCoordinates> portalBlocks = new LinkedList<WorldCoordinates>();
-        int pType = 0;
-
-        outerloop:
-            for (int j = 0; j < 6; j++)
-            {
-                for (int i = 1; i < 4; i++)
-                {
-                    portalBlocks = PortalUtils.ghostPortalAt(getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
-
-                    if (!portalBlocks.isEmpty())
-                    {
-                        pType = i;
-                        break outerloop;
-                    }
-                }
-            }
-
-        if (!portalBlocks.isEmpty())
-        {
-            List<WorldCoordinates> portalParts = new ArrayList<WorldCoordinates>();
-            Queue<WorldCoordinates> toProcess = new LinkedList<WorldCoordinates>();
-            Queue<WorldCoordinates> processed = new LinkedList<WorldCoordinates>();
-            toProcess.add(getWorldCoordinates());
-
-            int biometricCounter = 0, dialCounter = 0, networkCounter = 0, moduleCounter = 0;
-
-            while (!toProcess.isEmpty())
-            {
-                WorldCoordinates c = toProcess.remove();
-
-                if (!processed.contains(c))
-                {
-                    processed.add(c);
-                    TileEntity t = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-                    if (portalBlocks.contains(c) || t instanceof TilePortalPart)
-                    {
-                        if (t != null)
-                        {
-                            if (t instanceof TileNetworkInterface)
-                            {
-                                if (networkCounter == 1)
-                                {
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleNetworkInterfaces"));
-                                    return false;
-                                }
-                                else if (dialCounter == 1)
-                                {
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.networkInterfaceAndDialDevice"));
-                                    return false;
-                                }
-
-                                networkCounter++;
-                            }
-                            else if (t instanceof TileDiallingDevice)
-                            {
-                                if (dialCounter == 1)
-                                {
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleDiallingDevices"));
-                                    return false;
-                                }
-                                else if (networkCounter == 1)
-                                {
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.networkInterfaceAndDialDevice"));
-                                    return false;
-                                }
-
-                                dialCounter++;
-                            }
-                            else if (t instanceof TileBiometricIdentifier)
-                            {
-                                if (biometricCounter == 1)
-                                {
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleBiometricIdentifiers"));
-                                    return false;
-                                }
-
-                                biometricCounter++;
-                            }
-                            else if (t instanceof TileModuleManipulator)
-                            {
-                                if (moduleCounter == 1)
-                                {
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleModuleManipulators"));
-                                    return false;
-                                }
-
-                                moduleCounter++;
-                            }
-                            else if (t instanceof TilePortalController && processed.size() > 1)
-                            {
-                                player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleControllers"));
-                                return false;
-                            }
-                        }
-
-                        portalParts.add(c);
-                        PortalUtils.addNearbyBlocks(c, 0, toProcess);
-                    }
-                }
-            }
-
-            configure(portalParts, pType, player);
-        }
-        else
-        {
-            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.noPortals"));
-        }
-
-        return false;
-    }
-
-    @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
         partBroken();
+
+        GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
+
+        if (uID != null)
+        {
+            if (nID != null)
+            {
+                CommonProxy.networkManager.removePortalFromNetwork(uID, nID);
+            }
+
+            CommonProxy.networkManager.removePortal(uID);
+        }
     }
 
-    public TileStabilizerMain getStabilizer()
+    public void partBroken()
     {
-        if (bridgeStabilizer == null)
+        if (portalState == 2)
         {
-            return null;
+            return;
         }
 
-        TileEntity t = bridgeStabilizer.getBlockTileEntity();
+        removePortal();
+        portalState = 2; // Set the portal to inactive - this portal is no longer functional
+        WorldCoordinates dbs = blockManager.getDimensionalBridgeStabilizer();
 
-        if (t instanceof TileStabilizerMain)
+        for (ChunkCoordinates c : blockManager.getPortals())
         {
-            return (TileStabilizerMain) t;
+            worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
         }
 
-        return null;
+        for (ChunkCoordinates c : blockManager.getPortalFrames())
+        {
+            TilePortalPart tile = (TilePortalPart) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            tile.portalController = null;
+            CommonProxy.sendUpdatePacketToAllAround(tile);
+        }
+
+        for (ChunkCoordinates c : blockManager.getRedstoneInterfaces())
+        {
+            TilePortalPart tile = (TilePortalPart) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            tile.portalController = null;
+            CommonProxy.sendUpdatePacketToAllAround(tile);
+        }
+
+        TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
+
+        if (network != null)
+        {
+            network.portalController = null;
+            CommonProxy.sendUpdatePacketToAllAround(network);
+        }
+
+        TileDiallingDevice dial = blockManager.getDialDevice(worldObj);
+
+        if (dial != null)
+        {
+            dial.portalController = null;
+            CommonProxy.sendUpdatePacketToAllAround(dial);
+        }
+
+        TileBiometricIdentifier bio = blockManager.getBiometricIdentifier(worldObj);
+
+        if (bio != null)
+        {
+            bio.portalController = null;
+            CommonProxy.sendUpdatePacketToAllAround(bio);
+        }
+
+        TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
+
+        if (module != null)
+        {
+            module.portalController = null;
+            CommonProxy.sendUpdatePacketToAllAround(module);
+        }
+
+        blockManager = new BlockManager();
+        blockManager.setDimensionalBridgeStabilizer(dbs);
+    }
+
+    @Override
+    public boolean activate(EntityPlayer player)
+    {
+        ItemStack item = player.inventory.getCurrentItem();
+        boolean isReconfiguring = false;
+        WorldCoordinates dbs = null;
+
+        if (worldObj.isRemote || isFullyInitialized() || item == null)
+        {
+            if (!worldObj.isRemote)
+            {
+                super.activate(player);
+            }
+
+            return false;
+        }
+
+        if (portalState == 2)
+        {
+            if (item.itemID == CommonProxy.itemWrench.itemID)
+            {
+                isReconfiguring = true;
+                dbs = blockManager.getDimensionalBridgeStabilizer();
+            }
+        }
+        else if (item.itemID != CommonProxy.itemLocationCard.itemID && !ItemLocationCard.hasDBSLocation(item))
+        {
+            return false;
+        }
+
+        if (blockManager.getPortalCount() > 0 && blockManager.getDimensionalBridgeStabilizer() == null)
+        {
+            blockManager.setDimensionalBridgeStabilizer(ItemLocationCard.getDBSLocation(item));
+            portalState = 1;
+
+            item.stackSize--;
+
+            if (item.stackSize <= 0)
+            {
+                player.inventory.mainInventory[player.inventory.currentItem] = null;
+            }
+        }
+        else
+        {
+            blockManager = new BlockManager();
+            Queue<ChunkCoordinates> portalBlocks = PortalUtils.getGhostedPortals(this);
+
+            if (portalBlocks == null || portalBlocks.isEmpty() || portalType == 0)
+            {
+                System.out.println("A portal could not be created at this location");
+                return false;
+            }
+
+            Queue<ChunkCoordinates> allBlocks = PortalUtils.findAllAttachedPortalParts(this, portalBlocks, player);
+
+            if (allBlocks == null || allBlocks.isEmpty())
+            {
+                // Should have already cried about not being able to complete the portal
+                return false;
+            }
+
+            for (ChunkCoordinates c : allBlocks)
+            {
+                TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+                if (tile == null || !(tile instanceof TilePortalPart)) // Should really be null, but the check is there for RC invisible blocks
+                {
+                    blockManager.addPortalBlock(c);
+                    continue; // We don't want to try and set the blocks controller/send a packet for this
+                }
+                else if (tile instanceof TileFrame)
+                {
+                    blockManager.addBasicFrame(c);
+                }
+                else if (tile instanceof TileRedstoneInterface)
+                {
+                    blockManager.addRedstoneInterface(c);
+                }
+                else if (tile instanceof TileNetworkInterface)
+                {
+                    blockManager.setNetworkInterface(c);
+                }
+                else if (tile instanceof TileDiallingDevice)
+                {
+                    blockManager.setDialDevice(c);
+                }
+                else if (tile instanceof TileModuleManipulator)
+                {
+                    blockManager.setModuleManipulator(c);
+                }
+
+                ((TilePortalPart) tile).portalController = getChunkCoordinates();
+                CommonProxy.sendUpdatePacketToAllAround((TileEnhancedPortals) tile);
+            }
+
+            portalState = 1;
+
+            if (!isReconfiguring)
+            {
+                blockManager.setDimensionalBridgeStabilizer(ItemLocationCard.getDBSLocation(item));
+                item.stackSize--;
+
+                if (item.stackSize <= 0)
+                {
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
+                }
+            }
+            else
+            {
+                blockManager.setDimensionalBridgeStabilizer(dbs);
+            }
+        }
+
+        return true;
     }
 
     public void dialRequest(GlyphIdentifier id)
@@ -600,20 +534,19 @@ public class TilePortalController extends TilePortalPart
 
     public void dialRequest(GlyphIdentifier id, PortalTextureManager m)
     {
-        if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && frameDialler != null)
+        GlyphIdentifier uID = getUniqueIdentifier();
+
+        if (uID != null && blockManager.getHasDialDevice())
         {
-            TileStabilizerMain dbs = getStabilizer();
+            TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
 
             if (dbs == null)
             {
-                bridgeStabilizer = null;
-                waitingForCard = true;
-                hasConfigured = false;
-                CommonProxy.sendUpdatePacketToAllAround(this);
+                portalState = 0;
                 return;
             }
 
-            dbs.setupNewConnection(getUniqueIdentifier(), id, m);
+            dbs.setupNewConnection(uID, id, m);
         }
     }
 
@@ -627,22 +560,22 @@ public class TilePortalController extends TilePortalPart
             return;
         }
 
-        if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()) && CommonProxy.networkManager.hasNetwork(getWorldCoordinates()))
+        GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
+
+        if (uID == null || nID == null)
         {
-            TileStabilizerMain dbs = getStabilizer();
-
-            if (dbs == null)
-            {
-                bridgeStabilizer = null;
-                waitingForCard = true;
-                hasConfigured = false;
-                CommonProxy.sendUpdatePacketToAllAround(this);
-                return;
-            }
-
-            GlyphIdentifier identifier = getUniqueIdentifier(), dest = CommonProxy.networkManager.getDestination(identifier, CommonProxy.networkManager.getPortalNetwork(identifier));
-            dbs.setupNewConnection(identifier, dest, null);
+            return;
         }
+
+        TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
+
+        if (dbs == null)
+        {
+            portalState = 0;
+            return;
+        }
+
+        dbs.setupNewConnection(uID, CommonProxy.networkManager.getDestination(uID, nID), null);
     }
 
     /***
@@ -655,212 +588,41 @@ public class TilePortalController extends TilePortalPart
             return;
         }
 
-        if (CommonProxy.networkManager.hasIdentifier(getWorldCoordinates()))
+        GlyphIdentifier uID = getUniqueIdentifier();
+
+        if (uID == null)
         {
-            TileStabilizerMain dbs = getStabilizer();
-            GlyphIdentifier identifier = CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
-
-            if (dbs == null)
-            {
-                bridgeStabilizer = null;
-                waitingForCard = true;
-                hasConfigured = false;
-                CommonProxy.sendUpdatePacketToAllAround(this);
-                return;
-            }
-
-            if (frameDialler != null)
-            {
-                dbs.terminateExistingConnection(identifier);
-            }
-            else if (frameNetwork != null && CommonProxy.networkManager.hasNetwork(getWorldCoordinates()))
-            {                
-                GlyphIdentifier dest = CommonProxy.networkManager.getDestination(identifier, CommonProxy.networkManager.getPortalNetwork(identifier));
-                dbs.terminateExistingConnection(identifier, dest);
-            }
+            return;
         }
-    }
 
-    public TileModuleManipulator getModuleManipulator()
-    {
-        return frameModule != null ? (TileModuleManipulator) worldObj.getBlockTileEntity(frameModule.posX, frameModule.posY, frameModule.posZ) : null;
-    }
+        TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
 
-    public TileBiometricIdentifier getBiometricIdentifier()
-    {
-        return frameBiometric != null ? (TileBiometricIdentifier) worldObj.getBlockTileEntity(frameBiometric.posX, frameBiometric.posY, frameBiometric.posZ) : null;
-    }
-
-    public List<WorldCoordinates> getAllPortalBlocks()
-    {
-        return portals;
-    }
-
-    /* IInventory */
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        if (i == 0)
+        if (dbs == null)
         {
-            activeTextureData.setFrameItem(itemstack);
+            portalState = 1;
+            return;
         }
-        else if (i == 1)
-        {
-            activeTextureData.setPortalItem(itemstack);
-        }
-    }
 
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        ItemStack s = getStackInSlot(i);
-        s.stackSize -= j;
-
-        return s;
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 1;
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return "tile.ep3.portalFrame.controller.name";
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return 2;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return i == 0 ? activeTextureData.getFrameItem() : i == 1 ? activeTextureData.getPortalItem() : null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return i == 0 ? activeTextureData.getFrameItem() : i == 1 ? activeTextureData.getPortalItem() : null;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack stack)
-    {
-        return false;
+        dbs.terminateExistingConnection(uID);
     }
 
     public void setPortalActive(boolean b)
     {
         isPortalActive = b;
 
-        for (WorldCoordinates c : frameRedstone)
+        for (ChunkCoordinates c : blockManager.getRedstoneInterfaces())
         {
             if (b)
             {
-                ((TileRedstoneInterface) c.getBlockTileEntity()).portalCreated();
+                ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).portalCreated();
             }
             else
             {
-                ((TileRedstoneInterface) c.getBlockTileEntity()).portalRemoved();
+                ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).portalRemoved();
             }
         }
 
         CommonProxy.sendUpdatePacketToAllAround(this);
-    }
-
-    public void partBroken()
-    {
-        if (!processing && hasConfigured && !worldObj.isRemote)
-        {
-            processing = true;
-            
-            if (hasUniqueIdentifier())
-            {
-                TileStabilizerMain dbs = getStabilizer();
-                
-                if (dbs != null)
-                {
-                    dbs.terminateExistingConnection(getUniqueIdentifier()); // Make sure to terminate any active connections
-                }
-                
-                if (hasNetworkIdentifier())
-                {
-                    CommonProxy.networkManager.removePortalFromNetwork(getUniqueIdentifier(), getNetworkIdentifier()); // Then remove it from the network
-                }
-                
-                CommonProxy.networkManager.removePortal(getWorldCoordinates()); // And free up the coords and UID
-            }
-
-            for (WorldCoordinates c : frameBasic)
-            {
-                TileFrame frame = (TileFrame) c.getBlockTileEntity();
-                frame.portalController = null;
-                CommonProxy.sendUpdatePacketToAllAround(frame);
-            }
-
-            for (WorldCoordinates c : frameRedstone)
-            {
-                TileRedstoneInterface frame = (TileRedstoneInterface) c.getBlockTileEntity();
-                frame.portalController = null;
-                CommonProxy.sendUpdatePacketToAllAround(frame);
-            }
-
-            if (isPortalActive)
-            {
-                for (WorldCoordinates c : portals)
-                {
-                    worldObj.setBlock(c.posX, c.posY, c.posZ, 0, 0, 2);
-                }
-            }
-
-            if (frameModule != null)
-            {
-                TileModuleManipulator frame = (TileModuleManipulator) frameModule.getBlockTileEntity();
-                frame.portalController = null;
-                CommonProxy.sendUpdatePacketToAllAround(frame);
-            }
-
-            if (frameDialler != null)
-            {
-                TileDiallingDevice frame = (TileDiallingDevice) frameDialler.getBlockTileEntity();
-                frame.portalController = null;
-                CommonProxy.sendUpdatePacketToAllAround(frame);
-            }
-
-            if (frameNetwork != null)
-            {
-                TileNetworkInterface frame = (TileNetworkInterface) frameNetwork.getBlockTileEntity();
-                frame.portalController = null;
-                CommonProxy.sendUpdatePacketToAllAround(frame);
-            }
-
-            if (frameBiometric != null)
-            {
-                TileBiometricIdentifier frame = (TileBiometricIdentifier) frameBiometric.getBlockTileEntity();
-                frame.portalController = null;
-                CommonProxy.sendUpdatePacketToAllAround(frame);
-            }
-
-            frameBasic.clear();
-            frameRedstone.clear();
-            portals.clear();
-            frameModule = null;
-            frameDialler = null;
-            frameNetwork = null;
-            frameBiometric = null;
-            bridgeStabilizer = null;
-            isPortalActive = false;
-            hasConfigured = false;
-            processing = false;
-
-            CommonProxy.sendUpdatePacketToAllAround(this);
-        }
     }
 
     public boolean hasUniqueIdentifier()
@@ -905,25 +667,93 @@ public class TilePortalController extends TilePortalPart
     {
         GlyphIdentifier uID = getUniqueIdentifier();
 
-        if (uID == null)
+        if (uID != null)
         {
-            return;
-        }
-        else
-        {
-            TileBiometricIdentifier bio = getBiometricIdentifier();
+            TileBiometricIdentifier bio = blockManager.getBiometricIdentifier(worldObj);
 
-            if (bio != null)
+            if (bio != null && !bio.canEntityBeSent(entity))
             {
-                if (!bio.canEntityBeSent(entity))
-                {
-                    EntityManager.setEntityPortalCooldown(entity);
-                    return;
-                }
+                EntityManager.setEntityPortalCooldown(entity);
+                return;
             }
 
-            TileStabilizerMain dbs = getStabilizer();
+            TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
             dbs.onEntityEnterPortal(uID, entity, portal);
         }
+    }
+
+    /* IInventory */
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        if (i == 0)
+        {
+            activeTextureData.setFrameItem(itemstack);
+        }
+        else if (i == 1)
+        {
+            activeTextureData.setPortalItem(itemstack);
+        }
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        ItemStack stack = getStackInSlot(i);
+
+        if (stack != null)
+        {
+            if (stack.stackSize <= j)
+            {
+                setInventorySlotContents(i, null);
+            }
+            else
+            {
+                stack = stack.splitStack(j);
+
+                if (stack.stackSize == 0)
+                {
+                    setInventorySlotContents(i, null);
+                }
+            }
+        }
+
+        return stack;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 1;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return "tile.ep3.portalFrame.controller.name";
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return 2;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return i == 0 ? activeTextureData.getFrameItem() : i == 1 ? activeTextureData.getPortalItem() : null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return i == 0 ? activeTextureData.getFrameItem() : i == 1 ? activeTextureData.getPortalItem() : null;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack stack)
+    {
+        return false;
     }
 }

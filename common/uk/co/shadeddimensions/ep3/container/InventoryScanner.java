@@ -1,11 +1,11 @@
 package uk.co.shadeddimensions.ep3.container;
 
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class InventoryScanner implements IInventory
 {

@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
-import uk.co.shadeddimensions.ep3.util.WorldUtils;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import cofh.api.energy.IEnergyHandler;
 
 public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandler
@@ -47,11 +47,6 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
     {
         if (worldObj.isRemote || player.inventory.getCurrentItem() == null || player.inventory.getCurrentItem().getItem().itemID != CommonProxy.itemWrench.itemID)
         {
-            if (!worldObj.isRemote)
-            {
-                receiveEnergy(ForgeDirection.UP, 13247, false);
-            }
-            
             return false;
         }
 
@@ -94,15 +89,25 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         {
             for (ChunkCoordinates c : blocks)
             {
-                TileStabilizer t = (TileStabilizer) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-                t.mainBlock = topLeft;
+                TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                
+                if (tile instanceof TileStabilizerMain)
+                {
+                    worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockStabilizer.blockID, 0, 3);
+                    tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                }
+                
+                if (tile instanceof TileStabilizer)
+                {
+                    TileStabilizer t = (TileStabilizer) tile;
+                    t.mainBlock = topLeft;
+                }
             }
 
             worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, CommonProxy.blockStabilizer.blockID, 1, 3);
 
             TileStabilizerMain main = (TileStabilizerMain) topLeft.getBlockTileEntity();
-            main.blockList = blocks;
-            main.rows = rows;
+            main.setData(blocks, rows);
         }
 
         return true;
@@ -150,14 +155,14 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-        WorldUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
+        GeneralUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        mainBlock = WorldUtils.loadChunkCoord(tag, "mainBlock");
+        mainBlock = GeneralUtils.loadChunkCoord(tag, "mainBlock");
     }
 
     @Override

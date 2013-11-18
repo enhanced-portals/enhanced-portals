@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -24,10 +25,10 @@ import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
-import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
@@ -84,7 +85,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         {
             return false;
         }
-        else if (!cA.hasConfigured || cA.waitingForCard || !cB.hasConfigured || cB.waitingForCard) // Make sure they're set up correctly...
+        else if (!cA.isFullyInitialized() || !cB.isFullyInitialized()) // Make sure they're set up correctly...
         {
             return false;
         }
@@ -92,7 +93,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         {
             return false;
         }
-        else if (!cA.bridgeStabilizer.equals(cB.bridgeStabilizer)) // And make sure they're on the same DBS
+        else if (!cA.blockManager.getDimensionalBridgeStabilizer().equals(cB.blockManager.getDimensionalBridgeStabilizer())) // And make sure they're on the same DBS
         {
             return false;
         }
@@ -431,7 +432,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
             poison.setCurativeItems(new ArrayList<ItemStack>());
 
             int effect = rand.nextInt(3);
-            
+
             if (effect == 0)
             {
                 ((EntityLivingBase) entity).addPotionEffect(blindness);
@@ -461,7 +462,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
             blindness.setCurativeItems(new ArrayList<ItemStack>());
             hunger.setCurativeItems(new ArrayList<ItemStack>());
             poison.setCurativeItems(new ArrayList<ItemStack>());
-            
+
             ((EntityLivingBase) entity).addPotionEffect(blindness);
             ((EntityLivingBase) entity).addPotionEffect(hunger);
             ((EntityLivingBase) entity).addPotionEffect(poison);
@@ -490,7 +491,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         energyStorage.writeToNBT(tag);
         tag.setInteger("powerState", powerState);
         tag.setInteger("rows", rows);
-        WorldUtils.saveChunkCoordList(tag, blockList, "blockList");
+        GeneralUtils.saveChunkCoordList(tag, blockList, "blockList");
 
         if (!activeConnections.isEmpty())
         {
@@ -520,10 +521,11 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         super.readFromNBT(tag);
 
-        energyStorage.readFromNBT(tag);
         powerState = tag.getInteger("powerState");
         rows = tag.getInteger("rows");
-        blockList = WorldUtils.loadChunkCoordList(tag, "blockList");
+        energyStorage = new EnergyStorage(rows * CommonProxy.REDSTONE_FLUX_COST);
+        blockList = GeneralUtils.loadChunkCoordList(tag, "blockList");
+        energyStorage.readFromNBT(tag);
 
         if (tag.hasKey("activeConnections"))
         {
@@ -552,6 +554,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         stream.writeInt(activeConnections.size());
         stream.writeInt(powerState);
         stream.writeInt(instability);
+        stream.writeInt(energyStorage.getMaxEnergyStored());
         stream.writeInt(energyStorage.getEnergyStored());
     }
 
@@ -561,6 +564,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
         intActiveConnections = stream.readInt();
         powerState = stream.readInt();
         instability = stream.readInt();
+        energyStorage = new EnergyStorage(stream.readInt());
         energyStorage.setEnergyStored(stream.readInt());
     }
 
@@ -573,10 +577,20 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
     public void deconstruct()
     {
+        for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list
+        {
+            terminateExistingConnection(new GlyphIdentifier(activeConnections.values().toArray(new String[activeConnections.size()])[i]));
+        }
+
         for (ChunkCoordinates c : blockList)
         {
-            TileStabilizer t = (TileStabilizer) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            t.mainBlock = null;
+            TileEntity tile =  worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+            if (tile instanceof TileStabilizer)
+            {
+                TileStabilizer t = (TileStabilizer) tile;
+                t.mainBlock = null;
+            }
         }
 
         worldObj.setBlock(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 0, 3);
@@ -644,8 +658,26 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     @Override
     public ItemStack decrStackSize(int i, int j)
     {
-        inventory.stackSize--;
-        return inventory;
+        ItemStack stack = getStackInSlot(i);
+
+        if (stack != null)
+        {
+            if (stack.stackSize <= j)
+            {
+                setInventorySlotContents(i, null);
+            }
+            else
+            {
+                stack = stack.splitStack(j);
+
+                if (stack.stackSize == 0)
+                {
+                    setInventorySlotContents(i, null);
+                }
+            }
+        }
+
+        return stack;
     }
 
     @Override
@@ -699,5 +731,12 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     public int getActiveConnections()
     {
         return activeConnections != null ? activeConnections.size() : -1;
+    }
+
+    public void setData(ArrayList<ChunkCoordinates> blocks, int rows2)
+    {
+        rows = rows2;
+        blockList = blocks;
+        energyStorage = new EnergyStorage(rows * CommonProxy.REDSTONE_FLUX_COST);
     }
 }

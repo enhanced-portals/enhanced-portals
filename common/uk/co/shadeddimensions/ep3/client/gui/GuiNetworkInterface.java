@@ -29,7 +29,7 @@ public class GuiNetworkInterface extends GuiBase
     public GuiNetworkInterface(TilePortalController tile, EntityPlayer play)
     {
         super(new ContainerNetworkInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
-
+        drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;

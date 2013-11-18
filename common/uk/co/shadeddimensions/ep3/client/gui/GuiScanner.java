@@ -18,15 +18,16 @@ public class GuiScanner extends GuiBase
     {
         super(new ContainerScanner(scanner, player, s), new ResourceLocation("enhancedportals", "textures/gui/scanner.png"));
         stack = s;
+        drawInventory = false;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        super.drawGuiContainerForegroundLayer(x, y);
-        
         fontRenderer.drawString("Scanner", 7, 7, 0x404040);
         fontRenderer.drawString("Inventory", 7, 70, 0x404040);
+
+        super.drawGuiContainerForegroundLayer(x, y);
     }
     
     @Override

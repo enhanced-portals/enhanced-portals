@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
@@ -19,15 +20,17 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TilePortalPart extends TileEnhancedPortals implements IInventory
 {
-    public WorldCoordinates portalController;
+    public ChunkCoordinates portalController;
 
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
@@ -58,18 +61,23 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     @Override
     public boolean activate(EntityPlayer player)
     {
+        if (worldObj.isRemote)
+        {
+            return false;
+        }
+        
         ItemStack s = player.inventory.getCurrentItem();
 
         if (s != null && s.getItem() instanceof ItemSynchronizer)
         {
             return false;
         }
-        
+
         if ((s != null && s.getItem() instanceof ItemPortalTool) || this instanceof TileDiallingDevice)
         {
             TilePortalController controller = getPortalController();
 
-            if (controller == null || !controller.hasConfigured)
+            if (controller == null || !controller.isFullyInitialized())
             {
                 return false;
             }
@@ -84,7 +92,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
 
                     return false;
                 }
-                
+
                 CommonProxy.openGui(player, GUIs.DiallingDevice, this);
                 return true;
             }
@@ -99,7 +107,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
                 {
                     CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
                 }
-                
+
                 return true;
             }
             else if (s.getItem().itemID == CommonProxy.itemWrench.itemID)
@@ -136,7 +144,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
                 {
                     CommonProxy.openGui(player, GUIs.ModuleManipulator, this);
                 }
-                
+
                 return true;
             }
 
@@ -150,71 +158,45 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-
-        if (portalController != null)
-        {
-            NBTTagCompound t = new NBTTagCompound();
-            t.setInteger("X", portalController.posX);
-            t.setInteger("Y", portalController.posY);
-            t.setInteger("Z", portalController.posZ);
-            t.setInteger("D", portalController.dimension);
-
-            tag.setTag("portalController", t);
-        }
+        GeneralUtils.saveChunkCoord(tag, portalController, "Controller");
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-
-        if (tag.hasKey("portalController"))
-        {
-            NBTTagCompound t = (NBTTagCompound) tag.getTag("portalController");
-
-            portalController = new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
-        }
+        portalController = GeneralUtils.loadChunkCoord(tag, "Controller");
     }
 
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         super.fillPacket(stream);
-
-        if (portalController != null)
-        {
-            stream.writeInt(portalController.posX);
-            stream.writeInt(portalController.posY);
-            stream.writeInt(portalController.posZ);
-        }
-        else
-        {
-            stream.writeInt(0);
-            stream.writeInt(-1);
-            stream.writeInt(0);
-        }
+        GeneralUtils.writeChunkCoord(stream, portalController);
     }
 
     @Override
     public void usePacket(DataInputStream stream) throws IOException
     {
         super.usePacket(stream);
-
-        WorldCoordinates c = new WorldCoordinates(stream.readInt(), stream.readInt(), stream.readInt(), worldObj.provider.dimensionId);
-
-        if (c.posY > -1)
-        {
-            portalController = c;
-        }
-        else
-        {
-            portalController = null;
-        }
+        portalController = GeneralUtils.readChunkCoord(stream);
     }
 
     public TilePortalController getPortalController()
     {
-        return portalController != null ? (TilePortalController) portalController.getBlockTileEntity() : null;
+        if (portalController != null)
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(portalController.posX, portalController.posY, portalController.posZ);
+
+            if (tile instanceof TilePortalController)
+            {
+                return (TilePortalController) tile;
+            }
+
+            portalController = null;
+        }
+
+        return null;
     }
 
     /* IInventory */

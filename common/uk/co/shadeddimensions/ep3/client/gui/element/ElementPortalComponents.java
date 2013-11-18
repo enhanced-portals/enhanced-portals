@@ -41,15 +41,15 @@ public class ElementPortalComponents extends ElementBase
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager, new ItemStack(CommonProxy.blockFrame, 1, 5), posX + 80, posY + 20);
         itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager, new ItemStack(CommonProxy.blockFrame, 1, 6), posX + 80, posY + 40);
         //itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, textureManager, new ItemStack(CommonProxy.blockFrame, 1, 7), posX + 80, posY + 60);
+                
+        fontRenderer.drawString("" + controller.blockManager.getFrameCount(), posX + 20, posY + 4, 0x404040);
+        fontRenderer.drawString("" + controller.blockManager.getRedstoneInterfaceCount(), posX + 20, posY + 24, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasNetworkInterface() ? "Initialized" : "0", posX + 20, posY + 44, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasDialDevice() ? "Initialized" : "0", posX + 20, posY + 64, 0x404040);
         
-        fontRenderer.drawString("" + controller.intBasic, posX + 20, posY + 4, 0x404040);
-        fontRenderer.drawString("" + controller.intRedstone, posX + 20, posY + 24, 0x404040);
-        fontRenderer.drawString(controller.boolNetwork ? "Initialized" : "0", posX + 20, posY + 44, 0x404040);
-        fontRenderer.drawString(controller.boolDialler ? "Initialized" : "0", posX + 20, posY + 64, 0x404040);
-        
-        fontRenderer.drawString("" + controller.intPortal, posX + 100, posY + 4, 0x404040);
-        fontRenderer.drawString(controller.boolBiometric ? "Initialized" : "0", posX + 100, posY + 24, 0x404040);
-        fontRenderer.drawString(controller.frameModule != null ? "Initialized" : "0", posX + 100, posY + 44, 0x404040);
+        fontRenderer.drawString("" + controller.blockManager.getPortalCount(), posX + 100, posY + 4, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasBiometricIdentifier() ? "Initialized" : "0", posX + 100, posY + 24, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasModuleManipulator() ? "Initialized" : "0", posX + 100, posY + 44, 0x404040);
     }
 
     @Override

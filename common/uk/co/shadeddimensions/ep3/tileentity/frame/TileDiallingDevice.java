@@ -128,7 +128,7 @@ public class TileDiallingDevice extends TilePortalPart
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         super.guiActionPerformed(payload, player);
-
+                
         if (payload.data.hasKey("DialRequest"))
         {
             String id = payload.data.getString("DialRequest");

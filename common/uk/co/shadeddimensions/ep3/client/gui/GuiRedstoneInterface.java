@@ -20,6 +20,7 @@ public class GuiRedstoneInterface extends GuiBase
         super(new ContainerRedstoneInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
         redstone = tile;
         ySize = 58;
+        drawInventory = false;
     }
 
     @Override

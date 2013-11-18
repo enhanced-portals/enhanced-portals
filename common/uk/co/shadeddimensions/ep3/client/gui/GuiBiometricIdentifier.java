@@ -30,6 +30,7 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         xSize = 300;
         ySize = 200;
         biometric = tile;
+        drawInventory = false;
     }
 
     @Override
@@ -49,14 +50,14 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        super.drawGuiContainerForegroundLayer(par1, par2);
-
         fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.biometric.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.biometric.name")) / 2, -13, 0xFFFFFF);
         fontRenderer.drawString("Sending", 7, 6, 0x404040);
         fontRenderer.drawString("Recieving", xSize - 7 - fontRenderer.getStringWidth("Recieving"), 6, 0x404040);
-        fontRenderer.drawString("ID Card", 28, ySize - 20, 0x404040);
-        fontRenderer.drawString("ID Card", 273 - fontRenderer.getStringWidth("ID Card"), ySize - 20, 0x404040);
+        fontRenderer.drawString("ID Card", 7, ySize - 36, 0x404040);
+        fontRenderer.drawString("ID Card", 293 - fontRenderer.getStringWidth("ID Card"), ySize - 36, 0x404040);
         fontRenderer.drawString(biometric.isActive ? "Active" : "Inactive", xSize / 2 - fontRenderer.getStringWidth(biometric.isActive ? "Active" : "Inactive") / 2, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
+    
+        super.drawGuiContainerForegroundLayer(par1, par2);
     }
     
     @Override
@@ -85,8 +86,8 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         buttonList.add(rightButton);
         buttonList.add(activateRecieveList);
         
-        sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 7, 17, 120, 95, true);
-        recieveList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"), biometric, xSize - 127, 17, 120, 95, false);
+        sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 0, 17, 140, 95, true);
+        recieveList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"), biometric, xSize - 142, 17, 140, 95, false);
         addElement(sendList);
         addElement(recieveList);
     }
