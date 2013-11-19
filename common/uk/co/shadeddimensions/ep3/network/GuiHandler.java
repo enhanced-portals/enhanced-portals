@@ -84,7 +84,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.TexturesDiallingDevice.ordinal())
             {                
-                return new GuiTexture((TilePortalController) tile, player, 0, false);
+                return new GuiTexture((TileDiallingDevice) tile, player, 0, false);
             }
             else if (ID == GUIs.BiometricIdentifier.ordinal())
             {                
@@ -131,7 +131,7 @@ public class GuiHandler implements IGuiHandler
                 return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
             }
             else if (ID == GUIs.DiallingDevice.ordinal())
-            {                
+            {
                 return new ContainerDiallingDevice((TileDiallingDevice) tile, player);
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
@@ -147,7 +147,7 @@ public class GuiHandler implements IGuiHandler
                 return new ContainerTexture((TilePortalController) tile, player);
             }
             else if (ID == GUIs.TexturesDiallingDevice.ordinal())
-            {                
+            {
                 return new ContainerTexture((TilePortalController) tile, player);
             }
             else if (ID == GUIs.BiometricIdentifier.ordinal())

@@ -21,6 +21,7 @@ import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
@@ -72,6 +73,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
     }
     
     TilePortalController controller;
+    TileDiallingDevice dial;
     int screenState;
     boolean editController;
     GuiButton colourResetButton, colourSaveButton, mainCancelButton, mainSaveButton;
@@ -91,11 +93,23 @@ public class GuiTexture extends GuiBase implements IElementHandler
         editController = editControl;
         drawInventory = false;
     }
+    
+    public GuiTexture(TileDiallingDevice t, EntityPlayer p, int startScreen, boolean editControl)
+    {
+        super(new ContainerTexture(t.getPortalController(), p), new ResourceLocation("enhancedportals", "textures/gui/colourInterface.png"));
+        ySize += 10;
+        controller = t.getPortalController();
+        screenState = startScreen;
+        editController = editControl;
+        drawInventory = false;
+        dial = t;
+    }
 
     @SuppressWarnings("unchecked")
     public void initGui()
     {
         super.initGui();
+        buttonList.clear();
 
         fakeItem = new ElementFakeItemSlot(this, 151, 74);
         fakeItem.setVisible(screenState != 2);
@@ -260,7 +274,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
         {
             if (button.id == mainCancelButton.id)
             {
-                ClientProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
+                ClientProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
             }
             else if (button.id == mainSaveButton.id)
             {
@@ -274,7 +288,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
                 ClientProxy.dialEntryTexture.writeToNBT(payload.data, "TextureData");
                 ClientProxy.sendGuiPacket(payload);
                 ClientProxy.editingDialEntry = -1;
-                ClientProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, controller);
+                ClientProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
             }
         }
     }

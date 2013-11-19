@@ -12,6 +12,8 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemFrame extends ItemBlock
 {
+    public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "biometric", "upgrade" };
+    
     public ItemFrame(int par1)
     {
         super(par1);
@@ -46,46 +48,7 @@ public class ItemFrame extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        int meta = stack.getItemDamage();
-        String name = "unknown";
-
-        switch (meta)
-        {
-            default:
-            case 0:
-                name = "frame";
-                break;
-
-            case 1:
-                name = "controller";
-                break;
-
-            case 2:
-                name = "redstone";
-                break;
-
-            case 3:
-                name = "networkInterface";
-                break;
-
-            case 4:
-                name = "dialDevice";
-                break;
-
-            case 5:
-                name = "biometric";
-                break;
-
-            case 6:
-                name = "upgrade";
-                break;
-                
-            case 7:
-                name = "energy";
-                break;
-        }
-
-        return super.getUnlocalizedName() + "." + name;
+        return super.getUnlocalizedName() + "." + unlocalizedName[stack.getItemDamage()];
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })

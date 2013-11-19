@@ -35,7 +35,7 @@ public class BlockManager
         portals = new ArrayList<ChunkCoordinates>();
         redstoneInterfaces = new ArrayList<ChunkCoordinates>();
     }
-    
+
     public int getFrameCount()
     {
         return basicFrames.size();
@@ -106,13 +106,13 @@ public class BlockManager
         stream.writeBoolean(biometricIdentifier != null);
         GeneralUtils.writeChunkCoord(stream, moduleManipulator);
     }
-    
+
     public BlockManager readFromPacket(DataInputStream stream) throws IOException
     {
         // Nothing to do serverside
         return this;
     }
-    
+
     public BlockManager addBasicFrame(ChunkCoordinates c)
     {
         basicFrames.add(c);
@@ -130,144 +130,144 @@ public class BlockManager
         redstoneInterfaces.add(c);
         return this;
     }
-    
+
     public BlockManager setNetworkInterface(ChunkCoordinates c)
     {
         networkInterface = c;
         return this;
     }
-    
+
     public BlockManager setDialDevice(ChunkCoordinates c)
     {
         dialDevice = c;
         return this;
     }
-    
+
     public BlockManager setBiometricIdentifier(ChunkCoordinates c)
     {
         biometricIdentifier = c;
         return this;
     }
-    
+
     public BlockManager setModuleManipulator(ChunkCoordinates c)
     {
         moduleManipulator = c;
         return this;
     }
-    
+
     public BlockManager setDimensionalBridgeStabilizer(WorldCoordinates w)
     {
         dimensionalBridgeStabilizer = w;
         return this;
     }
-    
+
     public ArrayList<ChunkCoordinates> getPortalFrames()
     {
         return basicFrames;
     }
-    
+
     public ArrayList<ChunkCoordinates> getPortals()
     {
         return portals;
     }
-    
+
     public ArrayList<ChunkCoordinates> getRedstoneInterfaces()
     {
         return redstoneInterfaces;
     }
-        
+
     public ChunkCoordinates getNetworkInterface()
     {
         return networkInterface;
     }
-    
+
     public TileNetworkInterface getNetworkInterface(World w)
     {
         if (networkInterface != null)
         {
             TileEntity tile = w.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
-            
+
             if (tile instanceof TileNetworkInterface)
             {
                 return (TileNetworkInterface) tile;
             }
         }
-        
+
         return null;
     }
-    
+
     public ChunkCoordinates getDialDevice()
     {
         return dialDevice;
     }
-    
+
     public TileDiallingDevice getDialDevice(World w)
     {
         if (dialDevice != null)
         {
             TileEntity tile = w.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
-            
+
             if (tile instanceof TileDiallingDevice)
             {
                 return (TileDiallingDevice) tile;
             }
         }
-        
+
         return null;
     }
-    
+
     public ChunkCoordinates getBiometricIdentifier()
     {
         return biometricIdentifier;
     }
-    
+
     public TileBiometricIdentifier getBiometricIdentifier(World w)
     {
         if (biometricIdentifier != null)
         {
             TileEntity tile = w.getBlockTileEntity(biometricIdentifier.posX, biometricIdentifier.posY, biometricIdentifier.posZ);
-            
+
             if (tile instanceof TileBiometricIdentifier)
             {
                 return (TileBiometricIdentifier) tile;
             }
         }
-        
+
         return null;
     }
-    
+
     public ChunkCoordinates getModuleManipulator()
     {
         return moduleManipulator;
     }
-    
+
     public TileModuleManipulator getModuleManipulator(World w)
     {
         if (moduleManipulator != null)
         {
             TileEntity tile = w.getBlockTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
-            
+
             if (tile instanceof TileModuleManipulator)
             {
                 return (TileModuleManipulator) tile;
             }
         }
-        
+
         return null;
     }
-    
+
     public WorldCoordinates getDimensionalBridgeStabilizer()
     {
         return dimensionalBridgeStabilizer;
     }
-    
+
     public TileStabilizerMain getDimensionalBridgeStabilizerTile()
     {
         if (dimensionalBridgeStabilizer != null)
         {
             World w = dimensionalBridgeStabilizer.getWorld();            
             TileEntity tile = w.getBlockTileEntity(dimensionalBridgeStabilizer.posX, dimensionalBridgeStabilizer.posY, dimensionalBridgeStabilizer.posZ);
-            
+
             if (tile instanceof TileStabilizerMain)
             {
                 return (TileStabilizerMain) tile;
@@ -276,17 +276,22 @@ public class BlockManager
             {
                 TileStabilizer t = (TileStabilizer) tile;
                 TileStabilizerMain m = t.getMainBlock();
-                
+
                 if (m != null)
                 {
                     setDimensionalBridgeStabilizer(m.getWorldCoordinates());
                     return m;
                 }
             }
-            
+
             dimensionalBridgeStabilizer = null;
         }
-        
+
         return null;
+    }
+
+    public void removeFrame(ChunkCoordinates chunkCoordinates)
+    {
+        basicFrames.remove(chunkCoordinates);
     }
 }

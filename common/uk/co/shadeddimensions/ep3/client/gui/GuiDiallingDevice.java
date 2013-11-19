@@ -256,16 +256,18 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
             {
                 // select
                 selector.setIdentifierTo(dial.glyphList.get(entry).identifier);
+                Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
             }
-            else if (type == 1 && entry >= 0 && entry < dial.glyphList.size())
+            else if (type == 1 && entry >= 0 && entry < dial.glyphList.size() && !controller.isPortalActive)
             {
                 // texture
                 ClientProxy.editingDialEntry = entry;
                 PacketDispatcher.sendPacketToServer(new PacketTextureData(entry, dial.xCoord, dial.yCoord, dial.zCoord).getPacket());
-                CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.TexturesDiallingDevice, dial.getPortalController());
+                CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.TexturesDiallingDevice, dial);
+                Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                 
             }
-            else if (type == 2 && entry >= 0 && entry < dial.glyphList.size())
+            else if (type == 2 && entry >= 0 && entry < dial.glyphList.size() && !controller.isPortalActive)
             {
                 // remove
                 selector.reset();
@@ -273,9 +275,8 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
                 GuiPayload p = new GuiPayload();
                 p.data.setInteger("DeleteGlyph", entry);
                 ClientProxy.sendGuiPacket(p);
+                Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
             }
-            
-            Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
         }
     }
 }

@@ -27,14 +27,13 @@ import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEnhancedPortals
 {    
-    static int PORTAL_CONTROLLER = 1,
+    public static int PORTAL_CONTROLLER = 1,
                REDSTONE_INTERFACE = 2,
                NETWORK_INTERFACE = 3,
                DIALLING_DEVICE = 4,
                BIOMETRIC_IDENTIFIER = 5,
-               MODULE_MANIPULATOR = 6;
-
-    public static int FRAME_TYPES = 7;
+               MODULE_MANIPULATOR = 6,
+               FRAME_TYPES = 7;
     
     public static Icon[] overlayIcons;
     static ConnectedTextures connectedTextures;

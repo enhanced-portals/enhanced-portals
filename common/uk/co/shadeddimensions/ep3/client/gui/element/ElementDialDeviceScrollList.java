@@ -25,10 +25,15 @@ public class ElementDialDeviceScrollList extends ElementScrollListBase
     protected void drawElement(int i, int x, int y, boolean isSelected, int mouseX, int mouseY)
     {
         boolean yMouse = mouseY >= y && mouseY <= y + getEntrySize();
-        boolean mouseOverMain = yMouse && mouseX >= x + 5 && mouseX <= x + sizeX - 38, mouseOverTexture = yMouse && mouseX >= x + sizeX - 36 && mouseX <= x + sizeX - 22, mouseOverRemove = yMouse && mouseX >= x + sizeX - 20 && mouseX <= x + sizeX - 6, additionalButtonsDisabled = gui instanceof GuiDiallingDevice ? ((GuiDiallingDevice) gui).showOverlay : false;
+        boolean mouseOverMain = yMouse && mouseX >= x + 5 && mouseX <= x + sizeX - 38, mouseOverTexture = yMouse && mouseX >= x + sizeX - 36 && mouseX <= x + sizeX - 22, mouseOverRemove = yMouse && mouseX >= x + sizeX - 20 && mouseX <= x + sizeX - 6, additionalButtonsDisabled = false;
         float colour = isSelected ? 0.7f : 1f;
         int mainButtonWidth = sizeX - 37, halfButtonWidth = mainButtonWidth / 2;
         GlyphElement element = dial.glyphList.get(i);
+        
+        if (gui instanceof GuiDiallingDevice)
+        {
+            additionalButtonsDisabled = dial.getPortalController().isPortalActive || ((GuiDiallingDevice) gui).showOverlay;
+        }
         
         GL11.glColor3f(colour, colour, colour);
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/buttons.png"));

@@ -78,7 +78,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {
+    {        
         if (player.isSneaking() && hasDBSLocation(stack))
         {
             clearDBSLocation(stack);

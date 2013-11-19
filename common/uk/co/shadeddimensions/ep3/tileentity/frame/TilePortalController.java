@@ -106,20 +106,6 @@ public class TilePortalController extends TilePortalPart
         stream.writeByte(portalState);
         stream.writeByte(portalType);
         stream.writeBoolean(isPortalActive);
-
-        for (int i = 0; i < getSizeInventory(); i++)
-        {
-            if (getStackInSlot(i) != null)
-            {
-                stream.writeInt(getStackInSlot(i).itemID);
-                stream.writeInt(getStackInSlot(i).getItemDamage());
-            }
-            else
-            {
-                stream.writeInt(0);
-                stream.writeInt(0);
-            }
-        }
     }
 
     @Override
@@ -132,16 +118,6 @@ public class TilePortalController extends TilePortalPart
         portalState = stream.readByte();
         portalType = stream.readByte();
         isPortalActive = stream.readBoolean();
-
-        for (int i = 0; i < getSizeInventory(); i++)
-        {
-            int id = stream.readInt(), meta = stream.readInt();
-
-            if (id != 0)
-            {
-                setInventorySlotContents(i, new ItemStack(id, 1, meta));
-            }
-        }
     }
 
     @Override
@@ -152,6 +128,7 @@ public class TilePortalController extends TilePortalPart
         tagCompound.setByte("PortalState", portalState);
         tagCompound.setByte("PortalType", portalType);
         activeTextureData.writeToNBT(tagCompound, "ActiveTextureData");
+        tagCompound.setBoolean("IsPortalActive", isPortalActive);
 
         if (inactiveTextureData != null)
         {
@@ -167,6 +144,7 @@ public class TilePortalController extends TilePortalPart
         portalState = tagCompound.getByte("PortalState");
         portalType = tagCompound.getByte("PortalType");
         activeTextureData.readFromNBT(tagCompound, "ActiveTextureData");
+        isPortalActive = tagCompound.getBoolean("IsPortalActive");
 
         if (tagCompound.hasKey("InactiveTextureData"))
         {
@@ -435,10 +413,17 @@ public class TilePortalController extends TilePortalPart
                 isReconfiguring = true;
                 dbs = blockManager.getDimensionalBridgeStabilizer();
             }
+            else
+            {
+                return false;
+            }
         }
-        else if (item.itemID != CommonProxy.itemLocationCard.itemID && !ItemLocationCard.hasDBSLocation(item))
+        else
         {
-            return false;
+            if (item.itemID != CommonProxy.itemLocationCard.itemID || !ItemLocationCard.hasDBSLocation(item))
+            {
+                return false;
+            }
         }
 
         if (blockManager.getPortalCount() > 0 && blockManager.getDimensionalBridgeStabilizer() == null)

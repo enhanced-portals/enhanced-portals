@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 
@@ -67,7 +68,7 @@ public class ElementFakeItemSlot extends ElementBase
         
         ItemStack s = Minecraft.getMinecraft().thePlayer.inventory.getItemStack();
         
-        if (s == null || s.getItem() instanceof ItemBlock)
+        if (s == null || s.getItem() instanceof ItemBlock || FluidContainerRegistry.isFilledContainer(s))
         {
             item = s;
             

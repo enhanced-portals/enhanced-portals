@@ -27,6 +27,7 @@ import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
+import uk.co.shadeddimensions.ep3.item.ItemUpgrade;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
@@ -68,6 +69,7 @@ public class CommonProxy
     public static ItemSynchronizer itemSynchronizer;
     public static ItemEntityCard itemEntityCard;
     public static ItemHandheldScanner itemScanner;
+    public static ItemUpgrade itemInPlaceUpgrade;
 
     public static NetworkManager networkManager;
 
@@ -155,6 +157,9 @@ public class CommonProxy
         
         itemScanner = new ItemHandheldScanner(configuration.getItemId("HandheldScanner"), "ep3.handheldScanner");
         GameRegistry.registerItem(itemScanner, "ep3.handheldScanner");
+        
+        itemInPlaceUpgrade = new ItemUpgrade(configuration.getItemId("InPlaceUpgrade"), "ep3.inPlaceUpgrade");
+        GameRegistry.registerItem(itemInPlaceUpgrade, "ep3.inPlaceUpgrade");
     }
 
     public void registerRenderers()
@@ -224,6 +229,7 @@ public class CommonProxy
         configuration.addItemEntry("EntityCard");
         configuration.addItemEntry("HandheldScanner");
         configuration.addItemEntry("PortalModule");
+        configuration.addItemEntry("InPlaceUpgrade");
 
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
         customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);

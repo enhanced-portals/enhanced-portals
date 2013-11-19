@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientBlockManager extends BlockManager
 {
-    int frame, portal, redstone, item, energy, fluid;
+    int frame, portal, redstone;
     boolean network, dial, biometric;
     
     public int getFrameCount()
@@ -25,21 +25,6 @@ public class ClientBlockManager extends BlockManager
     public int getRedstoneInterfaceCount()
     {
         return redstone;
-    }
-
-    public int getItemCount()
-    {
-        return item;
-    }
-
-    public int getEnergyCount()
-    {
-        return energy;
-    }
-
-    public int getFluidCount()
-    {
-        return fluid;
     }
 
     public boolean getHasNetworkInterface()
@@ -63,9 +48,6 @@ public class ClientBlockManager extends BlockManager
         frame = stream.readInt();
         portal = stream.readInt();
         redstone = stream.readInt();
-        item = stream.readInt();
-        energy = stream.readInt();
-        fluid = stream.readInt();
         network = stream.readBoolean();
         dial = stream.readBoolean();
         biometric = stream.readBoolean();

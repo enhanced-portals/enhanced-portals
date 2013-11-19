@@ -8,9 +8,12 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 
@@ -57,6 +60,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
         if (controller != null)
         {
             c = new Color(controller.activeTextureData.getFrameColour());
+            ItemStack s = controller.getStackInSlot(0);
 
             if (controller.activeTextureData.hasCustomFrameTexture())
             {
@@ -65,10 +69,17 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
                     overrideIcon = (Icon) ClientProxy.customFrameTextures.get(controller.activeTextureData.getCustomFrameTexture());
                 }
             }
-            else if (controller.getStackInSlot(0) != null)
+            if (s != null)
             {
-                baseBlock = Block.blocksList[controller.getStackInSlot(0).itemID];
-                baseMeta = controller.getStackInSlot(0).getItemDamage();
+                if (s.getItem() instanceof ItemBlock)
+                {
+                    baseBlock = Block.blocksList[((ItemBlock) s.getItem()).getBlockID()];
+                    baseMeta = s.getItemDamage();
+                }
+                else if (FluidContainerRegistry.isFilledContainer(s))
+                {
+                    overrideIcon = FluidContainerRegistry.getFluidForFilledItem(s).getFluid().getStillIcon();
+                }
             }
 
             TileModuleManipulator m = controller.blockManager.getModuleManipulator(controller.worldObj);
@@ -192,6 +203,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
         if (controller != null)
         {
             c = new Color(controller.activeTextureData.getPortalColour());
+            ItemStack s = controller.getStackInSlot(1);
 
             if (controller.activeTextureData.hasCustomPortalTexture())
             {
@@ -200,10 +212,17 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
                     overrideIcon = (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
                 }
             }
-            else if (controller.getStackInSlot(1) != null)
+            else if (s != null)
             {
-                baseBlock = Block.blocksList[controller.getStackInSlot(1).itemID];
-                baseMeta = controller.getStackInSlot(1).getItemDamage();
+                if (s.getItem() instanceof ItemBlock)
+                {
+                    baseBlock = Block.blocksList[((ItemBlock) s.getItem()).getBlockID()];
+                    baseMeta = s.getItemDamage();
+                }
+                else if (FluidContainerRegistry.isFilledContainer(s))
+                {
+                    overrideIcon = FluidContainerRegistry.getFluidForFilledItem(s).getFluid().getStillIcon();
+                }
             }
 
             TileModuleManipulator m = controller.blockManager.getModuleManipulator(controller.worldObj);
