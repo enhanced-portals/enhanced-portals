@@ -6,6 +6,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
+import uk.co.shadeddimensions.ep3.addon.AddonManager;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -56,18 +57,21 @@ public class EnhancedPortals
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         DimensionManager.registerProviderType(CommonProxy.Dimension, EPWorldProvider.class, false);
         DimensionManager.registerDimension(CommonProxy.Dimension, CommonProxy.Dimension);
+        
+        AddonManager.instance.init(event);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        
+        AddonManager.instance.postInit(event);
     }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
+        AddonManager.instance.preInit(event);
     }
 
     @EventHandler

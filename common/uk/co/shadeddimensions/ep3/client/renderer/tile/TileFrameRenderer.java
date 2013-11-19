@@ -69,7 +69,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
                     overrideIcon = (Icon) ClientProxy.customFrameTextures.get(controller.activeTextureData.getCustomFrameTexture());
                 }
             }
-            if (s != null)
+            else if (s != null)
             {
                 if (s.getItem() instanceof ItemBlock)
                 {

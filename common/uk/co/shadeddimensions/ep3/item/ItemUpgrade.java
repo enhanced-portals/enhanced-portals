@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -103,19 +104,18 @@ public class ItemUpgrade extends ItemEnhancedPortals
                 {
                     if (controller.blockManager.getHasBiometricIdentifier() && blockMeta == BlockFrame.BIOMETRIC_IDENTIFIER)
                     {
-                        // cry 2 bios
-                        
+                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleBiometricIdentifiers"));
                         return false;
                     }
                     else if (controller.blockManager.getHasDialDevice() && (blockMeta == BlockFrame.DIALLING_DEVICE || blockMeta == BlockFrame.NETWORK_INTERFACE))
                     {
                         if (blockMeta == BlockFrame.DIALLING_DEVICE)
                         {
-                            // cry 2 diallers
+                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleDiallingDevices"));
                         }
                         else
                         {
-                            // cry dialler and network
+                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.networkInterfaceAndDialDevice"));
                         }
                         
                         return false;
@@ -124,19 +124,18 @@ public class ItemUpgrade extends ItemEnhancedPortals
                     {
                         if (blockMeta == BlockFrame.NETWORK_INTERFACE)
                         {
-                            // cry 2 network
+                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleNetworkInterfaces"));
                         }
                         else
                         {
-                            // cry dialler and network
+                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.networkInterfaceAndDialDevice"));
                         }
                         
                         return false;
                     }
                     else if (controller.blockManager.getHasModuleManipulator() && blockMeta == BlockFrame.MODULE_MANIPULATOR)
                     {
-                        // cry 2 modules
-                        
+                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleModuleManipulators"));
                         return false;
                     }
 
@@ -169,6 +168,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
                     
                     t.portalController = controller.getChunkCoordinates();
                     CommonProxy.sendUpdatePacketToAllAround(t);
+                    CommonProxy.sendUpdatePacketToAllAround(controller);
                     return true;
                 }
             }

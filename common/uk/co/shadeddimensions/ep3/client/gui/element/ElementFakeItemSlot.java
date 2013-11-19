@@ -55,6 +55,7 @@ public class ElementFakeItemSlot extends ElementBase
         if (item != null)
         {
             itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().renderEngine, item, posX + 1, posY + 1);
+            GL11.glDisable(GL11.GL_LIGHTING);
         }
     }
     

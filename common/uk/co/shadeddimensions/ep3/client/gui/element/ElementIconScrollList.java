@@ -157,7 +157,7 @@ public class ElementIconScrollList extends ElementBase
     {
         if (getElementCount() == 0)
         {
-            Minecraft.getMinecraft().fontRenderer.drawString("No custom icons found", posX, posY + 3, 0x999999);
+            Minecraft.getMinecraft().fontRenderer.drawString("No custom icons found", posX, posY + 3, 0xCCCCCC);
         }
     }
 
