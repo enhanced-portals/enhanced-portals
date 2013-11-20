@@ -1,0 +1,110 @@
+# Blocks
+tile.ep3.portalFrame.frame.name=传送门框架
+tile.ep3.portalFrame.controller.name=传送门控制器
+tile.ep3.portalFrame.redstone.name=红石接口
+tile.ep3.portalFrame.networkInterface.name=网络接口
+tile.ep3.portalFrame.dialDevice.name=拨号设备
+tile.ep3.portalFrame.biometric.name=生物辨识器
+tile.ep3.portalFrame.upgrade.name=模块操作器
+tile.ep3.portal.name=传送门
+tile.ep3.stabilizer.name=位面之桥稳定器(DBS)
+
+# Items
+item.ep3.wrench.name=扳手
+item.ep3.paintbrush.name=纳米刷子
+item.ep3.goggles.name=护目镜
+item.ep3.locationCard.name=位面之桥稳定器(DBS)定位卡片
+
+# Upgrades
+item.ep3.portalModule.0.name=粒子湮灭模块
+item.ep3.portalModule.0.desc=使传送门不再散发出粒子
+item.ep3.portalModule.1.name=彩虹粒子模块
+item.ep3.portalModule.1.desc=每个粒子都会有随机颜色
+item.ep3.portalModule.2.name=传送门静音模块
+item.ep3.portalModule.2.desc=消除传送门音效
+item.ep3.portalModule.3.name=动量模块
+item.ep3.portalModule.3.desc=实体经过传送门保持原有动量
+item.ep3.portalModule.4.name=传送门隐匿模块
+item.ep3.portalModule.4.desc=使得传送门完全隐形
+item.ep3.portalModule.5.name=粒子阴影模块
+item.ep3.portalModule.5.desc=散发的粒子忽明忽暗的粒子忽明忽暗
+item.ep3.portalModule.6.name=天域框架模块
+item.ep3.portalModule.6.desc=使得传送门框架透明
+item.ep3.portalModule.6.desc2=且允许你穿过框架
+item.ep3.portalModule.6.desc3=发光但不照亮周围
+
+# Creative Tab
+itemGroup.EnhancedPortals3=强化传送门3
+
+# Gui
+gui.ep3.texture=材质
+gui.ep3.portalTexture=传送门材质
+gui.ep3.portalFrameTexture=传送门框架材质
+gui.ep3.particleTexture=粒子材质
+gui.ep3.button.reset=重置
+gui.ep3.button.save=保存
+gui.ep3.button.input=输入
+gui.ep3.button.output=输出
+gui.ep3.button.clear=清除
+gui.ep3.button.random=随机
+gui.ep3.button.cancel=取消
+gui.ep3.colour=颜色
+gui.ep3.colour.red=红
+gui.ep3.colour.green=绿
+gui.ep3.colour.blue=蓝
+gui.ep3.particleColour=粒子颜色
+gui.ep3.portalColour=传送门颜色
+gui.ep3.didYouKnow=你知道吗?
+gui.ep3.uniqueIdentifier=唯一标识符
+gui.ep3.glyphs=雕文
+gui.ep3.portalComponents=传送门组件
+gui.ep3.controller.frameBlocks=框架方块
+gui.ep3.controller.redstoneControllers=红石接口
+gui.ep3.controller.portalBlocks=传送门方块
+gui.ep3.controller.networkInterface=网络接口
+gui.ep3.controller.dialDevice=拨号设备
+gui.ep3.controller.biometric=生物辨识器
+gui.ep3.controller.initialized=初始化完成
+gui.ep3.controller.upgrade=模块操作器
+gui.ep3.controller.invalid=
+gui.ep3.clickToModify=点击以改装
+gui.ep3.networkIdentifier=网络辨识器
+gui.ep3.networkInfo=网络信息
+gui.ep3.networkIdentifier.networkedPortals=联网传送门
+gui.ep3.networkIdentifier.notSet=未设置
+gui.ep3.modules=模块
+
+# Redstone States (Titles)
+gui.ep3.redstone.output.portalCreated=传送门已创建
+gui.ep3.redstone.output.portalRemoved=传送门已移除
+gui.ep3.redstone.output.portalActive=传送门已激活
+gui.ep3.redstone.output.portalInactive=传送门已关闭
+gui.ep3.redstone.output.entityTouch=实体碰触开启[NI]
+gui.ep3.redstone.input.portalOnSignal=当接收到红石信号时创建传送门
+gui.ep3.redstone.input.portalNoSignal=当未接收到红石信号时创建传送门
+gui.ep3.redstone.input.portalOnPulse=当接收到红石脉冲信号时创建传送门
+gui.ep3.redstone.input.noPortalOnPulse=当接收到红石脉冲信号时移除传送门
+
+# Redstone States (Descriptions)
+gui.ep3.redstone.output.portalCreated.desc=当传送门创建时发出一个红石脉冲信号
+gui.ep3.redstone.output.portalRemoved.desc=当传送门被消除时发出一个红石脉冲信号
+gui.ep3.redstone.output.portalActive.desc=当传送门开启时发出一个稳定不变的红石信号
+gui.ep3.redstone.output.portalInactive.desc=当传送门未开启时发出一个稳定不变的红石信号
+gui.ep3.redstone.output.entityTouch.desc=当一个实体接触到这个方块的任意面时发出一个红石脉冲信号
+gui.ep3.redstone.input.portalOnSignal.desc=当接收到一个红石信号时创建传送门, 此传送门会在红石信号中断时被消除
+gui.ep3.redstone.input.portalNoSignal.desc=当没有接收到红石信号时创建传送门, 此传送门会在接收到一个红石信号时被消除
+gui.ep3.redstone.input.portalOnPulse.desc=当接收到一个红石脉冲信号时创建传送门, 此传送门不会被消除
+gui.ep3.redstone.input.noPortalOnPulse.desc=当接收到一个红石脉冲信号时消除传送门, 此传送门不会被重新创建
+
+# Chat
+ep3.chat.error.noUidSet=你必须先设置一个唯一标识符才能做这件事
+ep3.chat.error.multipleNetworkInterfaces=创建传送门失败: 你不能同时包含多个网络接口
+ep3.chat.error.networkInterfaceAndDialDevice=创建传送门失败: 你不能同时包含一个拨号设备和一个网络接口
+ep3.chat.error.multipleDiallingDevices=创建传送门失败: 你不能同时包含多个拨号设备
+ep3.chat.error.multipleBiometricIdentifiers=创建传送门失败: 你不能同时包含多个生物辨识器
+ep3.chat.error.multipleModuleManipulators=创建传送门失败: 你不能同时包含多个模块操作器
+ep3.chat.error.multipleControllers=创建传送门失败: 你不能同时包含多个传送门控制器
+ep3.chat.error.noPortals=在当前位置创建传送门失败. 请确保当前位置对一个传送门来说有效
+ep3.chat.error.voidLinkCard=这张链接卡不再链接至一个有效的位面之桥稳定器(DBS)
+ep3.chat.nextStage=请插入一个位面之桥稳定器(DBS)定位卡片以继续
+ep3.chat.success=成功初始化传送门
