@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -22,11 +23,11 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, GHOST_FRAME;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, GHOST_FRAME, FEATHERFALL;
 
         public String getUniqueID()
         {
-            ItemStack s = new ItemStack(CommonProxy.itemUpgrade, 1, ordinal());
+            ItemStack s = new ItemStack(CommonProxy.itemPortalModule, 1, ordinal());
             return ((IPortalModule) s.getItem()).getID(s);
         }
     }
@@ -209,5 +210,25 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     public boolean keepMomentumOnTeleport(TileModuleManipulator tileModuleManipulator, ItemStack i)
     {
         return i.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal();
+    }
+
+    @Override
+    public boolean onEntityTeleportStart(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    {
+        if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
+        {
+            entity.fallDistance = 0f; // For if it's installed on the entry portal
+        }
+        
+        return false;
+    }
+
+    @Override
+    public void onEntityTeleportEnd(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    {
+        if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
+        {
+            entity.fallDistance = 0f; // For if it's installed on the exit portal
+        }
     }
 }

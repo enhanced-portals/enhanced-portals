@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.ep3.tileentity.frame;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -270,5 +271,32 @@ public class TileModuleManipulator extends TilePortalPart
         }
         
         return false;
+    }
+
+    public boolean canSendEntity(Entity entity)
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).onEntityTeleportStart(entity, this, i))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    public void onEntityTeleported(Entity entity)
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                ((IPortalModule) i.getItem()).onEntityTeleportEnd(entity, this, i);
+            }
+        }
     }
 }

@@ -8,12 +8,24 @@ tile.ep3.portalFrame.biometric.name=Biometric Identifier
 tile.ep3.portalFrame.upgrade.name=Module Manipulator
 tile.ep3.portal.name=Portal
 tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
+tile.ep3.decoration.frame.name=Bordered Quartz
+tile.ep3.decoration.stabilizer.name=Stabilizer
 
 # Items
 item.ep3.wrench.name=Wrench
 item.ep3.paintbrush.name=Nanobrush
 item.ep3.goggles.name=Glasses
-item.ep3.locationCard.name=DBS Location Card
+item.ep3.locationCard.name=Location Card
+item.ep3.synchronizer.name=Synchronizer
+item.ep3.entityCard.name=Identification Card
+item.ep3.handheldScanner.name=Handheld Scanner
+
+# In-place upgrades
+item.ep3.inPlaceUpgrade.redstone.name=Redstone Interface Upgrade
+item.ep3.inPlaceUpgrade.networkInterface.name=Network Interface Upgrade
+item.ep3.inPlaceUpgrade.dialDevice.name=Dialling Device Upgrade
+item.ep3.inPlaceUpgrade.biometric.name=Biometric Identifier Upgrade
+item.ep3.inPlaceUpgrade.upgrade.name=Module Manipulator Upgrade
 
 # Upgrades
 item.ep3.portalModule.0.name=Particle Destroyer
@@ -32,6 +44,8 @@ item.ep3.portalModule.6.name=Ethereal Frame
 item.ep3.portalModule.6.desc=Makes the portal frame transparent
 item.ep3.portalModule.6.desc2=Allows you to walk through the frame
 item.ep3.portalModule.6.desc3=Glows but does not give off light
+item.ep3.portalModule.7.name=Featherfall
+item.ep3.portalModule.7.desc=Negates fall damage
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3

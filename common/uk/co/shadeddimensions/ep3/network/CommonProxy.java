@@ -3,9 +3,13 @@ package uk.co.shadeddimensions.ep3.network;
 import java.io.File;
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
@@ -55,7 +59,7 @@ public class CommonProxy
 {
     public static final int REDSTONE_FLUX_COST = 10000;
     public static final int REDSTONE_FLUX_TIMER = 20;
-    
+
     public static BlockFrame blockFrame;
     public static BlockPortal blockPortal;
     public static BlockStabilizer blockStabilizer;
@@ -64,7 +68,7 @@ public class CommonProxy
     public static ItemWrench itemWrench;
     public static ItemPaintbrush itemPaintbrush;    
     public static ItemGoggles itemGoggles;
-    public static ItemPortalModule itemUpgrade;
+    public static ItemPortalModule itemPortalModule;
     public static ItemLocationCard itemLocationCard;
     public static ItemSynchronizer itemSynchronizer;
     public static ItemEntityCard itemEntityCard;
@@ -78,7 +82,7 @@ public class CommonProxy
 
     public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown;
     public static int redstoneFluxPowerMultiplier;
-    
+
     public static int MobEnderman, MobCreeper;
     public static int Dimension, WastelandID;
 
@@ -86,7 +90,7 @@ public class CommonProxy
     {
         PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 15, tile.worldObj.provider.dimensionId, new PacketTileUpdate(tile).getPacket());
     }
-    
+
     public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
         PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
@@ -146,18 +150,18 @@ public class CommonProxy
         itemLocationCard = new ItemLocationCard(configuration.getItemId("LocationCard"), "ep3.locationCard");
         GameRegistry.registerItem(itemLocationCard, "ep3.locationCard");
 
-        itemUpgrade = new ItemPortalModule(configuration.getItemId("PortalModule"), "ep3.portalModule");
-        GameRegistry.registerItem(itemUpgrade, "ep3.portalModule");
+        itemPortalModule = new ItemPortalModule(configuration.getItemId("PortalModule"), "ep3.portalModule");
+        GameRegistry.registerItem(itemPortalModule, "ep3.portalModule");
 
         itemSynchronizer = new ItemSynchronizer(configuration.getItemId("Synchronizer"), "ep3.synchronizer");
         GameRegistry.registerItem(itemSynchronizer, "ep3.synchronizer");
-        
+
         itemEntityCard = new ItemEntityCard(configuration.getItemId("EntityCard"), "ep3.entityCard");
         GameRegistry.registerItem(itemEntityCard, "ep3.entityCard");
-        
+
         itemScanner = new ItemHandheldScanner(configuration.getItemId("HandheldScanner"), "ep3.handheldScanner");
         GameRegistry.registerItem(itemScanner, "ep3.handheldScanner");
-        
+
         itemInPlaceUpgrade = new ItemUpgrade(configuration.getItemId("InPlaceUpgrade"), "ep3.inPlaceUpgrade");
         GameRegistry.registerItem(itemInPlaceUpgrade, "ep3.inPlaceUpgrade");
     }
@@ -180,18 +184,18 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileStabilizer.class, "epStabilizer");
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epStabilizerMain");
     }
-    
+
     public void registerEntities()
     {
         EntityRegistry.registerModEntity(MobEnderman.class, "enderman", MobEnderman, EnhancedPortals.instance, 64, 1, true);
         registerEntityEgg(MobEnderman.class, 0xFF0000, 0xFF00FF);
-        
+
         EntityRegistry.registerModEntity(MobCreeper.class, "creeper", MobCreeper, EnhancedPortals.instance, 64, 1, true);
         registerEntityEgg(MobCreeper.class, 0xFF0000, 0x00FF00);
     }
-    
+
     public static int eggIdCounter = 300;
-    
+
     static int getUniqueEggId()
     {
         do
@@ -199,10 +203,10 @@ public class CommonProxy
             eggIdCounter++;
         }
         while (EntityList.getStringFromID(eggIdCounter) != null);
-        
+
         return eggIdCounter;
     }
-    
+
     @SuppressWarnings("unchecked")
     static void registerEntityEgg(Class<?> entity, int c, int c2)
     {
@@ -238,18 +242,18 @@ public class CommonProxy
         fasterPortalCooldown = configuration.get("Portal", "FasterPortalCooldown", false);
 
         redstoneFluxPowerMultiplier = configuration.get("Power", "PowerMultiplier", 1);
-        
+
         MobEnderman = configuration.get("Mobs", "EndermanID", 0);
         MobCreeper = configuration.get("Mobs", "CreeperID", 1);
-        
+
         Dimension = configuration.get("World", "DimensionID", -10);
         WastelandID = configuration.get("World", "WastelandID", 50);
-        
+
         if (redstoneFluxPowerMultiplier < 0)
         {
             redstoneFluxPowerMultiplier = 0;
         }
-        
+
         configuration.init();
     }
 
@@ -266,5 +270,39 @@ public class CommonProxy
     public static void openGui(EntityPlayer player, int id, TileEnhancedPortals tile)
     {        
         player.openGui(EnhancedPortals.instance, id, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
+    }
+
+    public void setupCrafting()
+    {
+        // Frames
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { "SDS", "IQI", "SIS", 'S', Block.stone, 'D', Item.diamond, 'Q', Block.blockNetherQuartz, 'I', Item.ingotIron });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { " D ", "IQI", " I ", 'D', Item.diamond, 'Q', new ItemStack(blockDecoration, 1, 0), 'I', Item.ingotIron });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.PORTAL_CONTROLLER), new Object[] { "IDI", " F ", "IEI", 'F', new ItemStack(blockFrame, 1, 0), 'I', Item.ingotIron, 'E', Item.enderPearl, 'D', Item.diamond });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(blockFrame, 1, 0), 'R', Item.redstone });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'E',Item.enderPearl });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.DIALLING_DEVICE), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), 'E', Item.enderPearl, 'D', Item.diamond });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.MODULE_MANIPULATOR), new Object[] { " D ", "EFE", " U ", 'F', new ItemStack(blockFrame, 1, 0), 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule });
+
+        // In-Place Upgrades
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', Item.paper, 'R', Item.redstone });
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', Item.paper, 'Z', Item.blazePowder, 'E',Item.enderPearl });
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 2), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(itemInPlaceUpgrade, 1, 1), 'E', Item.enderPearl, 'D', Item.diamond });
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw });
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked });
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 4), new Object[] { " D ", "EFE", " U ", 'F', Item.paper, 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule });
+        
+        // Stabilizer
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockStabilizer, 6), new Object[] { "QPQ", "EDE", "QPQ", 'D', Block.blockDiamond, 'E', Item.emerald, 'Q', Block.blockNetherQuartz, 'P', Item.enderPearl });
+        
+        // Wrench
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemWrench), new Object[] { "Q Q", "III", " I ", 'I', Item.ingotIron, 'Q', Item.netherQuartz });
+        
+        // Location Card
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemLocationCard, 16), new Object[] { "GPG", "PPP", "GPG", 'G', Item.ingotGold, 'P', Item.paper });
+    
+        // Decoration
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockDecoration, 8, 0), new Object[] { "SQS", "QQQ", "SQS", 'S', Block.stone, 'Q', Block.blockNetherQuartz });
     }
 }

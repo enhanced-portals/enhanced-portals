@@ -80,7 +80,7 @@ public class EntityData
         }
         else if (EntityList.classToIDMapping.containsKey(clazz))
         {
-            return (int) EntityList.classToIDMapping.get(clazz);
+            return Integer.parseInt(EntityList.classToIDMapping.get(clazz).toString());
         }
         
         return 0;

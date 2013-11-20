@@ -655,8 +655,15 @@ public class TilePortalController extends TilePortalPart
         if (uID != null)
         {
             TileBiometricIdentifier bio = blockManager.getBiometricIdentifier(worldObj);
+            TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
 
             if (bio != null && !bio.canEntityBeSent(entity))
+            {
+                EntityManager.setEntityPortalCooldown(entity);
+                return;
+            }
+            
+            if (module != null && !module.canSendEntity(entity))
             {
                 EntityManager.setEntityPortalCooldown(entity);
                 return;

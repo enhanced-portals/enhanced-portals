@@ -50,6 +50,7 @@ public class EnhancedPortals
         proxy.registerItems();
         proxy.registerEntities();
         proxy.registerRenderers();
+        proxy.setupCrafting();
         proxy.miscSetup();
         Biomes.initBiomes();
 

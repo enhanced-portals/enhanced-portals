@@ -24,6 +24,7 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
@@ -307,7 +308,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
                             coord.posZ += rand.nextBoolean() ? (1 + rand.nextInt(31)) : -(1 + rand.nextInt(31));
 
-                            EntityManager.teleportEntity(entity, coord);
+                            EntityManager.transferEntityWithinDimension(entity, coord.posX, coord.posY, coord.posZ, entity.rotationYaw, 0, 0, false);
                         }
                         else if (effect == 1) // Get thrown out of the portal (before entering)
                         {
@@ -337,7 +338,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                         }
                         else if (effect == 2) // Get thrown out of the portal (after teleporting)
                         {
-                            EntityManager.teleportEntity(entity, uID, exit, portal);
+                            EntityManager.transferEntity(entity, uID, exit, portal.getBlockMetadata());
 
                             if (controller.portalType == 1)
                             {
@@ -379,7 +380,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + rand.nextInt(10);
                         }
 
-                        EntityManager.teleportEntity(entity, coord);
+                        EntityManager.transferEntityWithinDimension(entity, coord.posX, coord.posY, coord.posZ, entity.rotationYaw, 0, 0, false);
                         addMediumInstabilityEffects(entity);
                     }
                     else if (instability == 70) // High Instability - 1 Effect
@@ -390,12 +391,19 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                 }
                 else
                 {
-                    EntityManager.teleportEntity(entity, uID, exit, portal); // Random missed the instability - teleport normally
+                    EntityManager.transferEntity(entity, uID, exit, portal.getBlockMetadata()); // Random missed the instability - teleport normally
                 }
             }
             else
             {
-                EntityManager.teleportEntity(entity, uID, exit, portal); // No instability effects - teleport normally
+                EntityManager.transferEntity(entity, uID, exit, portal.getBlockMetadata()); // No instability effects - teleport normally
+            }
+
+            TileModuleManipulator module = controller.blockManager.getModuleManipulator(controller.worldObj);   
+
+            if (module != null)
+            {
+                module.onEntityTeleported(entity);
             }
         }
 
