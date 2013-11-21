@@ -13,7 +13,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import cofh.gui.GuiBase;
 
 public class GuiRedstoneInterface extends GuiBase
-{    
+{
     TileRedstoneInterface redstone;
 
     public GuiRedstoneInterface(TileRedstoneInterface tile, EntityPlayer play)
@@ -35,7 +35,7 @@ public class GuiRedstoneInterface extends GuiBase
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        super.drawGuiContainerForegroundLayer(par1, par2);        
+        super.drawGuiContainerForegroundLayer(par1, par2);
         drawCenteredString(fontRenderer, Localization.getGuiString("redstoneIdentifier"), xSize / 2, -13, 0xFFFFFF);
     }
 

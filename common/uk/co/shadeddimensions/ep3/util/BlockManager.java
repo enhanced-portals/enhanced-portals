@@ -92,7 +92,7 @@ public class BlockManager
         dialDevice = GeneralUtils.loadChunkCoord(tag, "DialDevice");
         biometricIdentifier = GeneralUtils.loadChunkCoord(tag, "BiometricIdentifier");
         moduleManipulator = GeneralUtils.loadChunkCoord(tag, "ModuleManipulator");
-        dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tag, "DimensionalBridgeStabilizer");        
+        dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tag, "DimensionalBridgeStabilizer");
         return this;
     }
 
@@ -265,7 +265,7 @@ public class BlockManager
     {
         if (dimensionalBridgeStabilizer != null)
         {
-            World w = dimensionalBridgeStabilizer.getWorld();            
+            World w = dimensionalBridgeStabilizer.getWorld();
             TileEntity tile = w.getBlockTileEntity(dimensionalBridgeStabilizer.posX, dimensionalBridgeStabilizer.posY, dimensionalBridgeStabilizer.posZ);
 
             if (tile instanceof TileStabilizerMain)

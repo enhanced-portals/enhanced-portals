@@ -209,7 +209,7 @@ public class PortalUtils
         for (int i = 0; i < 6; i++)
         {
             ForgeDirection d = ForgeDirection.getOrientation(i);
-            
+
             if (portalDirection == 1 && (i == 2 || i == 3))
             {
                 continue;
@@ -313,7 +313,7 @@ public class PortalUtils
     {
         while (!processed.isEmpty())
         {
-            ChunkCoordinates c = processed.remove();            
+            ChunkCoordinates c = processed.remove();
             world.setBlockToAir(c.posX, c.posY, c.posZ);
         }
     }
@@ -324,20 +324,20 @@ public class PortalUtils
         byte pType = 0;
 
         outerloop:
-            for (int j = 0; j < 6; j++)
+        for (int j = 0; j < 6; j++)
+        {
+            for (int i = 1; i < 4; i++)
             {
-                for (int i = 1; i < 4; i++)
-                {
-                    portalBlocks = PortalUtils.ghostPortalAt(c.worldObj, c.getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
+                portalBlocks = PortalUtils.ghostPortalAt(c.worldObj, c.getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
 
-                    if (!portalBlocks.isEmpty())
-                    {
-                        pType = (byte) i;
-                        break outerloop;
-                    }
+                if (!portalBlocks.isEmpty())
+                {
+                    pType = (byte) i;
+                    break outerloop;
                 }
             }
-        
+        }
+
         c.portalType = pType;
         return portalBlocks;
     }
@@ -426,7 +426,7 @@ public class PortalUtils
                 }
             }
         }
-        
+
         return portalParts;
-    }    
+    }
 }

@@ -13,17 +13,17 @@ import org.lwjgl.opengl.GL12;
 public class GuiUtils extends Gui
 {
     static GuiUtils instance;
-    
+
     public static GuiUtils getInstance()
     {
         if (instance == null)
         {
             instance = new GuiUtils();
         }
-        
+
         return instance;
     }
-    
+
     public void drawHoveringText(ArrayList<String> par1List, int par2, int par3)
     {
         if (par1List != null && !par1List.isEmpty())
@@ -65,24 +65,24 @@ public class GuiUtils extends Gui
                 j1 = Minecraft.getMinecraft().displayHeight - k1 - 6;
             }
 
-            this.zLevel = 300.0F;
+            zLevel = 300.0F;
             //itemRenderer.zLevel = 300.0F;
             int l1 = -267386864;
-            this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
             int i2 = 1347420415;
             int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
-            this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
+            drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
+            drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
+            drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
 
             for (int k2 = 0; k2 < par1List.size(); ++k2)
             {
-                String s1 = (String)par1List.get(k2);
+                String s1 = par1List.get(k2);
                 Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
 
                 if (k2 == 0)
@@ -93,7 +93,7 @@ public class GuiUtils extends Gui
                 j1 += 10;
             }
 
-            this.zLevel = 0.0F;
+            zLevel = 0.0F;
             //itemRenderer.zLevel = 0.0F;
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_DEPTH_TEST);

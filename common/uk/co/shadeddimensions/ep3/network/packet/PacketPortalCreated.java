@@ -15,19 +15,19 @@ import cpw.mods.fml.common.network.Player;
 public class PacketPortalCreated extends PacketEnhancedPortals
 {
     int x, y, z;
-    
+
     public PacketPortalCreated()
     {
-        
+
     }
-    
+
     public PacketPortalCreated(TileEnhancedPortals tile)
     {
         x = tile.xCoord;
         y = tile.yCoord;
         z = tile.zCoord;
     }
-    
+
     @Override
     public void readPacketData(DataInputStream stream) throws IOException
     {
@@ -35,7 +35,7 @@ public class PacketPortalCreated extends PacketEnhancedPortals
         y = stream.readInt();
         z = stream.readInt();
     }
-    
+
     @Override
     public void writePacketData(DataOutputStream stream) throws IOException
     {
@@ -43,12 +43,12 @@ public class PacketPortalCreated extends PacketEnhancedPortals
         stream.writeInt(y);
         stream.writeInt(z);
     }
-    
+
     @Override
     public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         World w = ((EntityPlayer) player).worldObj;
-                
+
         for (int i = 0; i < 70; i++)
         {
             FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalCreationFX(w, x, y + 1, z));

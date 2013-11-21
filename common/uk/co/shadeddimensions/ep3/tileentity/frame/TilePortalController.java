@@ -285,7 +285,7 @@ public class TilePortalController extends TilePortalPart
             sendUpdatePacket = true;
         }
 
-        if (payload.data.hasKey("portalItemID"))            
+        if (payload.data.hasKey("portalItemID"))
         {
             int id = payload.data.getInteger("portalItemID"), meta = payload.data.getInteger("portalItemMeta");
             ItemStack s = id == 0 ? null : new ItemStack(id, 1, meta);
@@ -426,9 +426,9 @@ public class TilePortalController extends TilePortalPart
             {
                 return false;
             }
-            
+
             WorldCoordinates stabilizer = ItemLocationCard.getDBSLocation(item);
-            
+
             if (!(stabilizer.getBlockTileEntity() instanceof TileStabilizerMain))
             {
                 ItemLocationCard.clearDBSLocation(item);
@@ -448,7 +448,7 @@ public class TilePortalController extends TilePortalPart
             {
                 player.inventory.mainInventory[player.inventory.currentItem] = null;
             }
-            
+
             player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
         }
         else
@@ -514,7 +514,7 @@ public class TilePortalController extends TilePortalPart
                 {
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                 }
-                
+
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("success")));
             }
             else
@@ -637,6 +637,7 @@ public class TilePortalController extends TilePortalPart
 
     /***
      * Gets this controllers unique identifier.
+     * 
      * @return Null if one is not set
      */
     public GlyphIdentifier getUniqueIdentifier()
@@ -651,6 +652,7 @@ public class TilePortalController extends TilePortalPart
 
     /***
      * Gets this controllers network identifier.
+     * 
      * @return Null if one is not set
      */
     public GlyphIdentifier getNetworkIdentifier()
@@ -677,7 +679,7 @@ public class TilePortalController extends TilePortalPart
                 EntityManager.setEntityPortalCooldown(entity);
                 return;
             }
-            
+
             if (module != null && !module.canSendEntity(entity))
             {
                 EntityManager.setEntityPortalCooldown(entity);

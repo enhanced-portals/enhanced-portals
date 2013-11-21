@@ -24,23 +24,23 @@ public class ItemEntityCard extends ItemEnhancedPortals
     public void addInformation(ItemStack stack, EntityPlayer par2EntityPlayer, List list, boolean par4)
     {
         NBTTagCompound tag = stack.getTagCompound();
-        
+
         if (tag != null)
         {
             list.add(EnumChatFormatting.GRAY + Localization.getItemString("contains"));
-            
+
             NBTTagList tagList = tag.getTagList("entities");
-            
+
             for (int i = 0; i < 5; i++)
             {
                 if (i >= tagList.tagCount())
                 {
                     break;
                 }
-                
+
                 NBTTagCompound t = (NBTTagCompound) tagList.tagAt(i);
                 String s = t.getString("Name");
-                
+
                 if (s.contains("item.item."))
                 {
                     s = StatCollector.translateToLocal(s.replace("item.item.", "item.") + ".name");
@@ -49,10 +49,10 @@ public class ItemEntityCard extends ItemEnhancedPortals
                 {
                     s = StatCollector.translateToLocal(s.replace("item.tile.", "tile.") + ".name");
                 }
-                
+
                 list.add(EnumChatFormatting.DARK_GRAY + " " + s);
             }
-            
+
             if (tagList.tagCount() > 5)
             {
                 list.add(EnumChatFormatting.GRAY + String.format(Localization.getItemString("andMore"), tagList.tagCount() - 5));

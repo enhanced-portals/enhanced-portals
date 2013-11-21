@@ -55,15 +55,15 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         fontRenderer.drawString(Localization.getGuiString("idCard"), 7, ySize - 36, 0x404040);
         fontRenderer.drawString(Localization.getGuiString("idCard"), 293 - fontRenderer.getStringWidth(Localization.getGuiString("idCard")), ySize - 36, 0x404040);
         fontRenderer.drawString(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive"), xSize / 2 - fontRenderer.getStringWidth(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive")) / 2, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
-    
+
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
-    
+
     @Override
     public void updateScreen()
     {
         super.updateScreen();
-        
+
         leftButton.displayString = biometric.notFoundSend ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
         rightButton.displayString = biometric.notFoundRecieve ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
         rightButton.enabled = biometric.hasSeperateLists;
@@ -75,7 +75,7 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
     public void initGui()
     {
         super.initGui();
-        
+
         leftButton = new GuiButton(0, guiLeft + 7, guiTop + 117, 60, 20, biometric.notFoundSend ? Localization.getGuiString("allow") : Localization.getGuiString("disallow"));
         rightButton = new GuiButton(1, guiLeft + xSize - 67, guiTop + 117, 60, 20, biometric.notFoundRecieve ? Localization.getGuiString("allow") : Localization.getGuiString("disallow"));
         activateRecieveList = new GuiButton(2, guiLeft + xSize - 67, guiTop + 138, 60, 20, biometric.hasSeperateLists ? Localization.getGuiString("deactivate") : Localization.getGuiString("activate"));
@@ -84,7 +84,7 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         buttonList.add(leftButton);
         buttonList.add(rightButton);
         buttonList.add(activateRecieveList);
-        
+
         sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 0, 17, 140, 95, true);
         recieveList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"), biometric, xSize - 142, 17, 140, 95, false);
         addElement(sendList);
@@ -123,7 +123,7 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         {
             int[] obj = (int[]) data;
             int list = obj[0], type = obj[1], entry = obj[2];
-            
+
             if (type == 0 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
             {
                 // invert
@@ -148,7 +148,7 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
                 p.data.setInteger("remove", entry);
                 ClientProxy.sendGuiPacket(p);
             }
-            
+
             Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
         }
     }

@@ -48,9 +48,9 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        list.add("Portal Module");        
+        list.add("Portal Module");
         list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
-        
+
         if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
         {
             list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
@@ -141,20 +141,20 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
         {
             float particleRed = particle.getRedColorF(), particleGreen = particle.getGreenColorF(), particleBlue = particle.getBlueColorF();
             int i = ClientProxy.random.nextInt(3);
-            
+
             if (i == 0)
             {
-                particleRed *= (particleRed / 4) * 3;
-                particleGreen *= (particleGreen / 4) * 3;
-                particleBlue *= (particleBlue / 4) * 3;
+                particleRed *= particleRed / 4 * 3;
+                particleGreen *= particleGreen / 4 * 3;
+                particleBlue *= particleBlue / 4 * 3;
             }
             else if (i == 1)
             {
-                particleRed = (255 - particleRed) * ((particleRed / 4) * 3);
-                particleGreen = (255 - particleGreen) * ((particleGreen / 4) * 3);
-                particleBlue = (255 - particleBlue) * ((particleBlue / 4) * 3);
+                particleRed = (255 - particleRed) * (particleRed / 4 * 3);
+                particleGreen = (255 - particleGreen) * (particleGreen / 4 * 3);
+                particleBlue = (255 - particleBlue) * (particleBlue / 4 * 3);
             }
-            
+
             particle.setRBGColorF(particleRed, particleGreen, particleBlue);
         }
     }
@@ -188,7 +188,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     {
         return i.getItemDamage() == PortalModules.GHOST_FRAME.ordinal();
     }
-    
+
     @Override
     public void registerIcons(IconRegister register)
     {
@@ -219,7 +219,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
         {
             entity.fallDistance = 0f; // For if it's installed on the entry portal
         }
-        
+
         return false;
     }
 

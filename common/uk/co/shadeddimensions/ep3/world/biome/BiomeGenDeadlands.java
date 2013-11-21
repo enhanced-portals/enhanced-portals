@@ -9,7 +9,7 @@ import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
 import uk.co.shadeddimensions.ep3.world.worldgen.WorldGenDeadlands;
 
 public class BiomeGenDeadlands extends BiomeGenBase
-{    
+{
     @SuppressWarnings("unchecked")
     public BiomeGenDeadlands(int par1)
     {
@@ -27,14 +27,14 @@ public class BiomeGenDeadlands extends BiomeGenBase
         theBiomeDecorator.treesPerChunk = -999;
         theBiomeDecorator.waterlilyPerChunk = 0;
         theBiomeDecorator.generateLakes = false;
-        
+
         spawnableCreatureList.clear();
         spawnableCaveCreatureList.clear();
         spawnableMonsterList.clear();
         spawnableWaterCreatureList.clear();
-        
+
         spawnableMonsterList.add(new SpawnListEntry(MobCreeper.class, 30, 1, 4));
-        
+
         setDisableRain();
         setBiomeName("Deadlands");
     }
@@ -44,25 +44,25 @@ public class BiomeGenDeadlands extends BiomeGenBase
     {
         return new WorldGenDeadlands();
     }
-    
+
     @Override
     public int getBiomeFoliageColor()
     {
         return 0xAA0000;
     }
-    
+
     @Override
     public int getBiomeGrassColor()
     {
         return 0x770000;
     }
-    
+
     @Override
     public int getSkyColorByTemp(float par1)
     {
         return 0x000000;
     }
-    
+
     @Override
     public int getWaterColorMultiplier()
     {

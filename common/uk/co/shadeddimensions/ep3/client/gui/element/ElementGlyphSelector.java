@@ -23,7 +23,7 @@ public class ElementGlyphSelector extends ElementBase
         theCount = 0;
         identifier = new GlyphIdentifier();
     }
-    
+
     public ElementGlyphSelector(GuiBase gui, int posX, int posY, GlyphIdentifier i)
     {
         super(gui, posX, posY);
@@ -46,17 +46,17 @@ public class ElementGlyphSelector extends ElementBase
 
         if (intersectsWith(mouseX, mouseY))
         {
-            int x = ((mouseX - posX + gui.getGuiLeft()) / 18), y = ((mouseY - posY + gui.getGuiTop()) / 18);
-            Gui.drawRect(posX + (x * 18) + 1, posY + (y * 18) + 1, posX + 17 + (x * 18), posY + 17 + (y * 18), 0x88FFFFFF);
+            int x = (mouseX - posX + gui.getGuiLeft()) / 18, y = (mouseY - posY + gui.getGuiTop()) / 18;
+            Gui.drawRect(posX + x * 18 + 1, posY + y * 18 + 1, posX + 17 + x * 18, posY + 17 + y * 18, 0x88FFFFFF);
         }
 
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/glyphs" + (CommonProxy.useAlternateGlyphs ? "_2" : "") + ".png"));
         drawTexturedModalRect(posX, posY, 0, 0, sizeX, sizeY);
-        
+
         for (int i = 0; i < 27; i++)
         {
-            int x = posX + (i % 9) * 18, y = posY + (i / 9) * 18, count = getGlyphCount(i);
-            
+            int x = posX + i % 9 * 18, y = posY + i / 9 * 18, count = getGlyphCount(i);
+
             if (count > 0)
             {
                 Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("" + count, x + 18 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + count), y + 10, 0xFFFFFF);
@@ -68,40 +68,40 @@ public class ElementGlyphSelector extends ElementBase
     {
         return counter[i];
     }
-    
+
     private void incrementGlyphCount(int i)
     {
         counter[i]++;
         theCount++;
         identifier.addGlyph(i);
     }
-    
+
     private void decrementGlyphCount(int i)
     {
         counter[i]--;
         theCount--;
         identifier.removeLast(i);
     }
-        
+
     public void reset()
     {
         counter = new int[27];
         theCount = 0;
         identifier = new GlyphIdentifier();
     }
-    
+
     public void setIdentifierTo(GlyphIdentifier i)
     {
         reset();
         identifier = i == null ? new GlyphIdentifier() : new GlyphIdentifier(i);
         theCount = identifier.size();
-        
+
         for (int j = 0; j < theCount; j++)
         {
             counter[identifier.get(j)]++;
         }
     }
-    
+
     @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
@@ -109,11 +109,11 @@ public class ElementGlyphSelector extends ElementBase
         {
             return false;
         }
-        
+
         if (intersectsWith(x, y))
         {
-            int X = ((x - posX + gui.getGuiLeft()) / 18), Y = ((y - posY + gui.getGuiTop()) / 18), element = (Y * 9) + X;
-    
+            int X = (x - posX + gui.getGuiLeft()) / 18, Y = (y - posY + gui.getGuiTop()) / 18, element = Y * 9 + X;
+
             if (element >= 0 && element <= 27)
             {
                 if (mouseButton == 0 && theCount < 9)
@@ -128,7 +128,7 @@ public class ElementGlyphSelector extends ElementBase
                 }
             }
         }
-        
+
         return false;
     }
 

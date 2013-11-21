@@ -33,7 +33,7 @@ public class EntityData
         {
             return;
         }
-        
+
         t.setString("Name", EntityDisplayName);
         t.setInteger("ID", getEntityID(EntityClass));
         t.setBoolean("Inverted", isInverted);
@@ -53,17 +53,17 @@ public class EntityData
     {
         return checkType == 0;
     }
-    
+
     public boolean shouldCheckClass()
     {
         return checkType == 1;
     }
-    
+
     public boolean shouldCheckNameAndClass()
     {
         return checkType == 2;
     }
-    
+
     public static int getEntityID(Class<? extends Entity> clazz)
     {
         if (EntityPlayer.class.equals(clazz))
@@ -82,7 +82,7 @@ public class EntityData
         {
             return Integer.parseInt(EntityList.classToIDMapping.get(clazz).toString());
         }
-        
+
         return 0;
     }
 
@@ -127,7 +127,7 @@ public class EntityData
         {
             return (String) EntityList.classToStringMapping.get(data.EntityClass);
         }
-        
+
         return "Unknown";
     }
 
@@ -145,7 +145,7 @@ public class EntityData
         {
             return -3;
         }
-        
+
         return 0;
     }
 }

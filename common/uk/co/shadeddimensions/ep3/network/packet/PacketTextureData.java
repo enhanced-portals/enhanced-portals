@@ -24,7 +24,7 @@ public class PacketTextureData extends PacketEnhancedPortals
     {
         id = -1;
     }
-    
+
     public PacketTextureData(int i, int x, int y, int z)
     {
         id = i;
@@ -32,13 +32,13 @@ public class PacketTextureData extends PacketEnhancedPortals
         this.y = y;
         this.z = z;
     }
-    
+
     public PacketTextureData(PortalTextureManager t)
     {
         id = -1;
         ptm = t;
     }
-    
+
     @Override
     public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
@@ -46,11 +46,11 @@ public class PacketTextureData extends PacketEnhancedPortals
         {
             return;
         }
-        
-        ClientProxy.dialEntryTexture = ptm;        
+
+        ClientProxy.dialEntryTexture = ptm;
         FMLClientHandler.instance().getClient().currentScreen.initGui(); // Force the UI elements to update to reflect the data that should be shown
     }
-    
+
     @Override
     public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
@@ -62,7 +62,7 @@ public class PacketTextureData extends PacketEnhancedPortals
             PacketDispatcher.sendPacketToPlayer(new PacketTextureData(PTM).getPacket(), player);
         }
     }
-    
+
     @Override
     public void readPacketData(DataInputStream stream) throws IOException
     {
@@ -79,14 +79,14 @@ public class PacketTextureData extends PacketEnhancedPortals
             byte[] compressed = new byte[length];
             stream.readFully(compressed);
             NBTTagCompound data = CompressedStreamTools.decompress(compressed);
-            
+
             ptm = new PortalTextureManager();
-            
+
             if (data.hasKey("Texture"))
             {
                 ptm.readFromNBT(data, "Texture");
             }
-            
+
             id = -1;
         }
     }
@@ -106,12 +106,12 @@ public class PacketTextureData extends PacketEnhancedPortals
         {
             stream.writeBoolean(false);
             NBTTagCompound data = new NBTTagCompound();
-            
+
             if (ptm != null)
             {
                 ptm.writeToNBT(data, "Texture");
             }
-            
+
             byte[] compressed = CompressedStreamTools.compress(data);
             stream.writeShort(compressed.length);
             stream.write(compressed);

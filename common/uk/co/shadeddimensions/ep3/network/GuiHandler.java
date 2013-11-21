@@ -39,27 +39,27 @@ public class GuiHandler implements IGuiHandler
     {
         if (ID == GUIs.Scanner.ordinal())
         {
-            ItemStack stack = player.inventory.getCurrentItem();            
+            ItemStack stack = player.inventory.getCurrentItem();
             return new GuiScanner(ItemHandheldScanner.getInventory(stack), player, stack);
         }
         else
         {
             TileEntity tile = world.getBlockTileEntity(x, y, z);
-            
+
             if (ID == GUIs.PortalController.ordinal())
-            {                
+            {
                 return new GuiPortalController((TilePortalController) tile, player);
             }
             else if (ID == GUIs.RedstoneInterface.ordinal())
-            {                
+            {
                 return new GuiRedstoneInterface((TileRedstoneInterface) tile, player);
             }
             else if (ID == GUIs.NetworkInterface.ordinal())
-            {                
+            {
                 return new GuiNetworkInterface((TilePortalController) tile, player);
             }
             else if (ID == GUIs.ModuleManipulator.ordinal())
-            {                
+            {
                 return new GuiModuleManipulator((TileModuleManipulator) tile, player);
             }
             else if (ID == GUIs.DimensionalBridgeStabilizer.ordinal())
@@ -67,31 +67,31 @@ public class GuiHandler implements IGuiHandler
                 return new GuiDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
             }
             else if (ID == GUIs.DiallingDevice.ordinal())
-            {                
+            {
                 return new GuiDiallingDevice((TileDiallingDevice) tile, player);
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
-            {                
+            {
                 return new GuiTexture((TilePortalController) tile, player, 0, true);
             }
             else if (ID == GUIs.TexturesPortal.ordinal())
-            {                
+            {
                 return new GuiTexture((TilePortalController) tile, player, 1, true);
             }
             else if (ID == GUIs.TexturesParticle.ordinal())
-            {                
+            {
                 return new GuiTexture((TilePortalController) tile, player, 2, true);
             }
             else if (ID == GUIs.TexturesDiallingDevice.ordinal())
-            {                
+            {
                 return new GuiTexture((TileDiallingDevice) tile, player, 0, false);
             }
             else if (ID == GUIs.BiometricIdentifier.ordinal())
-            {                
+            {
                 return new GuiBiometricIdentifier((TileBiometricIdentifier) tile, player);
             }
         }
-        
+
         return null;
     }
 
@@ -100,13 +100,13 @@ public class GuiHandler implements IGuiHandler
     {
         if (ID == GUIs.Scanner.ordinal())
         {
-            ItemStack stack = player.inventory.getCurrentItem();            
+            ItemStack stack = player.inventory.getCurrentItem();
             return new ContainerScanner(ItemHandheldScanner.getInventory(stack), player, stack);
         }
         else
         {
             TileEntity tile = world.getBlockTileEntity(x, y, z);
-            
+
             if (ID == GUIs.PortalController.ordinal())
             {
                 CommonProxy.sendUpdatePacketToPlayer((TilePortalController) tile, player);
@@ -118,11 +118,11 @@ public class GuiHandler implements IGuiHandler
                 return new ContainerRedstoneInterface((TileRedstoneInterface) tile, player);
             }
             else if (ID == GUIs.NetworkInterface.ordinal())
-            {                
+            {
                 return new ContainerNetworkInterface((TilePortalController) tile, player);
             }
             else if (ID == GUIs.ModuleManipulator.ordinal())
-            {                
+            {
                 return new ContainerModuleManipulator((TileModuleManipulator) tile, player);
             }
             else if (ID == GUIs.DimensionalBridgeStabilizer.ordinal())
@@ -135,15 +135,15 @@ public class GuiHandler implements IGuiHandler
                 return new ContainerDiallingDevice((TileDiallingDevice) tile, player);
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
-            {                
+            {
                 return new ContainerTexture((TilePortalController) tile, player);
             }
             else if (ID == GUIs.TexturesPortal.ordinal())
-            {                
+            {
                 return new ContainerTexture((TilePortalController) tile, player);
             }
             else if (ID == GUIs.TexturesParticle.ordinal())
-            {                
+            {
                 return new ContainerTexture((TilePortalController) tile, player);
             }
             else if (ID == GUIs.TexturesDiallingDevice.ordinal())
@@ -156,7 +156,7 @@ public class GuiHandler implements IGuiHandler
                 return new ContainerBiometricIdentifier((TileBiometricIdentifier) tile, player);
             }
         }
-        
+
         return null;
     }
 }

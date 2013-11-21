@@ -102,18 +102,20 @@ public interface IPortalModule
     public boolean ghostPortalFrame(TileModuleManipulator moduleManipulator, ItemStack upgrade);
 
     public boolean keepMomentumOnTeleport(TileModuleManipulator moduleManipulator, ItemStack upgrade);
-    
+
     /***
      * Gets called as soon as the entity enters the portal. This will only be called from the portal that the entity gets teleported from.
+     * 
      * @param entity
      * @param moduleManipulator
      * @param upgrade
      * @return Return true to stop the entity from teleporting
      */
     public boolean onEntityTeleportStart(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade);
-    
+
     /***
      * Gets called when the entity has successfully teleported. This will only be called from the portal that the entity gets teleported to.
+     * 
      * @param entity
      * @param moduleManipulator
      * @param upgrade

@@ -27,25 +27,25 @@ public class ItemDecoration extends ItemBlock
     {
         list.add(EnumChatFormatting.DARK_GRAY + Localization.getBlockString("decorativeBlock"));
     }
-    
+
     @Override
     public Icon getIconFromDamage(int meta)
     {
         return meta == 0 ? CommonProxy.blockFrame.getIcon(0, 0) : meta == 1 ? CommonProxy.blockStabilizer.getIcon(0, 1) : null;
     }
-    
+
     @Override
     public int getMetadata(int par1)
     {
         return par1;
     }
-    
+
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
         int meta = stack.getItemDamage();
         String name = "unknown";
-        
+
         if (meta == 0)
         {
             name = "frame";
@@ -54,10 +54,10 @@ public class ItemDecoration extends ItemBlock
         {
             name = "stabilizer";
         }
-        
+
         return super.getUnlocalizedName() + "." + name;
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
@@ -66,5 +66,5 @@ public class ItemDecoration extends ItemBlock
         {
             list.add(new ItemStack(itemID, 1, i));
         }
-    }    
+    }
 }

@@ -52,8 +52,8 @@ public class TileDiallingDevice extends TilePortalPart
     @Override
     public void writeToNBT(NBTTagCompound tag)
     {
-        super.writeToNBT(tag);        
-        NBTTagList list = new NBTTagList();    
+        super.writeToNBT(tag);
+        NBTTagList list = new NBTTagList();
 
         for (int i = 0; i < glyphList.size(); i++)
         {
@@ -76,7 +76,7 @@ public class TileDiallingDevice extends TilePortalPart
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
-        super.readFromNBT(tag);        
+        super.readFromNBT(tag);
         NBTTagList list = tag.getTagList("glyphList");
 
         for (int i = 0; i < list.tagCount(); i++)
@@ -117,7 +117,7 @@ public class TileDiallingDevice extends TilePortalPart
         super.usePacket(stream);
         int max = stream.readInt();
         glyphList.clear();
-        
+
         for (int i = 0; i < max; i++)
         {
             glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
@@ -128,11 +128,11 @@ public class TileDiallingDevice extends TilePortalPart
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         super.guiActionPerformed(payload, player);
-                
+
         if (payload.data.hasKey("DialRequest"))
         {
             String id = payload.data.getString("DialRequest");
-            
+
             for (GlyphElement el : glyphList)
             {
                 if (el.identifier.getGlyphString().equals(id))
@@ -141,7 +141,7 @@ public class TileDiallingDevice extends TilePortalPart
                     return;
                 }
             }
-            
+
             getPortalController().dialRequest(new GlyphIdentifier(id));
             return;
         }
@@ -168,7 +168,7 @@ public class TileDiallingDevice extends TilePortalPart
         if (payload.data.hasKey("DeleteGlyph"))
         {
             int g = payload.data.getInteger("DeleteGlyph");
-            
+
             if (glyphList.size() > g)
             {
                 glyphList.remove(g);
@@ -180,12 +180,12 @@ public class TileDiallingDevice extends TilePortalPart
     public ArrayList<GlyphElement> copyGlyphList()
     {
         ArrayList<GlyphElement> list = new ArrayList<GlyphElement>();
-        
-        for(GlyphElement e : glyphList)
+
+        for (GlyphElement e : glyphList)
         {
             list.add(new GlyphElement(e.name, e.identifier, e.texture));
         }
-        
+
         return list;
     }
 }

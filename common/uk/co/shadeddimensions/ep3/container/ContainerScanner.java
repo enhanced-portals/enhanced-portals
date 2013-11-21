@@ -39,7 +39,7 @@ public class ContainerScanner extends Container
             addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
         }
     }
-    
+
     @Override
     public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
     {
@@ -53,20 +53,20 @@ public class ContainerScanner extends Container
         hasChanged = true;
         return super.slotClick(par1, par2, par3, par4EntityPlayer);
     }
-    
+
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
         return true;
     }
-    
+
     public void saveToNBT(ItemStack stack)
     {
         if (!stack.hasTagCompound())
         {
             stack.setTagCompound(new NBTTagCompound());
         }
-        
+
         scannerInventory.saveContentsToNBT(stack.getTagCompound());
     }
 }

@@ -36,7 +36,7 @@ public class ElementScrollListBase extends ElementBase
     }
 
     public void setSelected(int i)
-    {   
+    {
         actualSelected = i;
     }
 
@@ -55,7 +55,7 @@ public class ElementScrollListBase extends ElementBase
         {
             if (isElementVisible(i))
             {
-                drawElement(i, left, top + (i * (getEntrySize() + getEntrySpacing())) - (int)scrolled + 1, actualSelected == i, mouseX, mouseY);
+                drawElement(i, left, top + i * (getEntrySize() + getEntrySpacing()) - (int) scrolled + 1, actualSelected == i, mouseX, mouseY);
             }
         }
 
@@ -83,7 +83,7 @@ public class ElementScrollListBase extends ElementBase
 
                     if (flag)
                     {
-                        initialClickY = (float) mouseY;
+                        initialClickY = mouseY;
                     }
                     else
                     {
@@ -97,8 +97,8 @@ public class ElementScrollListBase extends ElementBase
             }
             else if (initialClickY >= 0f)
             {
-                scrolled -= (float) mouseY - initialClickY;
-                initialClickY = (float) mouseY;
+                scrolled -= mouseY - initialClickY;
+                initialClickY = mouseY;
             }
         }
         else
@@ -190,8 +190,8 @@ public class ElementScrollListBase extends ElementBase
 
     protected boolean isElementVisible(int i)
     {
-        int yPos = (i * (getEntrySize() + getEntrySpacing()));
-        return (yPos - scrolled >= -getEntrySize()) && (yPos - scrolled + getEntrySize() < sizeY + getEntrySize()) ? true : false;
+        int yPos = i * (getEntrySize() + getEntrySpacing());
+        return yPos - scrolled >= -getEntrySize() && yPos - scrolled + getEntrySize() < sizeY + getEntrySize() ? true : false;
     }
 
     @Override

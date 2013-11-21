@@ -58,7 +58,7 @@ public class EnhancedPortals
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
         DimensionManager.registerProviderType(CommonProxy.Dimension, EPWorldProvider.class, false);
         DimensionManager.registerDimension(CommonProxy.Dimension, CommonProxy.Dimension);
-        
+
         AddonManager.instance.init(event);
     }
 
@@ -89,7 +89,7 @@ public class EnhancedPortals
             CommonProxy.networkManager.saveAllData();
         }
     }
-    
+
     @ForgeSubscribe
     @SideOnly(Side.CLIENT)
     public void textureHook(TextureStitchEvent.Pre event)
@@ -97,22 +97,22 @@ public class EnhancedPortals
         if (event.map.textureType == 0)
         {
             ClientProxy.customPortalTextures.clear();
-            ClientProxy.customFrameTextures.clear();            
+            ClientProxy.customFrameTextures.clear();
             int counter = 0;
-            
+
             while (ClientProxy.resourceExists("textures/blocks/customPortal/" + String.format("%02d", counter) + ".png"))
             {
                 CommonProxy.logger.info("Registered custom portal Icon: " + String.format("%02d", counter) + ".png");
-                ClientProxy.customPortalTextures.add(event.map.registerIcon("enhancedportals:customPortal/" + String.format("%02d", counter)));                
+                ClientProxy.customPortalTextures.add(event.map.registerIcon("enhancedportals:customPortal/" + String.format("%02d", counter)));
                 counter++;
             }
-            
+
             counter = 0;
-            
+
             while (ClientProxy.resourceExists("textures/blocks/customFrame/" + String.format("%02d", counter) + ".png"))
             {
                 CommonProxy.logger.info("Registered custom frame Icon: " + String.format("%02d", counter) + ".png");
-                ClientProxy.customFrameTextures.add(event.map.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));                
+                ClientProxy.customFrameTextures.add(event.map.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));
                 counter++;
             }
         }

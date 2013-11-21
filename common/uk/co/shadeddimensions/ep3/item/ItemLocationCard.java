@@ -38,7 +38,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
     {
         if (hasDBSLocation(s))
         {
-            NBTTagCompound t = s.getTagCompound();            
+            NBTTagCompound t = s.getTagCompound();
             return new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
         }
 
@@ -78,7 +78,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {        
+    {
         if (player.isSneaking() && hasDBSLocation(stack))
         {
             clearDBSLocation(stack);
@@ -86,8 +86,8 @@ public class ItemLocationCard extends ItemEnhancedPortals
         }
         else
         {
-            MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world,player, true);
-            
+            MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, player, true);
+
             if (movingobjectposition == null)
             {
                 return stack;
@@ -97,28 +97,28 @@ public class ItemLocationCard extends ItemEnhancedPortals
                 if (movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
                 {
                     TileEntity tile = world.getBlockTileEntity(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-                    
+
                     if (tile != null && tile instanceof TileStabilizer)
                     {
                         tile = ((TileStabilizer) tile).getMainBlock();
                     }
-                    
+
                     if (tile != null && tile instanceof TileStabilizerMain)
                     {
                         ItemStack s = new ItemStack(CommonProxy.itemLocationCard, 1);
                         setDBSLocation(s, ((TileStabilizerMain) tile).getWorldCoordinates());
-                        
-                       if (--stack.stackSize <= 0)
-                       {
-                           return s;
-                       }
-                       
-                       if (!player.inventory.addItemStackToInventory(s))
-                       {
-                           player.dropPlayerItem(s);
-                       }
-                       
-                       return stack;
+
+                        if (--stack.stackSize <= 0)
+                        {
+                            return s;
+                        }
+
+                        if (!player.inventory.addItemStackToInventory(s))
+                        {
+                            player.dropPlayerItem(s);
+                        }
+
+                        return stack;
                     }
                 }
             }

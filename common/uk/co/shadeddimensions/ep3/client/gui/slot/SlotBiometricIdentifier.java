@@ -22,8 +22,8 @@ public class SlotBiometricIdentifier extends Slot
         {
             return false;
         }
-        
-        return stack == null || (stack.itemID == CommonProxy.itemEntityCard.itemID && stack.hasTagCompound() && stack.getTagCompound().hasKey("entities"));
+
+        return stack == null || stack.itemID == CommonProxy.itemEntityCard.itemID && stack.hasTagCompound() && stack.getTagCompound().hasKey("entities");
     }
 
     @Override
@@ -31,10 +31,10 @@ public class SlotBiometricIdentifier extends Slot
     {
         super.onSlotChanged();
         ItemStack s = getStack();
-        
+
         if (s != null)
         {
-            biometric.applyBiometricFilters(getSlotIndex(), s);            
+            biometric.applyBiometricFilters(getSlotIndex(), s);
             biometric.setInventorySlotContents(getSlotIndex(), null);
         }
     }

@@ -1,12 +1,12 @@
 package uk.co.shadeddimensions.ep3.container;
 
-import cofh.gui.slot.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
+import cofh.gui.slot.SlotOutput;
 
 public abstract class ContainerEnhancedPortals extends Container
 {
@@ -31,12 +31,12 @@ public abstract class ContainerEnhancedPortals extends Container
 
             if (slotIndex < inventorySize)
             {
-                if (!this.mergeItemStack(stackInSlot, 0, 35, true))
+                if (!mergeItemStack(stackInSlot, 0, 35, true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(stackInSlot, 0, inventorySize, false))
+            else if (!mergeItemStack(stackInSlot, 0, inventorySize, false))
             {
                 return null;
             }
@@ -57,10 +57,10 @@ public abstract class ContainerEnhancedPortals extends Container
 
             slotObject.onPickupFromSlot(player, stackInSlot);
         }
-        
+
         return stack;
     }
-    
+
     @Override
     protected boolean mergeItemStack(ItemStack par1ItemStack, int par2, int par3, boolean par4)
     {
@@ -79,7 +79,7 @@ public abstract class ContainerEnhancedPortals extends Container
         {
             while (par1ItemStack.stackSize > 0 && (!par4 && k < par3 || par4 && k >= par2))
             {
-                slot = (Slot)this.inventorySlots.get(k);                
+                slot = (Slot) inventorySlots.get(k);
                 itemstack1 = slot.getStack();
 
                 if (itemstack1 != null && itemstack1.itemID == par1ItemStack.itemID && (!par1ItemStack.getHasSubtypes() || par1ItemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(par1ItemStack, itemstack1))
@@ -126,13 +126,13 @@ public abstract class ContainerEnhancedPortals extends Container
 
             while (!par4 && k < par3 || par4 && k >= par2)
             {
-                slot = (Slot)this.inventorySlots.get(k);
-                
+                slot = (Slot) inventorySlots.get(k);
+
                 if (slot instanceof SlotOutput)
                 {
                     break;
                 }
-                
+
                 itemstack1 = slot.getStack();
 
                 if (itemstack1 == null)

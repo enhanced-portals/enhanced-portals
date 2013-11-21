@@ -14,12 +14,12 @@ import cpw.mods.fml.common.network.Player;
 public class PacketGuiData extends PacketEnhancedPortals
 {
     GuiPayload payload;
-    
+
     public PacketGuiData()
     {
-        
+
     }
-    
+
     public PacketGuiData(GuiPayload pload)
     {
         payload = pload;
@@ -36,12 +36,12 @@ public class PacketGuiData extends PacketEnhancedPortals
     {
         payload.write(stream);
     }
-    
+
     @Override
     public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         Container container = ((EntityPlayer) player).openContainer;
-        
+
         if (container != null && container instanceof ContainerEnhancedPortals)
         {
             ((ContainerEnhancedPortals) container).tile.guiActionPerformed(payload, (EntityPlayer) player);

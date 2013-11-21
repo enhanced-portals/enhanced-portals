@@ -18,7 +18,7 @@ public class ElementFakeTab extends ElementBase
     boolean isActive;
     int maxX = 0;
     ItemStack displayItem;
-    
+
     public ElementFakeTab(GuiBase gui, int posX, int posY, String name, ItemStack s, boolean active)
     {
         super(gui, posX, posY);
@@ -39,7 +39,7 @@ public class ElementFakeTab extends ElementBase
         drawTexturedModalRect(posX, posY + sizeY - 4, 0, 252, sizeX - 4, 4);
         drawTexturedModalRect(posX + sizeX - 4, posY, 252, 0, 4, sizeY - 4);
         drawTexturedModalRect(posX + sizeX - 4, posY + sizeY - 4, 252, 252, 4, 4);
-        
+
         if (isActive)
         {
             if (sizeX < maxX)
@@ -58,31 +58,31 @@ public class ElementFakeTab extends ElementBase
                 sizeX -= 2;
             }
         }
-        
+
         itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().renderEngine, displayItem, posX + 4, posY + 3);
         posX = gui.getGuiLeft() - sizeX;
         GL11.glColor4f(1f, 1f, 1f, 1f);
         GL11.glDisable(GL11.GL_LIGHTING);
     }
-    
+
     @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
         if (!isActive)
         {
             isActive = true;
-            
+
             if (gui instanceof IElementHandler)
             {
                 ((IElementHandler) gui).onElementChanged(this, null);
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     public void setActive(boolean b)
     {
         isActive = b;

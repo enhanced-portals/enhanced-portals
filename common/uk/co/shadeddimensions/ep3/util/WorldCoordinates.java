@@ -33,59 +33,59 @@ public class WorldCoordinates extends ChunkCoordinates
         super(coord.posX, coord.posY, coord.posZ);
         dimension = coord.dimension;
     }
-    
+
     public WorldCoordinates(NBTTagCompound tag)
     {
         this(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D"));
     }
-    
+
     public int getBlockId()
-    {        
+    {
         WorldServer world = getWorld();
-        
+
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
             world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
         }
-        
+
         return world.getBlockId(posX, posY, posZ);
     }
-    
+
     public int getBlockMetadata()
-    {        
+    {
         WorldServer world = getWorld();
-        
+
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
             world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
         }
-        
+
         return world.getBlockMetadata(posX, posY, posZ);
     }
-    
+
     public TileEntity getBlockTileEntity()
     {
         WorldServer world = getWorld();
-        
+
         if (world == null)
         {
             DimensionManager.initDimension(dimension);
             world = DimensionManager.getWorld(dimension);
-            
+
             if (world == null)
             {
                 return null; // How?
             }
         }
-        
+
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
             world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
         }
-        
+
         return world.getBlockTileEntity(posX, posY, posZ);
     }
-        
+
     public WorldCoordinates offset(ForgeDirection orientation)
     {
         return new WorldCoordinates(posX + orientation.offsetX, posY + orientation.offsetY, posZ + orientation.offsetZ, dimension);
@@ -94,21 +94,21 @@ public class WorldCoordinates extends ChunkCoordinates
     public WorldServer getWorld()
     {
         WorldServer world = DimensionManager.getWorld(dimension);
-        
+
         if (world == null)
         {
             DimensionManager.initDimension(dimension);
             world = DimensionManager.getWorld(dimension);
-            
+
             if (world == null)
             {
                 return null; // How?
             }
         }
-        
+
         return world;
     }
-    
+
     @Override
     public String toString()
     {

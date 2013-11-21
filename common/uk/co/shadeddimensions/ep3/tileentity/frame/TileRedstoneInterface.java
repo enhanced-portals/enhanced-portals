@@ -26,19 +26,19 @@ public class TileRedstoneInterface extends TilePortalPart
         state = 0;
         emitting = pulse = false;
     }
-    
+
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
         super.guiActionPerformed(payload, player);
-        
+
         if (payload.data.hasKey("id"))
         {
             if (payload.data.getInteger("id") == 0)
             {
                 output = !output;
                 setState((byte) 0);
-    
+
                 CommonProxy.sendUpdatePacketToPlayer(this, player);
             }
             else if (payload.data.getInteger("id") == 1)
@@ -65,17 +65,17 @@ public class TileRedstoneInterface extends TilePortalPart
                         setState((byte) 0);
                     }
                 }
-    
+
                 CommonProxy.sendUpdatePacketToPlayer(this, player);
             }
         }
     }
-    
+
     public byte getState()
     {
         return state;
     }
-    
+
     @Override
     public int isProvidingStrongPower(int side)
     {
@@ -97,7 +97,7 @@ public class TileRedstoneInterface extends TilePortalPart
 
         return super.isProvidingWeakPower(side);
     }
-    
+
     @Override
     public void onNeighborBlockChange(int id)
     {
@@ -279,20 +279,21 @@ public class TileRedstoneInterface extends TilePortalPart
         tagCompound.setBoolean("emitting", emitting);
         tagCompound.setBoolean("pulse", pulse);
     }
-            
+
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         super.fillPacket(stream);
-        
+
         stream.writeBoolean(output);
         stream.writeByte(state);
     }
-    
+
+    @Override
     public void usePacket(java.io.DataInputStream stream) throws IOException
     {
         super.usePacket(stream);
-        
+
         output = stream.readBoolean();
         setState(stream.readByte());
     }

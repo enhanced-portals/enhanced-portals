@@ -18,13 +18,14 @@ public class MobEnderman extends EntityEnderman
     @Override
     protected Entity findPlayerToAttack()
     {
-        return this.worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
+        return worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
     }
+
     @Override
     public void onUpdate()
     {
         super.onUpdate();
-        
+
         if (teleportTimer > -1)
         {
             teleportTimer++;
@@ -48,8 +49,8 @@ public class MobEnderman extends EntityEnderman
             }
             else
             {
-                int x = (int) (posX + (rand.nextBoolean() ? -rand.nextInt(32) : rand.nextInt(32))), y = 0, z = (int) (posZ + (rand.nextBoolean() ? -rand.nextInt(32) : rand.nextInt(32)));                
-                y = worldObj.getTopSolidOrLiquidBlock(x, z);                
+                int x = (int) (posX + (rand.nextBoolean() ? -rand.nextInt(32) : rand.nextInt(32))), y = 0, z = (int) (posZ + (rand.nextBoolean() ? -rand.nextInt(32) : rand.nextInt(32)));
+                y = worldObj.getTopSolidOrLiquidBlock(x, z);
                 EntityManager.transferEntityWithinDimension(par1Entity, x, y, z, par1Entity.rotationYaw, 0, 0, false);
                 //teleportTo(x + (rand.nextBoolean() ? -rand.nextInt(2) : rand.nextInt(2)), y, z + (rand.nextBoolean() ? -rand.nextInt(2) : rand.nextInt(2)));
             }

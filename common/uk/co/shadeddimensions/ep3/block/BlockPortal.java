@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockPortal extends BlockEnhancedPortals
 {
     Icon texture;
-    
+
     public BlockPortal(int id, String name)
     {
         super(id, Material.portal, false);
@@ -62,25 +62,25 @@ public class BlockPortal extends BlockEnhancedPortals
 
     @Override
     public Icon getIcon(int side, int meta)
-    {        
+    {
         return texture;
     }
-    
+
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalController controller = portal.getPortalController();
-        
+
         if (controller != null)
         {
             ItemStack stack = controller.getStackInSlot(1);
-            
+
             if (controller.activeTextureData.hasCustomPortalTexture())
             {
-                if (ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
+                if (ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
                 {
-                    return (Icon) ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
+                    return ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
                 }
             }
             else if (stack != null)
@@ -95,13 +95,13 @@ public class BlockPortal extends BlockEnhancedPortals
                 }
             }
         }
-        
+
         return texture;
     }
 
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
-    {        
+    {
         return 14;
     }
 
@@ -116,7 +116,7 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         return -1;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4)
@@ -192,16 +192,16 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         return false;
     }
-    
+
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalController controller = portal.getPortalController();
         TileModuleManipulator manip = controller == null ? null : controller.blockManager.getModuleManipulator(controller.worldObj);
-        
+
         if (controller != null && manip != null)
-        {            
+        {
             if (manip != null && !manip.shouldRenderPortal())
             {
                 setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
@@ -228,7 +228,7 @@ public class BlockPortal extends BlockEnhancedPortals
             setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
         }
     }
-    
+
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
@@ -236,22 +236,22 @@ public class BlockPortal extends BlockEnhancedPortals
         {
             return false;
         }
-        
+
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
     }
-    
+
     @Override
     public void setBlockBoundsForItemRender()
     {
         setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
     }
-    
+
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
         texture = iconRegister.registerIcon("enhancedportals:portal");
     }
-    
+
     @Override
     public boolean canCollideCheck(int par1, boolean par2)
     {

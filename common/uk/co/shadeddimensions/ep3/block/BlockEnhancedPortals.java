@@ -54,7 +54,7 @@ public class BlockEnhancedPortals extends BlockContainer
         {
             return false;
         }
-        
+
         return tile.activate(player);
     }
 
@@ -80,7 +80,7 @@ public class BlockEnhancedPortals extends BlockContainer
         {
             return super.isProvidingStrongPower(blockAccess, x, y, z, side);
         }
-        
+
         return tile.isProvidingStrongPower(side);
     }
 
@@ -93,7 +93,7 @@ public class BlockEnhancedPortals extends BlockContainer
         {
             return super.isProvidingWeakPower(blockAccess, x, y, z, side);
         }
-        
+
         return tile.isProvidingWeakPower(side);
     }
 
@@ -106,7 +106,7 @@ public class BlockEnhancedPortals extends BlockContainer
         {
             return;
         }
-        
+
         tile.onNeighborBlockChange(blockID);
     }
 
@@ -119,7 +119,7 @@ public class BlockEnhancedPortals extends BlockContainer
         {
             return;
         }
-        
+
         tile.updateTick(random);
     }
 
@@ -132,7 +132,7 @@ public class BlockEnhancedPortals extends BlockContainer
         {
             return;
         }
-        
+
         tile.onEntityCollidedWithBlock(entity);
     }
 }

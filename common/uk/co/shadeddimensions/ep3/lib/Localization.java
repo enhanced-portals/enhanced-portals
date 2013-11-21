@@ -10,20 +10,20 @@ public class Localization
         {
             return StatCollector.translateToLocal("container.inventory");
         }
-        
+
         return StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s);
     }
-    
+
     public static String getItemString(String s)
     {
         return StatCollector.translateToLocal(Reference.SHORT_ID + ".item." + s);
     }
-    
+
     public static String getBlockString(String s)
     {
         return StatCollector.translateToLocal(Reference.SHORT_ID + ".block." + s);
     }
-    
+
     public static String getChatString(String s)
     {
         return StatCollector.translateToLocal(Reference.SHORT_ID + ".chat." + s);

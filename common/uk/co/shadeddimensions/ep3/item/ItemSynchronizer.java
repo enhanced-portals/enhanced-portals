@@ -40,12 +40,12 @@ public class ItemSynchronizer extends ItemPortalTool
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-    {        
+    {
         if (world.isRemote)
         {
             return true;
         }
-        
+
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
         if (tile != null && tile instanceof TilePortalPart)
@@ -83,7 +83,7 @@ public class ItemSynchronizer extends ItemPortalTool
                 if (tile instanceof TileBiometricIdentifier)
                 {
                     TileBiometricIdentifier thisIdentifier = (TileBiometricIdentifier) tile, pairedIdentifier = pairedController.blockManager.getBiometricIdentifier(world);
-                    
+
                     if (pairedIdentifier != null)
                     {
                         pairedIdentifier.hasSeperateLists = thisIdentifier.hasSeperateLists;
@@ -98,14 +98,14 @@ public class ItemSynchronizer extends ItemPortalTool
                 }
                 else if (tile instanceof TileDiallingDevice)
                 {
-                    TileDiallingDevice thisDialler = (TileDiallingDevice) tile, pairedDialler = (TileDiallingDevice) pairedController.blockManager.getDialDevice(world);
-                    
+                    TileDiallingDevice thisDialler = (TileDiallingDevice) tile, pairedDialler = pairedController.blockManager.getDialDevice(world);
+
                     if (pairedDialler != null)
                     {
                         pairedDialler.glyphList = thisDialler.copyGlyphList();
                         CommonProxy.sendUpdatePacketToAllAround(pairedDialler);
                     }
-                    
+
                     return true;
                 }
             }

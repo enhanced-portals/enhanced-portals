@@ -16,7 +16,7 @@ public class PacketHandlerClient implements IPacketHandler
     {
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(packet.data));
         byte packetType = -1;
-        
+
         try
         {
             packetType = stream.readByte();
@@ -28,5 +28,5 @@ public class PacketHandlerClient implements IPacketHandler
         {
             e.printStackTrace();
         }
-    }    
+    }
 }

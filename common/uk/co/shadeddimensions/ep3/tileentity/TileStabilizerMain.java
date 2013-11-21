@@ -37,7 +37,7 @@ import cofh.util.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileStabilizerMain extends TileEnhancedPortals  implements IInventory, IEnergyHandler
+public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler
 {
     static final int ACTIVE_PORTALS_PER_ROW = 2;
 
@@ -63,6 +63,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
     /***
      * Sets up a new connection between two portals.
+     * 
      * @return True if connection was successfully established.
      */
     public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB, PortalTextureManager textureManager)
@@ -153,8 +154,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
             removeExistingConnection(portalA, portalB);
             return;
         }
-        else if ((activeConnections.containsKey(portalA.getGlyphString()) && activeConnections.get(portalA.getGlyphString()).equals(portalB.getGlyphString())) ||
-                (activeConnectionsReverse.containsKey(portalA.getGlyphString()) && activeConnectionsReverse.get(portalA.getGlyphString()).equals(portalB.getGlyphString())))
+        else if (activeConnections.containsKey(portalA.getGlyphString()) && activeConnections.get(portalA.getGlyphString()).equals(portalB.getGlyphString()) || activeConnectionsReverse.containsKey(portalA.getGlyphString()) && activeConnectionsReverse.get(portalA.getGlyphString()).equals(portalB.getGlyphString()))
         {
             // Make sure we're terminating the correct connection, also don't mind that we're terminating it from the other side that we started it from
             PortalUtils.removePortalFrom(cA);
@@ -211,7 +211,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
             return true;
         }
 
-        int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * (1 * CommonProxy.REDSTONE_FLUX_COST);
+        int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * 1 * CommonProxy.REDSTONE_FLUX_COST;
         return extractEnergy(null, (int) (powerRequirement * 0.3), true) == (int) (powerRequirement * 0.3);
     }
 
@@ -219,8 +219,8 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
      * Whether or not this stabilizer can create a new connection
      */
     public boolean canAcceptNewConnection()
-    {        
-        return (activeConnections.size() * 2) + 2 <= ACTIVE_PORTALS_PER_ROW * rows;
+    {
+        return activeConnections.size() * 2 + 2 <= ACTIVE_PORTALS_PER_ROW * rows;
     }
 
     @Override
@@ -228,7 +228,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         if (activeConnections.size() > 0 && CommonProxy.redstoneFluxPowerMultiplier > 0 && tickTimer >= CommonProxy.REDSTONE_FLUX_TIMER)
         {
-            int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * (activeConnections.size() * CommonProxy.REDSTONE_FLUX_COST);
+            int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * activeConnections.size() * CommonProxy.REDSTONE_FLUX_COST;
 
             if (powerState == 0 && extractEnergy(null, powerRequirement, true) == powerRequirement) // Simulate the full power requirement
             {
@@ -250,7 +250,8 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                 extractEnergy(null, (int) (powerRequirement * 0.3), false);
                 instability = 70;
             }
-            else // Fail
+            else
+            // Fail
             {
                 for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list
                 {
@@ -304,9 +305,9 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                         if (effect == 0) // Teleport somewhere close
                         {
                             WorldCoordinates coord = controller.getWorldCoordinates();
-                            coord.posX += rand.nextBoolean() ? (1 + rand.nextInt(31)) : -(1 + rand.nextInt(31));
+                            coord.posX += rand.nextBoolean() ? 1 + rand.nextInt(31) : -(1 + rand.nextInt(31));
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
-                            coord.posZ += rand.nextBoolean() ? (1 + rand.nextInt(31)) : -(1 + rand.nextInt(31));
+                            coord.posZ += rand.nextBoolean() ? 1 + rand.nextInt(31) : -(1 + rand.nextInt(31));
 
                             EntityManager.transferEntityWithinDimension(entity, coord.posX, coord.posY, coord.posZ, entity.rotationYaw, 0, 0, false);
                         }
@@ -366,16 +367,17 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                         addLowInstabilityEffects(entity);
                     }
                     else if (instability == 50) // Medium Instability - 2 Effects
-                    {                        
+                    {
                         WorldCoordinates coord = controller.getWorldCoordinates();
-                        coord.posX += rand.nextBoolean() ? (1 + rand.nextInt(127)) : -(1 + rand.nextInt(127));
-                        coord.posZ += rand.nextBoolean() ? (1 + rand.nextInt(127)) : -(1 + rand.nextInt(127));
+                        coord.posX += rand.nextBoolean() ? 1 + rand.nextInt(127) : -(1 + rand.nextInt(127));
+                        coord.posZ += rand.nextBoolean() ? 1 + rand.nextInt(127) : -(1 + rand.nextInt(127));
 
                         if (rand.nextInt(2) == 0) // Teleport somewhere fairly nearby -- on the ground
                         {
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
                         }
-                        else // Teleport somewhere fairly nearby -- in the air
+                        else
+                        // Teleport somewhere fairly nearby -- in the air
                         {
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + rand.nextInt(10);
                         }
@@ -399,7 +401,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
                 EntityManager.transferEntity(entity, uID, exit, portal.getBlockMetadata()); // No instability effects - teleport normally
             }
 
-            TileModuleManipulator module = controller.blockManager.getModuleManipulator(controller.worldObj);   
+            TileModuleManipulator module = controller.blockManager.getModuleManipulator(controller.worldObj);
 
             if (module != null)
             {
@@ -422,7 +424,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
             hunger.setCurativeItems(new ArrayList<ItemStack>());
             poison.setCurativeItems(new ArrayList<ItemStack>());
 
-            int effect = rand.nextInt(3);            
+            int effect = rand.nextInt(3);
             ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
         }
     }
@@ -580,7 +582,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     public void validate()
     {
         // Don't call super - we don't need to send any packets here
-        this.tileEntityInvalid = false;
+        tileEntityInvalid = false;
     }
 
     public void deconstruct()
@@ -592,7 +594,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
         for (ChunkCoordinates c : blockList)
         {
-            TileEntity tile =  worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
 
             if (tile instanceof TileStabilizer)
             {
@@ -629,21 +631,25 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     {
         return energyStorage.receiveEnergy(maxReceive, simulate);
     }
+
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
     {
         return energyStorage.extractEnergy(maxExtract, simulate);
     }
+
     @Override
     public boolean canInterface(ForgeDirection from)
     {
         return true;
     }
+
     @Override
     public int getEnergyStored(ForgeDirection from)
     {
         return energyStorage.getEnergyStored();
     }
+
     @Override
     public int getMaxEnergyStored(ForgeDirection from)
     {
@@ -725,10 +731,14 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
     }
 
     @Override
-    public void openChest() { }
+    public void openChest()
+    {
+    }
 
     @Override
-    public void closeChest() { }
+    public void closeChest()
+    {
+    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)

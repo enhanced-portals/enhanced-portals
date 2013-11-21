@@ -19,7 +19,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import cofh.gui.GuiBase;
 
 public class GuiPortalController extends GuiBase
-{    
+{
     ElementGlyphSelector selector;
     ElementGlyphViewer viewer;
     ElementPortalComponents components;
@@ -49,12 +49,12 @@ public class GuiPortalController extends GuiBase
             {
                 Random random = new Random();
                 GlyphIdentifier iden = new GlyphIdentifier();
-                
-                for (int i = 0; i < (isCtrlKeyDown() ? 9 : (random.nextInt(8) + 1)); i++)
+
+                for (int i = 0; i < (isCtrlKeyDown() ? 9 : random.nextInt(8) + 1); i++)
                 {
                     iden.addGlyph(random.nextInt(27));
                 }
-                
+
                 selector.setIdentifierTo(iden);
             }
         }
@@ -68,7 +68,7 @@ public class GuiPortalController extends GuiBase
             else if (button.id == saveButton.id) // Save Changes
             {
                 GuiPayload payload = new GuiPayload();
-                payload.data.setString("uniqueIdentifier", selector.getGlyphIdentifier().getGlyphString());                
+                payload.data.setString("uniqueIdentifier", selector.getGlyphIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
                 toggleState();
             }
@@ -83,10 +83,10 @@ public class GuiPortalController extends GuiBase
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             drawTexturedModalRect(guiLeft, guiTop + ySize - 106, 0, ySize, xSize, 106);
         }
-        
+
         super.drawElements();
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
@@ -95,7 +95,7 @@ public class GuiPortalController extends GuiBase
         drawCenteredString(fontRenderer, Localization.getGuiString("portalController"), xSize / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("uniqueIdentifier"), 8, 8, 0x404040);
         fontRenderer.drawString(overlayActive ? Localization.getGuiString("glyphs") : Localization.getGuiString("portalComponents"), 8, 44, 0x404040);
-   
+
         if (!overlayActive)
         {
             if (x >= guiLeft + 7 && x <= guiLeft + xSize - 8)
@@ -125,7 +125,7 @@ public class GuiPortalController extends GuiBase
         addElement(selector);
         addElement(viewer);
         addElement(components);
-        
+
         selector.setIdentifierTo(controller.getUniqueIdentifier());
         resetButton.drawButton = saveButton.drawButton = false;
     }
@@ -156,7 +156,7 @@ public class GuiPortalController extends GuiBase
         selector.setVisible(overlayActive);
         components.setVisible(!overlayActive);
     }
-    
+
     @Override
     public void updateScreen()
     {

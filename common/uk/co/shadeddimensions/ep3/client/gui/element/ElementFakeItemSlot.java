@@ -18,18 +18,18 @@ public class ElementFakeItemSlot extends ElementBase
 {
     ItemStack item;
     RenderItem itemRenderer = new RenderItem();
-    
+
     public ElementFakeItemSlot(GuiBase gui, int posX, int posY)
     {
         super(gui, posX, posY);
         sizeX = sizeY = 18;
     }
-    
+
     public ItemStack getItem()
     {
         return item;
     }
-    
+
     public void setItem(ItemStack i)
     {
         item = i;
@@ -42,23 +42,23 @@ public class ElementFakeItemSlot extends ElementBase
         {
             return;
         }
-        
+
         GL11.glColor4f(1f, 1f, 1f, 1f);
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/inventorySlots.png"));
         drawTexturedModalRect(posX, posY, 0, 0, 18, 18);
-        
+
         if (intersectsWith(gui.getMouseX(), gui.getMouseY()))
         {
             Gui.drawRect(posX + 1, posY + 1, posX + sizeX - 1, posY + sizeY - 1, 0x88FFFFFF);
         }
-        
+
         if (item != null)
         {
             itemRenderer.renderItemAndEffectIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().renderEngine, item, posX + 1, posY + 1);
             GL11.glDisable(GL11.GL_LIGHTING);
         }
     }
-    
+
     @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
@@ -66,19 +66,19 @@ public class ElementFakeItemSlot extends ElementBase
         {
             return false;
         }
-        
+
         ItemStack s = Minecraft.getMinecraft().thePlayer.inventory.getItemStack();
-        
+
         if (s == null || s.getItem() instanceof ItemBlock || FluidContainerRegistry.isFilledContainer(s))
         {
             item = s;
-            
+
             if (gui instanceof IElementHandler)
             {
                 ((IElementHandler) gui).onElementChanged(this, item);
             }
         }
-        
+
         return true;
     }
 

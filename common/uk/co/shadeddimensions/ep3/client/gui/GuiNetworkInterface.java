@@ -18,7 +18,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import cofh.gui.GuiBase;
 
 public class GuiNetworkInterface extends GuiBase
-{    
+{
     ElementGlyphSelector selector;
     ElementGlyphViewer viewer;
     TilePortalController controller;
@@ -47,12 +47,12 @@ public class GuiNetworkInterface extends GuiBase
             {
                 Random random = new Random();
                 GlyphIdentifier iden = new GlyphIdentifier();
-                
-                for (int i = 0; i < (isCtrlKeyDown() ? 9 : (random.nextInt(8) + 1)); i++)
+
+                for (int i = 0; i < (isCtrlKeyDown() ? 9 : random.nextInt(8) + 1); i++)
                 {
                     iden.addGlyph(random.nextInt(27));
                 }
-                
+
                 selector.setIdentifierTo(iden);
             }
         }
@@ -66,7 +66,7 @@ public class GuiNetworkInterface extends GuiBase
             else if (button.id == saveButton.id) // Save Changes
             {
                 GuiPayload payload = new GuiPayload();
-                payload.data.setString("networkIdentifier", selector.getGlyphIdentifier().getGlyphString());                
+                payload.data.setString("networkIdentifier", selector.getGlyphIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
                 toggleState();
             }
@@ -81,10 +81,10 @@ public class GuiNetworkInterface extends GuiBase
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             drawTexturedModalRect(guiLeft, guiTop + ySize - 106, 0, ySize, xSize, 106);
         }
-        
+
         super.drawElements();
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
@@ -93,13 +93,13 @@ public class GuiNetworkInterface extends GuiBase
         drawCenteredString(fontRenderer, Localization.getGuiString("networkInterface"), xSize / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("networkIdentifier"), 8, 8, 0x404040);
         fontRenderer.drawString(overlayActive ? Localization.getGuiString("glyphs") : Localization.getGuiString("networkInformation"), 8, 44, 0x404040);
-   
+
         if (!overlayActive)
         {
             String s1 = controller.connectedPortals == -1 ? Localization.getGuiString("notSet") : "" + controller.connectedPortals;
             fontRenderer.drawString(Localization.getGuiString("networkedPortals"), 12, 57, 0x404040);
             fontRenderer.drawString(s1, xSize - 12 - fontRenderer.getStringWidth(s1), 57, 0x404040);
-            
+
             if (x >= guiLeft + 7 && x <= guiLeft + xSize - 8)
             {
                 if (y >= guiTop + 20 && y <= guiTop + 37)
@@ -125,7 +125,7 @@ public class GuiNetworkInterface extends GuiBase
         buttonList.add(saveButton);
         addElement(selector);
         addElement(viewer);
-        
+
         selector.setIdentifierTo(controller.getNetworkIdentifier());
         resetButton.drawButton = saveButton.drawButton = false;
     }
@@ -155,7 +155,7 @@ public class GuiNetworkInterface extends GuiBase
         resetButton.drawButton = saveButton.drawButton = overlayActive;
         selector.setVisible(overlayActive);
     }
-    
+
     @Override
     public void updateScreen()
     {

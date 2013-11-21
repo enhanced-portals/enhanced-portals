@@ -18,100 +18,100 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TileEnhancedPortals extends TileEntity
-{    
+{
     public TileEnhancedPortals()
     {
-        
+
     }
-    
+
     public ChunkCoordinates getChunkCoordinates()
     {
         return new ChunkCoordinates(xCoord, yCoord, zCoord);
     }
-    
+
     public WorldCoordinates getWorldCoordinates()
     {
         return new WorldCoordinates(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
     }
-        
+
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
-        
+
     }
-    
+
     public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
     {
-        
+
     }
-    
+
     public void onNeighborBlockChange(int blockID)
     {
-        
+
     }
-    
+
     public void updateTick(Random random)
     {
-        
+
     }
-    
+
     public void onEntityCollidedWithBlock(Entity entity)
     {
-        
+
     }
-    
+
     public boolean activate(EntityPlayer player)
     {
         return false;
     }
-    
+
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
-        
+
     }
-    
+
     public int isProvidingStrongPower(int side)
     {
         return 0;
     }
-    
+
     public int isProvidingWeakPower(int side)
     {
         return 0;
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
     }
-    
+
     public void usePacket(DataInputStream stream) throws IOException
     {
 
     }
-    
+
     public void fillPacket(DataOutputStream stream) throws IOException
     {
 
     }
-    
+
     @Override
     public void validate()
     {
         super.validate();
-        
+
         if (worldObj.isRemote)
         {
             ClientProxy.requestTileData(this);
         }
     }
-    
+
     protected byte getHighestPowerState()
     {
         byte current = 0;

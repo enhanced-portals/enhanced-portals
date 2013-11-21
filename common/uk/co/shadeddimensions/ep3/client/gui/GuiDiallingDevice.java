@@ -34,10 +34,10 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
     public boolean showOverlay;
     String warningMessage;
     int warningTimer;
-    
+
     ElementGlyphSelector selector;
     ElementDialDeviceScrollList list;
-    
+
     public GuiDiallingDevice(TileDiallingDevice dialler, EntityPlayer player)
     {
         super(new ContainerDiallingDevice(dialler, player), new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png"));
@@ -92,18 +92,18 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
     {
         if (showOverlay)
         {
-            if (acceptButton.mousePressed(this.mc, par1, par2))
+            if (acceptButton.mousePressed(mc, par1, par2))
             {
-                this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                this.actionPerformed(acceptButton);
+                mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                actionPerformed(acceptButton);
             }
-            else if (cancelButton.mousePressed(this.mc, par1, par2))
+            else if (cancelButton.mousePressed(mc, par1, par2))
             {
-                this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                this.actionPerformed(cancelButton);
+                mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                actionPerformed(cancelButton);
             }
 
-            textField.mouseClicked(par1, par2, mouseButton);            
+            textField.mouseClicked(par1, par2, mouseButton);
             return;
         }
 
@@ -115,14 +115,14 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
     public void initGui()
     {
         super.initGui();
-        
+
         selector = new ElementGlyphSelector(this, 7, 139);
         list = new ElementDialDeviceScrollList(this, texture, dial, 0, 20, xSize, 80);
-        
+
         addElement(list);
         addElement(selector);
         addElement(new ElementGlyphViewer(this, selector, 7, 105));
-        
+
         cancelButton = new GuiButton(10, guiLeft + 20, guiTop + 70, 100, 20, Localization.getGuiString("cancel"));
         acceptButton = new GuiButton(11, guiLeft + xSize - 22 - 100, guiTop + 70, 100, 20, Localization.getGuiString("accept"));
         textField = new GuiTextField(fontRenderer, guiLeft + 20, guiTop + 47, xSize - 42, 20);
@@ -251,7 +251,7 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
         {
             int[] obj = (int[]) data;
             int type = obj[0], entry = obj[1];
-                        
+
             if (type == 0 && entry >= 0 && entry < dial.glyphList.size())
             {
                 // select
@@ -265,13 +265,13 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
                 PacketDispatcher.sendPacketToServer(new PacketTextureData(entry, dial.xCoord, dial.yCoord, dial.zCoord).getPacket());
                 CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.TexturesDiallingDevice, dial);
                 Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
-                
+
             }
             else if (type == 2 && entry >= 0 && entry < dial.glyphList.size() && !controller.isPortalActive)
             {
                 // remove
                 selector.reset();
-                
+
                 GuiPayload p = new GuiPayload();
                 p.data.setInteger("DeleteGlyph", entry);
                 ClientProxy.sendGuiPacket(p);

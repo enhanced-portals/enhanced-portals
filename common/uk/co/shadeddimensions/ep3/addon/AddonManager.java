@@ -10,13 +10,13 @@ public class AddonManager
 {
     ArrayList<Addon> addons;
     public static AddonManager instance = new AddonManager();
-    
+
     public AddonManager()
     {
         addons = new ArrayList<Addon>();
         addons.add(new AddonThermalExpansion());
     }
-    
+
     public void preInit(FMLPreInitializationEvent event)
     {
         for (Addon a : addons)
@@ -24,7 +24,7 @@ public class AddonManager
             a.preInit(event);
         }
     }
-    
+
     public void init(FMLInitializationEvent event)
     {
         for (Addon a : addons)
@@ -32,7 +32,7 @@ public class AddonManager
             a.init(event);
         }
     }
-    
+
     public void postInit(FMLPostInitializationEvent event)
     {
         for (Addon a : addons)

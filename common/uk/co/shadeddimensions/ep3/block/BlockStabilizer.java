@@ -13,7 +13,7 @@ import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
 public class BlockStabilizer extends BlockEnhancedPortals
 {
     static ConnectedTextures connectedTextures;
-    
+
     public BlockStabilizer(int id, String name)
     {
         super(id, Material.rock, true);
@@ -23,13 +23,13 @@ public class BlockStabilizer extends BlockEnhancedPortals
         setStepSound(soundStoneFootstep);
         connectedTextures = new ConnectedTextures("enhancedportals:bridge/bridge_%s", id, -1);
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {
         return null;
     }
-    
+
     @Override
     public TileEntity createTileEntity(World world, int metadata)
     {
@@ -41,45 +41,46 @@ public class BlockStabilizer extends BlockEnhancedPortals
         {
             return new TileStabilizerMain();
         }
-        
+
         return null;
     }
-    
+
     @Override
     public Icon getIcon(int par1, int par2)
     {
         return connectedTextures.getNormalIcon();
     }
-    
+
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
     }
-    
+
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
         connectedTextures.registerIcons(iconRegister);
     }
-    
+
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         return blockAccess.getBlockId(x, y, z) == blockID ? false : super.shouldSideBeRendered(blockAccess, x, y, z, side);
     }
-    
+
     @Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
-        
+
+    @Override
     public int getRenderBlockPass()
     {
         return 1;
     }
-    
+
     @Override
     public boolean isOpaqueCube()
     {

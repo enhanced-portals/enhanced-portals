@@ -85,7 +85,7 @@ public class TileBiometricIdentifier extends TilePortalPart
         boolean wasFound = false;
 
         for (EntityData data : hasSeperateLists ? recievingEntityTypes : sendingEntityTypes)
-        {            
+        {
             if (data.shouldCheckName() && data.EntityDisplayName.equals(entity.getEntityName()))
             {
                 if (!data.isInverted)
@@ -115,9 +115,9 @@ public class TileBiometricIdentifier extends TilePortalPart
             }
         }
 
-        return !wasFound ? (hasSeperateLists ? notFoundRecieve : notFoundSend) : false;
+        return !wasFound ? hasSeperateLists ? notFoundRecieve : notFoundSend : false;
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tag)
     {
@@ -150,7 +150,7 @@ public class TileBiometricIdentifier extends TilePortalPart
 
             tag.setTag("recievingEntityTypes", t2);
         }
-        
+
         NBTTagList itemList = new NBTTagList();
 
         for (int i = 0; i < inventory.length; i++)
@@ -204,11 +204,11 @@ public class TileBiometricIdentifier extends TilePortalPart
                 }
             }
         }
-        
+
         if (tag.hasKey("Inventory"))
         {
             NBTTagList tagList = tag.getTagList("Inventory");
-            
+
             for (int i = 0; i < tagList.tagCount(); i++)
             {
                 NBTTagCompound t2 = (NBTTagCompound) tagList.tagAt(i);
@@ -333,7 +333,7 @@ public class TileBiometricIdentifier extends TilePortalPart
         }
         else if (payload.data.hasKey("toggleSeperateLists"))
         {
-            hasSeperateLists = !hasSeperateLists;            
+            hasSeperateLists = !hasSeperateLists;
             CommonProxy.sendUpdatePacketToAllAround(this);
         }
     }
@@ -357,7 +357,7 @@ public class TileBiometricIdentifier extends TilePortalPart
     }
 
     public ArrayList<EntityData> copyRecievingEntityTypes()
-    {        
+    {
         ArrayList<EntityData> list = new ArrayList<EntityData>();
 
         for (EntityData data : recievingEntityTypes)
@@ -367,7 +367,7 @@ public class TileBiometricIdentifier extends TilePortalPart
 
         return list;
     }
-    
+
     /* IInventory */
     @Override
     public int getSizeInventory()
@@ -452,12 +452,12 @@ public class TileBiometricIdentifier extends TilePortalPart
     {
         NBTTagCompound t = s.getTagCompound();
         NBTTagList l = t.getTagList("entities");
-        
+
         for (int i = 0; i < l.tagCount(); i++)
         {
-            NBTTagCompound tag = (NBTTagCompound) l.tagAt(i);            
+            NBTTagCompound tag = (NBTTagCompound) l.tagAt(i);
             EntityData entity = new EntityData(tag.getString("Name"), EntityData.getClassFromID(tag.getInteger("ID")), false, (byte) 0);
-            
+
             if (slotIndex == 0)
             {
                 sendingEntityTypes.add(entity);
@@ -467,7 +467,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 recievingEntityTypes.add(entity);
             }
         }
-        
+
         CommonProxy.sendUpdatePacketToAllAround(this);
     }
 }

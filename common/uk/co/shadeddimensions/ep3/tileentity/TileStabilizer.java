@@ -9,8 +9,8 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
+import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cofh.api.energy.IEnergyHandler;
 
 public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandler
@@ -24,8 +24,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
     }
 
     /***
-     * Gets the block that does all the processing for this multiblock.
-     * If that block is self, will return self.
+     * Gets the block that does all the processing for this multiblock. If that block is self, will return self.
      */
     public TileStabilizerMain getMainBlock()
     {
@@ -63,7 +62,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
 
         WorldCoordinates topLeft = getWorldCoordinates();
 
-        while (topLeft.offset(ForgeDirection.WEST).getBlockId() == CommonProxy.blockStabilizer.blockID)  // Get the westernmost block
+        while (topLeft.offset(ForgeDirection.WEST).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the westernmost block
         {
             topLeft = topLeft.offset(ForgeDirection.WEST);
         }
@@ -90,13 +89,13 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
             for (ChunkCoordinates c : blocks)
             {
                 TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-                
+
                 if (tile instanceof TileStabilizerMain)
                 {
                     worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockStabilizer.blockID, 0, 3);
                     tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
                 }
-                
+
                 if (tile instanceof TileStabilizer)
                 {
                     TileStabilizer t = (TileStabilizer) tile;

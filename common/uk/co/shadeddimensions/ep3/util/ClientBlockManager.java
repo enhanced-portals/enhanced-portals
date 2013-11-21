@@ -11,37 +11,43 @@ public class ClientBlockManager extends BlockManager
 {
     int frame, portal, redstone;
     boolean network, dial, biometric;
-    
+
+    @Override
     public int getFrameCount()
     {
         return frame;
     }
 
+    @Override
     public int getPortalCount()
     {
         return portal;
     }
 
+    @Override
     public int getRedstoneInterfaceCount()
     {
         return redstone;
     }
 
+    @Override
     public boolean getHasNetworkInterface()
     {
         return network;
     }
 
+    @Override
     public boolean getHasDialDevice()
     {
         return dial;
     }
 
+    @Override
     public boolean getHasBiometricIdentifier()
     {
         return biometric;
     }
-    
+
     @Override
     public BlockManager readFromPacket(DataInputStream stream) throws IOException
     {

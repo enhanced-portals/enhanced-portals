@@ -15,18 +15,18 @@ public class PacketTileUpdate extends PacketEnhancedPortals
     DataInputStream s;
     int x, y, z;
     TileEnhancedPortals t;
-    
+
     public PacketTileUpdate()
     {
-        
+
     }
-    
+
     public PacketTileUpdate(TileEnhancedPortals tile)
     {
         t = tile;
         isChunkDataPacket = true;
     }
-    
+
     @Override
     public void readPacketData(DataInputStream stream) throws IOException
     {
@@ -42,17 +42,17 @@ public class PacketTileUpdate extends PacketEnhancedPortals
         stream.writeInt(t.xCoord);
         stream.writeInt(t.yCoord);
         stream.writeInt(t.zCoord);
-        
+
         t.fillPacket(stream);
     }
-    
+
     @Override
     public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         TileEntity t = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
-                
+
         if (t != null && t instanceof TileEnhancedPortals)
-        {            
+        {
             try
             {
                 ((TileEnhancedPortals) t).usePacket(s);

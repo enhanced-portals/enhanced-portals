@@ -11,10 +11,10 @@ public class ContainerBiometricIdentifier extends ContainerEnhancedPortals
     public ContainerBiometricIdentifier(TileBiometricIdentifier t, EntityPlayer player)
     {
         super(t);
-        
+
         addSlotToContainer(new SlotBiometricIdentifier(t, 0, 8, 176));
         addSlotToContainer(new SlotBiometricIdentifier(t, 1, 276, 176));
-        
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -34,7 +34,7 @@ public class ContainerBiometricIdentifier extends ContainerEnhancedPortals
     {
         return ((TileBiometricIdentifier) tile).isUseableByPlayer(entityplayer);
     }
-    
+
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {

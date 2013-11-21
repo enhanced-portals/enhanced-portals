@@ -17,7 +17,7 @@ public class PortalFX extends EntityFX
 
     private ParticleSet particle;
     private int nextFrame = 1;
-    
+
     public PortalFX(World par1World, TilePortalController controller, TileModuleManipulator module, double portalX, double portalY, double portalZ, double xMotion, double yMotion, double zMotion)
     {
         super(par1World, portalX, portalY, portalZ, xMotion, yMotion, zMotion);
@@ -27,17 +27,17 @@ public class PortalFX extends EntityFX
         portalPosX = posX = portalX;
         portalPosY = posY = portalY;
         portalPosZ = posZ = portalZ;
-        
+
         Color c = new Color(controller != null ? controller.activeTextureData.getParticleColour() : 0x0077D8);
         particleRed = c.getRed() / 255f;
         particleGreen = c.getGreen() / 255f;
         particleBlue = c.getBlue() / 255f;
-        
+
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
         particle = ClientProxy.particleSets.get(controller != null ? controller.activeTextureData.getParticleType() : 0);
-        
+
         setParticleTextureIndex(particle.type == 0 ? particle.frames[ClientProxy.random.nextInt(particle.frames.length)] : particle.frames[0]);
 
         if (module != null)
@@ -108,11 +108,11 @@ public class PortalFX extends EntityFX
                     return;
                 }
             }
-            
+
             setParticleTextureIndex(particle.frames[nextFrame]);
             nextFrame++;
         }
-        
+
         if (particleAge++ >= particleMaxAge)
         {
             setDead();

@@ -11,24 +11,24 @@ public class InventoryScanner implements IInventory
 {
     ItemStack parent;
     ItemStack[] inventory;
-        
+
     public InventoryScanner(ItemStack stack)
     {
         inventory = new ItemStack[2];
         loadContentsFromNBT(stack.getTagCompound());
     }
-    
+
     public void loadContentsFromNBT(NBTTagCompound tag)
     {
         if (tag == null)
         {
             return;
         }
-        
+
         if (tag.hasKey("scannerInventory"))
         {
             NBTTagList tagList = tag.getTagList("scannerInventory");
-            
+
             for (int i = 0; i < tagList.tagCount(); i++)
             {
                 NBTTagCompound t = (NBTTagCompound) tagList.tagAt(i);
@@ -41,7 +41,7 @@ public class InventoryScanner implements IInventory
             }
         }
     }
-    
+
     public void saveContentsToNBT(NBTTagCompound tag)
     {
         NBTTagList itemList = new NBTTagList();
@@ -61,7 +61,7 @@ public class InventoryScanner implements IInventory
 
         tag.setTag("scannerInventory", itemList);
     }
-    
+
     @Override
     public int getSizeInventory()
     {
@@ -144,18 +144,18 @@ public class InventoryScanner implements IInventory
     @Override
     public void closeChest()
     {
-        
+
     }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return itemstack == null || (i == 0 && itemstack.itemID == CommonProxy.itemEntityCard.itemID);
+        return itemstack == null || i == 0 && itemstack.itemID == CommonProxy.itemEntityCard.itemID;
     }
 
     @Override
     public void onInventoryChanged()
     {
-        
+
     }
 }

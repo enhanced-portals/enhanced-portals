@@ -14,7 +14,7 @@ public class PortalTextureManager
     int portalColour, customPortalTexture;
     int particleColour, particleType;
     ItemStack[] inventory;
-    
+
     public PortalTextureManager()
     {
         frameColour = portalColour = 0xffffff;
@@ -23,7 +23,7 @@ public class PortalTextureManager
         customFrameTexture = customPortalTexture = -1;
         inventory = new ItemStack[2];
     }
-    
+
     public PortalTextureManager(PortalTextureManager p)
     {
         frameColour = p.frameColour;
@@ -34,7 +34,7 @@ public class PortalTextureManager
         customPortalTexture = p.customPortalTexture;
         inventory = p.inventory;
     }
-    
+
     public void readFromNBT(NBTTagCompound tag, String tagName)
     {
         NBTTagCompound t = tag.getCompoundTag(tagName);
@@ -43,16 +43,16 @@ public class PortalTextureManager
         particleColour = t.getInteger("particleColour");
         particleType = t.getInteger("particleType");
         customFrameTexture = t.getInteger("customFrameTexture");
-        customPortalTexture = t.getInteger("customPortalTexture");        
+        customPortalTexture = t.getInteger("customPortalTexture");
         NBTTagList l = t.getTagList("Inventory");
-        
+
         for (int i = 0; i < inventory.length; i++)
         {
-            NBTTagCompound T = (NBTTagCompound) l.tagAt(i);            
+            NBTTagCompound T = (NBTTagCompound) l.tagAt(i);
             inventory[i] = ItemStack.loadItemStackFromNBT(T);
         }
     }
-    
+
     public void writeToNBT(NBTTagCompound tag, String tagName)
     {
         NBTTagCompound t = new NBTTagCompound();
@@ -61,25 +61,25 @@ public class PortalTextureManager
         t.setInteger("particleColour", particleColour);
         t.setInteger("particleType", particleType);
         t.setInteger("customFrameTexture", customFrameTexture);
-        t.setInteger("customPortalTexture", customPortalTexture);        
+        t.setInteger("customPortalTexture", customPortalTexture);
         NBTTagList l = new NBTTagList();
-        
-        for (int i = 0; i < inventory.length; i++)
+
+        for (ItemStack element : inventory)
         {
             NBTTagCompound T = new NBTTagCompound();
-            
-            if (inventory[i] != null)
+
+            if (element != null)
             {
-                inventory[i].writeToNBT(T);
+                element.writeToNBT(T);
             }
-            
+
             l.appendTag(T); // Make sure we still write it when it's null, so inventory slots don't get shifted when reloading
         }
-        
-        t.setTag("Inventory", l);        
+
+        t.setTag("Inventory", l);
         tag.setTag(tagName, t);
     }
-    
+
     public void usePacket(DataInputStream stream) throws IOException
     {
         frameColour = stream.readInt();
@@ -88,11 +88,11 @@ public class PortalTextureManager
         particleType = stream.readInt();
         customFrameTexture = stream.readInt();
         customPortalTexture = stream.readInt();
-        
+
         for (int i = 0; i < inventory.length; i++)
         {
             int ID = stream.readInt(), meta = stream.readInt();
-            
+
             if (ID == 0)
             {
                 inventory[i] = null;
@@ -103,7 +103,7 @@ public class PortalTextureManager
             }
         }
     }
-    
+
     public void writeToPacket(DataOutputStream stream) throws IOException
     {
         stream.writeInt(frameColour);
@@ -112,13 +112,13 @@ public class PortalTextureManager
         stream.writeInt(particleType);
         stream.writeInt(customFrameTexture);
         stream.writeInt(customPortalTexture);
-        
-        for (int i = 0; i < inventory.length; i++)
+
+        for (ItemStack element : inventory)
         {
-            if (inventory[i] != null)
+            if (element != null)
             {
-                stream.writeInt(inventory[i].itemID);
-                stream.writeInt(inventory[i].getItemDamage());
+                stream.writeInt(element.itemID);
+                stream.writeInt(element.getItemDamage());
             }
             else
             {
@@ -127,92 +127,92 @@ public class PortalTextureManager
             }
         }
     }
-    
+
     public int getFrameColour()
     {
         return frameColour;
     }
-    
+
     public void setFrameColour(int i)
     {
         frameColour = i;
     }
-    
+
     public int getCustomFrameTexture()
     {
         return customFrameTexture;
     }
-    
+
     public void setCustomFrameTexture(int i)
     {
         customFrameTexture = i;
     }
-    
+
     public boolean hasCustomFrameTexture()
     {
         return customFrameTexture > -1;
     }
-    
+
     public int getPortalColour()
     {
         return portalColour;
     }
-    
+
     public void setPortalColour(int i)
     {
         portalColour = i;
     }
-    
+
     public int getCustomPortalTexture()
     {
         return customPortalTexture;
     }
-    
+
     public void setCustomPortalTexture(int i)
     {
         customPortalTexture = i;
     }
-    
+
     public boolean hasCustomPortalTexture()
     {
         return customPortalTexture > -1;
     }
-    
+
     public int getParticleColour()
     {
         return particleColour;
     }
-    
+
     public void setParticleColour(int i)
     {
         particleColour = i;
     }
-    
+
     public int getParticleType()
     {
         return particleType;
     }
-    
+
     public void setParticleType(int i)
     {
         particleType = i;
     }
-    
+
     public ItemStack getPortalItem()
     {
         return inventory[1];
     }
-    
+
     public void setPortalItem(ItemStack s)
     {
         inventory[1] = s;
     }
-    
+
     public ItemStack getFrameItem()
     {
         return inventory[0];
     }
-    
+
     public void setFrameItem(ItemStack s)
     {
         inventory[0] = s;

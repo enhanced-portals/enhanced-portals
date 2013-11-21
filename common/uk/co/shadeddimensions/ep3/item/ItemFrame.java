@@ -14,7 +14,7 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 public class ItemFrame extends ItemBlock
 {
     public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "biometric", "upgrade" };
-    
+
     public ItemFrame(int par1)
     {
         super(par1);
@@ -51,7 +51,7 @@ public class ItemFrame extends ItemBlock
     {
         return super.getUnlocalizedName() + "." + unlocalizedName[stack.getItemDamage()];
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)

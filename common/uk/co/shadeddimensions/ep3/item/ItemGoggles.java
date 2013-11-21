@@ -12,7 +12,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 public class ItemGoggles extends ItemArmor
 {
     Icon icon;
-    
+
     public ItemGoggles(int id, String name)
     {
         super(id, EnumArmorMaterial.CLOTH, RenderingRegistry.addNewArmourRendererPrefix("epGoggles"), 0);
@@ -37,7 +37,7 @@ public class ItemGoggles extends ItemArmor
     {
         icon = iconRegister.registerIcon("enhancedportals:goggles");
     }
-    
+
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
     {

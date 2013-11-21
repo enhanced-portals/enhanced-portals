@@ -1,21 +1,21 @@
 package uk.co.shadeddimensions.ep3.container;
 
-import cofh.gui.slot.SlotEnergy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
+import cofh.gui.slot.SlotEnergy;
 
 public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPortals
 {
     private int lastPower, lastPortals, lastInstability, lastPowerState;
-    
+
     public ContainerDimensionalBridgeStabilizer(TileStabilizerMain t, EntityPlayer player)
     {
         super(t);
-        
+
         addSlotToContainer(new SlotEnergy(t, 0, 152, 58));
-        
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -35,17 +35,17 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     {
         return ((TileStabilizerMain) tile).isUseableByPlayer(entityplayer);
     }
-    
+
     @Override
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
         int currentPower = ((TileStabilizerMain) tile).getEnergyStored(null), currentPortals = ((TileStabilizerMain) tile).getActiveConnections(), currentInstability = ((TileStabilizerMain) tile).instability, currentPowerState = ((TileStabilizerMain) tile).powerState;
-        
+
         for (int i = 0; i < crafters.size(); i++)
         {
             ICrafting icrafting = (ICrafting) crafters.get(i);
-            
+
             if (lastPower != currentPower)
             {
                 icrafting.sendProgressBarUpdate(this, 0, currentPower);
@@ -63,13 +63,13 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
                 icrafting.sendProgressBarUpdate(this, 3, currentPowerState);
             }
         }
-        
+
         lastPower = currentPower;
         lastPortals = currentPortals;
         lastInstability = currentInstability;
         lastPowerState = currentPowerState;
     }
-    
+
     @Override
     public void updateProgressBar(int par1, int par2)
     {

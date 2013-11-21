@@ -18,7 +18,7 @@ public class BlockDecoration extends Block
 {
     public static final int BLOCK_TYPES = 2;
     ConnectedTextures[] connectedTextures;
-    
+
     public BlockDecoration(int par1, String name)
     {
         super(par1, Material.rock);
@@ -34,13 +34,13 @@ public class BlockDecoration extends Block
         int meta = blockAccess.getBlockMetadata(x, y, z);
         return meta == 0 ? connectedTextures[0].getIconForFace(blockAccess, x, y, z, face) : meta == 1 ? connectedTextures[1].getIconForFace(blockAccess, x, y, z, face) : null;
     }
-    
+
     @Override
     public Icon getIcon(int side, int meta)
     {
         return meta == 0 ? connectedTextures[0].getNormalIcon() : meta == 1 ? connectedTextures[1].getNormalIcon() : null;
     }
-    
+
     @Override
     public void registerIcons(IconRegister register)
     {
@@ -48,13 +48,13 @@ public class BlockDecoration extends Block
         connectedTextures[0] = new ConnectedTextures(BlockFrame.connectedTextures, blockID, 0);
         connectedTextures[1] = new ConnectedTextures(BlockStabilizer.connectedTextures, blockID, 1);
     }
-    
+
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         return new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z));
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void getSubBlocks(int par1, CreativeTabs creativeTab, List list)
@@ -64,7 +64,7 @@ public class BlockDecoration extends Block
             list.add(new ItemStack(blockID, 1, i));
         }
     }
-    
+
     @Override
     public int damageDropped(int par1)
     {

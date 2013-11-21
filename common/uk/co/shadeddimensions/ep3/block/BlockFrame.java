@@ -26,15 +26,9 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
 
 public class BlockFrame extends BlockEnhancedPortals
-{    
-    public static int PORTAL_CONTROLLER = 1,
-               REDSTONE_INTERFACE = 2,
-               NETWORK_INTERFACE = 3,
-               DIALLING_DEVICE = 4,
-               BIOMETRIC_IDENTIFIER = 5,
-               MODULE_MANIPULATOR = 6,
-               FRAME_TYPES = 7;
-    
+{
+    public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, FRAME_TYPES = 7;
+
     public static Icon[] overlayIcons;
     static ConnectedTextures connectedTextures;
 
@@ -118,7 +112,7 @@ public class BlockFrame extends BlockEnhancedPortals
     {
         return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
     }
-    
+
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
@@ -163,12 +157,12 @@ public class BlockFrame extends BlockEnhancedPortals
     public void registerIcons(IconRegister register)
     {
         overlayIcons = new Icon[FRAME_TYPES];
-        
+
         for (int i = 0; i < overlayIcons.length; i++)
         {
             overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + (i + 1));
         }
-        
+
         connectedTextures.registerIcons(register);
     }
 
@@ -177,33 +171,33 @@ public class BlockFrame extends BlockEnhancedPortals
     {
         return false;
     }
-    
+
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int par2, int par3, int par4, int par5)
     {
         return blockAccess.getBlockId(par2, par3, par4) == blockID ? false : super.shouldSideBeRendered(blockAccess, par2, par3, par4, par5);
     }
-    
+
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
         TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
-        
+
         if (tile != null && tile instanceof TilePortalPart)
         {
             TilePortalController controller = ((TilePortalPart) tile).getPortalController();
-            
+
             if (controller != null)
             {
                 TileModuleManipulator m = controller.blockManager.getModuleManipulator(par1World);
-                
+
                 if (m != null)
                 {
                     return m.isFrameGhost() ? par1World.getBlockId(par2, par3 + 1, par4) != CommonProxy.blockPortal.blockID ? null : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4) : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
                 }
             }
         }
-        
+
         return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 }

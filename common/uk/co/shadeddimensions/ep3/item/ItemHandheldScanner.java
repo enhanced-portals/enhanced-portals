@@ -20,7 +20,7 @@ import uk.co.shadeddimensions.ep3.util.EntityData;
 import cofh.api.energy.ItemEnergyContainer;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
-{    
+{
     public ItemHandheldScanner(int par1, String name)
     {
         super(par1, 2000, 250, 250);
@@ -160,14 +160,14 @@ public class ItemHandheldScanner extends ItemEnergyContainer
                         }
                         else
                         {
-                            NBTTagList list = itemStack.getTagCompound().getTagList("scanned");                        
+                            NBTTagList list = itemStack.getTagCompound().getTagList("scanned");
                             ItemStack s = scanner.scannerInventory.getStackInSlot(1);
                             NBTTagCompound t = s.getTagCompound();
                             NBTTagList l = t.getTagList("entities");
 
                             for (int i = 0; i < list.tagCount(); i++)
                             {
-                                l.appendTag((NBTTagCompound) list.tagAt(i));
+                                l.appendTag(list.tagAt(i));
                             }
 
                             t.setTag("entities", l);
@@ -184,14 +184,14 @@ public class ItemHandheldScanner extends ItemEnergyContainer
                     }
                     else if (scanner.scannerInventory.getStackInSlot(0) == null && scanner.scannerInventory.getStackInSlot(1) != null && drainPower(itemStack))
                     {
-                        NBTTagList list = itemStack.getTagCompound().getTagList("scanned");                        
+                        NBTTagList list = itemStack.getTagCompound().getTagList("scanned");
                         ItemStack s = scanner.scannerInventory.getStackInSlot(1);
                         NBTTagCompound t = s.getTagCompound();
                         NBTTagList l = t.getTagList("entities");
 
                         for (int i = 0; i < list.tagCount(); i++)
                         {
-                            l.appendTag((NBTTagCompound) list.tagAt(i));
+                            l.appendTag(list.tagAt(i));
                         }
 
                         t.setTag("entities", l);

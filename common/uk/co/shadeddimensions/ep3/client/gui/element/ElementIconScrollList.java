@@ -33,7 +33,7 @@ public class ElementIconScrollList extends ElementBase
         initialClickY = -2f;
         top = gui.getGuiTop() + posY;
         left = gui.getGuiLeft() + posX;
-        elementsPerRow = sizeX / (getEntrySize() + (getEntrySpacing() * 2));
+        elementsPerRow = sizeX / (getEntrySize() + getEntrySpacing() * 2);
         actualSelected = DEFAULT_SELECTION;
         texture = t;
         list = theList;
@@ -59,10 +59,9 @@ public class ElementIconScrollList extends ElementBase
         {
             if (isElementVisible(i))
             {
-                int row = (i / elementsPerRow) * (getEntrySize() + getEntrySpacing()),
-                        col = (i % elementsPerRow) * (getEntrySize() + getEntrySpacing());
+                int row = i / elementsPerRow * (getEntrySize() + getEntrySpacing()), col = i % elementsPerRow * (getEntrySize() + getEntrySpacing());
 
-                drawElement(i, left + col + getEntrySpacing(), top + row - (int)scrolled + 1, actualSelected == i, mouseX, mouseY);
+                drawElement(i, left + col + getEntrySpacing(), top + row - (int) scrolled + 1, actualSelected == i, mouseX, mouseY);
             }
         }
 
@@ -77,13 +76,13 @@ public class ElementIconScrollList extends ElementBase
                     int k1 = mouseY - top + (int) scrolled;
                     int row = k1 / (getEntrySize() + getEntrySpacing());
 
-                    if (row >= 0 && row <= (getElementCount() / elementsPerRow))
+                    if (row >= 0 && row <= getElementCount() / elementsPerRow)
                     {
                         int entry = (mouseX - left) / (getEntrySize() + getEntrySpacing());
 
                         if (entry < elementsPerRow)
                         {
-                            entry = (row * elementsPerRow) + entry;
+                            entry = row * elementsPerRow + entry;
 
                             if (entry < getElementCount())
                             {
@@ -101,7 +100,7 @@ public class ElementIconScrollList extends ElementBase
 
                     if (flag)
                     {
-                        initialClickY = (float) mouseY;
+                        initialClickY = mouseY;
                     }
                     else
                     {
@@ -115,8 +114,8 @@ public class ElementIconScrollList extends ElementBase
             }
             else if (initialClickY >= 0f)
             {
-                scrolled -= (float) mouseY - initialClickY;
-                initialClickY = (float) mouseY;
+                scrolled -= mouseY - initialClickY;
+                initialClickY = mouseY;
             }
         }
         else if (Mouse.isButtonDown(1) && actualSelected > DEFAULT_SELECTION && mouseY >= top && mouseY <= top + sizeY && mouseX >= left && mouseX <= left + sizeX)
@@ -199,7 +198,7 @@ public class ElementIconScrollList extends ElementBase
 
     protected void restrictScrollAmount()
     {
-        int i = (getElementCount() / elementsPerRow) * (getEntrySize() + getEntrySpacing());
+        int i = getElementCount() / elementsPerRow * (getEntrySize() + getEntrySpacing());
 
         if (i < 0)
         {
@@ -219,17 +218,17 @@ public class ElementIconScrollList extends ElementBase
 
     protected int getElementZCoord(int i)
     {
-        return ((i % elementsPerRow) * (getEntrySize() + getEntrySpacing())) + getEntrySpacing();
+        return i % elementsPerRow * (getEntrySize() + getEntrySpacing()) + getEntrySpacing();
     }
 
     protected int getElementYCoord(int i)
     {
-        return (int) (getRealElementYCoord(i) - scrolled);        
+        return (int) (getRealElementYCoord(i) - scrolled);
     }
 
     protected int getRealElementYCoord(int i)
-    {        
-        return (i / elementsPerRow) * (getEntrySize() + getEntrySpacing());
+    {
+        return i / elementsPerRow * (getEntrySize() + getEntrySpacing());
     }
 
     protected boolean isElementVisible(int i)

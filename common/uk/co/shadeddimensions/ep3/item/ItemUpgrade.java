@@ -75,7 +75,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
         {
             return false;
         }
-        
+
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         int blockMeta = stack.getItemDamage() + 2;
 
@@ -118,7 +118,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
                         {
                             player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
                         }
-                        
+
                         return false;
                     }
                     else if (controller.blockManager.getHasNetworkInterface() && (blockMeta == BlockFrame.DIALLING_DEVICE || blockMeta == BlockFrame.NETWORK_INTERFACE))
@@ -131,7 +131,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
                         {
                             player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
                         }
-                        
+
                         return false;
                     }
                     else if (controller.blockManager.getHasModuleManipulator() && blockMeta == BlockFrame.MODULE_MANIPULATOR)
@@ -145,7 +145,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
                     world.setBlock(x, y, z, CommonProxy.blockFrame.blockID, blockMeta, 2);
                     decrementStack(stack);
                     TilePortalPart t = (TilePortalPart) world.getBlockTileEntity(x, y, z);
-                    
+
                     if (t instanceof TileRedstoneInterface)
                     {
                         controller.blockManager.addRedstoneInterface(t.getChunkCoordinates());
@@ -166,7 +166,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
                     {
                         controller.blockManager.setModuleManipulator(t.getChunkCoordinates());
                     }
-                    
+
                     t.portalController = controller.getChunkCoordinates();
                     CommonProxy.sendUpdatePacketToAllAround(t);
                     CommonProxy.sendUpdatePacketToAllAround(controller);

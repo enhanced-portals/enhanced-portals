@@ -25,7 +25,7 @@ public class GeneralUtils
 
         return t.getInteger("Y") == -1 ? null : new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
     }
-    
+
     public static WorldCoordinates loadWorldCoord(NBTTagCompound tagCompound, String string)
     {
         if (tagCompound.getTag(string) == null)
@@ -53,7 +53,7 @@ public class GeneralUtils
 
         return list;
     }
-    
+
     public static ArrayList<WorldCoordinates> loadWorldCoordList(NBTTagCompound tag, String name)
     {
         ArrayList<WorldCoordinates> list = new ArrayList<WorldCoordinates>();
@@ -89,7 +89,7 @@ public class GeneralUtils
 
         tagCompound.setTag(string, t);
     }
-    
+
     public static void saveWorldCoord(NBTTagCompound tagCompound, WorldCoordinates c, String string)
     {
         if (c == null)
@@ -122,7 +122,7 @@ public class GeneralUtils
 
         tag.setTag(name, tagList);
     }
-    
+
     public static void saveWorldCoordList(NBTTagCompound tag, List<WorldCoordinates> list, String name)
     {
         NBTTagList tagList = new NBTTagList();
@@ -140,7 +140,7 @@ public class GeneralUtils
 
         tag.setTag(name, tagList);
     }
-    
+
     public static void writeChunkCoord(DataOutputStream stream, ChunkCoordinates c) throws IOException
     {
         if (c == null)
@@ -156,19 +156,19 @@ public class GeneralUtils
             stream.writeInt(c.posZ);
         }
     }
-    
+
     public static ChunkCoordinates readChunkCoord(DataInputStream stream) throws IOException
     {
         ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
-                
+
         return c.posY == -1 ? null : c;
     }
-    
+
     public static void writeGlyphIdentifier(DataOutputStream stream, GlyphIdentifier i) throws IOException
     {
         stream.writeUTF(i == null ? "" : i.getGlyphString());
     }
-    
+
     public static GlyphIdentifier readGlyphIdentifier(DataInputStream stream) throws IOException
     {
         return new GlyphIdentifier(stream.readUTF());

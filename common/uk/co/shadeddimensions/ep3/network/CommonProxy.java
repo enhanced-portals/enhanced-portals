@@ -66,7 +66,7 @@ public class CommonProxy
     public static BlockDecoration blockDecoration;
 
     public static ItemWrench itemWrench;
-    public static ItemPaintbrush itemPaintbrush;    
+    public static ItemPaintbrush itemPaintbrush;
     public static ItemGoggles itemGoggles;
     public static ItemPortalModule itemPortalModule;
     public static ItemLocationCard itemLocationCard;
@@ -268,7 +268,7 @@ public class CommonProxy
     }
 
     public static void openGui(EntityPlayer player, int id, TileEnhancedPortals tile)
-    {        
+    {
         player.openGui(EnhancedPortals.instance, id, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
     }
 
@@ -279,7 +279,7 @@ public class CommonProxy
         CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { " D ", "IQI", " I ", 'D', Item.diamond, 'Q', new ItemStack(blockDecoration, 1, 0), 'I', Item.ingotIron });
         CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.PORTAL_CONTROLLER), new Object[] { "IDI", " F ", "IEI", 'F', new ItemStack(blockFrame, 1, 0), 'I', Item.ingotIron, 'E', Item.enderPearl, 'D', Item.diamond });
         CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(blockFrame, 1, 0), 'R', Item.redstone });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'E',Item.enderPearl });
+        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'E', Item.enderPearl });
         CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.DIALLING_DEVICE), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), 'E', Item.enderPearl, 'D', Item.diamond });
         CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw });
         CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked });
@@ -287,21 +287,21 @@ public class CommonProxy
 
         // In-Place Upgrades
         CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', Item.paper, 'R', Item.redstone });
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', Item.paper, 'Z', Item.blazePowder, 'E',Item.enderPearl });
+        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', Item.paper, 'Z', Item.blazePowder, 'E', Item.enderPearl });
         CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 2), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(itemInPlaceUpgrade, 1, 1), 'E', Item.enderPearl, 'D', Item.diamond });
         CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw });
         CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked });
         CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 4), new Object[] { " D ", "EFE", " U ", 'F', Item.paper, 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule });
-        
+
         // Stabilizer
         CraftingManager.getInstance().addRecipe(new ItemStack(blockStabilizer, 6), new Object[] { "QPQ", "EDE", "QPQ", 'D', Block.blockDiamond, 'E', Item.emerald, 'Q', Block.blockNetherQuartz, 'P', Item.enderPearl });
-        
+
         // Wrench
         CraftingManager.getInstance().addRecipe(new ItemStack(itemWrench), new Object[] { "Q Q", "III", " I ", 'I', Item.ingotIron, 'Q', Item.netherQuartz });
-        
+
         // Location Card
         CraftingManager.getInstance().addRecipe(new ItemStack(itemLocationCard, 16), new Object[] { "GPG", "PPP", "GPG", 'G', Item.ingotGold, 'P', Item.paper });
-    
+
         // Decoration
         CraftingManager.getInstance().addRecipe(new ItemStack(blockDecoration, 8, 0), new Object[] { "SQS", "QQQ", "SQS", 'S', Block.stone, 'Q', Block.blockNetherQuartz });
     }

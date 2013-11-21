@@ -26,40 +26,40 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class EntityManager
 {
-static final int PLAYER_COOLDOWN_RATE = 10;
-    
+    static final int PLAYER_COOLDOWN_RATE = 10;
+
     private static ChunkCoordinates getActualExitLocation(Entity entity, TilePortalController controller)
     {
         int entityHeight = Math.round(entity.height), entityWidth = Math.round(entity.width);
         boolean horizontal = controller.portalType == 3;
 
         forloop:
-            for (ChunkCoordinates c : controller.blockManager.getPortals())
+        for (ChunkCoordinates c : controller.blockManager.getPortals())
+        {
+            for (int i = 0; i < (horizontal ? Math.round(entityWidth / 2) : entityHeight); i++)
             {
-                for (int i = 0; i < (horizontal ? Math.round(entityWidth / 2) : entityHeight); i++)
+                if (horizontal)
                 {
-                    if (horizontal)
+                    if (controller.worldObj.getBlockId(c.posX + i, c.posY, c.posZ) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX - i, c.posY, c.posZ) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX, c.posY, c.posZ + i) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX, c.posY, c.posZ + i) != CommonProxy.blockPortal.blockID)
                     {
-                        if (controller.worldObj.getBlockId(c.posX + i, c.posY, c.posZ) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX - i, c.posY, c.posZ) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX, c.posY, c.posZ + i) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX, c.posY, c.posZ + i) != CommonProxy.blockPortal.blockID)
-                        {
-                            continue forloop;
-                        }
-                    }
-                    else
-                    {
-                        if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
-                        {
-                            continue forloop;
-                        }
+                        continue forloop;
                     }
                 }
-
-                return c;
+                else
+                {
+                    if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
+                    {
+                        continue forloop;
+                    }
+                }
             }
+
+            return c;
+        }
 
         return null;
     }
-    
+
     private static void handleMomentum(Entity entity, int touchedPortalType, int exitPortalType, float exitYaw, boolean keepMomentum)
     {
         if (!keepMomentum)
@@ -131,9 +131,9 @@ static final int PLAYER_COOLDOWN_RATE = 10;
 
         entity.velocityChanged = true;
     }
-    
+
     private static float getRotation(Entity entity, TilePortalController controller, ChunkCoordinates loc)
-    {        
+    {
         if (controller.portalType == 1)
         {
             if (controller.worldObj.isBlockOpaqueCube(loc.posX, loc.posY, loc.posZ + 1))
@@ -155,7 +155,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
 
         return entity.rotationYaw;
     }
-    
+
     public static boolean isEntityFitForTravel(Entity entity)
     {
         return entity != null && entity.timeUntilPortal == 0;
@@ -163,7 +163,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
 
     public static void setEntityPortalCooldown(Entity entity)
     {
-        if (CommonProxy.fasterPortalCooldown || (entity instanceof EntityPlayer || entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse))
+        if (CommonProxy.fasterPortalCooldown || entity instanceof EntityPlayer || entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse)
         {
             entity.timeUntilPortal = PLAYER_COOLDOWN_RATE;
         }
@@ -172,7 +172,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             entity.timeUntilPortal = 300; // Reduced to 300 ticks from 900.
         }
     }
-    
+
     public static void transferEntity(Entity entity, GlyphIdentifier entryID, GlyphIdentifier exitID, int portalType)
     {
         TilePortalController controllerEntry = CommonProxy.networkManager.getPortalController(entryID), controllerDest = CommonProxy.networkManager.getPortalController(exitID);
@@ -217,36 +217,36 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             }
 
             CommonProxy.logger.fine(String.format("Found a suitable exit location for Entity (%s): %s, %s, %s", entity.getEntityName(), exit.posX, exit.posY, exit.posZ));
-            
+
             while (entity.ridingEntity != null)
             {
                 entity = entity.ridingEntity;
             }
-            
+
             transferEntityWithRider(entity, exit.posX + 0.5, exit.posY, exit.posZ + 0.5, getRotation(entity, controllerDest, exit), (WorldServer) controllerDest.worldObj, portalType, controllerDest.portalType, keepMomentum);
         }
     }
-    
+
     public static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         Entity rider = entity.riddenByEntity;
-        
+
         if (rider != null)
         {
             rider.mountEntity(null);
             rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
         }
-        
+
         entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
-        
+
         if (rider != null)
         {
             rider.mountEntity(entity);
         }
-        
+
         return entity;
     }
-    
+
     public static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
@@ -258,7 +258,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum);
         }
     }
-    
+
     public static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         if (entity == null)
@@ -285,10 +285,10 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             WorldServer world = (WorldServer) entity.worldObj;
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
-            
+
             int chunkX = entity.chunkCoordX;
             int chunkZ = entity.chunkCoordZ;
-            
+
             if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
             {
                 world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
@@ -302,7 +302,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             if (newEntity != null)
             {
                 handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
-                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);                
+                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
                 newEntity.forceSpawn = true;
                 world.spawnEntityInWorld(newEntity);
                 newEntity.setWorld(world);
@@ -333,7 +333,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
 
             player.closeScreen();
             player.dimension = enteringWorld.provider.dimensionId;
-            player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte)player.worldObj.difficultySetting, enteringWorld.getWorldInfo().getTerrainType(), enteringWorld.getHeight(), player.theItemInWorldManager.getGameType()));
+            player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, enteringWorld.getWorldInfo().getTerrainType(), enteringWorld.getHeight(), player.theItemInWorldManager.getGameType()));
 
             exitingWorld.removePlayerEntityDangerously(player);
             player.isDead = false;
@@ -350,7 +350,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             config.updateTimeAndWeatherForPlayer(player, enteringWorld);
             config.syncPlayerInventory(player);
 
-            Iterator potion = player.getActivePotionEffects().iterator();            
+            Iterator potion = player.getActivePotionEffects().iterator();
             while (potion.hasNext())
             {
                 player.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(player.entityId, (PotionEffect) potion.next()));
@@ -366,10 +366,10 @@ static final int PLAYER_COOLDOWN_RATE = 10;
         {
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
-            
+
             int chunkX = entity.chunkCoordX;
             int chunkZ = entity.chunkCoordZ;
-            
+
             if (entity.addedToChunk && exitingWorld.getChunkProvider().chunkExists(chunkX, chunkZ))
             {
                 exitingWorld.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
@@ -383,7 +383,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
             if (newEntity != null)
             {
                 handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
-                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);                
+                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
                 newEntity.forceSpawn = true;
                 enteringWorld.spawnEntityInWorld(newEntity);
                 newEntity.setWorld(enteringWorld);
@@ -392,7 +392,7 @@ static final int PLAYER_COOLDOWN_RATE = 10;
 
             exitingWorld.resetUpdateEntityTick();
             enteringWorld.resetUpdateEntityTick();
-            
+
             return newEntity;
         }
     }
@@ -400,6 +400,6 @@ static final int PLAYER_COOLDOWN_RATE = 10;
     public static void teleportEntityToDimension(Entity par1Entity)
     {
         // TODO Auto-generated method stub
-        
+
     }
 }

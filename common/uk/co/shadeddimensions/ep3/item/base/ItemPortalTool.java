@@ -11,7 +11,7 @@ public class ItemPortalTool extends ItemEnhancedPortals
         maxStackSize = 1;
         setMaxDamage(0);
     }
-    
+
     @Override
     public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6)
     {

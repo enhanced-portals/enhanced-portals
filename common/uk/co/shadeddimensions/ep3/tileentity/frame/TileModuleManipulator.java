@@ -76,7 +76,7 @@ public class TileModuleManipulator extends TilePortalPart
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return (stack != null && stack.getItem() instanceof IPortalModule) && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
+        return stack != null && stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
     }
 
     public void particleCreated(PortalFX portalFX)
@@ -142,33 +142,33 @@ public class TileModuleManipulator extends TilePortalPart
 
         tagCompound.setTag("Inventory", list);
     }
-    
+
     public IPortalModule[] getInstalledUpgrades()
     {
         IPortalModule[] modules = new IPortalModule[getSizeInventory()];
-        
+
         for (int i = 0; i < getSizeInventory(); i++)
         {
             ItemStack s = getStackInSlot(i);
-            
+
             if (s != null)
             {
                 modules[i] = (IPortalModule) s.getItem();
             }
         }
-        
+
         return modules;
     }
-    
+
     public boolean installUpgrade(ItemStack stack)
     {
         if (stack == null || !(stack.getItem() instanceof IPortalModule))
         {
             return false;
         }
-        
-        IPortalModule pModule = ((IPortalModule) stack.getItem());
-        
+
+        IPortalModule pModule = (IPortalModule) stack.getItem();
+
         if (!hasModule(pModule.getID(stack)) && pModule.canInstallUpgrade(this, getInstalledUpgrades(), stack))
         {
             for (int i = 0; i < getSizeInventory(); i++)
@@ -177,22 +177,22 @@ public class TileModuleManipulator extends TilePortalPart
                 {
                     ItemStack s = stack.copy();
                     s.stackSize = 1;
-                    
+
                     setInventorySlotContents(i, s);
                     CommonProxy.sendUpdatePacketToAllAround(this);
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
-        
+
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         super.fillPacket(stream);
-        
+
         for (int i = 0; i < getSizeInventory(); i++)
         {
             if (getStackInSlot(i) != null)
@@ -207,21 +207,22 @@ public class TileModuleManipulator extends TilePortalPart
             }
         }
     }
-    
+
+    @Override
     public void usePacket(java.io.DataInputStream stream) throws IOException
     {
         super.usePacket(stream);
-        
+
         for (int i = 0; i < getSizeInventory(); i++)
         {
             int id = stream.readInt(), meta = stream.readInt();
-            
+
             if (id != 0)
             {
                 setInventorySlotContents(i, new ItemStack(id, 1, meta));
             }
         }
-        
+
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
@@ -240,7 +241,7 @@ public class TileModuleManipulator extends TilePortalPart
 
         return false;
     }
-    
+
     public boolean isPortalInvisible()
     {
         for (ItemStack i : inventory)
@@ -269,7 +270,7 @@ public class TileModuleManipulator extends TilePortalPart
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -285,7 +286,7 @@ public class TileModuleManipulator extends TilePortalPart
                 }
             }
         }
-        
+
         return true;
     }
 

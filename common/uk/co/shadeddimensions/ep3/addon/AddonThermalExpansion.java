@@ -11,15 +11,15 @@ public class AddonThermalExpansion extends Addon
     @Override
     public void preInit(FMLPreInitializationEvent event)
     {
-        
+
     }
-    
+
     @Override
     public void init(FMLInitializationEvent event)
     {
-        
+
     }
-    
+
     @Override
     public void postInit(FMLPostInitializationEvent event)
     {

@@ -26,7 +26,7 @@ public class ConnectedTextures
         blockID = blockId;
         meta = metadata;
     }
-    
+
     public ConnectedTextures(ConnectedTextures connectedTextures, int b, int m)
     {
         textures = connectedTextures.textures;
@@ -39,7 +39,7 @@ public class ConnectedTextures
     {
         blockID = id;
     }
-    
+
     public void setMetadata(int metadata)
     {
         meta = metadata;

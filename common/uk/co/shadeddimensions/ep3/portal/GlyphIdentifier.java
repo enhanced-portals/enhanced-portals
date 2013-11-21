@@ -16,11 +16,11 @@ public class GlyphIdentifier
     {
         glyphs = new ArrayList<Integer>();
     }
-    
+
     public GlyphIdentifier(GlyphIdentifier i)
     {
         glyphs = new ArrayList<Integer>(i.glyphs.size());
-        
+
         for (int I : i.glyphs)
         {
             glyphs.add(I);
@@ -31,10 +31,10 @@ public class GlyphIdentifier
     {
         this();
 
-        for (int i = 0; i < Glyphs.length; i++)
+        for (int glyph : Glyphs)
         {
-            glyphs.add(Glyphs[i]);
-        }        
+            glyphs.add(glyph);
+        }
     }
 
     public GlyphIdentifier(String s)
@@ -77,9 +77,9 @@ public class GlyphIdentifier
             {
                 String[] sGlyphs = str.split(GLYPH_SEPERATOR);
 
-                for (int i = 0; i < sGlyphs.length; i++)
+                for (String sGlyph : sGlyphs)
                 {
-                    Glyphs.add(Integer.parseInt(sGlyphs[i]));
+                    Glyphs.add(Integer.parseInt(sGlyph));
                 }
             }
             else
@@ -109,7 +109,7 @@ public class GlyphIdentifier
         {
             s += GLYPH_SEPERATOR + i;
         }
-        
+
         return s.length() > 0 ? s.substring(GLYPH_SEPERATOR.length()) : "";
     }
 
@@ -139,7 +139,7 @@ public class GlyphIdentifier
         if (obj instanceof GlyphIdentifier)
         {
             GlyphIdentifier id = (GlyphIdentifier) obj;
-                        
+
             if (size() == id.size())
             {
                 for (int i = 0; i < size(); i++)
@@ -149,7 +149,7 @@ public class GlyphIdentifier
                         return false;
                     }
                 }
-                
+
                 return true;
             }
         }

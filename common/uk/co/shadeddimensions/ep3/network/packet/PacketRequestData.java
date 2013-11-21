@@ -14,12 +14,12 @@ import cpw.mods.fml.common.network.Player;
 public class PacketRequestData extends PacketEnhancedPortals
 {
     int x, y, z;
-    
+
     public PacketRequestData()
     {
-        
+
     }
-    
+
     public PacketRequestData(TileEnhancedPortals tile)
     {
         x = tile.xCoord;
@@ -27,7 +27,7 @@ public class PacketRequestData extends PacketEnhancedPortals
         z = tile.zCoord;
         isChunkDataPacket = true;
     }
-    
+
     @Override
     public void readPacketData(DataInputStream stream) throws IOException
     {
@@ -48,7 +48,7 @@ public class PacketRequestData extends PacketEnhancedPortals
     public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
-        
+
         if (tile != null && tile instanceof TileEnhancedPortals)
         {
             CommonProxy.sendUpdatePacketToPlayer((TileEnhancedPortals) tile, (EntityPlayer) player);

@@ -39,7 +39,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
         {
             return;
         }
-        
+
         TilePortalController controller = getPortalController();
 
         if (controller != null)
@@ -53,7 +53,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     {
         for (int i = 0; i < 6; i++)
         {
-            WorldCoordinates c = getWorldCoordinates().offset(ForgeDirection.getOrientation(i));            
+            WorldCoordinates c = getWorldCoordinates().offset(ForgeDirection.getOrientation(i));
             TileEntity tile = c.getBlockTileEntity();
 
             if (tile != null && tile instanceof TilePortalPart)
@@ -70,7 +70,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
         {
             return false;
         }
-        
+
         ItemStack s = player.inventory.getCurrentItem();
 
         if (s != null && s.getItem() instanceof ItemSynchronizer)
@@ -78,7 +78,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
             return false;
         }
 
-        if ((s != null && s.getItem() instanceof ItemPortalTool) || this instanceof TileDiallingDevice)
+        if (s != null && s.getItem() instanceof ItemPortalTool || this instanceof TileDiallingDevice)
         {
             TilePortalController controller = getPortalController();
 

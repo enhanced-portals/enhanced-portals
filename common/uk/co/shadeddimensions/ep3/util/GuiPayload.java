@@ -10,12 +10,12 @@ import net.minecraft.nbt.NBTTagCompound;
 public class GuiPayload
 {
     public NBTTagCompound data;
-    
+
     public GuiPayload()
     {
         data = new NBTTagCompound();
     }
-    
+
     public GuiPayload(DataInputStream s) throws IOException
     {
         short length = s.readShort();
@@ -23,12 +23,12 @@ public class GuiPayload
         s.readFully(compressed);
         data = CompressedStreamTools.decompress(compressed);
     }
-    
+
     public GuiPayload(NBTTagCompound tag)
     {
         data = tag;
     }
-    
+
     public void writeData(NBTTagCompound tag)
     {
         if (data != null)
@@ -36,12 +36,12 @@ public class GuiPayload
             tag.setTag("guiPayload", data);
         }
     }
-    
+
     public void readData(NBTTagCompound tag)
     {
         data = tag.hasKey("guiPayload") ? (NBTTagCompound) tag.getTag("guiPayload") : null;
     }
-    
+
     public void write(DataOutputStream s) throws IOException
     {
         byte[] compressed = CompressedStreamTools.compress(data);

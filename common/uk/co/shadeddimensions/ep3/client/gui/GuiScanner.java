@@ -14,7 +14,7 @@ import cofh.gui.element.ElementEnergyStored;
 public class GuiScanner extends GuiBase
 {
     ItemStack stack;
-    
+
     public GuiScanner(InventoryScanner scanner, EntityPlayer player, ItemStack s)
     {
         super(new ContainerScanner(scanner, player, s), new ResourceLocation("enhancedportals", "textures/gui/scanner.png"));
@@ -30,12 +30,12 @@ public class GuiScanner extends GuiBase
 
         super.drawGuiContainerForegroundLayer(x, y);
     }
-    
+
     @Override
     public void initGui()
     {
         super.initGui();
-        
+
         EnergyStorage storage = new EnergyStorage(2000, 250, 250);
         storage.setEnergyStored(((ItemEnergyContainer) stack.getItem()).getEnergyStored(stack));
         addElement(new ElementEnergyStored(this, xSize - 22, 22, storage));
