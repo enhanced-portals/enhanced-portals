@@ -2,9 +2,8 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import cofh.gui.GuiBase;
 
@@ -24,9 +23,9 @@ public class GuiModuleManipulator extends GuiBase
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
 
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.upgrade.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.upgrade.name")) / 2, -13, 0xFFFFFF);
+        fontRenderer.drawStringWithShadow(Localization.getGuiString("moduleManipulator"), xSize / 2 - fontRenderer.getStringWidth(Localization.getGuiString("moduleManipulator")) / 2, -13, 0xFFFFFF);
 
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".modules"), 7, 8, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 7, 70, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("modules"), 7, 8, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("inventory"), 7, 70, 0x404040);
     }
 }

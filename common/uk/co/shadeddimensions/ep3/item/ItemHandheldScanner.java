@@ -1,5 +1,7 @@
 package uk.co.shadeddimensions.ep3.item;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +13,7 @@ import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.EntityData;
@@ -30,6 +33,21 @@ public class ItemHandheldScanner extends ItemEnergyContainer
     public static InventoryScanner getInventory(ItemStack stack)
     {
         return new InventoryScanner(stack);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    {
+        NBTTagCompound tag = par1ItemStack.getTagCompound();
+
+        if (tag == null)
+        {
+            return;
+        }
+
+        par3List.add(String.format(Localization.getItemString("charge") + " %s / %s " + Localization.getGuiString("redstoneFluxShort"), tag.getInteger("Energy"), capacity));
+        par3List.add(String.format(Localization.getItemString("scanned") + " %s", tag.getTagList("scanned").tagCount()));
     }
 
     @Override
@@ -195,7 +213,7 @@ public class ItemHandheldScanner extends ItemEnergyContainer
             }
         }
     }
-    
+
     private boolean drainPower(ItemStack itemStack)
     {
         if (CommonProxy.redstoneFluxPowerMultiplier > 0)
@@ -210,7 +228,7 @@ public class ItemHandheldScanner extends ItemEnergyContainer
                 return true;
             }
         }
-        
+
         return true;
     }
 }

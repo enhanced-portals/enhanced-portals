@@ -265,7 +265,7 @@ public class TileStabilizerMain extends TileEnhancedPortals  implements IInvento
 
         if (inventory != null && ((IEnergyContainerItem) inventory.getItem()).getEnergyStored(inventory) > 0)
         {
-            energyStorage.receiveEnergy(((IEnergyContainerItem) inventory.getItem()).extractEnergy(inventory, 100, false), false);
+            energyStorage.receiveEnergy(((IEnergyContainerItem) inventory.getItem()).extractEnergy(inventory, 10000, false), false);
         }
 
         tickTimer++;

@@ -8,6 +8,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -57,7 +58,7 @@ public class ItemSynchronizer extends ItemPortalTool
             }
             else if (!controller.isPortalActive)
             {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText("ep3.chat.error.portalIsNotActive"));
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("portalNotActive")));
                 return false;
             }
 

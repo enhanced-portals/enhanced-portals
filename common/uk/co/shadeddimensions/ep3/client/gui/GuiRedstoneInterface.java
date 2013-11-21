@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
@@ -32,17 +33,10 @@ public class GuiRedstoneInterface extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
-        super.drawGuiContainerBackgroundLayer(f, i, j);
-    }
-
-    @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        super.drawGuiContainerForegroundLayer(par1, par2);
-
-        fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name"), xSize / 2 - fontRenderer.getStringWidth(StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.redstone.name")) / 2, -13, 0xFFFFFF);
+        super.drawGuiContainerForegroundLayer(par1, par2);        
+        drawCenteredString(fontRenderer, Localization.getGuiString("redstoneIdentifier"), xSize / 2, -13, 0xFFFFFF);
     }
 
     @SuppressWarnings("unchecked")
@@ -56,7 +50,7 @@ public class GuiRedstoneInterface extends GuiBase
     }
 
     @Override
-    public void updateScreen()
+    public void updateScreen() // TODO: Rewrite when RI has been rewritten
     {
         super.updateScreen();
 

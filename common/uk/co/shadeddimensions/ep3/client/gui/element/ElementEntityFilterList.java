@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.client.gui.IElementHandler;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GuiUtils;
@@ -65,13 +66,13 @@ public class ElementEntityFilterList extends ElementDialDeviceScrollList
         
         if (mouseOverMain)
         {
-            tooltip.add(data.isInverted ? EnumChatFormatting.RED + "Disallowing" : EnumChatFormatting.GREEN + "Allowing");
-            tooltip.add(data.shouldCheckClass() ? "Anything of the type:" : "Anything called:");
+            tooltip.add(data.isInverted ? EnumChatFormatting.RED + Localization.getGuiString("disallowing") : EnumChatFormatting.GREEN + Localization.getGuiString("allowing"));
+            tooltip.add(data.shouldCheckClass() ? Localization.getGuiString("anythingOfTheType") : Localization.getGuiString("anythingCalled"));
             tooltip.add(EnumChatFormatting.GRAY + " " + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.EntityDisplayName));
             
             if (data.shouldCheckNameAndClass())
             {
-                tooltip.add("With the type of:");
+                tooltip.add(Localization.getGuiString("withTheTypeOf"));
                 tooltip.add(EnumChatFormatting.GRAY + " " + EntityData.getClassDisplayName(data));
             }
         }
@@ -79,15 +80,15 @@ public class ElementEntityFilterList extends ElementDialDeviceScrollList
         {
             if (data.checkType == 0)
             {
-                tooltip.add("Match name");
+                tooltip.add(Localization.getGuiString("matchName"));
             }
             else if (data.checkType == 1)
             {
-                tooltip.add("Match type");
+                tooltip.add(Localization.getGuiString("matchType"));
             }
             else 
             {
-                tooltip.add("Match type and name");
+                tooltip.add(Localization.getGuiString("matchTypeAndName"));
             }
         }
     }

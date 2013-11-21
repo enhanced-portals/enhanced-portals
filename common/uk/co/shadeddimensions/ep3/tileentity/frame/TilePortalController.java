@@ -10,8 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -424,6 +426,15 @@ public class TilePortalController extends TilePortalPart
             {
                 return false;
             }
+            
+            WorldCoordinates stabilizer = ItemLocationCard.getDBSLocation(item);
+            
+            if (!(stabilizer.getBlockTileEntity() instanceof TileStabilizerMain))
+            {
+                ItemLocationCard.clearDBSLocation(item);
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("voidLinkCard")));
+                return false;
+            }
         }
 
         if (blockManager.getPortalCount() > 0 && blockManager.getDimensionalBridgeStabilizer() == null)
@@ -437,6 +448,8 @@ public class TilePortalController extends TilePortalPart
             {
                 player.inventory.mainInventory[player.inventory.currentItem] = null;
             }
+            
+            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
         }
         else
         {
@@ -445,7 +458,7 @@ public class TilePortalController extends TilePortalPart
 
             if (portalBlocks == null || portalBlocks.isEmpty() || portalType == 0)
             {
-                System.out.println("A portal could not be created at this location");
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("portalCouldNotBeCreatedHere")));
                 return false;
             }
 
@@ -453,7 +466,6 @@ public class TilePortalController extends TilePortalPart
 
             if (allBlocks == null || allBlocks.isEmpty())
             {
-                // Should have already cried about not being able to complete the portal
                 return false;
             }
 
@@ -502,10 +514,13 @@ public class TilePortalController extends TilePortalPart
                 {
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                 }
+                
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("success")));
             }
             else
             {
                 blockManager.setDimensionalBridgeStabilizer(dbs);
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
             }
         }
 

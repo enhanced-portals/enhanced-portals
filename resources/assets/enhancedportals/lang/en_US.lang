@@ -11,6 +11,14 @@ tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
 tile.ep3.decoration.frame.name=Bordered Quartz
 tile.ep3.decoration.stabilizer.name=Stabilizer
 
+# Block Misc
+ep3.block.portalFramePart=Portal Frame Part
+ep3.block.multiblockStructure=Multiblock Structure
+ep3.block.dbsSize=2x3x2 to 2x3x256
+ep3.block.eachRowAddsToTheMaximum=Each row adds to the maximum
+ep3.block.activePortalConnections=active portal connections
+ep3.block.decorativeBlock=Decorative Block
+
 # Items
 item.ep3.wrench.name=Wrench
 item.ep3.paintbrush.name=Nanobrush
@@ -19,6 +27,12 @@ item.ep3.locationCard.name=Location Card
 item.ep3.synchronizer.name=Synchronizer
 item.ep3.entityCard.name=Identification Card
 item.ep3.handheldScanner.name=Handheld Scanner
+
+# Items Misc
+ep3.item.charge=Charge:
+ep3.item.scanned=Scanned:
+ep3.item.contains=Contains:
+ep3.item.andMore=And %s more...
 
 # In-place upgrades
 item.ep3.inPlaceUpgrade.redstone.name=Redstone Interface Upgrade
@@ -50,75 +64,116 @@ item.ep3.portalModule.7.desc=Negates fall damage
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3
 
-# Gui
-gui.ep3.texture=Texture
-gui.ep3.portalTexture=Portal Texture
-gui.ep3.portalFrameTexture=Portal Frame Texture
-gui.ep3.particleTexture=Particle Texture
-gui.ep3.button.reset=Reset
-gui.ep3.button.save=Save
-gui.ep3.button.input=Input
-gui.ep3.button.output=Output
-gui.ep3.button.clear=Clear
-gui.ep3.button.random=Random
-gui.ep3.button.cancel=Cancel
-gui.ep3.colour=Colour
-gui.ep3.colour.red=Red
-gui.ep3.colour.green=Green
-gui.ep3.colour.blue=Blue
-gui.ep3.particleColour=Particle Colour
-gui.ep3.portalColour=Portal Colour
-gui.ep3.didYouKnow=Did you know...
-gui.ep3.uniqueIdentifier=Unique Identifier
-gui.ep3.glyphs=Glyphs
-gui.ep3.portalComponents=Portal Components
-gui.ep3.controller.frameBlocks=Frame Blocks
-gui.ep3.controller.redstoneControllers=Redstone Interfaces
-gui.ep3.controller.portalBlocks=Portal Blocks
-gui.ep3.controller.networkInterface=Network Interface
-gui.ep3.controller.dialDevice=Dialling Device
-gui.ep3.controller.biometric=Biometric Identifier
-gui.ep3.controller.initialized=Initialized
-gui.ep3.controller.upgrade=Module Manipulator
-gui.ep3.controller.invalid=
-gui.ep3.clickToModify=Click to modify
-gui.ep3.networkIdentifier=Network Identifier
-gui.ep3.networkInfo=Network Information
-gui.ep3.networkIdentifier.networkedPortals=Networked Portals
-gui.ep3.networkIdentifier.notSet=Not Set
-gui.ep3.modules=Modules
+# GUI Handheld Scanner
+ep3.gui.scanner=Handheld Scanner
 
-# Redstone States (Titles)
-gui.ep3.redstone.output.portalCreated=Portal Created
-gui.ep3.redstone.output.portalRemoved=Portal Removed
-gui.ep3.redstone.output.portalActive=Portal Active
-gui.ep3.redstone.output.portalInactive=Portal Inactive
-gui.ep3.redstone.output.entityTouch=Entity Touch [NI]
-gui.ep3.redstone.input.portalOnSignal=Create Portal on Signal
-gui.ep3.redstone.input.portalNoSignal=Create Portal with no Signal
-gui.ep3.redstone.input.portalOnPulse=Create Portal on Pulse
-gui.ep3.redstone.input.noPortalOnPulse=Remove Portal on Pulse
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=Dimensional Bridge Stabilizer
+ep3.gui.information=Information
+ep3.gui.activePortals=Active Portals
+ep3.gui.redstoneFluxPerSecond=RF/s
+ep3.gui.redstoneFluxShort=RF
+ep3.gui.instability=Instability
+ep3.gui.powerModeFree=Mode: Free
+ep3.gui.powerModeNormal=Mode: Normal
+ep3.gui.powerModeRisky=Mode: Risky
+ep3.gui.powerModeUnstable=Mode: Unstable
+ep3.gui.powerModeUnpredictable=Mode: Unpredictable
 
-# Redstone States (Descriptions)
-gui.ep3.redstone.output.portalCreated.desc=Pulse a redstone signal when a portal gets created
-gui.ep3.redstone.output.portalRemoved.desc=Pulse a redstone signal when a portal gets removed
-gui.ep3.redstone.output.portalActive.desc=Emit a constant redstone signal while the portal is active
-gui.ep3.redstone.output.portalInactive.desc=Emit a constant redstone signal while the portal is not active
-gui.ep3.redstone.output.entityTouch.desc=Pulse a redstone signal when an entity touches any side of this block
-gui.ep3.redstone.input.portalOnSignal.desc=Creates a portal while recieving a redstone signal, the portal will be removed when the signal is interrupted
-gui.ep3.redstone.input.portalNoSignal.desc=Creates a portal when no redstone signal is being recieved, the portal will be removed when a redstone signal is applied
-gui.ep3.redstone.input.portalOnPulse.desc=Creates a portal when recieving a redstone pulse, the portal will not be removed
-gui.ep3.redstone.input.noPortalOnPulse.desc=Removes a portal when recieving a redstone pulse, the portal will not get recreated
+# GUI Portal Controller
+ep3.gui.portalController=PortalController
+ep3.gui.uniqueIdentifier=Unique Identifier
+ep3.gui.portalComponents=Portal Components
+
+# GUI Dialler
+ep3.gui.dialDevice=Dialling Device
+ep3.gui.storedIdentifiers=Stored Identifiers
+ep3.gui.terminate=Terminate
+ep3.gui.dial=Dial
+ep3.gui.identifierCannotBeBlank=Identifier cannot be blank
+
+# GUI Texture
+ep3.gui.customIcon=Custom Icon
+ep3.gui.facade=Facade
+ep3.gui.frame=Frame
+ep3.gui.portal=Portal
+ep3.gui.particle=Particles
+ep3.gui.colour=Colour
+ep3.gui.red=Red
+ep3.gui.green=Green
+ep3.gui.blue=Blue
+ep3.gui.noCustomIconsFound=No custom Icons found
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=Module Manipulator
+ep3.gui.modules=Portal Modules
+
+# GUI Network Interface
+ep3.gui.networkInterface=Network Interface
+ep3.gui.networkIdentifier=Network Identifier
+ep3.gui.networkInformation=Network Information
+ep3.gui.networkedPortals=Networked Portals
+ep3.gui.notSet=Not Set
+
+# GUI Biometric Identifier
+ep3.gui.biometricIdentifier=Biometric Identifier
+ep3.gui.sending=Sending
+ep3.gui.recieving=Recieving
+ep3.gui.allow=Allow
+ep3.gui.allowing=Allowing
+ep3.gui.disallow=Disallow
+ep3.gui.disallowing=Disallowing
+ep3.gui.activate=Activate
+ep3.gui.deactivate=Deactivate
+ep3.gui.idCard=ID Card
+ep3.gui.active=Active
+ep3.gui.inactive=Inactive
+ep3.gui.anythingCalled=Anything called:
+ep3.gui.matchName=Match name
+ep3.gui.anythingOfTheType=Anything of the type:
+ep3.gui.matchType=Match type
+ep3.gui.withTheTypeOf=With the type of:
+ep3.gui.matchTypeAndName=Match name and type
+
+# GUI Redstone
+ep3.gui.input=Input
+ep3.gui.input.createPortalOnSignal=Create portal on signal
+ep3.gui.input.removePortalOnSignal=Remove portal on signal
+ep3.gui.input.createPortalOnPulse=Create portal on pulse
+ep3.gui.input.removePortalOnPulse=Remove portal on pulse
+ep3.gui.input.dialStoredIdentifier=Dial specific identifier
+ep3.gui.input.dialRandomIdentifier=Dial random identifier
+
+ep3.gui.output=Output
+ep3.gui.output.portalCreated=Portal Created
+ep3.gui.output.portalRemoved=Portal Removed
+ep3.gui.output.portalActive=Portal Active
+ep3.gui.output.portalInactive=Portal Inactive
+ep3.gui.output.entityTeleport=Entity Teleport
+ep3.gui.output.playerTeleport=Player Teleport
+ep3.gui.output.animalTeleport=Animal Teleport
+ep3.gui.output.monsterTeleport=Monster Teleport
+
+# GUI General
+ep3.gui.initialized=Initialized
+ep3.gui.glyphs=Glyphs
+ep3.gui.cancel=Cancel
+ep3.gui.save=Save
+ep3.gui.reset=Reset
+ep3.gui.clear=Clear
+ep3.gui.random=Random
+ep3.gui.add=Add
+ep3.gui.clickToModify=Click to modify
 
 # Chat
-ep3.chat.error.noUidSet=You must set a Unique Identifier before doing this
-ep3.chat.error.multipleNetworkInterfaces=Failed to create a portal: You cannot have multiple Network Interfaces
-ep3.chat.error.networkInterfaceAndDialDevice=Failed to create a portal: You cannot have a Dialling Device and a Network Interface
-ep3.chat.error.multipleDiallingDevices=Failed to create a portal: You cannot have multiple Dialling Devices
-ep3.chat.error.multipleBiometricIdentifiers=Failed to create a portal: You cannot have multiple Biometric Identifiers
-ep3.chat.error.multipleModuleManipulators=Failed to create a portal: You cannot have multiple Module Manipulators
-ep3.chat.error.multipleControllers=Failed to create a portal: You cannot have multiple Portal Controllers
-ep3.chat.error.noPortals=Failed to create a portal at this location. Check that this location is valid for a portal
-ep3.chat.error.voidLinkCard=This link card no longer links to a valid DBS
-ep3.chat.nextStage=Please insert a DBS Location Card to continue
-ep3.chat.success=Successfully initialized the portal
+ep3.chat.multiplePortalControllers=Failed: You cannot have multiple Portal Controllers
+ep3.chat.multipleNetworkInterfaces=Failed: You cannot have multiple Network Interfaces
+ep3.chat.multipleDiallingDevices=Failed: You cannot have multiple Dialling Devices
+ep3.chat.multipleBiometricIdentifiers=Failed: You cannot have multiple Biometric Identifiers
+ep3.chat.multipleModuleManipulators=Failed: You cannot have multiple Module Manipulators
+ep3.chat.dialDeviceAndNetworkInterface=Failed: You cannot have a Dialling Device and a Network Interface
+ep3.chat.voidLinkCard=This card no longer links to a valid Dimensional Bridge Stabilizer
+ep3.chat.portalCouldNotBeCreatedHere=Failed: A portal could not be created at this location.
+ep3.chat.success=The portal was initialized successfully
+ep3.chat.reconfigureSuccess=The portal was successfully reconfigured
+ep3.chat.noUidSet=You must set a Unique Identifier before doing this

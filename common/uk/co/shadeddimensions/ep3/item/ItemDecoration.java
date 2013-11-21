@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemDecoration extends ItemBlock
@@ -24,7 +25,7 @@ public class ItemDecoration extends ItemBlock
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        list.add(EnumChatFormatting.DARK_GRAY + "Decorative Block");
+        list.add(EnumChatFormatting.DARK_GRAY + Localization.getBlockString("decorativeBlock"));
     }
     
     @Override

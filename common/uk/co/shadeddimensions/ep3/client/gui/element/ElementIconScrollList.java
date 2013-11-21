@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 import uk.co.shadeddimensions.ep3.client.gui.IElementHandler;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import cofh.gui.GuiBase;
 import cofh.gui.element.ElementBase;
 
@@ -157,7 +158,7 @@ public class ElementIconScrollList extends ElementBase
     {
         if (getElementCount() == 0)
         {
-            Minecraft.getMinecraft().fontRenderer.drawString("No custom icons found", posX, posY + 3, 0xCCCCCC);
+            Minecraft.getMinecraft().fontRenderer.drawString(Localization.getGuiString("noCustomIconsFound"), posX, posY + 3, 0xAAAAAA);
         }
     }
 

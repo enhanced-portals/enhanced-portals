@@ -7,12 +7,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphSelector;
 import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphViewer;
 import uk.co.shadeddimensions.ep3.client.gui.element.ElementPortalComponents;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalController;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -93,9 +92,9 @@ public class GuiPortalController extends GuiBase
     {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        drawCenteredString(fontRenderer, StatCollector.translateToLocal("tile." + Reference.SHORT_ID + ".portalFrame.controller.name"), xSize / 2, -13, 0xFFFFFF);
-        fontRenderer.drawString(StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".uniqueIdentifier"), 8, 8, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal(overlayActive ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".glyphs") : "gui." + Reference.SHORT_ID + ".portalComponents"), 8, 44, 0x404040);
+        drawCenteredString(fontRenderer, Localization.getGuiString("portalController"), xSize / 2, -13, 0xFFFFFF);
+        fontRenderer.drawString(Localization.getGuiString("uniqueIdentifier"), 8, 8, 0x404040);
+        fontRenderer.drawString(overlayActive ? Localization.getGuiString("glyphs") : Localization.getGuiString("portalComponents"), 8, 44, 0x404040);
    
         if (!overlayActive)
         {
@@ -103,7 +102,7 @@ public class GuiPortalController extends GuiBase
             {
                 if (y >= guiTop + 20 && y <= guiTop + 37)
                 {
-                    drawCreativeTabHoveringText("Click to modify", x - guiLeft, y - guiTop);
+                    drawCreativeTabHoveringText(Localization.getGuiString("clickToModify"), x - guiLeft, y - guiTop);
                 }
             }
         }
@@ -115,8 +114,8 @@ public class GuiPortalController extends GuiBase
     {
         super.initGui();
 
-        resetButton = new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.cancel"));
-        saveButton = new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save"));
+        resetButton = new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("cancel"));
+        saveButton = new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("save"));
         selector = (ElementGlyphSelector) new ElementGlyphSelector(this, 7, 57).setVisible(false);
         viewer = new ElementGlyphViewer(this, selector, 7, 20);
         components = new ElementPortalComponents(this, controller, 7, 57);
@@ -167,13 +166,13 @@ public class GuiPortalController extends GuiBase
         {
             if (isShiftKeyDown())
             {
-                resetButton.displayString = EnumChatFormatting.AQUA + StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.clear");
-                saveButton.displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.random");
+                resetButton.displayString = EnumChatFormatting.AQUA + Localization.getGuiString("clear");
+                saveButton.displayString = (isCtrlKeyDown() ? EnumChatFormatting.GOLD : EnumChatFormatting.AQUA) + Localization.getGuiString("random");
             }
             else
             {
-                resetButton.displayString = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.cancel");
-                saveButton.displayString = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save");
+                resetButton.displayString = Localization.getGuiString("cancel");
+                saveButton.displayString = Localization.getGuiString("save");
             }
         }
     }

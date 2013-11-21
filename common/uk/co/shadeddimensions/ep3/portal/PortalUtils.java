@@ -10,7 +10,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -342,7 +342,7 @@ public class PortalUtils
         return portalBlocks;
     }
 
-    public static Queue<ChunkCoordinates> findAllAttachedPortalParts(TilePortalController controller, Queue<ChunkCoordinates> portalBlocks, EntityPlayer playerToMoanAt)
+    public static Queue<ChunkCoordinates> findAllAttachedPortalParts(TilePortalController controller, Queue<ChunkCoordinates> portalBlocks, EntityPlayer player)
     {
         Queue<ChunkCoordinates> portalParts = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
@@ -368,12 +368,12 @@ public class PortalUtils
                         {
                             if (networkCounter == 1)
                             {
-                                playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleNetworkInterfaces"));
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleNetworkInterfaces")));
                                 return null;
                             }
                             else if (dialCounter == 1)
                             {
-                                playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.networkInterfaceAndDialDevice"));
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
                                 return null;
                             }
 
@@ -383,12 +383,12 @@ public class PortalUtils
                         {
                             if (dialCounter == 1)
                             {
-                                playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleDiallingDevices"));
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleDiallingDevices")));
                                 return null;
                             }
                             else if (networkCounter == 1)
                             {
-                                playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.networkInterfaceAndDialDevice"));
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
                                 return null;
                             }
 
@@ -398,7 +398,7 @@ public class PortalUtils
                         {
                             if (biometricCounter == 1)
                             {
-                                playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleBiometricIdentifiers"));
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleBiometricIdentifiers")));
                                 return null;
                             }
 
@@ -408,7 +408,7 @@ public class PortalUtils
                         {
                             if (moduleCounter == 1)
                             {
-                                playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleModuleManipulators"));
+                                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleModuleManipulators")));
                                 return null;
                             }
 
@@ -416,7 +416,7 @@ public class PortalUtils
                         }
                         else if (t instanceof TilePortalController && processed.size() > 1)
                         {
-                            playerToMoanAt.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.multipleControllers"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multiplePortalControllers")));
                             return null;
                         }
                     }

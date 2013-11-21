@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import cofh.gui.GuiBase;
@@ -44,12 +45,12 @@ public class ElementPortalComponents extends ElementBase
                 
         fontRenderer.drawString("" + controller.blockManager.getFrameCount(), posX + 20, posY + 4, 0x404040);
         fontRenderer.drawString("" + controller.blockManager.getRedstoneInterfaceCount(), posX + 20, posY + 24, 0x404040);
-        fontRenderer.drawString(controller.blockManager.getHasNetworkInterface() ? "Initialized" : "0", posX + 20, posY + 44, 0x404040);
-        fontRenderer.drawString(controller.blockManager.getHasDialDevice() ? "Initialized" : "0", posX + 20, posY + 64, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasNetworkInterface() ? Localization.getGuiString("initialized") : "0", posX + 20, posY + 44, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasDialDevice() ? Localization.getGuiString("initialized") : "0", posX + 20, posY + 64, 0x404040);
         
         fontRenderer.drawString("" + controller.blockManager.getPortalCount(), posX + 100, posY + 4, 0x404040);
-        fontRenderer.drawString(controller.blockManager.getHasBiometricIdentifier() ? "Initialized" : "0", posX + 100, posY + 24, 0x404040);
-        fontRenderer.drawString(controller.blockManager.getHasModuleManipulator() ? "Initialized" : "0", posX + 100, posY + 44, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasBiometricIdentifier() ? Localization.getGuiString("initialized") : "0", posX + 100, posY + 24, 0x404040);
+        fontRenderer.drawString(controller.blockManager.getHasModuleManipulator() ? Localization.getGuiString("initialized") : "0", posX + 100, posY + 44, 0x404040);
     }
 
     @Override

@@ -18,7 +18,7 @@ import uk.co.shadeddimensions.ep3.client.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
@@ -48,7 +48,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
             
             if (isFullyOpened())
             {
-                fontRenderer.drawStringWithShadow("Colour", posX + 24, posY + 7, 0xe1c92f);
+                fontRenderer.drawStringWithShadow(Localization.getGuiString("colour"), posX + 24, posY + 7, 0xe1c92f);
             }
 
             redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = isFullyOpened();
@@ -127,9 +127,9 @@ public class GuiTexture extends GuiBase implements IElementHandler
         particleList.setVisible(screenState == 2);
         particleList.setSelected(getTextureManager().getParticleType());
         
-        frameTab = new ElementFakeTab(this, -22, 5, "Frame", new ItemStack(CommonProxy.blockFrame), screenState == 0);
-        portalTab = new ElementFakeTab(this, -22, 26, "Portal", new ItemStack(CommonProxy.blockPortal), screenState == 1);
-        particleTab = new ElementFakeTab(this, -22, 47, "Particle", new ItemStack(Item.blazePowder), screenState == 2);
+        frameTab = new ElementFakeTab(this, -22, 5, Localization.getGuiString("frame"), new ItemStack(CommonProxy.blockFrame), screenState == 0);
+        portalTab = new ElementFakeTab(this, -22, 26, Localization.getGuiString("portal"), new ItemStack(CommonProxy.blockPortal), screenState == 1);
+        particleTab = new ElementFakeTab(this, -22, 47, Localization.getGuiString("particle"), new ItemStack(Item.blazePowder), screenState == 2);
         
         addElement(frameList);
         addElement(portalList);
@@ -144,25 +144,25 @@ public class GuiTexture extends GuiBase implements IElementHandler
         
         // Sliders
         Color c = new Color(screenState == 0 ? getTextureManager().getFrameColour() : screenState == 1 ? getTextureManager().getPortalColour() : getTextureManager().getParticleColour());
-        redSlider = new GuiRGBSlider(100, guiLeft + xSize + 5, guiTop + 27, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.red"), c.getRed() / 255f);
-        greenSlider = new GuiRGBSlider(101, guiLeft + xSize + 5, guiTop + 48, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.green"), c.getGreen() / 255f);
-        blueSlider = new GuiRGBSlider(102, guiLeft + xSize + 5, guiTop + 69, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".colour.blue"), c.getBlue() / 255f);
+        redSlider = new GuiRGBSlider(100, guiLeft + xSize + 5, guiTop + 27, Localization.getGuiString("red"), c.getRed() / 255f);
+        greenSlider = new GuiRGBSlider(101, guiLeft + xSize + 5, guiTop + 48, Localization.getGuiString("green"), c.getGreen() / 255f);
+        blueSlider = new GuiRGBSlider(102, guiLeft + xSize + 5, guiTop + 69, Localization.getGuiString("blue"), c.getBlue() / 255f);
         
         buttonList.add(redSlider);
         buttonList.add(greenSlider);
         buttonList.add(blueSlider);
         
         // Buttons
-        colourSaveButton = new GuiButton(110, guiLeft + xSize + 5, guiTop + 90, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.save"));
-        colourResetButton = new GuiButton(111, guiLeft + xSize + 68, guiTop + 90, 51, 20, StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.reset"));
+        colourSaveButton = new GuiButton(110, guiLeft + xSize + 5, guiTop + 90, 51, 20, Localization.getGuiString("save"));
+        colourResetButton = new GuiButton(111, guiLeft + xSize + 68, guiTop + 90, 51, 20, Localization.getGuiString("reset"));
         
         buttonList.add(colourSaveButton);
         buttonList.add(colourResetButton);
         
         if (!editController)
         {
-            mainCancelButton = new GuiButton(10, guiLeft, guiTop + ySize + 3, 75, 20, "Cancel");
-            mainSaveButton = new GuiButton(11, guiLeft + xSize - 75, guiTop + ySize + 3, 75, 20, "Save");
+            mainCancelButton = new GuiButton(10, guiLeft, guiTop + ySize + 3, 75, 20, Localization.getGuiString("cancel"));
+            mainSaveButton = new GuiButton(11, guiLeft + xSize - 75, guiTop + ySize + 3, 75, 20, Localization.getGuiString("save"));
 
             buttonList.add(mainCancelButton);
             buttonList.add(mainSaveButton);
@@ -179,12 +179,12 @@ public class GuiTexture extends GuiBase implements IElementHandler
 
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        fontRenderer.drawString("Custom Icon", 8, 6, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, 82, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("customIcon"), 8, 6, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal(Localization.getGuiString("inventory")), 8, 82, 0x404040);
 
         if (screenState != 2)
         {
-            fontRenderer.drawString("Facade", xSize - 28 - fontRenderer.getStringWidth("Facade"), 79, 0x404040);
+            fontRenderer.drawString(Localization.getGuiString("facade"), xSize - 28 - fontRenderer.getStringWidth(Localization.getGuiString("facade")), 79, 0x404040);
         }
         
         super.drawGuiContainerForegroundLayer(x, y);

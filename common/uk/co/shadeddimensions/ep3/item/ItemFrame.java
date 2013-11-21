@@ -8,6 +8,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemFrame extends ItemBlock
@@ -29,7 +30,7 @@ public class ItemFrame extends ItemBlock
 
         if (damage > 0)
         {
-            list.add("Portal Frame Part");
+            list.add(Localization.getBlockString("portalFramePart"));
         }
     }
 

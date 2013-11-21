@@ -12,6 +12,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
@@ -104,18 +105,18 @@ public class ItemUpgrade extends ItemEnhancedPortals
                 {
                     if (controller.blockManager.getHasBiometricIdentifier() && blockMeta == BlockFrame.BIOMETRIC_IDENTIFIER)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleBiometricIdentifiers"));
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleBiometricIdentifiers")));
                         return false;
                     }
                     else if (controller.blockManager.getHasDialDevice() && (blockMeta == BlockFrame.DIALLING_DEVICE || blockMeta == BlockFrame.NETWORK_INTERFACE))
                     {
                         if (blockMeta == BlockFrame.DIALLING_DEVICE)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleDiallingDevices"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleDiallingDevices")));
                         }
                         else
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.networkInterfaceAndDialDevice"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
                         }
                         
                         return false;
@@ -124,18 +125,18 @@ public class ItemUpgrade extends ItemEnhancedPortals
                     {
                         if (blockMeta == BlockFrame.NETWORK_INTERFACE)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleNetworkInterfaces"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleNetworkInterfaces")));
                         }
                         else
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.networkInterfaceAndDialDevice"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
                         }
                         
                         return false;
                     }
                     else if (controller.blockManager.getHasModuleManipulator() && blockMeta == BlockFrame.MODULE_MANIPULATOR)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("ep3.chat.error.multipleModuleManipulators"));
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleModuleManipulators")));
                         return false;
                     }
 

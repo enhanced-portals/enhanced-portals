@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.ItemEnergyContainer;
 import cofh.gui.GuiBase;
@@ -24,8 +25,8 @@ public class GuiScanner extends GuiBase
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        fontRenderer.drawString("Scanner", 7, 7, 0x404040);
-        fontRenderer.drawString("Inventory", 7, 70, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("scanner"), 7, 7, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("inventory"), 7, 70, 0x404040);
 
         super.drawGuiContainerForegroundLayer(x, y);
     }

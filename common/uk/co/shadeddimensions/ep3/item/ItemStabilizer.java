@@ -7,6 +7,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemStabilizer extends ItemBlock
@@ -22,10 +23,10 @@ public class ItemStabilizer extends ItemBlock
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        list.add("Multiblock Structure");
-        list.add(EnumChatFormatting.DARK_GRAY + "3x2x2 to 3x2x256");
-        list.add(EnumChatFormatting.DARK_GRAY + "Each row adds to the maximum");
-        list.add(EnumChatFormatting.DARK_GRAY + "active portal connections");
+        list.add(Localization.getBlockString("multiblockStructure"));
+        list.add(EnumChatFormatting.DARK_GRAY + Localization.getBlockString("dbsSize"));
+        list.add(EnumChatFormatting.DARK_GRAY + Localization.getBlockString("eachRowAddsToTheMaximum"));
+        list.add(EnumChatFormatting.DARK_GRAY + Localization.getBlockString("activePortalConnections"));
     }
 
     @Override

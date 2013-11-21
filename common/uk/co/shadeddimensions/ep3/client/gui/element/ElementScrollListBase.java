@@ -9,6 +9,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.client.gui.IElementHandler;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import cofh.gui.GuiBase;
 import cofh.gui.element.ElementBase;
 
@@ -131,7 +132,7 @@ public class ElementScrollListBase extends ElementBase
     {
         if (getElementCount() == 0)
         {
-            Minecraft.getMinecraft().fontRenderer.drawString("No entries found", posX + 10, posY + 7, 0xAAAAAA);
+            Minecraft.getMinecraft().fontRenderer.drawString(Localization.getGuiString("noEntriesFound"), posX + 10, posY + 7, 0xAAAAAA);
         }
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
