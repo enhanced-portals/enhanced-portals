@@ -251,10 +251,4 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         texture = iconRegister.registerIcon("enhancedportals:portal");
     }
-
-    @Override
-    public boolean canCollideCheck(int par1, boolean par2)
-    {
-        return true;
-    }
 }

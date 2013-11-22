@@ -44,7 +44,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
 
         if (controller != null)
         {
-            controller.partBroken();
+            controller.partBroken(false);
         }
     }
 

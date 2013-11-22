@@ -139,6 +139,7 @@ ep3.gui.anythingOfTheType=Anything of the type:
 ep3.gui.matchType=Match type
 ep3.gui.withTheTypeOf=With the type of:
 ep3.gui.matchTypeAndName=Match name and type
+ep3.gui.listNotEnabled=This list is not enabled
 
 # GUI Redstone
 ep3.gui.redstoneInterface=Redstone Interface

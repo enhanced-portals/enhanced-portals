@@ -41,7 +41,7 @@ public class ContainerScanner extends Container
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
         hasChanged = true;
         return null;

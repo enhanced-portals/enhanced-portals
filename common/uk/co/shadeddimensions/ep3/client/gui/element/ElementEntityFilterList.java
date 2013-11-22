@@ -30,6 +30,14 @@ public class ElementEntityFilterList extends ElementDialDeviceScrollList
     }
 
     @Override
+    protected void drawOverlays()
+    {
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        gui.drawTexturedModalRect(posX, posY - getEntrySize(), posX - gui.getGuiLeft() + (sendList ? 0 : 106), posY - gui.getGuiTop() - getEntrySize(), sizeX, getEntrySize());
+        gui.drawTexturedModalRect(posX, posY + sizeY, posX - gui.getGuiLeft() + (sendList ? 0 : 106), posY - gui.getGuiTop() + sizeY, sizeX, getEntrySize());
+    }
+    
+    @Override
     public void draw()
     {
         tooltip = new ArrayList<String>();
@@ -96,11 +104,23 @@ public class ElementEntityFilterList extends ElementDialDeviceScrollList
     @Override
     protected void drawForeground()
     {
-        GuiUtils.getInstance().drawHoveringText(tooltip, gui.getMouseX() + posX, gui.getMouseY() + posY);
+        if (!sendList && !biometric.hasSeperateLists)
+        {
+            Minecraft.getMinecraft().fontRenderer.drawString(Localization.getGuiString("listNotEnabled"), posX + 10, posY + 7, 0xAAAAAA);
+        }
+        else
+        {
+            super.drawForeground();
+        }
+    }
+    
+    public void drawHoverText()
+    {        
+        GuiUtils.getInstance().drawHoveringText(tooltip, gui.getMouseX(), gui.getMouseY());
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glColor3f(1f, 1f, 1f);
     }
-
+    
     @Override
     protected void entrySelected(int entry, int mouseX, int mouseY)
     {

@@ -7,13 +7,23 @@ import net.minecraft.entity.Entity;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
 public class TilePortal extends TilePortalPart
-{
+{    
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
+        if (oldBlockID == worldObj.getBlockId(xCoord, yCoord, zCoord))
+        {
+            return;
+        }
 
+        TilePortalController controller = getPortalController();
+
+        if (controller != null)
+        {
+            controller.partBroken(true);
+        }
     }
-
+    
     @Override
     public void usePacket(DataInputStream stream) throws IOException
     {

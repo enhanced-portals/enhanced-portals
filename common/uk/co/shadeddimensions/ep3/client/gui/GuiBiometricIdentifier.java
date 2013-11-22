@@ -56,6 +56,9 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         fontRenderer.drawString(Localization.getGuiString("idCard"), 293 - fontRenderer.getStringWidth(Localization.getGuiString("idCard")), ySize - 36, 0x404040);
         fontRenderer.drawString(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive"), xSize / 2 - fontRenderer.getStringWidth(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive")) / 2, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
 
+        sendList.drawHoverText();
+        recieveList.drawHoverText();
+        
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
 

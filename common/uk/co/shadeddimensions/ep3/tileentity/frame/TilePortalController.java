@@ -40,6 +40,7 @@ public class TilePortalController extends TilePortalPart
     public byte portalType;
     public boolean isPortalActive;
     public boolean processing;
+    boolean processingPortal;
 
     @SideOnly(Side.CLIENT)
     public GlyphIdentifier uniqueID, networkID;
@@ -55,7 +56,7 @@ public class TilePortalController extends TilePortalPart
         portalState = 0;
         activeTextureData = new PortalTextureManager();
         inactiveTextureData = null;
-        isPortalActive = processing = false;
+        isPortalActive = processing = processingPortal = false;
     }
 
     /***
@@ -94,7 +95,7 @@ public class TilePortalController extends TilePortalPart
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         GlyphIdentifier nID = getNetworkIdentifier();
-        
+
         GeneralUtils.writeGlyphIdentifier(stream, getUniqueIdentifier());
         GeneralUtils.writeGlyphIdentifier(stream, nID);
         blockManager.writeToPacket(stream);
@@ -306,7 +307,7 @@ public class TilePortalController extends TilePortalPart
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
-        partBroken();
+        partBroken(false);
 
         GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
 
@@ -321,10 +322,22 @@ public class TilePortalController extends TilePortalPart
         }
     }
 
-    public void partBroken()
+    public void partBroken(boolean isPortal)
     {
         if (portalState != 1)
         {
+            return;
+        }
+
+        if (isPortal)
+        {            
+            if (!processingPortal)
+            {
+                processingPortal = true;
+                removePortal();
+                processingPortal = false;
+            }
+            
             return;
         }
 
@@ -672,7 +685,7 @@ public class TilePortalController extends TilePortalPart
                 ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);
             }
         }
-        
+
         if (uID != null)
         {
             TileBiometricIdentifier bio = blockManager.getBiometricIdentifier(worldObj);

@@ -138,18 +138,15 @@ public class TileBiometricIdentifier extends TilePortalPart
 
         tag.setTag("sendingEntityTypes", t);
 
-        if (hasSeperateLists)
+        NBTTagList t2 = new NBTTagList();
+        for (EntityData d : recievingEntityTypes)
         {
-            NBTTagList t2 = new NBTTagList();
-            for (EntityData d : recievingEntityTypes)
-            {
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                d.saveToNBT(tagCompound);
-                t.appendTag(tagCompound);
-            }
-
-            tag.setTag("recievingEntityTypes", t2);
+            NBTTagCompound tagCompound = new NBTTagCompound();
+            d.saveToNBT(tagCompound);
+            t2.appendTag(tagCompound);
         }
+
+        tag.setTag("recievingEntityTypes", t2);
 
         NBTTagList itemList = new NBTTagList();
 
@@ -159,10 +156,10 @@ public class TileBiometricIdentifier extends TilePortalPart
 
             if (stack != null)
             {
-                NBTTagCompound t2 = new NBTTagCompound();
-                t2.setByte("Slot", (byte) i);
-                stack.writeToNBT(t2);
-                itemList.appendTag(t2);
+                NBTTagCompound t3 = new NBTTagCompound();
+                t3.setByte("Slot", (byte) i);
+                stack.writeToNBT(t3);
+                itemList.appendTag(t3);
             }
         }
 
