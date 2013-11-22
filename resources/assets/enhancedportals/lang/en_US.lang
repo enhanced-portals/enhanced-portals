@@ -92,6 +92,8 @@ ep3.gui.terminate=Terminate
 ep3.gui.dial=Dial
 ep3.gui.identifierCannotBeBlank=Identifier cannot be blank
 ep3.gui.noEntriesFound=No entries found
+ep3.gui.name=Name
+ep3.gui.identifierName=Identifier Name
 
 # GUI Texture
 ep3.gui.customIcon=Custom Icon
@@ -168,6 +170,7 @@ ep3.gui.reset=Reset
 ep3.gui.clear=Clear
 ep3.gui.random=Random
 ep3.gui.add=Add
+ep3.gui.accept=Accept
 ep3.gui.clickToModify=Click to modify
 
 # Chat

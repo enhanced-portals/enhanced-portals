@@ -26,6 +26,7 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
@@ -410,6 +411,11 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             if (module != null)
             {
                 module.onEntityTeleported(entity);
+            }
+            
+            for (ChunkCoordinates c : controller.blockManager.getRedstoneInterfaces())
+            {
+                ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);
             }
         }
 

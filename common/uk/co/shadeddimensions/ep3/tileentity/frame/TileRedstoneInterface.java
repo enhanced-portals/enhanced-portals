@@ -244,8 +244,6 @@ public class TileRedstoneInterface extends TilePortalPart
 
     public void entityTeleport(Entity entity)
     {
-        System.out.println(entity.getEntityName());
-
         if (isOutput)
         {
             if (state == 4 || state == 5 && entity instanceof EntityPlayer || state == 6 && entity instanceof EntityAnimal || state == 7 && entity instanceof EntityMob)
