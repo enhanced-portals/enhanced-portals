@@ -152,7 +152,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             }
 
             removeExistingConnection(portalA, portalB);
-            return;
         }
         else if (activeConnections.containsKey(portalA.getGlyphString()) && activeConnections.get(portalA.getGlyphString()).equals(portalB.getGlyphString()) || activeConnectionsReverse.containsKey(portalA.getGlyphString()) && activeConnectionsReverse.get(portalA.getGlyphString()).equals(portalB.getGlyphString()))
         {
@@ -199,6 +198,11 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         activeConnections.remove(portalB.getGlyphString());
         activeConnectionsReverse.remove(portalA.getGlyphString());
         activeConnectionsReverse.remove(portalB.getGlyphString());
+        
+        if (activeConnections.size() == 0 && powerState == 0 && instability > 0)
+        {
+            instability = 0;
+        }
     }
 
     /***

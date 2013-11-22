@@ -16,7 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
@@ -92,7 +92,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
                 {
                     if (!worldObj.isRemote)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.noUidSet"));
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
                     }
 
                     return false;
@@ -131,7 +131,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
                     {
                         if (!worldObj.isRemote)
                         {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Reference.SHORT_ID + ".chat.error.noUidSet"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
                         }
 
                         return false;

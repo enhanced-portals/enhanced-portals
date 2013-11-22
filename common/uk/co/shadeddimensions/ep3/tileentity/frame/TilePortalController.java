@@ -52,18 +52,10 @@ public class TilePortalController extends TilePortalPart
         blockManager = new BlockManager();
         portalType = 0;
         connectedPortals = -1;
-        portalState = -1;
+        portalState = 0;
         activeTextureData = new PortalTextureManager();
         inactiveTextureData = null;
         isPortalActive = processing = false;
-    }
-
-    /***
-     * Checks whether or not this portal has already filled it's BlockManager.
-     */
-    public boolean isPortalInitialized()
-    {
-        return portalState == 0;
     }
 
     /***
@@ -101,13 +93,16 @@ public class TilePortalController extends TilePortalPart
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
+        GlyphIdentifier nID = getNetworkIdentifier();
+        
         GeneralUtils.writeGlyphIdentifier(stream, getUniqueIdentifier());
-        GeneralUtils.writeGlyphIdentifier(stream, getNetworkIdentifier());
+        GeneralUtils.writeGlyphIdentifier(stream, nID);
         blockManager.writeToPacket(stream);
         activeTextureData.writeToPacket(stream);
         stream.writeByte(portalState);
         stream.writeByte(portalType);
         stream.writeBoolean(isPortalActive);
+        stream.writeInt(nID == null ? -1 : CommonProxy.networkManager.getNetworkSize(nID));
     }
 
     @Override
@@ -120,6 +115,7 @@ public class TilePortalController extends TilePortalPart
         portalState = stream.readByte();
         portalType = stream.readByte();
         isPortalActive = stream.readBoolean();
+        connectedPortals = stream.readInt();
     }
 
     @Override
@@ -327,7 +323,7 @@ public class TilePortalController extends TilePortalPart
 
     public void partBroken()
     {
-        if (portalState == 2)
+        if (portalState != 1)
         {
             return;
         }
@@ -398,7 +394,7 @@ public class TilePortalController extends TilePortalPart
         boolean isReconfiguring = false;
         WorldCoordinates dbs = null;
 
-        if (worldObj.isRemote || isFullyInitialized() || item == null)
+        if (worldObj.isRemote || isFullyInitialized() || item == null || portalState == 1)
         {
             if (!worldObj.isRemote)
             {
@@ -408,19 +404,7 @@ public class TilePortalController extends TilePortalPart
             return false;
         }
 
-        if (portalState == 2)
-        {
-            if (item.itemID == CommonProxy.itemWrench.itemID)
-            {
-                isReconfiguring = true;
-                dbs = blockManager.getDimensionalBridgeStabilizer();
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
+        if (portalState == 0)
         {
             if (item.itemID != CommonProxy.itemLocationCard.itemID || !ItemLocationCard.hasDBSLocation(item))
             {
@@ -433,6 +417,18 @@ public class TilePortalController extends TilePortalPart
             {
                 ItemLocationCard.clearDBSLocation(item);
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("voidLinkCard")));
+                return false;
+            }
+        }
+        else if (portalState == 2)
+        {
+            if (item.itemID == CommonProxy.itemWrench.itemID)
+            {
+                isReconfiguring = true;
+                dbs = blockManager.getDimensionalBridgeStabilizer();
+            }
+            else
+            {
                 return false;
             }
         }
@@ -669,6 +665,14 @@ public class TilePortalController extends TilePortalPart
     {
         GlyphIdentifier uID = getUniqueIdentifier();
 
+        if (EntityManager.isEntityFitForTravel(entity)) // Make sure we're not spamming this. We only want it to happen once per entity.
+        {
+            for (ChunkCoordinates c : blockManager.getRedstoneInterfaces())
+            {
+                ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);
+            }
+        }
+        
         if (uID != null)
         {
             TileBiometricIdentifier bio = blockManager.getBiometricIdentifier(worldObj);

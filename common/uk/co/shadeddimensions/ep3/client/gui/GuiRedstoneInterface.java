@@ -3,10 +3,8 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
@@ -36,7 +34,7 @@ public class GuiRedstoneInterface extends GuiBase
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        drawCenteredString(fontRenderer, Localization.getGuiString("redstoneIdentifier"), xSize / 2, -13, 0xFFFFFF);
+        drawCenteredString(fontRenderer, Localization.getGuiString("redstoneInterface"), xSize / 2, -13, 0xFFFFFF);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,37 +48,49 @@ public class GuiRedstoneInterface extends GuiBase
     }
 
     @Override
-    public void updateScreen() // TODO: Rewrite when RI has been rewritten
+    public void updateScreen()
     {
         super.updateScreen();
 
         String stateText = "";
-        boolean flag = redstone.output;
+        boolean flag = redstone.isOutput;
 
-        switch (redstone.getState())
+        switch (redstone.state)
         {
             case 0:
-                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalCreated" : "input.portalOnSignal"));
+                stateText = flag ? Localization.getGuiString("portalCreated") : Localization.getGuiString("createPortalOnSignal");
                 break;
 
             case 1:
-                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalRemoved" : "input.portalNoSignal"));
+                stateText = flag ? Localization.getGuiString("portalRemoved") : Localization.getGuiString("removePortalOnSignal");
                 break;
 
             case 2:
-                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalActive" : "input.portalOnPulse"));
+                stateText = flag ? Localization.getGuiString("portalActive") : Localization.getGuiString("createPortalOnPulse");
                 break;
 
             case 3:
-                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone." + (flag ? "output.portalInactive" : "input.noPortalOnPulse"));
+                stateText = flag ? Localization.getGuiString("portalInactive") : Localization.getGuiString("removePortalOnPulse");
                 break;
 
             case 4:
-                stateText = StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".redstone.output.entityTouch");
+                stateText = flag ? Localization.getGuiString("entityTeleport") : Localization.getGuiString("dialStoredIdentifier");
+                break;
+                
+            case 5:
+                stateText = flag ? Localization.getGuiString("playerTeleport") : Localization.getGuiString("dialStoredIdentifier2");
+                break;
+                
+            case 6:
+                stateText = flag ? Localization.getGuiString("animalTeleport") : Localization.getGuiString("dialRandomIdentifier");
+                break;
+                
+            case 7:
+                stateText = flag ? Localization.getGuiString("monsterTeleport") : Localization.getGuiString("dialRandomIdentifier2");
                 break;
         }
 
-        ((GuiButton) buttonList.get(0)).displayString = redstone.output ? StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.output") : StatCollector.translateToLocal("gui." + Reference.SHORT_ID + ".button.input");
+        ((GuiButton) buttonList.get(0)).displayString = redstone.isOutput ? Localization.getGuiString("output") : Localization.getGuiString("input");
         ((GuiButton) buttonList.get(1)).displayString = stateText;
     }
 }

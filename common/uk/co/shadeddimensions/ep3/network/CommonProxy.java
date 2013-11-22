@@ -9,11 +9,11 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -80,7 +80,7 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown;
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes;
     public static int redstoneFluxPowerMultiplier;
 
     public static int MobEnderman, MobCreeper;
@@ -249,6 +249,9 @@ public class CommonProxy
         Dimension = configuration.get("World", "DimensionID", -10);
         WastelandID = configuration.get("World", "WastelandID", 50);
 
+        disableVanillaRecipes = configuration.get("Recipes", "DisableVanillaRecipes", false);
+        disableTERecipes = configuration.get("Recipes", "DisableTERecipes", false);
+
         if (redstoneFluxPowerMultiplier < 0)
         {
             redstoneFluxPowerMultiplier = 0;
@@ -274,35 +277,43 @@ public class CommonProxy
 
     public void setupCrafting()
     {
+        if (disableVanillaRecipes)
+        {
+            return;
+        }
+        
         // Frames
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { "SDS", "IQI", "SIS", 'S', Block.stone, 'D', Item.diamond, 'Q', Block.blockNetherQuartz, 'I', Item.ingotIron });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { " D ", "IQI", " I ", 'D', Item.diamond, 'Q', new ItemStack(blockDecoration, 1, 0), 'I', Item.ingotIron });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.PORTAL_CONTROLLER), new Object[] { "IDI", " F ", "IEI", 'F', new ItemStack(blockFrame, 1, 0), 'I', Item.ingotIron, 'E', Item.enderPearl, 'D', Item.diamond });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(blockFrame, 1, 0), 'R', Item.redstone });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'E', Item.enderPearl });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.DIALLING_DEVICE), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), 'E', Item.enderPearl, 'D', Item.diamond });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked });
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockFrame, 1, BlockFrame.MODULE_MANIPULATOR), new Object[] { " D ", "EFE", " U ", 'F', new ItemStack(blockFrame, 1, 0), 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule });
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { "SDS", "IQI", "SIS", 'S', Block.stone, 'D', Item.diamond, 'Q', Block.blockNetherQuartz, 'I', Item.ingotIron }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { " D ", "IQI", " I ", 'D', Item.diamond, 'Q', new ItemStack(blockDecoration, 1, 0), 'I', Item.ingotIron }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.PORTAL_CONTROLLER), new Object[] { "IDI", " F ", "IEI", 'F', new ItemStack(blockFrame, 1, 0), 'I', Item.ingotIron, 'E', Item.enderPearl, 'D', Item.diamond }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(blockFrame, 1, 0), 'R', Item.redstone }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'E', Item.enderPearl }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.DIALLING_DEVICE), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), 'E', Item.enderPearl, 'D', Item.diamond }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.MODULE_MANIPULATOR), new Object[] { " D ", "EFE", " U ", 'F', new ItemStack(blockFrame, 1, 0), 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule }));
 
         // In-Place Upgrades
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', Item.paper, 'R', Item.redstone });
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', Item.paper, 'Z', Item.blazePowder, 'E', Item.enderPearl });
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 2), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(itemInPlaceUpgrade, 1, 1), 'E', Item.enderPearl, 'D', Item.diamond });
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw });
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked });
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemInPlaceUpgrade, 1, 4), new Object[] { " D ", "EFE", " U ", 'F', Item.paper, 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule });
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', Item.paper, 'R', Item.redstone }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', Item.paper, 'Z', Item.blazePowder, 'E', Item.enderPearl }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 2), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(itemInPlaceUpgrade, 1, 1), 'E', Item.enderPearl, 'D', Item.diamond }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', Item.paper, 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 4), new Object[] { " D ", "EFE", " U ", 'F', Item.paper, 'D', Item.diamond, 'E', Item.emerald, 'U', itemPortalModule }));
 
         // Stabilizer
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockStabilizer, 6), new Object[] { "QPQ", "EDE", "QPQ", 'D', Block.blockDiamond, 'E', Item.emerald, 'Q', Block.blockNetherQuartz, 'P', Item.enderPearl });
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockStabilizer, 6), new Object[] { "QPQ", "EDE", "QPQ", 'D', Block.blockDiamond, 'E', Item.emerald, 'Q', Block.blockNetherQuartz, 'P', Item.enderPearl }));
 
         // Wrench
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemWrench), new Object[] { "Q Q", "III", " I ", 'I', Item.ingotIron, 'Q', Item.netherQuartz });
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemWrench), new Object[] { "Q Q", "III", " I ", 'I', Item.ingotIron, 'Q', Item.netherQuartz }));
 
         // Location Card
-        CraftingManager.getInstance().addRecipe(new ItemStack(itemLocationCard, 16), new Object[] { "GPG", "PPP", "GPG", 'G', Item.ingotGold, 'P', Item.paper });
-
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemLocationCard, 16), new Object[] { "IPI", "PPP", "IDI", 'I', Item.ingotIron, 'P', Item.paper, 'D', "dyeBlue" }));
+        
+        // Entity Card
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemEntityCard, 8), new Object[] { "GPG", "PPP", "GDG", 'G', Item.ingotGold, 'P', Item.paper, 'D', "dyeLime" }));
+        
         // Decoration
-        CraftingManager.getInstance().addRecipe(new ItemStack(blockDecoration, 8, 0), new Object[] { "SQS", "QQQ", "SQS", 'S', Block.stone, 'Q', Block.blockNetherQuartz });
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockDecoration, 8, 0), new Object[] { "SQS", "QQQ", "SQS", 'S', Block.stone, 'Q', Block.blockNetherQuartz }));
     }
 }

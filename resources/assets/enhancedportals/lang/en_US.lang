@@ -81,7 +81,7 @@ ep3.gui.powerModeUnstable=Mode: Unstable
 ep3.gui.powerModeUnpredictable=Mode: Unpredictable
 
 # GUI Portal Controller
-ep3.gui.portalController=PortalController
+ep3.gui.portalController=Portal Controller
 ep3.gui.uniqueIdentifier=Unique Identifier
 ep3.gui.portalComponents=Portal Components
 
@@ -91,6 +91,7 @@ ep3.gui.storedIdentifiers=Stored Identifiers
 ep3.gui.terminate=Terminate
 ep3.gui.dial=Dial
 ep3.gui.identifierCannotBeBlank=Identifier cannot be blank
+ep3.gui.noEntriesFound=No entries found
 
 # GUI Texture
 ep3.gui.customIcon=Custom Icon
@@ -136,23 +137,27 @@ ep3.gui.withTheTypeOf=With the type of:
 ep3.gui.matchTypeAndName=Match name and type
 
 # GUI Redstone
+ep3.gui.redstoneInterface=Redstone Interface
+
 ep3.gui.input=Input
-ep3.gui.input.createPortalOnSignal=Create portal on signal
-ep3.gui.input.removePortalOnSignal=Remove portal on signal
-ep3.gui.input.createPortalOnPulse=Create portal on pulse
-ep3.gui.input.removePortalOnPulse=Remove portal on pulse
-ep3.gui.input.dialStoredIdentifier=Dial specific identifier
-ep3.gui.input.dialRandomIdentifier=Dial random identifier
+ep3.gui.createPortalOnSignal=Create portal on signal
+ep3.gui.removePortalOnSignal=Remove portal on signal
+ep3.gui.createPortalOnPulse=Create portal on pulse
+ep3.gui.removePortalOnPulse=Remove portal on pulse
+ep3.gui.dialStoredIdentifier=Dial specific identifier
+ep3.gui.dialRandomIdentifier=Dial random identifier
+ep3.gui.dialStoredIdentifier2=Dial specific identifier (2)
+ep3.gui.dialRandomIdentifier2=Dial random identifier (2)
 
 ep3.gui.output=Output
-ep3.gui.output.portalCreated=Portal Created
-ep3.gui.output.portalRemoved=Portal Removed
-ep3.gui.output.portalActive=Portal Active
-ep3.gui.output.portalInactive=Portal Inactive
-ep3.gui.output.entityTeleport=Entity Teleport
-ep3.gui.output.playerTeleport=Player Teleport
-ep3.gui.output.animalTeleport=Animal Teleport
-ep3.gui.output.monsterTeleport=Monster Teleport
+ep3.gui.portalCreated=Portal Created
+ep3.gui.portalRemoved=Portal Removed
+ep3.gui.portalActive=Portal Active
+ep3.gui.portalInactive=Portal Inactive
+ep3.gui.entityTeleport=Entity Touch Portal
+ep3.gui.playerTeleport=Player Touch Portal
+ep3.gui.animalTeleport=Animal Touch Portal
+ep3.gui.monsterTeleport=Monster Touch Portal
 
 # GUI General
 ep3.gui.initialized=Initialized

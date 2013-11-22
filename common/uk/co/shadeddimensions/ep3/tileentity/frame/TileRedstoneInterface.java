@@ -4,27 +4,29 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 
 public class TileRedstoneInterface extends TilePortalPart
 {
-    public boolean output;
-
-    byte previousRedstoneInputState, state, timer;
-    boolean emitting, pulse;
-
-    static byte MAX_INPUT_STATE = 4, MAX_OUTPUT_STATE = 5, MAX_TIMER = 5;
+    public boolean isOutput;
+    public byte state, previousRedstoneState;
+    byte timeUntilOff;
+    static int TPS = 20;
+    static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
 
     public TileRedstoneInterface()
     {
-        previousRedstoneInputState = 0;
-        state = 0;
-        emitting = pulse = false;
+        isOutput = false;
+        state = timeUntilOff = previousRedstoneState = 0;
     }
 
     @Override
@@ -36,14 +38,14 @@ public class TileRedstoneInterface extends TilePortalPart
         {
             if (payload.data.getInteger("id") == 0)
             {
-                output = !output;
+                isOutput = !isOutput;
                 setState((byte) 0);
 
                 CommonProxy.sendUpdatePacketToPlayer(this, player);
             }
             else if (payload.data.getInteger("id") == 1)
             {
-                if (output)
+                if (isOutput)
                 {
                     if (state + 1 < MAX_OUTPUT_STATE)
                     {
@@ -71,15 +73,10 @@ public class TileRedstoneInterface extends TilePortalPart
         }
     }
 
-    public byte getState()
-    {
-        return state;
-    }
-
     @Override
     public int isProvidingStrongPower(int side)
     {
-        if (emitting || pulse)
+        if (timeUntilOff != 0)
         {
             return 15;
         }
@@ -90,7 +87,7 @@ public class TileRedstoneInterface extends TilePortalPart
     @Override
     public int isProvidingWeakPower(int side)
     {
-        if (emitting || pulse)
+        if (timeUntilOff != 0)
         {
             return 15;
         }
@@ -106,67 +103,89 @@ public class TileRedstoneInterface extends TilePortalPart
             return;
         }
 
-        if (!output) // Only do this if set to input
+        if (!isOutput) // Only do this if set to input
         {
+            TilePortalController controller = getPortalController();
+
+            if (controller == null)
+            {
+                return;
+            }
+
+            boolean hasDialler =  controller.blockManager.getHasDialDevice();
             byte redstoneInputState = getHighestPowerState();
 
-            if (state == 0 || state == 1)
+            if (state == 1 && redstoneInputState == 0 && controller.isPortalActive) // Remove portal on signal
             {
-                if (redstoneInputState > 0 && previousRedstoneInputState == 0)
+                controller.removePortal();
+            }
+            else if (state == 3 && redstoneInputState > 0 && previousRedstoneState == 0 && controller.isPortalActive) // Remove portal on pulse
+            {
+                controller.removePortal();
+            }
+            else if (!hasDialler) // These require no dialler
+            {
+                if (state == 0 && redstoneInputState > 0 && !controller.isPortalActive) // Create portal on signal
                 {
-                    TilePortalController c = getPortalController();
-
-                    if (c != null)
-                    {
-                        if (state == 0)
-                        {
-                            c.createPortal();
-                        }
-                        else if (state == 1)
-                        {
-                            c.removePortal();
-                        }
-                    }
+                    controller.createPortal();
                 }
-                else if (redstoneInputState == 0 && previousRedstoneInputState > 0)
+                else if (state == 2 && redstoneInputState > 0 && previousRedstoneState == 0 && !controller.isPortalActive) // Create portal on pulse
                 {
-                    TilePortalController c = getPortalController();
-
-                    if (c != null)
-                    {
-                        if (state == 0)
-                        {
-                            c.removePortal();
-                        }
-                        else if (state == 1)
-                        {
-                            c.createPortal();
-                        }
-                    }
-
+                    controller.createPortal();
                 }
             }
-            else if (state == 2 || state == 3)
+            else // These require a dialler
             {
-                if (previousRedstoneInputState > 0 && redstoneInputState == 0)
-                {
-                    TilePortalController c = getPortalController();
+                TileDiallingDevice dialler = controller.blockManager.getDialDevice(worldObj);
 
-                    if (c != null)
+                if (dialler == null)
+                {
+                    return;
+                }
+
+                int glyphCount = dialler.glyphList.size();
+
+                if (state == 4 && redstoneInputState > 0 && !controller.isPortalActive) // Dial specific identifier
+                {
+                    if (redstoneInputState - 1 < glyphCount)
                     {
-                        if (state == 2)
+                        GlyphElement e = dialler.glyphList.get(redstoneInputState - 1);
+                        controller.dialRequest(e.identifier, e.texture);
+                    }
+                }
+                else if (state == 5) // Dial specific identifier II
+                {
+                    if (redstoneInputState > 0 && !controller.isPortalActive)
+                    {
+                        if (redstoneInputState - 1 < glyphCount)
                         {
-                            c.createPortal();
+                            GlyphElement e = dialler.glyphList.get(redstoneInputState - 1);
+                            controller.dialRequest(e.identifier, e.texture);
                         }
-                        else if (state == 3)
-                        {
-                            c.removePortal();
-                        }
+                    }
+                    else if (redstoneInputState == 0 && controller.isPortalActive)
+                    {
+                        controller.removePortal();
+                    }
+                }
+                else if (state == 6 && redstoneInputState > 0 && !controller.isPortalActive) // Dial random identifier
+                {
+                    GlyphElement e = dialler.glyphList.get(new Random().nextInt(glyphCount));
+                    controller.dialRequest(e.identifier, e.texture);
+                }
+                else if (state == 7) // Dial random identifier II
+                {
+                    if (redstoneInputState > 0 && !controller.isPortalActive)
+                    {
+                        GlyphElement e = dialler.glyphList.get(new Random().nextInt(glyphCount));
+                        controller.dialRequest(e.identifier, e.texture);
+                    }
+                    else if (redstoneInputState == 0 && controller.isPortalActive)
+                    {
+                        controller.removePortal();
                     }
                 }
             }
-
-            previousRedstoneInputState = redstoneInputState;
         }
     }
 
@@ -183,19 +202,19 @@ public class TileRedstoneInterface extends TilePortalPart
 
     public void portalCreated()
     {
-        if (output)
+        if (isOutput)
         {
             if (state == 0)
             {
-                pulseRedstone();
+                timeUntilOff = (byte) TPS;
             }
             else if (state == 2)
             {
-                emitting = true;
+                timeUntilOff = -1;
             }
             else if (state == 3)
             {
-                emitting = false;
+                timeUntilOff = 0;
             }
 
             notifyNeighbors();
@@ -204,56 +223,54 @@ public class TileRedstoneInterface extends TilePortalPart
 
     public void portalRemoved()
     {
-        if (output)
+        if (isOutput)
         {
             if (state == 1)
             {
-                pulseRedstone();
+                timeUntilOff = (byte) TPS;
             }
             else if (state == 2)
             {
-                emitting = false;
+                timeUntilOff = 0;
             }
             else if (state == 3)
             {
-                emitting = true;
+                timeUntilOff = -1;
             }
 
             notifyNeighbors();
         }
     }
 
-    private void pulseRedstone()
+    public void entityTeleport(Entity entity)
     {
-        if (pulse)
+        System.out.println(entity.getEntityName());
+
+        if (isOutput)
         {
-            return;
-        }
+            if (state == 4 || state == 5 && entity instanceof EntityPlayer || state == 6 && entity instanceof EntityAnimal || state == 7 && entity instanceof EntityMob)
+            {
+                timeUntilOff = (byte) TPS;
+            }
 
-        pulse = true;
-        notifyNeighbors();
-        worldObj.scheduleBlockUpdate(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID, 20);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-
-        previousRedstoneInputState = tagCompound.getByte("redstoneInputState");
-        output = tagCompound.getBoolean("output");
-        state = tagCompound.getByte("state");
-        emitting = tagCompound.getBoolean("emitting");
-        pulse = tagCompound.getBoolean("pulse");
-    }
-
-    @Override
-    public void updateTick(Random random)
-    {
-        if (pulse)
-        {
-            pulse = false;
             notifyNeighbors();
+        }
+    }
+
+    @Override
+    public void updateEntity()
+    {
+        if (isOutput)
+        {
+            if (timeUntilOff > 1)
+            {
+                timeUntilOff--;
+            }
+            else if (timeUntilOff == 1)
+            {
+                timeUntilOff--;
+                notifyNeighbors(); // Make sure we update our neighbors
+            }
         }
     }
 
@@ -261,9 +278,9 @@ public class TileRedstoneInterface extends TilePortalPart
     {
         state = newState;
 
-        if (emitting || pulse)
+        if (timeUntilOff != 0)
         {
-            emitting = pulse = false;
+            timeUntilOff = 0;
             notifyNeighbors();
         }
     }
@@ -272,20 +289,27 @@ public class TileRedstoneInterface extends TilePortalPart
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
-
-        tagCompound.setByte("redstoneInputState", previousRedstoneInputState);
-        tagCompound.setBoolean("output", output);
+        tagCompound.setBoolean("output", isOutput);
         tagCompound.setByte("state", state);
-        tagCompound.setBoolean("emitting", emitting);
-        tagCompound.setBoolean("pulse", pulse);
+        tagCompound.setByte("previousRedstoneState", previousRedstoneState);
+        tagCompound.setByte("timeUntilOff", timeUntilOff);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+        isOutput = tagCompound.getBoolean("output");
+        state = tagCompound.getByte("state");
+        previousRedstoneState = tagCompound.getByte("previousRedstoneState");
+        timeUntilOff = tagCompound.getByte("timeUntilOff");
     }
 
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         super.fillPacket(stream);
-
-        stream.writeBoolean(output);
+        stream.writeBoolean(isOutput);
         stream.writeByte(state);
     }
 
@@ -293,8 +317,7 @@ public class TileRedstoneInterface extends TilePortalPart
     public void usePacket(java.io.DataInputStream stream) throws IOException
     {
         super.usePacket(stream);
-
-        output = stream.readBoolean();
+        isOutput = stream.readBoolean();
         setState(stream.readByte());
     }
 }

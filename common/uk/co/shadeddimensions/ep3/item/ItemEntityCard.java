@@ -2,21 +2,37 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 
 public class ItemEntityCard extends ItemEnhancedPortals
 {
+    Icon texture;
+    
     public ItemEntityCard(int par1, String name)
     {
         super(par1, true);
         setUnlocalizedName(name);
+    }
+    
+    @Override
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
+    }
+    
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        texture = par1IconRegister.registerIcon("enhancedportals:idCard");
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
