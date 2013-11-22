@@ -27,6 +27,8 @@ item.ep3.locationCard.name=Location Card
 item.ep3.synchronizer.name=Synchronizer
 item.ep3.entityCard.name=Identification Card
 item.ep3.handheldScanner.name=Handheld Scanner
+item.ep3.miscItems.blankPortalModule.name=Blank Portal Module
+item.ep3.miscItems.blankUpgrade.name=Blank Upgrade
 
 # Items Misc
 ep3.item.charge=Charge:
