@@ -399,7 +399,10 @@ public class EntityManager
 
     public static void teleportEntityToDimension(Entity par1Entity)
     {
-        // TODO Auto-generated method stub
+        // TODO 
 
+        // For now, just teleport them to the spawn point of the dimension they're in
+        ChunkCoordinates spawn = par1Entity.worldObj.getSpawnPoint();
+        transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posZ), spawn.posZ, 0f, 0, 0, false);
     }
 }

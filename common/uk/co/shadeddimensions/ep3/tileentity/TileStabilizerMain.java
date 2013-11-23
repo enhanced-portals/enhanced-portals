@@ -199,7 +199,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         activeConnections.remove(portalB.getGlyphString());
         activeConnectionsReverse.remove(portalA.getGlyphString());
         activeConnectionsReverse.remove(portalB.getGlyphString());
-        
+
         if (activeConnections.size() == 0 && powerState == 0 && instability > 0)
         {
             instability = 0;
@@ -412,7 +412,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             {
                 module.onEntityTeleported(entity);
             }
-            
+
             for (ChunkCoordinates c : controller.blockManager.getRedstoneInterfaces())
             {
                 ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);

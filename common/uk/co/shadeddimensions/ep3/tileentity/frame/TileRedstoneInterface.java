@@ -112,7 +112,7 @@ public class TileRedstoneInterface extends TilePortalPart
                 return;
             }
 
-            boolean hasDialler =  controller.blockManager.getHasDialDevice();
+            boolean hasDialler = controller.blockManager.getHasDialDevice();
             byte redstoneInputState = getHighestPowerState();
 
             if (state == 1 && redstoneInputState == 0 && controller.isPortalActive) // Remove portal on signal
@@ -134,7 +134,8 @@ public class TileRedstoneInterface extends TilePortalPart
                     controller.createPortal();
                 }
             }
-            else // These require a dialler
+            else
+            // These require a dialler
             {
                 TileDiallingDevice dialler = controller.blockManager.getDialDevice(worldObj);
 

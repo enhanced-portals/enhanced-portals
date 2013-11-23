@@ -76,15 +76,15 @@ public class GuiRedstoneInterface extends GuiBase
             case 4:
                 stateText = flag ? Localization.getGuiString("entityTeleport") : Localization.getGuiString("dialStoredIdentifier");
                 break;
-                
+
             case 5:
                 stateText = flag ? Localization.getGuiString("playerTeleport") : Localization.getGuiString("dialStoredIdentifier2");
                 break;
-                
+
             case 6:
                 stateText = flag ? Localization.getGuiString("animalTeleport") : Localization.getGuiString("dialRandomIdentifier");
                 break;
-                
+
             case 7:
                 stateText = flag ? Localization.getGuiString("monsterTeleport") : Localization.getGuiString("dialRandomIdentifier2");
                 break;

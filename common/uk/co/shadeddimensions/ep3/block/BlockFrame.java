@@ -156,7 +156,7 @@ public class BlockFrame extends BlockEnhancedPortals
     @Override
     public void registerIcons(IconRegister register)
     {
-        overlayIcons = new Icon[FRAME_TYPES];
+        overlayIcons = new Icon[FRAME_TYPES - 1];
 
         for (int i = 0; i < overlayIcons.length; i++)
         {

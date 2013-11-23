@@ -16,19 +16,19 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 public class ItemEntityCard extends ItemEnhancedPortals
 {
     Icon texture;
-    
+
     public ItemEntityCard(int par1, String name)
     {
         super(par1, true);
         setUnlocalizedName(name);
     }
-    
+
     @Override
     public Icon getIconFromDamage(int par1)
     {
         return texture;
     }
-    
+
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {

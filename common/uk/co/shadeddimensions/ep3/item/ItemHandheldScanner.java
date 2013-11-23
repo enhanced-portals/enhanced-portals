@@ -2,12 +2,14 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
@@ -21,6 +23,8 @@ import cofh.api.energy.ItemEnergyContainer;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
 {
+    Icon texture;
+
     public ItemHandheldScanner(int par1, String name)
     {
         super(par1, 2000, 250, 250);
@@ -28,6 +32,18 @@ public class ItemHandheldScanner extends ItemEnergyContainer
         setCreativeTab(Reference.creativeTab);
         setMaxDamage(0);
         setMaxStackSize(1);
+    }
+
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        texture = par1IconRegister.registerIcon("enhancedportals:handheldScanner");
+    }
+
+    @Override
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
     }
 
     public static InventoryScanner getInventory(ItemStack stack)

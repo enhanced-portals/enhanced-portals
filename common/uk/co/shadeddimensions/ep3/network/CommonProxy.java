@@ -166,7 +166,7 @@ public class CommonProxy
 
         itemInPlaceUpgrade = new ItemUpgrade(configuration.getItemId("InPlaceUpgrade"), "ep3.inPlaceUpgrade");
         GameRegistry.registerItem(itemInPlaceUpgrade, "ep3.inPlaceUpgrade");
-        
+
         itemMisc = new ItemMisc(configuration.getItemId("MiscItems"), "ep3.miscItems");
         GameRegistry.registerItem(itemMisc, "ep3.miscItems");
     }
@@ -287,7 +287,7 @@ public class CommonProxy
         {
             return;
         }
-        
+
         // Frames
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { "SDS", "IQI", "SIS", 'S', Block.stone, 'D', Item.diamond, 'Q', Block.blockNetherQuartz, 'I', Item.ingotIron }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.PORTAL_CONTROLLER), new Object[] { "IDI", " F ", "IEI", 'F', new ItemStack(blockFrame, 1, 0), 'I', Item.ingotIron, 'E', Item.enderPearl, 'D', Item.diamond }));
@@ -314,20 +314,20 @@ public class CommonProxy
 
         // Glasses
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGoggles), true, new Object[] { "R B", "GLG", "L L", 'R', "dyeRed", 'B', "dyeBlue", 'G', "glass", 'L', Item.leather }));
-        
+
         // Nanobrush
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPaintbrush), new Object[] { "WT ", "TS ", "  S", 'W', Block.cloth, 'T', Item.silk, 'S', "stickWood" }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPaintbrush), new Object[] { " TW", " ST", "S  ", 'W', Block.cloth, 'T', Item.silk, 'S', "stickWood" }));
-        
+
         // Location Card
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemLocationCard, 16), new Object[] { "IPI", "PPP", "IDI", 'I', Item.ingotIron, 'P', Item.paper, 'D', "dyeBlue" }));
 
         // Synchronizer
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemSynchronizer), new Object[] { "GRG", "IQI", "III", 'G', Item.ingotGold, 'I', Item.ingotIron, 'R', Item.redstone, 'Q', Item.netherQuartz }));
-        
+
         // Handheld Scanner
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemScanner), new Object[] { "GRG", "IQI", "IEI", 'G', Item.ingotGold, 'I', Item.ingotIron, 'R', Item.redstone, 'Q', Item.netherQuartz, 'E', itemEntityCard }));
-        
+
         // Entity Card
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemEntityCard, 8), new Object[] { "GPG", "PPP", "GDG", 'G', Item.ingotGold, 'P', Item.paper, 'D', "dyeLime" }));
 
@@ -336,8 +336,8 @@ public class CommonProxy
 
         // Blank stuff
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), true, new Object[] { "II ", "II ", "NN ", 'I', Item.ingotIron, 'N', Item.goldNugget })); // Blank Portal Module
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 1), new Object[] { " I ", "IPI", " I ",  'P', Item.paper, 'I', Item.ingotIron })); // Blank Upgrade
-    
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 1), new Object[] { " I ", "IPI", " I ", 'P', Item.paper, 'I', Item.ingotIron })); // Blank Upgrade
+
         // Portal Modules
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 0), new Object[] { "   ", " X ", "   ", 'X', new ItemStack(itemMisc, 1, 0) })); // Particle Destroyer
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 1), new Object[] { "RGB", " X ", "BGR", 'X', new ItemStack(itemMisc, 1, 0), 'R', "dyeRed", 'B', "dyeBlue", 'G', "dyeGreen" })); // Rainbow particles

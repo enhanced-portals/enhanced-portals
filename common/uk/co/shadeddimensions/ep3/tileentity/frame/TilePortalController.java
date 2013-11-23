@@ -330,14 +330,14 @@ public class TilePortalController extends TilePortalPart
         }
 
         if (isPortal)
-        {            
+        {
             if (!processingPortal)
             {
                 processingPortal = true;
                 removePortal();
                 processingPortal = false;
             }
-            
+
             return;
         }
 

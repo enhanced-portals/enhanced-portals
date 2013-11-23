@@ -58,7 +58,7 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
 
         sendList.drawHoverText();
         recieveList.drawHoverText();
-        
+
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
 
