@@ -52,6 +52,8 @@ public class ClientProxy extends CommonProxy
     @Override
     public void miscSetup()
     {
+        super.miscSetup();
+        
         // Randomly chooses a particle then spawns it, stays static
         particleSets.add(new ParticleSet(0, new int[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
         particleSets.add(new ParticleSet(0, new int[] { 16, 17 }));

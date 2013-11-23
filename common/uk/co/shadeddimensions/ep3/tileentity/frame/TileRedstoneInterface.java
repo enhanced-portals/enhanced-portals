@@ -115,9 +115,16 @@ public class TileRedstoneInterface extends TilePortalPart
             boolean hasDialler = controller.blockManager.getHasDialDevice();
             byte redstoneInputState = getHighestPowerState();
 
-            if (state == 1 && redstoneInputState == 0 && controller.isPortalActive) // Remove portal on signal
+            if (state == 1) // Remove portal on signal
             {
-                controller.removePortal();
+                if (redstoneInputState > 0 && controller.isPortalActive)
+                {
+                    controller.removePortal();
+                }
+                else if (redstoneInputState == 0 && !controller.isPortalActive)
+                {
+                    controller.createPortal();
+                }
             }
             else if (state == 3 && redstoneInputState > 0 && previousRedstoneState == 0 && controller.isPortalActive) // Remove portal on pulse
             {
@@ -125,9 +132,16 @@ public class TileRedstoneInterface extends TilePortalPart
             }
             else if (!hasDialler) // These require no dialler
             {
-                if (state == 0 && redstoneInputState > 0 && !controller.isPortalActive) // Create portal on signal
+                if (state == 0) // Create portal on signal
                 {
-                    controller.createPortal();
+                    if (redstoneInputState > 0 && !controller.isPortalActive)
+                    {
+                        controller.createPortal();
+                    }
+                    else if (redstoneInputState == 0 && controller.isPortalActive)
+                    {
+                        controller.removePortal();
+                    }
                 }
                 else if (state == 2 && redstoneInputState > 0 && previousRedstoneState == 0 && !controller.isPortalActive) // Create portal on pulse
                 {
@@ -135,7 +149,7 @@ public class TileRedstoneInterface extends TilePortalPart
                 }
             }
             else
-            // These require a dialler
+                // These require a dialler
             {
                 TileDiallingDevice dialler = controller.blockManager.getDialDevice(worldObj);
 

@@ -192,7 +192,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public void registerIcons(IconRegister register)
     {
-        baseIcon = register.registerIcon("enhancedportals:portalModule_base");
+        baseIcon = register.registerIcon("enhancedportals:blankPortalModule");
 
         for (int i = 0; i < overlayIcons.length; i++)
         {

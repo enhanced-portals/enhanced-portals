@@ -241,12 +241,6 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
-    public void setBlockBoundsForItemRender()
-    {
-        setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
-    }
-
-    @Override
     public void registerIcons(IconRegister iconRegister)
     {
         texture = iconRegister.registerIcon("enhancedportals:portal");

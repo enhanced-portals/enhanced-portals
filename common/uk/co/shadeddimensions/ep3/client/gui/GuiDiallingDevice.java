@@ -135,7 +135,6 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
 
         cancelButton.drawButton = acceptButton.drawButton = showOverlay;
         ((GuiButton) buttonList.get(0)).enabled = ((GuiButton) buttonList.get(1)).enabled = ((GuiButton) buttonList.get(2)).enabled = !showOverlay;
-
     }
 
     private void setWarningMessage(int type)

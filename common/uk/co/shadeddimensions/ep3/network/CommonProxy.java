@@ -11,6 +11,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -268,7 +270,8 @@ public class CommonProxy
 
     public void miscSetup()
     {
-
+        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 4), 10, 40, 2));
+        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 6), 10, 40, 2));
     }
 
     public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
@@ -299,21 +302,21 @@ public class CommonProxy
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.MODULE_MANIPULATOR), new Object[] { " D ", "EFE", " U ", 'F', new ItemStack(blockFrame, 1, 0), 'D', Item.diamond, 'E', Item.emerald, 'U', new ItemStack(itemMisc, 1, 0) }));
 
         // In-Place Upgrades
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(itemMisc, 1, 0), 'R', Item.redstone }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(itemMisc, 1, 0), 'Z', Item.blazePowder, 'E', Item.enderPearl }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(itemMisc, 1, 1), 'R', Item.redstone }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new Object[] { " Z ", "EFE", " Z ", 'F', new ItemStack(itemMisc, 1, 1), 'Z', Item.blazePowder, 'E', Item.enderPearl }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 2), new Object[] { " E ", "DFD", " E ", 'F', new ItemStack(itemInPlaceUpgrade, 1, 1), 'E', Item.enderPearl, 'D', Item.diamond }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(itemMisc, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(itemMisc, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 4), new Object[] { " D ", "EFE", " F ", 'F', new ItemStack(itemMisc, 1, 0), 'D', Item.diamond, 'E', Item.emerald }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(itemMisc, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(itemMisc, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 4), new Object[] { " D ", "EFE", " U ", 'F', new ItemStack(itemMisc, 1, 1), 'D', Item.diamond, 'E', Item.emerald, 'U', new ItemStack(itemMisc, 1, 0) }));
 
         // Stabilizer
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockStabilizer, 6), new Object[] { "QPQ", "EDE", "QPQ", 'D', Block.blockDiamond, 'E', Item.emerald, 'Q', Block.blockNetherQuartz, 'P', Item.enderPearl }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockStabilizer, 6), new Object[] { "QPQ", "EDE", "QPQ", 'D', Block.blockDiamond, 'E', Item.emerald, 'Q', Block.blockIron, 'P', Item.enderPearl }));
 
         // Wrench
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemWrench), new Object[] { "I I", " Q ", " I ", 'I', Item.ingotIron, 'Q', Item.netherQuartz }));
 
         // Glasses
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGoggles), true, new Object[] { "R B", "GLG", "L L", 'R', "dyeRed", 'B', "dyeBlue", 'G', "glass", 'L', Item.leather }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGoggles), true, new Object[] { "R B", "GLG", "L L", 'R', "dyeRed", 'B', "dyeCyan", 'G', "glass", 'L', Item.leather }));
 
         // Nanobrush
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPaintbrush), new Object[] { "WT ", "TS ", "  S", 'W', Block.cloth, 'T', Item.silk, 'S', "stickWood" }));
@@ -323,7 +326,7 @@ public class CommonProxy
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemLocationCard, 16), new Object[] { "IPI", "PPP", "IDI", 'I', Item.ingotIron, 'P', Item.paper, 'D', "dyeBlue" }));
 
         // Synchronizer
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemSynchronizer), new Object[] { "GRG", "IQI", "III", 'G', Item.ingotGold, 'I', Item.ingotIron, 'R', Item.redstone, 'Q', Item.netherQuartz }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemSynchronizer), new Object[] { "GGG", "IQI", "III", 'G', Item.ingotGold, 'I', Item.ingotIron, 'Q', Item.netherQuartz }));
 
         // Handheld Scanner
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemScanner), new Object[] { "GRG", "IQI", "IEI", 'G', Item.ingotGold, 'I', Item.ingotIron, 'R', Item.redstone, 'Q', Item.netherQuartz, 'E', itemEntityCard }));
@@ -336,15 +339,15 @@ public class CommonProxy
 
         // Blank stuff
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), true, new Object[] { "II ", "II ", "NN ", 'I', Item.ingotIron, 'N', Item.goldNugget })); // Blank Portal Module
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 1), new Object[] { " I ", "IPI", " I ", 'P', Item.paper, 'I', Item.ingotIron })); // Blank Upgrade
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 4, 1), new Object[] { "D", "P", "R", 'P', Item.paper, 'D', Item.diamond, 'R', "dyeRed" })); // Blank Upgrade
 
         // Portal Modules
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 0), new Object[] { "   ", " X ", "   ", 'X', new ItemStack(itemMisc, 1, 0) })); // Particle Destroyer
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 0), new Object[] { "RXG", 'X', new ItemStack(itemMisc, 1, 0), 'R', Item.redstone, 'G', Item.gunpowder })); // Particle Destroyer
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 1), new Object[] { "RGB", " X ", "BGR", 'X', new ItemStack(itemMisc, 1, 0), 'R', "dyeRed", 'B', "dyeBlue", 'G', "dyeGreen" })); // Rainbow particles
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 2), new Object[] { "   ", "RXN", "   ", 'X', new ItemStack(itemMisc, 1, 0), 'R', Item.redstone, 'N', Block.music })); // Portal Silencer
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 3), new Object[] { "   ", "AXF", "   ", 'X', new ItemStack(itemMisc, 1, 0), 'A', Block.anvil, 'F', Item.feather })); // Momentum
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 2), new Object[] { "RXN", 'X', new ItemStack(itemMisc, 1, 0), 'R', Item.redstone, 'N', Block.music })); // Portal Silencer
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 3), new Object[] { "AXF", 'X', new ItemStack(itemMisc, 1, 0), 'A', Block.anvil, 'F', Item.feather })); // Momentum
         // 4 - Portal Cloaking - does not have a recipe
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 5), new Object[] { "   ", "BXI", "   ", 'X', new ItemStack(itemMisc, 1, 0), 'B', "dyeWhite", 'I', "dyeBlack" })); // Particle Shader
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 5), new Object[] { "BXI", 'X', new ItemStack(itemMisc, 1, 0), 'B', "dyeWhite", 'I', "dyeBlack" })); // Particle Shader
         // 6 - Ethereal Frame - does not have a recipe
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 7), new Object[] { "FFF", "FXF", "FFF", 'X', new ItemStack(itemMisc, 1, 0), 'F', Item.feather })); // Featherfall
     }

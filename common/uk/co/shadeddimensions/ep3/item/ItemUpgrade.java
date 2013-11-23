@@ -25,8 +25,9 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 
 public class ItemUpgrade extends ItemEnhancedPortals
 {
-    Icon textures[];
-
+    static Icon baseIcon;
+    static Icon[] overlayIcons = new Icon[BlockFrame.FRAME_TYPES - 2];
+    
     public ItemUpgrade(int par1, String name)
     {
         super(par1, true);
@@ -34,21 +35,32 @@ public class ItemUpgrade extends ItemEnhancedPortals
         setHasSubtypes(true);
         setMaxDamage(0);
     }
-
+    
     @Override
-    public Icon getIconFromDamage(int par1)
+    public boolean requiresMultipleRenderPasses()
     {
-        return textures[par1];
+        return true;
     }
 
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public Icon getIconFromDamageForRenderPass(int damage, int pass)
     {
-        textures = new Icon[BlockFrame.FRAME_TYPES - 2];
-
-        for (int i = 0; i < textures.length; i++)
+        if (pass == 1)
         {
-            textures[i] = par1IconRegister.registerIcon("enhancedportals:upgrade_" + i);
+            return overlayIcons[damage];
+        }
+
+        return baseIcon;
+    }
+
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        baseIcon = register.registerIcon("enhancedportals:blankUpgrade");
+
+        for (int i = 0; i < overlayIcons.length; i++)
+        {
+            overlayIcons[i] = register.registerIcon("enhancedportals:upgrade_" + i);
         }
     }
 
@@ -62,7 +74,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (int i = 0; i < textures.length; i++)
+        for (int i = 0; i < overlayIcons.length; i++)
         {
             par3List.add(new ItemStack(itemID, 1, i));
         }
