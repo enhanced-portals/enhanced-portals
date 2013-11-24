@@ -41,19 +41,17 @@ public class TilePortalController extends TilePortalPart
     public boolean isPortalActive;
     public boolean processing;
     boolean processingPortal;
+    public int connectedPortals;
 
     @SideOnly(Side.CLIENT)
     public GlyphIdentifier uniqueID, networkID;
-
-    @SideOnly(Side.CLIENT)
-    public int connectedPortals;
-
+  
     public TilePortalController()
     {
         blockManager = new BlockManager();
         portalType = 0;
-        connectedPortals = -1;
         portalState = 0;
+        connectedPortals = -1;
         activeTextureData = new PortalTextureManager();
         inactiveTextureData = null;
         isPortalActive = processing = processingPortal = false;

@@ -78,22 +78,19 @@ public class CommonProxy
     public static ItemHandheldScanner itemScanner;
     public static ItemUpgrade itemInPlaceUpgrade;
     public static ItemMisc itemMisc;
+    
+    public int gogglesRenderIndex = 0;
 
     public static NetworkManager networkManager;
 
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes;
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles;
     public static int redstoneFluxPowerMultiplier;
 
     public static int MobEnderman, MobCreeper;
     public static int Dimension, WastelandID;
-
-    public static void sendPacketToAllAroundTiny(TileEnhancedPortals tile)
-    {
-        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 15, tile.worldObj.provider.dimensionId, new PacketTileUpdate(tile).getPacket());
-    }
 
     public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
@@ -245,6 +242,8 @@ public class CommonProxy
 
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
         customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);
+        disablePortalSounds = configuration.get("Overrides", "DisablePortalSounds", false);
+        disableParticles = configuration.get("Overrides", "DisableParticles", false);
 
         portalsDestroyBlocks = configuration.get("Portal", "PortalsDestroyBlocks", true);
         fasterPortalCooldown = configuration.get("Portal", "FasterPortalCooldown", false);
@@ -264,6 +263,9 @@ public class CommonProxy
         {
             redstoneFluxPowerMultiplier = 0;
         }
+        
+        configuration.getConfiguration().addCustomCategoryComment("World", "None of this is implemented yet.");
+        configuration.getConfiguration().addCustomCategoryComment("Overrides", "Nether portal override is not yet implemented.");
 
         configuration.init();
     }

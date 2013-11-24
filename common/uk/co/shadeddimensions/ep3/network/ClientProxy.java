@@ -50,6 +50,14 @@ public class ClientProxy extends CommonProxy
     public static Random random = new Random();
 
     @Override
+    public void registerItems()
+    {
+        gogglesRenderIndex = RenderingRegistry.addNewArmourRendererPrefix("epGoggles");
+        
+        super.registerItems();
+    }
+    
+    @Override
     public void miscSetup()
     {
         super.miscSetup();

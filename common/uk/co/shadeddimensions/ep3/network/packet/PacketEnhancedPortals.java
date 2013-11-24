@@ -88,7 +88,7 @@ public abstract class PacketEnhancedPortals
         p.data = baos.toByteArray();
         p.length = p.data.length;
         p.isChunkDataPacket = isChunkDataPacket;
-
+        
         return p;
     }
 

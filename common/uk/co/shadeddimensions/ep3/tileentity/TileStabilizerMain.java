@@ -59,7 +59,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         blockList = new ArrayList<ChunkCoordinates>();
         activeConnections = new HashMap<String, String>();
         activeConnectionsReverse = new HashMap<String, String>();
-        energyStorage = new EnergyStorage(32000);
+        energyStorage = new EnergyStorage(1000000000);
     }
 
     /***
@@ -584,7 +584,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         intActiveConnections = stream.readInt();
         powerState = stream.readInt();
         instability = stream.readInt();
-        energyStorage = new EnergyStorage(stream.readInt());
+        energyStorage.setCapacity(stream.readInt());
         energyStorage.setEnergyStored(stream.readInt());
     }
 

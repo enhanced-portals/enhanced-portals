@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -140,50 +141,58 @@ public class BlockPortal extends BlockEnhancedPortals
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
+        if (CommonProxy.disablePortalSounds && CommonProxy.disableParticles)
+        {
+            return;
+        }
+        
         int metadata = world.getBlockMetadata(x, y, z);
         TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
         TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
 
-        if (random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID())))
+        if (!CommonProxy.disablePortalSounds && random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID())))
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
 
-        if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID()))
+        if (!CommonProxy.disableParticles)
         {
-            return;
-        }
-
-        for (int l = 0; l < 4; ++l)
-        {
-            double d0 = x + random.nextFloat();
-            double d1 = y + random.nextFloat();
-            double d2 = z + random.nextFloat();
-            double d3 = 0.0D;
-            double d4 = 0.0D;
-            double d5 = 0.0D;
-            int i1 = random.nextInt(2) * 2 - 1;
-            d3 = (random.nextFloat() - 0.5D) * 0.5D;
-            d4 = (random.nextFloat() - 0.5D) * 0.5D;
-            d5 = (random.nextFloat() - 0.5D) * 0.5D;
-
-            if (metadata == 1)
+            if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID()))
             {
-                d2 = z + 0.5D + 0.25D * i1;
-                d5 = random.nextFloat() * 2.0F * i1;
-            }
-            else if (metadata == 2)
-            {
-                d0 = x + 0.5D + 0.25D * i1;
-                d3 = random.nextFloat() * 2.0F * i1;
-            }
-            else if (metadata == 3)
-            {
-                d1 = y + 0.5D + 0.25D * i1;
-                d4 = random.nextFloat() * 2.0F * i1;
+                return;
             }
 
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, controller, module, d0, d1, d2, d3, d4, d5));
+            for (int l = 0; l < 4; ++l)
+            {
+                double d0 = x + random.nextFloat();
+                double d1 = y + random.nextFloat();
+                double d2 = z + random.nextFloat();
+                double d3 = 0.0D;
+                double d4 = 0.0D;
+                double d5 = 0.0D;
+                int i1 = random.nextInt(2) * 2 - 1;
+                d3 = (random.nextFloat() - 0.5D) * 0.5D;
+                d4 = (random.nextFloat() - 0.5D) * 0.5D;
+                d5 = (random.nextFloat() - 0.5D) * 0.5D;
+
+                if (metadata == 1)
+                {
+                    d2 = z + 0.5D + 0.25D * i1;
+                    d5 = random.nextFloat() * 2.0F * i1;
+                }
+                else if (metadata == 2)
+                {
+                    d0 = x + 0.5D + 0.25D * i1;
+                    d3 = random.nextFloat() * 2.0F * i1;
+                }
+                else if (metadata == 3)
+                {
+                    d1 = y + 0.5D + 0.25D * i1;
+                    d4 = random.nextFloat() * 2.0F * i1;
+                }
+
+                FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, controller, module, d0, d1, d2, d3, d4, d5));
+            }
         }
     }
 

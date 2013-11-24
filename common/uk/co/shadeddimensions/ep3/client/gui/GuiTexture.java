@@ -57,7 +57,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
         @Override
         public boolean handleMouseClicked(int x, int y, int mouseButton)
         {
-            if (y > posY - 10)
+            if (isFullyOpened() && mouseButton == 0)
             {
                 return true;
             }

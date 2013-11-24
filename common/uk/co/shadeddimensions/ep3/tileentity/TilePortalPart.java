@@ -26,7 +26,6 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
-import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TilePortalPart extends TileEnhancedPortals implements IInventory
 {
@@ -35,6 +34,11 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
+        if (worldObj.isRemote)
+        {
+            return;
+        }
+        
         if (oldBlockID == worldObj.getBlockId(xCoord, yCoord, zCoord))
         {
             return;
@@ -51,10 +55,15 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     @Override
     public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
     {
+        if (worldObj.isRemote)
+        {
+            return;
+        }
+        
         for (int i = 0; i < 6; i++)
         {
-            WorldCoordinates c = getWorldCoordinates().offset(ForgeDirection.getOrientation(i));
-            TileEntity tile = c.getBlockTileEntity();
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            TileEntity tile = worldObj.getBlockTileEntity(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ);
 
             if (tile != null && tile instanceof TilePortalPart)
             {

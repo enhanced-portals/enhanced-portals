@@ -62,28 +62,4 @@ public class BlockStabilizer extends BlockEnhancedPortals
     {
         connectedTextures.registerIcons(iconRegister);
     }
-
-    @Override
-    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
-    {
-        return blockAccess.getBlockId(x, y, z) == blockID ? false : super.shouldSideBeRendered(blockAccess, x, y, z, side);
-    }
-
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-
-    @Override
-    public int getRenderBlockPass()
-    {
-        return 1;
-    }
-
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
-    }
 }
