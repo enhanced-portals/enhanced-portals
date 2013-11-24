@@ -8,12 +8,40 @@ tile.ep3.portalFrame.biometric.name=生物辨识器
 tile.ep3.portalFrame.upgrade.name=模块操作器
 tile.ep3.portal.name=传送门
 tile.ep3.stabilizer.name=位面之桥稳定器(DBS)
+tile.ep3.decoration.frame.name=镶边石英
+tile.ep3.decoration.stabilizer.name=稳定器
+
+# Block Misc
+ep3.block.portalFramePart=传送门框架部分
+ep3.block.multiblockStructure=多方块结构
+ep3.block.dbsSize=2x3x2 ~ 2x3x256
+ep3.block.eachRowAddsToTheMaximum=每行增加到最大数量
+ep3.block.activePortalConnections=激活传送门连接
+ep3.block.decorativeBlock=装饰方块
+item.ep3.synchronizer.name=同步器
+item.ep3.entityCard.name=ID卡
+item.ep3.handheldScanner.name=手持扫描仪
+item.ep3.miscItems.blankPortalModule.name=空白传送门模块
+item.ep3.miscItems.blankUpgrade.name=空白升级
 
 # Items
 item.ep3.wrench.name=扳手
 item.ep3.paintbrush.name=纳米刷子
 item.ep3.goggles.name=护目镜
 item.ep3.locationCard.name=位面之桥稳定器(DBS)定位卡片
+
+# Items Misc
+ep3.item.charge=充能:
+ep3.item.scanned=扫描:
+ep3.item.contains=包含:
+ep3.item.andMore=及更多%s...
+
+# In-place upgrades
+item.ep3.inPlaceUpgrade.redstone.name=红石接口升级
+item.ep3.inPlaceUpgrade.networkInterface.name=网络接口升级
+item.ep3.inPlaceUpgrade.dialDevice.name=拨号设备升级
+item.ep3.inPlaceUpgrade.biometric.name=生物辨识器升级
+item.ep3.inPlaceUpgrade.upgrade.name=模块操作器升级
 
 # Upgrades
 item.ep3.portalModule.0.name=粒子湮灭模块
@@ -32,79 +60,131 @@ item.ep3.portalModule.6.name=天域框架模块
 item.ep3.portalModule.6.desc=使得传送门框架透明
 item.ep3.portalModule.6.desc2=且允许你穿过框架
 item.ep3.portalModule.6.desc3=发光但不照亮周围
+item.ep3.portalModule.7.name=羽落模块
+item.ep3.portalModule.7.desc=消除掉落伤害
 
 # Creative Tab
 itemGroup.EnhancedPortals3=强化传送门3
 
-# Gui
-gui.ep3.texture=材质
-gui.ep3.portalTexture=传送门材质
-gui.ep3.portalFrameTexture=传送门框架材质
-gui.ep3.particleTexture=粒子材质
-gui.ep3.button.reset=重置
-gui.ep3.button.save=保存
-gui.ep3.button.input=输入
-gui.ep3.button.output=输出
-gui.ep3.button.clear=清除
-gui.ep3.button.random=随机
-gui.ep3.button.cancel=取消
-gui.ep3.colour=颜色
-gui.ep3.colour.red=红
-gui.ep3.colour.green=绿
-gui.ep3.colour.blue=蓝
-gui.ep3.particleColour=粒子颜色
-gui.ep3.portalColour=传送门颜色
-gui.ep3.didYouKnow=你知道吗?
-gui.ep3.uniqueIdentifier=唯一标识符
-gui.ep3.glyphs=雕文
-gui.ep3.portalComponents=传送门组件
-gui.ep3.controller.frameBlocks=框架方块
-gui.ep3.controller.redstoneControllers=红石接口
-gui.ep3.controller.portalBlocks=传送门方块
-gui.ep3.controller.networkInterface=网络接口
-gui.ep3.controller.dialDevice=拨号设备
-gui.ep3.controller.biometric=生物辨识器
-gui.ep3.controller.initialized=初始化完成
-gui.ep3.controller.upgrade=模块操作器
-gui.ep3.controller.invalid=
-gui.ep3.clickToModify=点击以改装
-gui.ep3.networkIdentifier=网络辨识器
-gui.ep3.networkInfo=网络信息
-gui.ep3.networkIdentifier.networkedPortals=联网传送门
-gui.ep3.networkIdentifier.notSet=未设置
-gui.ep3.modules=模块
+# GUI Handheld Scanner
+ep3.gui.scanner=手持扫描仪
 
-# Redstone States (Titles)
-gui.ep3.redstone.output.portalCreated=传送门已创建
-gui.ep3.redstone.output.portalRemoved=传送门已移除
-gui.ep3.redstone.output.portalActive=传送门已激活
-gui.ep3.redstone.output.portalInactive=传送门已关闭
-gui.ep3.redstone.output.entityTouch=实体碰触开启[NI]
-gui.ep3.redstone.input.portalOnSignal=当接收到红石信号时创建传送门
-gui.ep3.redstone.input.portalNoSignal=当未接收到红石信号时创建传送门
-gui.ep3.redstone.input.portalOnPulse=当接收到红石脉冲信号时创建传送门
-gui.ep3.redstone.input.noPortalOnPulse=当接收到红石脉冲信号时移除传送门
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=位面之桥稳定器(DBS)
+ep3.gui.information=信息
+ep3.gui.activePortals=激活传送门
+ep3.gui.redstoneFluxPerSecond=RF/秒
+ep3.gui.redstoneFluxShort=RF
+ep3.gui.instability=不稳定性
+ep3.gui.powerModeFree=模式: 安全
+ep3.gui.powerModeNormal=模式: 标准
+ep3.gui.powerModeRisky=模式: 风险
+ep3.gui.powerModeUnstable=模式: 不稳定
+ep3.gui.powerModeUnpredictable=模式: 难以预计
 
-# Redstone States (Descriptions)
-gui.ep3.redstone.output.portalCreated.desc=当传送门创建时发出一个红石脉冲信号
-gui.ep3.redstone.output.portalRemoved.desc=当传送门被消除时发出一个红石脉冲信号
-gui.ep3.redstone.output.portalActive.desc=当传送门开启时发出一个稳定不变的红石信号
-gui.ep3.redstone.output.portalInactive.desc=当传送门未开启时发出一个稳定不变的红石信号
-gui.ep3.redstone.output.entityTouch.desc=当一个实体接触到这个方块的任意面时发出一个红石脉冲信号
-gui.ep3.redstone.input.portalOnSignal.desc=当接收到一个红石信号时创建传送门, 此传送门会在红石信号中断时被消除
-gui.ep3.redstone.input.portalNoSignal.desc=当没有接收到红石信号时创建传送门, 此传送门会在接收到一个红石信号时被消除
-gui.ep3.redstone.input.portalOnPulse.desc=当接收到一个红石脉冲信号时创建传送门, 此传送门不会被消除
-gui.ep3.redstone.input.noPortalOnPulse.desc=当接收到一个红石脉冲信号时消除传送门, 此传送门不会被重新创建
+# GUI Portal Controller
+ep3.gui.portalController=传送门控制器
+ep3.gui.uniqueIdentifier=唯一标识符
+ep3.gui.portalComponents=传送门组件
+
+# GUI Dialler
+ep3.gui.dialDevice=拨号设备
+ep3.gui.storedIdentifiers=已存储标识符
+ep3.gui.terminate=终止
+ep3.gui.dial=拨号
+ep3.gui.identifierCannotBeBlank=标识符不能留空
+ep3.gui.noEntriesFound=未发现可连接项目
+ep3.gui.name=名称
+ep3.gui.identifierName=标识符名称
+
+# GUI Texture
+ep3.gui.customIcon=自定义图标
+ep3.gui.facade=外观
+ep3.gui.frame=框架
+ep3.gui.portal=传送门
+ep3.gui.particle=粒子
+ep3.gui.colour=颜色
+ep3.gui.red=红
+ep3.gui.green=绿
+ep3.gui.blue=蓝
+ep3.gui.noCustomIconsFound=未发现自定义图标
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=模块操作器
+ep3.gui.modules=传送门模块
+
+# GUI Network Interface
+ep3.gui.networkInterface=网络接口
+ep3.gui.networkIdentifier=网络标识符
+ep3.gui.networkInformation=网络信息
+ep3.gui.networkedPortals=已联网传送门
+ep3.gui.notSet=未设置
+
+# GUI Biometric Identifier
+ep3.gui.biometricIdentifier=生物辨识器
+ep3.gui.sending=发送中…
+ep3.gui.recieving=接收中…
+ep3.gui.allow=允许
+ep3.gui.allowing=允许中…
+ep3.gui.disallow=禁止
+ep3.gui.disallowing=禁止中…
+ep3.gui.activate=激活
+ep3.gui.deactivate=注销
+ep3.gui.idCard=ID卡
+ep3.gui.active=激活
+ep3.gui.inactive=注销
+ep3.gui.anythingCalled=任意如下名称的物品:
+ep3.gui.matchName=匹配名称
+ep3.gui.anythingOfTheType=任意如下类型的物品:
+ep3.gui.matchType=匹配类型
+ep3.gui.withTheTypeOf=符合如下类型的物品:
+ep3.gui.matchTypeAndName=匹配名称与类型
+ep3.gui.listNotEnabled=该列表已被禁止
+
+# GUI Redstone
+ep3.gui.redstoneInterface=红石接口
+
+ep3.gui.input=输入
+ep3.gui.createPortalOnSignal=接收到红石信号时创建传送门
+ep3.gui.removePortalOnSignal=接收到红石信号时移除传送门
+ep3.gui.createPortalOnPulse=接收到红石脉冲时创建传送门
+ep3.gui.removePortalOnPulse=接收到红石脉冲时移除传送门
+ep3.gui.dialStoredIdentifier=拨号为指定标识符
+ep3.gui.dialRandomIdentifier=拨号为随机标识符
+ep3.gui.dialStoredIdentifier2=拨号为指定标识符(2)
+ep3.gui.dialRandomIdentifier2=拨号为随机标识符(2)
+
+ep3.gui.output=输出
+ep3.gui.portalCreated=传送门已创建
+ep3.gui.portalRemoved=传送门已移除
+ep3.gui.portalActive=开启传送门
+ep3.gui.portalInactive=关闭传送门
+ep3.gui.entityTeleport=实体触发传送门
+ep3.gui.playerTeleport=玩家触发传送门
+ep3.gui.animalTeleport=动物触发传送门
+ep3.gui.monsterTeleport=怪物触发传送门
+
+# GUI General
+ep3.gui.initialized=已初始化
+ep3.gui.glyphs=铭文
+ep3.gui.cancel=取消
+ep3.gui.save=保存
+ep3.gui.reset=重置
+ep3.gui.clear=清除
+ep3.gui.random=随机
+ep3.gui.add=添加
+ep3.gui.accept=接受
+ep3.gui.clickToModify=点击以修改
 
 # Chat
-ep3.chat.error.noUidSet=你必须先设置一个唯一标识符才能做这件事
-ep3.chat.error.multipleNetworkInterfaces=创建传送门失败: 你不能同时包含多个网络接口
-ep3.chat.error.networkInterfaceAndDialDevice=创建传送门失败: 你不能同时包含一个拨号设备和一个网络接口
-ep3.chat.error.multipleDiallingDevices=创建传送门失败: 你不能同时包含多个拨号设备
-ep3.chat.error.multipleBiometricIdentifiers=创建传送门失败: 你不能同时包含多个生物辨识器
-ep3.chat.error.multipleModuleManipulators=创建传送门失败: 你不能同时包含多个模块操作器
-ep3.chat.error.multipleControllers=创建传送门失败: 你不能同时包含多个传送门控制器
-ep3.chat.error.noPortals=在当前位置创建传送门失败. 请确保当前位置对一个传送门来说有效
-ep3.chat.error.voidLinkCard=这张链接卡不再链接至一个有效的位面之桥稳定器(DBS)
-ep3.chat.nextStage=请插入一个位面之桥稳定器(DBS)定位卡片以继续
+ep3.chat.multiplePortalControllers=创建传送门失败: 不能同时包含多个传送门控制器
+ep3.chat.multipleNetworkInterfaces=创建传送门失败: 不能同时包含多个网络接口
+ep3.chat.multipleDiallingDevices=创建传送门失败: 不能同时包含多个拨号设备
+ep3.chat.multipleBiometricIdentifiers=创建传送门失败: 不能同时包含多个生物辨识器
+ep3.chat.multipleModuleManipulators=创建传送门失败: 不能同时包含多个模块操作器
+ep3.chat.dialDeviceAndNetworkInterface=创建传送门失败: 不能同时包含一个拨号设备和一个网络接口器
+ep3.chat.voidLinkCard=这张链接卡不再链接至一个有效的位面之桥稳定器(DBS)
+ep3.chat.portalCouldNotBeCreatedHere=创建传送门失败:当前位置不能创建传送门.
 ep3.chat.success=成功初始化传送门
+ep3.chat.reconfigureSuccess=传送门已成功重载配置.
+ep3.chat.noUidSet=你必须先设置一个唯一标识符才能继续操作
