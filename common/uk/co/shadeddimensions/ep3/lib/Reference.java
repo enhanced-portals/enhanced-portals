@@ -9,7 +9,7 @@ public class Reference
     public static final String SHORT_ID = "ep3";
     public static final String NAME = "EnhancedPortals 3";
     public static final String VERSION = "@VERSION@";
-    public static final String DEPENDENCIES = "";
+    public static final String DEPENDENCIES = "required-after:CoFHCore";
     public static final String MC_VERSION = "[1.6.4,)";
 
     public static final String CLIENT_PROXY = "uk.co.shadeddimensions.ep3.network.ClientProxy";

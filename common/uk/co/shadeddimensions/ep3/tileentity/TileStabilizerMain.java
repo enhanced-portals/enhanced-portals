@@ -415,7 +415,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
 
             for (ChunkCoordinates c : controller.blockManager.getRedstoneInterfaces())
             {
-                ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);
+                ((TileRedstoneInterface) controller.worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);
             }
         }
 

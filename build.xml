@@ -52,9 +52,11 @@
 		
 		<mkdir dir="${dir.release}\${version.mc}" />
 		<delete dir="${dir.mcp}\reobf\minecraft\net\" />
+		<delete dir="${dir.mcp}\reobf\minecraft\cpw\" />
+		<delete dir="${dir.mcp}\reobf\minecraft\cofh\" />
 		
-		<jar destfile="${dir.release}\${version.mc}\EnhancedPortals-3_${version.main}.jar">
-			<fileset dir="${dir.mcp}\reobf\minecraft\" excludes="**/cpw*" />
+		<jar destfile="${dir.release}\${version.mc}\EnhancedPortals_${version.main}.jar">
+			<fileset dir="${dir.mcp}\reobf\minecraft\" />
 			<fileset dir="${dir.resources}" excludes="mcmod.info" />
 			<fileset dir="${dir.mcp}\src\minecraft\" includes="mcmod.info" />
 		</jar>
