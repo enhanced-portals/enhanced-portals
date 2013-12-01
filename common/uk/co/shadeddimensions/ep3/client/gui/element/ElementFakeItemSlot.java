@@ -1,5 +1,7 @@
 package uk.co.shadeddimensions.ep3.client.gui.element;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -83,8 +85,11 @@ public class ElementFakeItemSlot extends ElementBase
     }
 
     @Override
-    public String getTooltip()
+    public void addTooltip(List<String> list)
     {
-        return !isVisible() ? null : item != null ? item.getDisplayName() : null;
+        if (isVisible())
+        {
+            list.add(item.getDisplayName());
+        }
     }
 }

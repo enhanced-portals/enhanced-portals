@@ -194,12 +194,6 @@ public class ElementScrollListBase extends ElementBase
         return yPos - scrolled >= -getEntrySize() && yPos - scrolled + getEntrySize() < sizeY + getEntrySize() ? true : false;
     }
 
-    @Override
-    public String getTooltip()
-    {
-        return null;
-    }
-
     protected void notifyParent()
     {
         if (gui instanceof IElementHandler)

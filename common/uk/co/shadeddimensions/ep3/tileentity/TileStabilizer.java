@@ -100,6 +100,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
                 {
                     TileStabilizer t = (TileStabilizer) tile;
                     t.mainBlock = topLeft;
+                    CommonProxy.sendUpdatePacketToAllAround(t);
                 }
             }
 
@@ -175,6 +176,13 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         }
 
         main.deconstruct();
+    }
+    
+    @Override
+    public void validate()
+    {
+        // Don't call super - we don't need to send any packets here
+        tileEntityInvalid = false;
     }
 
     /* IEnergyHandler */

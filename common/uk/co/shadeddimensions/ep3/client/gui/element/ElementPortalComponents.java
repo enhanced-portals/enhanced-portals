@@ -52,10 +52,4 @@ public class ElementPortalComponents extends ElementBase
         fontRenderer.drawString(controller.blockManager.getHasBiometricIdentifier() ? Localization.getGuiString("initialized") : "0", posX + 100, posY + 24, 0x404040);
         fontRenderer.drawString(controller.blockManager.getHasModuleManipulator() ? Localization.getGuiString("initialized") : "0", posX + 100, posY + 44, 0x404040);
     }
-
-    @Override
-    public String getTooltip()
-    {
-        return null;
-    }
 }

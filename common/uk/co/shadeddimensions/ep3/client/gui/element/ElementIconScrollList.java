@@ -236,10 +236,4 @@ public class ElementIconScrollList extends ElementBase
         int pos = getElementYCoord(i);
         return pos > -getEntrySize() && pos < sizeY - 1;
     }
-
-    @Override
-    public String getTooltip()
-    {
-        return null;
-    }
 }

@@ -3,8 +3,12 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import uk.co.shadeddimensions.ep3.client.gui.slot.SlotDBS;
+import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import cofh.gui.slot.SlotEnergy;
+import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPortals
 {
@@ -14,7 +18,7 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     {
         super(t);
 
-        addSlotToContainer(new SlotEnergy(t, 0, 152, 58));
+        addSlotToContainer(new SlotDBS(t, 0, 152, 58));
 
         for (int i = 0; i < 3; i++)
         {
@@ -40,7 +44,11 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        int currentPower = ((TileStabilizerMain) tile).getEnergyStored(null), currentPortals = ((TileStabilizerMain) tile).getActiveConnections(), currentInstability = ((TileStabilizerMain) tile).instability, currentPowerState = ((TileStabilizerMain) tile).powerState;
+        TileStabilizerMain stabilizer = (TileStabilizerMain) tile;
+        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(),
+            currentPortals = stabilizer.getActiveConnections(),
+            currentInstability = stabilizer.instability,
+            currentPowerState = stabilizer.powerState;
 
         for (int i = 0; i < crafters.size(); i++)
         {
@@ -48,19 +56,22 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
 
             if (lastPower != currentPower)
             {
-                icrafting.sendProgressBarUpdate(this, 0, currentPower);
+                GuiPayload payload = new GuiPayload();
+                payload.data.setInteger("energy", currentPower);
+                PacketDispatcher.sendPacketToPlayer(new PacketGuiData(payload).getPacket(), (Player) icrafting);
+                //icrafting.sendProgressBarUpdate(this, 1, currentPower);
             }
             if (lastPortals != currentPortals)
             {
-                icrafting.sendProgressBarUpdate(this, 1, currentPortals);
+                icrafting.sendProgressBarUpdate(this, 2, currentPortals);
             }
             if (lastInstability != currentInstability)
             {
-                icrafting.sendProgressBarUpdate(this, 2, currentInstability);
+                icrafting.sendProgressBarUpdate(this, 3, currentInstability);
             }
             if (lastPowerState != currentPowerState)
             {
-                icrafting.sendProgressBarUpdate(this, 3, currentPowerState);
+                icrafting.sendProgressBarUpdate(this, 4, currentPowerState);
             }
         }
 
@@ -73,21 +84,23 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     @Override
     public void updateProgressBar(int par1, int par2)
     {
-        if (par1 == 0)
+        TileStabilizerMain stabilizer = (TileStabilizerMain) tile;
+        
+        //if (par1 == 1)
+        //{
+        //    stabilizer.getEnergyStorage().setEnergyStored(par2);
+        //}
+        if (par1 == 2)
         {
-            ((TileStabilizerMain) tile).getEnergyStorage().setEnergyStored(par2);
+            stabilizer.intActiveConnections = par2;
         }
-        else if (par1 == 1)
+        if (par1 == 3)
         {
-            ((TileStabilizerMain) tile).intActiveConnections = par2;
+            stabilizer.instability = par2;
         }
-        else if (par1 == 2)
+        if (par1 == 4)
         {
-            ((TileStabilizerMain) tile).instability = par2;
-        }
-        else if (par1 == 3)
-        {
-            ((TileStabilizerMain) tile).powerState = par2;
+            stabilizer.powerState = par2;
         }
     }
 }

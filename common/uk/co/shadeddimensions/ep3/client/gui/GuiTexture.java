@@ -64,12 +64,6 @@ public class GuiTexture extends GuiBase implements IElementHandler
 
             return false;
         }
-
-        @Override
-        public String getTooltip()
-        {
-            return null;
-        }
     }
 
     TilePortalController controller;

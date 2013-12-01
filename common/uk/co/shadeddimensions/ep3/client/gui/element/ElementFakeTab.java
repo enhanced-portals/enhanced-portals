@@ -87,10 +87,4 @@ public class ElementFakeTab extends ElementBase
     {
         isActive = b;
     }
-
-    @Override
-    public String getTooltip()
-    {
-        return null;
-    }
 }

@@ -47,4 +47,15 @@ public class PacketGuiData extends PacketEnhancedPortals
             ((ContainerEnhancedPortals) container).tile.guiActionPerformed(payload, (EntityPlayer) player);
         }
     }
+    
+    @Override
+    public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
+    {
+        Container container = ((EntityPlayer) player).openContainer;
+
+        if (container != null && container instanceof ContainerEnhancedPortals)
+        {
+            ((ContainerEnhancedPortals) container).tile.guiActionPerformed(payload, (EntityPlayer) player);
+        }
+    }
 }

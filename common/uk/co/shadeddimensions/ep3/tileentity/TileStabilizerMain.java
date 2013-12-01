@@ -20,6 +20,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -256,7 +257,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                 instability = 70;
             }
             else
-            // Fail
+                // Fail
             {
                 for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list
                 {
@@ -269,9 +270,22 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             tickTimer = -1;
         }
 
-        if (inventory != null && ((IEnergyContainerItem) inventory.getItem()).getEnergyStored(inventory) > 0)
+        if (inventory != null)
         {
-            energyStorage.receiveEnergy(((IEnergyContainerItem) inventory.getItem()).extractEnergy(inventory, 10000, false), false);
+            if (inventory.getItem() instanceof IEnergyContainerItem)
+            {
+                if (((IEnergyContainerItem) inventory.getItem()).getEnergyStored(inventory) > 0)
+                {
+                    energyStorage.receiveEnergy(((IEnergyContainerItem) inventory.getItem()).extractEnergy(inventory, 10000, false), false);
+                }
+            }
+            else if (inventory.itemID == CommonProxy.itemLocationCard.itemID)
+            {
+                if (!ItemLocationCard.hasDBSLocation(inventory) && !worldObj.isRemote)
+                {
+                    ItemLocationCard.setDBSLocation(inventory, getWorldCoordinates());
+                }
+            }
         }
 
         tickTimer++;
@@ -382,7 +396,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
                         }
                         else
-                        // Teleport somewhere fairly nearby -- in the air
+                            // Teleport somewhere fairly nearby -- in the air
                         {
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + rand.nextInt(10);
                         }
@@ -633,6 +647,10 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                 powerState = 0;
             }
         }
+        if (payload.data.hasKey("energy"))
+        {
+            energyStorage.setEnergyStored(payload.data.getInteger("energy"));
+        }
     }
 
     /* IEnergyHandler */
@@ -731,7 +749,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     @Override
     public int getInventoryStackLimit()
     {
-        return 1;
+        return 64;
     }
 
     @Override
@@ -766,5 +784,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         rows = rows2;
         blockList = blocks;
         energyStorage = new EnergyStorage(rows * CommonProxy.REDSTONE_FLUX_COST);
+        CommonProxy.sendUpdatePacketToAllAround(this);
     }
 }

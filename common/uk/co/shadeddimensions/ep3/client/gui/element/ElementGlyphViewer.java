@@ -51,10 +51,4 @@ public class ElementGlyphViewer extends ElementBase
 
         return false;
     }
-
-    @Override
-    public String getTooltip()
-    {
-        return null;
-    }
 }

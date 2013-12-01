@@ -48,6 +48,8 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
         fontRenderer.drawString(s1, xSize - 27 - fontRenderer.getStringWidth(s1), 17, 0x404040);
         fontRenderer.drawString(s2, xSize - 27 - fontRenderer.getStringWidth(s2), 27, 0x404040);
         fontRenderer.drawString(s3, xSize - 27 - fontRenderer.getStringWidth(s3), 37, instability == 0 ? 0x00DD00 : instability == 20 ? 0xDD6644 : instability == 50 ? 0xDD4422 : 0xFF0000);
+   
+        //System.out.println(DBS.getEnergyStorage().getMaxEnergyStored() + " | " + DBS.getEnergyStorage().getEnergyStored());
     }
 
     @SuppressWarnings("unchecked")

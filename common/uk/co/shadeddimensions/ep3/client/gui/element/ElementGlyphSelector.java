@@ -137,12 +137,6 @@ public class ElementGlyphSelector extends ElementBase
         return identifier;
     }
 
-    @Override
-    public String getTooltip()
-    {
-        return null;
-    }
-
     public void removeGlyph(int index)
     {
         if (index >= 0 && index < identifier.size())

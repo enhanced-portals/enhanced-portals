@@ -6,17 +6,9 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class ItemLocationCard extends ItemEnhancedPortals
@@ -27,6 +19,8 @@ public class ItemLocationCard extends ItemEnhancedPortals
     {
         super(id, true);
         setUnlocalizedName(name);
+        setMaxDamage(0);
+        setHasSubtypes(true);
     }
 
     public static boolean hasDBSLocation(ItemStack s)
@@ -69,10 +63,7 @@ public class ItemLocationCard extends ItemEnhancedPortals
 
         if (w != null)
         {
-            list.add(EnumChatFormatting.GRAY + DimensionManager.getProvider(w.dimension).getDimensionName());
-            list.add(EnumChatFormatting.DARK_GRAY + "X: " + w.posX);
-            list.add(EnumChatFormatting.DARK_GRAY + "Y: " + w.posY);
-            list.add(EnumChatFormatting.DARK_GRAY + "Z: " + w.posZ);
+            list.add("Location set");
         }
     }
 
@@ -83,45 +74,6 @@ public class ItemLocationCard extends ItemEnhancedPortals
         {
             clearDBSLocation(stack);
             return stack;
-        }
-        else
-        {
-            MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, player, true);
-
-            if (movingobjectposition == null)
-            {
-                return stack;
-            }
-            else
-            {
-                if (movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
-                {
-                    TileEntity tile = world.getBlockTileEntity(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-
-                    if (tile != null && tile instanceof TileStabilizer)
-                    {
-                        tile = ((TileStabilizer) tile).getMainBlock();
-                    }
-
-                    if (tile != null && tile instanceof TileStabilizerMain)
-                    {
-                        ItemStack s = new ItemStack(CommonProxy.itemLocationCard, 1);
-                        setDBSLocation(s, ((TileStabilizerMain) tile).getWorldCoordinates());
-
-                        if (--stack.stackSize <= 0)
-                        {
-                            return s;
-                        }
-
-                        if (!player.inventory.addItemStackToInventory(s))
-                        {
-                            player.dropPlayerItem(s);
-                        }
-
-                        return stack;
-                    }
-                }
-            }
         }
 
         return stack;
