@@ -159,6 +159,11 @@ public class TileRedstoneInterface extends TilePortalPart
                 }
 
                 int glyphCount = dialler.glyphList.size();
+                
+                if (glyphCount == 0)
+                {
+                    return;
+                }
 
                 if (state == 4 && redstoneInputState > 0 && !controller.isPortalActive) // Dial specific identifier
                 {

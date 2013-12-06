@@ -87,7 +87,7 @@ public class ElementFakeItemSlot extends ElementBase
     @Override
     public void addTooltip(List<String> list)
     {
-        if (isVisible())
+        if (isVisible() && item != null)
         {
             list.add(item.getDisplayName());
         }
