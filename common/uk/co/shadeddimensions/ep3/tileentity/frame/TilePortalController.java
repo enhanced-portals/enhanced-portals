@@ -702,7 +702,9 @@ public class TilePortalController extends TilePortalPart
             }
 
             TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
-            dbs.onEntityEnterPortal(uID, entity, portal);
+            if (dbs != null) {
+              dbs.onEntityEnterPortal(uID, entity, portal);
+            }
         }
     }
 
