@@ -18,14 +18,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.aspects.IAspectContainer;
-import thaumcraft.api.wands.IWandable;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
@@ -45,7 +39,7 @@ import cofh.util.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler, IAspectContainer, IWandable
+public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler//, IAspectContainer, IWandable
 {
     static final int ACTIVE_PORTALS_PER_ROW = 2;
 
@@ -794,7 +788,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     }
 
     /* IAspectContainer */
-    int storedAspect = 0;
+    /*int storedAspect = 0;
     final int MAX_ASPECT = 1000;
     
     @Override
@@ -871,7 +865,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     }
 
     /* IWandable */
-    @Override
+    /*@Override
     public int onWandRightClick(World world, ItemStack wandstack, EntityPlayer player, int x, int y, int z, int side, int md)
     {
         return 0;
@@ -894,5 +888,5 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     public void onWandStoppedUsing(ItemStack wandstack, World world, EntityPlayer player, int count)
     {
         
-    }
+    }*/
 }

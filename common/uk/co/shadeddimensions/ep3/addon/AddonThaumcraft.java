@@ -1,6 +1,5 @@
 package uk.co.shadeddimensions.ep3.addon;
 
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -27,7 +26,7 @@ public class AddonThaumcraft extends Addon
         {
             
             
-            CommonProxy.logger.warning("Loaded TC4 addon");
+            //CommonProxy.logger.warning("Loaded TC4 addon");
         }
     }
 }
