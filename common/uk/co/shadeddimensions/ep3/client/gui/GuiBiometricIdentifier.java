@@ -1,27 +1,23 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementDialDeviceScrollList;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementEntityFilterList;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.gui.GuiBase;
-import cofh.gui.element.ElementBase;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
-public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
+public class GuiBiometricIdentifier extends GuiBase
 {
     TileBiometricIdentifier biometric;
     GuiButton leftButton, rightButton, activateRecieveList;
-    ElementEntityFilterList sendList, recieveList;
+    //ElementEntityFilterList sendList, recieveList;
 
     public GuiBiometricIdentifier(TileBiometricIdentifier tile, EntityPlayer player)
     {
@@ -29,21 +25,20 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         xSize = 300;
         ySize = 200;
         biometric = tile;
-        drawInventory = false;
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        updateElements();
+        //updateElements();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/biometric.png"));
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 256, ySize);
         mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"));
         drawTexturedModalRect(guiLeft + 150, guiTop, 0, 0, 150, ySize);
 
-        drawElements();
-        drawTabs();
+        //drawElements();
+        //drawTabs();
     }
 
     @Override
@@ -55,9 +50,6 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         fontRenderer.drawString(Localization.getGuiString("idCard"), 7, ySize - 36, 0x404040);
         fontRenderer.drawString(Localization.getGuiString("idCard"), 293 - fontRenderer.getStringWidth(Localization.getGuiString("idCard")), ySize - 36, 0x404040);
         fontRenderer.drawString(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive"), xSize / 2 - fontRenderer.getStringWidth(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive")) / 2, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
-
-        sendList.drawHoverText();
-        recieveList.drawHoverText();
 
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
@@ -88,10 +80,10 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
         buttonList.add(rightButton);
         buttonList.add(activateRecieveList);
 
-        sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 0, 17, 140, 95, true);
+        /*sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 0, 17, 140, 95, true);
         recieveList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"), biometric, xSize - 142, 17, 140, 95, false);
         addElement(sendList);
-        addElement(recieveList);
+        addElement(recieveList);*/
     }
 
     @Override
@@ -118,8 +110,8 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
             ClientProxy.sendGuiPacket(payload);
         }
     }
-
-    @Override
+    
+    /*@Override
     public void onElementChanged(ElementBase element, Object data)
     {
         if (element instanceof ElementDialDeviceScrollList)
@@ -154,5 +146,5 @@ public class GuiBiometricIdentifier extends GuiBase implements IElementHandler
 
             Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
         }
-    }
+    }*/
 }

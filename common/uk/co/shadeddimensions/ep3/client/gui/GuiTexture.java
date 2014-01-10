@@ -5,18 +5,11 @@ import java.awt.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementFakeItemSlot;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementFakeTab;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementIconScrollList;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementParticleScrollList;
 import uk.co.shadeddimensions.ep3.client.gui.slider.GuiBetterSlider;
 import uk.co.shadeddimensions.ep3.client.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
-import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
@@ -25,13 +18,11 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
-import cofh.gui.GuiBase;
-import cofh.gui.element.ElementBase;
-import cofh.gui.element.TabBase;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
-public class GuiTexture extends GuiBase implements IElementHandler
+public class GuiTexture extends GuiBase
 {
-    class ColourTab extends TabBase
+    /*class ColourTab extends TabBase
     {
         public ColourTab(GuiBase gui)
         {
@@ -64,7 +55,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
 
             return false;
         }
-    }
+    }*/
 
     TilePortalController controller;
     TileDiallingDevice dial;
@@ -72,11 +63,11 @@ public class GuiTexture extends GuiBase implements IElementHandler
     boolean editController;
     GuiButton colourResetButton, colourSaveButton, mainCancelButton, mainSaveButton;
     GuiRGBSlider redSlider, greenSlider, blueSlider;
-    ColourTab colourTab;
+    //ColourTab colourTab;
 
-    ElementIconScrollList frameList, portalList, particleList;
-    ElementFakeItemSlot fakeItem;
-    ElementFakeTab frameTab, portalTab, particleTab;
+   // ElementIconScrollList frameList, portalList, particleList;
+    //ElementFakeItemSlot fakeItem;
+    //ElementFakeTab frameTab, portalTab, particleTab;
 
     public GuiTexture(TilePortalController t, EntityPlayer p, int startScreen, boolean editControl)
     {
@@ -85,7 +76,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
         controller = t;
         screenState = startScreen;
         editController = editControl;
-        drawInventory = false;
+       // drawInventory = false;
     }
 
     public GuiTexture(TileDiallingDevice t, EntityPlayer p, int startScreen, boolean editControl)
@@ -95,18 +86,17 @@ public class GuiTexture extends GuiBase implements IElementHandler
         controller = t.getPortalController();
         screenState = startScreen;
         editController = editControl;
-        drawInventory = false;
+       // drawInventory = false;
         dial = t;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initGui()
     {
         super.initGui();
         buttonList.clear();
 
-        fakeItem = new ElementFakeItemSlot(this, 151, 74);
+       /* fakeItem = new ElementFakeItemSlot(this, 151, 74);
         fakeItem.setVisible(screenState != 2);
         fakeItem.setItem(screenState == 0 ? getTextureManager().getFrameItem() : getTextureManager().getPortalItem());
 
@@ -163,7 +153,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
             buttonList.add(mainSaveButton);
         }
 
-        redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = colourTab.isFullyOpened();
+        redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = colourTab.isFullyOpened();*/
     }
 
     @Override
@@ -289,7 +279,7 @@ public class GuiTexture extends GuiBase implements IElementHandler
         }
     }
 
-    @Override
+    /*@Override
     public void onElementChanged(ElementBase element, Object data)
     {
         if (element instanceof ElementIconScrollList)
@@ -404,5 +394,5 @@ public class GuiTexture extends GuiBase implements IElementHandler
         redSlider.sliderValue = c.getRed() / 255f;
         greenSlider.sliderValue = c.getGreen() / 255f;
         blueSlider.sliderValue = c.getBlue() / 255f;
-    }
+    }*/
 }

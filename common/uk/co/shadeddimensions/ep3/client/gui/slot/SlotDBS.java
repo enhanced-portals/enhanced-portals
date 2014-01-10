@@ -1,11 +1,12 @@
 package uk.co.shadeddimensions.ep3.client.gui.slot;
 
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import cofh.gui.slot.SlotEnergy;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 
-public class SlotDBS extends SlotEnergy
+public class SlotDBS extends Slot
 {
     public SlotDBS(IInventory inventory, int x, int y, int z)
     {
@@ -15,6 +16,6 @@ public class SlotDBS extends SlotEnergy
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        return super.isItemValid(stack) || stack.itemID == CommonProxy.itemLocationCard.itemID;
+        return GeneralUtils.isEnergyContainerItem(stack) || stack.itemID == CommonProxy.itemLocationCard.itemID;
     }
 }

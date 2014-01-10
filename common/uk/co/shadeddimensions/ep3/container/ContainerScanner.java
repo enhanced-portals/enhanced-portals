@@ -5,9 +5,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import uk.co.shadeddimensions.ep3.client.gui.slot.SlotOutput;
+import uk.co.shadeddimensions.ep3.client.gui.slot.SlotSpecificItem;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import cofh.gui.slot.SlotOutput;
-import cofh.gui.slot.SlotSpecificItem;
 
 public class ContainerScanner extends Container
 {

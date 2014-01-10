@@ -12,8 +12,7 @@ import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.gui.GuiBase;
-import cofh.gui.element.ElementEnergyStored;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
 public class GuiDimensionalBridgeStabilizer extends GuiBase
 {
@@ -23,8 +22,8 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
     {
         super(new ContainerDimensionalBridgeStabilizer(stabilizer, player), new ResourceLocation("enhancedportals", "textures/gui/dimensionalBridgeStabilizer.png"));
         DBS = stabilizer;
-        ySize = 176;
-        drawInventory = false;
+        //ySize = 176;
+        //drawInventory = false;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
     {
         super.initGui();
 
-        addElement(new ElementEnergyStored(this, xSize - 24, 10, DBS.getEnergyStorage()));
+       // addElement(new ElementEnergyStored(this, xSize - 24, 10, DBS.getEnergyStorage()));
         buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + 56, 140, 20, CommonProxy.redstoneFluxPowerMultiplier == 0 ? Localization.getGuiString("powerModeFree") : Localization.getGuiString("powerModeNormal")));
 
         if (CommonProxy.redstoneFluxPowerMultiplier == 0)

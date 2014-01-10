@@ -6,6 +6,7 @@
 	<target name="clean">
 		<delete dir="${dir.mcp}\src\minecraft\uk\" />
 		<delete dir="${dir.mcp}\src\minecraft\cofh\" />
+		<delete dir="${dir.mcp}\src\minecraft\ep3\" /> <!-- Remove when no longer bundling CoFHLib -->
 		<delete dir="${dir.mcp}\reobf\" />
 		<delete file="${dir.mcp}\src\minecraft\mcmod.info" />
 	</target>

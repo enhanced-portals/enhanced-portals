@@ -2,27 +2,23 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphSelector;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphViewer;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementPortalComponents;
 import uk.co.shadeddimensions.ep3.container.ContainerPortalController;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
 public class GuiPortalController extends GuiBase
 {
-    ElementGlyphSelector selector;
-    ElementGlyphViewer viewer;
-    ElementPortalComponents components;
+   // ElementGlyphSelector selector;
+   // ElementGlyphViewer viewer;
+   // ElementPortalComponents components;
     TilePortalController controller;
     GuiButton resetButton, saveButton;
     boolean overlayActive;
@@ -30,7 +26,7 @@ public class GuiPortalController extends GuiBase
     public GuiPortalController(TilePortalController tile, EntityPlayer play)
     {
         super(new ContainerPortalController(tile, play), new ResourceLocation("enhancedportals", "textures/gui/portalController.png"));
-        drawInventory = false;
+        //drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;
@@ -43,7 +39,7 @@ public class GuiPortalController extends GuiBase
         {
             if (button.id == resetButton.id) // Clear
             {
-                selector.reset();
+                //selector.reset();
             }
             else if (button.id == saveButton.id) // Random
             {
@@ -55,27 +51,27 @@ public class GuiPortalController extends GuiBase
                     iden.addGlyph(random.nextInt(27));
                 }
 
-                selector.setIdentifierTo(iden);
+                //selector.setIdentifierTo(iden);
             }
         }
         else
         {
             if (button.id == resetButton.id) // Reset Changes
             {
-                selector.setIdentifierTo(controller.getUniqueIdentifier());
+                //selector.setIdentifierTo(controller.getUniqueIdentifier());
                 toggleState();
             }
             else if (button.id == saveButton.id) // Save Changes
             {
                 GuiPayload payload = new GuiPayload();
-                payload.data.setString("uniqueIdentifier", selector.getGlyphIdentifier().getGlyphString());
+                //payload.data.setString("uniqueIdentifier", selector.getGlyphIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
                 toggleState();
             }
         }
     }
 
-    @Override
+    /*@Override
     protected void drawElements()
     {
         if (overlayActive)
@@ -85,7 +81,7 @@ public class GuiPortalController extends GuiBase
         }
 
         super.drawElements();
-    }
+    }*/
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
@@ -116,17 +112,17 @@ public class GuiPortalController extends GuiBase
 
         resetButton = new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("cancel"));
         saveButton = new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("save"));
-        selector = (ElementGlyphSelector) new ElementGlyphSelector(this, 7, 57).setVisible(false);
-        viewer = new ElementGlyphViewer(this, selector, 7, 20);
-        components = new ElementPortalComponents(this, controller, 7, 57);
+        //selector = (ElementGlyphSelector) new ElementGlyphSelector(this, 7, 57).setVisible(false);
+        //viewer = new ElementGlyphViewer(this, selector, 7, 20);
+        //components = new ElementPortalComponents(this, controller, 7, 57);
 
         buttonList.add(resetButton);
         buttonList.add(saveButton);
-        addElement(selector);
-        addElement(viewer);
-        addElement(components);
+        //addElement(selector);
+        //addElement(viewer);
+        //addElement(components);
 
-        selector.setIdentifierTo(controller.getUniqueIdentifier());
+        //selector.setIdentifierTo(controller.getUniqueIdentifier());
         resetButton.drawButton = saveButton.drawButton = false;
     }
 
@@ -153,8 +149,8 @@ public class GuiPortalController extends GuiBase
     {
         overlayActive = !overlayActive;
         resetButton.drawButton = saveButton.drawButton = overlayActive;
-        selector.setVisible(overlayActive);
-        components.setVisible(!overlayActive);
+        //selector.setVisible(overlayActive);
+        //components.setVisible(!overlayActive);
     }
 
     @Override

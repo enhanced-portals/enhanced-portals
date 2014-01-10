@@ -13,8 +13,8 @@ import net.minecraft.nbt.NBTTagList;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.EntityData;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.util.EnergyHelper;
 
 public class TileBiometricIdentifier extends TilePortalPart
 {
@@ -442,7 +442,7 @@ public class TileBiometricIdentifier extends TilePortalPart
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return EnergyHelper.isEnergyContainerItem(itemstack);
+        return GeneralUtils.isEnergyContainerItem(itemstack);
     }
 
     public void applyBiometricFilters(int slotIndex, ItemStack s)

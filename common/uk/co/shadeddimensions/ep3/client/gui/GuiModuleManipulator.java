@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import cofh.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
 public class GuiModuleManipulator extends GuiBase
 {
@@ -15,7 +15,7 @@ public class GuiModuleManipulator extends GuiBase
     {
         super(new ContainerModuleManipulator(t, player), new ResourceLocation("enhancedportals", "textures/gui/moduleManipulator.png"));
         module = t;
-        drawInventory = false;
+        //drawInventory = false;
     }
 
     @Override

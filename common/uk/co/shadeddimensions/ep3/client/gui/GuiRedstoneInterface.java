@@ -8,7 +8,7 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
 public class GuiRedstoneInterface extends GuiBase
 {
@@ -18,8 +18,8 @@ public class GuiRedstoneInterface extends GuiBase
     {
         super(new ContainerRedstoneInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
         redstone = tile;
-        ySize = 58;
-        drawInventory = false;
+        //ySize = 58;
+        //drawInventory = false;
     }
 
     @Override

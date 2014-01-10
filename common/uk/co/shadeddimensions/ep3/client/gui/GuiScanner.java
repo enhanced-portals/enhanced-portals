@@ -6,10 +6,9 @@ import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
 import uk.co.shadeddimensions.ep3.lib.Localization;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.ItemEnergyContainer;
-import cofh.gui.GuiBase;
-import cofh.gui.element.ElementEnergyStored;
 
 public class GuiScanner extends GuiBase
 {
@@ -19,7 +18,7 @@ public class GuiScanner extends GuiBase
     {
         super(new ContainerScanner(scanner, player, s), new ResourceLocation("enhancedportals", "textures/gui/scanner.png"));
         stack = s;
-        drawInventory = false;
+        //drawInventory = false;
     }
 
     @Override
@@ -38,6 +37,6 @@ public class GuiScanner extends GuiBase
 
         EnergyStorage storage = new EnergyStorage(2000, 250, 250);
         storage.setEnergyStored(((ItemEnergyContainer) stack.getItem()).getEnergyStored(stack));
-        addElement(new ElementEnergyStored(this, xSize - 22, 22, storage));
+        //addElement(new ElementEnergyStored(this, xSize - 22, 22, storage));
     }
 }

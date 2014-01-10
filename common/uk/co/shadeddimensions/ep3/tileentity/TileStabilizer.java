@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3.tileentity;
 
 import java.util.ArrayList;
 
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -11,7 +12,6 @@ import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
-import cofh.api.energy.IEnergyHandler;
 
 public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandler
 {

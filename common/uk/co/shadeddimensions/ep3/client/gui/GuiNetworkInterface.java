@@ -2,25 +2,22 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphSelector;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphViewer;
 import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
 public class GuiNetworkInterface extends GuiBase
 {
-    ElementGlyphSelector selector;
-    ElementGlyphViewer viewer;
+    //ElementGlyphSelector selector;
+    //ElementGlyphViewer viewer;
     TilePortalController controller;
     GuiButton resetButton, saveButton;
     boolean overlayActive;
@@ -28,7 +25,7 @@ public class GuiNetworkInterface extends GuiBase
     public GuiNetworkInterface(TilePortalController tile, EntityPlayer play)
     {
         super(new ContainerNetworkInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
-        drawInventory = false;
+        //drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;
@@ -41,7 +38,7 @@ public class GuiNetworkInterface extends GuiBase
         {
             if (button.id == resetButton.id) // Clear
             {
-                selector.reset();
+               // selector.reset();
             }
             else if (button.id == saveButton.id) // Random
             {
@@ -53,27 +50,27 @@ public class GuiNetworkInterface extends GuiBase
                     iden.addGlyph(random.nextInt(27));
                 }
 
-                selector.setIdentifierTo(iden);
+               // selector.setIdentifierTo(iden);
             }
         }
         else
         {
             if (button.id == resetButton.id) // Reset Changes
             {
-                selector.setIdentifierTo(controller.getNetworkIdentifier());
+               // selector.setIdentifierTo(controller.getNetworkIdentifier());
                 toggleState();
             }
             else if (button.id == saveButton.id) // Save Changes
             {
                 GuiPayload payload = new GuiPayload();
-                payload.data.setString("networkIdentifier", selector.getGlyphIdentifier().getGlyphString());
+                //payload.data.setString("networkIdentifier", selector.getGlyphIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
                 toggleState();
             }
         }
     }
 
-    @Override
+    /*@Override
     protected void drawElements()
     {
         if (overlayActive)
@@ -83,7 +80,7 @@ public class GuiNetworkInterface extends GuiBase
         }
 
         super.drawElements();
-    }
+    }*/
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
@@ -118,15 +115,15 @@ public class GuiNetworkInterface extends GuiBase
 
         resetButton = new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("cancel"));
         saveButton = new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("save"));
-        selector = (ElementGlyphSelector) new ElementGlyphSelector(this, 7, 57).setVisible(false);
-        viewer = new ElementGlyphViewer(this, selector, 7, 20);
+        //selector = (ElementGlyphSelector) new ElementGlyphSelector(this, 7, 57).setVisible(false);
+        //viewer = new ElementGlyphViewer(this, selector, 7, 20);
 
         buttonList.add(resetButton);
         buttonList.add(saveButton);
-        addElement(selector);
-        addElement(viewer);
+       // addElement(selector);
+       // addElement(viewer);
 
-        selector.setIdentifierTo(controller.getNetworkIdentifier());
+       // selector.setIdentifierTo(controller.getNetworkIdentifier());
         resetButton.drawButton = saveButton.drawButton = false;
     }
 
@@ -153,7 +150,7 @@ public class GuiNetworkInterface extends GuiBase
     {
         overlayActive = !overlayActive;
         resetButton.drawButton = saveButton.drawButton = overlayActive;
-        selector.setVisible(overlayActive);
+       // selector.setVisible(overlayActive);
     }
 
     @Override

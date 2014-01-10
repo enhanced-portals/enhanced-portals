@@ -35,7 +35,6 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
-import cofh.util.EnergyHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -771,7 +770,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return EnergyHelper.isEnergyContainerItem(itemstack);
+        return GeneralUtils.isEnergyContainerItem(itemstack);
     }
 
     public int getActiveConnections()

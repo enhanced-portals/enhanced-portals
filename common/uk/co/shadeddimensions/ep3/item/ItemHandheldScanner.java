@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
+import cofh.api.energy.ItemEnergyContainer;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -19,7 +20,6 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.EntityData;
-import cofh.api.energy.ItemEnergyContainer;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
 {

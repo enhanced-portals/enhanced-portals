@@ -9,23 +9,15 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementDialDeviceScrollList;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphSelector;
-import uk.co.shadeddimensions.ep3.client.gui.element.ElementGlyphViewer;
 import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.network.packet.PacketTextureData;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import cofh.gui.GuiBase;
-import cofh.gui.element.ElementBase;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import uk.co.shadeddimensions.library.gui.GuiBase;
 
-public class GuiDiallingDevice extends GuiBase implements IElementHandler
+public class GuiDiallingDevice extends GuiBase
 {
     TilePortalController controller;
     TileDiallingDevice dial;
@@ -35,8 +27,8 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
     String warningMessage;
     int warningTimer;
 
-    ElementGlyphSelector selector;
-    ElementDialDeviceScrollList list;
+    //ElementGlyphSelector selector;
+    //ElementDialDeviceScrollList list;
 
     public GuiDiallingDevice(TileDiallingDevice dialler, EntityPlayer player)
     {
@@ -47,7 +39,7 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
         ySize = 200;
         warningMessage = "";
         warningTimer = 0;
-        drawInventory = showOverlay = false;
+        showOverlay = false;
     }
 
     @Override
@@ -116,12 +108,12 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
     {
         super.initGui();
 
-        selector = new ElementGlyphSelector(this, 7, 139);
+        /*selector = new ElementGlyphSelector(this, 7, 139);
         list = new ElementDialDeviceScrollList(this, texture, dial, 0, 20, xSize, 80);
 
         addElement(list);
         addElement(selector);
-        addElement(new ElementGlyphViewer(this, selector, 7, 105));
+        addElement(new ElementGlyphViewer(this, selector, 7, 105));*/
 
         cancelButton = new GuiButton(10, guiLeft + 20, guiTop + 70, 100, 20, Localization.getGuiString("cancel"));
         acceptButton = new GuiButton(11, guiLeft + xSize - 22 - 100, guiTop + 70, 100, 20, Localization.getGuiString("accept"));
@@ -157,12 +149,12 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
                 payload.data.setBoolean("DialTerminateRequest", true);
                 ClientProxy.sendGuiPacket(payload);
             }
-            else if (selector.getGlyphIdentifier().size() > 0)
+            /*else if (selector.getGlyphIdentifier().size() > 0)
             {
                 GuiPayload payload = new GuiPayload();
                 payload.data.setString("DialRequest", selector.getGlyphIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
-            }
+            }*/
             else
             {
                 setWarningMessage(0);
@@ -170,18 +162,18 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
         }
         else if (button.id == 2) // ADD
         {
-            if (selector.getGlyphIdentifier().size() == 0)
+            /*if (selector.getGlyphIdentifier().size() == 0)
             {
                 setWarningMessage(0);
                 return;
-            }
+            }*/
 
             toggleState();
         }
         else if (button.id == 3) // CLEAR
         {
-            selector.reset();
-            list.setSelected(-1);
+            //selector.reset();
+            //list.setSelected(-1);
         }
         else if (button.id == cancelButton.id) // CANCEL
         {
@@ -189,13 +181,13 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
         }
         else if (button.id == acceptButton.id) // ACCEPT
         {
-            if (!textField.getText().equals("") && selector.getGlyphIdentifier().size() > 0)
+            /*if (!textField.getText().equals("") && selector.getGlyphIdentifier().size() > 0)
             {
                 GuiPayload payload = new GuiPayload();
                 payload.data.setString("GlyphName", textField.getText());
                 payload.data.setString("Glyphs", selector.getGlyphIdentifier().getGlyphString());
                 ClientProxy.sendGuiPacket(payload);
-            }
+            }*/
 
             toggleState();
         }
@@ -243,7 +235,7 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
         ((GuiButton) buttonList.get(0)).enabled = ((GuiButton) buttonList.get(1)).enabled = ((GuiButton) buttonList.get(2)).enabled = !showOverlay;
     }
 
-    @Override
+    /*@Override
     public void onElementChanged(ElementBase element, Object data)
     {
         if (element instanceof ElementDialDeviceScrollList && !showOverlay)
@@ -277,5 +269,5 @@ public class GuiDiallingDevice extends GuiBase implements IElementHandler
                 Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
             }
         }
-    }
+    }*/
 }
