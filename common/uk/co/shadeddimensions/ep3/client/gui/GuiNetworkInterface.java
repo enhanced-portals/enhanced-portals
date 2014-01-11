@@ -3,10 +3,8 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import java.util.Random;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -22,9 +20,9 @@ public class GuiNetworkInterface extends GuiBase
     GuiButton resetButton, saveButton;
     boolean overlayActive;
 
-    public GuiNetworkInterface(TilePortalController tile, EntityPlayer play)
+    public GuiNetworkInterface(TilePortalController tile)
     {
-        super(new ContainerNetworkInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
+        super(new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
         //drawInventory = false;
         ySize = 144;
         controller = tile;

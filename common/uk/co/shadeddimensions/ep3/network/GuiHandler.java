@@ -14,12 +14,8 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
-import uk.co.shadeddimensions.ep3.container.ContainerNetworkInterface;
-import uk.co.shadeddimensions.ep3.container.ContainerPortalController;
-import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.item.ItemHandheldScanner;
@@ -30,6 +26,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
+import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler
@@ -48,15 +45,15 @@ public class GuiHandler implements IGuiHandler
 
             if (ID == GUIs.PortalController.ordinal())
             {
-                return new GuiPortalController((TilePortalController) tile, player);
+                return new GuiPortalController((TilePortalController) tile);
             }
             else if (ID == GUIs.RedstoneInterface.ordinal())
             {
-                return new GuiRedstoneInterface((TileRedstoneInterface) tile, player);
+                return new GuiRedstoneInterface((TileRedstoneInterface) tile);
             }
             else if (ID == GUIs.NetworkInterface.ordinal())
             {
-                return new GuiNetworkInterface((TilePortalController) tile, player);
+                return new GuiNetworkInterface((TilePortalController) tile);
             }
             else if (ID == GUIs.ModuleManipulator.ordinal())
             {
@@ -68,7 +65,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.DiallingDevice.ordinal())
             {
-                return new GuiDiallingDevice((TileDiallingDevice) tile, player);
+                return new GuiDiallingDevice((TileDiallingDevice) tile);
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
             {
@@ -110,16 +107,16 @@ public class GuiHandler implements IGuiHandler
             if (ID == GUIs.PortalController.ordinal())
             {
                 CommonProxy.sendUpdatePacketToPlayer((TilePortalController) tile, player);
-                return new ContainerPortalController((TilePortalController) tile, player);
+                return new ContainerBase((TilePortalController) tile);
             }
             else if (ID == GUIs.RedstoneInterface.ordinal())
             {
                 CommonProxy.sendUpdatePacketToPlayer((TileRedstoneInterface) tile, player);
-                return new ContainerRedstoneInterface((TileRedstoneInterface) tile, player);
+                return new ContainerBase((TileRedstoneInterface) tile);
             }
             else if (ID == GUIs.NetworkInterface.ordinal())
             {
-                return new ContainerNetworkInterface((TilePortalController) tile, player);
+                return new ContainerBase((TilePortalController) tile);
             }
             else if (ID == GUIs.ModuleManipulator.ordinal())
             {
@@ -132,7 +129,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.DiallingDevice.ordinal())
             {
-                return new ContainerDiallingDevice((TileDiallingDevice) tile, player);
+                return new ContainerBase((TileDiallingDevice) tile);
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
             {

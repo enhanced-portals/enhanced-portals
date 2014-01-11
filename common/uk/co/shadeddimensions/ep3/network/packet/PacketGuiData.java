@@ -7,8 +7,9 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.network.INetworkManager;
-import uk.co.shadeddimensions.ep3.container.ContainerEnhancedPortals;
+import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketGuiData extends PacketEnhancedPortals
@@ -42,9 +43,9 @@ public class PacketGuiData extends PacketEnhancedPortals
     {
         Container container = ((EntityPlayer) player).openContainer;
 
-        if (container != null && container instanceof ContainerEnhancedPortals)
+        if (container != null && container instanceof ContainerBase)
         {
-            ((ContainerEnhancedPortals) container).tile.guiActionPerformed(payload, (EntityPlayer) player);
+            ((TileEnhancedPortals) ((ContainerBase) container).object).guiActionPerformed(payload, (EntityPlayer) player);
         }
     }
     
@@ -53,9 +54,9 @@ public class PacketGuiData extends PacketEnhancedPortals
     {
         Container container = ((EntityPlayer) player).openContainer;
 
-        if (container != null && container instanceof ContainerEnhancedPortals)
+        if (container != null && container instanceof ContainerBase)
         {
-            ((ContainerEnhancedPortals) container).tile.guiActionPerformed(payload, (EntityPlayer) player);
+            ((TileEnhancedPortals) ((ContainerBase) container).object).guiActionPerformed(payload, (EntityPlayer) player);
         }
     }
 }

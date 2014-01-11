@@ -28,15 +28,15 @@ public class WorldCoordinates extends ChunkCoordinates
         dimension = dim;
     }
 
+    public WorldCoordinates(NBTTagCompound tag)
+    {
+        this(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D"));
+    }
+
     public WorldCoordinates(WorldCoordinates coord)
     {
         super(coord.posX, coord.posY, coord.posZ);
         dimension = coord.dimension;
-    }
-
-    public WorldCoordinates(NBTTagCompound tag)
-    {
-        this(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"), tag.getInteger("D"));
     }
 
     public int getBlockId()
@@ -75,11 +75,6 @@ public class WorldCoordinates extends ChunkCoordinates
         return world.getBlockTileEntity(posX, posY, posZ);
     }
 
-    public WorldCoordinates offset(ForgeDirection orientation)
-    {
-        return new WorldCoordinates(posX + orientation.offsetX, posY + orientation.offsetY, posZ + orientation.offsetZ, dimension);
-    }
-
     public WorldServer getWorld()
     {
         WorldServer world = DimensionManager.getWorld(dimension);
@@ -97,7 +92,12 @@ public class WorldCoordinates extends ChunkCoordinates
 
         return world;
     }
-    
+
+    public WorldCoordinates offset(ForgeDirection orientation)
+    {
+        return new WorldCoordinates(posX + orientation.offsetX, posY + orientation.offsetY, posZ + orientation.offsetZ, dimension);
+    }
+
     @Override
     public String toString()
     {

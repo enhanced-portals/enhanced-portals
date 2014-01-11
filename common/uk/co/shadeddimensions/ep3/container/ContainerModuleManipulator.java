@@ -4,8 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import uk.co.shadeddimensions.ep3.client.gui.slot.SlotPortalModule;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.library.container.ContainerBase;
 
-public class ContainerModuleManipulator extends ContainerEnhancedPortals
+public class ContainerModuleManipulator extends ContainerBase
 {
     public ContainerModuleManipulator(TileModuleManipulator t, EntityPlayer player)
     {
@@ -28,11 +29,5 @@ public class ContainerModuleManipulator extends ContainerEnhancedPortals
         {
             addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
         }
-    }
-
-    @Override
-    public boolean canInteractWith(EntityPlayer entityplayer)
-    {
-        return ((TileModuleManipulator) tile).isUseableByPlayer(entityplayer);
     }
 }

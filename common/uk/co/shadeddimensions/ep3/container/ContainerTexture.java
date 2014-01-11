@@ -3,8 +3,9 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.library.container.ContainerBase;
 
-public class ContainerTexture extends ContainerEnhancedPortals
+public class ContainerTexture extends ContainerBase
 {
     public ContainerTexture(TilePortalController t, EntityPlayer player)
     {
@@ -22,11 +23,5 @@ public class ContainerTexture extends ContainerEnhancedPortals
         {
             addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 152));
         }
-    }
-
-    @Override
-    public boolean canInteractWith(EntityPlayer entityplayer)
-    {
-        return ((TilePortalController) tile).isUseableByPlayer(entityplayer);
     }
 }

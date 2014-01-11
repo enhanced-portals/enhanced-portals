@@ -10,56 +10,17 @@ import net.minecraft.nbt.NBTTagCompound;
 public class GlyphIdentifier
 {
     public static final String GLYPH_SEPERATOR = "-";
-    ArrayList<Integer> glyphs;
 
-    public GlyphIdentifier()
+    public static String getGlyphString(ArrayList<Integer> glyph)
     {
-        glyphs = new ArrayList<Integer>();
-    }
+        String s = "";
 
-    public GlyphIdentifier(GlyphIdentifier i)
-    {
-        glyphs = new ArrayList<Integer>(i.glyphs.size());
-
-        for (int I : i.glyphs)
+        for (int i : glyph)
         {
-            glyphs.add(I);
+            s += GLYPH_SEPERATOR + i;
         }
-    }
 
-    public GlyphIdentifier(int[] Glyphs)
-    {
-        this();
-
-        for (int glyph : Glyphs)
-        {
-            glyphs.add(glyph);
-        }
-    }
-
-    public GlyphIdentifier(String s)
-    {
-        glyphs = parseGlyphString(s);
-
-        if (glyphs == null)
-        {
-            glyphs = new ArrayList<Integer>();
-        }
-    }
-
-    public GlyphIdentifier(DataInputStream s) throws IOException
-    {
-        this(s.readUTF());
-    }
-
-    public GlyphIdentifier(NBTTagCompound tag)
-    {
-        this(tag.getString("GlyphIdentifier"));
-    }
-
-    public GlyphIdentifier(ArrayList<Integer> list)
-    {
-        glyphs = list;
+        return s.length() > 0 ? s.substring(GLYPH_SEPERATOR.length()) : "";
     }
 
     public static ArrayList<Integer> parseGlyphString(String str)
@@ -96,41 +57,64 @@ public class GlyphIdentifier
         return Glyphs;
     }
 
-    public String getGlyphString()
+    ArrayList<Integer> glyphs;
+
+    public GlyphIdentifier()
     {
-        return getGlyphString(glyphs);
+        glyphs = new ArrayList<Integer>();
     }
 
-    public static String getGlyphString(ArrayList<Integer> glyph)
+    public GlyphIdentifier(ArrayList<Integer> list)
     {
-        String s = "";
+        glyphs = list;
+    }
 
-        for (int i : glyph)
+    public GlyphIdentifier(DataInputStream s) throws IOException
+    {
+        this(s.readUTF());
+    }
+
+    public GlyphIdentifier(GlyphIdentifier i)
+    {
+        glyphs = new ArrayList<Integer>(i.glyphs.size());
+
+        for (int I : i.glyphs)
         {
-            s += GLYPH_SEPERATOR + i;
+            glyphs.add(I);
         }
-
-        return s.length() > 0 ? s.substring(GLYPH_SEPERATOR.length()) : "";
     }
 
-    public ArrayList<Integer> getGlyphs()
+    public GlyphIdentifier(int[] Glyphs)
     {
-        return glyphs;
+        this();
+
+        for (int glyph : Glyphs)
+        {
+            glyphs.add(glyph);
+        }
     }
 
-    public void setGlyphs(ArrayList<Integer> glyph)
+    public GlyphIdentifier(NBTTagCompound tag)
     {
-        glyphs = glyph;
+        this(tag.getString("GlyphIdentifier"));
     }
 
-    public void setGlyphs(String str)
+    public GlyphIdentifier(String s)
     {
-        glyphs = parseGlyphString(str);
+        glyphs = parseGlyphString(s);
+
+        if (glyphs == null)
+        {
+            glyphs = new ArrayList<Integer>();
+        }
     }
 
-    public int getGlyph(int id)
+    public void addGlyph(int glyph)
     {
-        return glyphs.get(id);
+        if (glyphs.size() < 9)
+        {
+            glyphs.add(glyph);
+        }
     }
 
     @Override
@@ -157,30 +141,24 @@ public class GlyphIdentifier
         return false;
     }
 
-    @Override
-    public String toString()
+    public int get(int id)
     {
-        return String.format("GlyphIdentifier (%s)", getGlyphString());
+        return glyphs.get(id);
     }
 
-    public void writeToNBT(NBTTagCompound tag)
+    public int getGlyph(int id)
     {
-        tag.setString("GlyphIdentifier", getGlyphString());
+        return glyphs.get(id);
     }
 
-    public void readFromNBT(NBTTagCompound tag)
+    public ArrayList<Integer> getGlyphs()
     {
-        setGlyphs(tag.getString("GlyphIdentifier"));
+        return glyphs;
     }
 
-    public void writeToStream(DataOutputStream stream) throws IOException
+    public String getGlyphString()
     {
-        stream.writeUTF(getGlyphString());
-    }
-
-    public void readFromStream(DataInputStream stream) throws IOException
-    {
-        setGlyphs(stream.readUTF());
+        return getGlyphString(glyphs);
     }
 
     public boolean hasGlyph(int glyph)
@@ -201,22 +179,14 @@ public class GlyphIdentifier
         return glyphs.isEmpty();
     }
 
-    public void addGlyph(int glyph)
+    public void readFromNBT(NBTTagCompound tag)
     {
-        if (glyphs.size() < 9)
-        {
-            glyphs.add(glyph);
-        }
+        setGlyphs(tag.getString("GlyphIdentifier"));
     }
 
-    public int size()
+    public void readFromStream(DataInputStream stream) throws IOException
     {
-        return glyphs.size();
-    }
-
-    public int get(int id)
-    {
-        return glyphs.get(id);
+        setGlyphs(stream.readUTF());
     }
 
     public void remove(int index)
@@ -237,5 +207,36 @@ public class GlyphIdentifier
                 }
             }
         }
+    }
+
+    public void setGlyphs(ArrayList<Integer> glyph)
+    {
+        glyphs = glyph;
+    }
+
+    public void setGlyphs(String str)
+    {
+        glyphs = parseGlyphString(str);
+    }
+
+    public int size()
+    {
+        return glyphs.size();
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("GlyphIdentifier (%s)", getGlyphString());
+    }
+
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        tag.setString("GlyphIdentifier", getGlyphString());
+    }
+
+    public void writeToStream(DataOutputStream stream) throws IOException
+    {
+        stream.writeUTF(getGlyphString());
     }
 }

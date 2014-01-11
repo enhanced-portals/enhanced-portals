@@ -7,8 +7,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.client.gui.slider.GuiBetterSlider;
-import uk.co.shadeddimensions.ep3.client.gui.slider.GuiRGBSlider;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
@@ -19,6 +17,8 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
+import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
 
 public class GuiTexture extends GuiBase
 {

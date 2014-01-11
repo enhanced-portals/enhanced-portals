@@ -60,6 +60,30 @@ public class EntityManager
         return null;
     }
 
+    private static float getRotation(Entity entity, TilePortalController controller, ChunkCoordinates loc)
+    {
+        if (controller.portalType == 1)
+        {
+            if (controller.worldObj.isBlockOpaqueCube(loc.posX, loc.posY, loc.posZ + 1))
+            {
+                return 180f; // 2
+            }
+
+            return 0f; // 0
+        }
+        else if (controller.portalType == 2)
+        {
+            if (controller.worldObj.isBlockOpaqueCube(loc.posX - 1, loc.posY, loc.posZ))
+            {
+                return -90f; // 3
+            }
+
+            return 90f; // 1
+        }
+
+        return entity.rotationYaw;
+    }
+
     private static void handleMomentum(Entity entity, int touchedPortalType, int exitPortalType, float exitYaw, boolean keepMomentum)
     {
         if (!keepMomentum)
@@ -132,30 +156,6 @@ public class EntityManager
         entity.velocityChanged = true;
     }
 
-    private static float getRotation(Entity entity, TilePortalController controller, ChunkCoordinates loc)
-    {
-        if (controller.portalType == 1)
-        {
-            if (controller.worldObj.isBlockOpaqueCube(loc.posX, loc.posY, loc.posZ + 1))
-            {
-                return 180f; // 2
-            }
-
-            return 0f; // 0
-        }
-        else if (controller.portalType == 2)
-        {
-            if (controller.worldObj.isBlockOpaqueCube(loc.posX - 1, loc.posY, loc.posZ))
-            {
-                return -90f; // 3
-            }
-
-            return 90f; // 1
-        }
-
-        return entity.rotationYaw;
-    }
-
     public static boolean isEntityFitForTravel(Entity entity)
     {
         return entity != null && entity.timeUntilPortal == 0;
@@ -170,6 +170,27 @@ public class EntityManager
         else
         {
             entity.timeUntilPortal = 300; // Reduced to 300 ticks from 900.
+        }
+    }
+
+    public static void teleportEntityToDimension(Entity par1Entity)
+    {
+        // TODO 
+
+        // For now, just teleport them to the spawn point of the dimension they're in
+        ChunkCoordinates spawn = par1Entity.worldObj.getSpawnPoint();
+        transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posZ), spawn.posZ, 0f, 0, 0, false);
+    }
+
+    public static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    {
+        if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
+        {
+            return transferEntityWithinDimension(entity, x, y, z, yaw, touchedPortalType, exitPortalType, keepMomentum);
+        }
+        else
+        {
+            return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum);
         }
     }
 
@@ -224,93 +245,6 @@ public class EntityManager
             }
 
             transferEntityWithRider(entity, exit.posX + 0.5, exit.posY, exit.posZ + 0.5, getRotation(entity, controllerDest, exit), (WorldServer) controllerDest.worldObj, portalType, controllerDest.portalType, keepMomentum);
-        }
-    }
-
-    public static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
-    {
-        Entity rider = entity.riddenByEntity;
-
-        if (rider != null)
-        {
-            rider.mountEntity(null);
-            rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
-        }
-
-        entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
-
-        if (rider != null)
-        {
-            rider.mountEntity(entity);
-        }
-
-        return entity;
-    }
-
-    public static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
-    {
-        if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
-        {
-            return transferEntityWithinDimension(entity, x, y, z, yaw, touchedPortalType, exitPortalType, keepMomentum);
-        }
-        else
-        {
-            return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum);
-        }
-    }
-
-    public static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum)
-    {
-        if (entity == null)
-        {
-            return null;
-        }
-        else if (!isEntityFitForTravel(entity))
-        {
-            return entity;
-        }
-        else if (entity instanceof EntityPlayer)
-        {
-            EntityPlayerMP player = (EntityPlayerMP) entity;
-            player.rotationYaw = yaw;
-            player.setPositionAndUpdate(x, y, z);
-            handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
-            player.worldObj.updateEntityWithOptionalForce(player, false);
-
-            setEntityPortalCooldown(player);
-            return player;
-        }
-        else
-        {
-            WorldServer world = (WorldServer) entity.worldObj;
-            NBTTagCompound tag = new NBTTagCompound();
-            entity.writeToNBTOptional(tag);
-
-            int chunkX = entity.chunkCoordX;
-            int chunkZ = entity.chunkCoordZ;
-
-            if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
-            {
-                world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
-            }
-
-            world.loadedEntityList.remove(entity);
-            world.onEntityRemoved(entity);
-
-            Entity newEntity = EntityList.createEntityFromNBT(tag, world);
-
-            if (newEntity != null)
-            {
-                handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
-                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
-                newEntity.forceSpawn = true;
-                world.spawnEntityInWorld(newEntity);
-                newEntity.setWorld(world);
-                setEntityPortalCooldown(newEntity);
-            }
-
-            world.resetUpdateEntityTick();
-            return newEntity;
         }
     }
 
@@ -397,12 +331,78 @@ public class EntityManager
         }
     }
 
-    public static void teleportEntityToDimension(Entity par1Entity)
+    public static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
-        // TODO 
+        if (entity == null)
+        {
+            return null;
+        }
+        else if (!isEntityFitForTravel(entity))
+        {
+            return entity;
+        }
+        else if (entity instanceof EntityPlayer)
+        {
+            EntityPlayerMP player = (EntityPlayerMP) entity;
+            player.rotationYaw = yaw;
+            player.setPositionAndUpdate(x, y, z);
+            handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
+            player.worldObj.updateEntityWithOptionalForce(player, false);
 
-        // For now, just teleport them to the spawn point of the dimension they're in
-        ChunkCoordinates spawn = par1Entity.worldObj.getSpawnPoint();
-        transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posZ), spawn.posZ, 0f, 0, 0, false);
+            setEntityPortalCooldown(player);
+            return player;
+        }
+        else
+        {
+            WorldServer world = (WorldServer) entity.worldObj;
+            NBTTagCompound tag = new NBTTagCompound();
+            entity.writeToNBTOptional(tag);
+
+            int chunkX = entity.chunkCoordX;
+            int chunkZ = entity.chunkCoordZ;
+
+            if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
+            {
+                world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
+            }
+
+            world.loadedEntityList.remove(entity);
+            world.onEntityRemoved(entity);
+
+            Entity newEntity = EntityList.createEntityFromNBT(tag, world);
+
+            if (newEntity != null)
+            {
+                handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
+                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
+                newEntity.forceSpawn = true;
+                world.spawnEntityInWorld(newEntity);
+                newEntity.setWorld(world);
+                setEntityPortalCooldown(newEntity);
+            }
+
+            world.resetUpdateEntityTick();
+            return newEntity;
+        }
+    }
+
+    public static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    {
+        Entity rider = entity.riddenByEntity;
+
+        if (rider != null)
+        {
+            rider.mountEntity(null);
+            rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
+        }
+
+        entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
+
+        if (rider != null)
+        {
+            rider.mountEntity(entity);
+        }
+
+        return entity;
     }
 }

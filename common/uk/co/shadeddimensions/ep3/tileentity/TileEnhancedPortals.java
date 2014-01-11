@@ -19,46 +19,6 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TileEnhancedPortals extends TileEntity
 {
-    public TileEnhancedPortals()
-    {
-
-    }
-
-    public ChunkCoordinates getChunkCoordinates()
-    {
-        return new ChunkCoordinates(xCoord, yCoord, zCoord);
-    }
-
-    public WorldCoordinates getWorldCoordinates()
-    {
-        return new WorldCoordinates(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
-    }
-
-    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
-    {
-
-    }
-
-    public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
-    {
-
-    }
-
-    public void onNeighborBlockChange(int blockID)
-    {
-
-    }
-
-    public void updateTick(Random random)
-    {
-
-    }
-
-    public void onEntityCollidedWithBlock(Entity entity)
-    {
-
-    }
-
     public boolean activate(EntityPlayer player)
     {
         return false;
@@ -69,47 +29,14 @@ public class TileEnhancedPortals extends TileEntity
 
     }
 
-    public int isProvidingStrongPower(int side)
-    {
-        return 0;
-    }
-
-    public int isProvidingWeakPower(int side)
-    {
-        return 0;
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tag)
-    {
-        super.writeToNBT(tag);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
-        super.readFromNBT(tag);
-    }
-
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-
-    }
-
     public void fillPacket(DataOutputStream stream) throws IOException
     {
 
     }
 
-    @Override
-    public void validate()
+    public ChunkCoordinates getChunkCoordinates()
     {
-        super.validate();
-
-        if (worldObj.isRemote)
-        {
-            ClientProxy.requestTileData(this);
-        }
+        return new ChunkCoordinates(xCoord, yCoord, zCoord);
     }
 
     protected byte getHighestPowerState()
@@ -128,5 +55,73 @@ public class TileEnhancedPortals extends TileEntity
         }
 
         return current;
+    }
+
+    public WorldCoordinates getWorldCoordinates()
+    {
+        return new WorldCoordinates(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
+    }
+
+    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
+    {
+
+    }
+
+    public int isProvidingStrongPower(int side)
+    {
+        return 0;
+    }
+
+    public int isProvidingWeakPower(int side)
+    {
+        return 0;
+    }
+
+    public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
+    {
+
+    }
+
+    public void onEntityCollidedWithBlock(Entity entity)
+    {
+
+    }
+
+    public void onNeighborBlockChange(int blockID)
+    {
+
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
+    {
+        super.readFromNBT(tag);
+    }
+
+    public void updateTick(Random random)
+    {
+
+    }
+
+    public void usePacket(DataInputStream stream) throws IOException
+    {
+
+    }
+
+    @Override
+    public void validate()
+    {
+        super.validate();
+
+        if (worldObj.isRemote)
+        {
+            ClientProxy.requestTileData(this);
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);
     }
 }

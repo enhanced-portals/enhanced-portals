@@ -7,10 +7,11 @@ import uk.co.shadeddimensions.ep3.client.gui.slot.SlotDBS;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPortals
+public class ContainerDimensionalBridgeStabilizer extends ContainerBase
 {
     private int lastPower, lastPortals, lastInstability, lastPowerState;
 
@@ -35,20 +36,11 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer entityplayer)
-    {
-        return ((TileStabilizerMain) tile).isUseableByPlayer(entityplayer);
-    }
-
-    @Override
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        TileStabilizerMain stabilizer = (TileStabilizerMain) tile;
-        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(),
-            currentPortals = stabilizer.getActiveConnections(),
-            currentInstability = stabilizer.instability,
-            currentPowerState = stabilizer.powerState;
+        TileStabilizerMain stabilizer = (TileStabilizerMain) object;
+        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
 
         for (int i = 0; i < crafters.size(); i++)
         {
@@ -84,8 +76,8 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerEnhancedPorta
     @Override
     public void updateProgressBar(int par1, int par2)
     {
-        TileStabilizerMain stabilizer = (TileStabilizerMain) tile;
-        
+        TileStabilizerMain stabilizer = (TileStabilizerMain) object;
+
         //if (par1 == 1)
         //{
         //    stabilizer.getEnergyStorage().setEnergyStored(par2);

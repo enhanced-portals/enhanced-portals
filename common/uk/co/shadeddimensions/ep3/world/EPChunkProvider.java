@@ -147,6 +147,33 @@ public class EPChunkProvider implements IChunkProvider
     }
 
     /**
+     * Returns if the IChunkProvider supports saving.
+     */
+    @Override
+    public boolean canSave()
+    {
+        return true;
+    }
+
+    /**
+     * Checks to see if a chunk exists at x, y
+     */
+    @Override
+    public boolean chunkExists(int par1, int par2)
+    {
+        return true;
+    }
+
+    /**
+     * Returns the location of the closest structure of the specified type. If not found returns null.
+     */
+    @Override
+    public ChunkPosition findClosestStructure(World par1World, String par2Str, int par3, int par4, int par5)
+    {
+        return "Stronghold".equals(par2Str) && strongholdGenerator != null ? strongholdGenerator.getNearestInstance(par1World, par3, par4, par5) : null;
+    }
+
+    /**
      * Generates the shape of the terrain for the chunk though its all stone though the water is frozen if the temperature is low enough
      */
     public void generateTerrain(int par1, int par2, byte[] par3ArrayOfByte)
@@ -223,146 +250,21 @@ public class EPChunkProvider implements IChunkProvider
         }
     }
 
-    /**
-     * Replaces the stone that was placed in with blocks that match the biome
-     */
-    public void replaceBlocksForBiome(int par1, int par2, byte[] par3ArrayOfByte, BiomeGenBase[] par4ArrayOfBiomeGenBase)
+    @Override
+    public int getLoadedChunkCount()
     {
-        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, par1, par2, par3ArrayOfByte, par4ArrayOfBiomeGenBase);
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.getResult() == Result.DENY)
-        {
-            return;
-        }
-
-        byte b0 = 63;
-        double d0 = 0.03125D;
-        stoneNoise = noiseGen4.generateNoiseOctaves(stoneNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
-
-        for (int k = 0; k < 16; ++k)
-        {
-            for (int l = 0; l < 16; ++l)
-            {
-                BiomeGenBase biomegenbase = par4ArrayOfBiomeGenBase[l + k * 16];
-                float f = biomegenbase.getFloatTemperature();
-                int i1 = (int) (stoneNoise[k + l * 16] / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
-                int j1 = -1;
-                byte b1 = biomegenbase.topBlock;
-                byte b2 = biomegenbase.fillerBlock;
-
-                for (int k1 = 127; k1 >= 0; --k1)
-                {
-                    int l1 = (l * 16 + k) * 128 + k1;
-
-                    if (k1 <= 0 + rand.nextInt(5))
-                    {
-                        par3ArrayOfByte[l1] = (byte) Block.bedrock.blockID;
-                    }
-                    else
-                    {
-                        byte b3 = par3ArrayOfByte[l1];
-
-                        if (b3 == 0)
-                        {
-                            j1 = -1;
-                        }
-                        else if (b3 == Block.stone.blockID)
-                        {
-                            if (j1 == -1)
-                            {
-                                if (i1 <= 0)
-                                {
-                                    b1 = 0;
-                                    b2 = (byte) Block.stone.blockID;
-                                }
-                                else if (k1 >= b0 - 4 && k1 <= b0 + 1)
-                                {
-                                    b1 = biomegenbase.topBlock;
-                                    b2 = biomegenbase.fillerBlock;
-                                }
-
-                                if (k1 < b0 && b1 == 0)
-                                {
-                                    if (f < 0.15F)
-                                    {
-                                        b1 = (byte) Block.ice.blockID;
-                                    }
-                                    else
-                                    {
-                                        b1 = (byte) Block.waterStill.blockID;
-                                    }
-                                }
-
-                                j1 = i1;
-
-                                if (k1 >= b0 - 1)
-                                {
-                                    par3ArrayOfByte[l1] = b1;
-                                }
-                                else
-                                {
-                                    par3ArrayOfByte[l1] = b2;
-                                }
-                            }
-                            else if (j1 > 0)
-                            {
-                                --j1;
-                                par3ArrayOfByte[l1] = b2;
-
-                                if (j1 == 0 && b2 == Block.sand.blockID)
-                                {
-                                    j1 = rand.nextInt(4);
-                                    b2 = (byte) Block.sandStone.blockID;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        return 0;
     }
 
     /**
-     * loads or generates the chunk at the chunk location specified
+     * Returns a list of creatures of the specified type that can spawn at the given location.
      */
     @Override
-    public Chunk loadChunk(int par1, int par2)
+    @SuppressWarnings("rawtypes")
+    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        return provideChunk(par1, par2);
-    }
-
-    /**
-     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the specified chunk from the map seed and chunk seed
-     */
-    @Override
-    public Chunk provideChunk(int par1, int par2)
-    {
-        rand.setSeed(par1 * 341873128712L + par2 * 132897987541L);
-        byte[] abyte = new byte[32768];
-        generateTerrain(par1, par2, abyte);
-        biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
-        replaceBlocksForBiome(par1, par2, abyte, biomesForGeneration);
-        caveGenerator.generate(this, worldObj, par1, par2, abyte);
-        //this.ravineGenerator.generate(this, this.worldObj, par1, par2, abyte);
-
-        if (mapFeaturesEnabled)
-        {
-            mineshaftGenerator.generate(this, worldObj, par1, par2, abyte);
-            villageGenerator.generate(this, worldObj, par1, par2, abyte);
-            strongholdGenerator.generate(this, worldObj, par1, par2, abyte);
-            scatteredFeatureGenerator.generate(this, worldObj, par1, par2, abyte);
-        }
-
-        Chunk chunk = new Chunk(worldObj, abyte, par1, par2);
-        byte[] abyte1 = chunk.getBiomeArray();
-
-        for (int k = 0; k < abyte1.length; ++k)
-        {
-            abyte1[k] = (byte) biomesForGeneration[k].biomeID;
-        }
-
-        chunk.generateSkylightMap();
-        return chunk;
+        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(par2, par4);
+        return biomegenbase == null ? null : par1EnumCreatureType == EnumCreatureType.monster && scatteredFeatureGenerator.func_143030_a(par2, par3, par4) ? scatteredFeatureGenerator.getScatteredFeatureSpawnList() : biomegenbase.getSpawnableList(par1EnumCreatureType);
     }
 
     /**
@@ -521,12 +423,21 @@ public class EPChunkProvider implements IChunkProvider
     }
 
     /**
-     * Checks to see if a chunk exists at x, y
+     * loads or generates the chunk at the chunk location specified
      */
     @Override
-    public boolean chunkExists(int par1, int par2)
+    public Chunk loadChunk(int par1, int par2)
     {
-        return true;
+        return provideChunk(par1, par2);
+    }
+
+    /**
+     * Converts the instance data to a readable string.
+     */
+    @Override
+    public String makeString()
+    {
+        return "RandomLevelSource";
     }
 
     /**
@@ -618,6 +529,151 @@ public class EPChunkProvider implements IChunkProvider
     }
 
     /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the specified chunk from the map seed and chunk seed
+     */
+    @Override
+    public Chunk provideChunk(int par1, int par2)
+    {
+        rand.setSeed(par1 * 341873128712L + par2 * 132897987541L);
+        byte[] abyte = new byte[32768];
+        generateTerrain(par1, par2, abyte);
+        biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
+        replaceBlocksForBiome(par1, par2, abyte, biomesForGeneration);
+        caveGenerator.generate(this, worldObj, par1, par2, abyte);
+        //this.ravineGenerator.generate(this, this.worldObj, par1, par2, abyte);
+
+        if (mapFeaturesEnabled)
+        {
+            mineshaftGenerator.generate(this, worldObj, par1, par2, abyte);
+            villageGenerator.generate(this, worldObj, par1, par2, abyte);
+            strongholdGenerator.generate(this, worldObj, par1, par2, abyte);
+            scatteredFeatureGenerator.generate(this, worldObj, par1, par2, abyte);
+        }
+
+        Chunk chunk = new Chunk(worldObj, abyte, par1, par2);
+        byte[] abyte1 = chunk.getBiomeArray();
+
+        for (int k = 0; k < abyte1.length; ++k)
+        {
+            abyte1[k] = (byte) biomesForGeneration[k].biomeID;
+        }
+
+        chunk.generateSkylightMap();
+        return chunk;
+    }
+
+    @Override
+    public void recreateStructures(int par1, int par2)
+    {
+        if (mapFeaturesEnabled)
+        {
+            mineshaftGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
+            villageGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
+            strongholdGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
+            scatteredFeatureGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
+        }
+    }
+
+    /**
+     * Replaces the stone that was placed in with blocks that match the biome
+     */
+    public void replaceBlocksForBiome(int par1, int par2, byte[] par3ArrayOfByte, BiomeGenBase[] par4ArrayOfBiomeGenBase)
+    {
+        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, par1, par2, par3ArrayOfByte, par4ArrayOfBiomeGenBase);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.getResult() == Result.DENY)
+        {
+            return;
+        }
+
+        byte b0 = 63;
+        double d0 = 0.03125D;
+        stoneNoise = noiseGen4.generateNoiseOctaves(stoneNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, d0 * 2.0D, d0 * 2.0D, d0 * 2.0D);
+
+        for (int k = 0; k < 16; ++k)
+        {
+            for (int l = 0; l < 16; ++l)
+            {
+                BiomeGenBase biomegenbase = par4ArrayOfBiomeGenBase[l + k * 16];
+                float f = biomegenbase.getFloatTemperature();
+                int i1 = (int) (stoneNoise[k + l * 16] / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
+                int j1 = -1;
+                byte b1 = biomegenbase.topBlock;
+                byte b2 = biomegenbase.fillerBlock;
+
+                for (int k1 = 127; k1 >= 0; --k1)
+                {
+                    int l1 = (l * 16 + k) * 128 + k1;
+
+                    if (k1 <= 0 + rand.nextInt(5))
+                    {
+                        par3ArrayOfByte[l1] = (byte) Block.bedrock.blockID;
+                    }
+                    else
+                    {
+                        byte b3 = par3ArrayOfByte[l1];
+
+                        if (b3 == 0)
+                        {
+                            j1 = -1;
+                        }
+                        else if (b3 == Block.stone.blockID)
+                        {
+                            if (j1 == -1)
+                            {
+                                if (i1 <= 0)
+                                {
+                                    b1 = 0;
+                                    b2 = (byte) Block.stone.blockID;
+                                }
+                                else if (k1 >= b0 - 4 && k1 <= b0 + 1)
+                                {
+                                    b1 = biomegenbase.topBlock;
+                                    b2 = biomegenbase.fillerBlock;
+                                }
+
+                                if (k1 < b0 && b1 == 0)
+                                {
+                                    if (f < 0.15F)
+                                    {
+                                        b1 = (byte) Block.ice.blockID;
+                                    }
+                                    else
+                                    {
+                                        b1 = (byte) Block.waterStill.blockID;
+                                    }
+                                }
+
+                                j1 = i1;
+
+                                if (k1 >= b0 - 1)
+                                {
+                                    par3ArrayOfByte[l1] = b1;
+                                }
+                                else
+                                {
+                                    par3ArrayOfByte[l1] = b2;
+                                }
+                            }
+                            else if (j1 > 0)
+                            {
+                                --j1;
+                                par3ArrayOfByte[l1] = b2;
+
+                                if (j1 == 0 && b2 == Block.sand.blockID)
+                                {
+                                    j1 = rand.nextInt(4);
+                                    b2 = (byte) Block.sandStone.blockID;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Two modes of operation: if passed true, save all Chunks in one go. If passed false, save up to two chunks. Return true if all chunks have been saved.
      */
     @Override
@@ -641,61 +697,5 @@ public class EPChunkProvider implements IChunkProvider
     public boolean unloadQueuedChunks()
     {
         return false;
-    }
-
-    /**
-     * Returns if the IChunkProvider supports saving.
-     */
-    @Override
-    public boolean canSave()
-    {
-        return true;
-    }
-
-    /**
-     * Converts the instance data to a readable string.
-     */
-    @Override
-    public String makeString()
-    {
-        return "RandomLevelSource";
-    }
-
-    /**
-     * Returns a list of creatures of the specified type that can spawn at the given location.
-     */
-    @Override
-    @SuppressWarnings("rawtypes")
-    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
-    {
-        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(par2, par4);
-        return biomegenbase == null ? null : par1EnumCreatureType == EnumCreatureType.monster && scatteredFeatureGenerator.func_143030_a(par2, par3, par4) ? scatteredFeatureGenerator.getScatteredFeatureSpawnList() : biomegenbase.getSpawnableList(par1EnumCreatureType);
-    }
-
-    /**
-     * Returns the location of the closest structure of the specified type. If not found returns null.
-     */
-    @Override
-    public ChunkPosition findClosestStructure(World par1World, String par2Str, int par3, int par4, int par5)
-    {
-        return "Stronghold".equals(par2Str) && strongholdGenerator != null ? strongholdGenerator.getNearestInstance(par1World, par3, par4, par5) : null;
-    }
-
-    @Override
-    public int getLoadedChunkCount()
-    {
-        return 0;
-    }
-
-    @Override
-    public void recreateStructures(int par1, int par2)
-    {
-        if (mapFeaturesEnabled)
-        {
-            mineshaftGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
-            villageGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
-            strongholdGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
-            scatteredFeatureGenerator.generate(this, worldObj, par1, par2, (byte[]) null);
-        }
     }
 }

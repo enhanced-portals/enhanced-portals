@@ -27,38 +27,6 @@ public class BlockEnhancedPortals extends BlockContainer
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world)
-    {
-        return null;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
-    {
-        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
-
-        if (tile == null)
-        {
-            return;
-        }
-
-        tile.onBlockPlacedBy(entity, stack);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-    {
-        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
-
-        if (tile == null)
-        {
-            return false;
-        }
-
-        return tile.activate(player);
-    }
-
-    @Override
     public void breakBlock(World world, int x, int y, int z, int oldBlockID, int oldMetadata)
     {
         TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
@@ -69,6 +37,12 @@ public class BlockEnhancedPortals extends BlockContainer
         }
 
         super.breakBlock(world, x, y, z, oldBlockID, oldMetadata);
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return null;
     }
 
     @Override
@@ -98,6 +72,45 @@ public class BlockEnhancedPortals extends BlockContainer
     }
 
     @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
+
+        if (tile == null)
+        {
+            return false;
+        }
+
+        return tile.activate(player);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+    {
+        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
+
+        if (tile == null)
+        {
+            return;
+        }
+
+        tile.onBlockPlacedBy(entity, stack);
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    {
+        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
+
+        if (tile == null)
+        {
+            return;
+        }
+
+        tile.onEntityCollidedWithBlock(entity);
+    }
+
+    @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
     {
         TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
@@ -121,18 +134,5 @@ public class BlockEnhancedPortals extends BlockContainer
         }
 
         tile.updateTick(random);
-    }
-
-    @Override
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-    {
-        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
-
-        if (tile == null)
-        {
-            return;
-        }
-
-        tile.onEntityCollidedWithBlock(entity);
     }
 }

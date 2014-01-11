@@ -33,18 +33,6 @@ public class GeneralUtils
         return t.getInteger("Y") == -1 ? null : new ChunkCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"));
     }
 
-    public static WorldCoordinates loadWorldCoord(NBTTagCompound tagCompound, String string)
-    {
-        if (tagCompound.getTag(string) == null)
-        {
-            return null;
-        }
-
-        NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
-
-        return t.getInteger("Y") == -1 ? null : new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
-    }
-
     public static ArrayList<ChunkCoordinates> loadChunkCoordList(NBTTagCompound tag, String name)
     {
         ArrayList<ChunkCoordinates> list = new ArrayList<ChunkCoordinates>();
@@ -59,6 +47,18 @@ public class GeneralUtils
         }
 
         return list;
+    }
+
+    public static WorldCoordinates loadWorldCoord(NBTTagCompound tagCompound, String string)
+    {
+        if (tagCompound.getTag(string) == null)
+        {
+            return null;
+        }
+
+        NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
+
+        return t.getInteger("Y") == -1 ? null : new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
     }
 
     public static ArrayList<WorldCoordinates> loadWorldCoordList(NBTTagCompound tag, String name)
@@ -82,6 +82,18 @@ public class GeneralUtils
         return new ChunkCoordinates(coord.posX + dir.offsetX, coord.posY + dir.offsetY, coord.posZ + dir.offsetZ);
     }
 
+    public static ChunkCoordinates readChunkCoord(DataInputStream stream) throws IOException
+    {
+        ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
+
+        return c.posY == -1 ? null : c;
+    }
+
+    public static GlyphIdentifier readGlyphIdentifier(DataInputStream stream) throws IOException
+    {
+        return new GlyphIdentifier(stream.readUTF());
+    }
+
     public static void saveChunkCoord(NBTTagCompound tagCompound, ChunkCoordinates c, String string)
     {
         if (c == null)
@@ -93,22 +105,6 @@ public class GeneralUtils
         t.setInteger("X", c.posX);
         t.setInteger("Y", c.posY);
         t.setInteger("Z", c.posZ);
-
-        tagCompound.setTag(string, t);
-    }
-
-    public static void saveWorldCoord(NBTTagCompound tagCompound, WorldCoordinates c, String string)
-    {
-        if (c == null)
-        {
-            return;
-        }
-
-        NBTTagCompound t = new NBTTagCompound();
-        t.setInteger("X", c.posX);
-        t.setInteger("Y", c.posY);
-        t.setInteger("Z", c.posZ);
-        t.setInteger("D", c.dimension);
 
         tagCompound.setTag(string, t);
     }
@@ -128,6 +124,22 @@ public class GeneralUtils
         }
 
         tag.setTag(name, tagList);
+    }
+
+    public static void saveWorldCoord(NBTTagCompound tagCompound, WorldCoordinates c, String string)
+    {
+        if (c == null)
+        {
+            return;
+        }
+
+        NBTTagCompound t = new NBTTagCompound();
+        t.setInteger("X", c.posX);
+        t.setInteger("Y", c.posY);
+        t.setInteger("Z", c.posZ);
+        t.setInteger("D", c.dimension);
+
+        tagCompound.setTag(string, t);
     }
 
     public static void saveWorldCoordList(NBTTagCompound tag, List<WorldCoordinates> list, String name)
@@ -164,20 +176,8 @@ public class GeneralUtils
         }
     }
 
-    public static ChunkCoordinates readChunkCoord(DataInputStream stream) throws IOException
-    {
-        ChunkCoordinates c = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
-
-        return c.posY == -1 ? null : c;
-    }
-
     public static void writeGlyphIdentifier(DataOutputStream stream, GlyphIdentifier i) throws IOException
     {
         stream.writeUTF(i == null ? "" : i.getGlyphString());
-    }
-
-    public static GlyphIdentifier readGlyphIdentifier(DataInputStream stream) throws IOException
-    {
-        return new GlyphIdentifier(stream.readUTF());
     }
 }

@@ -21,6 +21,22 @@ public class TileModuleManipulator extends TilePortalPart
         inventory = new ItemStack[9];
     }
 
+    public boolean canSendEntity(Entity entity)
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).onEntityTeleportStart(entity, this, i))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public ItemStack decrStackSize(int i, int j)
     {
@@ -28,6 +44,43 @@ public class TileModuleManipulator extends TilePortalPart
         s.stackSize -= j;
 
         return s;
+    }
+
+    @Override
+    public void fillPacket(DataOutputStream stream) throws IOException
+    {
+        super.fillPacket(stream);
+
+        for (int i = 0; i < getSizeInventory(); i++)
+        {
+            if (getStackInSlot(i) != null)
+            {
+                stream.writeInt(getStackInSlot(i).itemID);
+                stream.writeInt(getStackInSlot(i).getItemDamage());
+            }
+            else
+            {
+                stream.writeInt(0);
+                stream.writeInt(0);
+            }
+        }
+    }
+
+    public IPortalModule[] getInstalledUpgrades()
+    {
+        IPortalModule[] modules = new IPortalModule[getSizeInventory()];
+
+        for (int i = 0; i < getSizeInventory(); i++)
+        {
+            ItemStack s = getStackInSlot(i);
+
+            if (s != null)
+            {
+                modules[i] = (IPortalModule) s.getItem();
+            }
+        }
+
+        return modules;
     }
 
     @Override
@@ -73,10 +126,81 @@ public class TileModuleManipulator extends TilePortalPart
         return false;
     }
 
+    public boolean installUpgrade(ItemStack stack)
+    {
+        if (stack == null || !(stack.getItem() instanceof IPortalModule))
+        {
+            return false;
+        }
+
+        IPortalModule pModule = (IPortalModule) stack.getItem();
+
+        if (!hasModule(pModule.getID(stack)) && pModule.canInstallUpgrade(this, getInstalledUpgrades(), stack))
+        {
+            for (int i = 0; i < getSizeInventory(); i++)
+            {
+                if (getStackInSlot(i) == null)
+                {
+                    ItemStack s = stack.copy();
+                    s.stackSize = 1;
+
+                    setInventorySlotContents(i, s);
+                    CommonProxy.sendUpdatePacketToAllAround(this);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isFrameGhost()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).ghostPortalFrame(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
         return stack != null && stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
+    }
+
+    public boolean isPortalInvisible()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void onEntityTeleported(Entity entity)
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                ((IPortalModule) i.getItem()).onEntityTeleportEnd(entity, this, i);
+            }
+        }
     }
 
     public void particleCreated(PortalFX portalFX)
@@ -108,6 +232,22 @@ public class TileModuleManipulator extends TilePortalPart
         inventory[i] = itemstack;
     }
 
+    public boolean shouldKeepMomentumOnTeleport()
+    {
+        for (ItemStack i : inventory)
+        {
+            if (i != null)
+            {
+                if (((IPortalModule) i.getItem()).keepMomentumOnTeleport(this, i))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public boolean shouldRenderPortal()
     {
         for (ItemStack i : inventory)
@@ -122,90 +262,6 @@ public class TileModuleManipulator extends TilePortalPart
         }
 
         return true;
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-
-        NBTTagList list = new NBTTagList();
-        for (ItemStack s : inventory)
-        {
-            if (s != null)
-            {
-                NBTTagCompound compound = new NBTTagCompound();
-                s.writeToNBT(compound);
-                list.appendTag(compound);
-            }
-        }
-
-        tagCompound.setTag("Inventory", list);
-    }
-
-    public IPortalModule[] getInstalledUpgrades()
-    {
-        IPortalModule[] modules = new IPortalModule[getSizeInventory()];
-
-        for (int i = 0; i < getSizeInventory(); i++)
-        {
-            ItemStack s = getStackInSlot(i);
-
-            if (s != null)
-            {
-                modules[i] = (IPortalModule) s.getItem();
-            }
-        }
-
-        return modules;
-    }
-
-    public boolean installUpgrade(ItemStack stack)
-    {
-        if (stack == null || !(stack.getItem() instanceof IPortalModule))
-        {
-            return false;
-        }
-
-        IPortalModule pModule = (IPortalModule) stack.getItem();
-
-        if (!hasModule(pModule.getID(stack)) && pModule.canInstallUpgrade(this, getInstalledUpgrades(), stack))
-        {
-            for (int i = 0; i < getSizeInventory(); i++)
-            {
-                if (getStackInSlot(i) == null)
-                {
-                    ItemStack s = stack.copy();
-                    s.stackSize = 1;
-
-                    setInventorySlotContents(i, s);
-                    CommonProxy.sendUpdatePacketToAllAround(this);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
-    {
-        super.fillPacket(stream);
-
-        for (int i = 0; i < getSizeInventory(); i++)
-        {
-            if (getStackInSlot(i) != null)
-            {
-                stream.writeInt(getStackInSlot(i).itemID);
-                stream.writeInt(getStackInSlot(i).getItemDamage());
-            }
-            else
-            {
-                stream.writeInt(0);
-                stream.writeInt(0);
-            }
-        }
     }
 
     @Override
@@ -226,78 +282,22 @@ public class TileModuleManipulator extends TilePortalPart
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
-    public boolean isFrameGhost()
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
     {
-        for (ItemStack i : inventory)
+        super.writeToNBT(tagCompound);
+
+        NBTTagList list = new NBTTagList();
+        for (ItemStack s : inventory)
         {
-            if (i != null)
+            if (s != null)
             {
-                if (((IPortalModule) i.getItem()).ghostPortalFrame(this, i))
-                {
-                    return true;
-                }
+                NBTTagCompound compound = new NBTTagCompound();
+                s.writeToNBT(compound);
+                list.appendTag(compound);
             }
         }
 
-        return false;
-    }
-
-    public boolean isPortalInvisible()
-    {
-        for (ItemStack i : inventory)
-        {
-            if (i != null)
-            {
-                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public boolean shouldKeepMomentumOnTeleport()
-    {
-        for (ItemStack i : inventory)
-        {
-            if (i != null)
-            {
-                if (((IPortalModule) i.getItem()).keepMomentumOnTeleport(this, i))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public boolean canSendEntity(Entity entity)
-    {
-        for (ItemStack i : inventory)
-        {
-            if (i != null)
-            {
-                if (((IPortalModule) i.getItem()).onEntityTeleportStart(entity, this, i))
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public void onEntityTeleported(Entity entity)
-    {
-        for (ItemStack i : inventory)
-        {
-            if (i != null)
-            {
-                ((IPortalModule) i.getItem()).onEntityTeleportEnd(entity, this, i);
-            }
-        }
+        tagCompound.setTag("Inventory", list);
     }
 }

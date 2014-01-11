@@ -16,28 +16,6 @@ public class MobEnderman extends EntityEnderman
     }
 
     @Override
-    protected Entity findPlayerToAttack()
-    {
-        return worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
-    }
-
-    @Override
-    public void onUpdate()
-    {
-        super.onUpdate();
-
-        if (teleportTimer > -1)
-        {
-            teleportTimer++;
-
-            if (teleportTimer >= teleportLimit)
-            {
-                teleportTimer = -1;
-            }
-        }
-    }
-
-    @Override
     protected void attackEntity(Entity par1Entity, float par2)
     {
         if (teleportTimer == -1)
@@ -60,6 +38,28 @@ public class MobEnderman extends EntityEnderman
         else
         {
             super.attackEntity(par1Entity, par2);
+        }
+    }
+
+    @Override
+    protected Entity findPlayerToAttack()
+    {
+        return worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
+    }
+
+    @Override
+    public void onUpdate()
+    {
+        super.onUpdate();
+
+        if (teleportTimer > -1)
+        {
+            teleportTimer++;
+
+            if (teleportTimer >= teleportLimit)
+            {
+                teleportTimer = -1;
+            }
         }
     }
 }

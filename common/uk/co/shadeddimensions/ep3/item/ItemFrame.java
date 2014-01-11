@@ -46,12 +46,6 @@ public class ItemFrame extends ItemBlock
         return par1;
     }
 
-    @Override
-    public String getUnlocalizedName(ItemStack stack)
-    {
-        return super.getUnlocalizedName() + "." + unlocalizedName[stack.getItemDamage()];
-    }
-
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
@@ -60,5 +54,11 @@ public class ItemFrame extends ItemBlock
         {
             list.add(new ItemStack(CommonProxy.blockFrame.blockID, 1, i));
         }
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack)
+    {
+        return super.getUnlocalizedName() + "." + unlocalizedName[stack.getItemDamage()];
     }
 }

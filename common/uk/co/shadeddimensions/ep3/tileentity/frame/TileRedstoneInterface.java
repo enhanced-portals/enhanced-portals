@@ -29,6 +29,27 @@ public class TileRedstoneInterface extends TilePortalPart
         state = timeUntilOff = previousRedstoneState = 0;
     }
 
+    public void entityTeleport(Entity entity)
+    {
+        if (isOutput)
+        {
+            if (state == 4 || state == 5 && entity instanceof EntityPlayer || state == 6 && entity instanceof EntityAnimal || state == 7 && entity instanceof EntityMob)
+            {
+                timeUntilOff = (byte) TPS;
+            }
+
+            notifyNeighbors();
+        }
+    }
+
+    @Override
+    public void fillPacket(DataOutputStream stream) throws IOException
+    {
+        super.fillPacket(stream);
+        stream.writeBoolean(isOutput);
+        stream.writeByte(state);
+    }
+
     @Override
     public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
     {
@@ -95,6 +116,17 @@ public class TileRedstoneInterface extends TilePortalPart
         return super.isProvidingWeakPower(side);
     }
 
+    private void notifyNeighbors()
+    {
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID);
+
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, CommonProxy.blockFrame.blockID);
+        }
+    }
+
     @Override
     public void onNeighborBlockChange(int id)
     {
@@ -149,7 +181,7 @@ public class TileRedstoneInterface extends TilePortalPart
                 }
             }
             else
-                // These require a dialler
+            // These require a dialler
             {
                 TileDiallingDevice dialler = controller.blockManager.getDialDevice(worldObj);
 
@@ -159,7 +191,7 @@ public class TileRedstoneInterface extends TilePortalPart
                 }
 
                 int glyphCount = dialler.glyphList.size();
-                
+
                 if (glyphCount == 0)
                 {
                     return;
@@ -209,17 +241,6 @@ public class TileRedstoneInterface extends TilePortalPart
         }
     }
 
-    private void notifyNeighbors()
-    {
-        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, CommonProxy.blockFrame.blockID);
-
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, CommonProxy.blockFrame.blockID);
-        }
-    }
-
     public void portalCreated()
     {
         if (isOutput)
@@ -262,15 +283,23 @@ public class TileRedstoneInterface extends TilePortalPart
         }
     }
 
-    public void entityTeleport(Entity entity)
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
     {
-        if (isOutput)
-        {
-            if (state == 4 || state == 5 && entity instanceof EntityPlayer || state == 6 && entity instanceof EntityAnimal || state == 7 && entity instanceof EntityMob)
-            {
-                timeUntilOff = (byte) TPS;
-            }
+        super.readFromNBT(tagCompound);
+        isOutput = tagCompound.getBoolean("output");
+        state = tagCompound.getByte("state");
+        previousRedstoneState = tagCompound.getByte("previousRedstoneState");
+        timeUntilOff = tagCompound.getByte("timeUntilOff");
+    }
 
+    public void setState(byte newState)
+    {
+        state = newState;
+
+        if (timeUntilOff != 0)
+        {
+            timeUntilOff = 0;
             notifyNeighbors();
         }
     }
@@ -292,15 +321,12 @@ public class TileRedstoneInterface extends TilePortalPart
         }
     }
 
-    public void setState(byte newState)
+    @Override
+    public void usePacket(java.io.DataInputStream stream) throws IOException
     {
-        state = newState;
-
-        if (timeUntilOff != 0)
-        {
-            timeUntilOff = 0;
-            notifyNeighbors();
-        }
+        super.usePacket(stream);
+        isOutput = stream.readBoolean();
+        setState(stream.readByte());
     }
 
     @Override
@@ -311,31 +337,5 @@ public class TileRedstoneInterface extends TilePortalPart
         tagCompound.setByte("state", state);
         tagCompound.setByte("previousRedstoneState", previousRedstoneState);
         tagCompound.setByte("timeUntilOff", timeUntilOff);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-        isOutput = tagCompound.getBoolean("output");
-        state = tagCompound.getByte("state");
-        previousRedstoneState = tagCompound.getByte("previousRedstoneState");
-        timeUntilOff = tagCompound.getByte("timeUntilOff");
-    }
-
-    @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
-    {
-        super.fillPacket(stream);
-        stream.writeBoolean(isOutput);
-        stream.writeByte(state);
-    }
-
-    @Override
-    public void usePacket(java.io.DataInputStream stream) throws IOException
-    {
-        super.usePacket(stream);
-        isOutput = stream.readBoolean();
-        setState(stream.readByte());
     }
 }

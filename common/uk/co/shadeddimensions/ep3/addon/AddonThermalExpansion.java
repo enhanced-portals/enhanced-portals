@@ -1,32 +1,27 @@
 package uk.co.shadeddimensions.ep3.addon;
 
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cofh.api.core.IInitializer;
 
-public class AddonThermalExpansion extends Addon
+public class AddonThermalExpansion implements IInitializer
 {
     @Override
-    public void preInit(FMLPreInitializationEvent event)
+    public boolean preInit()
     {
-
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
-    public void init(FMLInitializationEvent event)
+    public boolean initialize()
     {
-
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event)
+    public boolean postInit()
     {
-        if (!Loader.isModLoaded("ThermalExpansion"))
-        {
-            CommonProxy.logger.warning("Thermal Expansion was not found. Energy requirements have been disabled");
-            CommonProxy.redstoneFluxPowerMultiplier = 0;
-        }
+        // TODO Auto-generated method stub
+        return false;
     }
 }

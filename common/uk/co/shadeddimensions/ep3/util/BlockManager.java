@@ -36,83 +36,6 @@ public class BlockManager
         redstoneInterfaces = new ArrayList<ChunkCoordinates>();
     }
 
-    public int getFrameCount()
-    {
-        return basicFrames.size();
-    }
-
-    public int getPortalCount()
-    {
-        return portals.size();
-    }
-
-    public int getRedstoneInterfaceCount()
-    {
-        return redstoneInterfaces.size();
-    }
-
-    public boolean getHasNetworkInterface()
-    {
-        return networkInterface != null;
-    }
-
-    public boolean getHasDialDevice()
-    {
-        return dialDevice != null;
-    }
-
-    public boolean getHasBiometricIdentifier()
-    {
-        return biometricIdentifier != null;
-    }
-
-    public boolean getHasModuleManipulator()
-    {
-        return moduleManipulator != null;
-    }
-
-    public void writeToNBT(NBTTagCompound tag)
-    {
-        GeneralUtils.saveChunkCoordList(tag, basicFrames, "Frames");
-        GeneralUtils.saveChunkCoordList(tag, portals, "Portals");
-        GeneralUtils.saveChunkCoordList(tag, redstoneInterfaces, "RedstoneInterfaces");
-        GeneralUtils.saveChunkCoord(tag, networkInterface, "NetworkInterface");
-        GeneralUtils.saveChunkCoord(tag, dialDevice, "DialDevice");
-        GeneralUtils.saveChunkCoord(tag, biometricIdentifier, "BiometricIdentifier");
-        GeneralUtils.saveChunkCoord(tag, moduleManipulator, "ModuleManipulator");
-        GeneralUtils.saveWorldCoord(tag, dimensionalBridgeStabilizer, "DimensionalBridgeStabilizer");
-    }
-
-    public BlockManager readFromNBT(NBTTagCompound tag)
-    {
-        basicFrames = GeneralUtils.loadChunkCoordList(tag, "Frames");
-        portals = GeneralUtils.loadChunkCoordList(tag, "Portals");
-        redstoneInterfaces = GeneralUtils.loadChunkCoordList(tag, "RedstoneInterfaces");
-        networkInterface = GeneralUtils.loadChunkCoord(tag, "NetworkInterface");
-        dialDevice = GeneralUtils.loadChunkCoord(tag, "DialDevice");
-        biometricIdentifier = GeneralUtils.loadChunkCoord(tag, "BiometricIdentifier");
-        moduleManipulator = GeneralUtils.loadChunkCoord(tag, "ModuleManipulator");
-        dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tag, "DimensionalBridgeStabilizer");
-        return this;
-    }
-
-    public void writeToPacket(DataOutputStream stream) throws IOException
-    {
-        stream.writeInt(basicFrames.size());
-        stream.writeInt(portals.size());
-        stream.writeInt(redstoneInterfaces.size());
-        stream.writeBoolean(networkInterface != null);
-        stream.writeBoolean(dialDevice != null);
-        stream.writeBoolean(biometricIdentifier != null);
-        GeneralUtils.writeChunkCoord(stream, moduleManipulator);
-    }
-
-    public BlockManager readFromPacket(DataInputStream stream) throws IOException
-    {
-        // Nothing to do serverside
-        return this;
-    }
-
     public BlockManager addBasicFrame(ChunkCoordinates c)
     {
         basicFrames.add(c);
@@ -129,91 +52,6 @@ public class BlockManager
     {
         redstoneInterfaces.add(c);
         return this;
-    }
-
-    public BlockManager setNetworkInterface(ChunkCoordinates c)
-    {
-        networkInterface = c;
-        return this;
-    }
-
-    public BlockManager setDialDevice(ChunkCoordinates c)
-    {
-        dialDevice = c;
-        return this;
-    }
-
-    public BlockManager setBiometricIdentifier(ChunkCoordinates c)
-    {
-        biometricIdentifier = c;
-        return this;
-    }
-
-    public BlockManager setModuleManipulator(ChunkCoordinates c)
-    {
-        moduleManipulator = c;
-        return this;
-    }
-
-    public BlockManager setDimensionalBridgeStabilizer(WorldCoordinates w)
-    {
-        dimensionalBridgeStabilizer = w;
-        return this;
-    }
-
-    public ArrayList<ChunkCoordinates> getPortalFrames()
-    {
-        return basicFrames;
-    }
-
-    public ArrayList<ChunkCoordinates> getPortals()
-    {
-        return portals;
-    }
-
-    public ArrayList<ChunkCoordinates> getRedstoneInterfaces()
-    {
-        return redstoneInterfaces;
-    }
-
-    public ChunkCoordinates getNetworkInterface()
-    {
-        return networkInterface;
-    }
-
-    public TileNetworkInterface getNetworkInterface(World w)
-    {
-        if (networkInterface != null)
-        {
-            TileEntity tile = w.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
-
-            if (tile instanceof TileNetworkInterface)
-            {
-                return (TileNetworkInterface) tile;
-            }
-        }
-
-        return null;
-    }
-
-    public ChunkCoordinates getDialDevice()
-    {
-        return dialDevice;
-    }
-
-    public TileDiallingDevice getDialDevice(World w)
-    {
-        if (dialDevice != null)
-        {
-            TileEntity tile = w.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
-
-            if (tile instanceof TileDiallingDevice)
-            {
-                return (TileDiallingDevice) tile;
-            }
-        }
-
-        return null;
     }
 
     public ChunkCoordinates getBiometricIdentifier()
@@ -236,20 +74,20 @@ public class BlockManager
         return null;
     }
 
-    public ChunkCoordinates getModuleManipulator()
+    public ChunkCoordinates getDialDevice()
     {
-        return moduleManipulator;
+        return dialDevice;
     }
 
-    public TileModuleManipulator getModuleManipulator(World w)
+    public TileDiallingDevice getDialDevice(World w)
     {
-        if (moduleManipulator != null)
+        if (dialDevice != null)
         {
-            TileEntity tile = w.getBlockTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
+            TileEntity tile = w.getBlockTileEntity(dialDevice.posX, dialDevice.posY, dialDevice.posZ);
 
-            if (tile instanceof TileModuleManipulator)
+            if (tile instanceof TileDiallingDevice)
             {
-                return (TileModuleManipulator) tile;
+                return (TileDiallingDevice) tile;
             }
         }
 
@@ -290,8 +128,170 @@ public class BlockManager
         return null;
     }
 
+    public int getFrameCount()
+    {
+        return basicFrames.size();
+    }
+
+    public boolean getHasBiometricIdentifier()
+    {
+        return biometricIdentifier != null;
+    }
+
+    public boolean getHasDialDevice()
+    {
+        return dialDevice != null;
+    }
+
+    public boolean getHasModuleManipulator()
+    {
+        return moduleManipulator != null;
+    }
+
+    public boolean getHasNetworkInterface()
+    {
+        return networkInterface != null;
+    }
+
+    public ChunkCoordinates getModuleManipulator()
+    {
+        return moduleManipulator;
+    }
+
+    public TileModuleManipulator getModuleManipulator(World w)
+    {
+        if (moduleManipulator != null)
+        {
+            TileEntity tile = w.getBlockTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
+
+            if (tile instanceof TileModuleManipulator)
+            {
+                return (TileModuleManipulator) tile;
+            }
+        }
+
+        return null;
+    }
+
+    public ChunkCoordinates getNetworkInterface()
+    {
+        return networkInterface;
+    }
+
+    public TileNetworkInterface getNetworkInterface(World w)
+    {
+        if (networkInterface != null)
+        {
+            TileEntity tile = w.getBlockTileEntity(networkInterface.posX, networkInterface.posY, networkInterface.posZ);
+
+            if (tile instanceof TileNetworkInterface)
+            {
+                return (TileNetworkInterface) tile;
+            }
+        }
+
+        return null;
+    }
+
+    public int getPortalCount()
+    {
+        return portals.size();
+    }
+
+    public ArrayList<ChunkCoordinates> getPortalFrames()
+    {
+        return basicFrames;
+    }
+
+    public ArrayList<ChunkCoordinates> getPortals()
+    {
+        return portals;
+    }
+
+    public int getRedstoneInterfaceCount()
+    {
+        return redstoneInterfaces.size();
+    }
+
+    public ArrayList<ChunkCoordinates> getRedstoneInterfaces()
+    {
+        return redstoneInterfaces;
+    }
+
+    public BlockManager readFromNBT(NBTTagCompound tag)
+    {
+        basicFrames = GeneralUtils.loadChunkCoordList(tag, "Frames");
+        portals = GeneralUtils.loadChunkCoordList(tag, "Portals");
+        redstoneInterfaces = GeneralUtils.loadChunkCoordList(tag, "RedstoneInterfaces");
+        networkInterface = GeneralUtils.loadChunkCoord(tag, "NetworkInterface");
+        dialDevice = GeneralUtils.loadChunkCoord(tag, "DialDevice");
+        biometricIdentifier = GeneralUtils.loadChunkCoord(tag, "BiometricIdentifier");
+        moduleManipulator = GeneralUtils.loadChunkCoord(tag, "ModuleManipulator");
+        dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tag, "DimensionalBridgeStabilizer");
+        return this;
+    }
+
+    public BlockManager readFromPacket(DataInputStream stream) throws IOException
+    {
+        // Nothing to do serverside
+        return this;
+    }
+
     public void removeFrame(ChunkCoordinates chunkCoordinates)
     {
         basicFrames.remove(chunkCoordinates);
+    }
+
+    public BlockManager setBiometricIdentifier(ChunkCoordinates c)
+    {
+        biometricIdentifier = c;
+        return this;
+    }
+
+    public BlockManager setDialDevice(ChunkCoordinates c)
+    {
+        dialDevice = c;
+        return this;
+    }
+
+    public BlockManager setDimensionalBridgeStabilizer(WorldCoordinates w)
+    {
+        dimensionalBridgeStabilizer = w;
+        return this;
+    }
+
+    public BlockManager setModuleManipulator(ChunkCoordinates c)
+    {
+        moduleManipulator = c;
+        return this;
+    }
+
+    public BlockManager setNetworkInterface(ChunkCoordinates c)
+    {
+        networkInterface = c;
+        return this;
+    }
+
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        GeneralUtils.saveChunkCoordList(tag, basicFrames, "Frames");
+        GeneralUtils.saveChunkCoordList(tag, portals, "Portals");
+        GeneralUtils.saveChunkCoordList(tag, redstoneInterfaces, "RedstoneInterfaces");
+        GeneralUtils.saveChunkCoord(tag, networkInterface, "NetworkInterface");
+        GeneralUtils.saveChunkCoord(tag, dialDevice, "DialDevice");
+        GeneralUtils.saveChunkCoord(tag, biometricIdentifier, "BiometricIdentifier");
+        GeneralUtils.saveChunkCoord(tag, moduleManipulator, "ModuleManipulator");
+        GeneralUtils.saveWorldCoord(tag, dimensionalBridgeStabilizer, "DimensionalBridgeStabilizer");
+    }
+
+    public void writeToPacket(DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(basicFrames.size());
+        stream.writeInt(portals.size());
+        stream.writeInt(redstoneInterfaces.size());
+        stream.writeBoolean(networkInterface != null);
+        stream.writeBoolean(dialDevice != null);
+        stream.writeBoolean(biometricIdentifier != null);
+        GeneralUtils.writeChunkCoord(stream, moduleManipulator);
     }
 }

@@ -35,6 +35,56 @@ public class PortalTextureManager
         inventory = p.inventory;
     }
 
+    public int getCustomFrameTexture()
+    {
+        return customFrameTexture;
+    }
+
+    public int getCustomPortalTexture()
+    {
+        return customPortalTexture;
+    }
+
+    public int getFrameColour()
+    {
+        return frameColour;
+    }
+
+    public ItemStack getFrameItem()
+    {
+        return inventory[0];
+    }
+
+    public int getParticleColour()
+    {
+        return particleColour;
+    }
+
+    public int getParticleType()
+    {
+        return particleType;
+    }
+
+    public int getPortalColour()
+    {
+        return portalColour;
+    }
+
+    public ItemStack getPortalItem()
+    {
+        return inventory[1];
+    }
+
+    public boolean hasCustomFrameTexture()
+    {
+        return customFrameTexture > -1;
+    }
+
+    public boolean hasCustomPortalTexture()
+    {
+        return customPortalTexture > -1;
+    }
+
     public void readFromNBT(NBTTagCompound tag, String tagName)
     {
         NBTTagCompound t = tag.getCompoundTag(tagName);
@@ -50,6 +100,70 @@ public class PortalTextureManager
         {
             NBTTagCompound T = (NBTTagCompound) l.tagAt(i);
             inventory[i] = ItemStack.loadItemStackFromNBT(T);
+        }
+    }
+
+    public void setCustomFrameTexture(int i)
+    {
+        customFrameTexture = i;
+    }
+
+    public void setCustomPortalTexture(int i)
+    {
+        customPortalTexture = i;
+    }
+
+    public void setFrameColour(int i)
+    {
+        frameColour = i;
+    }
+
+    public void setFrameItem(ItemStack s)
+    {
+        inventory[0] = s;
+    }
+
+    public void setParticleColour(int i)
+    {
+        particleColour = i;
+    }
+
+    public void setParticleType(int i)
+    {
+        particleType = i;
+    }
+
+    public void setPortalColour(int i)
+    {
+        portalColour = i;
+    }
+
+    public void setPortalItem(ItemStack s)
+    {
+        inventory[1] = s;
+    }
+
+    public void usePacket(DataInputStream stream) throws IOException
+    {
+        frameColour = stream.readInt();
+        portalColour = stream.readInt();
+        particleColour = stream.readInt();
+        particleType = stream.readInt();
+        customFrameTexture = stream.readInt();
+        customPortalTexture = stream.readInt();
+
+        for (int i = 0; i < inventory.length; i++)
+        {
+            int ID = stream.readInt(), meta = stream.readInt();
+
+            if (ID == 0)
+            {
+                inventory[i] = null;
+            }
+            else
+            {
+                inventory[i] = new ItemStack(ID, 1, meta);
+            }
         }
     }
 
@@ -80,30 +194,6 @@ public class PortalTextureManager
         tag.setTag(tagName, t);
     }
 
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        frameColour = stream.readInt();
-        portalColour = stream.readInt();
-        particleColour = stream.readInt();
-        particleType = stream.readInt();
-        customFrameTexture = stream.readInt();
-        customPortalTexture = stream.readInt();
-
-        for (int i = 0; i < inventory.length; i++)
-        {
-            int ID = stream.readInt(), meta = stream.readInt();
-
-            if (ID == 0)
-            {
-                inventory[i] = null;
-            }
-            else
-            {
-                inventory[i] = new ItemStack(ID, 1, meta);
-            }
-        }
-    }
-
     public void writeToPacket(DataOutputStream stream) throws IOException
     {
         stream.writeInt(frameColour);
@@ -126,95 +216,5 @@ public class PortalTextureManager
                 stream.writeInt(0);
             }
         }
-    }
-
-    public int getFrameColour()
-    {
-        return frameColour;
-    }
-
-    public void setFrameColour(int i)
-    {
-        frameColour = i;
-    }
-
-    public int getCustomFrameTexture()
-    {
-        return customFrameTexture;
-    }
-
-    public void setCustomFrameTexture(int i)
-    {
-        customFrameTexture = i;
-    }
-
-    public boolean hasCustomFrameTexture()
-    {
-        return customFrameTexture > -1;
-    }
-
-    public int getPortalColour()
-    {
-        return portalColour;
-    }
-
-    public void setPortalColour(int i)
-    {
-        portalColour = i;
-    }
-
-    public int getCustomPortalTexture()
-    {
-        return customPortalTexture;
-    }
-
-    public void setCustomPortalTexture(int i)
-    {
-        customPortalTexture = i;
-    }
-
-    public boolean hasCustomPortalTexture()
-    {
-        return customPortalTexture > -1;
-    }
-
-    public int getParticleColour()
-    {
-        return particleColour;
-    }
-
-    public void setParticleColour(int i)
-    {
-        particleColour = i;
-    }
-
-    public int getParticleType()
-    {
-        return particleType;
-    }
-
-    public void setParticleType(int i)
-    {
-        particleType = i;
-    }
-
-    public ItemStack getPortalItem()
-    {
-        return inventory[1];
-    }
-
-    public void setPortalItem(ItemStack s)
-    {
-        inventory[1] = s;
-    }
-
-    public ItemStack getFrameItem()
-    {
-        return inventory[0];
-    }
-
-    public void setFrameItem(ItemStack s)
-    {
-        inventory[0] = s;
     }
 }

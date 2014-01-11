@@ -13,19 +13,9 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class ItemLocationCard extends ItemEnhancedPortals
 {
-    Icon texture;
-
-    public ItemLocationCard(int id, String name)
+    public static void clearDBSLocation(ItemStack s)
     {
-        super(id, true);
-        setUnlocalizedName(name);
-        setMaxDamage(0);
-        setHasSubtypes(true);
-    }
-
-    public static boolean hasDBSLocation(ItemStack s)
-    {
-        return s.hasTagCompound();
+        s.setTagCompound(null);
     }
 
     public static WorldCoordinates getDBSLocation(ItemStack s)
@@ -39,6 +29,11 @@ public class ItemLocationCard extends ItemEnhancedPortals
         return null;
     }
 
+    public static boolean hasDBSLocation(ItemStack s)
+    {
+        return s.hasTagCompound();
+    }
+
     public static void setDBSLocation(ItemStack s, WorldCoordinates w)
     {
         NBTTagCompound t = new NBTTagCompound();
@@ -50,9 +45,14 @@ public class ItemLocationCard extends ItemEnhancedPortals
         s.setTagCompound(t);
     }
 
-    public static void clearDBSLocation(ItemStack s)
+    Icon texture;
+
+    public ItemLocationCard(int id, String name)
     {
-        s.setTagCompound(null);
+        super(id, true);
+        setUnlocalizedName(name);
+        setMaxDamage(0);
+        setHasSubtypes(true);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -68,6 +68,12 @@ public class ItemLocationCard extends ItemEnhancedPortals
     }
 
     @Override
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
+    }
+
+    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         if (player.isSneaking() && hasDBSLocation(stack))
@@ -77,12 +83,6 @@ public class ItemLocationCard extends ItemEnhancedPortals
         }
 
         return stack;
-    }
-
-    @Override
-    public Icon getIconFromDamage(int par1)
-    {
-        return texture;
     }
 
     @Override

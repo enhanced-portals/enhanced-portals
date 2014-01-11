@@ -3,13 +3,11 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.container.ContainerDiallingDevice;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
@@ -30,9 +28,9 @@ public class GuiDiallingDevice extends GuiBase
     //ElementGlyphSelector selector;
     //ElementDialDeviceScrollList list;
 
-    public GuiDiallingDevice(TileDiallingDevice dialler, EntityPlayer player)
+    public GuiDiallingDevice(TileDiallingDevice dialler)
     {
-        super(new ContainerDiallingDevice(dialler, player), new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png"));
+        super(new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png"));
         dial = dialler;
         controller = dialler.getPortalController();
         xSize = 256;

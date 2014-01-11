@@ -78,7 +78,7 @@ public class CommonProxy
     public static ItemHandheldScanner itemScanner;
     public static ItemUpgrade itemInPlaceUpgrade;
     public static ItemMisc itemMisc;
-    
+
     public int gogglesRenderIndex = 0;
 
     public static NetworkManager networkManager;
@@ -92,9 +92,40 @@ public class CommonProxy
     public static int MobEnderman, MobCreeper;
     public static int Dimension, WastelandID;
 
-    public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
+    public static int eggIdCounter = 300;
+
+    static int getUniqueEggId()
     {
-        PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
+        do
+        {
+            eggIdCounter++;
+        }
+        while (EntityList.getStringFromID(eggIdCounter) != null);
+
+        return eggIdCounter;
+    }
+
+    public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
+    {
+        openGui(player, gui.ordinal(), tile);
+    }
+
+    public static void openGui(EntityPlayer player, int id, TileEnhancedPortals tile)
+    {
+        player.openGui(EnhancedPortals.instance, id, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
+    }
+
+    @SuppressWarnings("unchecked")
+    static void registerEntityEgg(Class<?> entity, int c, int c2)
+    {
+        int id = getUniqueEggId();
+        EntityList.IDtoClassMapping.put(id, entity);
+        EntityList.entityEggs.put(id, new EntityEggInfo(id, c, c2));
+    }
+
+    public static void sendPacketToAllAround(TileEntity tile, Packet250CustomPayload packet)
+    {
+        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, packet);
     }
 
     public static void sendUpdatePacketToAllAround(TileEnhancedPortals tile)
@@ -102,9 +133,9 @@ public class CommonProxy
         sendPacketToAllAround(tile, new PacketTileUpdate(tile).getPacket());
     }
 
-    public static void sendPacketToAllAround(TileEntity tile, Packet250CustomPayload packet)
+    public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
     {
-        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, packet);
+        PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
     }
 
     public File getBaseDir()
@@ -122,6 +153,12 @@ public class CommonProxy
         return new File(getBaseDir(), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
     }
 
+    public void miscSetup()
+    {
+        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 4), 10, 40, 2));
+        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 6), 10, 40, 2));
+    }
+
     public void registerBlocks()
     {
         blockFrame = new BlockFrame(configuration.getBlockId("Frame"), "ep3.portalFrame");
@@ -135,6 +172,15 @@ public class CommonProxy
 
         blockDecoration = new BlockDecoration(configuration.getBlockId("Decoration"), "ep3.decoration");
         GameRegistry.registerBlock(blockDecoration, ItemDecoration.class, "ep3.decoration");
+    }
+
+    public void registerEntities()
+    {
+        EntityRegistry.registerModEntity(MobEnderman.class, "enderman", MobEnderman, EnhancedPortals.instance, 64, 1, true);
+        registerEntityEgg(MobEnderman.class, 0xFF0000, 0xFF00FF);
+
+        EntityRegistry.registerModEntity(MobCreeper.class, "creeper", MobCreeper, EnhancedPortals.instance, 64, 1, true);
+        registerEntityEgg(MobCreeper.class, 0xFF0000, 0x00FF00);
     }
 
     public void registerItems()
@@ -189,36 +235,6 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epStabilizerMain");
     }
 
-    public void registerEntities()
-    {
-        EntityRegistry.registerModEntity(MobEnderman.class, "enderman", MobEnderman, EnhancedPortals.instance, 64, 1, true);
-        registerEntityEgg(MobEnderman.class, 0xFF0000, 0xFF00FF);
-
-        EntityRegistry.registerModEntity(MobCreeper.class, "creeper", MobCreeper, EnhancedPortals.instance, 64, 1, true);
-        registerEntityEgg(MobCreeper.class, 0xFF0000, 0x00FF00);
-    }
-
-    public static int eggIdCounter = 300;
-
-    static int getUniqueEggId()
-    {
-        do
-        {
-            eggIdCounter++;
-        }
-        while (EntityList.getStringFromID(eggIdCounter) != null);
-
-        return eggIdCounter;
-    }
-
-    @SuppressWarnings("unchecked")
-    static void registerEntityEgg(Class<?> entity, int c, int c2)
-    {
-        int id = getUniqueEggId();
-        EntityList.IDtoClassMapping.put(id, entity);
-        EntityList.entityEggs.put(id, new EntityEggInfo(id, c, c2));
-    }
-
     public void setupConfiguration(Configuration theConfig)
     {
         configuration = new ConfigHandler(Reference.VERSION);
@@ -263,27 +279,11 @@ public class CommonProxy
         {
             redstoneFluxPowerMultiplier = 0;
         }
-        
+
         configuration.getConfiguration().addCustomCategoryComment("World", "None of this is implemented yet.");
         configuration.getConfiguration().addCustomCategoryComment("Overrides", "Nether portal override is not yet implemented.");
 
         configuration.init();
-    }
-
-    public void miscSetup()
-    {
-        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 4), 10, 40, 2));
-        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 6), 10, 40, 2));
-    }
-
-    public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
-    {
-        openGui(player, gui.ordinal(), tile);
-    }
-
-    public static void openGui(EntityPlayer player, int id, TileEnhancedPortals tile)
-    {
-        player.openGui(EnhancedPortals.instance, id, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
     }
 
     public void setupCrafting()

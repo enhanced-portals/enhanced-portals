@@ -22,15 +22,25 @@ public class ItemMisc extends ItemEnhancedPortals
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        return getUnlocalizedName() + "." + NAMES[par1ItemStack.getItemDamage()];
-    }
-
-    @Override
     public Icon getIconFromDamage(int par1)
     {
         return texture[par1];
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        for (int i = 0; i < NAMES.length; i++)
+        {
+            par3List.add(new ItemStack(itemID, 1, i));
+        }
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack par1ItemStack)
+    {
+        return getUnlocalizedName() + "." + NAMES[par1ItemStack.getItemDamage()];
     }
 
     @Override
@@ -41,16 +51,6 @@ public class ItemMisc extends ItemEnhancedPortals
         for (int i = 0; i < NAMES.length; i++)
         {
             texture[i] = register.registerIcon("enhancedportals:" + NAMES[i]);
-        }
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
-    {
-        for (int i = 0; i < NAMES.length; i++)
-        {
-            par3List.add(new ItemStack(itemID, 1, i));
         }
     }
 }

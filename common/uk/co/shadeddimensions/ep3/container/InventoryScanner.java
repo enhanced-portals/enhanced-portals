@@ -18,60 +18,10 @@ public class InventoryScanner implements IInventory
         loadContentsFromNBT(stack.getTagCompound());
     }
 
-    public void loadContentsFromNBT(NBTTagCompound tag)
-    {
-        if (tag == null)
-        {
-            return;
-        }
-
-        if (tag.hasKey("scannerInventory"))
-        {
-            NBTTagList tagList = tag.getTagList("scannerInventory");
-
-            for (int i = 0; i < tagList.tagCount(); i++)
-            {
-                NBTTagCompound t = (NBTTagCompound) tagList.tagAt(i);
-                byte slot = t.getByte("Slot");
-
-                if (slot >= 0 && slot < inventory.length)
-                {
-                    inventory[slot] = ItemStack.loadItemStackFromNBT(t);
-                }
-            }
-        }
-    }
-
-    public void saveContentsToNBT(NBTTagCompound tag)
-    {
-        NBTTagList itemList = new NBTTagList();
-
-        for (int i = 0; i < inventory.length; i++)
-        {
-            ItemStack stack = inventory[i];
-
-            if (stack != null)
-            {
-                NBTTagCompound t = new NBTTagCompound();
-                t.setByte("Slot", (byte) i);
-                stack.writeToNBT(t);
-                itemList.appendTag(t);
-            }
-        }
-
-        tag.setTag("scannerInventory", itemList);
-    }
-
     @Override
-    public int getSizeInventory()
+    public void closeChest()
     {
-        return inventory.length;
-    }
 
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return inventory[i];
     }
 
     @Override
@@ -100,15 +50,9 @@ public class InventoryScanner implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int i)
+    public int getInventoryStackLimit()
     {
-        return inventory[i];
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        inventory[i] = itemstack;
+        return 64;
     }
 
     @Override
@@ -118,33 +62,27 @@ public class InventoryScanner implements IInventory
     }
 
     @Override
+    public int getSizeInventory()
+    {
+        return inventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
     public boolean isInvNameLocalized()
     {
         return false;
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 64;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void openChest()
-    {
-
-    }
-
-    @Override
-    public void closeChest()
-    {
-
     }
 
     @Override
@@ -154,8 +92,70 @@ public class InventoryScanner implements IInventory
     }
 
     @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    public void loadContentsFromNBT(NBTTagCompound tag)
+    {
+        if (tag == null)
+        {
+            return;
+        }
+
+        if (tag.hasKey("scannerInventory"))
+        {
+            NBTTagList tagList = tag.getTagList("scannerInventory");
+
+            for (int i = 0; i < tagList.tagCount(); i++)
+            {
+                NBTTagCompound t = (NBTTagCompound) tagList.tagAt(i);
+                byte slot = t.getByte("Slot");
+
+                if (slot >= 0 && slot < inventory.length)
+                {
+                    inventory[slot] = ItemStack.loadItemStackFromNBT(t);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onInventoryChanged()
     {
 
+    }
+
+    @Override
+    public void openChest()
+    {
+
+    }
+
+    public void saveContentsToNBT(NBTTagCompound tag)
+    {
+        NBTTagList itemList = new NBTTagList();
+
+        for (int i = 0; i < inventory.length; i++)
+        {
+            ItemStack stack = inventory[i];
+
+            if (stack != null)
+            {
+                NBTTagCompound t = new NBTTagCompound();
+                t.setByte("Slot", (byte) i);
+                stack.writeToNBT(t);
+                itemList.appendTag(t);
+            }
+        }
+
+        tag.setTag("scannerInventory", itemList);
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        inventory[i] = itemstack;
     }
 }

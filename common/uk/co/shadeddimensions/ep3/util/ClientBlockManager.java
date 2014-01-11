@@ -19,21 +19,9 @@ public class ClientBlockManager extends BlockManager
     }
 
     @Override
-    public int getPortalCount()
+    public boolean getHasBiometricIdentifier()
     {
-        return portal;
-    }
-
-    @Override
-    public int getRedstoneInterfaceCount()
-    {
-        return redstone;
-    }
-
-    @Override
-    public boolean getHasNetworkInterface()
-    {
-        return network;
+        return biometric;
     }
 
     @Override
@@ -43,9 +31,21 @@ public class ClientBlockManager extends BlockManager
     }
 
     @Override
-    public boolean getHasBiometricIdentifier()
+    public boolean getHasNetworkInterface()
     {
-        return biometric;
+        return network;
+    }
+
+    @Override
+    public int getPortalCount()
+    {
+        return portal;
+    }
+
+    @Override
+    public int getRedstoneInterfaceCount()
+    {
+        return redstone;
     }
 
     @Override

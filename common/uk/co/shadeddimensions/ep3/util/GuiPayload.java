@@ -29,14 +29,6 @@ public class GuiPayload
         data = tag;
     }
 
-    public void writeData(NBTTagCompound tag)
-    {
-        if (data != null)
-        {
-            tag.setTag("guiPayload", data);
-        }
-    }
-
     public void readData(NBTTagCompound tag)
     {
         data = tag.hasKey("guiPayload") ? (NBTTagCompound) tag.getTag("guiPayload") : null;
@@ -47,5 +39,13 @@ public class GuiPayload
         byte[] compressed = CompressedStreamTools.compress(data);
         s.writeShort(compressed.length);
         s.write(compressed);
+    }
+
+    public void writeData(NBTTagCompound tag)
+    {
+        if (data != null)
+        {
+            tag.setTag("guiPayload", data);
+        }
     }
 }

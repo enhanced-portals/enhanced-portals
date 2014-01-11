@@ -2,42 +2,40 @@ package uk.co.shadeddimensions.ep3.addon;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cofh.api.core.IInitializer;
 
 public class AddonManager
 {
-    ArrayList<Addon> addons;
+    ArrayList<IInitializer> addons;
     public static AddonManager instance = new AddonManager();
 
     public AddonManager()
     {
-        addons = new ArrayList<Addon>();
+        addons = new ArrayList<IInitializer>();
         addons.add(new AddonThermalExpansion());
     }
 
-    public void preInit(FMLPreInitializationEvent event)
+    public void init()
     {
-        for (Addon a : addons)
+        for (IInitializer a : addons)
         {
-            a.preInit(event);
+            a.initialize();
         }
     }
 
-    public void init(FMLInitializationEvent event)
+    public void postInit()
     {
-        for (Addon a : addons)
+        for (IInitializer a : addons)
         {
-            a.init(event);
+            a.postInit();
         }
     }
 
-    public void postInit(FMLPostInitializationEvent event)
+    public void preInit()
     {
-        for (Addon a : addons)
+        for (IInitializer a : addons)
         {
-            a.postInit(event);
+            a.preInit();
         }
     }
 }

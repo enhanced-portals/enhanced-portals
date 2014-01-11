@@ -32,47 +32,27 @@ public class TileBiometricIdentifier extends TilePortalPart
         isActive = true;
     }
 
-    public boolean canEntityBeSent(Entity entity)
+    public void applyBiometricFilters(int slotIndex, ItemStack s)
     {
-        if (!isActive)
+        NBTTagCompound t = s.getTagCompound();
+        NBTTagList l = t.getTagList("entities");
+
+        for (int i = 0; i < l.tagCount(); i++)
         {
-            return true;
-        }
+            NBTTagCompound tag = (NBTTagCompound) l.tagAt(i);
+            EntityData entity = new EntityData(tag.getString("Name"), EntityData.getClassFromID(tag.getInteger("ID")), false, (byte) 0);
 
-        boolean wasFound = false;
-
-        for (EntityData data : sendingEntityTypes)
-        {
-            if (data.shouldCheckName() && data.EntityDisplayName.equals(entity.getEntityName()))
+            if (slotIndex == 0)
             {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
+                sendingEntityTypes.add(entity);
             }
-            else if (data.shouldCheckClass() && data.EntityClass.isInstance(entity))
+            else if (slotIndex == 1)
             {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
-            }
-            else if (data.shouldCheckNameAndClass() && data.EntityDisplayName.equals(entity.getEntityName()) && data.EntityClass.isInstance(entity))
-            {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
+                recievingEntityTypes.add(entity);
             }
         }
 
-        return !wasFound ? notFoundSend : false;
+        CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
     public boolean canEntityBeRecieved(Entity entity)
@@ -118,135 +98,96 @@ public class TileBiometricIdentifier extends TilePortalPart
         return !wasFound ? hasSeperateLists ? notFoundRecieve : notFoundSend : false;
     }
 
-    @Override
-    public void writeToNBT(NBTTagCompound tag)
+    public boolean canEntityBeSent(Entity entity)
     {
-        super.writeToNBT(tag);
-
-        tag.setBoolean("isActive", isActive);
-        tag.setBoolean("hasSeperateLists", hasSeperateLists);
-        tag.setBoolean("notFoundSend", notFoundSend);
-        tag.setBoolean("notFoundRecieve", notFoundRecieve);
-
-        NBTTagList t = new NBTTagList();
-        for (EntityData d : sendingEntityTypes)
+        if (!isActive)
         {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            d.saveToNBT(tagCompound);
-            t.appendTag(tagCompound);
+            return true;
         }
 
-        tag.setTag("sendingEntityTypes", t);
+        boolean wasFound = false;
 
-        NBTTagList t2 = new NBTTagList();
-        for (EntityData d : recievingEntityTypes)
+        for (EntityData data : sendingEntityTypes)
         {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            d.saveToNBT(tagCompound);
-            t2.appendTag(tagCompound);
-        }
-
-        tag.setTag("recievingEntityTypes", t2);
-
-        NBTTagList itemList = new NBTTagList();
-
-        for (int i = 0; i < inventory.length; i++)
-        {
-            ItemStack stack = inventory[i];
-
-            if (stack != null)
+            if (data.shouldCheckName() && data.EntityDisplayName.equals(entity.getEntityName()))
             {
-                NBTTagCompound t3 = new NBTTagCompound();
-                t3.setByte("Slot", (byte) i);
-                stack.writeToNBT(t3);
-                itemList.appendTag(t3);
+                if (!data.isInverted)
+                {
+                    return true;
+                }
+
+                wasFound = true;
+            }
+            else if (data.shouldCheckClass() && data.EntityClass.isInstance(entity))
+            {
+                if (!data.isInverted)
+                {
+                    return true;
+                }
+
+                wasFound = true;
+            }
+            else if (data.shouldCheckNameAndClass() && data.EntityDisplayName.equals(entity.getEntityName()) && data.EntityClass.isInstance(entity))
+            {
+                if (!data.isInverted)
+                {
+                    return true;
+                }
+
+                wasFound = true;
             }
         }
 
-        tag.setTag("Inventory", itemList);
+        return !wasFound ? notFoundSend : false;
+    }
+
+    public ArrayList<EntityData> copyRecievingEntityTypes()
+    {
+        ArrayList<EntityData> list = new ArrayList<EntityData>();
+
+        for (EntityData data : recievingEntityTypes)
+        {
+            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.isInverted, data.checkType));
+        }
+
+        return list;
+    }
+
+    public ArrayList<EntityData> copySendingEntityTypes()
+    {
+        ArrayList<EntityData> list = new ArrayList<EntityData>();
+
+        for (EntityData data : sendingEntityTypes)
+        {
+            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.isInverted, data.checkType));
+        }
+
+        return list;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag)
+    public ItemStack decrStackSize(int i, int j)
     {
-        super.readFromNBT(tag);
+        ItemStack stack = getStackInSlot(i);
 
-        isActive = tag.getBoolean("isActive");
-        hasSeperateLists = tag.getBoolean("hasSeperateLists");
-        notFoundSend = tag.getBoolean("notFoundSend");
-        notFoundRecieve = tag.getBoolean("notFoundRecieve");
-
-        NBTTagList l = tag.getTagList("sendingEntityTypes");
-        for (int i = 0; i < l.tagCount(); i++)
+        if (stack != null)
         {
-            EntityData d = new EntityData().readFromNBT((NBTTagCompound) l.tagAt(i));
-
-            if (d != null && d.EntityClass != null)
+            if (stack.stackSize <= j)
             {
-                sendingEntityTypes.add(d);
+                setInventorySlotContents(i, null);
             }
-        }
-
-        if (tag.hasKey("recievingEntityTypes"))
-        {
-            NBTTagList l2 = tag.getTagList("recievingEntityTypes");
-
-            for (int i = 0; i < l2.tagCount(); i++)
+            else
             {
-                EntityData d = new EntityData().readFromNBT((NBTTagCompound) l2.tagAt(i));
+                stack = stack.splitStack(j);
 
-                if (d != null && d.EntityClass != null)
+                if (stack.stackSize == 0)
                 {
-                    recievingEntityTypes.add(d);
+                    setInventorySlotContents(i, null);
                 }
             }
         }
 
-        if (tag.hasKey("Inventory"))
-        {
-            NBTTagList tagList = tag.getTagList("Inventory");
-
-            for (int i = 0; i < tagList.tagCount(); i++)
-            {
-                NBTTagCompound t2 = (NBTTagCompound) tagList.tagAt(i);
-                byte slot = t2.getByte("Slot");
-
-                if (slot >= 0 && slot < inventory.length)
-                {
-                    inventory[slot] = ItemStack.loadItemStackFromNBT(t2);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        super.usePacket(stream);
-
-        isActive = stream.readBoolean();
-        hasSeperateLists = stream.readBoolean();
-        notFoundSend = stream.readBoolean();
-        notFoundRecieve = stream.readBoolean();
-        sendingEntityTypes.clear();
-        recievingEntityTypes.clear();
-
-        byte size = stream.readByte();
-
-        for (int i = 0; i < size; i++)
-        {
-            sendingEntityTypes.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
-        }
-
-        if (hasSeperateLists)
-        {
-            size = stream.readByte();
-
-            for (int i = 0; i < size; i++)
-            {
-                recievingEntityTypes.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
-            }
-        }
+        return stack;
     }
 
     @Override
@@ -280,6 +221,37 @@ public class TileBiometricIdentifier extends TilePortalPart
                 stream.writeByte(d.checkType);
             }
         }
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 1;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return "tile.ep3.frame.scanner.name";
+    }
+
+    /* IInventory */
+    @Override
+    public int getSizeInventory()
+    {
+        return inventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return inventory[i];
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return inventory[i];
     }
 
     @Override
@@ -336,101 +308,15 @@ public class TileBiometricIdentifier extends TilePortalPart
     }
 
     @Override
-    public void onNeighborBlockChange(int blockID)
-    {
-        isActive = getHighestPowerState() == 0;
-    }
-
-    public ArrayList<EntityData> copySendingEntityTypes()
-    {
-        ArrayList<EntityData> list = new ArrayList<EntityData>();
-
-        for (EntityData data : sendingEntityTypes)
-        {
-            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.isInverted, data.checkType));
-        }
-
-        return list;
-    }
-
-    public ArrayList<EntityData> copyRecievingEntityTypes()
-    {
-        ArrayList<EntityData> list = new ArrayList<EntityData>();
-
-        for (EntityData data : recievingEntityTypes)
-        {
-            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.isInverted, data.checkType));
-        }
-
-        return list;
-    }
-
-    /* IInventory */
-    @Override
-    public int getSizeInventory()
-    {
-        return inventory.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return inventory[i];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        ItemStack stack = getStackInSlot(i);
-
-        if (stack != null)
-        {
-            if (stack.stackSize <= j)
-            {
-                setInventorySlotContents(i, null);
-            }
-            else
-            {
-                stack = stack.splitStack(j);
-
-                if (stack.stackSize == 0)
-                {
-                    setInventorySlotContents(i, null);
-                }
-            }
-        }
-
-        return stack;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return inventory[i];
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        inventory[i] = itemstack;
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return "tile.ep3.frame.scanner.name";
-    }
-
-    @Override
     public boolean isInvNameLocalized()
     {
         return false;
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return 1;
+        return GeneralUtils.isEnergyContainerItem(itemstack);
     }
 
     @Override
@@ -440,31 +326,145 @@ public class TileBiometricIdentifier extends TilePortalPart
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public void onNeighborBlockChange(int blockID)
     {
-        return GeneralUtils.isEnergyContainerItem(itemstack);
+        isActive = getHighestPowerState() == 0;
     }
 
-    public void applyBiometricFilters(int slotIndex, ItemStack s)
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
     {
-        NBTTagCompound t = s.getTagCompound();
-        NBTTagList l = t.getTagList("entities");
+        super.readFromNBT(tag);
 
+        isActive = tag.getBoolean("isActive");
+        hasSeperateLists = tag.getBoolean("hasSeperateLists");
+        notFoundSend = tag.getBoolean("notFoundSend");
+        notFoundRecieve = tag.getBoolean("notFoundRecieve");
+
+        NBTTagList l = tag.getTagList("sendingEntityTypes");
         for (int i = 0; i < l.tagCount(); i++)
         {
-            NBTTagCompound tag = (NBTTagCompound) l.tagAt(i);
-            EntityData entity = new EntityData(tag.getString("Name"), EntityData.getClassFromID(tag.getInteger("ID")), false, (byte) 0);
+            EntityData d = new EntityData().readFromNBT((NBTTagCompound) l.tagAt(i));
 
-            if (slotIndex == 0)
+            if (d != null && d.EntityClass != null)
             {
-                sendingEntityTypes.add(entity);
-            }
-            else if (slotIndex == 1)
-            {
-                recievingEntityTypes.add(entity);
+                sendingEntityTypes.add(d);
             }
         }
 
-        CommonProxy.sendUpdatePacketToAllAround(this);
+        if (tag.hasKey("recievingEntityTypes"))
+        {
+            NBTTagList l2 = tag.getTagList("recievingEntityTypes");
+
+            for (int i = 0; i < l2.tagCount(); i++)
+            {
+                EntityData d = new EntityData().readFromNBT((NBTTagCompound) l2.tagAt(i));
+
+                if (d != null && d.EntityClass != null)
+                {
+                    recievingEntityTypes.add(d);
+                }
+            }
+        }
+
+        if (tag.hasKey("Inventory"))
+        {
+            NBTTagList tagList = tag.getTagList("Inventory");
+
+            for (int i = 0; i < tagList.tagCount(); i++)
+            {
+                NBTTagCompound t2 = (NBTTagCompound) tagList.tagAt(i);
+                byte slot = t2.getByte("Slot");
+
+                if (slot >= 0 && slot < inventory.length)
+                {
+                    inventory[slot] = ItemStack.loadItemStackFromNBT(t2);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        inventory[i] = itemstack;
+    }
+
+    @Override
+    public void usePacket(DataInputStream stream) throws IOException
+    {
+        super.usePacket(stream);
+
+        isActive = stream.readBoolean();
+        hasSeperateLists = stream.readBoolean();
+        notFoundSend = stream.readBoolean();
+        notFoundRecieve = stream.readBoolean();
+        sendingEntityTypes.clear();
+        recievingEntityTypes.clear();
+
+        byte size = stream.readByte();
+
+        for (int i = 0; i < size; i++)
+        {
+            sendingEntityTypes.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
+        }
+
+        if (hasSeperateLists)
+        {
+            size = stream.readByte();
+
+            for (int i = 0; i < size; i++)
+            {
+                recievingEntityTypes.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
+            }
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);
+
+        tag.setBoolean("isActive", isActive);
+        tag.setBoolean("hasSeperateLists", hasSeperateLists);
+        tag.setBoolean("notFoundSend", notFoundSend);
+        tag.setBoolean("notFoundRecieve", notFoundRecieve);
+
+        NBTTagList t = new NBTTagList();
+        for (EntityData d : sendingEntityTypes)
+        {
+            NBTTagCompound tagCompound = new NBTTagCompound();
+            d.saveToNBT(tagCompound);
+            t.appendTag(tagCompound);
+        }
+
+        tag.setTag("sendingEntityTypes", t);
+
+        NBTTagList t2 = new NBTTagList();
+        for (EntityData d : recievingEntityTypes)
+        {
+            NBTTagCompound tagCompound = new NBTTagCompound();
+            d.saveToNBT(tagCompound);
+            t2.appendTag(tagCompound);
+        }
+
+        tag.setTag("recievingEntityTypes", t2);
+
+        NBTTagList itemList = new NBTTagList();
+
+        for (int i = 0; i < inventory.length; i++)
+        {
+            ItemStack stack = inventory[i];
+
+            if (stack != null)
+            {
+                NBTTagCompound t3 = new NBTTagCompound();
+                t3.setByte("Slot", (byte) i);
+                stack.writeToNBT(t3);
+                itemList.appendTag(t3);
+            }
+        }
+
+        tag.setTag("Inventory", itemList);
     }
 }

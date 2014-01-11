@@ -56,35 +56,26 @@ public class EnhancedPortals
         //DimensionManager.registerProviderType(CommonProxy.Dimension, EPWorldProvider.class, false); // TODO
         //DimensionManager.registerDimension(CommonProxy.Dimension, CommonProxy.Dimension); // TODO
 
-        AddonManager.instance.init(event);
+        AddonManager.instance.init();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        AddonManager.instance.postInit(event);
+        AddonManager.instance.postInit();
     }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
-        AddonManager.instance.preInit(event);
+        AddonManager.instance.preInit();
     }
 
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
         CommonProxy.networkManager = new NetworkManager(event);
-    }
-
-    @ForgeSubscribe
-    public void worldSave(WorldEvent.Save event)
-    {
-        if (!event.world.isRemote)
-        {
-            CommonProxy.networkManager.saveAllData();
-        }
     }
 
     @ForgeSubscribe
@@ -112,6 +103,15 @@ public class EnhancedPortals
                 ClientProxy.customFrameTextures.add(event.map.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));
                 counter++;
             }
+        }
+    }
+
+    @ForgeSubscribe
+    public void worldSave(WorldEvent.Save event)
+    {
+        if (!event.world.isRemote)
+        {
+            CommonProxy.networkManager.saveAllData();
         }
     }
 }

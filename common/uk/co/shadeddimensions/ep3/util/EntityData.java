@@ -9,81 +9,26 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class EntityData
 {
-    public String EntityDisplayName;
-    public Class<? extends Entity> EntityClass;
-    public boolean isInverted;
-    public byte checkType;
-
-    public EntityData()
+    public static String getClassDisplayName(EntityData data)
     {
-
-    }
-
-    public EntityData(String name, Class<? extends Entity> clazz, boolean inverted, byte type)
-    {
-        EntityDisplayName = name;
-        EntityClass = clazz;
-        isInverted = inverted;
-        checkType = type;
-    }
-
-    public void saveToNBT(NBTTagCompound t)
-    {
-        if (getEntityID(EntityClass) == 0)
+        if (EntityPlayer.class.equals(data.EntityClass))
         {
-            return;
+            return "Player";
+        }
+        else if (EntityMob.class.equals(data.EntityClass))
+        {
+            return "Monster";
+        }
+        else if (EntityAnimal.class.equals(data.EntityClass))
+        {
+            return "Animal";
+        }
+        else if (EntityList.classToIDMapping.containsKey(data.EntityClass))
+        {
+            return (String) EntityList.classToStringMapping.get(data.EntityClass);
         }
 
-        t.setString("Name", EntityDisplayName);
-        t.setInteger("ID", getEntityID(EntityClass));
-        t.setBoolean("Inverted", isInverted);
-        t.setByte("CheckType", checkType);
-    }
-
-    public EntityData readFromNBT(NBTTagCompound t)
-    {
-        EntityDisplayName = t.getString("Name");
-        EntityClass = getClassFromID(t.getInteger("ID"));
-        isInverted = t.getBoolean("Inverted");
-        checkType = t.getByte("CheckType");
-        return this;
-    }
-
-    public boolean shouldCheckName()
-    {
-        return checkType == 0;
-    }
-
-    public boolean shouldCheckClass()
-    {
-        return checkType == 1;
-    }
-
-    public boolean shouldCheckNameAndClass()
-    {
-        return checkType == 2;
-    }
-
-    public static int getEntityID(Class<? extends Entity> clazz)
-    {
-        if (EntityPlayer.class.equals(clazz))
-        {
-            return -1;
-        }
-        else if (EntityMob.class.equals(clazz))
-        {
-            return -2;
-        }
-        else if (EntityAnimal.class.equals(clazz))
-        {
-            return -3;
-        }
-        else if (EntityList.classToIDMapping.containsKey(clazz))
-        {
-            return Integer.parseInt(EntityList.classToIDMapping.get(clazz).toString());
-        }
-
-        return 0;
+        return "Unknown";
     }
 
     @SuppressWarnings("unchecked")
@@ -109,26 +54,26 @@ public class EntityData
         return EntityList.getClassFromID(id);
     }
 
-    public static String getClassDisplayName(EntityData data)
+    public static int getEntityID(Class<? extends Entity> clazz)
     {
-        if (EntityPlayer.class.equals(data.EntityClass))
+        if (EntityPlayer.class.equals(clazz))
         {
-            return "Player";
+            return -1;
         }
-        else if (EntityMob.class.equals(data.EntityClass))
+        else if (EntityMob.class.equals(clazz))
         {
-            return "Monster";
+            return -2;
         }
-        else if (EntityAnimal.class.equals(data.EntityClass))
+        else if (EntityAnimal.class.equals(clazz))
         {
-            return "Animal";
+            return -3;
         }
-        else if (EntityList.classToIDMapping.containsKey(data.EntityClass))
+        else if (EntityList.classToIDMapping.containsKey(clazz))
         {
-            return (String) EntityList.classToStringMapping.get(data.EntityClass);
+            return Integer.parseInt(EntityList.classToIDMapping.get(clazz).toString());
         }
 
-        return "Unknown";
+        return 0;
     }
 
     public static int getParentEntityID(Entity entity)
@@ -147,5 +92,63 @@ public class EntityData
         }
 
         return 0;
+    }
+
+    public String EntityDisplayName;
+
+    public Class<? extends Entity> EntityClass;
+
+    public boolean isInverted;
+
+    public byte checkType;
+
+    public EntityData()
+    {
+
+    }
+
+    public EntityData(String name, Class<? extends Entity> clazz, boolean inverted, byte type)
+    {
+        EntityDisplayName = name;
+        EntityClass = clazz;
+        isInverted = inverted;
+        checkType = type;
+    }
+
+    public EntityData readFromNBT(NBTTagCompound t)
+    {
+        EntityDisplayName = t.getString("Name");
+        EntityClass = getClassFromID(t.getInteger("ID"));
+        isInverted = t.getBoolean("Inverted");
+        checkType = t.getByte("CheckType");
+        return this;
+    }
+
+    public void saveToNBT(NBTTagCompound t)
+    {
+        if (getEntityID(EntityClass) == 0)
+        {
+            return;
+        }
+
+        t.setString("Name", EntityDisplayName);
+        t.setInteger("ID", getEntityID(EntityClass));
+        t.setBoolean("Inverted", isInverted);
+        t.setByte("CheckType", checkType);
+    }
+
+    public boolean shouldCheckClass()
+    {
+        return checkType == 1;
+    }
+
+    public boolean shouldCheckName()
+    {
+        return checkType == 0;
+    }
+
+    public boolean shouldCheckNameAndClass()
+    {
+        return checkType == 2;
     }
 }

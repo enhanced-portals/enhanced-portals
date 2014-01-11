@@ -56,18 +56,6 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
-    {
-        return null;
-    }
-
-    @Override
-    public Icon getIcon(int side, int meta)
-    {
-        return texture;
-    }
-
-    @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
@@ -101,6 +89,18 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    {
+        return null;
+    }
+
+    @Override
+    public Icon getIcon(int side, int meta)
+    {
+        return texture;
+    }
+
+    @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
     {
         return 14;
@@ -110,12 +110,6 @@ public class BlockPortal extends BlockEnhancedPortals
     public int getRenderBlockPass()
     {
         return 1;
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return -1;
     }
 
     @Override
@@ -145,7 +139,7 @@ public class BlockPortal extends BlockEnhancedPortals
         {
             return;
         }
-        
+
         int metadata = world.getBlockMetadata(x, y, z);
         TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
         TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
@@ -197,6 +191,12 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        texture = iconRegister.registerIcon("enhancedportals:portal");
+    }
+
+    @Override
     public boolean renderAsNormalBlock()
     {
         return false;
@@ -241,17 +241,11 @@ public class BlockPortal extends BlockEnhancedPortals
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        if (blockAccess.getBlockMaterial(x, y, z) == Material.portal)
+        if (blockAccess.getBlockMaterial(x, y, z) == Material.portal || blockAccess.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)
         {
             return false;
         }
 
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
-    }
-
-    @Override
-    public void registerIcons(IconRegister iconRegister)
-    {
-        texture = iconRegister.registerIcon("enhancedportals:portal");
     }
 }

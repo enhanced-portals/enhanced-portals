@@ -10,21 +10,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
-import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
-import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 
 public class TilePortalPart extends TileEnhancedPortals implements IInventory
@@ -34,152 +22,32 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
-        if (worldObj.isRemote)
+        if (!worldObj.isRemote)
         {
-            return;
-        }
-        
-        if (oldBlockID == worldObj.getBlockId(xCoord, yCoord, zCoord))
-        {
-            return;
-        }
-
-        TilePortalController controller = getPortalController();
-
-        if (controller != null)
-        {
-            controller.partBroken(false);
-        }
-    }
-
-    @Override
-    public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
-    {
-        if (worldObj.isRemote)
-        {
-            return;
-        }
-        
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            TileEntity tile = worldObj.getBlockTileEntity(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ);
-
-            if (tile != null && tile instanceof TilePortalPart)
+            if (oldBlockID == worldObj.getBlockId(xCoord, yCoord, zCoord))
             {
-                ((TilePortalPart) tile).breakBlock(0, 0);
+                return;
             }
-        }
-    }
 
-    @Override
-    public boolean activate(EntityPlayer player)
-    {
-        if (worldObj.isRemote)
-        {
-            return false;
-        }
-
-        ItemStack s = player.inventory.getCurrentItem();
-
-        if (s != null && s.getItem() instanceof ItemSynchronizer)
-        {
-            return false;
-        }
-
-        if (s != null && s.getItem() instanceof ItemPortalTool || this instanceof TileDiallingDevice)
-        {
             TilePortalController controller = getPortalController();
 
-            if (controller == null || !controller.isFullyInitialized())
+            if (controller != null)
             {
-                return false;
+                controller.partBroken(false);
             }
-            else if (this instanceof TileDiallingDevice)
-            {
-                if (controller.getUniqueIdentifier() == null)
-                {
-                    if (!worldObj.isRemote)
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
-                    }
-
-                    return false;
-                }
-
-                CommonProxy.openGui(player, GUIs.DiallingDevice, this);
-                return true;
-            }
-
-            if (s.getItem().itemID == CommonProxy.itemPaintbrush.itemID)
-            {
-                if (this instanceof TilePortal)
-                {
-                    CommonProxy.openGui(player, player.isSneaking() ? GUIs.TexturesParticle : GUIs.TexturesPortal, controller);
-                }
-                else
-                {
-                    CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
-                }
-
-                return true;
-            }
-            else if (s.getItem().itemID == CommonProxy.itemWrench.itemID)
-            {
-                if (this instanceof TilePortalController || this instanceof TileFrame || this instanceof TilePortal)
-                {
-                    CommonProxy.openGui(player, GUIs.PortalController, controller);
-                }
-                else if (this instanceof TileRedstoneInterface)
-                {
-                    CommonProxy.openGui(player, GUIs.RedstoneInterface, this);
-                }
-                else if (this instanceof TileNetworkInterface)
-                {
-                    if (controller.getUniqueIdentifier() == null)
-                    {
-                        if (!worldObj.isRemote)
-                        {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
-                        }
-
-                        return false;
-                    }
-                    else
-                    {
-                        CommonProxy.openGui(player, GUIs.NetworkInterface, controller);
-                    }
-                }
-                else if (this instanceof TileBiometricIdentifier)
-                {
-                    CommonProxy.openGui(player, GUIs.BiometricIdentifier, this);
-                }
-                else if (this instanceof TileModuleManipulator)
-                {
-                    CommonProxy.openGui(player, GUIs.ModuleManipulator, this);
-                }
-
-                return true;
-            }
-
-            return true;
         }
-
-        return false;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag)
+    public void closeChest()
     {
-        super.writeToNBT(tag);
-        GeneralUtils.saveChunkCoord(tag, portalController, "Controller");
+
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag)
+    public ItemStack decrStackSize(int i, int j)
     {
-        super.readFromNBT(tag);
-        portalController = GeneralUtils.loadChunkCoord(tag, "Controller");
+        return null;
     }
 
     @Override
@@ -190,10 +58,15 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     }
 
     @Override
-    public void usePacket(DataInputStream stream) throws IOException
+    public int getInventoryStackLimit()
     {
-        super.usePacket(stream);
-        portalController = GeneralUtils.readChunkCoord(stream);
+        return 0;
+    }
+
+    @Override
+    public String getInvName()
+    {
+        return null;
     }
 
     public TilePortalController getPortalController()
@@ -227,25 +100,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     }
 
     @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        return null;
-    }
-
-    @Override
     public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-
-    }
-
-    @Override
-    public String getInvName()
     {
         return null;
     }
@@ -257,9 +112,9 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return 0;
+        return false;
     }
 
     @Override
@@ -269,20 +124,53 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     }
 
     @Override
+    public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
+    {
+        if (!worldObj.isRemote)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                ForgeDirection d = ForgeDirection.getOrientation(i);
+                TileEntity tile = worldObj.getBlockTileEntity(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ);
+
+                if (tile != null && tile instanceof TilePortalPart)
+                {
+                    ((TilePortalPart) tile).breakBlock(0, 0);
+                }
+            }
+        }
+    }
+
+    @Override
     public void openChest()
     {
 
     }
 
     @Override
-    public void closeChest()
+    public void readFromNBT(NBTTagCompound tag)
+    {
+        super.readFromNBT(tag);
+        portalController = GeneralUtils.loadChunkCoord(tag, "Controller");
+    }
+
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack)
     {
 
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public void usePacket(DataInputStream stream) throws IOException
     {
-        return false;
+        super.usePacket(stream);
+        portalController = GeneralUtils.readChunkCoord(stream);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);
+        GeneralUtils.saveChunkCoord(tag, portalController, "Controller");
     }
 }

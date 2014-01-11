@@ -21,6 +21,12 @@ public class ItemGoggles extends ItemArmor
     }
 
     @Override
+    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
+    {
+        return "enhancedportals:textures/models/armor/goggles.png";
+    }
+
+    @Override
     public Icon getIcon(ItemStack stack, int pass)
     {
         return icon;
@@ -36,11 +42,5 @@ public class ItemGoggles extends ItemArmor
     public void registerIcons(IconRegister iconRegister)
     {
         icon = iconRegister.registerIcon("enhancedportals:goggles");
-    }
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
-    {
-        return "enhancedportals:textures/models/armor/goggles.png";
     }
 }

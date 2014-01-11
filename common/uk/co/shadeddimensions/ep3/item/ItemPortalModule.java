@@ -131,6 +131,38 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     }
 
     @Override
+    public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i)
+    {
+        return i.getItemDamage() == PortalModules.GHOST_FRAME.ordinal();
+    }
+
+    @Override
+    public boolean keepMomentumOnTeleport(TileModuleManipulator tileModuleManipulator, ItemStack i)
+    {
+        return i.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal();
+    }
+
+    @Override
+    public void onEntityTeleportEnd(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    {
+        if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
+        {
+            entity.fallDistance = 0f; // For if it's installed on the exit portal
+        }
+    }
+
+    @Override
+    public boolean onEntityTeleportStart(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    {
+        if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
+        {
+            entity.fallDistance = 0f; // For if it's installed on the entry portal
+        }
+
+        return false;
+    }
+
+    @Override
     public void onParticleCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade, PortalFX particle)
     {
         if (upgrade.getItemDamage() == PortalModules.RAINBOW_PARTICLES.ordinal())
@@ -184,12 +216,6 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     }
 
     @Override
-    public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i)
-    {
-        return i.getItemDamage() == PortalModules.GHOST_FRAME.ordinal();
-    }
-
-    @Override
     public void registerIcons(IconRegister register)
     {
         baseIcon = register.registerIcon("enhancedportals:blankPortalModule");
@@ -204,31 +230,5 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     public boolean requiresMultipleRenderPasses()
     {
         return true;
-    }
-
-    @Override
-    public boolean keepMomentumOnTeleport(TileModuleManipulator tileModuleManipulator, ItemStack i)
-    {
-        return i.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal();
-    }
-
-    @Override
-    public boolean onEntityTeleportStart(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
-    {
-        if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
-        {
-            entity.fallDistance = 0f; // For if it's installed on the entry portal
-        }
-
-        return false;
-    }
-
-    @Override
-    public void onEntityTeleportEnd(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
-    {
-        if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
-        {
-            entity.fallDistance = 0f; // For if it's installed on the exit portal
-        }
     }
 }

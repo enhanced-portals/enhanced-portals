@@ -5,9 +5,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.client.gui.slot.SlotOutput;
-import uk.co.shadeddimensions.ep3.client.gui.slot.SlotSpecificItem;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.library.gui.slot.SlotOutput;
+import uk.co.shadeddimensions.library.gui.slot.SlotSpecificItem;
 
 public class ContainerScanner extends Container
 {
@@ -41,20 +41,6 @@ public class ContainerScanner extends Container
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
-    {
-        hasChanged = true;
-        return null;
-    }
-
-    @Override
-    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
-    {
-        hasChanged = true;
-        return super.slotClick(par1, par2, par3, par4EntityPlayer);
-    }
-
-    @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
         return true;
@@ -68,5 +54,19 @@ public class ContainerScanner extends Container
         }
 
         scannerInventory.saveContentsToNBT(stack.getTagCompound());
+    }
+
+    @Override
+    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+    {
+        hasChanged = true;
+        return super.slotClick(par1, par2, par3, par4EntityPlayer);
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
+    {
+        hasChanged = true;
+        return null;
     }
 }

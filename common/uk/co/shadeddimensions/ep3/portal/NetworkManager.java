@@ -61,6 +61,158 @@ public class NetworkManager
         }
     }
 
+    /***
+     * Creates a new network if one does not already exist
+     */
+    private void addNetwork(GlyphIdentifier network)
+    {
+        if (networkedPortals.get(network.getGlyphString()) == null)
+        {
+            networkedPortals.put(network.getGlyphString(), new ArrayList<String>());
+        }
+    }
+
+    /***
+     * Adds a new portal to the system
+     */
+    public void addPortal(GlyphIdentifier g, WorldCoordinates w)
+    {
+        if (getPortalIdentifier(w) != null || getPortalLocation(g) != null)
+        {
+            return;
+        }
+
+        portalCoordinates.put(g.getGlyphString(), w);
+        portalCoordinatesReverse.put(w, g.getGlyphString());
+    }
+
+    /***
+     * Adds a portal to a network
+     */
+    public void addPortalToNetwork(GlyphIdentifier portal, GlyphIdentifier network)
+    {
+        if (portal == null || network == null || getPortalNetwork(portal) != null)
+        {
+            System.out.println("VOID");
+            return;
+        }
+
+        getNetwork(network).add(portal.getGlyphString());
+        portalNetworks.put(portal.getGlyphString(), network.getGlyphString());
+    }
+
+    public GlyphIdentifier getDestination(GlyphIdentifier identifier, GlyphIdentifier portalNetwork)
+    {
+        ArrayList<String> network = getNetwork(portalNetwork);
+        int index = network.indexOf(identifier.getGlyphString());
+
+        if (index == network.size() - 1)
+        {
+            return new GlyphIdentifier(network.get(0));
+        }
+        else
+        {
+            return new GlyphIdentifier(network.get(index + 1));
+        }
+    }
+
+    /***
+     * Retrieves all the portals for the specified network. Will create a network if one does not already exist
+     */
+    private ArrayList<String> getNetwork(GlyphIdentifier network)
+    {
+        addNetwork(network);
+
+        return networkedPortals.get(network.getGlyphString());
+    }
+
+    public int getNetworkSize(GlyphIdentifier nID)
+    {
+        ArrayList<String> list = getNetwork(nID);
+        return list.isEmpty() ? -1 : list.size();
+    }
+
+    /***
+     * Gets the portal controller for the specified portal identifier
+     */
+    public TilePortalController getPortalController(GlyphIdentifier portal)
+    {
+        WorldCoordinates w = getPortalLocation(portal);
+
+        if (w == null)
+        {
+            return null;
+        }
+
+        TileEntity tile = w.getBlockTileEntity();
+
+        if (tile == null || !(tile instanceof TilePortalController))
+        {
+            return null;
+        }
+
+        return (TilePortalController) tile;
+    }
+
+    /***
+     * Gets the unique identifier of the specified controller
+     * 
+     * @return Null if one is not set
+     */
+    public GlyphIdentifier getPortalIdentifier(WorldCoordinates w)
+    {
+        if (w == null)
+        {
+            return null;
+        }
+
+        String ID = portalCoordinatesReverse.get(w);
+
+        return ID == null ? null : new GlyphIdentifier(portalCoordinatesReverse.get(w));
+    }
+
+    /***
+     * Gets the world coordinates of the specified controller
+     * 
+     * @return Null if one is not found
+     */
+    public WorldCoordinates getPortalLocation(GlyphIdentifier g)
+    {
+        return g == null ? null : portalCoordinates.get(g.getGlyphString());
+    }
+
+    /***
+     * Gets the network identifier of the specified controller
+     * 
+     * @return Null if one is not set
+     */
+    public GlyphIdentifier getPortalNetwork(GlyphIdentifier g)
+    {
+        if (g == null)
+        {
+            return null;
+        }
+
+        String ID = portalNetworks.get(g.getGlyphString());
+
+        return ID == null ? null : new GlyphIdentifier(portalNetworks.get(g.getGlyphString()));
+    }
+
+    public boolean hasIdentifier(WorldCoordinates w)
+    {
+        return w == null ? null : portalCoordinates.containsValue(w);
+    }
+
+    public boolean hasNetwork(GlyphIdentifier g)
+    {
+        return g == null ? null : portalNetworks.containsKey(g.getGlyphString());
+    }
+
+    public boolean hasNetwork(WorldCoordinates w)
+    {
+        return w == null ? null : hasNetwork(getPortalIdentifier(w));
+    }
+
     public void loadAllData() throws Exception
     {
         if (makeFile())
@@ -118,6 +270,57 @@ public class NetworkManager
         return false;
     }
 
+    /***
+     * Removes a portal
+     */
+    public void removePortal(GlyphIdentifier g)
+    {
+        removePortal(g, getPortalLocation(g));
+    }
+
+    /***
+     * Removes a portal
+     */
+    public void removePortal(GlyphIdentifier g, WorldCoordinates w)
+    {
+        if (g == null || w == null)
+        {
+            return;
+        }
+
+        GlyphIdentifier n = getPortalNetwork(g);
+
+        if (n != null)
+        {
+            removePortalFromNetwork(g, n);
+        }
+
+        portalCoordinates.remove(g.getGlyphString());
+        portalCoordinatesReverse.remove(w);
+    }
+
+    /***
+     * Removes a portal
+     */
+    public void removePortal(WorldCoordinates w)
+    {
+        removePortal(getPortalIdentifier(w), w);
+    }
+
+    /***
+     * Removes a portal from a network
+     */
+    public void removePortalFromNetwork(GlyphIdentifier portal, GlyphIdentifier network)
+    {
+        if (portal == null || network == null)
+        {
+            return;
+        }
+
+        getNetwork(network).remove(portal.getGlyphString());
+        portalNetworks.remove(portal.getGlyphString());
+    }
+
     public void saveAllData()
     {
         makeFile();
@@ -171,208 +374,5 @@ public class NetworkManager
         {
             e.printStackTrace();
         }
-    }
-
-    /***
-     * Gets the unique identifier of the specified controller
-     * 
-     * @return Null if one is not set
-     */
-    public GlyphIdentifier getPortalIdentifier(WorldCoordinates w)
-    {
-        if (w == null)
-        {
-            return null;
-        }
-
-        String ID = portalCoordinatesReverse.get(w);
-
-        return ID == null ? null : new GlyphIdentifier(portalCoordinatesReverse.get(w));
-    }
-
-    /***
-     * Gets the network identifier of the specified controller
-     * 
-     * @return Null if one is not set
-     */
-    public GlyphIdentifier getPortalNetwork(GlyphIdentifier g)
-    {
-        if (g == null)
-        {
-            return null;
-        }
-
-        String ID = portalNetworks.get(g.getGlyphString());
-
-        return ID == null ? null : new GlyphIdentifier(portalNetworks.get(g.getGlyphString()));
-    }
-
-    public boolean hasIdentifier(WorldCoordinates w)
-    {
-        return w == null ? null : portalCoordinates.containsValue(w);
-    }
-
-    public boolean hasNetwork(GlyphIdentifier g)
-    {
-        return g == null ? null : portalNetworks.containsKey(g.getGlyphString());
-    }
-
-    public boolean hasNetwork(WorldCoordinates w)
-    {
-        return w == null ? null : hasNetwork(getPortalIdentifier(w));
-    }
-
-    /***
-     * Gets the world coordinates of the specified controller
-     * 
-     * @return Null if one is not found
-     */
-    public WorldCoordinates getPortalLocation(GlyphIdentifier g)
-    {
-        return g == null ? null : portalCoordinates.get(g.getGlyphString());
-    }
-
-    /***
-     * Adds a new portal to the system
-     */
-    public void addPortal(GlyphIdentifier g, WorldCoordinates w)
-    {
-        if (getPortalIdentifier(w) != null || getPortalLocation(g) != null)
-        {
-            return;
-        }
-
-        portalCoordinates.put(g.getGlyphString(), w);
-        portalCoordinatesReverse.put(w, g.getGlyphString());
-    }
-
-    /***
-     * Removes a portal
-     */
-    public void removePortal(GlyphIdentifier g)
-    {
-        removePortal(g, getPortalLocation(g));
-    }
-
-    /***
-     * Removes a portal
-     */
-    public void removePortal(WorldCoordinates w)
-    {
-        removePortal(getPortalIdentifier(w), w);
-    }
-
-    /***
-     * Removes a portal
-     */
-    public void removePortal(GlyphIdentifier g, WorldCoordinates w)
-    {
-        if (g == null || w == null)
-        {
-            return;
-        }
-
-        GlyphIdentifier n = getPortalNetwork(g);
-
-        if (n != null)
-        {
-            removePortalFromNetwork(g, n);
-        }
-
-        portalCoordinates.remove(g.getGlyphString());
-        portalCoordinatesReverse.remove(w);
-    }
-
-    /***
-     * Removes a portal from a network
-     */
-    public void removePortalFromNetwork(GlyphIdentifier portal, GlyphIdentifier network)
-    {
-        if (portal == null || network == null)
-        {
-            return;
-        }
-
-        getNetwork(network).remove(portal.getGlyphString());
-        portalNetworks.remove(portal.getGlyphString());
-    }
-
-    /***
-     * Adds a portal to a network
-     */
-    public void addPortalToNetwork(GlyphIdentifier portal, GlyphIdentifier network)
-    {
-        if (portal == null || network == null || getPortalNetwork(portal) != null)
-        {
-            System.out.println("VOID");
-            return;
-        }
-
-        getNetwork(network).add(portal.getGlyphString());
-        portalNetworks.put(portal.getGlyphString(), network.getGlyphString());
-    }
-
-    /***
-     * Creates a new network if one does not already exist
-     */
-    private void addNetwork(GlyphIdentifier network)
-    {
-        if (networkedPortals.get(network.getGlyphString()) == null)
-        {
-            networkedPortals.put(network.getGlyphString(), new ArrayList<String>());
-        }
-    }
-
-    /***
-     * Retrieves all the portals for the specified network. Will create a network if one does not already exist
-     */
-    private ArrayList<String> getNetwork(GlyphIdentifier network)
-    {
-        addNetwork(network);
-
-        return networkedPortals.get(network.getGlyphString());
-    }
-
-    /***
-     * Gets the portal controller for the specified portal identifier
-     */
-    public TilePortalController getPortalController(GlyphIdentifier portal)
-    {
-        WorldCoordinates w = getPortalLocation(portal);
-
-        if (w == null)
-        {
-            return null;
-        }
-
-        TileEntity tile = w.getBlockTileEntity();
-
-        if (tile == null || !(tile instanceof TilePortalController))
-        {
-            return null;
-        }
-
-        return (TilePortalController) tile;
-    }
-
-    public GlyphIdentifier getDestination(GlyphIdentifier identifier, GlyphIdentifier portalNetwork)
-    {
-        ArrayList<String> network = getNetwork(portalNetwork);
-        int index = network.indexOf(identifier.getGlyphString());
-
-        if (index == network.size() - 1)
-        {
-            return new GlyphIdentifier(network.get(0));
-        }
-        else
-        {
-            return new GlyphIdentifier(network.get(index + 1));
-        }
-    }
-
-    public int getNetworkSize(GlyphIdentifier nID)
-    {
-        ArrayList<String> list = getNetwork(nID);
-        return list.isEmpty() ? -1 : list.size();
     }
 }

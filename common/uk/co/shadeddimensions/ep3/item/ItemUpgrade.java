@@ -27,7 +27,7 @@ public class ItemUpgrade extends ItemEnhancedPortals
 {
     static Icon baseIcon;
     static Icon[] overlayIcons = new Icon[BlockFrame.FRAME_TYPES - 2];
-    
+
     public ItemUpgrade(int par1, String name)
     {
         super(par1, true);
@@ -35,11 +35,15 @@ public class ItemUpgrade extends ItemEnhancedPortals
         setHasSubtypes(true);
         setMaxDamage(0);
     }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses()
+
+    private void decrementStack(ItemStack stack)
     {
-        return true;
+        stack.stackSize--;
+
+        if (stack.stackSize <= 0)
+        {
+            stack = null;
+        }
     }
 
     @Override
@@ -53,23 +57,6 @@ public class ItemUpgrade extends ItemEnhancedPortals
         return baseIcon;
     }
 
-    @Override
-    public void registerIcons(IconRegister register)
-    {
-        baseIcon = register.registerIcon("enhancedportals:blankUpgrade");
-
-        for (int i = 0; i < overlayIcons.length; i++)
-        {
-            overlayIcons[i] = register.registerIcon("enhancedportals:upgrade_" + i);
-        }
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        return super.getUnlocalizedName() + "." + ItemFrame.unlocalizedName[par1ItemStack.getItemDamage() + 2];
-    }
-
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
@@ -78,6 +65,12 @@ public class ItemUpgrade extends ItemEnhancedPortals
         {
             par3List.add(new ItemStack(itemID, 1, i));
         }
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack par1ItemStack)
+    {
+        return super.getUnlocalizedName() + "." + ItemFrame.unlocalizedName[par1ItemStack.getItemDamage() + 2];
     }
 
     @Override
@@ -190,13 +183,20 @@ public class ItemUpgrade extends ItemEnhancedPortals
         return false;
     }
 
-    private void decrementStack(ItemStack stack)
+    @Override
+    public void registerIcons(IconRegister register)
     {
-        stack.stackSize--;
+        baseIcon = register.registerIcon("enhancedportals:blankUpgrade");
 
-        if (stack.stackSize <= 0)
+        for (int i = 0; i < overlayIcons.length; i++)
         {
-            stack = null;
+            overlayIcons[i] = register.registerIcon("enhancedportals:upgrade_" + i);
         }
+    }
+
+    @Override
+    public boolean requiresMultipleRenderPasses()
+    {
+        return true;
     }
 }

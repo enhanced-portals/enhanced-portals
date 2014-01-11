@@ -12,7 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
+import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 
 public class BlockDecoration extends Block
 {
@@ -29,24 +29,22 @@ public class BlockDecoration extends Block
     }
 
     @Override
+    public int damageDropped(int par1)
+    {
+        return par1;
+    }
+
+    @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int face)
     {
         int meta = blockAccess.getBlockMetadata(x, y, z);
-        return meta == 0 ? connectedTextures[0].getIconForFace(blockAccess, x, y, z, face) : meta == 1 ? connectedTextures[1].getIconForFace(blockAccess, x, y, z, face) : null;
+        return meta == 0 ? connectedTextures[0].getIconForSide(blockAccess, x, y, z, face) : meta == 1 ? connectedTextures[1].getIconForSide(blockAccess, x, y, z, face) : null;
     }
 
     @Override
     public Icon getIcon(int side, int meta)
     {
-        return meta == 0 ? connectedTextures[0].getNormalIcon() : meta == 1 ? connectedTextures[1].getNormalIcon() : null;
-    }
-
-    @Override
-    public void registerIcons(IconRegister register)
-    {
-        connectedTextures = new ConnectedTextures[2];
-        connectedTextures[0] = new ConnectedTextures(BlockFrame.connectedTextures, blockID, 0);
-        connectedTextures[1] = new ConnectedTextures(BlockStabilizer.connectedTextures, blockID, 1);
+        return meta == 0 ? connectedTextures[0].getBaseIcon() : meta == 1 ? connectedTextures[1].getBaseIcon() : null;
     }
 
     @Override
@@ -66,8 +64,10 @@ public class BlockDecoration extends Block
     }
 
     @Override
-    public int damageDropped(int par1)
+    public void registerIcons(IconRegister register)
     {
-        return par1;
+        connectedTextures = new ConnectedTextures[2];
+        connectedTextures[0] = BlockFrame.connectedTextures.copy(blockID, 0);
+        connectedTextures[1] = BlockStabilizer.connectedTextures.copy(blockID, 1);
     }
 }

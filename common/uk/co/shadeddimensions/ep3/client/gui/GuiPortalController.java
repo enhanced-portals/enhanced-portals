@@ -2,11 +2,10 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.container.ContainerPortalController;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -16,17 +15,13 @@ import uk.co.shadeddimensions.library.gui.GuiBase;
 
 public class GuiPortalController extends GuiBase
 {
-   // ElementGlyphSelector selector;
-   // ElementGlyphViewer viewer;
-   // ElementPortalComponents components;
     TilePortalController controller;
     GuiButton resetButton, saveButton;
     boolean overlayActive;
 
-    public GuiPortalController(TilePortalController tile, EntityPlayer play)
+    public GuiPortalController(TilePortalController tile)
     {
-        super(new ContainerPortalController(tile, play), new ResourceLocation("enhancedportals", "textures/gui/portalController.png"));
-        //drawInventory = false;
+        super(new ResourceLocation("enhancedportals", "textures/gui/portalController.png"));
         ySize = 144;
         controller = tile;
         overlayActive = false;
@@ -71,18 +66,18 @@ public class GuiPortalController extends GuiBase
         }
     }
 
-    /*@Override
-    protected void drawElements()
+    @Override
+    protected void drawBackground()
     {
+        super.drawBackground();
+        
         if (overlayActive)
         {
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             drawTexturedModalRect(guiLeft, guiTop + ySize - 106, 0, ySize, xSize, 106);
         }
-
-        super.drawElements();
-    }*/
-
+    }
+    
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {

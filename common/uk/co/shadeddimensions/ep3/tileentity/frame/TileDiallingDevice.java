@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatMessageComponent;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -50,52 +53,37 @@ public class TileDiallingDevice extends TilePortalPart
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag)
+    public boolean activate(EntityPlayer player)
     {
-        super.writeToNBT(tag);
-        NBTTagList list = new NBTTagList();
+        TilePortalController controller = getPortalController();
 
-        for (int i = 0; i < glyphList.size(); i++)
+        if (controller != null && controller.isFullyInitialized())
         {
-            NBTTagCompound t = new NBTTagCompound();
-            GlyphElement e = glyphList.get(i);
-            t.setString("Name", e.name);
-            t.setString("Identifier", e.identifier.getGlyphString());
-
-            if (e.hasSpecificTexture())
+            if (controller.getUniqueIdentifier() == null)
             {
-                e.texture.writeToNBT(t, "texture");
-            }
-
-            list.appendTag(t);
-        }
-
-        tag.setTag("glyphList", list);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
-        super.readFromNBT(tag);
-        NBTTagList list = tag.getTagList("glyphList");
-
-        for (int i = 0; i < list.tagCount(); i++)
-        {
-            NBTTagCompound t = (NBTTagCompound) list.tagAt(i);
-            String name = t.getString("Name"), glyph = t.getString("Identifier");
-
-            if (t.hasKey("texture"))
-            {
-                PortalTextureManager tex = new PortalTextureManager();
-                tex.readFromNBT(t, "texture");
-
-                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph), tex));
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
             }
             else
             {
-                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph)));
+                CommonProxy.openGui(player, GUIs.DiallingDevice, this);
             }
+
+            return true;
         }
+
+        return worldObj.isRemote; // Needs to always return true clientside
+    }
+
+    public ArrayList<GlyphElement> copyGlyphList()
+    {
+        ArrayList<GlyphElement> list = new ArrayList<GlyphElement>();
+
+        for (GlyphElement e : glyphList)
+        {
+            list.add(new GlyphElement(e.name, e.identifier, e.texture));
+        }
+
+        return list;
     }
 
     @Override
@@ -108,19 +96,6 @@ public class TileDiallingDevice extends TilePortalPart
         {
             stream.writeUTF(glyphList.get(i).name);
             stream.writeUTF(glyphList.get(i).identifier.getGlyphString());
-        }
-    }
-
-    @Override
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        super.usePacket(stream);
-        int max = stream.readInt();
-        glyphList.clear();
-
-        for (int i = 0; i < max; i++)
-        {
-            glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
         }
     }
 
@@ -177,15 +152,65 @@ public class TileDiallingDevice extends TilePortalPart
         }
     }
 
-    public ArrayList<GlyphElement> copyGlyphList()
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
     {
-        ArrayList<GlyphElement> list = new ArrayList<GlyphElement>();
+        super.readFromNBT(tag);
+        NBTTagList list = tag.getTagList("glyphList");
 
-        for (GlyphElement e : glyphList)
+        for (int i = 0; i < list.tagCount(); i++)
         {
-            list.add(new GlyphElement(e.name, e.identifier, e.texture));
+            NBTTagCompound t = (NBTTagCompound) list.tagAt(i);
+            String name = t.getString("Name"), glyph = t.getString("Identifier");
+
+            if (t.hasKey("texture"))
+            {
+                PortalTextureManager tex = new PortalTextureManager();
+                tex.readFromNBT(t, "texture");
+
+                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph), tex));
+            }
+            else
+            {
+                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph)));
+            }
+        }
+    }
+
+    @Override
+    public void usePacket(DataInputStream stream) throws IOException
+    {
+        super.usePacket(stream);
+        int max = stream.readInt();
+        glyphList.clear();
+
+        for (int i = 0; i < max; i++)
+        {
+            glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);
+        NBTTagList list = new NBTTagList();
+
+        for (int i = 0; i < glyphList.size(); i++)
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            GlyphElement e = glyphList.get(i);
+            t.setString("Name", e.name);
+            t.setString("Identifier", e.identifier.getGlyphString());
+
+            if (e.hasSpecificTexture())
+            {
+                e.texture.writeToNBT(t, "texture");
+            }
+
+            list.appendTag(t);
         }
 
-        return list;
+        tag.setTag("glyphList", list);
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
+import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 
 public class BlockStabilizer extends BlockEnhancedPortals
 {
@@ -46,15 +46,15 @@ public class BlockStabilizer extends BlockEnhancedPortals
     }
 
     @Override
-    public Icon getIcon(int par1, int par2)
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return connectedTextures.getNormalIcon();
+        return connectedTextures.getIconForSide(blockAccess, x, y, z, side);
     }
 
     @Override
-    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+    public Icon getIcon(int par1, int par2)
     {
-        return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
+        return connectedTextures.getBaseIcon();
     }
 
     @Override

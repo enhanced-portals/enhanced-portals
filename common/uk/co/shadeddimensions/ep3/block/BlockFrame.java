@@ -23,7 +23,8 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
-import uk.co.shadeddimensions.ep3.util.ConnectedTextures;
+import uk.co.shadeddimensions.library.ct.ConnectedTextures;
+import uk.co.shadeddimensions.library.ct.ConnectedTexturesDetailed;
 
 public class BlockFrame extends BlockEnhancedPortals
 {
@@ -39,7 +40,7 @@ public class BlockFrame extends BlockEnhancedPortals
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
-        connectedTextures = new ConnectedTextures("enhancedportals:frame/portalFrame_%s", id, -1);
+        connectedTextures = new ConnectedTexturesDetailed("enhancedportals:frame/%s", id, -1);
     }
 
     @Override
@@ -102,27 +103,44 @@ public class BlockFrame extends BlockEnhancedPortals
     }
 
     @Override
-    public Icon getIcon(int side, int meta)
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return connectedTextures.getNormalIcon();
+        return connectedTextures.getIconForSide(blockAccess, x, y, z, side);
     }
 
     @Override
-    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        return connectedTextures.getIconForFace(blockAccess, x, y, z, side);
+        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
+
+        if (tile != null && tile instanceof TilePortalPart)
+        {
+            TilePortalController controller = ((TilePortalPart) tile).getPortalController();
+
+            if (controller != null)
+            {
+                TileModuleManipulator m = controller.blockManager.getModuleManipulator(par1World);
+
+                if (m != null)
+                {
+                    return m.isFrameGhost() ? par1World.getBlockId(par2, par3 + 1, par4) != CommonProxy.blockPortal.blockID ? null : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4) : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+                }
+            }
+        }
+
+        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+    }
+
+    @Override
+    public Icon getIcon(int side, int meta)
+    {
+        return connectedTextures.getBaseIcon();
     }
 
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return -1;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -176,28 +194,5 @@ public class BlockFrame extends BlockEnhancedPortals
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int par2, int par3, int par4, int par5)
     {
         return blockAccess.getBlockId(par2, par3, par4) == blockID ? false : super.shouldSideBeRendered(blockAccess, par2, par3, par4, par5);
-    }
-
-    @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
-    {
-        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
-
-        if (tile != null && tile instanceof TilePortalPart)
-        {
-            TilePortalController controller = ((TilePortalPart) tile).getPortalController();
-
-            if (controller != null)
-            {
-                TileModuleManipulator m = controller.blockManager.getModuleManipulator(par1World);
-
-                if (m != null)
-                {
-                    return m.isFrameGhost() ? par1World.getBlockId(par2, par3 + 1, par4) != CommonProxy.blockPortal.blockID ? null : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4) : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
-                }
-            }
-        }
-
-        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 }

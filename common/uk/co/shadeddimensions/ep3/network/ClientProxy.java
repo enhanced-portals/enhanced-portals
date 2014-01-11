@@ -13,17 +13,14 @@ import uk.co.shadeddimensions.ep3.client.renderer.entity.RenderCreeper;
 import uk.co.shadeddimensions.ep3.client.renderer.entity.RenderEnderman;
 import uk.co.shadeddimensions.ep3.client.renderer.tile.FrameItemRenderer;
 import uk.co.shadeddimensions.ep3.client.renderer.tile.PortalItemRenderer;
-import uk.co.shadeddimensions.ep3.client.renderer.tile.TileFrameRenderer;
 import uk.co.shadeddimensions.ep3.entity.mob.MobCreeper;
 import uk.co.shadeddimensions.ep3.entity.mob.MobEnderman;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
@@ -49,19 +46,42 @@ public class ClientProxy extends CommonProxy
     public static ArrayList<ParticleSet> particleSets = new ArrayList<ParticleSet>();
     public static Random random = new Random();
 
-    @Override
-    public void registerItems()
+    public static void requestTileData(TileEnhancedPortals tile)
     {
-        gogglesRenderIndex = RenderingRegistry.addNewArmourRendererPrefix("epGoggles");
-        
-        super.registerItems();
+        PacketDispatcher.sendPacketToServer(new PacketRequestData(tile).getPacket());
     }
-    
+
+    public static boolean resourceExists(String file)
+    {
+        ReloadableResourceManager resourceManager = (ReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
+
+        try
+        {
+            resourceManager.getResource(new ResourceLocation("enhancedportals", file));
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    public static void sendGuiPacket(GuiPayload payload)
+    {
+        PacketDispatcher.sendPacketToServer(new PacketGuiData(payload).getPacket());
+    }
+
+    @Override
+    public File getWorldDir()
+    {
+        return new File(getBaseDir(), "saves/" + DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
+    }
+
     @Override
     public void miscSetup()
     {
         super.miscSetup();
-        
+
         // Randomly chooses a particle then spawns it, stays static
         particleSets.add(new ParticleSet(0, new int[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
         particleSets.add(new ParticleSet(0, new int[] { 16, 17 }));
@@ -93,43 +113,20 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
-    public File getWorldDir()
+    public void registerItems()
     {
-        return new File(getBaseDir(), "saves/" + DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
+        gogglesRenderIndex = RenderingRegistry.addNewArmourRendererPrefix("epGoggles");
+
+        super.registerItems();
     }
 
     @Override
     public void registerRenderers()
     {
-        ClientRegistry.bindTileEntitySpecialRenderer(TilePortalPart.class, new TileFrameRenderer());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TilePortalPart.class, new TileFrameRenderer());
         MinecraftForgeClient.registerItemRenderer(blockFrame.blockID, new FrameItemRenderer());
         MinecraftForgeClient.registerItemRenderer(blockPortal.blockID, new PortalItemRenderer());
         RenderingRegistry.registerEntityRenderingHandler(MobEnderman.class, new RenderEnderman());
         RenderingRegistry.registerEntityRenderingHandler(MobCreeper.class, new RenderCreeper());
-    }
-
-    public static void sendGuiPacket(GuiPayload payload)
-    {
-        PacketDispatcher.sendPacketToServer(new PacketGuiData(payload).getPacket());
-    }
-
-    public static void requestTileData(TileEnhancedPortals tile)
-    {
-        PacketDispatcher.sendPacketToServer(new PacketRequestData(tile).getPacket());
-    }
-
-    public static boolean resourceExists(String file)
-    {
-        ReloadableResourceManager resourceManager = (ReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
-
-        try
-        {
-            resourceManager.getResource(new ResourceLocation("enhancedportals", file));
-            return true;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
     }
 }

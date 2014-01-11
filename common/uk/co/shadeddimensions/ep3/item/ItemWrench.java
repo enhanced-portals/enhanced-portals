@@ -28,12 +28,6 @@ public class ItemWrench extends ItemPortalTool
     }
 
     @Override
-    public void registerIcons(IconRegister register)
-    {
-        texture = register.registerIcon("enhancedportals:wrench");
-    }
-
-    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
@@ -60,5 +54,11 @@ public class ItemWrench extends ItemPortalTool
         }
 
         return super.onItemUse(stack, player, world, x, y, z, par7, par8, par9, par10);
+    }
+
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        texture = register.registerIcon("enhancedportals:wrench");
     }
 }

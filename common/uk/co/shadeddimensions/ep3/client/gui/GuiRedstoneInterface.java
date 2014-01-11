@@ -1,9 +1,7 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.container.ContainerRedstoneInterface;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
@@ -14,12 +12,11 @@ public class GuiRedstoneInterface extends GuiBase
 {
     TileRedstoneInterface redstone;
 
-    public GuiRedstoneInterface(TileRedstoneInterface tile, EntityPlayer play)
+    public GuiRedstoneInterface(TileRedstoneInterface tile)
     {
-        super(new ContainerRedstoneInterface(tile, play), new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
+        super(new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
         redstone = tile;
-        //ySize = 58;
-        //drawInventory = false;
+        ySize = 58;
     }
 
     @Override

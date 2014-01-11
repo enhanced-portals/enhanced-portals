@@ -2,7 +2,6 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
-import cofh.api.energy.ItemEnergyContainer;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -20,9 +19,15 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.EntityData;
+import cofh.api.energy.ItemEnergyContainer;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
 {
+    public static InventoryScanner getInventory(ItemStack stack)
+    {
+        return new InventoryScanner(stack);
+    }
+
     Icon texture;
 
     public ItemHandheldScanner(int par1, String name)
@@ -32,23 +37,6 @@ public class ItemHandheldScanner extends ItemEnergyContainer
         setCreativeTab(Reference.creativeTab);
         setMaxDamage(0);
         setMaxStackSize(1);
-    }
-
-    @Override
-    public void registerIcons(IconRegister par1IconRegister)
-    {
-        texture = par1IconRegister.registerIcon("enhancedportals:handheldScanner");
-    }
-
-    @Override
-    public Icon getIconFromDamage(int par1)
-    {
-        return texture;
-    }
-
-    public static InventoryScanner getInventory(ItemStack stack)
-    {
-        return new InventoryScanner(stack);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -64,6 +52,30 @@ public class ItemHandheldScanner extends ItemEnergyContainer
 
         par3List.add(String.format(Localization.getItemString("charge") + " %s / %s " + Localization.getGuiString("redstoneFluxShort"), tag.getInteger("Energy"), capacity));
         par3List.add(String.format(Localization.getItemString("scanned") + " %s", tag.getTagList("scanned").tagCount()));
+    }
+
+    private boolean drainPower(ItemStack itemStack)
+    {
+        if (CommonProxy.redstoneFluxPowerMultiplier > 0)
+        {
+            if (((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * CommonProxy.redstoneFluxPowerMultiplier, true) != 50 * CommonProxy.redstoneFluxPowerMultiplier)
+            {
+                return false;
+            }
+            else
+            {
+                ((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * CommonProxy.redstoneFluxPowerMultiplier, false);
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
     }
 
     @Override
@@ -88,60 +100,6 @@ public class ItemHandheldScanner extends ItemEnergyContainer
     {
         scanEntity(entity, player, stack);
         return true;
-    }
-
-    private void scanEntity(Entity entity, EntityPlayer player, ItemStack stack)
-    {
-        NBTTagCompound tag = null;
-
-        if (stack.hasTagCompound())
-        {
-            tag = stack.getTagCompound();
-        }
-        else
-        {
-            tag = new NBTTagCompound();
-        }
-
-        NBTTagList list = null;
-
-        if (tag.hasKey("scanned"))
-        {
-            list = tag.getTagList("scanned");
-        }
-        else
-        {
-            list = new NBTTagList();
-        }
-
-        int id = 0;
-
-        if (player.isSneaking())
-        {
-            id = EntityData.getParentEntityID(entity);
-
-            if (id == 0)
-            {
-                id = EntityList.getEntityID(entity);
-            }
-        }
-        else
-        {
-            id = EntityList.getEntityID(entity);
-        }
-
-        if (id == 0)
-        {
-            return;
-        }
-
-        NBTTagCompound t = new NBTTagCompound();
-        t.setString("Name", entity.getEntityName());
-        t.setInteger("ID", id);
-        list.appendTag(t);
-
-        tag.setTag("scanned", list);
-        stack.setTagCompound(tag);
     }
 
     @Override
@@ -230,21 +188,63 @@ public class ItemHandheldScanner extends ItemEnergyContainer
         }
     }
 
-    private boolean drainPower(ItemStack itemStack)
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
     {
-        if (CommonProxy.redstoneFluxPowerMultiplier > 0)
+        texture = par1IconRegister.registerIcon("enhancedportals:handheldScanner");
+    }
+
+    private void scanEntity(Entity entity, EntityPlayer player, ItemStack stack)
+    {
+        NBTTagCompound tag = null;
+
+        if (stack.hasTagCompound())
         {
-            if (((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * CommonProxy.redstoneFluxPowerMultiplier, true) != 50 * CommonProxy.redstoneFluxPowerMultiplier)
-            {
-                return false;
-            }
-            else
-            {
-                ((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * CommonProxy.redstoneFluxPowerMultiplier, false);
-                return true;
-            }
+            tag = stack.getTagCompound();
+        }
+        else
+        {
+            tag = new NBTTagCompound();
         }
 
-        return true;
+        NBTTagList list = null;
+
+        if (tag.hasKey("scanned"))
+        {
+            list = tag.getTagList("scanned");
+        }
+        else
+        {
+            list = new NBTTagList();
+        }
+
+        int id = 0;
+
+        if (player.isSneaking())
+        {
+            id = EntityData.getParentEntityID(entity);
+
+            if (id == 0)
+            {
+                id = EntityList.getEntityID(entity);
+            }
+        }
+        else
+        {
+            id = EntityList.getEntityID(entity);
+        }
+
+        if (id == 0)
+        {
+            return;
+        }
+
+        NBTTagCompound t = new NBTTagCompound();
+        t.setString("Name", entity.getEntityName());
+        t.setInteger("ID", id);
+        list.appendTag(t);
+
+        tag.setTag("scanned", list);
+        stack.setTagCompound(tag);
     }
 }

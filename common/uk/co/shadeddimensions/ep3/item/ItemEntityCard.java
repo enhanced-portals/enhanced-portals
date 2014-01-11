@@ -23,18 +23,6 @@ public class ItemEntityCard extends ItemEnhancedPortals
         setUnlocalizedName(name);
     }
 
-    @Override
-    public Icon getIconFromDamage(int par1)
-    {
-        return texture;
-    }
-
-    @Override
-    public void registerIcons(IconRegister par1IconRegister)
-    {
-        texture = par1IconRegister.registerIcon("enhancedportals:idCard");
-    }
-
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack stack, EntityPlayer par2EntityPlayer, List list, boolean par4)
@@ -74,5 +62,17 @@ public class ItemEntityCard extends ItemEnhancedPortals
                 list.add(EnumChatFormatting.GRAY + String.format(Localization.getItemString("andMore"), tagList.tagCount() - 5));
             }
         }
+    }
+
+    @Override
+    public Icon getIconFromDamage(int par1)
+    {
+        return texture;
+    }
+
+    @Override
+    public void registerIcons(IconRegister par1IconRegister)
+    {
+        texture = par1IconRegister.registerIcon("enhancedportals:idCard");
     }
 }

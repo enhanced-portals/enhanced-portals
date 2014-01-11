@@ -33,12 +33,6 @@ public class ItemSynchronizer extends ItemPortalTool
     }
 
     @Override
-    public void registerIcons(IconRegister register)
-    {
-        texture = register.registerIcon("enhancedportals:synchronizer");
-    }
-
-    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
         if (world.isRemote)
@@ -112,5 +106,11 @@ public class ItemSynchronizer extends ItemPortalTool
         }
 
         return false;
+    }
+
+    @Override
+    public void registerIcons(IconRegister register)
+    {
+        texture = register.registerIcon("enhancedportals:synchronizer");
     }
 }

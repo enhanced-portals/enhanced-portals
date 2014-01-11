@@ -2,24 +2,19 @@ package uk.co.shadeddimensions.ep3.client.renderer.tile;
 
 import java.awt.Color;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -53,40 +48,14 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
 
     private void renderFrame(World world, int x, int y, int z, int meta, TilePortalPart frame, TilePortalController controller, Tessellator tessellator)
     {
-        Icon[] icons = new Icon[2];
-        boolean hasSetIcon = false;
         int brightnessOverride = -1;
         Color c = new Color(0xFFFFFF);
 
         if (controller != null)
         {
-            c = new Color(controller.activeTextureData.getFrameColour());
-            ItemStack s = controller.getStackInSlot(0);
-
-            if (controller.activeTextureData.hasCustomFrameTexture())
-            {
-                if (ClientProxy.customFrameTextures.size() > controller.activeTextureData.getCustomFrameTexture() && ClientProxy.customFrameTextures.get(controller.activeTextureData.getCustomFrameTexture()) != null)
-                {
-                    icons[0] = ClientProxy.customFrameTextures.get(controller.activeTextureData.getCustomFrameTexture());
-                    hasSetIcon = true;
-                }
-            }
-            else if (s != null)
-            {
-                if (s.getItem() instanceof ItemBlock)
-                {                    
-                    icons[1] = Block.blocksList[((ItemBlock) s.getItem()).getBlockID()].getIcon(meta == 3 ? 1 : 2, s.getItemDamage());
-                    hasSetIcon = true;
-                }
-                else if (FluidContainerRegistry.isFilledContainer(s))
-                {
-                    icons[1] = FluidContainerRegistry.getFluidForFilledItem(s).getFluid().getStillIcon();
-                    hasSetIcon = true;
-                }
-            }
-
             TileModuleManipulator m = controller.blockManager.getModuleManipulator(controller.worldObj);
-
+            c = new Color(controller.activeTextureData.getFrameColour());
+            
             if (m != null && m.isFrameGhost())
             {
                 brightnessOverride = 244;
@@ -104,21 +73,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             {
                 tessellator.setBrightness(brightnessOverride != -1 ? brightnessOverride : CommonProxy.blockFrame.getMixedBrightnessForBlock(world, X, Y, Z));
                 tessellator.setColorOpaque_F(0.8f * (c.getRed() / 255f), 0.8f * (c.getGreen() / 255f), 0.8f * (c.getBlue() / 255f));
-
-                if (hasSetIcon)
-                {
-                    for (Icon icon : icons)
-                    {
-                        if (icon != null)
-                        {
-                            renderFace(i, icon);
-                        }
-                    }
-                }
-                else
-                {
-                    renderFace(i, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, i));
-                }
+                renderFace(i, CommonProxy.blockFrame.getBlockTexture(world, x, y, z, i));
 
                 if ((isWearingGoggles() && meta >= 1 || meta == 4))
                 {
@@ -131,8 +86,6 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
 
     private void renderPortal(World world, int x, int y, int z, int meta, TilePortal portal, TilePortalController controller, Tessellator tessellator)
     {
-        Icon[] icons = new Icon[2];
-        boolean hasSetIcon = false;
         Color c = new Color(0xFFFFFF);
 
         if (controller != null)
@@ -145,35 +98,6 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             }
 
             c = new Color(controller.activeTextureData.getPortalColour());
-            ItemStack s = controller.getStackInSlot(1);
-
-            if (controller.activeTextureData.hasCustomPortalTexture())
-            {
-                if (ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
-                {
-                    icons[0] = ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
-                    hasSetIcon = true;
-                }
-            }
-
-            if (s != null)
-            {
-                if (s.getItem() instanceof ItemBlock)
-                {
-                    icons[1] = Block.blocksList[((ItemBlock) s.getItem()).getBlockID()].getIcon(meta == 3 ? 1 : 2, s.getItemDamage());
-                    hasSetIcon = true;
-                }
-                else if (FluidContainerRegistry.isFilledContainer(s))
-                {
-                    icons[1] = FluidContainerRegistry.getFluidForFilledItem(s).getFluid().getStillIcon();
-                    hasSetIcon = true;
-                }
-            }
-        }
-
-        if (!hasSetIcon)
-        {
-            icons[0] = CommonProxy.blockPortal.getIcon(0, meta);
         }
 
         if (meta == 1) // X
@@ -202,14 +126,7 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             {
                 tessellator.setBrightness(CommonProxy.blockFrame.getMixedBrightnessForBlock(world, X, Y, Z));
                 tessellator.setColorOpaque_F(0.8f * (c.getRed() / 255f), 0.8f * (c.getGreen() / 255f), 0.8f * (c.getBlue() / 255f));
-
-                for (Icon icon : icons)
-                {
-                    if (icon != null)
-                    {
-                        renderFace(i, icon);
-                    }
-                }
+                renderFace(i, CommonProxy.blockPortal.getBlockTexture(world, x, y, z, i));
             }
         }
     }
@@ -277,4 +194,6 @@ public class TileFrameRenderer extends TileEntitySpecialRenderer
             renderBlocks.renderFaceXPos(null, 0, 0, 0, texture);
         }
     }
+    
+    
 }

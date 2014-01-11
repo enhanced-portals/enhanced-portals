@@ -40,6 +40,16 @@ public class ItemDecoration extends ItemBlock
         return par1;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
+    {
+        for (int i = 0; i < BlockDecoration.BLOCK_TYPES; i++)
+        {
+            list.add(new ItemStack(itemID, 1, i));
+        }
+    }
+
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
@@ -56,15 +66,5 @@ public class ItemDecoration extends ItemBlock
         }
 
         return super.getUnlocalizedName() + "." + name;
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
-    {
-        for (int i = 0; i < BlockDecoration.BLOCK_TYPES; i++)
-        {
-            list.add(new ItemStack(itemID, 1, i));
-        }
     }
 }

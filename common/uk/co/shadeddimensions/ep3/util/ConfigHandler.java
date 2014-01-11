@@ -18,7 +18,6 @@ import net.minecraftforge.common.Property;
  */
 public class ConfigHandler
 {
-
     @SuppressWarnings("unchecked")
     ArrayList<String>[] blockEntries = new ArrayList[3];
     @SuppressWarnings("unchecked")
@@ -72,31 +71,9 @@ public class ConfigHandler
         }
     }
 
-    public void setConfiguration(Configuration config)
-    {
-        modConfiguration = config;
-        modConfiguration.load();
-    }
-
-    public Configuration getConfiguration()
-    {
-        return modConfiguration;
-    }
-
-    public String getVersion()
-    {
-        return modVersion;
-    }
-
     public void addBlockEntry(String name)
     {
         addBlockEntry(name, 0);
-    }
-
-    public void addItemEntry(String name)
-    {
-
-        addItemEntry(name, 0);
     }
 
     public void addBlockEntry(String name, int level)
@@ -106,11 +83,69 @@ public class ConfigHandler
         blockIdCounter++;
     }
 
+    public void addItemEntry(String name)
+    {
+
+        addItemEntry(name, 0);
+    }
+
     public void addItemEntry(String name, int level)
     {
 
         itemEntries[level].add(name);
         itemIdCounter++;
+    }
+
+    public void cleanUp(boolean delConfig, boolean saveVersion)
+    {
+
+        removeProperty("general", "version");
+        removeProperty("general", "Version");
+
+        if (saveVersion)
+        {
+            get("general", "Version", modVersion);
+        }
+        modConfiguration.save();
+
+        for (ArrayList<String> blockEntrie : blockEntries)
+        {
+            blockEntrie.clear();
+        }
+        blockEntries = null;
+
+        for (ArrayList<String> itemEntrie : itemEntries)
+        {
+            itemEntrie.clear();
+        }
+        itemEntries = null;
+
+        blockIds.clear();
+        itemIds.clear();
+        assignedIds.clear();
+
+        if (delConfig)
+        {
+            modConfiguration = null;
+        }
+    }
+
+    public boolean get(String category, String key, boolean defaultValue)
+    {
+
+        return modConfiguration.get(category, key, defaultValue).getBoolean(defaultValue);
+    }
+
+    public int get(String category, String key, int defaultValue)
+    {
+
+        return modConfiguration.get(category, key, defaultValue).getInt();
+    }
+
+    public String get(String category, String key, String defaultValue)
+    {
+
+        return modConfiguration.get(category, key, defaultValue).getString();
     }
 
     public int getBlockId(String name)
@@ -125,6 +160,30 @@ public class ConfigHandler
         return ret.getInt();
     }
 
+    public ConfigCategory getCategory(String category)
+    {
+
+        return modConfiguration.getCategory(category);
+    }
+
+    public Set<String> getCategoryKeys(String category)
+    {
+
+        return modConfiguration.getCategory(category).getValues().keySet();
+    }
+
+    @SuppressWarnings("rawtypes")
+    public Map getCategoryMap(String category)
+    {
+
+        return modConfiguration.getCategory(category).getValues();
+    }
+
+    public Configuration getConfiguration()
+    {
+        return modConfiguration;
+    }
+
     public int getItemId(String name)
     {
 
@@ -137,31 +196,13 @@ public class ConfigHandler
         return ret.getInt();
     }
 
-    public int get(String category, String key, int defaultValue)
-    {
-
-        return modConfiguration.get(category, key, defaultValue).getInt();
-    }
-
-    public boolean get(String category, String key, boolean defaultValue)
-    {
-
-        return modConfiguration.get(category, key, defaultValue).getBoolean(defaultValue);
-    }
-
-    public String get(String category, String key, String defaultValue)
-    {
-
-        return modConfiguration.get(category, key, defaultValue).getString();
-    }
-
-    public Property getProperty(String category, String key, int defaultValue)
+    public Property getProperty(String category, String key, boolean defaultValue)
     {
 
         return modConfiguration.get(category, key, defaultValue);
     }
 
-    public Property getProperty(String category, String key, boolean defaultValue)
+    public Property getProperty(String category, String key, int defaultValue)
     {
 
         return modConfiguration.get(category, key, defaultValue);
@@ -173,23 +214,9 @@ public class ConfigHandler
         return modConfiguration.get(category, key, defaultValue);
     }
 
-    public ConfigCategory getCategory(String category)
+    public String getVersion()
     {
-
-        return modConfiguration.getCategory(category);
-    }
-
-    @SuppressWarnings("rawtypes")
-    public Map getCategoryMap(String category)
-    {
-
-        return modConfiguration.getCategory(category).getValues();
-    }
-
-    public Set<String> getCategoryKeys(String category)
-    {
-
-        return modConfiguration.getCategory(category).getValues().keySet();
+        return modVersion;
     }
 
     public boolean hasCategory(String category)
@@ -279,10 +306,41 @@ public class ConfigHandler
         modConfiguration.save();
     }
 
-    public void save()
+    public boolean removeCategory(String category)
     {
 
-        modConfiguration.save();
+        if (!modConfiguration.hasCategory(category))
+        {
+            return false;
+        }
+        modConfiguration.removeCategory(modConfiguration.getCategory(category));
+        return true;
+    }
+
+    public boolean removeProperty(String category, String key)
+    {
+
+        if (!modConfiguration.hasKey(category, key))
+        {
+            return false;
+        }
+        modConfiguration.getCategory(category).remove(key);
+        return true;
+    }
+
+    public boolean renameCategory(String category, String newCategory)
+    {
+
+        if (!modConfiguration.hasCategory(category))
+        {
+            return false;
+        }
+        for (Property prop : modConfiguration.getCategory(category).values())
+        {
+            renameProperty(category, prop.getName(), newCategory, prop.getName(), true);
+        }
+        removeCategory(category);
+        return true;
     }
 
     public boolean renameProperty(String category, String key, String newCategory, String newKey, boolean forceValue)
@@ -341,75 +399,16 @@ public class ConfigHandler
         return false;
     }
 
-    public boolean removeProperty(String category, String key)
+    public void save()
     {
 
-        if (!modConfiguration.hasKey(category, key))
-        {
-            return false;
-        }
-        modConfiguration.getCategory(category).remove(key);
-        return true;
-    }
-
-    public boolean renameCategory(String category, String newCategory)
-    {
-
-        if (!modConfiguration.hasCategory(category))
-        {
-            return false;
-        }
-        for (Property prop : modConfiguration.getCategory(category).values())
-        {
-            renameProperty(category, prop.getName(), newCategory, prop.getName(), true);
-        }
-        removeCategory(category);
-        return true;
-    }
-
-    public boolean removeCategory(String category)
-    {
-
-        if (!modConfiguration.hasCategory(category))
-        {
-            return false;
-        }
-        modConfiguration.removeCategory(modConfiguration.getCategory(category));
-        return true;
-    }
-
-    public void cleanUp(boolean delConfig, boolean saveVersion)
-    {
-
-        removeProperty("general", "version");
-        removeProperty("general", "Version");
-
-        if (saveVersion)
-        {
-            get("general", "Version", modVersion);
-        }
         modConfiguration.save();
+    }
 
-        for (ArrayList<String> blockEntrie : blockEntries)
-        {
-            blockEntrie.clear();
-        }
-        blockEntries = null;
-
-        for (ArrayList<String> itemEntrie : itemEntries)
-        {
-            itemEntrie.clear();
-        }
-        itemEntries = null;
-
-        blockIds.clear();
-        itemIds.clear();
-        assignedIds.clear();
-
-        if (delConfig)
-        {
-            modConfiguration = null;
-        }
+    public void setConfiguration(Configuration config)
+    {
+        modConfiguration = config;
+        modConfiguration.load();
     }
 
 }
