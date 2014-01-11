@@ -1,3 +1,3 @@
-[submodule "gui-library"]
-	path = gui-library
-	url = https://github.com/ShadedDimension/gui-library.git
+[submodule "library"]
+	path = library
+	url = https://github.com/ShadedDimension/library.git
