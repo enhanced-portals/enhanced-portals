@@ -4,13 +4,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TileModuleManipulator extends TilePortalPart
 {
@@ -19,6 +22,33 @@ public class TileModuleManipulator extends TilePortalPart
     public TileModuleManipulator()
     {
         inventory = new ItemStack[9];
+    }
+    
+    @Override
+    public boolean activate(EntityPlayer player)
+    {
+        ItemStack item = player.inventory.getCurrentItem();
+        
+        if (item != null)
+        {
+            if (ItemHelper.isWrench(item))
+            {
+                CommonProxy.openGui(player, GUIs.ModuleManipulator, this);
+                return true;
+            }
+            else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
+            {
+                TilePortalController controller = getPortalController();
+                
+                if (controller != null && controller.isFullyInitialized())
+                {
+                    CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
     public boolean canSendEntity(Entity entity)

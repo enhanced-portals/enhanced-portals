@@ -176,7 +176,7 @@ public class GuiTexture extends GuiBase
         super.drawGuiContainerForegroundLayer(x, y);
     }
 
-    private PortalTextureManager getTextureManager()
+    private PortalTextureManager getPortalTextureManager()
     {
         return editController ? controller.activeTextureData : ClientProxy.dialEntryTexture;
     }
@@ -208,15 +208,15 @@ public class GuiTexture extends GuiBase
 
             if (screenState == 0)
             {
-                getTextureManager().setFrameColour(hex);
+                getPortalTextureManager().setFrameColour(hex);
             }
             else if (screenState == 1)
             {
-                getTextureManager().setPortalColour(hex);
+                getPortalTextureManager().setPortalColour(hex);
             }
             else if (screenState == 2)
             {
-                getTextureManager().setParticleColour(hex);
+                getPortalTextureManager().setParticleColour(hex);
             }
 
             if (editController)
@@ -232,16 +232,16 @@ public class GuiTexture extends GuiBase
 
             if (screenState == 0)
             {
-                getTextureManager().setFrameColour(colour);
+                getPortalTextureManager().setFrameColour(colour);
             }
             else if (screenState == 1)
             {
-                getTextureManager().setPortalColour(colour);
+                getPortalTextureManager().setPortalColour(colour);
             }
             else if (screenState == 2)
             {
                 colour = 0x0077D8;
-                getTextureManager().setParticleColour(colour);
+                getPortalTextureManager().setParticleColour(colour);
             }
 
             Color c = new Color(colour);

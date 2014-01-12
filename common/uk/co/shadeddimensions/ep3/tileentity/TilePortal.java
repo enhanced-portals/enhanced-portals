@@ -16,27 +16,27 @@ public class TilePortal extends TilePortalPart
     @Override
     public boolean activate(EntityPlayer player)
     {
-        ItemStack stack = player.inventory.getCurrentItem();
+        ItemStack item = player.inventory.getCurrentItem();
         
-        if (stack != null)
+        if (item != null)
         {
-            if (stack.itemID == CommonProxy.itemPaintbrush.itemID)
-            {
-                TilePortalController controller = getPortalController();
-                
-                if (controller != null)
-                {
-                    CommonProxy.openGui(player, player.isSneaking() ? GUIs.TexturesParticle : GUIs.TexturesPortal, controller);
-                    return true;
-                }
-            }
-            else if (ItemHelper.isWrench(stack))
+            if (ItemHelper.isWrench(item))
             {
                 TilePortalController controller = getPortalController();
                 
                 if (controller != null)
                 {
                     CommonProxy.openGui(player, GUIs.PortalController, controller);
+                    return true;
+                }
+            }
+            else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
+            {
+                TilePortalController controller = getPortalController();
+                
+                if (controller != null && controller.isFullyInitialized())
+                {
+                    CommonProxy.openGui(player, player.isSneaking() ? GUIs.TexturesParticle : GUIs.TexturesPortal, controller);
                     return true;
                 }
             }
