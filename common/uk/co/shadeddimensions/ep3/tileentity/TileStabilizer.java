@@ -7,10 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
+import uk.co.shadeddimensions.library.util.ItemHelper;
 import cofh.api.energy.IEnergyHandler;
 
 public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandler
@@ -26,73 +26,78 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
     @Override
     public boolean activate(EntityPlayer player)
     {
-        if (worldObj.isRemote || player.inventory.getCurrentItem() == null || player.inventory.getCurrentItem().getItem().itemID != CommonProxy.itemWrench.itemID)
+        if (worldObj.isRemote)
         {
-            return false;
+            return true;
         }
-
-        if (mainBlock != null)
+        
+        TileStabilizerMain main = getMainBlock();
+        
+        if (main != null)
         {
-            TileStabilizerMain main = getMainBlock();
-
-            if (main != null)
+            return main.activate(player);
+        }
+        else
+        {
+            if (ItemHelper.isWrench(player.inventory.getCurrentItem()))
             {
-                CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, main);
-                return true;
+                WorldCoordinates topLeft = getWorldCoordinates();
+
+                while (topLeft.offset(ForgeDirection.WEST).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the westernmost block
+                {
+                    topLeft = topLeft.offset(ForgeDirection.WEST);
+                }
+
+                while (topLeft.offset(ForgeDirection.NORTH).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the northenmost block
+                {
+                    topLeft = topLeft.offset(ForgeDirection.NORTH);
+                }
+
+                while (topLeft.offset(ForgeDirection.UP).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the highest block
+                {
+                    topLeft = topLeft.offset(ForgeDirection.UP);
+                }
+
+                ArrayList<ChunkCoordinates> blocks = checkShape(topLeft, true); // Try the X axis
+
+                if (blocks.isEmpty())
+                {
+                    blocks = checkShape(topLeft, false); // Try the Z axis before failing
+                }
+
+                if (!blocks.isEmpty()) // success
+                {
+                    for (ChunkCoordinates c : blocks)
+                    {
+                        TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+                        if (tile instanceof TileStabilizerMain)
+                        {
+                            worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockStabilizer.blockID, 0, 3);
+                            tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                        }
+
+                        if (tile instanceof TileStabilizer)
+                        {
+                            TileStabilizer t = (TileStabilizer) tile;
+                            t.mainBlock = topLeft;
+                            CommonProxy.sendUpdatePacketToAllAround(t);
+                        }
+                    }
+
+                    worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, CommonProxy.blockStabilizer.blockID, 1, 3);
+                    TileEntity tile = topLeft.getBlockTileEntity();
+                    
+                    if (tile instanceof TileStabilizerMain)
+                    {
+                        ((TileStabilizerMain) tile).setData(blocks, rows);
+                        return true;
+                    }
+                }
             }
         }
 
-        WorldCoordinates topLeft = getWorldCoordinates();
-
-        while (topLeft.offset(ForgeDirection.WEST).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the westernmost block
-        {
-            topLeft = topLeft.offset(ForgeDirection.WEST);
-        }
-
-        while (topLeft.offset(ForgeDirection.NORTH).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the northenmost block
-        {
-            topLeft = topLeft.offset(ForgeDirection.NORTH);
-        }
-
-        while (topLeft.offset(ForgeDirection.UP).getBlockId() == CommonProxy.blockStabilizer.blockID) // Get the highest block
-        {
-            topLeft = topLeft.offset(ForgeDirection.UP);
-        }
-
-        ArrayList<ChunkCoordinates> blocks = checkShape(topLeft, true); // Try the X axis
-
-        if (blocks.isEmpty())
-        {
-            blocks = checkShape(topLeft, false); // Try the Z axis before failing
-        }
-
-        if (!blocks.isEmpty()) // success
-        {
-            for (ChunkCoordinates c : blocks)
-            {
-                TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-                if (tile instanceof TileStabilizerMain)
-                {
-                    worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockStabilizer.blockID, 0, 3);
-                    tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-                }
-
-                if (tile instanceof TileStabilizer)
-                {
-                    TileStabilizer t = (TileStabilizer) tile;
-                    t.mainBlock = topLeft;
-                    CommonProxy.sendUpdatePacketToAllAround(t);
-                }
-            }
-
-            worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, CommonProxy.blockStabilizer.blockID, 1, 3);
-
-            TileStabilizerMain main = (TileStabilizerMain) topLeft.getBlockTileEntity();
-            main.setData(blocks, rows);
-        }
-
-        return true;
+        return false;
     }
 
     @Override

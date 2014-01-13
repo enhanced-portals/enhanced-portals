@@ -45,16 +45,12 @@ public class EnhancedPortals
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();
-        proxy.registerEntities();
         proxy.registerRenderers();
         proxy.setupCrafting();
         proxy.miscSetup();
-        //Biomes.initBiomes(); // TODO
 
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-        //DimensionManager.registerProviderType(CommonProxy.Dimension, EPWorldProvider.class, false); // TODO
-        //DimensionManager.registerDimension(CommonProxy.Dimension, CommonProxy.Dimension); // TODO
 
         AddonManager.instance.init();
     }

@@ -51,7 +51,6 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerBase
                 GuiPayload payload = new GuiPayload();
                 payload.data.setInteger("energy", currentPower);
                 PacketDispatcher.sendPacketToPlayer(new PacketGuiData(payload).getPacket(), (Player) icrafting);
-                //icrafting.sendProgressBarUpdate(this, 1, currentPower);
             }
             if (lastPortals != currentPortals)
             {
@@ -78,10 +77,6 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerBase
     {
         TileStabilizerMain stabilizer = (TileStabilizerMain) object;
 
-        //if (par1 == 1)
-        //{
-        //    stabilizer.getEnergyStorage().setEnergyStored(par2);
-        //}
         if (par1 == 2)
         {
             stabilizer.intActiveConnections = par2;

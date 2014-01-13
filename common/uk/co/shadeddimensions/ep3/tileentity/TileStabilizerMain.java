@@ -21,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -40,7 +41,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler//, IAspectContainer, IWandable
 {
-    static final int ACTIVE_PORTALS_PER_ROW = 2;
+    static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + (CommonProxy.REDSTONE_FLUX_COST / 2);
 
     ArrayList<ChunkCoordinates> blockList;
     HashMap<String, String> activeConnections;
@@ -59,7 +60,14 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         blockList = new ArrayList<ChunkCoordinates>();
         activeConnections = new HashMap<String, String>();
         activeConnectionsReverse = new HashMap<String, String>();
-        energyStorage = new EnergyStorage(1000000000);
+        energyStorage = new EnergyStorage(0);
+    }
+    
+    @Override
+    public boolean activate(EntityPlayer player)
+    {
+        CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, this);
+        return true;
     }
 
     void addHighInstabilityEffects(Entity entity)
@@ -484,7 +492,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
 
         powerState = tag.getInteger("powerState");
         rows = tag.getInteger("rows");
-        energyStorage = new EnergyStorage(rows * CommonProxy.REDSTONE_FLUX_COST);
+        energyStorage = new EnergyStorage(rows * ENERGY_STORAGE_PER_ROW);
         blockList = GeneralUtils.loadChunkCoordList(tag, "blockList");
         energyStorage.readFromNBT(tag);
 

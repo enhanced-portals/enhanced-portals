@@ -15,7 +15,6 @@ public class GuiModuleManipulator extends GuiBase
     {
         super(new ContainerModuleManipulator(t, player), new ResourceLocation("enhancedportals", "textures/gui/moduleManipulator.png"));
         module = t;
-        //drawInventory = false;
     }
 
     @Override
@@ -24,8 +23,6 @@ public class GuiModuleManipulator extends GuiBase
         super.drawGuiContainerForegroundLayer(par1, par2);
 
         fontRenderer.drawStringWithShadow(Localization.getGuiString("moduleManipulator"), xSize / 2 - fontRenderer.getStringWidth(Localization.getGuiString("moduleManipulator")) / 2, -13, 0xFFFFFF);
-
-        fontRenderer.drawString(Localization.getGuiString("modules"), 7, 8, 0x404040);
-        fontRenderer.drawString(Localization.getGuiString("inventory"), 7, 70, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("modules"), 8, 8, 0x404040);
     }
 }
