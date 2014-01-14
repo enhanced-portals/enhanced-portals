@@ -16,7 +16,6 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cofh.api.tileentity.ISidedBlockTexture;
@@ -111,7 +110,7 @@ public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTex
             return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
         }
 
-        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[4];
+        return BlockFrame.overlayIcons[4];
     }
 
     @Override
@@ -123,16 +122,16 @@ public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTex
         {
             String id = payload.data.getString("DialRequest");
 
-            for (GlyphElement el : glyphList)
+            for (GlyphElement el : glyphList) // Check to see if this is in the list of stored addresses, use its texture if it is.
             {
                 if (el.identifier.getGlyphString().equals(id))
                 {
-                    getPortalController().dialRequest(new GlyphIdentifier(id), el.texture);
+                    getPortalController().dialRequest(new GlyphIdentifier(id), el.texture, player);
                     return;
                 }
             }
 
-            getPortalController().dialRequest(new GlyphIdentifier(id));
+            getPortalController().dialRequest(new GlyphIdentifier(id), null, player); // If not, use no texture
             return;
         }
         else if (payload.data.hasKey("DialTerminateRequest"))

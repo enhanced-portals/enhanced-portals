@@ -29,6 +29,7 @@ public class TileRedstoneInterface extends TilePortalPart implements ISidedBlock
     byte timeUntilOff;
     static int TPS = 20;
     static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
+    long lastInteractTime = 0l;
 
     public TileRedstoneInterface()
     {
@@ -175,13 +176,9 @@ public class TileRedstoneInterface extends TilePortalPart implements ISidedBlock
     @Override
     public void onNeighborBlockChange(int id)
     {
-        if (worldObj.isRemote)
+        if (!isOutput && System.currentTimeMillis() - lastInteractTime > 250 && !worldObj.isRemote)
         {
-            return;
-        }
-
-        if (!isOutput) // Only do this if set to input
-        {
+            lastInteractTime = System.currentTimeMillis();            
             TilePortalController controller = getPortalController();
 
             if (controller == null)
@@ -247,7 +244,7 @@ public class TileRedstoneInterface extends TilePortalPart implements ISidedBlock
                     if (redstoneInputState - 1 < glyphCount)
                     {
                         GlyphElement e = dialler.glyphList.get(redstoneInputState - 1);
-                        controller.dialRequest(e.identifier, e.texture);
+                        controller.dialRequest(e.identifier, e.texture, null);
                     }
                 }
                 else if (state == 5) // Dial specific identifier II
@@ -257,7 +254,7 @@ public class TileRedstoneInterface extends TilePortalPart implements ISidedBlock
                         if (redstoneInputState - 1 < glyphCount)
                         {
                             GlyphElement e = dialler.glyphList.get(redstoneInputState - 1);
-                            controller.dialRequest(e.identifier, e.texture);
+                            controller.dialRequest(e.identifier, e.texture, null);
                         }
                     }
                     else if (redstoneInputState == 0 && controller.isPortalActive)
@@ -268,14 +265,14 @@ public class TileRedstoneInterface extends TilePortalPart implements ISidedBlock
                 else if (state == 6 && redstoneInputState > 0 && !controller.isPortalActive) // Dial random identifier
                 {
                     GlyphElement e = dialler.glyphList.get(new Random().nextInt(glyphCount));
-                    controller.dialRequest(e.identifier, e.texture);
+                    controller.dialRequest(e.identifier, e.texture, null);
                 }
                 else if (state == 7) // Dial random identifier II
                 {
                     if (redstoneInputState > 0 && !controller.isPortalActive)
                     {
                         GlyphElement e = dialler.glyphList.get(new Random().nextInt(glyphCount));
-                        controller.dialRequest(e.identifier, e.texture);
+                        controller.dialRequest(e.identifier, e.texture, null);
                     }
                     else if (redstoneInputState == 0 && controller.isPortalActive)
                     {

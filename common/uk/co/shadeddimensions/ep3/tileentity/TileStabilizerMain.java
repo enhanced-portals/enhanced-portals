@@ -40,7 +40,7 @@ import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler//, IAspectContainer, IWandable
+public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler
 {
     static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
@@ -578,6 +578,10 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         {
             throw new PortalDialException("maxedConnectionLimit");
         }
+        else if (portalA.equals(portalB))
+        {
+            throw new PortalDialException("cannotDialDiallingPortal");
+        }
 
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
 
@@ -818,107 +822,4 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             tag.setTag("inventory", t);
         }
     }
-
-    /* IAspectContainer */
-    /*int storedAspect = 0;
-    final int MAX_ASPECT = 1000;
-    
-    @Override
-    public AspectList getAspects()
-    {
-        AspectList list = new AspectList();
-        list.add(Aspect.TRAVEL, storedAspect);
-        return list;
-    }
-
-    @Override
-    public void setAspects(AspectList aspects)
-    {
-        
-    }
-
-    @Override
-    public boolean doesContainerAccept(Aspect tag)
-    {
-        return tag.equals(Aspect.TRAVEL);
-    }
-
-    @Override
-    public int addToContainer(Aspect tag, int amount)
-    {
-        if (storedAspect + amount <= MAX_ASPECT)
-        {
-            storedAspect += amount;
-            return 0;
-        }
-        else
-        {
-            int leftOver = (storedAspect + amount) - MAX_ASPECT;
-            storedAspect = MAX_ASPECT;
-            
-            return leftOver;
-        }
-    }
-
-    @Override
-    public boolean takeFromContainer(Aspect tag, int amount)
-    {
-        if (tag.equals(Aspect.TRAVEL) && amount >= storedAspect)
-        {
-            storedAspect -= amount;
-            return true;
-        }
-        
-        return false;
-    }
-
-    @Override
-    public boolean takeFromContainer(AspectList ot)
-    {    
-        return false;
-    }
-
-    @Override
-    public boolean doesContainerContainAmount(Aspect tag, int amount)
-    {
-        return tag.equals(Aspect.TRAVEL) && amount >= storedAspect;
-    }
-
-    @Override
-    public boolean doesContainerContain(AspectList ot)
-    {
-        return false;
-    }
-
-    @Override
-    public int containerContains(Aspect tag)
-    {
-        return tag.equals(Aspect.TRAVEL) ? storedAspect : 0;
-    }
-
-    /* IWandable */
-    /*@Override
-    public int onWandRightClick(World world, ItemStack wandstack, EntityPlayer player, int x, int y, int z, int side, int md)
-    {
-        return 0;
-    }
-
-    @Override
-    public ItemStack onWandRightClick(World world, ItemStack wandstack, EntityPlayer player)
-    {
-        player.sendChatToPlayer(ChatMessageComponent.createFromText("Storing: " + storedAspect + " / " + MAX_ASPECT + " (" + ((float) storedAspect / MAX_ASPECT) * 100 + ") essentia.")); 
-        return wandstack;
-    }
-
-    @Override
-    public void onUsingWandTick(ItemStack wandstack, EntityPlayer player, int count)
-    {
-        
-    }
-
-    @Override
-    public void onWandStoppedUsing(ItemStack wandstack, World world, EntityPlayer player, int count)
-    {
-        
-    }*/
 }

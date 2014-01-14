@@ -186,3 +186,24 @@ ep3.chat.portalCouldNotBeCreatedHere=Failed: A portal could not be created at th
 ep3.chat.success=The portal was initialized successfully
 ep3.chat.reconfigureSuccess=The portal was successfully reconfigured
 ep3.chat.noUidSet=You must set a Unique Identifier before doing this
+
+# Errors
+ep3.error.prefix=[Error] 
+ep3.error.receivingPortalNotInitialized=The receiving portal has not been initialized
+ep3.error.sendingPortalNotInitialized=The sending portal has not been initialized
+ep3.error.stabilizerNotFound=The DBS could not be found. Insert a new valid Location Card to continue
+ep3.error.receivingPortalNoDialler=You cannot dial a portal that does not have a Dialling Device
+ep3.error.sendingPortalNoDialler=You cannot dial from a portal that does not have a Dialling Device
+ep3.error.uniqueIdentifierNotSet=You cannot dial without setting a unique identifier
+ep3.error.networkIdentifierNotSet=You cannot dial without setting a network identifier
+ep3.error.dialDeviceNotFound=You cannot dial without a Dialling Device
+ep3.error.diallingPortalAlreadyActive=You cannot dial from a portal that already has an active connection
+ep3.error.receivingPortalAlreadyActive=You cannot dial to a portal that is already active
+ep3.error.notEnoughPowerToStart=There is not enough power in the DBS to create a connection
+ep3.error.maxedConnectionLimit=The DBS has too many active connections
+ep3.error.cannotDialDiallingPortal=You cannot dial the same portal you're dialling from
+ep3.error.diallingPortalNotFound=Failed to locate the portal that you are dialling from
+ep3.error.receivingPortalNotFound=Failed to locate the receiving portal
+ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
+ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
+ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal

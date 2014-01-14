@@ -30,7 +30,7 @@ public class TilePortal extends TilePortalPart
                     return true;
                 }
             }
-            else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
+            else if (item.itemID == CommonProxy.itemPaintbrush.itemID)
             {
                 TilePortalController controller = getPortalController();
 

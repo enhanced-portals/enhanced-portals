@@ -70,36 +70,54 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         boolean isReconfiguring = false;
         WorldCoordinates dbs = null;
 
-        if (worldObj.isRemote || isFullyInitialized() || item == null || portalState == 1)
+        if (worldObj.isRemote)
         {
-            if (ItemHelper.isWrench(item) && isFullyInitialized())
+            return true;
+        }
+
+        if (isFullyInitialized())
+        {
+            if (item == null)
+            {
+                return false;
+            }
+            else if (item.itemID == CommonProxy.itemLocationCard.itemID && ItemLocationCard.hasDBSLocation(item))
+            {
+                WorldCoordinates stabilizer = ItemLocationCard.getDBSLocation(item);
+
+                if (!(stabilizer.getBlockTileEntity() instanceof TileStabilizerMain))
+                {
+                    ItemLocationCard.clearDBSLocation(item);
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("voidLinkCard")));
+                    return true;
+                }
+                else
+                {
+                    if (!stabilizer.equals(blockManager.getDimensionalBridgeStabilizer()))
+                    {
+                        item.stackSize--;
+
+                        if (item.stackSize <= 0)
+                        {
+                            player.inventory.mainInventory[player.inventory.currentItem] = null;
+                        }
+
+                        blockManager.setDimensionalBridgeStabilizer(stabilizer);
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
+                    }
+
+                    return true;
+                }
+            }
+            else if (ItemHelper.isWrench(item) && isFullyInitialized())
             {
                 CommonProxy.openGui(player, GUIs.PortalController, this);
                 return true;
             }
-            else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID && isFullyInitialized())
+            else if (item.itemID == CommonProxy.itemPaintbrush.itemID && isFullyInitialized())
             {
                 CommonProxy.openGui(player, GUIs.TexturesFrame, this);
                 return true;
-            }
-
-            return false;
-        }
-
-        if (portalState == 0)
-        {
-            if (item.itemID != CommonProxy.itemLocationCard.itemID || !ItemLocationCard.hasDBSLocation(item))
-            {
-                return false;
-            }
-
-            WorldCoordinates stabilizer = ItemLocationCard.getDBSLocation(item);
-
-            if (!(stabilizer.getBlockTileEntity() instanceof TileStabilizerMain))
-            {
-                ItemLocationCard.clearDBSLocation(item);
-                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("voidLinkCard")));
-                return false;
             }
         }
         else if (portalState == 2)
@@ -114,12 +132,66 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
                 return false;
             }
         }
+        else if (item == null || item.itemID != CommonProxy.itemLocationCard.itemID)
+        {
+            return false;
+        }
 
-        if (blockManager.getPortalCount() > 0 && blockManager.getDimensionalBridgeStabilizer() == null)
+        blockManager = new BlockManager();
+        Queue<ChunkCoordinates> portalBlocks = PortalUtils.getGhostedPortals(this);
+
+        if (portalBlocks == null || portalBlocks.isEmpty() || portalType == 0)
+        {
+            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("portalCouldNotBeCreatedHere")));
+            return false;
+        }
+
+        Queue<ChunkCoordinates> allBlocks = PortalUtils.findAllAttachedPortalParts(this, portalBlocks, player);
+
+        if (allBlocks == null || allBlocks.isEmpty())
+        {
+            return false;
+        }
+
+        for (ChunkCoordinates c : allBlocks)
+        {
+            TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+
+            if (tile == null || !(tile instanceof TilePortalPart)) // Should really be null, but the check is there for invisible blocks
+            {
+                blockManager.addPortalBlock(c);
+                continue; // We don't want to try and set the blocks controller/send a packet for this
+            }
+            else if (tile instanceof TileFrame)
+            {
+                blockManager.addBasicFrame(c);
+            }
+            else if (tile instanceof TileRedstoneInterface)
+            {
+                blockManager.addRedstoneInterface(c);
+            }
+            else if (tile instanceof TileNetworkInterface)
+            {
+                blockManager.setNetworkInterface(c);
+            }
+            else if (tile instanceof TileDiallingDevice)
+            {
+                blockManager.setDialDevice(c);
+            }
+            else if (tile instanceof TileModuleManipulator)
+            {
+                blockManager.setModuleManipulator(c);
+            }
+
+            ((TilePortalPart) tile).portalController = getChunkCoordinates();
+            CommonProxy.sendUpdatePacketToAllAround((TileEnhancedPortals) tile);
+        }
+
+        portalState = 1;
+
+        if (!isReconfiguring)
         {
             blockManager.setDimensionalBridgeStabilizer(ItemLocationCard.getDBSLocation(item));
-            portalState = 1;
-
             item.stackSize--;
 
             if (item.stackSize <= 0)
@@ -127,79 +199,13 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
                 player.inventory.mainInventory[player.inventory.currentItem] = null;
             }
 
-            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
+            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("success")));
         }
         else
         {
-            blockManager = new BlockManager();
-            Queue<ChunkCoordinates> portalBlocks = PortalUtils.getGhostedPortals(this);
+            blockManager.setDimensionalBridgeStabilizer(dbs);
+            player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
 
-            if (portalBlocks == null || portalBlocks.isEmpty() || portalType == 0)
-            {
-                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("portalCouldNotBeCreatedHere")));
-                return false;
-            }
-
-            Queue<ChunkCoordinates> allBlocks = PortalUtils.findAllAttachedPortalParts(this, portalBlocks, player);
-
-            if (allBlocks == null || allBlocks.isEmpty())
-            {
-                return false;
-            }
-
-            for (ChunkCoordinates c : allBlocks)
-            {
-                TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-                if (tile == null || !(tile instanceof TilePortalPart)) // Should really be null, but the check is there for invisible blocks
-                {
-                    blockManager.addPortalBlock(c);
-                    continue; // We don't want to try and set the blocks controller/send a packet for this
-                }
-                else if (tile instanceof TileFrame)
-                {
-                    blockManager.addBasicFrame(c);
-                }
-                else if (tile instanceof TileRedstoneInterface)
-                {
-                    blockManager.addRedstoneInterface(c);
-                }
-                else if (tile instanceof TileNetworkInterface)
-                {
-                    blockManager.setNetworkInterface(c);
-                }
-                else if (tile instanceof TileDiallingDevice)
-                {
-                    blockManager.setDialDevice(c);
-                }
-                else if (tile instanceof TileModuleManipulator)
-                {
-                    blockManager.setModuleManipulator(c);
-                }
-
-                ((TilePortalPart) tile).portalController = getChunkCoordinates();
-                CommonProxy.sendUpdatePacketToAllAround((TileEnhancedPortals) tile);
-            }
-
-            portalState = 1;
-
-            if (!isReconfiguring)
-            {
-                blockManager.setDimensionalBridgeStabilizer(ItemLocationCard.getDBSLocation(item));
-                item.stackSize--;
-
-                if (item.stackSize <= 0)
-                {
-                    player.inventory.mainInventory[player.inventory.currentItem] = null;
-                }
-
-                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("success")));
-            }
-            else
-            {
-                blockManager.setDimensionalBridgeStabilizer(dbs);
-                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
-            }
         }
 
         return true;
@@ -228,7 +234,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
      */
     public void createPortal()
     {
-        if (worldObj.isRemote)
+        if (worldObj.isRemote || blockManager.getHasDialDevice())
         {
             return;
         }
@@ -250,15 +256,19 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
 
             if (dbs == null)
             {
-                portalState = 0;
                 throw new PortalDialException("stabilizerNotFound");
             }
 
             dbs.setupNewConnection(uID, CommonProxy.networkManager.getDestination(uID, nID), null);
         }
         catch (PortalDialException e)
-        { // TODO
-            System.out.println(e.getMessage());
+        {
+            EntityPlayer player = worldObj.getClosestPlayer(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128);
+            
+            if (player != null)
+            {
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getErrorString(e.getMessage())));
+            }
         }
     }
 
@@ -287,17 +297,17 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         return stack;
     }
 
-    public void dialRequest(GlyphIdentifier id)
+    public void dialRequest(GlyphIdentifier id, PortalTextureManager m, EntityPlayer player)
     {
-        dialRequest(id, null);
-    }
-
-    public void dialRequest(GlyphIdentifier id, PortalTextureManager m)
-    {
+        if (worldObj.isRemote || blockManager.getHasNetworkInterface())
+        {
+            return;
+        }
+        
         try
         {
             GlyphIdentifier uID = getUniqueIdentifier();
-            
+
             if (uID == null)
             {
                 throw new PortalDialException("uniqueIdentifierNotSet");
@@ -306,20 +316,27 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
             {
                 throw new PortalDialException("dialDeviceNotFound");
             }
-            
+
             TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
 
             if (dbs == null)
             {
-                portalState = 0;
                 throw new PortalDialException("stabilizerNotFound");
             }
 
             dbs.setupNewConnection(uID, id, m);
         }
         catch (PortalDialException e)
-        { // TODO
-            System.out.println(e.getMessage());
+        {
+            if (player == null)
+            {
+                player = worldObj.getClosestPlayer(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128);
+            }
+            
+            if (player != null)
+            {
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getErrorString(e.getMessage())));
+            }
         }
     }
 
@@ -805,6 +822,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
 
     public void swapTextureData(PortalTextureManager newManager)
     {
+        System.out.println("swapped");
         inactiveTextureData = new PortalTextureManager(activeTextureData);
         activeTextureData = newManager;
     }
@@ -820,6 +838,8 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         portalType = stream.readByte();
         isPortalActive = stream.readBoolean();
         connectedPortals = stream.readInt();
+        
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord); // TODO
     }
 
     @Override
