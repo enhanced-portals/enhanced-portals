@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphSelector;
 import uk.co.shadeddimensions.ep3.lib.Localization;
@@ -84,25 +85,30 @@ public class GuiPortalController extends GuiBase
         portalComponents = new ElementItemStackPanel(this, 10, 59, 158, 75);
         portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockPortal, controller.blockManager.getPortalCount())));
         portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getFrameCount(), 0)));
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getRedstoneInterfaceCount(), 2)));
-
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 1)));
+        
+        if (controller.blockManager.getRedstoneInterfaceCount() > 0)
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getRedstoneInterfaceCount(), BlockFrame.REDSTONE_INTERFACE)));
+        }
+        
         if (controller.blockManager.getHasNetworkInterface())
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 3)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.NETWORK_INTERFACE)));
         }
-        else if (controller.blockManager.getHasNetworkInterface())
+        else if (controller.blockManager.getHasDialDevice())
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 4)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.DIALLING_DEVICE)));
         }
 
         if (controller.blockManager.getHasBiometricIdentifier())
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 5)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER)));
         }
 
         if (controller.blockManager.getHasModuleManipulator())
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 6)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.MODULE_MANIPULATOR)));
         }
 
         identifier.setDisabled(!overlayActive);

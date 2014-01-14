@@ -62,6 +62,11 @@ public class TilePortal extends TilePortalPart
     @Override
     public void onEntityCollidedWithBlock(Entity entity)
     {
+        if (entity instanceof EntityPlayer)
+        {
+            ((EntityPlayer) entity).closeScreen();
+        }
+        
         if (!entity.worldObj.isRemote)
         {
             TilePortalController controller = getPortalController();
