@@ -107,16 +107,16 @@ public class GuiHandler implements IGuiHandler
             if (ID == GUIs.PortalController.ordinal())
             {
                 CommonProxy.sendUpdatePacketToPlayer((TilePortalController) tile, player);
-                return new ContainerBase((TilePortalController) tile);
+                return new ContainerBase(tile);
             }
             else if (ID == GUIs.RedstoneInterface.ordinal())
             {
                 CommonProxy.sendUpdatePacketToPlayer((TileRedstoneInterface) tile, player);
-                return new ContainerBase((TileRedstoneInterface) tile);
+                return new ContainerBase(tile);
             }
             else if (ID == GUIs.NetworkInterface.ordinal())
             {
-                return new ContainerBase((TilePortalController) tile);
+                return new ContainerBase(tile);
             }
             else if (ID == GUIs.ModuleManipulator.ordinal())
             {
@@ -129,7 +129,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.DiallingDevice.ordinal())
             {
-                return new ContainerBase((TileDiallingDevice) tile);
+                return new ContainerBase(tile);
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
             {

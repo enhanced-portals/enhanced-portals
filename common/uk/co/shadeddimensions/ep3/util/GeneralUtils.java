@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import cofh.api.energy.IEnergyContainerItem;
 
@@ -19,6 +21,12 @@ public class GeneralUtils
     public static boolean isEnergyContainerItem(ItemStack container)
     {
         return container != null && container.getItem() instanceof IEnergyContainerItem;
+    }
+
+    public static boolean isWearingGoggles()
+    {
+        ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
+        return stack != null && stack.itemID == CommonProxy.itemGoggles.itemID;
     }
 
     public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)

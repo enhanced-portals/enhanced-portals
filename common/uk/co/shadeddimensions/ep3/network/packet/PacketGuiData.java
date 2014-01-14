@@ -27,15 +27,20 @@ public class PacketGuiData extends PacketEnhancedPortals
     }
 
     @Override
-    public void readPacketData(DataInputStream stream) throws IOException
+    public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
-        payload = new GuiPayload(stream);
+        Container container = ((EntityPlayer) player).openContainer;
+
+        if (container != null && container instanceof ContainerBase)
+        {
+            ((TileEnhancedPortals) ((ContainerBase) container).object).guiActionPerformed(payload, (EntityPlayer) player);
+        }
     }
 
     @Override
-    public void writePacketData(DataOutputStream stream) throws IOException
+    public void readPacketData(DataInputStream stream) throws IOException
     {
-        payload.write(stream);
+        payload = new GuiPayload(stream);
     }
 
     @Override
@@ -48,15 +53,10 @@ public class PacketGuiData extends PacketEnhancedPortals
             ((TileEnhancedPortals) ((ContainerBase) container).object).guiActionPerformed(payload, (EntityPlayer) player);
         }
     }
-    
-    @Override
-    public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
-    {
-        Container container = ((EntityPlayer) player).openContainer;
 
-        if (container != null && container instanceof ContainerBase)
-        {
-            ((TileEnhancedPortals) ((ContainerBase) container).object).guiActionPerformed(payload, (EntityPlayer) player);
-        }
+    @Override
+    public void writePacketData(DataOutputStream stream) throws IOException
+    {
+        payload.write(stream);
     }
 }

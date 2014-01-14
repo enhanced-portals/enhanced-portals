@@ -17,6 +17,7 @@ public class GuiBiometricIdentifier extends GuiBase
 {
     TileBiometricIdentifier biometric;
     GuiButton leftButton, rightButton, activateRecieveList;
+
     //ElementEntityFilterList sendList, recieveList;
 
     public GuiBiometricIdentifier(TileBiometricIdentifier tile, EntityPlayer player)
@@ -25,6 +26,31 @@ public class GuiBiometricIdentifier extends GuiBase
         xSize = 300;
         ySize = 200;
         biometric = tile;
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        if (button.id == 0)
+        {
+            GuiPayload payload = new GuiPayload();
+            payload.data.setBoolean("list", true);
+            payload.data.setBoolean("default", false);
+            ClientProxy.sendGuiPacket(payload);
+        }
+        else if (button.id == 1)
+        {
+            GuiPayload payload = new GuiPayload();
+            payload.data.setBoolean("list", false);
+            payload.data.setBoolean("default", false);
+            ClientProxy.sendGuiPacket(payload);
+        }
+        else if (button.id == 2)
+        {
+            GuiPayload payload = new GuiPayload();
+            payload.data.setBoolean("toggleSeperateLists", false);
+            ClientProxy.sendGuiPacket(payload);
+        }
     }
 
     @Override
@@ -54,17 +80,6 @@ public class GuiBiometricIdentifier extends GuiBase
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
 
-    @Override
-    public void updateScreen()
-    {
-        super.updateScreen();
-
-        leftButton.displayString = biometric.notFoundSend ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
-        rightButton.displayString = biometric.notFoundRecieve ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
-        rightButton.enabled = biometric.hasSeperateLists;
-        activateRecieveList.displayString = biometric.hasSeperateLists ? Localization.getGuiString("deactivate") : Localization.getGuiString("activate");
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void initGui()
@@ -87,30 +102,16 @@ public class GuiBiometricIdentifier extends GuiBase
     }
 
     @Override
-    protected void actionPerformed(GuiButton button)
+    public void updateScreen()
     {
-        if (button.id == 0)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("list", true);
-            payload.data.setBoolean("default", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
-        else if (button.id == 1)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("list", false);
-            payload.data.setBoolean("default", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
-        else if (button.id == 2)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("toggleSeperateLists", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
+        super.updateScreen();
+
+        leftButton.displayString = biometric.notFoundSend ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
+        rightButton.displayString = biometric.notFoundRecieve ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
+        rightButton.enabled = biometric.hasSeperateLists;
+        activateRecieveList.displayString = biometric.hasSeperateLists ? Localization.getGuiString("deactivate") : Localization.getGuiString("activate");
     }
-    
+
     /*@Override
     public void onElementChanged(ElementBase element, Object data)
     {

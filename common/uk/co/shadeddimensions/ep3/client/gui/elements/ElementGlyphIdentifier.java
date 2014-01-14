@@ -14,19 +14,6 @@ public class ElementGlyphIdentifier extends ElementBaseContainer
     }
 
     @Override
-    public void update()
-    {
-        elements.clear();
-
-        int j = 0;            
-        for (int i : selector.selectedGlyphs)
-        {
-            addElement(new ElementGlyph(gui, j, 0, i));
-            j += 18;
-        }
-    }
-
-    @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
         for (int i = 0; i < elements.size(); i++)
@@ -41,5 +28,18 @@ public class ElementGlyphIdentifier extends ElementBaseContainer
         }
 
         return false;
+    }
+
+    @Override
+    public void update()
+    {
+        elements.clear();
+
+        int j = 0;
+        for (int i : selector.selectedGlyphs)
+        {
+            addElement(new ElementGlyph(gui, j, 0, i));
+            j += 18;
+        }
     }
 }

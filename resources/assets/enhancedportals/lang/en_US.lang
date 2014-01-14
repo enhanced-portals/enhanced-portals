@@ -56,10 +56,8 @@ item.ep3.portalModule.4.name=Portal Cloaking
 item.ep3.portalModule.4.desc=Makes the portal completely invisible
 item.ep3.portalModule.5.name=Particle Shader
 item.ep3.portalModule.5.desc=Particles randomly spawn lighter or darker
-item.ep3.portalModule.6.name=Ethereal Frame
-item.ep3.portalModule.6.desc=Makes the portal frame transparent
-item.ep3.portalModule.6.desc2=Allows you to walk through the frame
-item.ep3.portalModule.6.desc3=Glows but does not give off light
+item.ep3.portalModule.6.name=Ethereal Frame [Deprecated]
+item.ep3.portalModule.6.desc=I no longer do anything.
 item.ep3.portalModule.7.name=Featherfall
 item.ep3.portalModule.7.desc=Negates fall damage
 

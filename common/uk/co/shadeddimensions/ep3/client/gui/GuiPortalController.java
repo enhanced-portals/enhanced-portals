@@ -23,7 +23,7 @@ public class GuiPortalController extends GuiBase
     TilePortalController controller;
     GuiButton resetButton, saveButton;
     boolean overlayActive;
-    
+
     ElementGlyphSelector selector;
     ElementGlyphIdentifier identifier;
     ElementItemStackPanel portalComponents;
@@ -77,16 +77,55 @@ public class GuiPortalController extends GuiBase
     }
 
     @Override
+    public void addElements()
+    {
+        selector = new ElementGlyphSelector(this, 7, 57);
+        identifier = new ElementGlyphIdentifier(this, 7, 20, selector);
+        portalComponents = new ElementItemStackPanel(this, 10, 59, 158, 75);
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockPortal, controller.blockManager.getPortalCount())));
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getFrameCount(), 0)));
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getRedstoneInterfaceCount(), 2)));
+
+        if (controller.blockManager.getHasNetworkInterface())
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 3)));
+        }
+        else if (controller.blockManager.getHasNetworkInterface())
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 4)));
+        }
+
+        if (controller.blockManager.getHasBiometricIdentifier())
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 5)));
+        }
+
+        if (controller.blockManager.getHasModuleManipulator())
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 6)));
+        }
+
+        identifier.setDisabled(!overlayActive);
+        portalComponents.setVisible(!overlayActive);
+        selector.setVisible(overlayActive);
+        selector.setIdentifierTo(controller.getUniqueIdentifier());
+
+        addElement(identifier);
+        addElement(portalComponents);
+        addElement(selector);
+    }
+
+    @Override
     protected void drawBackgroundTexture()
     {
         super.drawBackgroundTexture();
-        
+
         if (overlayActive)
         {
             drawTexturedModalRect(guiLeft, guiTop + ySize - 106, 0, ySize, xSize, 106);
         }
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
@@ -104,7 +143,7 @@ public class GuiPortalController extends GuiBase
                 }
             }
         }
-        
+
         super.drawGuiContainerForegroundLayer(x, y);
     }
 
@@ -113,7 +152,7 @@ public class GuiPortalController extends GuiBase
     public void initGui()
     {
         super.initGui();
-        
+
         resetButton = new GuiButton(0, guiLeft + 10, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("cancel"));
         saveButton = new GuiButton(1, guiLeft + xSize / 2 + 6, guiTop + 117, (xSize - 20) / 2 - 5, 20, Localization.getGuiString("save"));
 
@@ -121,45 +160,6 @@ public class GuiPortalController extends GuiBase
         buttonList.add(saveButton);
 
         resetButton.drawButton = saveButton.drawButton = overlayActive;
-    }
-    
-    @Override
-    public void addElements()
-    {
-        selector = new ElementGlyphSelector(this, 7, 57);
-        identifier = new ElementGlyphIdentifier(this, 7, 20, selector);
-        portalComponents = new ElementItemStackPanel(this, 10, 59, 158, 75);
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockPortal, controller.blockManager.getPortalCount())));
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getFrameCount(), 0)));
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getRedstoneInterfaceCount(), 2)));
-        
-        if (controller.blockManager.getHasNetworkInterface())
-        {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 3)));
-        }
-        else if (controller.blockManager.getHasNetworkInterface())
-        {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 4)));
-        }
-        
-        if (controller.blockManager.getHasBiometricIdentifier())
-        {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 5)));
-        }
-        
-        if (controller.blockManager.getHasModuleManipulator())
-        {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 6)));
-        }
-        
-        identifier.setDisabled(!overlayActive);
-        portalComponents.setVisible(!overlayActive);
-        selector.setVisible(overlayActive);
-        selector.setIdentifierTo(controller.getUniqueIdentifier());
-        
-        addElement(identifier);
-        addElement(portalComponents);
-        addElement(selector);
     }
 
     @Override

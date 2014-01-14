@@ -16,6 +16,8 @@ import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 
 public class BlockEnhancedPortals extends BlockContainer
 {
+    public static int renderPass = 0;
+
     protected BlockEnhancedPortals(int id, Material material, boolean showOnTab)
     {
         super(id, material);

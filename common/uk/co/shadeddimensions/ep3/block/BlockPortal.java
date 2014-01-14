@@ -239,6 +239,12 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
+    public void setBlockBoundsForItemRender()
+    {
+        setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
+    }
+
+    @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         if (blockAccess.getBlockMaterial(x, y, z) == Material.portal || blockAccess.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)

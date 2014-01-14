@@ -29,6 +29,17 @@ public class PacketPortalCreated extends PacketEnhancedPortals
     }
 
     @Override
+    public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
+    {
+        World w = ((EntityPlayer) player).worldObj;
+
+        for (int i = 0; i < 70; i++)
+        {
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalCreationFX(w, x, y + 1, z));
+        }
+    }
+
+    @Override
     public void readPacketData(DataInputStream stream) throws IOException
     {
         x = stream.readInt();
@@ -42,16 +53,5 @@ public class PacketPortalCreated extends PacketEnhancedPortals
         stream.writeInt(x);
         stream.writeInt(y);
         stream.writeInt(z);
-    }
-
-    @Override
-    public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
-    {
-        World w = ((EntityPlayer) player).worldObj;
-
-        for (int i = 0; i < 70; i++)
-        {
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalCreationFX(w, x, y + 1, z));
-        }
     }
 }

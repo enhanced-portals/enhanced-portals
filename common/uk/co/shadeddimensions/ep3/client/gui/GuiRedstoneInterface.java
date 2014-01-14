@@ -32,7 +32,7 @@ public class GuiRedstoneInterface extends GuiBase
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         drawCenteredString(fontRenderer, Localization.getGuiString("redstoneInterface"), xSize / 2, -13, 0xFFFFFF);
-        
+
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
 

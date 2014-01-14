@@ -23,16 +23,16 @@ public class GuiScanner extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
-    {
-        fontRenderer.drawString(Localization.getGuiString("scanner"), 7, 7, 0x404040);
-        super.drawGuiContainerForegroundLayer(x, y);
-    }
-    
-    @Override
     public void addElements()
     {
         storage.setEnergyStored(((ItemEnergyContainer) stack.getItem()).getEnergyStored(stack));
         addElement(new ElementRedstoneFlux(this, xSize - 22, 22, storage.getEnergyStored(), storage.getMaxEnergyStored()));
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int x, int y)
+    {
+        fontRenderer.drawString(Localization.getGuiString("scanner"), 7, 7, 0x404040);
+        super.drawGuiContainerForegroundLayer(x, y);
     }
 }

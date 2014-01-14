@@ -52,18 +52,6 @@ public class PacketTextureData extends PacketEnhancedPortals
     }
 
     @Override
-    public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
-    {
-        TileDiallingDevice dial = (TileDiallingDevice) ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
-
-        if (dial != null)
-        {
-            PortalTextureManager PTM = dial.glyphList.get(id).texture;
-            PacketDispatcher.sendPacketToPlayer(new PacketTextureData(PTM).getPacket(), player);
-        }
-    }
-
-    @Override
     public void readPacketData(DataInputStream stream) throws IOException
     {
         if (stream.readBoolean())
@@ -88,6 +76,18 @@ public class PacketTextureData extends PacketEnhancedPortals
             }
 
             id = -1;
+        }
+    }
+
+    @Override
+    public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
+    {
+        TileDiallingDevice dial = (TileDiallingDevice) ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
+
+        if (dial != null)
+        {
+            PortalTextureManager PTM = dial.glyphList.get(id).texture;
+            PacketDispatcher.sendPacketToPlayer(new PacketTextureData(PTM).getPacket(), player);
         }
     }
 

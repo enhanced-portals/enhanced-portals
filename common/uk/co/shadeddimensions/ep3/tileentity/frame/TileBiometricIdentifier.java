@@ -10,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
@@ -17,8 +19,9 @@ import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileBiometricIdentifier extends TilePortalPart
+public class TileBiometricIdentifier extends TilePortalPart implements ISidedBlockTexture
 {
     public ArrayList<EntityData> sendingEntityTypes, recievingEntityTypes;
     public boolean notFoundSend, notFoundRecieve, isActive, hasSeperateLists;
@@ -33,12 +36,12 @@ public class TileBiometricIdentifier extends TilePortalPart
         notFoundSend = notFoundRecieve = true;
         isActive = true;
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
-        
+
         if (item != null)
         {
             if (ItemHelper.isWrench(item))
@@ -49,7 +52,7 @@ public class TileBiometricIdentifier extends TilePortalPart
             else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
             {
                 TilePortalController controller = getPortalController();
-                
+
                 if (controller != null && controller.isFullyInitialized())
                 {
                     CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
@@ -57,7 +60,7 @@ public class TileBiometricIdentifier extends TilePortalPart
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -250,6 +253,17 @@ public class TileBiometricIdentifier extends TilePortalPart
                 stream.writeByte(d.checkType);
             }
         }
+    }
+
+    @Override
+    public Icon getBlockTexture(int side, int pass)
+    {
+        if (pass == 0)
+        {
+            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+        }
+
+        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[5];
     }
 
     @Override

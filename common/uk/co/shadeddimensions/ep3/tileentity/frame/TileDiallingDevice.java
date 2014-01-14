@@ -9,15 +9,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileDiallingDevice extends TilePortalPart
+public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTexture
 {
     public class GlyphElement
     {
@@ -97,6 +101,17 @@ public class TileDiallingDevice extends TilePortalPart
             stream.writeUTF(glyphList.get(i).name);
             stream.writeUTF(glyphList.get(i).identifier.getGlyphString());
         }
+    }
+
+    @Override
+    public Icon getBlockTexture(int side, int pass)
+    {
+        if (pass == 0)
+        {
+            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+        }
+
+        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[4];
     }
 
     @Override

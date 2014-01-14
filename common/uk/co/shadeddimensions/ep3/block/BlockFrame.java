@@ -6,16 +6,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
@@ -25,13 +24,15 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 import uk.co.shadeddimensions.library.ct.ConnectedTexturesDetailed;
+import cofh.api.block.IDismantleable;
+import cofh.api.tileentity.ISidedBlockTexture;
 
-public class BlockFrame extends BlockEnhancedPortals
+public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
 {
     public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, FRAME_TYPES = 7;
 
     public static Icon[] overlayIcons;
-    static ConnectedTextures connectedTextures;
+    public static ConnectedTextures connectedTextures;
 
     public BlockFrame(int id, String name)
     {
@@ -53,6 +54,19 @@ public class BlockFrame extends BlockEnhancedPortals
     public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
     {
         return false;
+    }
+
+    @Override
+    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean canRenderInPass(int pass)
+    {
+        BlockEnhancedPortals.renderPass = pass;
+        return pass < 2;
     }
 
     @Override
@@ -103,32 +117,15 @@ public class BlockFrame extends BlockEnhancedPortals
     }
 
     @Override
-    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+    public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
     {
-        return connectedTextures.getIconForSide(blockAccess, x, y, z, side);
+        return new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z));
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+    public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
-
-        if (tile != null && tile instanceof TilePortalPart)
-        {
-            TilePortalController controller = ((TilePortalPart) tile).getPortalController();
-
-            if (controller != null)
-            {
-                TileModuleManipulator m = controller.blockManager.getModuleManipulator(par1World);
-
-                if (m != null)
-                {
-                    return m.isFrameGhost() ? par1World.getBlockId(par2, par3 + 1, par4) != CommonProxy.blockPortal.blockID ? null : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4) : super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
-                }
-            }
-        }
-
-        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+        return ((ISidedBlockTexture) blockAccess.getBlockTileEntity(x, y, z)).getBlockTexture(side, BlockEnhancedPortals.renderPass);
     }
 
     @Override
@@ -141,6 +138,12 @@ public class BlockFrame extends BlockEnhancedPortals
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
+    }
+
+    @Override
+    public int getRenderBlockPass()
+    {
+        return 1;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -174,11 +177,11 @@ public class BlockFrame extends BlockEnhancedPortals
     @Override
     public void registerIcons(IconRegister register)
     {
-        overlayIcons = new Icon[FRAME_TYPES - 1];
+        overlayIcons = new Icon[FRAME_TYPES];
 
         for (int i = 0; i < overlayIcons.length; i++)
         {
-            overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + (i + 1));
+            overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
         }
 
         connectedTextures.registerIcons(register);

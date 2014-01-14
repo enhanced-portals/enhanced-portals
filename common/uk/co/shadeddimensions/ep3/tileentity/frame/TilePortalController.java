@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
@@ -27,13 +29,15 @@ import uk.co.shadeddimensions.ep3.util.BlockManager;
 import uk.co.shadeddimensions.ep3.util.ClientBlockManager;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.util.PortalDialException;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import cofh.api.tileentity.ISidedBlockTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TilePortalController extends TilePortalPart
+public class TilePortalController extends TilePortalPart implements ISidedBlockTexture
 {
     public PortalTextureManager activeTextureData;
     PortalTextureManager inactiveTextureData;
@@ -229,22 +233,33 @@ public class TilePortalController extends TilePortalPart
             return;
         }
 
-        GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
-
-        if (uID == null || nID == null)
+        try
         {
-            return;
+            GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();
+
+            if (uID == null)
+            {
+                throw new PortalDialException("uniqueIdentifierNotSet");
+            }
+            else if (nID == null)
+            {
+                throw new PortalDialException("networkIdentifierNotSet");
+            }
+
+            TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
+
+            if (dbs == null)
+            {
+                portalState = 0;
+                throw new PortalDialException("stabilizerNotFound");
+            }
+
+            dbs.setupNewConnection(uID, CommonProxy.networkManager.getDestination(uID, nID), null);
         }
-
-        TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
-
-        if (dbs == null)
-        {
-            portalState = 0;
-            return;
+        catch (PortalDialException e)
+        { // TODO
+            System.out.println(e.getMessage());
         }
-
-        dbs.setupNewConnection(uID, CommonProxy.networkManager.getDestination(uID, nID), null);
     }
 
     @Override
@@ -279,19 +294,32 @@ public class TilePortalController extends TilePortalPart
 
     public void dialRequest(GlyphIdentifier id, PortalTextureManager m)
     {
-        GlyphIdentifier uID = getUniqueIdentifier();
-
-        if (uID != null && blockManager.getHasDialDevice())
+        try
         {
+            GlyphIdentifier uID = getUniqueIdentifier();
+            
+            if (uID == null)
+            {
+                throw new PortalDialException("uniqueIdentifierNotSet");
+            }
+            else if (!blockManager.getHasDialDevice())
+            {
+                throw new PortalDialException("dialDeviceNotFound");
+            }
+            
             TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
 
             if (dbs == null)
             {
                 portalState = 0;
-                return;
+                throw new PortalDialException("stabilizerNotFound");
             }
 
             dbs.setupNewConnection(uID, id, m);
+        }
+        catch (PortalDialException e)
+        { // TODO
+            System.out.println(e.getMessage());
         }
     }
 
@@ -308,6 +336,17 @@ public class TilePortalController extends TilePortalPart
         stream.writeByte(portalType);
         stream.writeBoolean(isPortalActive);
         stream.writeInt(nID == null ? -1 : CommonProxy.networkManager.getNetworkSize(nID));
+    }
+
+    @Override
+    public Icon getBlockTexture(int side, int pass)
+    {
+        if (pass == 0)
+        {
+            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+        }
+
+        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[1];
     }
 
     @Override

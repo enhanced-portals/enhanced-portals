@@ -17,13 +17,13 @@ public class TilePortal extends TilePortalPart
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
-        
+
         if (item != null)
         {
             if (ItemHelper.isWrench(item))
             {
                 TilePortalController controller = getPortalController();
-                
+
                 if (controller != null)
                 {
                     CommonProxy.openGui(player, GUIs.PortalController, controller);
@@ -33,7 +33,7 @@ public class TilePortal extends TilePortalPart
             else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
             {
                 TilePortalController controller = getPortalController();
-                
+
                 if (controller != null && controller.isFullyInitialized())
                 {
                     CommonProxy.openGui(player, player.isSneaking() ? GUIs.TexturesParticle : GUIs.TexturesPortal, controller);
@@ -41,17 +41,17 @@ public class TilePortal extends TilePortalPart
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
         if (oldBlockID != worldObj.getBlockId(xCoord, yCoord, zCoord))
         {
             TilePortalController controller = getPortalController();
-    
+
             if (controller != null)
             {
                 controller.partBroken(true);
@@ -65,7 +65,7 @@ public class TilePortal extends TilePortalPart
         if (!entity.worldObj.isRemote)
         {
             TilePortalController controller = getPortalController();
-    
+
             if (controller != null && controller.isFullyInitialized() && controller.isPortalActive)
             {
                 controller.onEntityEnterPortal(entity, this);

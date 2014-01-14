@@ -45,7 +45,6 @@ public class EnhancedPortals
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();
-        proxy.registerRenderers();
         proxy.setupCrafting();
         proxy.miscSetup();
 

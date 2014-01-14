@@ -10,15 +10,19 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileRedstoneInterface extends TilePortalPart
+public class TileRedstoneInterface extends TilePortalPart implements ISidedBlockTexture
 {
     public boolean isOutput;
     public byte state, previousRedstoneState;
@@ -31,12 +35,12 @@ public class TileRedstoneInterface extends TilePortalPart
         isOutput = false;
         state = timeUntilOff = previousRedstoneState = 0;
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
-        
+
         if (item != null)
         {
             if (ItemHelper.isWrench(item))
@@ -47,7 +51,7 @@ public class TileRedstoneInterface extends TilePortalPart
             else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
             {
                 TilePortalController controller = getPortalController();
-                
+
                 if (controller != null && controller.isFullyInitialized())
                 {
                     CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
@@ -55,7 +59,7 @@ public class TileRedstoneInterface extends TilePortalPart
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -78,6 +82,17 @@ public class TileRedstoneInterface extends TilePortalPart
         super.fillPacket(stream);
         stream.writeBoolean(isOutput);
         stream.writeByte(state);
+    }
+
+    @Override
+    public Icon getBlockTexture(int side, int pass)
+    {
+        if (pass == 0)
+        {
+            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+        }
+
+        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[2];
     }
 
     @Override

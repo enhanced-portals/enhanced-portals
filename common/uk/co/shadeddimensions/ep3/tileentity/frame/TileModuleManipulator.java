@@ -8,14 +8,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileModuleManipulator extends TilePortalPart
+public class TileModuleManipulator extends TilePortalPart implements ISidedBlockTexture
 {
     ItemStack[] inventory;
 
@@ -23,12 +27,12 @@ public class TileModuleManipulator extends TilePortalPart
     {
         inventory = new ItemStack[9];
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
-        
+
         if (item != null)
         {
             if (ItemHelper.isWrench(item))
@@ -39,7 +43,7 @@ public class TileModuleManipulator extends TilePortalPart
             else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
             {
                 TilePortalController controller = getPortalController();
-                
+
                 if (controller != null && controller.isFullyInitialized())
                 {
                     CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
@@ -47,7 +51,7 @@ public class TileModuleManipulator extends TilePortalPart
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -94,6 +98,17 @@ public class TileModuleManipulator extends TilePortalPart
                 stream.writeInt(0);
             }
         }
+    }
+
+    @Override
+    public Icon getBlockTexture(int side, int pass)
+    {
+        if (pass == 0)
+        {
+            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+        }
+
+        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[6];
     }
 
     public IPortalModule[] getInstalledUpgrades()
@@ -176,22 +191,6 @@ public class TileModuleManipulator extends TilePortalPart
 
                     setInventorySlotContents(i, s);
                     CommonProxy.sendUpdatePacketToAllAround(this);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isFrameGhost()
-    {
-        for (ItemStack i : inventory)
-        {
-            if (i != null)
-            {
-                if (((IPortalModule) i.getItem()).ghostPortalFrame(this, i))
-                {
                     return true;
                 }
             }

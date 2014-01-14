@@ -23,23 +23,23 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
         public TabRedstoneFluxInfo(GuiBase gui, ElementRedstoneFlux f)
         {
             super(gui, f);
-            this.maxHeight += 35;
+            maxHeight += 35;
         }
 
         @Override
         public void draw()
         {
             super.draw();
-            
+
             if (isFullyOpened() && elementFlux != null)
             {
                 int instability = DBS.powerState == 0 ? DBS.instability : DBS.powerState == 1 ? 20 : DBS.powerState == 2 ? 50 : 70;
                 int powerCost = DBS.intActiveConnections * CommonProxy.REDSTONE_FLUX_COST * CommonProxy.redstoneFluxPowerMultiplier;
                 powerCost -= (int) (powerCost * (instability / 100f));
-                
+
                 gui.getFontRenderer().drawStringWithShadow("Energy Usage:", posX + 10, posY + 70, 0xAAAAAA);
                 gui.getFontRenderer().drawString(powerCost + " RF/s", posX + 17, posY + 83, 0x000000);
-                gui.getFontRenderer().drawString((powerCost / 20) + " RF/t", posX + 17, posY + 94, 0x000000);
+                gui.getFontRenderer().drawString(powerCost / 20 + " RF/t", posX + 17, posY + 94, 0x000000);
             }
         }
     }
@@ -51,6 +51,29 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
         super(new ContainerDimensionalBridgeStabilizer(stabilizer, player), new ResourceLocation("enhancedportals", "textures/gui/dimensionalBridgeStabilizer.png"));
         DBS = stabilizer;
         ySize = 176;
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button)
+    {
+        if (button.id == 0)
+        {
+            GuiPayload payload = new GuiPayload();
+            payload.data.setBoolean("button", false);
+            ClientProxy.sendGuiPacket(payload);
+        }
+    }
+
+    @Override
+    public void addElements()
+    {
+        addElement(new ElementRedstoneFlux(this, xSize - 23, 10, DBS.getEnergyStored(null), DBS.getMaxEnergyStored(null)));
+    }
+
+    @Override
+    public void addTabs()
+    {
+        addTab(new TabRedstoneFluxInfo(this, (ElementRedstoneFlux) elements.get(0)));
     }
 
     @Override
@@ -84,33 +107,10 @@ public class GuiDimensionalBridgeStabilizer extends GuiBase
     }
 
     @Override
-    public void addElements()
-    {
-        addElement(new ElementRedstoneFlux(this, xSize - 23, 10, DBS.getEnergyStored(null), DBS.getMaxEnergyStored(null)));
-    }
-
-    @Override
-    public void addTabs()
-    {
-        addTab(new TabRedstoneFluxInfo(this, (ElementRedstoneFlux) elements.get(0)));
-    }
-
-    @Override
     public void updateScreen()
     {
         super.updateScreen();
         ((ElementRedstoneFlux) elements.get(0)).setMaximum(DBS.getMaxEnergyStored(null)).setProgress(DBS.getEnergyStored(null));
         ((GuiButton) buttonList.get(0)).displayString = DBS.powerState == 0 ? Localization.getGuiString("powerModeNormal") : DBS.powerState == 1 ? Localization.getGuiString("powerModeRisky") : DBS.powerState == 2 ? Localization.getGuiString("powerModeUnstable") : Localization.getGuiString("powerModeUnpredictable");
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        if (button.id == 0)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("button", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
     }
 }

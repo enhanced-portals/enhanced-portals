@@ -30,9 +30,9 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         {
             return true;
         }
-        
+
         TileStabilizerMain main = getMainBlock();
-        
+
         if (main != null)
         {
             return main.activate(player);
@@ -87,7 +87,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
 
                     worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, CommonProxy.blockStabilizer.blockID, 1, 3);
                     TileEntity tile = topLeft.getBlockTileEntity();
-                    
+
                     if (tile instanceof TileStabilizerMain)
                     {
                         ((TileStabilizerMain) tile).setData(blocks, rows);

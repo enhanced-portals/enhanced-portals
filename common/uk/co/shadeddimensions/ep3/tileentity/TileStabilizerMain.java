@@ -31,6 +31,7 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.util.PortalDialException;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cofh.api.energy.EnergyStorage;
@@ -41,7 +42,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileStabilizerMain extends TileEnhancedPortals implements IInventory, IEnergyHandler//, IAspectContainer, IWandable
 {
-    static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + (CommonProxy.REDSTONE_FLUX_COST / 2);
+    static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
     ArrayList<ChunkCoordinates> blockList;
     HashMap<String, String> activeConnections;
@@ -62,7 +63,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         activeConnectionsReverse = new HashMap<String, String>();
         energyStorage = new EnergyStorage(0);
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player)
     {
@@ -559,38 +560,62 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
      * 
      * @return True if connection was successfully established.
      */
-    public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB, PortalTextureManager textureManager)
+    public boolean setupNewConnection(GlyphIdentifier portalA, GlyphIdentifier portalB, PortalTextureManager textureManager) throws PortalDialException
     {
-        if (activeConnections.containsKey(portalA.getGlyphString()) || activeConnections.containsValue(portalB.getGlyphString()) || !hasEnoughPowerToStart() || !canAcceptNewConnection())
+        if (activeConnections.containsKey(portalA.getGlyphString()))
         {
-            return false;
+            throw new PortalDialException("diallingPortalAlreadyActive");
+        }
+        else if (activeConnections.containsValue(portalB.getGlyphString()))
+        {
+            throw new PortalDialException("receivingPortalAlreadyActive");
         }
         else if (!hasEnoughPowerToStart())
         {
-            return false;
+            throw new PortalDialException("notEnoughPowerToStart");
+        }
+        else if (!canAcceptNewConnection())
+        {
+            throw new PortalDialException("maxedConnectionLimit");
         }
 
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
 
-        if (cA == null || cB == null)
+        if (cA == null)
         {
-            return false;
+            throw new PortalDialException("diallingPortalNotFound");
         }
-        else if (cA.isPortalActive || cB.isPortalActive) // Make sure both portals are inactive
+        else if (cB == null)
         {
-            return false;
+            throw new PortalDialException("receivingPortalNotFound");
         }
-        else if (!cA.isFullyInitialized() || !cB.isFullyInitialized()) // Make sure they're set up correctly...
+        else if (cA.isPortalActive)
         {
-            return false;
+            throw new PortalDialException("diallingPortalAlreadyActive");
         }
-        else if (cA.isPortalActive || cB.isPortalActive)
+        else if (cB.isPortalActive) // Make sure both portals are inactive
         {
-            return false;
+            throw new PortalDialException("receivingPortalAlreadyActive");
+        }
+        else if (!cA.isFullyInitialized())
+        {
+            throw new PortalDialException("sendingPortalNotInitialized");
+        }
+        else if (!cB.isFullyInitialized()) // Make sure they're set up correctly...
+        {
+            throw new PortalDialException("receivingPortalNotInitialized");
         }
         else if (!cA.blockManager.getDimensionalBridgeStabilizer().equals(cB.blockManager.getDimensionalBridgeStabilizer())) // And make sure they're on the same DBS
         {
-            return false;
+            throw new PortalDialException("notOnSameStabilizer");
+        }
+        else if (cA.blockManager.getHasDialDevice() && cB.blockManager.getHasNetworkInterface())
+        {
+            throw new PortalDialException("receivingPortalNoDialler");
+        }
+        else if (cA.blockManager.getHasNetworkInterface() && cB.blockManager.getHasDialDevice())
+        {
+            throw new PortalDialException("sendingPortalNoDialler"); // Should never happen but it doesn't hurt to check.
         }
 
         if (textureManager != null)
@@ -603,14 +628,14 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         {
             cA.revertTextureData();
             cB.revertTextureData();
-            return false;
+            throw new PortalDialException("sendingPortalFailedToCreatePortal");
         }
         else if (!PortalUtils.createPortalFrom(cB)) // Make sure both portals can be created
         {
             PortalUtils.removePortalFrom(cA);
             cA.revertTextureData();
             cB.revertTextureData();
-            return false;
+            throw new PortalDialException("receivingPortalFailedToCreatePortal");
         }
 
         activeConnections.put(portalA.getGlyphString(), portalB.getGlyphString());

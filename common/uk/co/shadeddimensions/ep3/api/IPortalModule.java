@@ -56,11 +56,6 @@ public interface IPortalModule
      */
     public String getID(ItemStack upgrade);
 
-    /***
-     * Should this upgrade ghost the portal frame
-     */
-    public boolean ghostPortalFrame(TileModuleManipulator moduleManipulator, ItemStack upgrade);
-
     public boolean keepMomentumOnTeleport(TileModuleManipulator moduleManipulator, ItemStack upgrade);
 
     /***

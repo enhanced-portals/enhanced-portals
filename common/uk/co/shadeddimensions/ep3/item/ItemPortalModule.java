@@ -50,12 +50,6 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     {
         list.add("Portal Module");
         list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
-
-        if (stack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
-        {
-            list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc2"));
-            list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc3"));
-        }
     }
 
     @Override
@@ -128,12 +122,6 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     public String getUnlocalizedName(ItemStack stack)
     {
         return super.getUnlocalizedName() + "." + stack.getItemDamage();
-    }
-
-    @Override
-    public boolean ghostPortalFrame(TileModuleManipulator tileModuleManipulator, ItemStack i)
-    {
-        return i.getItemDamage() == PortalModules.GHOST_FRAME.ordinal();
     }
 
     @Override

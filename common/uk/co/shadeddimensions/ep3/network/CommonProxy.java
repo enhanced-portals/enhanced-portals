@@ -178,11 +178,6 @@ public class CommonProxy
         GameRegistry.registerItem(itemMisc, "ep3.miscItems");
     }
 
-    public void registerRenderers()
-    {
-
-    }
-
     public void registerTileEntities()
     {
         GameRegistry.registerTileEntity(TilePortal.class, "epPortal");

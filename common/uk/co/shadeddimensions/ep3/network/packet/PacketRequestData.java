@@ -37,14 +37,6 @@ public class PacketRequestData extends PacketEnhancedPortals
     }
 
     @Override
-    public void writePacketData(DataOutputStream stream) throws IOException
-    {
-        stream.writeInt(x);
-        stream.writeInt(y);
-        stream.writeInt(z);
-    }
-
-    @Override
     public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
@@ -53,5 +45,13 @@ public class PacketRequestData extends PacketEnhancedPortals
         {
             CommonProxy.sendUpdatePacketToPlayer((TileEnhancedPortals) tile, (EntityPlayer) player);
         }
+    }
+
+    @Override
+    public void writePacketData(DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(x);
+        stream.writeInt(y);
+        stream.writeInt(z);
     }
 }

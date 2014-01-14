@@ -21,6 +21,15 @@ public class ElementGlyphSelector extends ElementBaseContainer
         }
     }
 
+    public void addGlyph(int i)
+    {
+        if (selectedGlyphs.size() < 9)
+        {
+            selectedGlyphs.add(i);
+            glyphCount[i]++;
+        }
+    }
+
     @Override
     public void draw()
     {
@@ -31,6 +40,11 @@ public class ElementGlyphSelector extends ElementBaseContainer
             String s = "" + (glyphCount[i] > 0 ? glyphCount[i] : "");
             gui.getFontRenderer().drawStringWithShadow(s, posX + i % 9 * 18 + 17 - gui.getFontRenderer().getStringWidth(s), posY + i / 9 * 18 + 9, 0xFFFFFF);
         }
+    }
+
+    public GlyphIdentifier getGlyphIdentifier()
+    {
+        return new GlyphIdentifier(selectedGlyphs);
     }
 
     @Override
@@ -76,15 +90,6 @@ public class ElementGlyphSelector extends ElementBaseContainer
         return false;
     }
 
-    public void addGlyph(int i)
-    {
-        if (selectedGlyphs.size() < 9)
-        {
-            selectedGlyphs.add(i);
-            glyphCount[i]++;
-        }
-    }
-
     public void removeGlyphAt(int i)
     {
         glyphCount[selectedGlyphs.get(i)]--;
@@ -100,20 +105,15 @@ public class ElementGlyphSelector extends ElementBaseContainer
     public void setIdentifierTo(GlyphIdentifier identifier)
     {
         reset();
-        
+
         if (identifier != null && !identifier.isEmpty())
         {
             selectedGlyphs = new ArrayList<Integer>(identifier.getGlyphs());
-    
+
             for (int i : selectedGlyphs)
             {
                 glyphCount[i]++;
             }
         }
-    }
-
-    public GlyphIdentifier getGlyphIdentifier()
-    {
-        return new GlyphIdentifier(selectedGlyphs);
     }
 }

@@ -12,7 +12,7 @@ public class SlotDBS extends Slot
     {
         super(inventory, x, y, z);
     }
-    
+
     @Override
     public boolean isItemValid(ItemStack stack)
     {

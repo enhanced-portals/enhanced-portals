@@ -38,7 +38,7 @@ public class GuiNetworkInterface extends GuiBase
         {
             if (button.id == resetButton.id) // Clear
             {
-                 selector.reset();
+                selector.reset();
             }
             else if (button.id == saveButton.id) // Random
             {
@@ -50,7 +50,7 @@ public class GuiNetworkInterface extends GuiBase
                     iden.addGlyph(random.nextInt(27));
                 }
 
-                 selector.setIdentifierTo(iden);
+                selector.setIdentifierTo(iden);
             }
         }
         else
@@ -71,10 +71,24 @@ public class GuiNetworkInterface extends GuiBase
     }
 
     @Override
+    public void addElements()
+    {
+        selector = new ElementGlyphSelector(this, 7, 57);
+        identifier = new ElementGlyphIdentifier(this, 7, 20, selector);
+
+        identifier.setDisabled(!overlayActive);
+        selector.setVisible(overlayActive);
+        selector.setIdentifierTo(controller.getNetworkIdentifier());
+
+        addElement(identifier);
+        addElement(selector);
+    }
+
+    @Override
     protected void drawBackgroundTexture()
     {
         super.drawBackgroundTexture();
-        
+
         if (overlayActive)
         {
             drawTexturedModalRect(guiLeft, guiTop + ySize - 106, 0, ySize, xSize, 106);
@@ -117,22 +131,8 @@ public class GuiNetworkInterface extends GuiBase
 
         buttonList.add(resetButton);
         buttonList.add(saveButton);
-        
+
         resetButton.drawButton = saveButton.drawButton = false;
-    }
-    
-    @Override
-    public void addElements()
-    {
-        selector = new ElementGlyphSelector(this, 7, 57);
-        identifier = new ElementGlyphIdentifier(this, 7, 20, selector);
-        
-        identifier.setDisabled(!overlayActive);
-        selector.setVisible(overlayActive);
-        selector.setIdentifierTo(controller.getNetworkIdentifier());
-        
-        addElement(identifier);
-        addElement(selector);
     }
 
     @Override

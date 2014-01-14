@@ -4,20 +4,20 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
-public class ItemFrame extends ItemBlock
+public class ItemFrame extends ItemBlockWithMetadata
 {
     public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "biometric", "upgrade" };
 
     public ItemFrame(int par1)
     {
-        super(par1);
+        super(par1, CommonProxy.blockFrame);
         setMaxDamage(0);
         setHasSubtypes(true);
     }
@@ -35,15 +35,14 @@ public class ItemFrame extends ItemBlock
     }
 
     @Override
-    public Icon getIconFromDamage(int par1)
+    public Icon getIconFromDamageForRenderPass(int meta, int pass)
     {
-        return CommonProxy.blockFrame.getBlockTextureFromSide(0);
-    }
+        if (pass == 0)
+        {
+            return getIconFromDamage(meta);
+        }
 
-    @Override
-    public int getMetadata(int par1)
-    {
-        return par1;
+        return BlockFrame.overlayIcons[meta];
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -60,5 +59,11 @@ public class ItemFrame extends ItemBlock
     public String getUnlocalizedName(ItemStack stack)
     {
         return super.getUnlocalizedName() + "." + unlocalizedName[stack.getItemDamage()];
+    }
+
+    @Override
+    public boolean requiresMultipleRenderPasses()
+    {
+        return true;
     }
 }
