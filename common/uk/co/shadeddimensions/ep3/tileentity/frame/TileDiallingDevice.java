@@ -15,12 +15,11 @@ import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
-import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTexture
+public class TileDiallingDevice extends TilePortalFrame
 {
     public class GlyphElement
     {
@@ -59,7 +58,12 @@ public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTex
     public boolean activate(EntityPlayer player)
     {
         TilePortalController controller = getPortalController();
-
+        
+        if (worldObj.isRemote)
+        {
+            return controller != null;
+        }
+        
         if (controller != null && controller.isFullyInitialized())
         {
             if (controller.getUniqueIdentifier() == null)
@@ -74,7 +78,7 @@ public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTex
             return true;
         }
 
-        return worldObj.isRemote; // Needs to always return true clientside
+        return false;
     }
 
     public ArrayList<GlyphElement> copyGlyphList()
@@ -107,7 +111,7 @@ public class TileDiallingDevice extends TilePortalPart implements ISidedBlockTex
     {
         if (pass == 0)
         {
-            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+            return super.getBlockTexture(side, pass);
         }
 
         return BlockFrame.overlayIcons[4];

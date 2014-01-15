@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.ep3.tileentity.frame;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Queue;
 
 import net.minecraft.entity.Entity;
@@ -13,16 +14,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Icon;
+import net.minecraft.world.ChunkCoordIntPair;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.packet.PacketRerender;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.BlockManager;
@@ -33,11 +37,10 @@ import uk.co.shadeddimensions.ep3.util.PortalDialException;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.library.util.ItemHelper;
-import cofh.api.tileentity.ISidedBlockTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TilePortalController extends TilePortalPart implements ISidedBlockTexture
+public class TilePortalController extends TilePortalFrame
 {
     public PortalTextureManager activeTextureData;
     PortalTextureManager inactiveTextureData;
@@ -72,7 +75,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
 
         if (worldObj.isRemote)
         {
-            return true;
+            return item == null ? false : true;
         }
 
         if (isFullyInitialized())
@@ -89,7 +92,6 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
                 {
                     ItemLocationCard.clearDBSLocation(item);
                     player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("voidLinkCard")));
-                    return true;
                 }
                 else
                 {
@@ -105,24 +107,22 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
                         blockManager.setDimensionalBridgeStabilizer(stabilizer);
                         player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("reconfigureSuccess")));
                     }
-
-                    return true;
                 }
             }
             else if (ItemHelper.isWrench(item) && isFullyInitialized())
             {
                 CommonProxy.openGui(player, GUIs.PortalController, this);
-                return true;
             }
             else if (item.itemID == CommonProxy.itemPaintbrush.itemID && isFullyInitialized())
             {
                 CommonProxy.openGui(player, GUIs.TexturesFrame, this);
-                return true;
             }
+            
+            return true;
         }
         else if (portalState == 2)
         {
-            if (item.itemID == CommonProxy.itemWrench.itemID)
+            if (ItemHelper.isWrench(item))
             {
                 isReconfiguring = true;
                 dbs = blockManager.getDimensionalBridgeStabilizer();
@@ -264,7 +264,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         catch (PortalDialException e)
         {
             EntityPlayer player = worldObj.getClosestPlayer(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128);
-            
+
             if (player != null)
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getErrorString(e.getMessage())));
@@ -303,7 +303,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         {
             return;
         }
-        
+
         try
         {
             GlyphIdentifier uID = getUniqueIdentifier();
@@ -332,7 +332,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
             {
                 player = worldObj.getClosestPlayer(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128);
             }
-            
+
             if (player != null)
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getErrorString(e.getMessage())));
@@ -360,10 +360,10 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
     {
         if (pass == 0)
         {
-            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+            return super.getBlockTexture(side, pass);
         }
 
-        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[1];
+        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[1] : BlockFrame.overlayIcons[0];
     }
 
     @Override
@@ -493,7 +493,14 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
 
                 if (dbs != null)
                 {
-                    dbs.terminateExistingConnection(getUniqueIdentifier());
+                    try
+                    {
+                        dbs.terminateExistingConnection(getUniqueIdentifier());
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
                 }
 
                 if (hasNetworkIdentifier())
@@ -581,6 +588,18 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         if (sendUpdatePacket)
         {
             CommonProxy.sendUpdatePacketToAllAround(this);
+            
+            ArrayList<ChunkCoordIntPair> chunks = new ArrayList<ChunkCoordIntPair>();
+            chunks.add(new ChunkCoordIntPair(xCoord >> 4, zCoord >> 4));
+            
+            for (ChunkCoordinates c : blockManager.getPortalFrames())
+            {
+                if (!chunks.contains(new ChunkCoordIntPair(c.posX >> 4, c.posZ >> 4)))
+                {
+                    CommonProxy.sendPacketToAllAround(this, new PacketRerender(c.posX, c.posY, c.posZ).getPacket());
+                    chunks.add(new ChunkCoordIntPair(c.posX >> 4, c.posZ >> 4));
+                }
+            }
         }
     }
 
@@ -772,7 +791,14 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
             return;
         }
 
-        dbs.terminateExistingConnection(uID);
+        try
+        {
+            dbs.terminateExistingConnection(uID);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void revertTextureData()
@@ -838,7 +864,7 @@ public class TilePortalController extends TilePortalPart implements ISidedBlockT
         portalType = stream.readByte();
         isPortalActive = stream.readBoolean();
         connectedPortals = stream.readInt();
-        
+
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord); // TODO
     }
 

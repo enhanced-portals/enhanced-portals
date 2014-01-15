@@ -1,5 +1,8 @@
 package uk.co.shadeddimensions.ep3.tileentity;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,11 +15,16 @@ import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 import cofh.api.energy.IEnergyHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandler
 {
     ChunkCoordinates mainBlock;
     int rows;
+    
+    @SideOnly(Side.CLIENT)
+    public boolean isFormed;
 
     public TileStabilizer()
     {
@@ -220,6 +228,18 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         super.readFromNBT(tag);
         mainBlock = GeneralUtils.loadChunkCoord(tag, "mainBlock");
     }
+    
+    @Override
+    public void usePacket(DataInputStream stream) throws IOException
+    {
+        isFormed = stream.readBoolean();
+    }
+    
+    @Override
+    public void fillPacket(DataOutputStream stream) throws IOException
+    {
+        stream.writeBoolean(mainBlock != null);
+    }
 
     /* IEnergyHandler */
     @Override
@@ -233,13 +253,6 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         }
 
         return main.receiveEnergy(from, maxReceive, simulate);
-    }
-
-    @Override
-    public void validate()
-    {
-        // Don't call super - we don't need to send any packets here
-        tileEntityInvalid = false;
     }
 
     @Override

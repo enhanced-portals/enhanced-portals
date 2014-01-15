@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import java.awt.Color;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -14,10 +15,12 @@ import uk.co.shadeddimensions.ep3.client.gui.elements.ElementIconToggleButton;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementParticleToggleButton;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
+import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.gui.GuiBase;
@@ -31,7 +34,7 @@ import uk.co.shadeddimensions.library.gui.element.ElementText;
 import uk.co.shadeddimensions.library.gui.tab.TabBase;
 import uk.co.shadeddimensions.library.gui.tab.TabToggleButton;
 
-public class GuiTexture extends GuiBase
+public class GuiTextureDialler extends GuiBase
 {
     class ColourTab extends TabBase
     {
@@ -69,19 +72,21 @@ public class GuiTexture extends GuiBase
     }
 
     TilePortalController controller;
+    TileDiallingDevice dial;
     int screenState;
-    GuiButton colourResetButton, colourSaveButton;
+    GuiButton colourResetButton, colourSaveButton, mainCancelButton, mainSaveButton;
     GuiRGBSlider redSlider, greenSlider, blueSlider;
 
     ElementFakeItemSlot fakeItem;
     ElementScrollPanelOverlay frameList, portalList, particleList;
 
-    public GuiTexture(TilePortalController t, EntityPlayer p, int startScreen)
+    public GuiTextureDialler(TileDiallingDevice d, EntityPlayer p)
     {
-        super(new ContainerTexture(t, p), new ResourceLocation("enhancedportals", "textures/gui/colourInterface.png"));
+        super(new ContainerTexture(d.getPortalController(), p), new ResourceLocation("enhancedportals", "textures/gui/colourInterface.png"));
         ySize += 10;
-        controller = t;
-        screenState = startScreen;
+        controller = d.getPortalController();
+        dial = d;
+        screenState = 0;
     }
 
     @Override
@@ -93,20 +98,16 @@ public class GuiTexture extends GuiBase
 
             if (screenState == 0)
             {
-                controller.activeTextureData.setFrameColour(hex);
+                ClientProxy.dialEntryTexture.setFrameColour(hex);
             }
             else if (screenState == 1)
             {
-                controller.activeTextureData.setPortalColour(hex);
+                ClientProxy.dialEntryTexture.setPortalColour(hex);
             }
             else if (screenState == 2)
             {
-                controller.activeTextureData.setParticleColour(hex);
+                ClientProxy.dialEntryTexture.setParticleColour(hex);
             }
-
-            GuiPayload payload = new GuiPayload();
-            payload.data.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", hex);
-            ClientProxy.sendGuiPacket(payload);
         }
         else if (button.id == colourResetButton.id)
         {
@@ -114,26 +115,40 @@ public class GuiTexture extends GuiBase
 
             if (screenState == 0)
             {
-                controller.activeTextureData.setFrameColour(colour);
+                ClientProxy.dialEntryTexture.setFrameColour(colour);
             }
             else if (screenState == 1)
             {
-                controller.activeTextureData.setPortalColour(colour);
+                ClientProxy.dialEntryTexture.setPortalColour(colour);
             }
             else if (screenState == 2)
             {
                 colour = 0x0077D8;
-                controller.activeTextureData.setParticleColour(colour);
+                ClientProxy.dialEntryTexture.setParticleColour(colour);
             }
 
             Color c = new Color(colour);
             redSlider.sliderValue = c.getRed() / 255f;
             greenSlider.sliderValue = c.getGreen() / 255f;
             blueSlider.sliderValue = c.getBlue() / 255f;
+        }
+        else if (button.id == mainCancelButton.id)
+        {
+            CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
+        }
+        else if (button.id == mainSaveButton.id)
+        {
+            if (ClientProxy.editingDialEntry == -1)
+            {
+                return;
+            }
 
             GuiPayload payload = new GuiPayload();
-            payload.data.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", Integer.parseInt(String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()), 16));
+            payload.data.setInteger("SetDialTexture", ClientProxy.editingDialEntry);
+            ClientProxy.dialEntryTexture.writeToNBT(payload.data, "TextureData");
             ClientProxy.sendGuiPacket(payload);
+            ClientProxy.editingDialEntry = -1;
+            CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
         }
     }
 
@@ -157,7 +172,7 @@ public class GuiTexture extends GuiBase
     {
         super.initGui();
 
-        Color c = new Color(screenState == 0 ? controller.activeTextureData.getFrameColour() : screenState == 1 ? controller.activeTextureData.getPortalColour() : controller.activeTextureData.getParticleColour());
+        Color c = new Color(screenState == 0 ? ClientProxy.dialEntryTexture.getFrameColour() : screenState == 1 ? ClientProxy.dialEntryTexture.getPortalColour() : ClientProxy.dialEntryTexture.getParticleColour());
         redSlider = new GuiRGBSlider(100, guiLeft + xSize + 5, guiTop + 27, Localization.getGuiString("red"), c.getRed() / 255f);
         greenSlider = new GuiRGBSlider(101, guiLeft + xSize + 5, guiTop + 48, Localization.getGuiString("green"), c.getGreen() / 255f);
         blueSlider = new GuiRGBSlider(102, guiLeft + xSize + 5, guiTop + 69, Localization.getGuiString("blue"), c.getBlue() / 255f);
@@ -171,6 +186,12 @@ public class GuiTexture extends GuiBase
 
         buttonList.add(colourSaveButton);
         buttonList.add(colourResetButton);
+
+        mainCancelButton = new GuiButton(10, guiLeft, guiTop + ySize + 3, 75, 20, Localization.getGuiString("cancel"));
+        mainSaveButton = new GuiButton(11, guiLeft + xSize - 75, guiTop + ySize + 3, 75, 20, Localization.getGuiString("save"));
+
+        buttonList.add(mainCancelButton);
+        buttonList.add(mainSaveButton);
 
         redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = tabs.get(tabs.size() - 1).isFullyOpened();
         setScreenState(screenState);
@@ -194,7 +215,7 @@ public class GuiTexture extends GuiBase
         for (Icon i : ClientProxy.customFrameTextures)
         {
             ElementIconToggleButton button = new ElementIconToggleButton(this, x, y, "F" + count, i);
-            button.setSelected(controller.activeTextureData.hasCustomFrameTexture() && controller.activeTextureData.getCustomFrameTexture() == count);
+            button.setSelected(ClientProxy.dialEntryTexture.hasCustomFrameTexture() && ClientProxy.dialEntryTexture.getCustomFrameTexture() == count);
 
             count++;
             x += button.getWidth();
@@ -221,7 +242,7 @@ public class GuiTexture extends GuiBase
         for (Icon i : ClientProxy.customPortalTextures)
         {
             ElementIconToggleButton button = new ElementIconToggleButton(this, x, y, "P" + count, i);
-            button.setSelected(controller.activeTextureData.hasCustomPortalTexture() && controller.activeTextureData.getCustomPortalTexture() == count);
+            button.setSelected(ClientProxy.dialEntryTexture.hasCustomPortalTexture() && ClientProxy.dialEntryTexture.getCustomPortalTexture() == count);
 
             count++;
             x += button.getWidth();
@@ -258,7 +279,7 @@ public class GuiTexture extends GuiBase
             }
 
             ElementParticleToggleButton button = new ElementParticleToggleButton(this, x, y, "X" + count, set);
-            button.setSelected(controller.activeTextureData.getParticleType() == count);
+            button.setSelected(ClientProxy.dialEntryTexture.getParticleType() == count);
 
             count++;
             x += button.getWidth();
@@ -317,42 +338,14 @@ public class GuiTexture extends GuiBase
     public void handleElementFakeSlotItemChange(ElementFakeItemSlot slot)
     {
         ItemStack s = slot.getStack();
-        GuiPayload payload = new GuiPayload();
 
         if (screenState == 0)
         {
-            controller.activeTextureData.setFrameItem(s);
-
-            if (s == null)
-            {
-                payload.data.setInteger("frameItemID", 0);
-                payload.data.setInteger("frameItemMeta", 0);
-            }
-            else
-            {
-                payload.data.setInteger("frameItemID", s.itemID);
-                payload.data.setInteger("frameItemMeta", s.getItemDamage());
-            }
+            ClientProxy.dialEntryTexture.setFrameItem(s);
         }
         else if (screenState == 1)
         {
-            controller.activeTextureData.setPortalItem(s);
-
-            if (s == null)
-            {
-                payload.data.setInteger("portalItemID", 0);
-                payload.data.setInteger("portalItemMeta", 0);
-            }
-            else
-            {
-                payload.data.setInteger("portalItemID", s.itemID);
-                payload.data.setInteger("portalItemMeta", s.getItemDamage());
-            }
-        }
-
-        if (payload.data.hasKey("frameItemID") || payload.data.hasKey("portalItemID"))
-        {
-            ClientProxy.sendGuiPacket(payload);
+            ClientProxy.dialEntryTexture.setPortalItem(s);
         }
     }
 
@@ -381,22 +374,18 @@ public class GuiTexture extends GuiBase
 
                     if (b.getID().equals(buttonName))
                     {
-                        GuiPayload payload = new GuiPayload();
-
                         if (mouseButton == 0)
                         {
                             fakeItem.setDisabled(true);
                             b.setSelected(true);
-                            payload.data.setInteger("customPortalTexture", Integer.parseInt(buttonName.replace("P", "")));
+                            ClientProxy.dialEntryTexture.setCustomPortalTexture(Integer.parseInt(buttonName.replace("P", "")));
                         }
                         else
                         {
                             fakeItem.setDisabled(false);
                             b.setSelected(false);
-                            payload.data.setInteger("customPortalTexture", -1);
+                            ClientProxy.dialEntryTexture.setCustomPortalTexture(-1);
                         }
-
-                        ClientProxy.sendGuiPacket(payload);
                     }
                     else
                     {
@@ -415,22 +404,18 @@ public class GuiTexture extends GuiBase
 
                     if (b.getID().equals(buttonName))
                     {
-                        GuiPayload payload = new GuiPayload();
-
                         if (mouseButton == 0)
                         {
                             fakeItem.setDisabled(true);
                             b.setSelected(true);
-                            payload.data.setInteger("customFrameTexture", Integer.parseInt(buttonName.replace("F", "")));
+                            ClientProxy.dialEntryTexture.setCustomFrameTexture(Integer.parseInt(buttonName.replace("F", "")));
                         }
                         else
                         {
                             fakeItem.setDisabled(false);
                             b.setSelected(false);
-                            payload.data.setInteger("customFrameTexture", -1);
+                            ClientProxy.dialEntryTexture.setCustomFrameTexture(-1);
                         }
-
-                        ClientProxy.sendGuiPacket(payload);
                     }
                     else
                     {
@@ -449,20 +434,16 @@ public class GuiTexture extends GuiBase
 
                     if (b.getID().equals(buttonName))
                     {
-                        GuiPayload payload = new GuiPayload();
-
                         if (mouseButton == 0)
                         {
                             b.setSelected(true);
-                            payload.data.setInteger("particleType", Integer.parseInt(buttonName.replace("X", "")));
+                            ClientProxy.dialEntryTexture.setParticleType(Integer.parseInt(buttonName.replace("X", "")));
                         }
                         else
                         {
                             b.setSelected(false);
-                            payload.data.setInteger("particleType", -1);
+                            ClientProxy.dialEntryTexture.setParticleType(0);
                         }
-
-                        ClientProxy.sendGuiPacket(payload);
                     }
                     else
                     {
@@ -488,10 +469,10 @@ public class GuiTexture extends GuiBase
         portalList.setVisible(screenState == 1);
         particleList.setVisible(screenState == 2);
 
-        fakeItem.setItem(screenState == 0 ? controller.activeTextureData.getFrameItem() : controller.activeTextureData.getPortalItem());
-        fakeItem.setDisabled(screenState == 2 || screenState == 0 && controller.activeTextureData.hasCustomFrameTexture() || screenState == 1 && controller.activeTextureData.hasCustomPortalTexture());
+        fakeItem.setItem(screenState == 0 ? ClientProxy.dialEntryTexture.getFrameItem() : ClientProxy.dialEntryTexture.getPortalItem());
+        fakeItem.setDisabled(screenState == 2 || screenState == 0 && ClientProxy.dialEntryTexture.hasCustomFrameTexture() || screenState == 1 && ClientProxy.dialEntryTexture.hasCustomPortalTexture());
 
-        Color c = new Color(screenState == 0 ? controller.activeTextureData.getFrameColour() : screenState == 1 ? controller.activeTextureData.getPortalColour() : controller.activeTextureData.getParticleColour());
+        Color c = new Color(screenState == 0 ? ClientProxy.dialEntryTexture.getFrameColour() : screenState == 1 ? ClientProxy.dialEntryTexture.getPortalColour() : ClientProxy.dialEntryTexture.getParticleColour());
         redSlider.sliderValue = c.getRed() / 255f;
         greenSlider.sliderValue = c.getGreen() / 255f;
         blueSlider.sliderValue = c.getBlue() / 255f;

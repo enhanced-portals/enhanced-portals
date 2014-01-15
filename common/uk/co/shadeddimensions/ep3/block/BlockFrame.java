@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
@@ -119,7 +121,29 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     @Override
     public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
     {
-        return new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z));
+        ItemStack dropBlock = new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z));
+        
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TilePortalFrame)
+        {
+            ((TilePortalFrame) tile).blockDismantled();
+        }
+        
+        world.setBlockToAir(x, y, z);
+        
+        if (dropBlock != null && !returnBlock)
+        {
+            float f = 0.3F;
+            double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+            double y2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+            double z2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+            EntityItem item = new EntityItem(world, x + x2, y + y2, z + z2, dropBlock);
+            item.delayBeforeCanPickup = 10;
+            world.spawnEntityInWorld(item);
+        }
+        
+        return dropBlock;
     }
 
     @Override

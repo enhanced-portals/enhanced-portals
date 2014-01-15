@@ -45,14 +45,17 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
     ArrayList<ChunkCoordinates> blockList;
+    
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
+    
     public int powerState;
     ItemStack inventory;
     int rows, tickTimer;
     EnergyStorage energyStorage;
     public int instability = 0;
     Random rand = new Random();
+    
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
 
@@ -157,11 +160,19 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     {
     }
 
-    public void deconstruct()
+    @Override
+    public void breakBlock(int oldBlockID, int oldMetadata)
     {
         for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list
         {
-            terminateExistingConnection(new GlyphIdentifier(activeConnections.values().toArray(new String[activeConnections.size()])[i]));
+            try
+            {
+                terminateExistingConnection(new GlyphIdentifier(activeConnections.values().toArray(new String[activeConnections.size()])[i]));
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         for (ChunkCoordinates c : blockList)
@@ -172,9 +183,14 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             {
                 TileStabilizer t = (TileStabilizer) tile;
                 t.mainBlock = null;
+                CommonProxy.sendUpdatePacketToAllAround(t);
             }
         }
-
+    }
+    
+    public void deconstruct()
+    {
+        breakBlock(0, 0);
         worldObj.setBlock(xCoord, yCoord, zCoord, CommonProxy.blockStabilizer.blockID, 0, 3);
     }
 
@@ -441,7 +457,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
                         }
                         else
-                        // Teleport somewhere fairly nearby -- in the air
+                            // Teleport somewhere fairly nearby -- in the air
                         {
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + rand.nextInt(10);
                         }
@@ -451,7 +467,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                     }
                     else if (instability == 70) // High Instability - 1 Effect
                     {
-                        EntityManager.teleportEntityToDimension(entity); // Teleport to dimension
+                        EntityManager.teleportEntityHighestInstability(entity); // Teleport to dimension
                         addHighInstabilityEffects(entity);
                     }
                 }
@@ -490,7 +506,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-
+        System.out.println("!!!!!! Loading...");
         powerState = tag.getInteger("powerState");
         rows = tag.getInteger("rows");
         energyStorage = new EnergyStorage(rows * ENERGY_STORAGE_PER_ROW);
@@ -504,11 +520,11 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             for (int i = 0; i < c.tagCount(); i++)
             {
                 NBTTagCompound t = (NBTTagCompound) c.tagAt(i);
-
                 String A = t.getString("Key"), B = t.getString("Value");
 
                 activeConnections.put(A, B);
                 activeConnectionsReverse.put(B, A);
+                System.out.println("Loaded connection: " + A + " <-> " + B);
             }
         }
 
@@ -545,7 +561,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     {
         rows = rows2;
         blockList = blocks;
-        energyStorage = new EnergyStorage(rows * CommonProxy.REDSTONE_FLUX_COST);
+        energyStorage = new EnergyStorage(rows * ENERGY_STORAGE_PER_ROW);
         CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
@@ -650,11 +666,11 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     /***
      * Terminates both portals and removes them from the active connection list. Used by dialling devices when the exit location is not known by the controller.
      */
-    public void terminateExistingConnection(GlyphIdentifier identifier)
+    public void terminateExistingConnection(GlyphIdentifier identifier) throws PortalDialException
     {
         if (identifier == null || identifier.isEmpty())
         {
-            return;
+            throw new PortalDialException("No identifier found for first portal");
         }
 
         GlyphIdentifier portalA = new GlyphIdentifier(identifier), portalB = null;
@@ -674,17 +690,30 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     /***
      * Terminates both portals and removes them from the active connection list.
      */
-    public void terminateExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB)
+    public void terminateExistingConnection(GlyphIdentifier portalA, GlyphIdentifier portalB) throws PortalDialException
     {
-        if (portalA == null || portalB == null)
+        if (portalA == null)
         {
-            return;
+            throw new PortalDialException("No identifier found for first portal");
+        }
+        else if (portalB == null)
+        {
+            throw new PortalDialException("No identifier found for second portal");
         }
 
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
 
         if (cA == null || cB == null)
         {
+            if (cA == null)
+            {
+                throw new PortalDialException("No identifier found for first portal");
+            }
+            else if (cB == null)
+            {
+                throw new PortalDialException("No identifier found for second portal");
+            }
+
             if (cA != null)
             {
                 PortalUtils.removePortalFrom(cA);
@@ -708,6 +737,10 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             cB.revertTextureData();
 
             removeExistingConnection(portalA, portalB);
+        }
+        else
+        {
+            throw new PortalDialException("Could not find both portals in the active connection list.");
         }
     }
 
@@ -739,11 +772,17 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                 instability = 70;
             }
             else
-            // Fail
             {
                 for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list
                 {
-                    terminateExistingConnection(new GlyphIdentifier(activeConnections.values().toArray(new String[activeConnections.size()])[i]));
+                    try
+                    {
+                        terminateExistingConnection(new GlyphIdentifier(activeConnections.values().toArray(new String[activeConnections.size()])[i]));
+                    }
+                    catch (PortalDialException e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
                 }
 
                 instability = 0;
@@ -794,7 +833,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-
+System.out.println("!!!!!! Saving...");
         energyStorage.writeToNBT(tag);
         tag.setInteger("powerState", powerState);
         tag.setInteger("rows", rows);
@@ -810,6 +849,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                 t.setString("Key", entry.getKey());
                 t.setString("Value", entry.getValue());
                 c.appendTag(t);
+                System.out.println("Saved connection: " + entry.getKey() + " <-> " + entry.getValue());
             }
 
             tag.setTag("activeConnections", c);

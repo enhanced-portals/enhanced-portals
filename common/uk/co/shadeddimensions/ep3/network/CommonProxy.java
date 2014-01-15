@@ -14,6 +14,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -81,7 +82,7 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles;
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles, forceShowFrameOverlays;
     public static int redstoneFluxPowerMultiplier;
 
     public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
@@ -214,6 +215,8 @@ public class CommonProxy
         configuration.addItemEntry("InPlaceUpgrade");
 
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
+        forceShowFrameOverlays = configuration.get("Misc", "ForceShowFrameOverlays", false);
+        
         customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);
         disablePortalSounds = configuration.get("Overrides", "DisablePortalSounds", false);
         disableParticles = configuration.get("Overrides", "DisableParticles", false);
@@ -230,9 +233,6 @@ public class CommonProxy
         {
             redstoneFluxPowerMultiplier = 0;
         }
-
-        configuration.getConfiguration().addCustomCategoryComment("World", "None of this is implemented yet.");
-        configuration.getConfiguration().addCustomCategoryComment("Overrides", "Nether portal override is not yet implemented.");
 
         configuration.init();
     }
@@ -289,6 +289,7 @@ public class CommonProxy
 
         // Decoration
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockDecoration, 8, 0), new Object[] { "SQS", "QQQ", "SQS", 'S', Block.stone, 'Q', Block.blockNetherQuartz }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockDecoration, 10, 1), Block.blockIron, Item.ingotIron, Item.ingotIron, Item.ingotIron, Item.ingotIron));
 
         // Blank stuff
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemMisc, 1, 0), true, new Object[] { "II ", "II ", "NN ", 'I', Item.ingotIron, 'N', Item.goldNugget })); // Blank Portal Module
@@ -301,7 +302,7 @@ public class CommonProxy
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 3), new Object[] { "AXF", 'X', new ItemStack(itemMisc, 1, 0), 'A', Block.anvil, 'F', Item.feather })); // Momentum
         // 4 - Portal Cloaking - does not have a recipe
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 5), new Object[] { "BXI", 'X', new ItemStack(itemMisc, 1, 0), 'B', "dyeWhite", 'I', "dyeBlack" })); // Particle Shader
-        // 6 - Ethereal Frame - does not have a recipe
+        // 6 - Ethereal Frame - removed
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPortalModule, 1, 7), new Object[] { "FFF", "FXF", "FFF", 'X', new ItemStack(itemMisc, 1, 0), 'F', Item.feather })); // Featherfall
     }
 }

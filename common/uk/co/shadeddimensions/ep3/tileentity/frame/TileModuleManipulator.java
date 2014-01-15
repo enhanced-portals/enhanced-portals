@@ -14,12 +14,11 @@ import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
-import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileModuleManipulator extends TilePortalPart implements ISidedBlockTexture
+public class TileModuleManipulator extends TilePortalFrame
 {
     ItemStack[] inventory;
 
@@ -105,10 +104,10 @@ public class TileModuleManipulator extends TilePortalPart implements ISidedBlock
     {
         if (pass == 0)
         {
-            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+            return super.getBlockTexture(side, pass);
         }
 
-        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[6];
+        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[6] : BlockFrame.overlayIcons[0];
     }
 
     public IPortalModule[] getInstalledUpgrades()

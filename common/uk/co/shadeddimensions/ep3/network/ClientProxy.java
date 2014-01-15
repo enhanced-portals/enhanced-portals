@@ -92,7 +92,7 @@ public class ClientProxy extends CommonProxy
         particleSets.add(new ParticleSet(1, new int[] { 135, 134, 133, 132, 131, 130, 129, 128 }));
         particleSets.add(new ParticleSet(1, new int[] { 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250 }));
 
-        // Will play through their animation until they die
+        // Static
         particleSets.add(new ParticleSet(2, new int[] { 32 }));
         particleSets.add(new ParticleSet(2, new int[] { 33 }));
         particleSets.add(new ParticleSet(2, new int[] { 64 }));
@@ -102,7 +102,9 @@ public class ClientProxy extends CommonProxy
         particleSets.add(new ParticleSet(2, new int[] { 81 }));
         particleSets.add(new ParticleSet(2, new int[] { 82 }));
         particleSets.add(new ParticleSet(2, new int[] { 83 }));
-        particleSets.add(new ParticleSet(2, new int[] { 164, 165 }));
+        
+        // Will play through their animation until they die
+        //particleSets.add(new ParticleSet(3, new int[] { 164, 165 }));
     }
 
     @Override

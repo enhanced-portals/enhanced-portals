@@ -13,6 +13,7 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiPortalController;
 import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
+import uk.co.shadeddimensions.ep3.client.gui.GuiTextureDialler;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
@@ -69,19 +70,19 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.TexturesFrame.ordinal())
             {
-                return new GuiTexture((TilePortalController) tile, player, 0, true);
+                return new GuiTexture((TilePortalController) tile, player, 0);
             }
             else if (ID == GUIs.TexturesPortal.ordinal())
             {
-                return new GuiTexture((TilePortalController) tile, player, 1, true);
+                return new GuiTexture((TilePortalController) tile, player, 1);
             }
             else if (ID == GUIs.TexturesParticle.ordinal())
             {
-                return new GuiTexture((TilePortalController) tile, player, 2, true);
+                return new GuiTexture((TilePortalController) tile, player, 2);
             }
             else if (ID == GUIs.TexturesDiallingDevice.ordinal())
             {
-                return new GuiTexture((TileDiallingDevice) tile, player, 0, false);
+                return new GuiTextureDialler((TileDiallingDevice) tile, player);
             }
             else if (ID == GUIs.BiometricIdentifier.ordinal())
             {

@@ -3,7 +3,6 @@ package uk.co.shadeddimensions.ep3.tileentity;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -98,11 +97,6 @@ public class TileEnhancedPortals extends TileEntity
         super.readFromNBT(tag);
     }
 
-    public void updateTick(Random random)
-    {
-
-    }
-
     public void usePacket(DataInputStream stream) throws IOException
     {
 
@@ -123,5 +117,10 @@ public class TileEnhancedPortals extends TileEntity
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
+    }
+
+    public int getColourMultiplier()
+    {
+        return 0xFFFFFF;
     }
 }

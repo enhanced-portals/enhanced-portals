@@ -48,6 +48,13 @@ public class BlockStabilizer extends BlockEnhancedPortals
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
+        TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileStabilizer)
+        {
+            return ((TileStabilizer) tile).isFormed ? connectedTextures.getIconForSide(blockAccess, x, y, z, side) : connectedTextures.getBaseIcon();
+        }
+        
         return connectedTextures.getIconForSide(blockAccess, x, y, z, side);
     }
 

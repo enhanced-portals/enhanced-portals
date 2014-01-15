@@ -207,3 +207,13 @@ ep3.error.receivingPortalNotFound=Failed to locate the receiving portal
 ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
 ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
 ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
+
+# Particle Types
+ep3.gui.particleType.0.name=Random
+ep3.gui.particleType.0.info=Gets a random frame from its sequence
+ep3.gui.particleType.1.name=Sequential
+ep3.gui.particleType.1.info=Plays through its sequence, then dies
+ep3.gui.particleType.2.name=Static
+ep3.gui.particleType.2.info=Does not change at all
+ep3.gui.particleType.3.name=Loop
+ep3.gui.particleType.3.info=Continuously loops through its sequence

@@ -1,7 +1,5 @@
 package uk.co.shadeddimensions.ep3.block;
 
-import java.util.Random;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -124,17 +122,17 @@ public class BlockEnhancedPortals extends BlockContainer
 
         tile.onNeighborBlockChange(blockID);
     }
-
+    
     @Override
-    public void updateTick(World world, int x, int y, int z, Random random)
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
     {
-        TileEnhancedPortals tile = (TileEnhancedPortals) world.getBlockTileEntity(x, y, z);
-
-        if (tile == null)
+        TileEnhancedPortals tile = (TileEnhancedPortals) blockAccess.getBlockTileEntity(x, y, z);
+        
+        if (tile != null)
         {
-            return;
+            return tile.getColourMultiplier();
         }
-
-        tile.updateTick(random);
+        
+        return 0xFFFFFF;
     }
 }

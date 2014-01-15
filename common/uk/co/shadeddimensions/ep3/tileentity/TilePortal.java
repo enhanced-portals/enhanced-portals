@@ -84,4 +84,17 @@ public class TilePortal extends TilePortalPart
         super.usePacket(stream);
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
+    
+    @Override
+    public int getColourMultiplier()
+    {
+        TilePortalController controller = getPortalController();
+        
+        if (controller != null)
+        {
+            return controller.activeTextureData.getPortalColour();
+        }
+        
+        return 0xFFFFFF;
+    }
 }

@@ -18,6 +18,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -173,13 +174,19 @@ public class EntityManager
         }
     }
 
-    public static void teleportEntityToDimension(Entity par1Entity)
+    public static void teleportEntityHighestInstability(Entity par1Entity)
     {
-        // TODO 
+        boolean nether = MinecraftServer.getServer().getAllowNether();
+        ChunkCoordinates spawn = nether ? DimensionManager.getWorld(-1).getSpawnPoint() : par1Entity.worldObj.getSpawnPoint();
 
-        // For now, just teleport them to the spawn point of the dimension they're in
-        ChunkCoordinates spawn = par1Entity.worldObj.getSpawnPoint();
-        transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posZ), spawn.posZ, 0f, 0, 0, false);
+        if (nether)
+        {
+            transferEntityToDimension(par1Entity, (int) spawn.posX, (int) spawn.posY, (int) spawn.posZ, 0f, (WorldServer) par1Entity.worldObj, DimensionManager.getWorld(-1), -1, -1, false);
+        }
+        else
+        {
+            transferEntityWithinDimension(par1Entity, spawn.posX, spawn.posY, spawn.posZ, 0f, -1, -1, false);
+        }
     }
 
     public static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
@@ -251,6 +258,21 @@ public class EntityManager
     @SuppressWarnings("rawtypes")
     public static Entity transferEntityToDimension(Entity entity, double x, double y, double z, float yaw, WorldServer exitingWorld, WorldServer enteringWorld, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
+        if (touchedPortalType == -1 && exitPortalType == -1)
+        {
+            while (!enteringWorld.isAirBlock((int) x, (int) y, (int) z) || !enteringWorld.isAirBlock((int) x, (int) y + 1, (int) z))
+            {
+                y++;
+                
+                if (y > 250)
+                {
+                    break;
+                }
+            }
+            
+            y++;
+        }
+        
         if (entity == null)
         {
             return null;

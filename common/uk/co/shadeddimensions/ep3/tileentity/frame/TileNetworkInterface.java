@@ -6,12 +6,11 @@ import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
-import cofh.api.tileentity.ISidedBlockTexture;
 
-public class TileNetworkInterface extends TilePortalPart implements ISidedBlockTexture
+public class TileNetworkInterface extends TilePortalFrame
 {
     @Override
     public boolean activate(EntityPlayer player)
@@ -50,9 +49,9 @@ public class TileNetworkInterface extends TilePortalPart implements ISidedBlockT
     {
         if (pass == 0)
         {
-            return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+            return super.getBlockTexture(side, pass);
         }
 
-        return !GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[0] : BlockFrame.overlayIcons[3];
+        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[3] : BlockFrame.overlayIcons[0];
     }
 }
