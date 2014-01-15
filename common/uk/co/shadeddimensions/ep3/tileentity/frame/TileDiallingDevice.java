@@ -18,8 +18,11 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 
-public class TileDiallingDevice extends TilePortalFrame
+public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
 {
     public class GlyphElement
     {
@@ -79,6 +82,30 @@ public class TileDiallingDevice extends TilePortalFrame
         }
 
         return false;
+    }
+    
+    void dial(GlyphIdentifier id) throws Exception
+    {
+        TilePortalController controller = getPortalController();
+        
+        if (controller == null)
+        {
+            throw new Exception("Can't find portal controller");
+        }
+        
+        controller.dialRequest(id, null, null);
+    }
+    
+    void terminate() throws Exception
+    {
+        TilePortalController controller = getPortalController();
+        
+        if (controller == null)
+        {
+            throw new Exception("Can't find portal controller");
+        }
+        
+        controller.removePortal();
     }
 
     public ArrayList<GlyphElement> copyGlyphList()
@@ -230,5 +257,107 @@ public class TileDiallingDevice extends TilePortalFrame
         }
 
         tag.setTag("glyphList", list);
+    }
+    
+    /* IPeripheral */
+    @Override
+    public String getType()
+    {
+        return "Dialling Device";
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "dial", "terminate", "dialStored" };
+    }
+
+    @Override
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0) // dial
+        {
+            if (arguments.length == 1)
+            {
+                String s = arguments[0].toString();
+                s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
+
+                if (s.length() == 0)
+                {
+                    throw new Exception("Glyph ID is not formatted correctly");
+                }
+                
+                try
+                {
+                    if (s.contains(GlyphIdentifier.GLYPH_SEPERATOR))
+                    {
+                        String[] nums = s.split(GlyphIdentifier.GLYPH_SEPERATOR);
+
+                        if (nums.length > 9)
+                        {
+                            throw new Exception("Glyph ID is too long. Must be a maximum of 9 IDs");
+                        }
+
+                        for (String num : nums)
+                        {
+
+                            int n = Integer.parseInt(num);
+
+                            if (n < 0 || n > 27)
+                            {
+                                throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int n = Integer.parseInt(s);
+
+                        if (n < 0 || n > 27)
+                        {
+                            throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
+                        }
+                    }
+                }
+                catch (NumberFormatException ex)
+                {
+                    throw new Exception("Glyph ID is not formatted correctly");
+                }
+
+                dial(new GlyphIdentifier(s));
+            }
+            else
+            {
+                throw new Exception("Invalid arguments");
+            }
+        }
+        else if (method == 1) // terminate
+        {
+            terminate();
+        }
+        else if (method == 2) // dialStored
+        {
+            // TODO
+        }
+        
+        return null;
+    }
+
+    @Override
+    public boolean canAttachToSide(int side)
+    {
+        return true;
+    }
+
+    @Override
+    public void attach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void detach(IComputerAccess computer)
+    {
+        
     }
 }

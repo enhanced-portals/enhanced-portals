@@ -1,5 +1,8 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -10,7 +13,7 @@ import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileNetworkInterface extends TilePortalFrame
+public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
 {
     @Override
     public boolean activate(EntityPlayer player)
@@ -53,5 +56,42 @@ public class TileNetworkInterface extends TilePortalFrame
         }
 
         return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[3] : BlockFrame.overlayIcons[0];
+    }
+
+    /* IPeripheral */
+    @Override
+    public String getType()
+    {
+        return "Network Interface";
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { };
+    }
+
+    @Override
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        return null;
+    }
+
+    @Override
+    public boolean canAttachToSide(int side)
+    {
+        return true;
+    }
+
+    @Override
+    public void attach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void detach(IComputerAccess computer)
+    {
+        
     }
 }
