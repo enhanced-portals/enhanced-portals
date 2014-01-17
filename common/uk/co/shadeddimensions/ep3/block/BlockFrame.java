@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -33,6 +34,7 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
 {
     public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, FRAME_TYPES = 7;
 
+    static Icon[] fullIcons;
     public static Icon[] overlayIcons;
     public static ConnectedTextures connectedTextures;
 
@@ -155,7 +157,7 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     @Override
     public Icon getIcon(int side, int meta)
     {
-        return connectedTextures.getBaseIcon();
+        return fullIcons[MathHelper.clamp_int(meta, 0, FRAME_TYPES)];
     }
 
     @Override
@@ -202,10 +204,12 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     public void registerIcons(IconRegister register)
     {
         overlayIcons = new Icon[FRAME_TYPES];
+        fullIcons = new Icon[FRAME_TYPES];
 
         for (int i = 0; i < overlayIcons.length; i++)
         {
             overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
+            fullIcons[i] = register.registerIcon("enhancedportals:portalFrameFull_" + i);
         }
 
         connectedTextures.registerIcons(register);

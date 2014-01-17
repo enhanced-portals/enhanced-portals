@@ -12,7 +12,7 @@ public class ElementIconToggleButton extends ElementButton
 
     public ElementIconToggleButton(GuiBase parent, int x, int y, String id, Icon icon)
     {
-        super(parent, x, y, 0, id, null, null);
+        super(parent, x, y, 0, id, null, "");
         this.icon = icon;
         this.sizeY = icon.getIconHeight() + 2;
         this.sizeX = icon.getIconWidth() + 2;

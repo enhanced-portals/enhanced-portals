@@ -95,11 +95,8 @@ public class EntityData
     }
 
     public String EntityDisplayName;
-
     public Class<? extends Entity> EntityClass;
-
-    public boolean isInverted;
-
+    public boolean disallow;
     public byte checkType;
 
     public EntityData()
@@ -111,7 +108,7 @@ public class EntityData
     {
         EntityDisplayName = name;
         EntityClass = clazz;
-        isInverted = inverted;
+        disallow = inverted;
         checkType = type;
     }
 
@@ -119,7 +116,7 @@ public class EntityData
     {
         EntityDisplayName = t.getString("Name");
         EntityClass = getClassFromID(t.getInteger("ID"));
-        isInverted = t.getBoolean("Inverted");
+        disallow = t.getBoolean("Inverted");
         checkType = t.getByte("CheckType");
         return this;
     }
@@ -133,7 +130,7 @@ public class EntityData
 
         t.setString("Name", EntityDisplayName);
         t.setInteger("ID", getEntityID(EntityClass));
-        t.setBoolean("Inverted", isInverted);
+        t.setBoolean("Inverted", disallow);
         t.setByte("CheckType", checkType);
     }
 
@@ -150,5 +147,33 @@ public class EntityData
     public boolean shouldCheckNameAndClass()
     {
         return checkType == 2;
+    }
+    
+    
+    public int isEntityAcceptable(Entity entity)
+    {
+        if (shouldCheckName())
+        {
+            if (entity.getEntityName().equals(EntityDisplayName))
+            {
+                return disallow ? 0 : 1;
+            }
+        }
+        else if (shouldCheckClass())
+        {
+            if (EntityClass.isInstance(entity))
+            {
+                return disallow ? 0 : 1;
+            }
+        }
+        else if (shouldCheckNameAndClass())
+        {
+            if (entity.getEntityName().equals(EntityDisplayName) && EntityClass.isInstance(entity))
+            {
+                return disallow ? 0 : 1;
+            }
+        }
+        
+        return -1;
     }
 }

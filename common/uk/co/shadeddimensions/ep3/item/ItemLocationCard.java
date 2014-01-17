@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class ItemLocationCard extends ItemEnhancedPortals

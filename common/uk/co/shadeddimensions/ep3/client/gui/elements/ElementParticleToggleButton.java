@@ -17,7 +17,7 @@ public class ElementParticleToggleButton extends ElementButton
 
     public ElementParticleToggleButton(GuiBase parent, int x, int y, String id, ParticleSet p)
     {
-        super(parent, x, y, 0, id, null, null);
+        super(parent, x, y, 0, id, null, "");
         this.set = p;
         this.sizeY = 18;
         this.sizeX = 18;

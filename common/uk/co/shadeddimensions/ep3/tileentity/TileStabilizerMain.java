@@ -598,6 +598,14 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         {
             throw new PortalDialException("cannotDialDiallingPortal");
         }
+        else if (!CommonProxy.networkManager.portalIdentifierExists(portalA))
+        {
+            throw new PortalDialException("noPortalWithThatIdentifierSending");
+        }
+        else if (!CommonProxy.networkManager.portalIdentifierExists(portalB))
+        {
+            throw new PortalDialException("noPortalWithThatIdentifierReceiving");
+        }
 
         TilePortalController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
 
@@ -625,7 +633,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         {
             throw new PortalDialException("receivingPortalNotInitialized");
         }
-        else if (!cA.blockManager.getDimensionalBridgeStabilizer().equals(cB.blockManager.getDimensionalBridgeStabilizer())) // And make sure they're on the same DBS
+        else if (!cA.blockManager.getDimensionalBridgeStabilizerTile().getWorldCoordinates().equals(cB.blockManager.getDimensionalBridgeStabilizerTile().getWorldCoordinates())) // And make sure they're on the same DBS. We're getting the tile instead of the worldcoordinates to make sure the DBS hasn't expanded
         {
             throw new PortalDialException("notOnSameStabilizer");
         }

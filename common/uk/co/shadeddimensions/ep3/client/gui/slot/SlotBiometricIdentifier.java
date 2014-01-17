@@ -18,11 +18,6 @@ public class SlotBiometricIdentifier extends Slot
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        if (getSlotIndex() == 1 && stack != null && !biometric.hasSeperateLists)
-        {
-            return false;
-        }
-
         return stack == null || stack.itemID == CommonProxy.itemEntityCard.itemID && stack.hasTagCompound() && stack.getTagCompound().hasKey("entities");
     }
 

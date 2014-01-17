@@ -22,18 +22,16 @@ import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TileBiometricIdentifier extends TilePortalFrame
 {
-    public ArrayList<EntityData> sendingEntityTypes, recievingEntityTypes;
-    public boolean notFoundSend, notFoundRecieve, isActive, hasSeperateLists;
+    public long lastUpdateTime;
+    public ArrayList<EntityData> entityList;
+    public boolean defaultPermissions, isActive;
     ItemStack[] inventory;
 
     public TileBiometricIdentifier()
     {
         inventory = new ItemStack[2];
-        sendingEntityTypes = new ArrayList<EntityData>();
-        recievingEntityTypes = new ArrayList<EntityData>();
-        hasSeperateLists = false;
-        notFoundSend = notFoundRecieve = true;
-        isActive = true;
+        entityList = new ArrayList<EntityData>();
+        defaultPermissions = isActive = true;
     }
 
     @Override
@@ -43,7 +41,7 @@ public class TileBiometricIdentifier extends TilePortalFrame
 
         if (item != null)
         {
-            if (ItemHelper.isWrench(item))
+            if (ItemHelper.isWrench(item) && !player.isSneaking())
             {
                 CommonProxy.openGui(player, GUIs.BiometricIdentifier, this);
                 return true;
@@ -72,125 +70,43 @@ public class TileBiometricIdentifier extends TilePortalFrame
         {
             NBTTagCompound tag = (NBTTagCompound) l.tagAt(i);
             EntityData entity = new EntityData(tag.getString("Name"), EntityData.getClassFromID(tag.getInteger("ID")), false, (byte) 0);
-
-            if (slotIndex == 0)
-            {
-                sendingEntityTypes.add(entity);
-            }
-            else if (slotIndex == 1)
-            {
-                recievingEntityTypes.add(entity);
-            }
+            entityList.add(entity);
+            lastUpdateTime = System.currentTimeMillis();
         }
 
         CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
-    public boolean canEntityBeRecieved(Entity entity)
+    public boolean canEntityTravel(Entity entity)
     {
         if (!isActive)
         {
             return true;
         }
-
-        boolean wasFound = false;
-
-        for (EntityData data : hasSeperateLists ? recievingEntityTypes : sendingEntityTypes)
+        
+        boolean skippedAll = true, decision = defaultPermissions;
+        
+        for (EntityData data : entityList)
         {
-            if (data.shouldCheckName() && data.EntityDisplayName.equals(entity.getEntityName()))
+            int var = data.isEntityAcceptable(entity);
+            
+            if (var != -1)
             {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
-            }
-            else if (data.shouldCheckClass() && data.EntityClass.isInstance(entity))
-            {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
-            }
-            else if (data.shouldCheckNameAndClass() && data.EntityDisplayName.equals(entity.getEntityName()) && data.EntityClass.isInstance(entity))
-            {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
+                skippedAll = false;
+                decision = var == 1;
             }
         }
-
-        return !wasFound ? hasSeperateLists ? notFoundRecieve : notFoundSend : false;
-    }
-
-    public boolean canEntityBeSent(Entity entity)
-    {
-        if (!isActive)
-        {
-            return true;
-        }
-
-        boolean wasFound = false;
-
-        for (EntityData data : sendingEntityTypes)
-        {
-            if (data.shouldCheckName() && data.EntityDisplayName.equals(entity.getEntityName()))
-            {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
-            }
-            else if (data.shouldCheckClass() && data.EntityClass.isInstance(entity))
-            {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
-            }
-            else if (data.shouldCheckNameAndClass() && data.EntityDisplayName.equals(entity.getEntityName()) && data.EntityClass.isInstance(entity))
-            {
-                if (!data.isInverted)
-                {
-                    return true;
-                }
-
-                wasFound = true;
-            }
-        }
-
-        return !wasFound ? notFoundSend : false;
-    }
-
-    public ArrayList<EntityData> copyRecievingEntityTypes()
-    {
-        ArrayList<EntityData> list = new ArrayList<EntityData>();
-
-        for (EntityData data : recievingEntityTypes)
-        {
-            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.isInverted, data.checkType));
-        }
-
-        return list;
+        
+        return skippedAll ? defaultPermissions : decision;
     }
 
     public ArrayList<EntityData> copySendingEntityTypes()
     {
         ArrayList<EntityData> list = new ArrayList<EntityData>();
 
-        for (EntityData data : sendingEntityTypes)
+        for (EntityData data : entityList)
         {
-            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.isInverted, data.checkType));
+            list.add(new EntityData(data.EntityDisplayName, data.EntityClass, data.disallow, data.checkType));
         }
 
         return list;
@@ -227,30 +143,15 @@ public class TileBiometricIdentifier extends TilePortalFrame
         super.fillPacket(stream);
 
         stream.writeBoolean(isActive);
-        stream.writeBoolean(hasSeperateLists);
-        stream.writeBoolean(notFoundSend);
-        stream.writeBoolean(notFoundRecieve);
-        stream.writeByte(sendingEntityTypes.size());
+        stream.writeBoolean(defaultPermissions);
+        stream.writeByte(entityList.size());
 
-        for (EntityData d : sendingEntityTypes)
+        for (EntityData d : entityList)
         {
             stream.writeUTF(d.EntityDisplayName);
             stream.writeInt(EntityData.getEntityID(d.EntityClass));
-            stream.writeBoolean(d.isInverted);
+            stream.writeBoolean(d.disallow);
             stream.writeByte(d.checkType);
-        }
-
-        if (hasSeperateLists)
-        {
-            stream.writeByte(recievingEntityTypes.size());
-
-            for (EntityData d : recievingEntityTypes)
-            {
-                stream.writeUTF(d.EntityDisplayName);
-                stream.writeInt(EntityData.getEntityID(d.EntityClass));
-                stream.writeBoolean(d.isInverted);
-                stream.writeByte(d.checkType);
-            }
         }
     }
 
@@ -301,52 +202,38 @@ public class TileBiometricIdentifier extends TilePortalFrame
     {
         super.guiActionPerformed(payload, player);
 
-        if (payload.data.hasKey("list"))
+        if (payload.data.hasKey("invert"))
         {
-            boolean list = payload.data.getBoolean("list");
+            int id = payload.data.getInteger("invert");
 
-            if (payload.data.hasKey("invert"))
-            {
-                int id = payload.data.getInteger("invert");
-
-                (list ? sendingEntityTypes : recievingEntityTypes).get(id).isInverted = !(list ? sendingEntityTypes : recievingEntityTypes).get(id).isInverted;
-            }
-            else if (payload.data.hasKey("type"))
-            {
-                int id = payload.data.getInteger("type");
-
-                (list ? sendingEntityTypes : recievingEntityTypes).get(id).checkType++;
-
-                if ((list ? sendingEntityTypes : recievingEntityTypes).get(id).checkType > 2)
-                {
-                    (list ? sendingEntityTypes : recievingEntityTypes).get(id).checkType = 0;
-                }
-            }
-            else if (payload.data.hasKey("remove"))
-            {
-                int id = payload.data.getInteger("remove");
-
-                (list ? sendingEntityTypes : recievingEntityTypes).remove(id);
-            }
-            else if (payload.data.hasKey("default"))
-            {
-                if (list)
-                {
-                    notFoundSend = !notFoundSend;
-                }
-                else
-                {
-                    notFoundRecieve = !notFoundRecieve;
-                }
-            }
-
-            CommonProxy.sendUpdatePacketToAllAround(this);
+            entityList.get(id).disallow = !entityList.get(id).disallow;
+            lastUpdateTime = System.currentTimeMillis();
         }
-        else if (payload.data.hasKey("toggleSeperateLists"))
+        else if (payload.data.hasKey("type"))
         {
-            hasSeperateLists = !hasSeperateLists;
-            CommonProxy.sendUpdatePacketToAllAround(this);
+            int id = payload.data.getInteger("type");
+
+            entityList.get(id).checkType++;
+
+            if (entityList.get(id).checkType > 2)
+            {
+                entityList.get(id).checkType = 0;
+                lastUpdateTime = System.currentTimeMillis();
+            }
         }
+        else if (payload.data.hasKey("remove"))
+        {
+            int id = payload.data.getInteger("remove");
+
+            entityList.remove(id);
+            lastUpdateTime = System.currentTimeMillis();
+        }
+        else if (payload.data.hasKey("default"))
+        {
+            defaultPermissions = !defaultPermissions;
+        }
+
+        CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
     @Override
@@ -379,9 +266,7 @@ public class TileBiometricIdentifier extends TilePortalFrame
         super.readFromNBT(tag);
 
         isActive = tag.getBoolean("isActive");
-        hasSeperateLists = tag.getBoolean("hasSeperateLists");
-        notFoundSend = tag.getBoolean("notFoundSend");
-        notFoundRecieve = tag.getBoolean("notFoundRecieve");
+        defaultPermissions = tag.getBoolean("notFoundSend");
 
         NBTTagList l = tag.getTagList("sendingEntityTypes");
         for (int i = 0; i < l.tagCount(); i++)
@@ -390,22 +275,7 @@ public class TileBiometricIdentifier extends TilePortalFrame
 
             if (d != null && d.EntityClass != null)
             {
-                sendingEntityTypes.add(d);
-            }
-        }
-
-        if (tag.hasKey("recievingEntityTypes"))
-        {
-            NBTTagList l2 = tag.getTagList("recievingEntityTypes");
-
-            for (int i = 0; i < l2.tagCount(); i++)
-            {
-                EntityData d = new EntityData().readFromNBT((NBTTagCompound) l2.tagAt(i));
-
-                if (d != null && d.EntityClass != null)
-                {
-                    recievingEntityTypes.add(d);
-                }
+                entityList.add(d);
             }
         }
 
@@ -438,27 +308,15 @@ public class TileBiometricIdentifier extends TilePortalFrame
         super.usePacket(stream);
 
         isActive = stream.readBoolean();
-        hasSeperateLists = stream.readBoolean();
-        notFoundSend = stream.readBoolean();
-        notFoundRecieve = stream.readBoolean();
-        sendingEntityTypes.clear();
-        recievingEntityTypes.clear();
+        defaultPermissions = stream.readBoolean();
+        entityList.clear();
+        lastUpdateTime = System.currentTimeMillis();
 
         byte size = stream.readByte();
 
         for (int i = 0; i < size; i++)
         {
-            sendingEntityTypes.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
-        }
-
-        if (hasSeperateLists)
-        {
-            size = stream.readByte();
-
-            for (int i = 0; i < size; i++)
-            {
-                recievingEntityTypes.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
-            }
+            entityList.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
         }
     }
 
@@ -468,12 +326,10 @@ public class TileBiometricIdentifier extends TilePortalFrame
         super.writeToNBT(tag);
 
         tag.setBoolean("isActive", isActive);
-        tag.setBoolean("hasSeperateLists", hasSeperateLists);
-        tag.setBoolean("notFoundSend", notFoundSend);
-        tag.setBoolean("notFoundRecieve", notFoundRecieve);
+        tag.setBoolean("notFoundSend", defaultPermissions);
 
         NBTTagList t = new NBTTagList();
-        for (EntityData d : sendingEntityTypes)
+        for (EntityData d : entityList)
         {
             NBTTagCompound tagCompound = new NBTTagCompound();
             d.saveToNBT(tagCompound);
@@ -481,16 +337,6 @@ public class TileBiometricIdentifier extends TilePortalFrame
         }
 
         tag.setTag("sendingEntityTypes", t);
-
-        NBTTagList t2 = new NBTTagList();
-        for (EntityData d : recievingEntityTypes)
-        {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            d.saveToNBT(tagCompound);
-            t2.appendTag(tagCompound);
-        }
-
-        tag.setTag("recievingEntityTypes", t2);
 
         NBTTagList itemList = new NBTTagList();
 

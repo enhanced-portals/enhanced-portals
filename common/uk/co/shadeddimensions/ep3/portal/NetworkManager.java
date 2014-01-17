@@ -375,4 +375,9 @@ public class NetworkManager
             e.printStackTrace();
         }
     }
+
+    public boolean portalIdentifierExists(GlyphIdentifier id)
+    {
+        return portalCoordinates.containsKey(id.getGlyphString());
+    }
 }

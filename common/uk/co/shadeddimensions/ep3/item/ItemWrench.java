@@ -6,17 +6,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.block.IDismantleable;
 
-public class ItemWrench extends ItemPortalTool implements IToolWrench
+public class ItemWrench extends ItemEnhancedPortals implements IToolWrench
 {
     Icon texture;
 
     public ItemWrench(int id, String name)
     {
-        super(id, true, name);
+        super(id, true);
+        setUnlocalizedName(name);
+    }
+    
+    @Override
+    public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6)
+    {
+        return true;
     }
 
     @Override

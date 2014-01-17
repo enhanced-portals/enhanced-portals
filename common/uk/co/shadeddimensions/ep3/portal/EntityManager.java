@@ -31,32 +31,29 @@ public class EntityManager
 
     private static ChunkCoordinates getActualExitLocation(Entity entity, TilePortalController controller)
     {
-        int entityHeight = Math.round(entity.height), entityWidth = Math.round(entity.width);
+        int entityHeight = Math.round(entity.height);
         boolean horizontal = controller.portalType == 3;
 
         forloop:
-        for (ChunkCoordinates c : controller.blockManager.getPortals())
-        {
-            for (int i = 0; i < (horizontal ? Math.round(entityWidth / 2) : entityHeight); i++)
+            for (ChunkCoordinates c : controller.blockManager.getPortals())
             {
-                if (horizontal)
+                if (!horizontal)
                 {
-                    if (controller.worldObj.getBlockId(c.posX + i, c.posY, c.posZ) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX - i, c.posY, c.posZ) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX, c.posY, c.posZ + i) != CommonProxy.blockPortal.blockID || controller.worldObj.getBlockId(c.posX, c.posY, c.posZ + i) != CommonProxy.blockPortal.blockID)
+                    for (int i = 0; i < entityHeight; i++)
                     {
-                        continue forloop;
+                        if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
+                        {
+                            continue forloop;
+                        }
                     }
                 }
-                else
+                else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
                 {
-                    if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
-                    {
-                        continue forloop;
-                    }
+                    c.posY--;
                 }
-            }
 
-            return c;
-        }
+                return c;
+            }
 
         return null;
     }
@@ -220,7 +217,7 @@ public class EntityManager
 
         if (bio != null)
         {
-            if (!bio.canEntityBeRecieved(entity))
+            if (!bio.canEntityTravel(entity))
             {
                 setEntityPortalCooldown(entity);
                 return;
@@ -263,16 +260,16 @@ public class EntityManager
             while (!enteringWorld.isAirBlock((int) x, (int) y, (int) z) || !enteringWorld.isAirBlock((int) x, (int) y + 1, (int) z))
             {
                 y++;
-                
+
                 if (y > 250)
                 {
                     break;
                 }
             }
-            
+
             y++;
         }
-        
+
         if (entity == null)
         {
             return null;

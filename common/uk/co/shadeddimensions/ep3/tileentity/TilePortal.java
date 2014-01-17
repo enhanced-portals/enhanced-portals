@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
@@ -66,8 +67,8 @@ public class TilePortal extends TilePortalPart
         {
             ((EntityPlayer) entity).closeScreen();
         }
-        
-        if (!entity.worldObj.isRemote)
+
+        if (!entity.worldObj.isRemote && EntityManager.isEntityFitForTravel(entity))
         {
             TilePortalController controller = getPortalController();
 
@@ -75,6 +76,11 @@ public class TilePortal extends TilePortalPart
             {
                 controller.onEntityEnterPortal(entity, this);
             }
+        }
+
+        if (entity != null)
+        {
+            EntityManager.setEntityPortalCooldown(entity);
         }
     }
 
@@ -84,17 +90,17 @@ public class TilePortal extends TilePortalPart
         super.usePacket(stream);
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
-    
+
     @Override
     public int getColourMultiplier()
     {
         TilePortalController controller = getPortalController();
-        
+
         if (controller != null)
         {
             return controller.activeTextureData.getPortalColour();
         }
-        
+
         return 0xFFFFFF;
     }
 }

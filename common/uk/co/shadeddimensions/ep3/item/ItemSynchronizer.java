@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.item.base.ItemPortalTool;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
@@ -17,15 +16,22 @@ import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 
-public class ItemSynchronizer extends ItemPortalTool
+public class ItemSynchronizer extends ItemEnhancedPortals
 {
     Icon texture;
 
     public ItemSynchronizer(int id, String name)
     {
-        super(id, true, name);
+        super(id, true);
+        setUnlocalizedName(name);
     }
 
+    @Override
+    public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6)
+    {
+        return true;
+    }
+    
     @Override
     public Icon getIconFromDamage(int par1)
     {
@@ -80,11 +86,8 @@ public class ItemSynchronizer extends ItemPortalTool
 
                     if (pairedIdentifier != null)
                     {
-                        pairedIdentifier.hasSeperateLists = thisIdentifier.hasSeperateLists;
-                        pairedIdentifier.notFoundRecieve = thisIdentifier.notFoundRecieve;
-                        pairedIdentifier.notFoundSend = thisIdentifier.notFoundSend;
-                        pairedIdentifier.recievingEntityTypes = thisIdentifier.copyRecievingEntityTypes();
-                        pairedIdentifier.sendingEntityTypes = thisIdentifier.copySendingEntityTypes();
+                        pairedIdentifier.defaultPermissions = thisIdentifier.defaultPermissions;
+                        pairedIdentifier.entityList = thisIdentifier.copySendingEntityTypes();
                         CommonProxy.sendUpdatePacketToAllAround(pairedIdentifier);
                     }
 

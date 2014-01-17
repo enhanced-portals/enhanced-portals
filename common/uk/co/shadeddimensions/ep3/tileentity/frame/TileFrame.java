@@ -33,7 +33,7 @@ public class TileFrame extends TilePortalFrame
                     return true;
                 }
             }
-            else if (ItemHelper.isWrench(stack))
+            else if (ItemHelper.isWrench(stack) && !player.isSneaking())
             {
                 if (player.isSneaking())
                 {

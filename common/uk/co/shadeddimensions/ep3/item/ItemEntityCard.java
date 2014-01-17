@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.item.base.ItemEnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 
 public class ItemEntityCard extends ItemEnhancedPortals

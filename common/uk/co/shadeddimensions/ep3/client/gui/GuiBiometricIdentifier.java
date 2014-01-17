@@ -1,151 +1,126 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
-import net.minecraft.client.gui.GuiButton;
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.element.ElementButton;
+import uk.co.shadeddimensions.library.gui.element.ElementButtonIcon;
+import uk.co.shadeddimensions.library.gui.element.ElementScrollBar;
+import uk.co.shadeddimensions.library.gui.element.ElementScrollPanelOverlay;
 
 public class GuiBiometricIdentifier extends GuiBase
 {
     TileBiometricIdentifier biometric;
-    GuiButton leftButton, rightButton, activateRecieveList;
-
-    //ElementEntityFilterList sendList, recieveList;
+    ElementScrollPanelOverlay sendList;
+    ElementButton finalButton;
+    long lastUpdateTime;
 
     public GuiBiometricIdentifier(TileBiometricIdentifier tile, EntityPlayer player)
     {
-        super(new ContainerBiometricIdentifier(tile, player));
-        xSize = 300;
-        ySize = 200;
+        super(new ContainerBiometricIdentifier(tile, player), new ResourceLocation("enhancedportals", "textures/gui/biometric.png"));
+        xSize = 256;
+        ySize = 230;
         biometric = tile;
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        if (button.id == 0)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("list", true);
-            payload.data.setBoolean("default", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
-        else if (button.id == 1)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("list", false);
-            payload.data.setBoolean("default", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
-        else if (button.id == 2)
-        {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("toggleSeperateLists", false);
-            ClientProxy.sendGuiPacket(payload);
-        }
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
-        //updateElements();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/biometric.png"));
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, 256, ySize);
-        mc.renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"));
-        drawTexturedModalRect(guiLeft + 150, guiTop, 0, 0, 150, ySize);
-
-        //drawElements();
-        //drawTabs();
+        drawInventory = false;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        fontRenderer.drawStringWithShadow(Localization.getGuiString("biometricIdentifier"), xSize / 2 - fontRenderer.getStringWidth(Localization.getGuiString("biometricIdentifier")) / 2, -13, 0xFFFFFF);
-        fontRenderer.drawString(Localization.getGuiString("sending"), 7, 6, 0x404040);
-        fontRenderer.drawString(Localization.getGuiString("recieving"), xSize - 7 - fontRenderer.getStringWidth(Localization.getGuiString("recieving")), 6, 0x404040);
-        fontRenderer.drawString(Localization.getGuiString("idCard"), 7, ySize - 36, 0x404040);
-        fontRenderer.drawString(Localization.getGuiString("idCard"), 293 - fontRenderer.getStringWidth(Localization.getGuiString("idCard")), ySize - 36, 0x404040);
-        fontRenderer.drawString(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive"), xSize / 2 - fontRenderer.getStringWidth(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive")) / 2, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
+        fontRenderer.drawString(Localization.getGuiString("biometricIdentifier"), xSize / 2 - fontRenderer.getStringWidth(Localization.getGuiString("biometricIdentifier")) / 2, 6, 0x404040);
+        fontRenderer.drawString(Localization.getGuiString("idCard"), 27, ySize - 20, 0x404040);
+        fontRenderer.drawString(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive"), xSize - fontRenderer.getStringWidth(biometric.isActive ? Localization.getGuiString("active") : Localization.getGuiString("inactive")) - 5, 6, biometric.isActive ? 0x00AA00 : 0xAA0000);
 
         super.drawGuiContainerForegroundLayer(par1, par2);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void initGui()
+    public void addElements()
     {
-        super.initGui();
-
-        leftButton = new GuiButton(0, guiLeft + 7, guiTop + 117, 60, 20, biometric.notFoundSend ? Localization.getGuiString("allow") : Localization.getGuiString("disallow"));
-        rightButton = new GuiButton(1, guiLeft + xSize - 67, guiTop + 117, 60, 20, biometric.notFoundRecieve ? Localization.getGuiString("allow") : Localization.getGuiString("disallow"));
-        activateRecieveList = new GuiButton(2, guiLeft + xSize - 67, guiTop + 138, 60, 20, biometric.hasSeperateLists ? Localization.getGuiString("deactivate") : Localization.getGuiString("activate"));
-        rightButton.enabled = biometric.hasSeperateLists;
-
-        buttonList.add(leftButton);
-        buttonList.add(rightButton);
-        buttonList.add(activateRecieveList);
-
-        /*sendList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric.png"), biometric, 0, 17, 140, 95, true);
-        recieveList = new ElementEntityFilterList(this, new ResourceLocation("enhancedportals", "textures/gui/biometric_2.png"), biometric, xSize - 142, 17, 140, 95, false);
+        sendList = new ElementScrollPanelOverlay(this, 3, 21, xSize - 16, 121, texture, 20).setSides(true, true, false, false);
         addElement(sendList);
-        addElement(recieveList);*/
+        addElement(new ElementScrollBar(this, sendList.getWidth() + 3, 21, 10, 122, sendList));
+
+        finalButton = new ElementButton(this, 7, 147, 75, "mainToggle", biometric.defaultPermissions ? EnumChatFormatting.GREEN + Localization.getGuiString("allow") : EnumChatFormatting.RED + Localization.getGuiString("disallow"), Localization.getGuiString("anythingNotOnList"));
+        addElement(finalButton);
+        initializeList();
+        lastUpdateTime = biometric.lastUpdateTime;
+    }
+    
+    void initializeList()
+    {
+        sendList.clear();
+        
+        int i = 0;
+        for (EntityData data : biometric.entityList)
+        {
+            ArrayList<String> entityList = new ArrayList<String>();
+            entityList.add(data.disallow ? EnumChatFormatting.RED + Localization.getGuiString("disallowing") : EnumChatFormatting.GREEN + Localization.getGuiString("allowing"));
+            entityList.add(Localization.getGuiString(data.shouldCheckClass() ? "anythingOfTheType" : "anythingCalled"));
+            entityList.add(EnumChatFormatting.GRAY + " " + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.EntityDisplayName));
+            
+            if (data.shouldCheckNameAndClass())
+            {
+                entityList.add(Localization.getGuiString("withTheTypeOf"));
+                entityList.add(EnumChatFormatting.GRAY + " " + EntityData.getClassDisplayName(data));
+            }
+            
+            ArrayList<String> modeList = new ArrayList<String>();
+            modeList.add(Localization.getGuiString(data.checkType == 0 ? "matchName" : data.checkType == 1 ? "matchType" : "matchTypeAndName"));
+            
+            sendList.addElement(new ElementButton(this, 2, i * 21, 200, "E" + i, (data.disallow ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.shouldCheckNameAndClass() ? data.EntityDisplayName + " (" + EntityData.getClassDisplayName(data) + ")" : data.EntityDisplayName), entityList));
+            sendList.addElement(new ElementButton(this, 203, i * 21, 15, "M" + i, data.checkType + "", modeList));
+            sendList.addElement(new ElementButtonIcon(this, 218, i * 21, "R" + i, "Remove", CommonProxy.itemWrench.getIconFromDamage(0)));            
+            i++;
+        }
     }
 
     @Override
     public void updateScreen()
     {
         super.updateScreen();
-
-        leftButton.displayString = biometric.notFoundSend ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
-        rightButton.displayString = biometric.notFoundRecieve ? Localization.getGuiString("allow") : Localization.getGuiString("disallow");
-        rightButton.enabled = biometric.hasSeperateLists;
-        activateRecieveList.displayString = biometric.hasSeperateLists ? Localization.getGuiString("deactivate") : Localization.getGuiString("activate");
+        
+        if (lastUpdateTime != biometric.lastUpdateTime)
+        {
+            initializeList();
+            lastUpdateTime = biometric.lastUpdateTime;
+        }
+        
+        finalButton.setText(biometric.defaultPermissions ? EnumChatFormatting.GREEN + Localization.getGuiString("allow") : EnumChatFormatting.RED + Localization.getGuiString("disallow"));
     }
 
-    /*@Override
-    public void onElementChanged(ElementBase element, Object data)
+    @Override
+    public void handleElementButtonClick(String buttonName, int mouseButton)
     {
-        if (element instanceof ElementDialDeviceScrollList)
+        GuiPayload p = new GuiPayload();
+        
+        if (buttonName.equals("mainToggle"))
         {
-            int[] obj = (int[]) data;
-            int list = obj[0], type = obj[1], entry = obj[2];
-
-            if (type == 0 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
-            {
-                // invert
-                GuiPayload p = new GuiPayload();
-                p.data.setBoolean("list", list == 0);
-                p.data.setInteger("invert", entry);
-                ClientProxy.sendGuiPacket(p);
-            }
-            else if (type == 1 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
-            {
-                // mode
-                GuiPayload p = new GuiPayload();
-                p.data.setBoolean("list", list == 0);
-                p.data.setInteger("type", entry);
-                ClientProxy.sendGuiPacket(p);
-            }
-            else if (type == 2 && entry >= 0 && entry < (list == 0 ? biometric.sendingEntityTypes : biometric.recievingEntityTypes).size())
-            {
-                // remove                
-                GuiPayload p = new GuiPayload();
-                p.data.setBoolean("list", list == 0);
-                p.data.setInteger("remove", entry);
-                ClientProxy.sendGuiPacket(p);
-            }
-
-            Minecraft.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+            p.data.setBoolean("default", false);
         }
-    }*/
+        else if (buttonName.startsWith("E"))
+        {
+            p.data.setInteger("invert", Integer.parseInt(buttonName.replace("E", "")));
+        }
+        else if (buttonName.startsWith("M"))
+        {
+            p.data.setInteger("type", Integer.parseInt(buttonName.replace("M", "")));
+        }
+        else if (buttonName.startsWith("R"))
+        {
+            p.data.setInteger("remove", Integer.parseInt(buttonName.replace("R", "")));
+        }
+        
+        ClientProxy.sendGuiPacket(p);
+    }
 }

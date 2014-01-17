@@ -34,7 +34,7 @@ public class TileModuleManipulator extends TilePortalFrame
 
         if (item != null)
         {
-            if (ItemHelper.isWrench(item))
+            if (ItemHelper.isWrench(item) && !player.isSneaking())
             {
                 CommonProxy.openGui(player, GUIs.ModuleManipulator, this);
                 return true;

@@ -12,7 +12,6 @@ public class AddonManager
     public AddonManager()
     {
         addons = new ArrayList<IInitializer>();
-        addons.add(new AddonThermalExpansion());
     }
 
     public void init()

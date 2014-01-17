@@ -4,8 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,7 +73,7 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
             }
-            else
+            else if (!player.isSneaking())
             {
                 CommonProxy.openGui(player, GUIs.DiallingDevice, this);
             }
@@ -96,6 +94,18 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
         }
         
         controller.dialRequest(id, null, null);
+    }
+    
+    void dialStored(int i) throws Exception
+    {
+        TilePortalController controller = getPortalController();
+        
+        if (controller == null)
+        {
+            throw new Exception("Can't find portal controller");
+        }
+        
+        controller.dialRequest(glyphList.get(i).identifier, glyphList.get(i).texture, null);
     }
     
     void terminate() throws Exception
@@ -271,7 +281,7 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
     @Override
     public String[] getMethodNames()
     {
-        return new String[] { "dial", "terminate", "dialStored", "getStoredName", "getStoredGlyph", "getStoredList" };
+        return new String[] { "dial", "terminate", "dialStored", "getStoredName", "getStoredGlyph", "getStoredCount" };
     }
 
     @Override
@@ -340,16 +350,7 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
         else if (method == 2) // dialStored
         {
             int num = getSelectedEntry(arguments);
-            GlyphElement entry = glyphList.get(num);
-            
-            if (entry != null)
-            {
-                dial(entry.identifier);
-            }
-            else
-            {
-                throw new Exception("Entry not found");
-            }
+            dialStored(num);
         }
         else if (method == 3) // getStoredName
         {
@@ -379,16 +380,9 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
                 throw new Exception("Entry not found");
             }
         }
-        else if (method == 5) // getStoredList [ [name, gid], [name, gid] ]
+        else if (method == 5) // getStoredCount
         {
-            Map<String, String> map = new HashMap<String, String>();
-            
-            for (GlyphElement g : glyphList)
-            {
-                map.put(g.name, g.identifier.getGlyphString());
-            }
-            
-            return new Object[] { map };
+            return new Object[] { glyphList.size() };
         }
         
         return null;

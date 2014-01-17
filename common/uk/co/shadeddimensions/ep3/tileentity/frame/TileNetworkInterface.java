@@ -22,7 +22,7 @@ public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
 
         if (item != null)
         {
-            if (ItemHelper.isWrench(item))
+            if (ItemHelper.isWrench(item) && !player.isSneaking())
             {
                 TilePortalController controller = getPortalController();
 

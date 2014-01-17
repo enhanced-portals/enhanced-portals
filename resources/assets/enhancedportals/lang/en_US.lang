@@ -126,8 +126,6 @@ ep3.gui.allow=Allow
 ep3.gui.allowing=Allowing
 ep3.gui.disallow=Disallow
 ep3.gui.disallowing=Disallowing
-ep3.gui.activate=Activate
-ep3.gui.deactivate=Deactivate
 ep3.gui.idCard=ID Card
 ep3.gui.active=Active
 ep3.gui.inactive=Inactive
@@ -137,7 +135,7 @@ ep3.gui.anythingOfTheType=Anything of the type:
 ep3.gui.matchType=Match type
 ep3.gui.withTheTypeOf=With the type of:
 ep3.gui.matchTypeAndName=Match name and type
-ep3.gui.listNotEnabled=This list is not enabled
+ep3.gui.anythingNotOnList=Anything that's not on the list
 
 # GUI Redstone
 ep3.gui.redstoneInterface=Redstone Interface
@@ -207,6 +205,8 @@ ep3.error.receivingPortalNotFound=Failed to locate the receiving portal
 ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
 ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
 ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
+ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
+ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...?)
 
 # Particle Types
 ep3.gui.particleType.0.name=Random

@@ -112,7 +112,7 @@ public class TilePortalController extends TilePortalFrame implements IPeripheral
                     }
                 }
             }
-            else if (ItemHelper.isWrench(item) && isFullyInitialized())
+            else if (ItemHelper.isWrench(item) && isFullyInitialized() && !player.isSneaking())
             {
                 CommonProxy.openGui(player, GUIs.PortalController, this);
             }
@@ -695,7 +695,7 @@ public class TilePortalController extends TilePortalFrame implements IPeripheral
             TileBiometricIdentifier bio = blockManager.getBiometricIdentifier(worldObj);
             TileModuleManipulator module = blockManager.getModuleManipulator(worldObj);
 
-            if (bio != null && !bio.canEntityBeSent(entity))
+            if (bio != null && !bio.canEntityTravel(entity))
             {
                 EntityManager.setEntityPortalCooldown(entity);
                 return;

@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.item;
+package uk.co.shadeddimensions.ep3.item.block;
 
 import java.util.List;
 
