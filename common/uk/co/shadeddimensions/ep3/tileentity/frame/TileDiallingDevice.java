@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -269,7 +271,7 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
     @Override
     public String[] getMethodNames()
     {
-        return new String[] { "dial", "terminate", "dialStored" };
+        return new String[] { "dial", "terminate", "dialStored", "getStoredName", "getStoredGlyph", "getStoredList" };
     }
 
     @Override
@@ -337,10 +339,88 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
         }
         else if (method == 2) // dialStored
         {
-            // TODO
+            int num = getSelectedEntry(arguments);
+            GlyphElement entry = glyphList.get(num);
+            
+            if (entry != null)
+            {
+                dial(entry.identifier);
+            }
+            else
+            {
+                throw new Exception("Entry not found");
+            }
+        }
+        else if (method == 3) // getStoredName
+        {
+            int num = getSelectedEntry(arguments);
+            GlyphElement entry = glyphList.get(num);
+            
+            if (entry != null)
+            {
+                return new Object[] { entry.name };
+            }
+            else
+            {
+                throw new Exception("Entry not found");
+            }
+        }
+        else if (method == 4) // getStoredGlyph
+        {
+            int num = getSelectedEntry(arguments);
+            GlyphElement entry = glyphList.get(num);
+            
+            if (entry != null)
+            {
+                return new Object[] { entry.identifier.getGlyphString() };
+            }
+            else
+            {
+                throw new Exception("Entry not found");
+            }
+        }
+        else if (method == 5) // getStoredList [ [name, gid], [name, gid] ]
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            
+            for (GlyphElement g : glyphList)
+            {
+                map.put(g.name, g.identifier.getGlyphString());
+            }
+            
+            return new Object[] { map };
         }
         
         return null;
+    }
+    
+    int getSelectedEntry(Object[] arguments) throws Exception
+    {
+        try
+        {
+            if (arguments.length == 1)
+            {
+                if (arguments[0].toString().contains("."))
+                {
+                    arguments[0] = arguments[0].toString().substring(0, arguments[0].toString().indexOf("."));
+                }
+                
+                int i = Integer.parseInt(arguments[0].toString());
+                
+                if (i < 0 || i >= glyphList.size())
+                {
+                    throw new Exception("There is no entry in location " + i);
+                }
+                
+                return i;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            throw new Exception(arguments[0].toString() + " is not an integer.");
+        }
+        
+        throw new Exception("Invalid number of arguments.");
     }
 
     @Override

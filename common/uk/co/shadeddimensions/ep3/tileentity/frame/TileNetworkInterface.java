@@ -58,6 +58,30 @@ public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
         return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[3] : BlockFrame.overlayIcons[0];
     }
 
+    void dial() throws Exception
+    {
+        TilePortalController controller = getPortalController();
+
+        if (controller == null)
+        {
+            throw new Exception("Can't find portal controller");
+        }
+
+        controller.createPortal();
+    }
+
+    void terminate() throws Exception
+    {
+        TilePortalController controller = getPortalController();
+
+        if (controller == null)
+        {
+            throw new Exception("Can't find portal controller");
+        }
+
+        controller.removePortal();
+    }
+
     /* IPeripheral */
     @Override
     public String getType()
@@ -68,12 +92,21 @@ public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
     @Override
     public String[] getMethodNames()
     {
-        return new String[] { };
+        return new String[] { "dial", "terminate" };
     }
 
     @Override
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
+        if (method == 0) // dial
+        {
+            dial();
+        }
+        else if (method == 1) // terminate
+        {
+            terminate();
+        }
+
         return null;
     }
 
@@ -86,12 +119,12 @@ public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
     @Override
     public void attach(IComputerAccess computer)
     {
-        
+
     }
 
     @Override
     public void detach(IComputerAccess computer)
     {
-        
+
     }
 }

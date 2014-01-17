@@ -487,7 +487,7 @@ public class TilePortalController extends TilePortalFrame implements IPeripheral
         GlyphIdentifier uID = getUniqueIdentifier();
         TileStabilizerMain dbs = blockManager.getDimensionalBridgeStabilizerTile();
 
-        if (dbs != null)
+        if (dbs != null && isPortalActive)
         {
             try
             {
