@@ -6,7 +6,6 @@ import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TileFrame extends TilePortalFrame

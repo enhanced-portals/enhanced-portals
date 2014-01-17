@@ -206,7 +206,7 @@ ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
 ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
 ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
 ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
-ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...?)
+ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
 
 # Particle Types
 ep3.gui.particleType.0.name=Random

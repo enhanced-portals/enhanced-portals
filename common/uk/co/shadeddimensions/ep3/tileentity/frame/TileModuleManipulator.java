@@ -14,11 +14,9 @@ import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileModuleManipulator extends TilePortalFrame
+public class TileModuleManipulator extends TilePortalFrameSpecial
 {
     ItemStack[] inventory;
 
@@ -107,7 +105,7 @@ public class TileModuleManipulator extends TilePortalFrame
             return super.getBlockTexture(side, pass);
         }
 
-        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[6] : BlockFrame.overlayIcons[0];
+        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[6] : BlockFrame.overlayIcons[0];
     }
 
     public IPortalModule[] getInstalledUpgrades()

@@ -25,13 +25,13 @@ public class ItemGoggles extends ItemArmor
     {
         return "enhancedportals:textures/models/armor/goggles.png";
     }
-
+    
     @Override
     public Icon getIcon(ItemStack stack, int pass)
     {
         return icon;
     }
-
+    
     @Override
     public boolean isBookEnchantable(ItemStack itemstack1, ItemStack itemstack2)
     {

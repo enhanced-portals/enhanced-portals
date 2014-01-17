@@ -506,7 +506,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        System.out.println("!!!!!! Loading...");
         powerState = tag.getInteger("powerState");
         rows = tag.getInteger("rows");
         energyStorage = new EnergyStorage(rows * ENERGY_STORAGE_PER_ROW);
@@ -524,7 +523,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
 
                 activeConnections.put(A, B);
                 activeConnectionsReverse.put(B, A);
-                System.out.println("Loaded connection: " + A + " <-> " + B);
             }
         }
 
@@ -789,7 +787,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                     }
                     catch (PortalDialException e)
                     {
-                        System.out.println(e.getMessage());
+                        CommonProxy.logger.warning(e.getMessage());
                     }
                 }
 
@@ -841,7 +839,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-System.out.println("!!!!!! Saving...");
         energyStorage.writeToNBT(tag);
         tag.setInteger("powerState", powerState);
         tag.setInteger("rows", rows);
@@ -857,7 +854,6 @@ System.out.println("!!!!!! Saving...");
                 t.setString("Key", entry.getKey());
                 t.setString("Value", entry.getValue());
                 c.appendTag(t);
-                System.out.println("Saved connection: " + entry.getKey() + " <-> " + entry.getValue());
             }
 
             tag.setTag("activeConnections", c);

@@ -1,19 +1,17 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
-import dan200.computer.api.IPeripheral;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 
-public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
+public class TileNetworkInterface extends TilePortalFrameSpecial implements IPeripheral
 {
     @Override
     public boolean activate(EntityPlayer player)
@@ -55,7 +53,7 @@ public class TileNetworkInterface extends TilePortalFrame implements IPeripheral
             return super.getBlockTexture(side, pass);
         }
 
-        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[3] : BlockFrame.overlayIcons[0];
+        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[3] : BlockFrame.overlayIcons[0];
     }
 
     void dial() throws Exception

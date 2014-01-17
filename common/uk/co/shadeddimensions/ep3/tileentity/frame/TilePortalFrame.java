@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.tileentity;
+package uk.co.shadeddimensions.ep3.tileentity.frame;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -9,11 +9,13 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import cofh.api.tileentity.ISidedBlockTexture;
 
 public class TilePortalFrame extends TilePortalPart implements ISidedBlockTexture
 {
+    protected boolean wearingGoggles = false;
+    
     @Override
     public int getColourMultiplier()
     {

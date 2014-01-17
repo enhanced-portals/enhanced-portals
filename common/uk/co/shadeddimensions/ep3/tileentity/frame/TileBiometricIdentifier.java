@@ -14,13 +14,12 @@ import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileBiometricIdentifier extends TilePortalFrame
+public class TileBiometricIdentifier extends TilePortalFrameSpecial
 {
     public long lastUpdateTime;
     public ArrayList<EntityData> entityList;
@@ -163,7 +162,7 @@ public class TileBiometricIdentifier extends TilePortalFrame
             return super.getBlockTexture(side, pass);
         }
 
-        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[5] : BlockFrame.overlayIcons[0];
+        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[5] : BlockFrame.overlayIcons[0];
     }
 
     @Override

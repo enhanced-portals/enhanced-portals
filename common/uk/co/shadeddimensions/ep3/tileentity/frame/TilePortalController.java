@@ -26,7 +26,6 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.BlockManager;
@@ -43,7 +42,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TilePortalController extends TilePortalFrame implements IPeripheral
+public class TilePortalController extends TilePortalFrameSpecial implements IPeripheral
 {
     public PortalTextureManager activeTextureData;
     PortalTextureManager inactiveTextureData;
@@ -366,7 +365,7 @@ public class TilePortalController extends TilePortalFrame implements IPeripheral
             return super.getBlockTexture(side, pass);
         }
 
-        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[1] : BlockFrame.overlayIcons[0];
+        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[1] : BlockFrame.overlayIcons[0];
     }
 
     @Override

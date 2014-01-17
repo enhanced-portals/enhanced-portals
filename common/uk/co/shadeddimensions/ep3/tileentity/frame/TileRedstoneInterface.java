@@ -15,13 +15,11 @@ import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalFrame;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileRedstoneInterface extends TilePortalFrame
+public class TileRedstoneInterface extends TilePortalFrameSpecial
 {
     public boolean isOutput;
     public byte state, previousRedstoneState;
@@ -92,7 +90,7 @@ public class TileRedstoneInterface extends TilePortalFrame
             return super.getBlockTexture(side, pass);
         }
 
-        return CommonProxy.forceShowFrameOverlays || GeneralUtils.isWearingGoggles() ? BlockFrame.overlayIcons[2] : BlockFrame.overlayIcons[0];
+        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[2] : BlockFrame.overlayIcons[0];
     }
 
     @Override
