@@ -148,8 +148,7 @@ public class EntityData
     {
         return checkType == 2;
     }
-    
-    
+
     public int isEntityAcceptable(Entity entity)
     {
         if (shouldCheckName())
@@ -173,7 +172,7 @@ public class EntityData
                 return disallow ? 0 : 1;
             }
         }
-        
+
         return -1;
     }
 }

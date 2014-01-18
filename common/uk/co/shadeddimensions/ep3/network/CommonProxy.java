@@ -216,7 +216,7 @@ public class CommonProxy
 
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
         forceShowFrameOverlays = configuration.get("Misc", "ForceShowFrameOverlays", false);
-        
+
         customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);
         disablePortalSounds = configuration.get("Overrides", "DisablePortalSounds", false);
         disableParticles = configuration.get("Overrides", "DisableParticles", false);
@@ -249,14 +249,14 @@ public class CommonProxy
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.PORTAL_CONTROLLER), new ItemStack(blockFrame, 1, 0), Item.diamond));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(blockFrame, 1, 0), 'R', Item.redstone }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new ItemStack(blockFrame, 1, 0), Item.enderPearl));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.DIALLING_DEVICE), new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), Item.diamond ));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.DIALLING_DEVICE), new ItemStack(blockFrame, 1, BlockFrame.NETWORK_INTERFACE), Item.diamond));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(blockFrame, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockFrame, 1, BlockFrame.MODULE_MANIPULATOR), new ItemStack(blockFrame, 1, 0), Item.diamond, Item.emerald, new ItemStack(itemMisc, 1, 0)));
 
         // In-Place Upgrades
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 0), new Object[] { " R ", "RFR", " R ", 'F', new ItemStack(itemMisc, 1, 1), 'R', Item.redstone }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new ItemStack(itemMisc, 1, 1), Item.enderPearl ));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 1), new ItemStack(itemMisc, 1, 1), Item.enderPearl));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 2), new ItemStack(itemInPlaceUpgrade, 1, 1), Item.diamond));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(itemMisc, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemInPlaceUpgrade, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(itemMisc, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));

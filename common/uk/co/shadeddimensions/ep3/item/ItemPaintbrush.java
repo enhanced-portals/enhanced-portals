@@ -26,7 +26,7 @@ public class ItemPaintbrush extends ItemEnhancedPortals
     {
         texture = register.registerIcon("enhancedportals:paintbrush");
     }
-    
+
     @Override
     public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6)
     {

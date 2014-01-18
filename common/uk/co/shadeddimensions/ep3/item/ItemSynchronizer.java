@@ -31,7 +31,7 @@ public class ItemSynchronizer extends ItemEnhancedPortals
     {
         return true;
     }
-    
+
     @Override
     public Icon getIconFromDamage(int par1)
     {

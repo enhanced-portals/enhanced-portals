@@ -45,17 +45,17 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
     ArrayList<ChunkCoordinates> blockList;
-    
+
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
-    
+
     public int powerState;
     ItemStack inventory;
     int rows, tickTimer;
     EnergyStorage energyStorage;
     public int instability = 0;
     Random rand = new Random();
-    
+
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
 
@@ -187,7 +187,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             }
         }
     }
-    
+
     public void deconstruct()
     {
         breakBlock(0, 0);
@@ -457,7 +457,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ);
                         }
                         else
-                            // Teleport somewhere fairly nearby -- in the air
+                        // Teleport somewhere fairly nearby -- in the air
                         {
                             coord.posY = controller.worldObj.getTopSolidOrLiquidBlock(coord.posX, coord.posZ) + rand.nextInt(10);
                         }

@@ -19,7 +19,7 @@ public class ItemWrench extends ItemEnhancedPortals implements IToolWrench
         setUnlocalizedName(name);
         setMaxStackSize(1);
     }
-    
+
     @Override
     public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6)
     {
@@ -47,16 +47,16 @@ public class ItemWrench extends ItemEnhancedPortals implements IToolWrench
     @Override
     public void wrenchUsed(EntityPlayer player, int x, int y, int z)
     {
-        
+
     }
-    
+
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote && player.isSneaking())
         {
             Block block = Block.blocksList[world.getBlockId(x, y, z)];
-            
+
             if (block instanceof IDismantleable)
             {
                 if (((IDismantleable) block).canDismantle(player, world, x, y, z))
@@ -66,7 +66,7 @@ public class ItemWrench extends ItemEnhancedPortals implements IToolWrench
                 }
             }
         }
-        
+
         return false;
     }
 }

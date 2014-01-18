@@ -69,8 +69,6 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
         return null;
     }
 
-    
-    
     public TilePortalController getPortalController()
     {
         if (portalController != null)
@@ -87,7 +85,7 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
 
         return null;
     }
-    
+
     /* IInventory */
     @Override
     public int getSizeInventory()

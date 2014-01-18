@@ -86,12 +86,12 @@ public class GuiPortalController extends GuiBase
         portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockPortal, controller.blockManager.getPortalCount())));
         portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getFrameCount(), 0)));
         portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 1)));
-        
+
         if (controller.blockManager.getRedstoneInterfaceCount() > 0)
         {
             portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getRedstoneInterfaceCount(), BlockFrame.REDSTONE_INTERFACE)));
         }
-        
+
         if (controller.blockManager.getHasNetworkInterface())
         {
             portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.NETWORK_INTERFACE)));

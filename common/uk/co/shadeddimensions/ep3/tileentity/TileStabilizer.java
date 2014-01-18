@@ -22,7 +22,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
 {
     ChunkCoordinates mainBlock;
     int rows;
-    
+
     @SideOnly(Side.CLIENT)
     public boolean isFormed;
 
@@ -228,13 +228,13 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         super.readFromNBT(tag);
         mainBlock = GeneralUtils.loadChunkCoord(tag, "mainBlock");
     }
-    
+
     @Override
     public void usePacket(DataInputStream stream) throws IOException
     {
         isFormed = stream.readBoolean();
     }
-    
+
     @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {

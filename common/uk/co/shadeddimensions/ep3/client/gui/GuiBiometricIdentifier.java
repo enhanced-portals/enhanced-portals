@@ -56,11 +56,11 @@ public class GuiBiometricIdentifier extends GuiBase
         initializeList();
         lastUpdateTime = biometric.lastUpdateTime;
     }
-    
+
     void initializeList()
     {
         sendList.clear();
-        
+
         int i = 0;
         for (EntityData data : biometric.entityList)
         {
@@ -68,19 +68,19 @@ public class GuiBiometricIdentifier extends GuiBase
             entityList.add(data.disallow ? EnumChatFormatting.RED + Localization.getGuiString("disallowing") : EnumChatFormatting.GREEN + Localization.getGuiString("allowing"));
             entityList.add(Localization.getGuiString(data.shouldCheckClass() ? "anythingOfTheType" : "anythingCalled"));
             entityList.add(EnumChatFormatting.GRAY + " " + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.EntityDisplayName));
-            
+
             if (data.shouldCheckNameAndClass())
             {
                 entityList.add(Localization.getGuiString("withTheTypeOf"));
                 entityList.add(EnumChatFormatting.GRAY + " " + EntityData.getClassDisplayName(data));
             }
-            
+
             ArrayList<String> modeList = new ArrayList<String>();
             modeList.add(Localization.getGuiString(data.checkType == 0 ? "matchName" : data.checkType == 1 ? "matchType" : "matchTypeAndName"));
-            
+
             sendList.addElement(new ElementButton(this, 2, i * 21, 200, "E" + i, (data.disallow ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.shouldCheckNameAndClass() ? data.EntityDisplayName + " (" + EntityData.getClassDisplayName(data) + ")" : data.EntityDisplayName), entityList));
             sendList.addElement(new ElementButton(this, 203, i * 21, 15, "M" + i, data.checkType + "", modeList));
-            sendList.addElement(new ElementButtonIcon(this, 218, i * 21, "R" + i, "Remove", CommonProxy.itemWrench.getIconFromDamage(0)));            
+            sendList.addElement(new ElementButtonIcon(this, 218, i * 21, "R" + i, "Remove", CommonProxy.itemWrench.getIconFromDamage(0)));
             i++;
         }
     }
@@ -89,13 +89,13 @@ public class GuiBiometricIdentifier extends GuiBase
     public void updateScreen()
     {
         super.updateScreen();
-        
+
         if (lastUpdateTime != biometric.lastUpdateTime)
         {
             initializeList();
             lastUpdateTime = biometric.lastUpdateTime;
         }
-        
+
         finalButton.setText(biometric.defaultPermissions ? EnumChatFormatting.GREEN + Localization.getGuiString("allow") : EnumChatFormatting.RED + Localization.getGuiString("disallow"));
     }
 
@@ -103,7 +103,7 @@ public class GuiBiometricIdentifier extends GuiBase
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {
         GuiPayload p = new GuiPayload();
-        
+
         if (buttonName.equals("mainToggle"))
         {
             p.data.setBoolean("default", false);
@@ -120,7 +120,7 @@ public class GuiBiometricIdentifier extends GuiBase
         {
             p.data.setInteger("remove", Integer.parseInt(buttonName.replace("R", "")));
         }
-        
+
         ClientProxy.sendGuiPacket(p);
     }
 }

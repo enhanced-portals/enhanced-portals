@@ -481,7 +481,7 @@ public class GuiTexture extends GuiBase
         {
             return stack == null || stack.getItem() instanceof ItemBlock && Block.blocksList[((ItemBlock) stack.getItem()).getBlockID()].isOpaqueCube();
         }
-        
+
         return stack == null || stack.getItem() instanceof ItemBlock || FluidContainerRegistry.isFilledContainer(stack);
     }
 

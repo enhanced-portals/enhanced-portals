@@ -29,7 +29,7 @@ public class GeneralUtils
         {
             return false;
         }
-        
+
         ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
         return stack != null && stack.itemID == CommonProxy.itemGoggles.itemID;
     }

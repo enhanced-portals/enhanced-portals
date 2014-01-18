@@ -122,17 +122,17 @@ public class BlockEnhancedPortals extends BlockContainer
 
         tile.onNeighborBlockChange(blockID);
     }
-    
+
     @Override
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
     {
         TileEnhancedPortals tile = (TileEnhancedPortals) blockAccess.getBlockTileEntity(x, y, z);
-        
+
         if (tile != null)
         {
             return tile.getColourMultiplier();
         }
-        
+
         return 0xFFFFFF;
     }
 }

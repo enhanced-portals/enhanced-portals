@@ -123,16 +123,16 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
     {
         ItemStack dropBlock = new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z));
-        
+
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (tile instanceof TilePortalFrame)
         {
             ((TilePortalFrame) tile).blockDismantled();
         }
-        
+
         world.setBlockToAir(x, y, z);
-        
+
         if (dropBlock != null && !returnBlock)
         {
             float f = 0.3F;
@@ -143,7 +143,7 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
             item.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(item);
         }
-        
+
         return dropBlock;
     }
 

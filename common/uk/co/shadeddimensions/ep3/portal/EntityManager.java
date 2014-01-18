@@ -35,25 +35,25 @@ public class EntityManager
         boolean horizontal = controller.portalType == 3;
 
         forloop:
-            for (ChunkCoordinates c : controller.blockManager.getPortals())
+        for (ChunkCoordinates c : controller.blockManager.getPortals())
+        {
+            if (!horizontal)
             {
-                if (!horizontal)
+                for (int i = 0; i < entityHeight; i++)
                 {
-                    for (int i = 0; i < entityHeight; i++)
+                    if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
                     {
-                        if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
-                        {
-                            continue forloop;
-                        }
+                        continue forloop;
                     }
                 }
-                else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
-                {
-                    c.posY--;
-                }
-
-                return c;
             }
+            else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
+            {
+                c.posY--;
+            }
+
+            return c;
+        }
 
         return null;
     }
@@ -178,7 +178,7 @@ public class EntityManager
 
         if (nether)
         {
-            transferEntityToDimension(par1Entity, (int) spawn.posX, (int) spawn.posY, (int) spawn.posZ, 0f, (WorldServer) par1Entity.worldObj, DimensionManager.getWorld(-1), -1, -1, false);
+            transferEntityToDimension(par1Entity, spawn.posX, spawn.posY, spawn.posZ, 0f, (WorldServer) par1Entity.worldObj, DimensionManager.getWorld(-1), -1, -1, false);
         }
         else
         {

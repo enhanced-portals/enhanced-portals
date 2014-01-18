@@ -6,7 +6,8 @@
 	<target name="clean">
 		<delete dir="${dir.mcp}\src\minecraft\uk\" />
 		<delete dir="${dir.mcp}\src\minecraft\cofh\" />
-		<delete dir="${dir.mcp}\src\minecraft\ep3\" /> <!-- Remove when no longer bundling CoFHLib -->
+		<delete dir="${dir.mcp}\src\minecraft\dan200\" />
+		<delete dir="${dir.mcp}\src\minecraft\buildcraft\" />
 		<delete dir="${dir.mcp}\reobf\" />
 		<delete file="${dir.mcp}\src\minecraft\mcmod.info" />
 	</target>
@@ -21,10 +22,7 @@
 		<copy todir="${dir.mcp}\src\minecraft\">
 			<fileset dir="${dir.source}" />
 			<fileset dir="${dir.resources}" includes="mcmod.info" />
-			<fileset dir="${dir.cofh}">
-				<exclude name="**/*.txt" />
-				<exclude name="**/assets*" />
-			</fileset>
+			<fileset dir="${dir.library}\common\" />
 		</copy>
 		
 		<replace dir="${dir.mcp}\src\minecraft\" token="@VERSION@" value="${version.main}" />
@@ -59,6 +57,7 @@
 		<jar destfile="${dir.release}\${version.mc}\EnhancedPortals_${version.main}.jar">
 			<fileset dir="${dir.mcp}\reobf\minecraft\" />
 			<fileset dir="${dir.resources}" excludes="mcmod.info" />
+			<fileset dir="${dir.library}\resources\" />
 			<fileset dir="${dir.mcp}\src\minecraft\" includes="mcmod.info" />
 		</jar>
 		
