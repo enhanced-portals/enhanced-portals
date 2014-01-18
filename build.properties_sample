@@ -4,6 +4,6 @@ dir.mcp=${base}forge/mcp
 dir.release=${base}release
 dir.source=${base}source/enhanced-portals/common
 dir.resources=${base}source/enhanced-portals/resources
-dir.cofh=${base}source/CoFHLib
+dir.library=${base}source/enhanced-portals/library
 version.mc=1.6.4
 version.main=1.0.0

@@ -201,7 +201,6 @@ public class CommonProxy
         configuration.addBlockEntry("Frame");
         configuration.addBlockEntry("DimensionalBridgeStabilizer");
         configuration.addBlockEntry("Decoration");
-        configuration.addBlockEntry("CraftingBlocks");
 
         configuration.addItemEntry("Wrench");
         configuration.addItemEntry("Glasses");
@@ -217,7 +216,7 @@ public class CommonProxy
         useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
         forceShowFrameOverlays = configuration.get("Misc", "ForceShowFrameOverlays", false);
 
-        customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);
+        //customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", false);
         disablePortalSounds = configuration.get("Overrides", "DisablePortalSounds", false);
         disableParticles = configuration.get("Overrides", "DisableParticles", false);
 
@@ -226,8 +225,8 @@ public class CommonProxy
 
         redstoneFluxPowerMultiplier = configuration.get("Power", "PowerMultiplier", 1);
 
-        disableVanillaRecipes = configuration.get("Recipes", "DisableVanillaRecipes", false);
-        disableTERecipes = configuration.get("Recipes", "DisableTERecipes", false);
+        //disableVanillaRecipes = configuration.get("Recipes", "DisableVanillaRecipes", false);
+        //disableTERecipes = configuration.get("Recipes", "DisableTERecipes", false);
 
         if (redstoneFluxPowerMultiplier < 0)
         {
@@ -239,10 +238,10 @@ public class CommonProxy
 
     public void setupCrafting()
     {
-        if (disableVanillaRecipes)
-        {
-            return;
-        }
+        //if (disableVanillaRecipes)
+        //{
+            //return;
+        //}
 
         // Frames
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFrame, 4, 0), new Object[] { "SIS", "IQI", "SIS", 'S', Block.stone, 'Q', Block.blockNetherQuartz, 'I', Item.ingotIron }));

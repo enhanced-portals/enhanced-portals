@@ -26,7 +26,7 @@
 		</copy>
 		
 		<replace dir="${dir.mcp}\src\minecraft\" token="@VERSION@" value="${version.main}" />
-		<replace dir="${dir.mcp}\src\minecraft\" token="@BUILD_NUMBER@" value="${build_number}" />		
+		<replace dir="${dir.mcp}\src\minecraft\" token="@BUILD_NUMBER@" value="${build_number}" />
 		<replace dir="${dir.mcp}\src\minecraft\uk\co\shadeddimensions\ep3\" token="@VERSION@" value="${version.main}" />
 	</target>
 	
@@ -52,7 +52,6 @@
 		<mkdir dir="${dir.release}\${version.mc}" />
 		<delete dir="${dir.mcp}\reobf\minecraft\net\" />
 		<delete dir="${dir.mcp}\reobf\minecraft\cpw\" />
-		<delete dir="${dir.mcp}\reobf\minecraft\cofh\" />
 		
 		<jar destfile="${dir.release}\${version.mc}\EnhancedPortals_${version.main}.jar">
 			<fileset dir="${dir.mcp}\reobf\minecraft\" />
