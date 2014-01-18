@@ -1,5 +1,6 @@
 package uk.co.shadeddimensions.ep3.tileentity.frame;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
@@ -346,6 +347,8 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
     @Override
     public void updateEntity()
     {
+        super.updateEntity();
+        
         if (isOutput)
         {
             if (timeUntilOff > 1)
@@ -361,7 +364,7 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
     }
 
     @Override
-    public void usePacket(java.io.DataInputStream stream) throws IOException
+    public void usePacket(DataInputStream stream) throws IOException
     {
         super.usePacket(stream);
         isOutput = stream.readBoolean();

@@ -184,6 +184,10 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
             {
                 blockManager.setModuleManipulator(c);
             }
+            else if (tile instanceof TileBiometricIdentifier)
+            {
+                blockManager.setBiometricIdentifier(c);
+            }
 
             ((TilePortalPart) tile).portalController = getChunkCoordinates();
             CommonProxy.sendUpdatePacketToAllAround((TileEnhancedPortals) tile);

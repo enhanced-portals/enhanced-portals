@@ -9,11 +9,12 @@ import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import cofh.api.tileentity.ISidedBlockTexture;
 
 public class TilePortalFrame extends TilePortalPart implements ISidedBlockTexture
 {
-    protected boolean wearingGoggles = false;
+    protected boolean wearingGoggles = GeneralUtils.isWearingGoggles();
 
     @Override
     public int getColourMultiplier()
