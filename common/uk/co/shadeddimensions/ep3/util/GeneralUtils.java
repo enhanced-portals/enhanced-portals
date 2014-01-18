@@ -25,6 +25,11 @@ public class GeneralUtils
 
     public static boolean isWearingGoggles()
     {
+        if (Minecraft.getMinecraft().thePlayer == null)
+        {
+            return false;
+        }
+        
         ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
         return stack != null && stack.itemID == CommonProxy.itemGoggles.itemID;
     }

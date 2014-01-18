@@ -12,6 +12,7 @@ public class ItemPaintbrush extends ItemEnhancedPortals
     {
         super(id, true);
         setUnlocalizedName(name);
+        setMaxStackSize(1);
     }
 
     @Override

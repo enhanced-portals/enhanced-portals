@@ -17,6 +17,7 @@ public class ItemWrench extends ItemEnhancedPortals implements IToolWrench
     {
         super(id, true);
         setUnlocalizedName(name);
+        setMaxStackSize(1);
     }
     
     @Override

@@ -65,12 +65,9 @@ public class BlockPortal extends BlockEnhancedPortals
         {
             ItemStack stack = controller.getStackInSlot(1);
 
-            if (controller.activeTextureData.hasCustomPortalTexture())
+            if (controller.activeTextureData.hasCustomPortalTexture() && ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
             {
-                if (ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
-                {
-                    return ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
-                }
+                return ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
             }
             else if (stack != null)
             {

@@ -15,7 +15,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
@@ -183,24 +182,6 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     }
 
     @Override
-    public boolean isBlockNormalCube(World world, int x, int y, int z)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side)
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
-    }
-
-    @Override
     public void registerIcons(IconRegister register)
     {
         overlayIcons = new Icon[FRAME_TYPES];
@@ -213,17 +194,5 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
         }
 
         connectedTextures.registerIcons(register);
-    }
-
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int par2, int par3, int par4, int par5)
-    {
-        return blockAccess.getBlockId(par2, par3, par4) == blockID ? false : super.shouldSideBeRendered(blockAccess, par2, par3, par4, par5);
     }
 }
