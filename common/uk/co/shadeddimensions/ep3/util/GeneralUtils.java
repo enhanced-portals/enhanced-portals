@@ -15,6 +15,8 @@ import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import cofh.api.energy.IEnergyContainerItem;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class GeneralUtils
 {
@@ -25,13 +27,18 @@ public class GeneralUtils
 
     public static boolean isWearingGoggles()
     {
-        if (Minecraft.getMinecraft().thePlayer == null)
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            return false;
-        }
+            if (Minecraft.getMinecraft().thePlayer == null)
+            {
+                return false;
+            }
 
-        ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
-        return stack != null && stack.itemID == CommonProxy.itemGoggles.itemID;
+            ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
+            return stack != null && stack.itemID == CommonProxy.itemGoggles.itemID;
+        }
+        
+        return false;
     }
 
     public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)

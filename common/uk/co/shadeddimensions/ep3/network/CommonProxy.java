@@ -268,7 +268,7 @@ public class CommonProxy
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemWrench), new Object[] { "I I", " Q ", " I ", 'I', Item.ingotIron, 'Q', Item.netherQuartz }));
 
         // Glasses
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGoggles), true, new Object[] { "R B", "GLG", "L L", 'R', "dyeRed", 'B', "dyeCyan", 'G', "glass", 'L', Item.leather }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGoggles), true, new Object[] { "R B", "GLG", "L L", 'R', "dyeRed", 'B', "dyeCyan", 'G', Block.thinGlass, 'L', Item.leather }));
 
         // Nanobrush
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPaintbrush), new Object[] { "WT ", "TS ", "  S", 'W', Block.cloth, 'T', Item.silk, 'S', "stickWood" }));
