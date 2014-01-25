@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class PortalRenderer implements ISimpleBlockRenderingHandler
@@ -29,7 +28,7 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
     {
         int meta = world.getBlockMetadata(x, y, z), light = 230;
         Tessellator tessellator = Tessellator.instance;
-        
+
         if (meta < 4)
         {
             int colour = CommonProxy.blockPortal.colorMultiplier(world, x, y, z);
@@ -111,73 +110,65 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
             tessellator.addTranslation(x, y, z);
             Icon c = block.getBlockTexture(world, x, y, z, 0);
             tessellator.setBrightness(240); // TODO Why are some brighter than others?
-            
+
             float u = c.getMinU();
             float v = c.getMinV();
             float U = c.getMaxU();
             float V = c.getMaxV();
-            
+
             if (meta == 4)
             {
-                boolean minX = PortalUtils.isPortalPart(world.getBlockTileEntity(x - 1, y, z)), posX = PortalUtils.isPortalPart(world.getBlockTileEntity(x + 1, y, z));
-                
-                if (minX && posX)
+                double d1 = 0.8, d2 = 0.2, min = -0.2, max = 1.2, d3 = 0.8, d4 = 0.2, min2 = -0.2, max2 = 1.2;
+
+                if (world.getBlockId(x + 1, y, z - 1) == CommonProxy.blockFrame.blockID)
                 {
-                    tessellator.addVertexWithUV(1, 0, 0.2, U, V);
-                    tessellator.addVertexWithUV(1, 1, 0.2, u, V);
-                    tessellator.addVertexWithUV(0.2, 1, 1, u, v);
-                    tessellator.addVertexWithUV(0.2, 0, 1, u, V);
-    
-                    tessellator.addVertexWithUV(0, 0, 0.8, U, V);
-                    tessellator.addVertexWithUV(0, 1, 0.8, u, V);
-                    tessellator.addVertexWithUV(0.8, 1, 0, u, v);
-                    tessellator.addVertexWithUV(0.8, 0, 0, u, V);
+                    max = 1.4;
+                    min = -0.4;
+                    d2 = 0;
+                    d1 = 1;
                 }
-                else if (!minX && posX)
+                else if (world.getBlockId(x - 1, y, z + 1) == CommonProxy.blockFrame.blockID)
                 {
-                    tessellator.addVertexWithUV(1, 0, 0.8, U, V);
-                    tessellator.addVertexWithUV(1, 1, 0.8, u, V);
-                    tessellator.addVertexWithUV(0.8, 1, 1, u, v);
-                    tessellator.addVertexWithUV(0.8, 0, 1, u, V);
+                    max2 = 1.4;
+                    min2 = -0.4;
+                    d4 = 0;
+                    d3 = 1;
                 }
-                else if (minX && !posX)
-                {
-                    tessellator.addVertexWithUV(0, 0, 0.2, U, V);
-                    tessellator.addVertexWithUV(0, 1, 0.2, u, V);
-                    tessellator.addVertexWithUV(0.2, 1, 0, u, v);
-                    tessellator.addVertexWithUV(0.2, 0, 0, u, V);
-                }
+
+                tessellator.addVertexWithUV(max, 0, d2, U, V);
+                tessellator.addVertexWithUV(max, 1, d2, u, V);
+                tessellator.addVertexWithUV(d4, 1, max2, u, v);
+                tessellator.addVertexWithUV(d4, 0, max2, u, V);
+
+                tessellator.addVertexWithUV(min2, 0, d3, U, V);
+                tessellator.addVertexWithUV(min2, 1, d3, u, V);
+                tessellator.addVertexWithUV(d1, 1, min, u, v);
+                tessellator.addVertexWithUV(d1, 0, min, u, V);
             }
             else if (meta == 5)
             {
-                boolean minZ = PortalUtils.isPortalPart(world.getBlockTileEntity(x, y, z - 1)), posZ = PortalUtils.isPortalPart(world.getBlockTileEntity(x, y, z + 1));
+                double d1 = 0.8, d2 = 0.2, min = -0.2, max = 1.2;
 
-                if (minZ && posZ)
+                if (world.getBlockId(x + 1, y, z + 1) == CommonProxy.blockFrame.blockID)
                 {
-                    tessellator.addVertexWithUV(1, 0, 0.8, U, V);
-                    tessellator.addVertexWithUV(1, 1, 0.8, u, V);
-                    tessellator.addVertexWithUV(0.2, 1, 0, u, v);
-                    tessellator.addVertexWithUV(0.2, 0, 0, u, V);
-    
-                    tessellator.addVertexWithUV(0, 0, 0.2, U, V);
-                    tessellator.addVertexWithUV(0, 1, 0.2, u, V);
-                    tessellator.addVertexWithUV(0.8, 1, 1, u, v);
-                    tessellator.addVertexWithUV(0.8, 0, 1, u, V);
+                    max = 1.4;
+                    d1 = 1;
                 }
-                else if (minZ && !posZ)
+                else if (world.getBlockId(x - 1, y, z - 1) == CommonProxy.blockFrame.blockID)
                 {
-                    tessellator.addVertexWithUV(1, 0, 0.2, U, V);
-                    tessellator.addVertexWithUV(1, 1, 0.2, u, V);
-                    tessellator.addVertexWithUV(0.8, 1, 0, u, v);
-                    tessellator.addVertexWithUV(0.8, 0, 0, u, V);
+                    min = -0.4;
+                    d2 = 0;
                 }
-                else if (!minZ && posZ)
-                {
-                    tessellator.addVertexWithUV(0, 0, 0.8, U, V);
-                    tessellator.addVertexWithUV(0, 1, 0.8, u, V);
-                    tessellator.addVertexWithUV(0.2, 1, 1, u, v);
-                    tessellator.addVertexWithUV(0.2, 0, 1, u, V);
-                }
+
+                tessellator.addVertexWithUV(max, 0, d1, U, V);
+                tessellator.addVertexWithUV(max, 1, d1, u, V);
+                tessellator.addVertexWithUV(d2, 1, min, u, v);
+                tessellator.addVertexWithUV(d2, 0, min, u, V);
+
+                tessellator.addVertexWithUV(min, 0, d2, U, V);
+                tessellator.addVertexWithUV(min, 1, d2, u, V);
+                tessellator.addVertexWithUV(d1, 1, max, u, v);
+                tessellator.addVertexWithUV(d1, 0, max, u, V);
             }
 
             tessellator.addTranslation(-x, -y, -z);

@@ -361,7 +361,7 @@ public class PortalUtils
                         processed.add(c);
                         ghostedPortals.add(c);
                         
-                        if (portalDirection >= 4)
+                        /*if (portalDirection >= 4)
                         {
                             for (int i = 0; i < 4; i++)
                             {
@@ -375,7 +375,7 @@ public class PortalUtils
                                 
                                 ghostedPortals.add(new ChunkCoordinates(c.posX + d.offsetX, c.posY, c.posZ + d.offsetZ));
                             }
-                        }
+                        }*/
                         
                         addNearbyBlocks(world, c, portalDirection, toProcess);
                     }

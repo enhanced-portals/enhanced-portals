@@ -235,7 +235,7 @@ public class BlockPortal extends BlockEnhancedPortals
         }
         else
         {
-            setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
+            setBlockBounds(0f, 0f, 0f, 1f, 1, 1f);
         }
     }
 
