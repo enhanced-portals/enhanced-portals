@@ -1,5 +1,6 @@
 package uk.co.shadeddimensions.ep3.portal;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.minecraft.entity.Entity;
@@ -35,7 +36,7 @@ public class EntityManager
         boolean horizontal = controller.portalType == 3;
 
         forloop:
-        for (ChunkCoordinates c : controller.blockManager.getPortals())
+        for (ChunkCoordinates c : new ArrayList<ChunkCoordinates>(controller.blockManager.getPortals()))
         {
             if (!horizontal)
             {
@@ -49,10 +50,10 @@ public class EntityManager
             }
             else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
             {
-                c.posY--;
+                return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
             }
 
-            return c;
+            return new ChunkCoordinates(c.posX, c.posY, c.posZ);
         }
 
         return null;

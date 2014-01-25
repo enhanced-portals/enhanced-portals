@@ -14,15 +14,14 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
 public class GeneralUtils
 {
-    public static boolean isEnergyContainerItem(ItemStack container)
+    public static boolean hasEnergyCost()
     {
-        return container != null && container.getItem() instanceof IEnergyContainerItem;
+        return CommonProxy.redstoneFluxPowerMultiplier > 0;
     }
 
     public static boolean isWearingGoggles()

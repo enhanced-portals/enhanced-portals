@@ -8,6 +8,7 @@ import net.minecraft.client.resources.ReloadableResourceManager;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
+import uk.co.shadeddimensions.ep3.client.PortalRenderer;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
 import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
@@ -105,6 +106,10 @@ public class ClientProxy extends CommonProxy
 
         // Will play through their animation until they die
         //particleSets.add(new ParticleSet(3, new int[] { 164, 165 }));
+        
+        // Rendering
+        PortalRenderer.ID = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(PortalRenderer.ID, new PortalRenderer());
     }
 
     @Override

@@ -34,6 +34,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalDialException;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
+import uk.co.shadeddimensions.library.util.ItemHelper;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
@@ -343,7 +344,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return GeneralUtils.isEnergyContainerItem(itemstack);
+        return ItemHelper.isEnergyContainerItem(itemstack);
     }
 
     @Override

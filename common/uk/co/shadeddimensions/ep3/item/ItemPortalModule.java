@@ -22,7 +22,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, GHOST_FRAME, FEATHERFALL;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, WALL, FEATHERFALL;
 
         public String getUniqueID()
         {
@@ -95,7 +95,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     @Override
     public EnumRarity getRarity(ItemStack itemStack)
     {
-        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal() || itemStack.getItemDamage() == PortalModules.GHOST_FRAME.ordinal())
+        if (itemStack.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal())
         {
             return EnumRarity.epic;
         }

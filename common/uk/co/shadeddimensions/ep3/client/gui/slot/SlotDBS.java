@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
+import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class SlotDBS extends Slot
 {
@@ -16,6 +16,6 @@ public class SlotDBS extends Slot
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        return GeneralUtils.isEnergyContainerItem(stack) || stack.itemID == CommonProxy.itemLocationCard.itemID;
+        return ItemHelper.isEnergyContainerItem(stack) || stack.itemID == CommonProxy.itemLocationCard.itemID;
     }
 }

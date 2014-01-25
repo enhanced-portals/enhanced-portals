@@ -2,6 +2,7 @@ package uk.co.shadeddimensions.ep3.tileentity.frame;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,9 +23,9 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
 
     public TileModuleManipulator()
     {
-        inventory = new ItemStack[9];
+        inventory = new ItemStack[10];
     }
-
+    
     @Override
     public boolean activate(EntityPlayer player)
     {
@@ -54,14 +55,11 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
 
     public boolean canSendEntity(Entity entity)
     {
-        for (ItemStack i : inventory)
+        for (ItemStack i : getModules())
         {
-            if (i != null)
+            if (((IPortalModule) i.getItem()).onEntityTeleportStart(entity, this, i))
             {
-                if (((IPortalModule) i.getItem()).onEntityTeleportStart(entity, this, i))
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -155,11 +153,31 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
         return inventory[i];
     }
 
-    public boolean hasModule(String ID)
+    public ArrayList<ItemStack> getModules()
     {
+        ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+
         for (ItemStack i : inventory)
         {
-            if (i != null && ((IPortalModule) i.getItem()).getID(i).equals(ID))
+            if (i != null && i.getItem() instanceof IPortalModule)
+            {
+                list.add(i);
+            }
+        }
+
+        return list;
+    }
+    
+    public ItemStack getModifierItem()
+    {
+        return inventory[9];
+    }
+
+    public boolean hasModule(String ID)
+    {
+        for (ItemStack i : getModules())
+        {
+            if (((IPortalModule) i.getItem()).getID(i).equals(ID))
             {
                 return true;
             }
@@ -197,21 +215,25 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
     }
 
     @Override
+    public void onInventoryChanged()
+    {
+        super.onInventoryChanged();
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+    }
+
+    @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return stack != null && stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
+        return stack != null && (i < 9 && stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack)));
     }
 
     public boolean isPortalInvisible()
     {
-        for (ItemStack i : inventory)
+        for (ItemStack i : getModules())
         {
-            if (i != null)
+            if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
             {
-                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
-                {
-                    return true;
-                }
+                return true;
             }
         }
 
@@ -220,23 +242,17 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
 
     public void onEntityTeleported(Entity entity)
     {
-        for (ItemStack i : inventory)
+        for (ItemStack i : getModules())
         {
-            if (i != null)
-            {
-                ((IPortalModule) i.getItem()).onEntityTeleportEnd(entity, this, i);
-            }
+            ((IPortalModule) i.getItem()).onEntityTeleportEnd(entity, this, i);
         }
     }
 
     public void particleCreated(PortalFX portalFX)
     {
-        for (ItemStack i : inventory)
+        for (ItemStack i : getModules())
         {
-            if (i != null)
-            {
-                ((IPortalModule) i.getItem()).onParticleCreated(this, i, portalFX);
-            }
+            ((IPortalModule) i.getItem()).onParticleCreated(this, i, portalFX);
         }
     }
 
@@ -260,34 +276,15 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
 
     public boolean shouldKeepMomentumOnTeleport()
     {
-        for (ItemStack i : inventory)
+        for (ItemStack i : getModules())
         {
-            if (i != null)
+            if (((IPortalModule) i.getItem()).keepMomentumOnTeleport(this, i))
             {
-                if (((IPortalModule) i.getItem()).keepMomentumOnTeleport(this, i))
-                {
-                    return true;
-                }
+                return true;
             }
         }
 
         return false;
-    }
-
-    public boolean shouldRenderPortal()
-    {
-        for (ItemStack i : inventory)
-        {
-            if (i != null)
-            {
-                if (((IPortalModule) i.getItem()).disablePortalRendering(this, i))
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
 import uk.co.shadeddimensions.ep3.lib.Localization;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.library.gui.GuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementRedstoneFlux;
 import cofh.api.energy.EnergyStorage;
@@ -25,8 +26,11 @@ public class GuiScanner extends GuiBase
     @Override
     public void addElements()
     {
-        storage.setEnergyStored(((ItemEnergyContainer) stack.getItem()).getEnergyStored(stack));
-        addElement(new ElementRedstoneFlux(this, xSize - 22, 22, storage.getEnergyStored(), storage.getMaxEnergyStored()));
+        if (GeneralUtils.hasEnergyCost())
+        {
+            storage.setEnergyStored(((ItemEnergyContainer) stack.getItem()).getEnergyStored(stack));
+            addElement(new ElementRedstoneFlux(this, xSize - 22, 22, storage.getEnergyStored(), storage.getMaxEnergyStored()));
+        }
     }
 
     @Override

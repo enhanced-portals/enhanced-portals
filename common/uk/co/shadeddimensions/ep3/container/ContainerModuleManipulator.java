@@ -16,6 +16,8 @@ public class ContainerModuleManipulator extends ContainerBase
         {
             addSlotToContainer(new SlotPortalModule(t, i, 8 + i * 18, 22));
         }
+        
+        addSlotToContainer(new Slot(t, 9, 152, 52));
 
         for (int i = 0; i < 3; i++)
         {

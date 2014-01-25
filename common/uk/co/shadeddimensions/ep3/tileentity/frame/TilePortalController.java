@@ -144,6 +144,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
 
         if (portalBlocks == null || portalBlocks.isEmpty() || portalType == 0)
         {
+            System.out.println(portalBlocks);
             player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("portalCouldNotBeCreatedHere")));
             return false;
         }

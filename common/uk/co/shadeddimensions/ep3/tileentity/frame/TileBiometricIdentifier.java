@@ -15,7 +15,6 @@ import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.util.EntityData;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
@@ -244,7 +243,7 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return GeneralUtils.isEnergyContainerItem(itemstack);
+        return ItemHelper.isEnergyContainerItem(itemstack);
     }
 
     @Override

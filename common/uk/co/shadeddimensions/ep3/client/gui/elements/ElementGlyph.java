@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.library.gui.GuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementBase;
 
@@ -16,7 +17,7 @@ public class ElementGlyph extends ElementBase
     {
         super(gui, posX, posY, 18, 18);
         this.glyph = glyph;
-        texture = new ResourceLocation("enhancedportals", "textures/gui/glyphs.png");
+        texture = new ResourceLocation("enhancedportals", CommonProxy.useAlternateGlyphs ? "textures/gui/glyphs_2.png" : "textures/gui/glyphs.png");
     }
 
     @Override

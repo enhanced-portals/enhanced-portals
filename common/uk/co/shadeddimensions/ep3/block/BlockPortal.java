@@ -13,6 +13,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import uk.co.shadeddimensions.ep3.client.PortalRenderer;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
@@ -200,19 +201,22 @@ public class BlockPortal extends BlockEnhancedPortals
     }
 
     @Override
+    public int getRenderType()
+    {
+        return PortalRenderer.ID;
+    }
+    
+    @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
         TilePortalController controller = portal.getPortalController();
         TileModuleManipulator manip = controller == null ? null : controller.blockManager.getModuleManipulator(controller.worldObj);
 
-        if (controller != null && manip != null)
+        if (controller != null && manip != null && manip.isPortalInvisible())
         {
-            if (manip != null && !manip.shouldRenderPortal())
-            {
-                setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
-                return;
-            }
+            setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
+            return;
         }
 
         int meta = blockAccess.getBlockMetadata(x, y, z);
@@ -231,7 +235,7 @@ public class BlockPortal extends BlockEnhancedPortals
         }
         else
         {
-            setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
+            setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
         }
     }
 

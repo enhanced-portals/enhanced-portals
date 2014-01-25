@@ -29,29 +29,49 @@ public class PortalUtils
      */
     public static void addNearbyBlocks(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> q)
     {
-        for (int i = 0; i < 6; i++)
+        if (portalDirection == 4)
         {
-            if (portalDirection == 1 && (i == 2 || i == 3))
-            {
-                continue;
-            }
-            else if (portalDirection == 2 && (i == 4 || i == 5))
-            {
-                continue;
-            }
-            else if (portalDirection == 3 && (i == 0 || i == 1))
-            {
-                continue;
-            }
+            q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
+            q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            q.add(new ChunkCoordinates(w.posX + d.offsetX, w.posY + d.offsetY, w.posZ + d.offsetZ));
+            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North East
+            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South West
+        }
+        else if (portalDirection == 5)
+        {
+            q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
+            q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
+
+            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North West
+            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South East
+        }
+        else
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (portalDirection == 1 && (i == 2 || i == 3))
+                {
+                    continue;
+                }
+                else if (portalDirection == 2 && (i == 4 || i == 5))
+                {
+                    continue;
+                }
+                else if (portalDirection == 3 && (i == 0 || i == 1))
+                {
+                    continue;
+                }
+
+                ForgeDirection d = ForgeDirection.getOrientation(i);
+                q.add(new ChunkCoordinates(w.posX + d.offsetX, w.posY + d.offsetY, w.posZ + d.offsetZ));
+            }
         }
     }
 
     /***
      * Creates a portal at the specified location.
      */
+    @Deprecated
     public static boolean createPortalAt(World world, ChunkCoordinates w, int portalDirection)
     {
         Queue<ChunkCoordinates> processed = new LinkedList<ChunkCoordinates>();
@@ -234,7 +254,7 @@ public class PortalUtils
                     }
 
                     portalParts.add(c);
-                    PortalUtils.addNearbyBlocks(controller.worldObj, c, 0, toProcess);
+                    addNearbyBlocks(controller.worldObj, c, 0, toProcess);
                 }
             }
         }
@@ -248,25 +268,11 @@ public class PortalUtils
     private static int getAllGhostedSides(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> ghostedParts)
     {
         int sides = 0;
+        Queue<ChunkCoordinates> neighbors = new LinkedList<ChunkCoordinates>();
+        addNearbyBlocks(world, w, portalDirection, neighbors);
 
-        for (int i = 0; i < 6; i++)
+        for (ChunkCoordinates c : neighbors)
         {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-            ChunkCoordinates c = new ChunkCoordinates(w.posX + d.offsetX, w.posY + d.offsetY, w.posZ + d.offsetZ);
-
-            if (portalDirection == 1 && (i == 2 || i == 3))
-            {
-                continue;
-            }
-            else if (portalDirection == 2 && (i == 4 || i == 5))
-            {
-                continue;
-            }
-            else if (portalDirection == 3 && (i == 0 || i == 1))
-            {
-                continue;
-            }
-
             if (ghostedParts.contains(c) || isPortalPart(world.getBlockTileEntity(c.posX, c.posY, c.posZ)))
             {
                 sides++;
@@ -282,25 +288,12 @@ public class PortalUtils
     private static int getAllSides(World world, ChunkCoordinates w, int portalDirection)
     {
         int sides = 0;
+        Queue<ChunkCoordinates> neighbors = new LinkedList<ChunkCoordinates>();
+        addNearbyBlocks(world, w, portalDirection, neighbors);
 
-        for (int i = 0; i < 6; i++)
+        for (ChunkCoordinates c : neighbors)
         {
-            ForgeDirection d = ForgeDirection.getOrientation(i);
-
-            if (portalDirection == 1 && (i == 2 || i == 3))
-            {
-                continue;
-            }
-            else if (portalDirection == 2 && (i == 4 || i == 5))
-            {
-                continue;
-            }
-            else if (portalDirection == 3 && (i == 0 || i == 1))
-            {
-                continue;
-            }
-
-            if (isPortalPart(world.getBlockTileEntity(w.posX + d.offsetX, w.posY + d.offsetY, w.posZ + d.offsetZ)))
+            if (isPortalPart(world.getBlockTileEntity(c.posX, c.posY, c.posZ)))
             {
                 sides++;
             }
@@ -311,26 +304,21 @@ public class PortalUtils
 
     public static Queue<ChunkCoordinates> getGhostedPortals(TilePortalController c)
     {
-        Queue<ChunkCoordinates> portalBlocks = null;
-        byte pType = 0;
-
-        outerloop:
         for (int j = 0; j < 6; j++)
         {
-            for (int i = 1; i < 4; i++)
+            for (int i = 1; i < 6; i++)
             {
-                portalBlocks = PortalUtils.ghostPortalAt(c.worldObj, c.getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
+                Queue<ChunkCoordinates> portalBlocks = ghostPortalAt(c.worldObj, c.getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
 
                 if (!portalBlocks.isEmpty())
                 {
-                    pType = (byte) i;
-                    break outerloop;
+                    c.portalType = (byte) i;
+                    return portalBlocks;
                 }
             }
         }
 
-        c.portalType = pType;
-        return portalBlocks;
+        return new LinkedList<ChunkCoordinates>();
     }
 
     /***
@@ -372,6 +360,23 @@ public class PortalUtils
                     {
                         processed.add(c);
                         ghostedPortals.add(c);
+                        
+                        if (portalDirection >= 4)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                ForgeDirection d = ForgeDirection.getOrientation(2 + i);
+                                
+                                if (!world.isAirBlock(c.posX + d.offsetX, c.posY, c.posZ + d.offsetZ))
+                                {
+                                    System.out.println("Corner block failed!");
+                                    return new LinkedList<ChunkCoordinates>();
+                                }
+                                
+                                ghostedPortals.add(new ChunkCoordinates(c.posX + d.offsetX, c.posY, c.posZ + d.offsetZ));
+                            }
+                        }
+                        
                         addNearbyBlocks(world, c, portalDirection, toProcess);
                     }
                 }
@@ -388,7 +393,7 @@ public class PortalUtils
     /***
      * Checks to see if the specified block is a portal part.
      */
-    private static boolean isPortalPart(TileEntity tile)
+    public static boolean isPortalPart(TileEntity tile)
     {
         return tile != null && tile instanceof TilePortalPart;
     }
@@ -396,11 +401,9 @@ public class PortalUtils
     /***
      * Checks to see if the specified block is a portal part.
      */
-    private static boolean isPortalPart(World world, int x, int y, int z)
+    public static boolean isPortalPart(World world, int x, int y, int z)
     {
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-        return isPortalPart(tile);
+        return isPortalPart(world.getBlockTileEntity(x, y, z));
     }
 
     private static void removeFailedPortal(World world, Queue<ChunkCoordinates> processed)
