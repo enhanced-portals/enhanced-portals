@@ -217,3 +217,34 @@ ep3.gui.particleType.2.name=Static
 ep3.gui.particleType.2.info=Does not change at all
 ep3.gui.particleType.3.name=Loop
 ep3.gui.particleType.3.info=Continuously loops through its sequence
+
+# Guide
+ep3.gui.information=Information
+ep3.gui.crafting=Crafting
+
+ep3.gui.blockFrame=Portal Frame
+ep3.gui.blockFrame.information=Portal Frames are used to contain the minor instabilities of the portal to allow portals to function correctly. Without them, the portal cannot take shape. <N><N>The Portal Frames must completely contain the portal on four opposite sides. You can arrange portals in many different shapes and sizes, varying from the standard vertical portal, to horizontal portals or even diagonally.<N><N>Portal Frames are also used as a base for the special frame blocks, many of them have GUIs you can open by activating them with a wrench. If you activate the basic Portal Frame with a wrench, it will open up the connected Portal Controller's GUI.
+
+ep3.gui.blockController=Portal Controller
+ep3.gui.blockController.information=Portal Controllers are the main block in the portal structure, it is in control of most of the functions of each individual portal, and as such, you can only have one per portal structure.<N><N>You can destroy/replace any of the other frame blocks, but as long as you do not replace the Portal Controller, it will retain all of its customizations.<N><N>If you interrupt the portal structure by removing a block, or placing a new frame block next to a formed structure, you can reform the portal structure by activating the Portal Controller with a wrench. You can also update its connected Dimensional Bridge Stabilizer by activating it with another Location Card.
+
+ep3.gui.blockRedstoneInterface=Redstone Interface
+ep3.gui.blockRedstoneInterface.information=Redstone Interfaces are the only blocks that will directly interact with Redstone signals, with the exception of the Biometric Identifier.<N><N>There are two different modes, Input and Output. On Input the Redstone Interface is programmed to receive Redstone signals and complete the specified task. All of these tasks involve interacting with portal connections, you can set it to create/remove portals, or dial specific Unique Identifiers.<N><N>The other mode is Output, where the Redstone Interface will emit Redstone signals based on the Portal state, or whether or not an entity is touching it.
+
+ep3.gui.blockNetworkInterface=Network Interface
+ep3.gui.blockNetworkInterface.information=The Network Interface is the most basic form of networking multiple portals together. Simply set a Unique ID for the portal, then activate this block with a wrench to set a Network ID. Any portals with the same Network ID will be connected to each other, entering an active portal will take you to the next portal in the sequence.<N><N>A Network Interface is not the only thing required to actually create the portal, you will also need a Redstone Interface connected to create/terminate the connection.<N><N>You can only have one of these in a Portal structure.
+
+ep3.gui.blockDiallingDevice=Dialling Device
+ep3.gui.blockDiallingDevice.information=Dialling Devices are an upgrade to the Network Interface, they allow you to dial directly to a specific portal without the requirement of setting up a network. In addition, you do not need a Redstone Interface connected to dial, and you can even dial to portals that do not have a Dialling Device or Network Interface. You cannot dial to portals that have Network Interfaces.<N><N>Unlike other special Portal Frame parts, you do not need the Glasses equipped to see its icon, you also do not need to use a wrench to open its GUI.<N><N>You can only have one of these in a Portal structure.
+
+ep3.gui.blockBiometric=Biometric Identifier
+ep3.gui.blockBiometric.information=Biometric Interfaces are effectively filters. You can filter specific players or entities to be allowed or disallowed through this portal.<N><N>You will need to put an Identification Card into the bottom left slot to add its stored entries to the list. From there, clicking on the name of the entry will toggle it between allowed/disallowed, and the GUI is self explanatory.<N><N>Elements lower on the list will overwrite those that come before it, meaning if you have 'Animals' disallowed at the top, and 'Pig' enabled below that, pigs are allowed. Swap them around and all animals aren't allowed, even pigs.
+
+ep3.gui.blockModule=Module Manipulator
+ep3.gui.blockModule.information=Module Manipulators store all the Portal Modules.
+
+ep3.gui.blockDbs=Dimensional Bridge Stabilizer
+ep3.gui.blockDbs.information=The Dimensional Bridge Stabilizer is responsible for creating and maintaining a wormhole between two points in space, allowing for instantaneous transportation.<N><N>You must place the component blocks in a 3x2x2 block, and then use a wrench on it to form the structure. You can also make the structure taller to gain additional simultaneous connections, and increase its Redstone Flux power capacity.<N><N>For every row you give it, you will gain an extra 15,000 RF and one more connection (two portals).<N><N>The Dimensional Bridge Stabilizer requires a lot of power, and will request 10,000 RF every second (500RF per tick). If it cannot get that amount of power from its storage, it will attempt to try to preserve the connection for as long as possible, though this will make the portal increasingly unstable to the point where it starts to implode. The Dimensional Bridge Stabilizer is then forced to terminate the connection, before any damage occurs.
+
+ep3.gui.blockDecoration=Decorative Blocks
+ep3.gui.blockDecoration.information=The two decorative blocks available use the same texture as the Portal Frames and Dimensional Bridge Stabilizers.<N><N>They are exactly the same although they do not have Tile Entities and will not connect to their real counterparts.

@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDimensionalBridgeStabilizer;
+import uk.co.shadeddimensions.ep3.client.gui.GuiGuide;
 import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
 import uk.co.shadeddimensions.ep3.client.gui.GuiNetworkInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiPortalController;
@@ -88,6 +89,10 @@ public class GuiHandler implements IGuiHandler
             {
                 return new GuiBiometricIdentifier((TileBiometricIdentifier) tile, player);
             }
+            else if (ID == GUIs.Guide.ordinal())
+            {
+                return new GuiGuide();
+            }
         }
 
         return null;
@@ -152,6 +157,10 @@ public class GuiHandler implements IGuiHandler
             {
                 CommonProxy.sendUpdatePacketToPlayer((TileBiometricIdentifier) tile, player);
                 return new ContainerBiometricIdentifier((TileBiometricIdentifier) tile, player);
+            }
+            else if (ID == GUIs.Guide.ordinal())
+            {
+                return new ContainerBase();
             }
         }
 

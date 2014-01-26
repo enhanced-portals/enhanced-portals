@@ -23,6 +23,7 @@ import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemDecoration;
 import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
+import uk.co.shadeddimensions.ep3.item.ItemGuide;
 import uk.co.shadeddimensions.ep3.item.ItemHandheldScanner;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemMisc;
@@ -74,6 +75,7 @@ public class CommonProxy
     public static ItemHandheldScanner itemScanner;
     public static ItemUpgrade itemInPlaceUpgrade;
     public static ItemMisc itemMisc;
+    public static ItemGuide itemGuide;
 
     public int gogglesRenderIndex = 0;
 
@@ -176,6 +178,9 @@ public class CommonProxy
 
         itemMisc = new ItemMisc(configuration.getItemId("MiscItems"), "ep3.miscItems");
         GameRegistry.registerItem(itemMisc, "ep3.miscItems");
+        
+        itemGuide = new ItemGuide(configuration.getItemId("Guide"), "ep3.guide");
+        GameRegistry.registerItem(itemGuide, "ep3.guide");
     }
 
     public void registerTileEntities()

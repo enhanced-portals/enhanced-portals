@@ -17,12 +17,7 @@ public class Localization
 
     public static String getGuiString(String s)
     {
-        if (s.equals("inventory"))
-        {
-            return StatCollector.translateToLocal("container.inventory");
-        }
-
-        return StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s);
+        return StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s).replace("<N>", "\n");
     }
 
     public static String getItemString(String s)
