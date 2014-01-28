@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.library.gui.GuiBase;
@@ -59,9 +60,9 @@ public class GuiGuide extends GuiBase
     @Override
     public void addElements()
     {
-        scrollPanel = new ElementScrollPanel(this, 11, -guiTop + 7, xSize - 22, ySize - 17);
+        scrollPanel = new ElementScrollPanel(this, 11, -guiTop + 7, xSize - 22, height - 17);
         addElement(scrollPanel);
-        addElement(new ElementScrollBar(this, xSize - 9, -guiTop + 7, 5, ySize - 16, scrollPanel));
+        addElement(new ElementScrollBar(this, xSize - 9, -guiTop + 7, 5, height - 16, scrollPanel));
         updateScrollPanel();
     }
 
@@ -107,15 +108,15 @@ public class GuiGuide extends GuiBase
 
             if (page.equals("mainBlocks"))
             {
-                addTab(new TabToggleButton(this, 1, "blockFrame", "Portal Frame", new ItemStack(CommonProxy.blockFrame)));
-                addTab(new TabToggleButton(this, 1, "blockController", "Portal Controller", new ItemStack(CommonProxy.blockFrame, 1, 1)));
-                addTab(new TabToggleButton(this, 1, "blockRedstoneInterface", "Redstone Interface", new ItemStack(CommonProxy.blockFrame, 1, 2)));
-                addTab(new TabToggleButton(this, 1, "blockNetworkInterface", "Network Interface", new ItemStack(CommonProxy.blockFrame, 1, 3)));
-                addTab(new TabToggleButton(this, 1, "blockDiallingDevice", "Dialling Device", new ItemStack(CommonProxy.blockFrame, 1, 4)));
-                addTab(new TabToggleButton(this, 1, "blockBiometric", "Biometric Identifier", new ItemStack(CommonProxy.blockFrame, 1, 5)));
-                addTab(new TabToggleButton(this, 1, "blockModule", "Module Manipulator", new ItemStack(CommonProxy.blockFrame, 1, 6)));
-                addTab(new TabToggleButton(this, 1, "blockDbs", "DBS", new ItemStack(CommonProxy.blockStabilizer)));
-                addTab(new TabToggleButton(this, 1, "blockDecoration", "Decoration", new ItemStack(CommonProxy.blockDecoration)));
+                addTab(new TabToggleButton(this, 1, "blockFrame", Localization.getGuiString("blockFrame"), new ItemStack(CommonProxy.blockFrame)));
+                addTab(new TabToggleButton(this, 1, "blockController", Localization.getGuiString("blockController"), new ItemStack(CommonProxy.blockFrame, 1, 1)));
+                addTab(new TabToggleButton(this, 1, "blockRedstoneInterface", Localization.getGuiString("blockRedstoneInterface"), new ItemStack(CommonProxy.blockFrame, 1, 2)));
+                addTab(new TabToggleButton(this, 1, "blockNetworkInterface", Localization.getGuiString("blockNetworkInterface"), new ItemStack(CommonProxy.blockFrame, 1, 3)));
+                addTab(new TabToggleButton(this, 1, "blockDiallingDevice", Localization.getGuiString("blockDiallingDevice"), new ItemStack(CommonProxy.blockFrame, 1, 4)));
+                addTab(new TabToggleButton(this, 1, "blockBiometric", Localization.getGuiString("blockBiometric"), new ItemStack(CommonProxy.blockFrame, 1, 5)));
+                addTab(new TabToggleButton(this, 1, "blockModule", Localization.getGuiString("blockModule"), new ItemStack(CommonProxy.blockFrame, 1, 6)));
+                addTab(new TabToggleButton(this, 1, "blockDbs", Localization.getGuiString("blockDBS"), new ItemStack(CommonProxy.blockStabilizer)));
+                addTab(new TabToggleButton(this, 1, "blockDecoration", Localization.getGuiString("blockDecoration"), new ItemStack(CommonProxy.blockDecoration)));
             }
             else if (page.equals("mainItems"))
             {
@@ -214,10 +215,78 @@ public class GuiGuide extends GuiBase
                 scrollPanel.addElement(craft2);
                 offset += craft2.getHeight();
             }
+            else if (page.equals("itemGlasses"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemGoggles));
+                craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.dyePowder, 0, 1), null, new ItemStack(Item.dyePowder, 0, 6), new ItemStack(Block.thinGlass), new ItemStack(Item.leather), new ItemStack(Block.thinGlass), new ItemStack(Item.leather), null, new ItemStack(Item.leather) });
+            }
+            else if (page.equals("itemWrench"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemWrench));
+                craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotIron), null, new ItemStack(Item.ingotIron), null, new ItemStack(Item.netherQuartz), null, null, new ItemStack(Item.ingotIron) });
+            }
+            else if (page.equals("itemNanobrush"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemPaintbrush));
+                craft.addAllGridSlots(new ItemStack[] { null, new ItemStack(Item.silk), new ItemStack(Block.cloth), null, new ItemStack(Item.stick), new ItemStack(Item.silk), new ItemStack(Item.stick) });
+            }
+            else if (page.equals("itemLocationCard"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemLocationCard, 16));
+                craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotIron), new ItemStack(Item.paper), new ItemStack(Item.ingotIron), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.ingotIron), new ItemStack(Item.dyePowder, 0, 4), new ItemStack(Item.ingotIron) });
+            }
+            else if (page.equals("itemSynchronizer"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemSynchronizer));
+                craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotGold), new ItemStack(Item.ingotGold), new ItemStack(Item.ingotGold), new ItemStack(Item.ingotIron), new ItemStack(Item.netherQuartz), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron) });
+            }
+            else if (page.equals("itemIdCard"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemEntityCard, 8));
+                craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotGold), new ItemStack(Item.paper), new ItemStack(Item.ingotGold), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.ingotGold), new ItemStack(Item.dyePowder, 0, 10), new ItemStack(Item.ingotGold) });
+            }
+            else if (page.equals("itemScanner"))
+            {
+                craft.addOutputSlot(new ItemStack(CommonProxy.itemScanner));
+                craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotGold), new ItemStack(Item.redstone), new ItemStack(Item.ingotGold), new ItemStack(Item.ingotIron), new ItemStack(Item.netherQuartz), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron), new ItemStack(CommonProxy.itemEntityCard), new ItemStack(Item.ingotIron) });
+            }
+            else if (page.equals("itemPortalModules"))
+            {
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30, 0).addOutputSlot(new ItemStack(CommonProxy.itemMisc)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.goldNugget), new ItemStack(Item.goldNugget), new ItemStack(Item.goldNugget), new ItemStack(Item.goldNugget), new ItemStack(Item.ingotIron), new ItemStack(Item.goldNugget), new ItemStack(Item.goldNugget), new ItemStack(Item.goldNugget), new ItemStack(Item.goldNugget) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 57, 0).addOutputSlot(new ItemStack(CommonProxy.itemPortalModule)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.redstone), new ItemStack(CommonProxy.itemMisc), new ItemStack(Item.gunpowder) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 114, 0).addOutputSlot(new ItemStack(CommonProxy.itemPortalModule, 0, 1)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.dyePowder, 0, 1), new ItemStack(Item.dyePowder, 0, 2), new ItemStack(Item.dyePowder, 0, 4), null, new ItemStack(CommonProxy.itemMisc), null, new ItemStack(Item.dyePowder, 0, 4), new ItemStack(Item.dyePowder, 0, 2), new ItemStack(Item.dyePowder, 0, 1) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 171, 0).addOutputSlot(new ItemStack(CommonProxy.itemPortalModule, 0, 2)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.redstone), new ItemStack(CommonProxy.itemMisc), new ItemStack(Block.music) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 228, 0).addOutputSlot(new ItemStack(CommonProxy.itemPortalModule, 0, 3)).addAllGridSlots(new ItemStack[] { new ItemStack(Block.anvil), new ItemStack(CommonProxy.itemMisc), new ItemStack(Item.feather) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 285, 0).addOutputSlot(new ItemStack(CommonProxy.itemPortalModule, 0, 5)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.dyePowder, 0, 15), new ItemStack(CommonProxy.itemMisc), new ItemStack(Item.dyePowder) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 342, 0).addOutputSlot(new ItemStack(CommonProxy.itemPortalModule, 0, 7)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.feather), new ItemStack(Item.feather), new ItemStack(Item.feather), new ItemStack(Item.feather), new ItemStack(CommonProxy.itemMisc), new ItemStack(Item.feather), new ItemStack(Item.feather), new ItemStack(Item.feather), new ItemStack(Item.feather) }));
+                
+                craft = null;
+                offset += 57 * 6;
+            }
+            else
+            {
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30, 0).addOutputSlot(new ItemStack(CommonProxy.itemMisc, 1, 1)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.diamond), null, null, new ItemStack(Item.paper), null, null, new ItemStack(Item.dyePowder, 0, 1) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 57, 0).addOutputSlot(new ItemStack(CommonProxy.itemInPlaceUpgrade)).addAllGridSlots(new ItemStack[] { null, new ItemStack(Item.redstone), null, new ItemStack(Item.redstone), new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(Item.redstone), null, new ItemStack(Item.redstone) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 114, 0).addOutputSlot(new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 1)).addAllGridSlots(new ItemStack[] { new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(Item.enderPearl) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 171, 0).addOutputSlot(new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 2)).addAllGridSlots(new ItemStack[] { new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 1), new ItemStack(Item.diamond) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 228, 0).addOutputSlot(new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 3)).addAllGridSlots(new ItemStack[] { new ItemStack(Item.porkCooked), new ItemStack(Item.beefCooked), new ItemStack(Item.chickenCooked), new ItemStack(Item.blazePowder), new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(Item.blazePowder) }));
+                scrollPanel.addElement(new ElementCrafting(this, craft.getRelativeX(), 30 + 285, 0).addOutputSlot(new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 4)).addAllGridSlots(new ItemStack[] { null, new ItemStack(CommonProxy.itemMisc), null, new ItemStack(Item.emerald), new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(Item.diamond) }));
+                
+                craft = null;
+                offset += 57 * (BlockFrame.FRAME_TYPES - 2);
+            }
 
-            scrollPanel.addElement(craft);
+            if (craft != null)
+            {
+                scrollPanel.addElement(craft);
+            }
+            
             scrollPanel.addElement(new ElementText(this, 5, 90 + offset, Localization.getGuiString("information"), null, 0x44AAFF, true));
             scrollPanel.addElement(new ElementTextBox(this, 8, 103 + offset, Localization.getGuiString(page + ".information"), scrollPanel.getWidth() - 14, 0xFFFFFF, false));
+        }
+        else
+        {
+            scrollPanel.addElement(new ElementTextBox(this, 8, 18, Localization.getGuiString(page + ".information"), scrollPanel.getWidth() - 14, 0xFFFFFF, false));
         }
     }
 }

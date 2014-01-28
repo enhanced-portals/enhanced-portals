@@ -17,7 +17,7 @@ public class Localization
 
     public static String getGuiString(String s)
     {
-        return StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s).replace("<N>", "\n");
+        return StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s).replace("<N>", "\n").replace("<MODVERSION>", Reference.VERSION);
     }
 
     public static String getItemString(String s)

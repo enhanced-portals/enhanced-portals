@@ -1,6 +1,8 @@
 package uk.co.shadeddimensions.ep3.network;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -18,6 +20,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
+import uk.co.shadeddimensions.ep3.block.BlockNetherPortal;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemDecoration;
@@ -84,7 +87,7 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles, forceShowFrameOverlays;
+    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles, forceShowFrameOverlays, disablePigmen, netherDisableParticles, netherDisableSounds;
     public static int redstoneFluxPowerMultiplier;
 
     public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
@@ -127,9 +130,65 @@ public class CommonProxy
         return new File(getBaseDir(), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
     }
 
+    boolean reflectBlock(Block block, Class<? extends Block> clazz)
+    {
+        Field field = null;
+        
+        for (Field f : net.minecraft.block.Block.class.getDeclaredFields())
+        {
+            if (f.getType() == clazz)
+            {
+                field = f;
+                break;
+            }
+        }
+        
+        if (field == null)
+        {
+            return false;
+        }
+        
+        field.setAccessible(true);
+        
+        if ((field.getModifiers() & Modifier.FINAL) != 0)
+        {
+            try
+            {
+                Field modifiers = Field.class.getDeclaredField("modifiers");
+                modifiers.setAccessible(true);
+                modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        
+        try
+        {
+            field.set(null, block);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
     public void miscSetup()
     {
         ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 4), 1, 1, 2));
+        
+        int portalID = Block.portal.blockID;
+        Block.blocksList[portalID] = null;
+        
+        if (!reflectBlock(new BlockNetherPortal(portalID), net.minecraft.block.BlockPortal.class))
+        {
+            Block.blocksList[portalID] = null;
+            Block.blocksList[portalID] = new net.minecraft.block.BlockPortal(portalID);
+            logger.warning("Unable to modify BlockPortal. Custom Nether Portals have been disabled.");
+        }
     }
 
     public void registerBlocks()
