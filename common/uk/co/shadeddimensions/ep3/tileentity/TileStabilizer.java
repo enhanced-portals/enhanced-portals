@@ -22,6 +22,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
 {
     ChunkCoordinates mainBlock;
     int rows;
+    boolean is3x3 = false;
 
     @SideOnly(Side.CLIENT)
     public boolean isFormed;
@@ -66,24 +67,45 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
                     topLeft = topLeft.offset(ForgeDirection.UP);
                 }
 
-                ArrayList<ChunkCoordinates> blocks = checkShape(topLeft, true); // Try the X axis
-
+                System.out.println("Checking 3x3");
+                ArrayList<ChunkCoordinates> blocks = checkShapeThreeWide(topLeft); // 3x3
+                
                 if (blocks.isEmpty())
                 {
-                    blocks = checkShape(topLeft, false); // Try the Z axis before failing
+                    System.out.println("Checking 3x2 X");
+                    blocks = checkShapeTwoWide(topLeft, true); // Try the 3x2 X axis
+    
+                    if (blocks.isEmpty())
+                    {
+                        System.out.println("Checking 3x2 Z");
+                        blocks = checkShapeTwoWide(topLeft, false); // Try the 3x2 Z axis before failing
+                    }
                 }
 
                 if (!blocks.isEmpty()) // success
                 {
-                    for (ChunkCoordinates c : blocks)
+                    for (ChunkCoordinates c : blocks) // make sure we're not interrupting something
                     {
                         TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-
-                        if (tile instanceof TileStabilizerMain)
+                        
+                        if (tile instanceof TileStabilizer)
                         {
-                            worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockStabilizer.blockID, 0, 3);
-                            tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+                            if (((TileStabilizer) tile).getMainBlock() != null)
+                            {
+                                return false;
+                            }
                         }
+                        else if (tile instanceof TileStabilizerMain)
+                        {
+                            return false;
+                        }
+                    }
+                    
+                    for (ChunkCoordinates c : blocks)
+                    {
+                        worldObj.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockStabilizer.blockID, 0, 2);
+                        
+                        TileEntity tile = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
 
                         if (tile instanceof TileStabilizer)
                         {
@@ -94,11 +116,12 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
                     }
 
                     worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, CommonProxy.blockStabilizer.blockID, 1, 3);
+                    
                     TileEntity tile = topLeft.getBlockTileEntity();
 
                     if (tile instanceof TileStabilizerMain)
                     {
-                        ((TileStabilizerMain) tile).setData(blocks, rows);
+                        ((TileStabilizerMain) tile).setData(blocks, rows, is3x3);
                         return true;
                     }
                 }
@@ -127,29 +150,67 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         return getMainBlock() != null;
     }
 
-    ArrayList<ChunkCoordinates> checkShape(WorldCoordinates topLeft, boolean isX)
+    ArrayList<ChunkCoordinates> checkShapeThreeWide(WorldCoordinates topLeft)
     {
         ArrayList<ChunkCoordinates> blocks = new ArrayList<ChunkCoordinates>();
-
-        int tempHeight = 0;
         ChunkCoordinates heightChecker = new ChunkCoordinates(topLeft);
+        rows = 0;
 
         while (worldObj.getBlockId(heightChecker.posX, heightChecker.posY, heightChecker.posZ) == CommonProxy.blockStabilizer.blockID)
         {
             heightChecker.posY--;
-            tempHeight++;
+            rows++;
         }
-
-        if (tempHeight < 2)
+        
+        if (rows < 2)
         {
+            rows = 0;
             return new ArrayList<ChunkCoordinates>();
         }
 
         for (int i = 0; i < 3; i++)
         {
+            for (int j = 0; j < 3; j++)
+            {
+                for (int k = 0; k < rows; k++)
+                {
+                    if (worldObj.getBlockId(topLeft.posX + i, topLeft.posY - k, topLeft.posZ + j) != CommonProxy.blockStabilizer.blockID)
+                    {
+                        return new ArrayList<ChunkCoordinates>();
+                    }
+    
+                    blocks.add(new ChunkCoordinates(topLeft.posX + i, topLeft.posY - k, topLeft.posZ + j));
+                }
+            }
+        }
+        
+        is3x3 = true;
+        return blocks;
+    }
+    
+    ArrayList<ChunkCoordinates> checkShapeTwoWide(WorldCoordinates topLeft, boolean isX)
+    {
+        ArrayList<ChunkCoordinates> blocks = new ArrayList<ChunkCoordinates>();
+        ChunkCoordinates heightChecker = new ChunkCoordinates(topLeft);
+        rows = 0;
+
+        while (worldObj.getBlockId(heightChecker.posX, heightChecker.posY, heightChecker.posZ) == CommonProxy.blockStabilizer.blockID)
+        {
+            heightChecker.posY--;
+            rows++;
+        }
+
+        if (rows < 2)
+        {
+            rows = 0;
+            return new ArrayList<ChunkCoordinates>();
+        }
+        
+        for (int i = 0; i < 3; i++)
+        {
             for (int j = 0; j < 2; j++)
             {
-                for (int k = 0; k < tempHeight; k++)
+                for (int k = 0; k < rows; k++)
                 {
                     if (worldObj.getBlockId(topLeft.posX + (isX ? i : j), topLeft.posY - k, topLeft.posZ + (!isX ? i : j)) != CommonProxy.blockStabilizer.blockID)
                     {
@@ -161,7 +222,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
             }
         }
 
-        rows = tempHeight;
+        is3x3 = false;
         return blocks;
     }
 
@@ -233,6 +294,7 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
     public void usePacket(DataInputStream stream) throws IOException
     {
         isFormed = stream.readBoolean();
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override

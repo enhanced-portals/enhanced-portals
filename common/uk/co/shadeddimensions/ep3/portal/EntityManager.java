@@ -65,19 +65,37 @@ public class EntityManager
         {
             if (controller.worldObj.isBlockOpaqueCube(loc.posX, loc.posY, loc.posZ + 1))
             {
-                return 180f; // 2
+                return 180f;
             }
 
-            return 0f; // 0
+            return 0f;
         }
         else if (controller.portalType == 2)
         {
             if (controller.worldObj.isBlockOpaqueCube(loc.posX - 1, loc.posY, loc.posZ))
             {
-                return -90f; // 3
+                return -90f;
             }
 
-            return 90f; // 1
+            return 90f;
+        }
+        else if (controller.portalType == 4)
+        {
+            if (controller.worldObj.isBlockOpaqueCube(loc.posX + 1, loc.posY, loc.posZ + 1))
+            {
+                return 135f;
+            }
+            
+            return -45f;
+        }
+        else if (controller.portalType == 5)
+        {
+            if (controller.worldObj.isBlockOpaqueCube(loc.posX - 1, loc.posY, loc.posZ + 1))
+            {
+                return -135f;
+            }
+            
+            return 45f;
         }
 
         return entity.rotationYaw;
@@ -162,6 +180,11 @@ public class EntityManager
 
     public static void setEntityPortalCooldown(Entity entity)
     {
+        if (entity == null)
+        {
+            return;
+        }
+        
         if (CommonProxy.fasterPortalCooldown || entity instanceof EntityPlayer || entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse)
         {
             entity.timeUntilPortal = PLAYER_COOLDOWN_RATE;

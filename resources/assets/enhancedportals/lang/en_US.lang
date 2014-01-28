@@ -29,6 +29,7 @@ item.ep3.entityCard.name=Identification Card
 item.ep3.handheldScanner.name=Handheld Scanner
 item.ep3.miscItems.blankPortalModule.name=Blank Portal Module
 item.ep3.miscItems.blankUpgrade.name=Blank Upgrade
+item.ep3.guide.name=EnhancedPortals Manual
 
 # Items Misc
 ep3.item.charge=Charge:
@@ -220,7 +221,7 @@ ep3.gui.particleType.3.info=Continuously loops through its sequence
 
 # Guide
 ep3.gui.mainMain=Welcome!
-ep3.gui.mainMain.information=The information is split up into sections, you will find the categories on the left. When you have selected a category, its contents will show up in new tabs on the right.<N><N>Last Update: Beta 4.
+ep3.gui.mainMain.information=This manual is split up into sections, you will find the categories on the left. When you have selected a category, its contents will show up in new tabs on the right.<N><N>Last Update: Beta 4.
 
 ep3.gui.mainBlocks=Blocks
 ep3.gui.mainBlocks.information=Use the tabs to the right to see information about a specific block.

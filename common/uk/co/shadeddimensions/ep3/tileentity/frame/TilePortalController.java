@@ -367,7 +367,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
     {
         if (pass == 0)
         {
-            return super.getBlockTexture(side, pass);
+            return isFullyInitialized() ? BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side) : BlockFrame.connectedTextures.getBaseIcon();
         }
 
         return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[1] : BlockFrame.overlayIcons[0];

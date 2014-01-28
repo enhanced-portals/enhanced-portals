@@ -50,12 +50,12 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
 
-    public int powerState;
     ItemStack inventory;
     int rows, tickTimer;
     EnergyStorage energyStorage;
-    public int instability = 0;
+    public int powerState, instability = 0;
     Random rand = new Random();
+    public boolean is3x3 = false;
 
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
@@ -509,7 +509,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         super.readFromNBT(tag);
         powerState = tag.getInteger("powerState");
         rows = tag.getInteger("rows");
-        energyStorage = new EnergyStorage(rows * ENERGY_STORAGE_PER_ROW);
+        energyStorage = new EnergyStorage(rows * getEnergyStoragePerRow());
         blockList = GeneralUtils.loadChunkCoordList(tag, "blockList");
         energyStorage.readFromNBT(tag);
 
@@ -556,14 +556,20 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         }
     }
 
-    public void setData(ArrayList<ChunkCoordinates> blocks, int rows2)
+    public void setData(ArrayList<ChunkCoordinates> blocks, int rows2, boolean is3)
     {
+        is3x3 = is3;
         rows = rows2;
         blockList = blocks;
-        energyStorage = new EnergyStorage(rows * ENERGY_STORAGE_PER_ROW);
+        energyStorage = new EnergyStorage(rows * getEnergyStoragePerRow());
         CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
+    public int getEnergyStoragePerRow()
+    {
+        return is3x3 ? ENERGY_STORAGE_PER_ROW + (ENERGY_STORAGE_PER_ROW / 2) : ENERGY_STORAGE_PER_ROW;
+    }
+    
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
@@ -827,6 +833,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         instability = stream.readInt();
         energyStorage.setCapacity(stream.readInt());
         energyStorage.setEnergyStored(stream.readInt());
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override

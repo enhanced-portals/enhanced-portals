@@ -77,11 +77,8 @@ public class TilePortal extends TilePortalPart
                 controller.onEntityEnterPortal(entity, this);
             }
         }
-
-        if (entity != null)
-        {
-            EntityManager.setEntityPortalCooldown(entity);
-        }
+        
+        EntityManager.setEntityPortalCooldown(entity);
     }
 
     @Override

@@ -10,8 +10,8 @@ import uk.co.shadeddimensions.ep3.lib.GUIs;
 
 public class ItemGuide extends ItemEnhancedPortals
 {
-    public static Icon texture;
-
+    Icon texture;
+    
     public ItemGuide(int id, String name)
     {
         super(id, true);
@@ -24,11 +24,11 @@ public class ItemGuide extends ItemEnhancedPortals
     {
         return texture;
     }
-
+    
     @Override
-    public void registerIcons(IconRegister register)
+    public void registerIcons(IconRegister iconRegister)
     {
-        texture = register.registerIcon("enhancedportals:paintbrush");
+        texture = iconRegister.registerIcon("enhancedportals:guide");
     }
     
     @Override

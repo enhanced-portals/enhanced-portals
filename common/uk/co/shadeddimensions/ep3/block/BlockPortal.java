@@ -35,6 +35,7 @@ public class BlockPortal extends BlockEnhancedPortals
         setBlockUnbreakable();
         setResistance(2000);
         setUnlocalizedName(name);
+        setLightOpacity(0);
         setStepSound(soundGlassFootstep);
     }
 
@@ -181,6 +182,15 @@ public class BlockPortal extends BlockEnhancedPortals
                 {
                     d1 = y + 0.5D + 0.25D * i1;
                     d4 = random.nextFloat() * 2.0F * i1;
+                }
+                else if (metadata == 4)
+                {
+                    d3 = d5 = random.nextFloat() * 2F * i1;
+                }
+                else if (metadata == 5)
+                {
+                    d3 = d5 = random.nextFloat() * 2F * i1;
+                    d3 = -d3;
                 }
 
                 FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, controller, module, d0, d1, d2, d3, d4, d5));
