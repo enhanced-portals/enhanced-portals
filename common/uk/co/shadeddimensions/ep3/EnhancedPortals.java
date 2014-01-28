@@ -5,7 +5,6 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import uk.co.shadeddimensions.ep3.addon.AddonManager;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -19,7 +18,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -50,21 +48,12 @@ public class EnhancedPortals
 
         MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-
-        AddonManager.instance.init();
     }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        AddonManager.instance.postInit();
-    }
-
+    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
-        AddonManager.instance.preInit();
     }
 
     @EventHandler

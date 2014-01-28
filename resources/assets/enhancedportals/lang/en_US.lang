@@ -10,6 +10,7 @@ tile.ep3.portal.name=Portal
 tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
 tile.ep3.decoration.frame.name=Bordered Quartz
 tile.ep3.decoration.stabilizer.name=Stabilizer
+tile.ep3.crafting.name=Dimensional Bridge Stabilizer (Empty)
 
 # Block Misc
 ep3.block.portalFramePart=Portal Frame Part
