@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -45,16 +46,94 @@ public class BlockNetherPortal extends net.minecraft.block.BlockPortal
 
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
+    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int par5)
     {
-        int id = par1IBlockAccess.getBlockId(par2, par3, par4);
+        int blocks[] = new int[6];
         
-        if (id == this.blockID || id == Block.obsidian.blockID)
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            blocks[i] = blockAccess.getBlockId(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+        }
+        
+        if (PortalUtils.isNetherPortalPart(blocks[0]) & PortalUtils.isNetherPortalPart(blocks[1]))
+        {
+            if (PortalUtils.isNetherPortalPart(blocks[2]) & PortalUtils.isNetherPortalPart(blocks[3]))
+            {
+                return false;
+            }
+            else if (PortalUtils.isNetherPortalPart(blocks[4]) & PortalUtils.isNetherPortalPart(blocks[5]))
+            {
+                return false;
+            }
+        }
+        else if (PortalUtils.isNetherPortalPart(blocks[2]) & PortalUtils.isNetherPortalPart(blocks[3]) & PortalUtils.isNetherPortalPart(blocks[4]) & PortalUtils.isNetherPortalPart(blocks[5]))
         {
             return false;
         }
         
         return true;
+    }
+    
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int par5)
+    {
+        if (par5 == blockID || par5 == Block.obsidian.blockID)
+        {
+            int blocks[] = new int[6];
+            
+            for (int i = 0; i < 6; i++)
+            {
+                ForgeDirection d = ForgeDirection.getOrientation(i);
+                blocks[i] = world.getBlockId(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+            }
+            
+            if (PortalUtils.isNetherPortalPart(blocks[0]) & PortalUtils.isNetherPortalPart(blocks[1]))
+            {
+                if (PortalUtils.isNetherPortalPart(blocks[2]) & PortalUtils.isNetherPortalPart(blocks[3]))
+                {
+                    return;
+                }
+                else if (PortalUtils.isNetherPortalPart(blocks[4]) & PortalUtils.isNetherPortalPart(blocks[5]))
+                {
+                    return;
+                }
+            }
+            else if (PortalUtils.isNetherPortalPart(blocks[2]) & PortalUtils.isNetherPortalPart(blocks[3]) & PortalUtils.isNetherPortalPart(blocks[4]) & PortalUtils.isNetherPortalPart(blocks[5]))
+            {
+                return;
+            }
+            
+            world.setBlockToAir(x, y, z);
+        }
+    }
+    
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
+    {
+        int blocks[] = new int[6];
+        
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            blocks[i] = blockAccess.getBlockId(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+        }
+        
+        if (PortalUtils.isNetherPortalPart(blocks[0]) & PortalUtils.isNetherPortalPart(blocks[1]))
+        {
+            if (PortalUtils.isNetherPortalPart(blocks[2]) & PortalUtils.isNetherPortalPart(blocks[3]))
+            {
+                setBlockBounds(0.375f, 0f, 0f, 0.625f, 1f, 1f);
+            }
+            else if (PortalUtils.isNetherPortalPart(blocks[4]) & PortalUtils.isNetherPortalPart(blocks[5]))
+            {
+                setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);
+            }
+        }
+        else if (PortalUtils.isNetherPortalPart(blocks[2]) & PortalUtils.isNetherPortalPart(blocks[3]) & PortalUtils.isNetherPortalPart(blocks[4]) & PortalUtils.isNetherPortalPart(blocks[5]))
+        {
+            setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
+        }
     }
     
     @SideOnly(Side.CLIENT)

@@ -443,42 +443,51 @@ public class PortalUtils
     public static boolean createNetherPortalFrom(World world, int x, int y, int z)
     {
         world.setBlockToAir(x, y, z);
-        boolean madePortal = false;
         
-        for (ChunkCoordinates c : getGhostedNetherPortal(world, x, y, z))
+        for (int i = 1; i < 4; i++)
         {
-            world.setBlock(c.posX, c.posY, c.posZ, Block.portal.blockID, 0, 2);
-            madePortal = true;
+            if (createNetherPortal(world, new ChunkCoordinates(x, y, z), i))
+            {
+                return true;
+            }
         }
         
-        return madePortal;
+        return false;
     }
 
-    static Queue<ChunkCoordinates> getGhostedNetherPortal(World world, int x, int y, int z)
+    static boolean isNetherPortalPart(World world, int x, int y, int z)
     {
-        Queue<ChunkCoordinates> list = new LinkedList<ChunkCoordinates>();
+        return isNetherPortalPart(world.getBlockId(x, y, z));
+    }
+    
+    public static boolean isNetherPortalPart(int id)
+    {
+        return id == Block.portal.blockID || id == Block.obsidian.blockID;
+    }
+    
+    static int getNetherSides(World world, ChunkCoordinates w, int portalDirection)
+    {
+        int sides = 0;
+        Queue<ChunkCoordinates> neighbors = new LinkedList<ChunkCoordinates>();
+        addNearbyBlocks(world, w, portalDirection, neighbors);
 
-        for (int j = 0; j < 3; j++)
-        {       
-            list = ghostNetherPortal(world, x, y, z, j);
-
-            if (!list.isEmpty())
+        for (ChunkCoordinates c : neighbors)
+        {
+            if (isNetherPortalPart(world, c.posX, c.posY, c.posZ))
             {
-                return list;
+                sides++;
             }
         }
 
-        return list;
+        return sides;
     }
-
-    static Queue<ChunkCoordinates> ghostNetherPortal(World world, int x, int y, int z, int portalDirection)
-    {        
+    
+    static boolean createNetherPortal(World world, ChunkCoordinates w, int portalDirection)
+    {
         Queue<ChunkCoordinates> processed = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
-        Queue<ChunkCoordinates> ghostedPortals = new LinkedList<ChunkCoordinates>();
         int chances = 0;
-
-        toProcess.add(new ChunkCoordinates(x, y, z));
+        toProcess.add(w);
 
         while (!toProcess.isEmpty())
         {
@@ -488,7 +497,7 @@ public class PortalUtils
             {
                 if (world.isAirBlock(c.posX, c.posY, c.posZ))
                 {
-                    int sides = getNetherGhostedSides(world, c, portalDirection, ghostedPortals);
+                    int sides = getNetherSides(world, c, portalDirection);
 
                     if (sides < 2)
                     {
@@ -499,48 +508,26 @@ public class PortalUtils
                         }
                         else
                         {
-                            return new LinkedList<ChunkCoordinates>();
+                            removeFailedPortal(world, processed);
+                            return false;
                         }
                     }
 
                     if (sides >= 2)
                     {
                         processed.add(c);
-                        ghostedPortals.add(c);
-
+                        world.setBlock(c.posX, c.posY, c.posZ, Block.portal.blockID, 0, 2);
                         addNearbyBlocks(world, c, portalDirection, toProcess);
                     }
                 }
                 else if (!isNetherPortalPart(world, c.posX, c.posY, c.posZ))
                 {
-                    return new LinkedList<ChunkCoordinates>();
+                    removeFailedPortal(world, processed);
+                    return false;
                 }
             }
         }
 
-        return ghostedPortals;
-    }
-
-    static boolean isNetherPortalPart(World world, int x, int y, int z)
-    {
-        int id = world.getBlockId(x, y, z);
-        return id == Block.portal.blockID || id == Block.obsidian.blockID;
-    }
-
-    static int getNetherGhostedSides(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> ghostedParts)
-    {
-        int sides = 0;
-        Queue<ChunkCoordinates> neighbors = new LinkedList<ChunkCoordinates>();
-        addNearbyBlocks(world, w, portalDirection, neighbors);
-
-        for (ChunkCoordinates c : neighbors)
-        {
-            if (ghostedParts.contains(c) || isNetherPortalPart(world, c.posX, c.posY, c.posZ))
-            {
-                sides++;
-            }
-        }
-
-        return sides;
+        return true;
     }
 }
