@@ -30,7 +30,6 @@ public class ThermalExpansion
         ThermalExpansionHelper.addTransposerFill(15000, new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 1), new FluidStack(FluidRegistry.getFluidID("ender"), 125), false);
         
         ThermalExpansionHelper.addTransposerFill(25000, new ItemStack(CommonProxy.blockCrafting, 1, 0), new ItemStack(CommonProxy.blockStabilizer, 1, 0), new FluidStack(FluidRegistry.getFluidID("ender"), 150), false);
-        
     }
     
     static ItemStack getItemStack(String ID)

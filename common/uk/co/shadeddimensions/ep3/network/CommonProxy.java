@@ -317,7 +317,7 @@ public class CommonProxy
     {
         Vanilla.registerRecipes();
         
-        if (Loader.isModLoaded("ThermalExpansion"))
+        if (Loader.isModLoaded("ThermalExpansion") && !CommonProxy.disableTERecipes)
         {
             ThermalExpansion.registerRecipes();
             ThermalExpansion.registerMachineRecipes();

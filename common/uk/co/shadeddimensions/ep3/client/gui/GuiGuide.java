@@ -1,12 +1,14 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import codechicken.nei.VisiblityData;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -288,5 +290,12 @@ public class GuiGuide extends GuiBase
         {
             scrollPanel.addElement(new ElementTextBox(this, 8, 18, Localization.getGuiString(page + ".information"), scrollPanel.getWidth() - 14, 0xFFFFFF, false));
         }
+    }
+    
+    @Override
+    public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility)
+    {
+        currentVisibility.showNEI = false;
+        return currentVisibility;
     }
 }

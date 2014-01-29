@@ -18,6 +18,12 @@ import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
 public class TileEnhancedPortals extends TileEntity
 {
+    @Override
+    public boolean canUpdate()
+    {
+        return false;
+    }
+    
     public boolean activate(EntityPlayer player)
     {
         return false;

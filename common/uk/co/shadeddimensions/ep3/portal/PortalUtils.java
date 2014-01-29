@@ -29,7 +29,7 @@ public class PortalUtils
      */
     public static void addNearbyBlocks(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> q)
     {
-        if (portalDirection == 4)
+        if (portalDirection == 4 || portalDirection == 0)
         {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
@@ -37,7 +37,8 @@ public class PortalUtils
             q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North East
             q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South West
         }
-        else if (portalDirection == 5)
+        
+        if (portalDirection == 5 || portalDirection == 0)
         {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
@@ -45,7 +46,8 @@ public class PortalUtils
             q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North West
             q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South East
         }
-        else
+        
+        if (portalDirection < 4)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -254,7 +256,7 @@ public class PortalUtils
                     }
 
                     portalParts.add(c);
-                    addNearbyBlocks(controller.worldObj, c, 0, toProcess);
+                    addNearbyBlocks(controller.worldObj, c, controller.portalType, toProcess);
                 }
             }
         }
@@ -360,23 +362,6 @@ public class PortalUtils
                     {
                         processed.add(c);
                         ghostedPortals.add(c);
-
-                        /*if (portalDirection >= 4)
-                        {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                ForgeDirection d = ForgeDirection.getOrientation(2 + i);
-
-                                if (!world.isAirBlock(c.posX + d.offsetX, c.posY, c.posZ + d.offsetZ))
-                                {
-                                    System.out.println("Corner block failed!");
-                                    return new LinkedList<ChunkCoordinates>();
-                                }
-
-                                ghostedPortals.add(new ChunkCoordinates(c.posX + d.offsetX, c.posY, c.posZ + d.offsetZ));
-                            }
-                        }*/
-
                         addNearbyBlocks(world, c, portalDirection, toProcess);
                     }
                 }
@@ -434,7 +419,7 @@ public class PortalUtils
     }
 
     /**
-     * Creates a nether portal from the specified Obsidian block.
+     * Creates a nether portal from the specified Fire block.
      * @param world
      * @param x
      * @param y

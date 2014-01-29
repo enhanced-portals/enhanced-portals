@@ -8,6 +8,12 @@ import cpw.mods.fml.relauncher.Side;
 public class TilePortalFrameSpecial extends TilePortalFrame
 {
     @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
+    
+    @Override
     public void updateEntity()
     {
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT && Minecraft.getSystemTime() % 10 == 0)

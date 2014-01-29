@@ -508,6 +508,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     {
         super.readFromNBT(tag);
         powerState = tag.getInteger("powerState");
+        is3x3 = tag.getBoolean("is3x3");
         rows = tag.getInteger("rows");
         energyStorage = new EnergyStorage(rows * getEnergyStoragePerRow());
         blockList = GeneralUtils.loadChunkCoordList(tag, "blockList");
@@ -756,6 +757,12 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             throw new PortalDialException("Could not find both portals in the active connection list.");
         }
     }
+    
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
 
     @Override
     public void updateEntity()
@@ -848,6 +855,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     {
         super.writeToNBT(tag);
         energyStorage.writeToNBT(tag);
+        tag.setBoolean("is3x3", is3x3);
         tag.setInteger("powerState", powerState);
         tag.setInteger("rows", rows);
         GeneralUtils.saveChunkCoordList(tag, blockList, "blockList");
