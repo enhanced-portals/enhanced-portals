@@ -23,8 +23,8 @@ public class ThermalExpansion
     
     public static void registerMachineRecipes()
     {
-        ThermalExpansionHelper.addTransposerFill(10000, new ItemStack(CommonProxy.blockFrame, 1, 0), new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new FluidStack(FluidRegistry.getFluidID("redstone"), 500), false);
-        ThermalExpansionHelper.addTransposerFill(10000, new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 0), new FluidStack(FluidRegistry.getFluidID("redstone"), 500), false);
+        ThermalExpansionHelper.addTransposerFill(10000, new ItemStack(CommonProxy.blockFrame, 1, 0), new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.REDSTONE_INTERFACE), new FluidStack(FluidRegistry.getFluidID("redstone"), 200), false);
+        ThermalExpansionHelper.addTransposerFill(10000, new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 0), new FluidStack(FluidRegistry.getFluidID("redstone"), 200), false);
         
         ThermalExpansionHelper.addTransposerFill(15000, new ItemStack(CommonProxy.blockFrame, 1, 0), new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.NETWORK_INTERFACE), new FluidStack(FluidRegistry.getFluidID("ender"), 125), false);
         ThermalExpansionHelper.addTransposerFill(15000, new ItemStack(CommonProxy.itemMisc, 1, 1), new ItemStack(CommonProxy.itemInPlaceUpgrade, 1, 1), new FluidStack(FluidRegistry.getFluidID("ender"), 125), false);
