@@ -29,7 +29,7 @@ public class PortalUtils
      */
     public static void addNearbyBlocks(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> q)
     {
-        if (portalDirection == 4 || portalDirection == 0)
+        if (portalDirection == 4)
         {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
@@ -37,8 +37,7 @@ public class PortalUtils
             q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North East
             q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South West
         }
-        
-        if (portalDirection == 5 || portalDirection == 0)
+        else if (portalDirection == 5)
         {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
@@ -46,8 +45,7 @@ public class PortalUtils
             q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North West
             q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South East
         }
-        
-        if (portalDirection < 4)
+        else
         {
             for (int i = 0; i < 6; i++)
             {
@@ -198,6 +196,11 @@ public class PortalUtils
                 {
                     if (t != null)
                     {
+                        if (!(t instanceof TilePortalController) && ((TilePortalPart) t).getPortalController() != null)
+                        {
+                            continue;
+                        }
+                        
                         if (t instanceof TileNetworkInterface)
                         {
                             if (networkCounter == 1)
@@ -257,6 +260,7 @@ public class PortalUtils
 
                     portalParts.add(c);
                     addNearbyBlocks(controller.worldObj, c, controller.portalType, toProcess);
+                    addNearbyBlocks(controller.worldObj, c, 0, toProcess);
                 }
             }
         }
