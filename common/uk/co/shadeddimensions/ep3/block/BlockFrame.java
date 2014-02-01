@@ -2,9 +2,11 @@ package uk.co.shadeddimensions.ep3.block;
 
 import java.util.List;
 
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +17,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.lib.Reference;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
@@ -29,7 +34,7 @@ import uk.co.shadeddimensions.library.ct.ConnectedTexturesDetailed;
 import cofh.api.block.IDismantleable;
 import cofh.api.tileentity.ISidedBlockTexture;
 
-public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
+public class BlockFrame extends BlockContainer implements IDismantleable
 {
     public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, FRAME_TYPES = 7;
 
@@ -39,7 +44,8 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
 
     public BlockFrame(int id, String name)
     {
-        super(id, Material.rock, true);
+        super(id, Material.rock);
+        setCreativeTab(Reference.creativeTab);
         setHardness(5);
         setResistance(2000);
         setUnlocalizedName(name);
@@ -68,7 +74,7 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     @Override
     public boolean canRenderInPass(int pass)
     {
-        BlockEnhancedPortals.renderPass = pass;
+        ClientProxy.renderPass = pass;
         return pass < 2;
     }
 
@@ -150,7 +156,7 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return ((ISidedBlockTexture) blockAccess.getBlockTileEntity(x, y, z)).getBlockTexture(side, BlockEnhancedPortals.renderPass);
+        return ((ISidedBlockTexture) blockAccess.getBlockTileEntity(x, y, z)).getBlockTexture(side, ClientProxy.renderPass);
     }
 
     @Override
@@ -194,5 +200,102 @@ public class BlockFrame extends BlockEnhancedPortals implements IDismantleable
         }
 
         connectedTextures.registerIcons(register);
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
+    {
+        ((TilePortalPart) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);        
+        super.breakBlock(world, x, y, z, oldID, newID);
+    }
+    
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileFrame)
+        {
+            return ((TileFrame) tile).activate(player);
+        }
+        else if (tile instanceof TilePortalController)
+        {
+            return ((TilePortalController) tile).activate(player);
+        }
+        else if (tile instanceof TileRedstoneInterface)
+        {
+            return ((TileRedstoneInterface) tile).activate(player);
+        }
+        else if (tile instanceof TileNetworkInterface)
+        {
+            return ((TileNetworkInterface) tile).activate(player);
+        }
+        else if (tile instanceof TileDiallingDevice)
+        {
+            return ((TileDiallingDevice) tile).activate(player);
+        }
+        else if (tile instanceof TileBiometricIdentifier)
+        {
+            return ((TileBiometricIdentifier) tile).activate(player);
+        }
+        else if (tile instanceof TileModuleManipulator)
+        {
+            return ((TileModuleManipulator) tile).activate(player);
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+    {
+        ((TilePortalPart) world.getBlockTileEntity(x, y, z)).onBlockPlacedBy(entity, stack);
+    }
+    
+    @Override
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
+    {
+        return ((TilePortalPart) blockAccess.getBlockTileEntity(x, y, z)).getColourMultiplier();
+    }
+    
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileRedstoneInterface)
+        {
+            ((TileRedstoneInterface) tile).onNeighborBlockChange(id);
+        }
+        else if (tile instanceof TileBiometricIdentifier)
+        {
+            ((TileBiometricIdentifier) tile).onNeighborBlockChange(id);
+        }
+    }
+    
+    @Override
+    public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileRedstoneInterface)
+        {
+            return ((TileRedstoneInterface) tile).isProvidingStrongPower(side);
+        }
+        
+        return 0;
+    }
+    
+    @Override
+    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileRedstoneInterface)
+        {
+            return ((TileRedstoneInterface) tile).isProvidingWeakPower(side);
+        }
+        
+        return 0;
     }
 }

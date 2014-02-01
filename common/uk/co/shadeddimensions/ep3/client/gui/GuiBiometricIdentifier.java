@@ -12,13 +12,13 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementButton;
 import uk.co.shadeddimensions.library.gui.element.ElementButtonIcon;
 import uk.co.shadeddimensions.library.gui.element.ElementScrollBar;
 import uk.co.shadeddimensions.library.gui.element.ElementScrollPanelOverlay;
 
-public class GuiBiometricIdentifier extends GuiBase
+public class GuiBiometricIdentifier extends GuiBaseContainer
 {
     TileBiometricIdentifier biometric;
     ElementScrollPanelOverlay sendList;

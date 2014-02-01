@@ -13,15 +13,15 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementRedstoneFlux;
 import uk.co.shadeddimensions.library.gui.tab.TabRedstoneFlux;
 
-public class GuiDimensionalBridgeStabilizer extends GuiBase
+public class GuiDimensionalBridgeStabilizer extends GuiBaseContainer
 {
     class TabRedstoneFluxInfo extends TabRedstoneFlux
     {
-        public TabRedstoneFluxInfo(GuiBase gui, ElementRedstoneFlux f)
+        public TabRedstoneFluxInfo(GuiBaseContainer gui, ElementRedstoneFlux f)
         {
             super(gui, f);
             maxHeight += 35;

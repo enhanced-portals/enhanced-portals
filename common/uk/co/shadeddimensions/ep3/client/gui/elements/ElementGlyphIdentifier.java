@@ -1,13 +1,13 @@
 package uk.co.shadeddimensions.ep3.client.gui.elements;
 
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.IGuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementBaseContainer;
 
 public class ElementGlyphIdentifier extends ElementBaseContainer
 {
     ElementGlyphSelector selector;
 
-    public ElementGlyphIdentifier(GuiBase parent, int x, int y, ElementGlyphSelector sel)
+    public ElementGlyphIdentifier(IGuiBase parent, int x, int y, ElementGlyphSelector sel)
     {
         super(parent, x, y, 162, 18);
         selector = sel;

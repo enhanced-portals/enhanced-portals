@@ -32,7 +32,6 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         mainBlock = null;
     }
 
-    @Override
     public boolean activate(EntityPlayer player)
     {
         if (worldObj.isRemote)
@@ -131,7 +130,6 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
         return false;
     }
 
-    @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
         TileStabilizerMain main = getMainBlock();

@@ -7,12 +7,12 @@ import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementRedstoneFlux;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.ItemEnergyContainer;
 
-public class GuiScanner extends GuiBase
+public class GuiScanner extends GuiBaseContainer
 {
     ItemStack stack;
     EnergyStorage storage = new EnergyStorage(2000, 250, 250);

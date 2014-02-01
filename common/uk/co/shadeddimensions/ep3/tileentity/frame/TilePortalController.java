@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +21,7 @@ import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
+import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRerender;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
@@ -68,7 +71,6 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         isPortalActive = processing = processingPortal = false;
     }
 
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
@@ -86,7 +88,8 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
             {
                 return false;
             }
-            else if (item.itemID == CommonProxy.itemLocationCard.itemID && ItemLocationCard.hasDBSLocation(item))
+            
+            if (item.itemID == CommonProxy.itemLocationCard.itemID && ItemLocationCard.hasDBSLocation(item))
             {
                 WorldCoordinates stabilizer = ItemLocationCard.getDBSLocation(item);
 
@@ -111,18 +114,19 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
                     }
                 }
             }
-            else if (ItemHelper.isWrench(item) && isFullyInitialized() && !player.isSneaking())
+            else if (ItemHelper.isWrench(item))
             {
                 CommonProxy.openGui(player, GUIs.PortalController, this);
             }
-            else if (item.itemID == CommonProxy.itemPaintbrush.itemID && isFullyInitialized())
+            else if (item.itemID == CommonProxy.itemPaintbrush.itemID)
             {
                 CommonProxy.openGui(player, GUIs.TexturesFrame, this);
             }
 
             return true;
         }
-        else if (portalState == 2)
+        
+        if (portalState == 2)
         {
             if (ItemHelper.isWrench(item))
             {
@@ -194,6 +198,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         }
 
         portalState = 1;
+        isPortalActive = false;
 
         if (!isReconfiguring)
         {
@@ -214,6 +219,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
 
         }
 
+        CommonProxy.sendUpdatePacketToAllAround(this);
         return true;
     }
 
@@ -276,31 +282,6 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getErrorString(e.getMessage())));
             }
         }
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        ItemStack stack = getStackInSlot(i);
-
-        if (stack != null)
-        {
-            if (stack.stackSize <= j)
-            {
-                setInventorySlotContents(i, null);
-            }
-            else
-            {
-                stack = stack.splitStack(j);
-
-                if (stack.stackSize == 0)
-                {
-                    setInventorySlotContents(i, null);
-                }
-            }
-        }
-
-        return stack;
     }
 
     public void dialRequest(GlyphIdentifier id, PortalTextureManager m, EntityPlayer player)
@@ -366,22 +347,30 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
     {
         if (pass == 0)
         {
-            return isFullyInitialized() ? BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side) : BlockFrame.connectedTextures.getBaseIcon();
+            if (isFullyInitialized())
+            {
+                if (activeTextureData.hasCustomFrameTexture())
+                {
+                    return ClientProxy.customFrameTextures.get(activeTextureData.getCustomFrameTexture());
+                }
+                else if (activeTextureData.getFrameItem() != null && activeTextureData.getFrameItem().getItem() instanceof ItemBlock)
+                {
+                    return Block.blocksList[((ItemBlock) activeTextureData.getFrameItem().getItem()).getBlockID()].getIcon(side, activeTextureData.getFrameItem().getItemDamage());
+                }
+                
+                return BlockFrame.connectedTextures.getIconForSide(worldObj, xCoord, yCoord, zCoord, side);
+            }
+            
+            return BlockFrame.connectedTextures.getBaseIcon();
         }
 
         return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[1] : BlockFrame.overlayIcons[0];
     }
-
+    
     @Override
-    public int getInventoryStackLimit()
+    public int getColourMultiplier()
     {
-        return 1;
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return "tile.ep3.portalFrame.controller.name";
+        return isFullyInitialized() ? activeTextureData.getFrameColour() : 0xFFFFFF;
     }
 
     /***
@@ -403,24 +392,6 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
     public TilePortalController getPortalController()
     {
         return this;
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return 2;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return i == 0 ? activeTextureData.getFrameItem() : i == 1 ? activeTextureData.getPortalItem() : null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return i == 0 ? activeTextureData.getFrameItem() : i == 1 ? activeTextureData.getPortalItem() : null;
     }
 
     /***
@@ -675,12 +646,6 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         return portalState == 1;
     }
 
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack stack)
-    {
-        return false;
-    }
-
     public void onEntityEnterPortal(Entity entity, TilePortal portal)
     {
         GlyphIdentifier uID = getUniqueIdentifier();
@@ -801,6 +766,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
 
         blockManager = new BlockManager();
         blockManager.setDimensionalBridgeStabilizer(dbs);
+        CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
     @Override
@@ -865,20 +831,6 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         activeTextureData = new PortalTextureManager(inactiveTextureData);
         inactiveTextureData = null;
         CommonProxy.sendUpdatePacketToAllAround(this);
-    }
-
-    /* IInventory */
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-        if (i == 0)
-        {
-            activeTextureData.setFrameItem(itemstack);
-        }
-        else if (i == 1)
-        {
-            activeTextureData.setPortalItem(itemstack);
-        }
     }
 
     public void setPortalActive(boolean b)

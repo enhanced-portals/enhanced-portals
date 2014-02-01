@@ -23,7 +23,7 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
 import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
 import uk.co.shadeddimensions.library.gui.element.ElementBase;
@@ -33,12 +33,13 @@ import uk.co.shadeddimensions.library.gui.element.ElementScrollPanelOverlay;
 import uk.co.shadeddimensions.library.gui.element.ElementText;
 import uk.co.shadeddimensions.library.gui.tab.TabBase;
 import uk.co.shadeddimensions.library.gui.tab.TabToggleButton;
+import uk.co.shadeddimensions.library.util.GuiUtils;
 
-public class GuiTextureDialler extends GuiBase
+public class GuiTextureDialler extends GuiBaseContainer
 {
     class ColourTab extends TabBase
     {
-        public ColourTab(GuiBase gui)
+        public ColourTab(GuiBaseContainer gui)
         {
             super(gui);
             backgroundColor = 0x5396da;
@@ -49,7 +50,7 @@ public class GuiTextureDialler extends GuiBase
         public void draw()
         {
             drawBackground();
-            drawIcon(ItemPaintbrush.texture, posX + 2, posY + 4, 1);
+            GuiUtils.drawIcon(gui, ItemPaintbrush.texture, posX + 2, posY + 4, 1);
 
             if (isFullyOpened())
             {
@@ -150,12 +151,6 @@ public class GuiTextureDialler extends GuiBase
             ClientProxy.editingDialEntry = -1;
             CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
         }
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
-    {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
     }
 
     @Override

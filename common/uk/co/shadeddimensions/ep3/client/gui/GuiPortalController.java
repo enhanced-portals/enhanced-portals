@@ -1,5 +1,7 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.gui.GuiButton;
@@ -18,6 +20,7 @@ import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.gui.GuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementItemIconWithCount;
 import uk.co.shadeddimensions.library.gui.element.ElementItemStackPanel;
+import uk.co.shadeddimensions.library.util.GuiUtils;
 
 public class GuiPortalController extends GuiBase
 {
@@ -35,7 +38,6 @@ public class GuiPortalController extends GuiBase
         ySize = 144;
         controller = tile;
         overlayActive = false;
-        drawInventory = false;
     }
 
     @Override
@@ -122,7 +124,7 @@ public class GuiPortalController extends GuiBase
     }
 
     @Override
-    protected void drawBackgroundTexture()
+    public void drawBackgroundTexture()
     {
         super.drawBackgroundTexture();
 
@@ -133,7 +135,7 @@ public class GuiPortalController extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    public void drawGuiForegroundLayer(int x, int y)
     {
         drawCenteredString(fontRenderer, Localization.getGuiString("portalController"), xSize / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("uniqueIdentifier"), 8, 8, 0x404040);
@@ -145,12 +147,15 @@ public class GuiPortalController extends GuiBase
             {
                 if (y >= guiTop + 20 && y <= guiTop + 37)
                 {
-                    drawCreativeTabHoveringText(Localization.getGuiString("clickToModify"), x - guiLeft, y - guiTop);
+                    List<String> list = new ArrayList<String>();
+                    list.add(Localization.getGuiString("clickToModify"));
+                    
+                    GuiUtils.drawTooltipHoveringText(this, list, x - guiLeft, y - guiTop);
                 }
             }
         }
 
-        super.drawGuiContainerForegroundLayer(x, y);
+        super.drawGuiForegroundLayer(x, y);
     }
 
     @SuppressWarnings("unchecked")

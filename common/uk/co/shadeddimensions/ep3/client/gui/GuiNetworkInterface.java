@@ -1,5 +1,7 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.gui.GuiButton;
@@ -13,6 +15,7 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.util.GuiUtils;
 
 public class GuiNetworkInterface extends GuiBase
 {
@@ -25,7 +28,6 @@ public class GuiNetworkInterface extends GuiBase
     public GuiNetworkInterface(TilePortalController tile)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
-        drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;
@@ -85,7 +87,7 @@ public class GuiNetworkInterface extends GuiBase
     }
 
     @Override
-    protected void drawBackgroundTexture()
+    public void drawBackgroundTexture()
     {
         super.drawBackgroundTexture();
 
@@ -96,9 +98,9 @@ public class GuiNetworkInterface extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y)
+    public void drawGuiForegroundLayer(int x, int y)
     {
-        super.drawGuiContainerForegroundLayer(x, y);
+        super.drawGuiForegroundLayer(x, y);
 
         drawCenteredString(fontRenderer, Localization.getGuiString("networkInterface"), xSize / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("networkIdentifier"), 8, 8, 0x404040);
@@ -114,7 +116,10 @@ public class GuiNetworkInterface extends GuiBase
             {
                 if (y >= guiTop + 20 && y <= guiTop + 37)
                 {
-                    drawCreativeTabHoveringText(Localization.getGuiString("clickToModify"), x - guiLeft, y - guiTop);
+                    List<String> list = new ArrayList<String>();
+                    list.add(Localization.getGuiString("clickToModify"));
+                    
+                    GuiUtils.drawTooltipHoveringText(this, list, x - guiLeft, y - guiTop);
                 }
             }
         }

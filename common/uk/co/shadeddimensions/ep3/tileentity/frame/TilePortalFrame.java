@@ -17,19 +17,6 @@ public class TilePortalFrame extends TilePortalPart implements ISidedBlockTextur
     protected boolean wearingGoggles = GeneralUtils.isWearingGoggles();
 
     @Override
-    public int getColourMultiplier()
-    {
-        TilePortalController controller = getPortalController();
-
-        if (controller != null)
-        {
-            return controller.activeTextureData.getFrameColour();
-        }
-
-        return super.getColourMultiplier();
-    }
-
-    @Override
     public Icon getBlockTexture(int side, int pass)
     {
         if (pass == 0)

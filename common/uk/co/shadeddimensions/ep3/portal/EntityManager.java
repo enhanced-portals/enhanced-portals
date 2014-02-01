@@ -19,7 +19,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
@@ -197,17 +196,17 @@ public class EntityManager
 
     public static void teleportEntityHighestInstability(Entity par1Entity)
     {
-        boolean nether = MinecraftServer.getServer().getAllowNether();
-        ChunkCoordinates spawn = nether ? DimensionManager.getWorld(-1).getSpawnPoint() : par1Entity.worldObj.getSpawnPoint();
+        //boolean nether = MinecraftServer.getServer().getAllowNether();
+        ChunkCoordinates spawn = /*nether ? DimensionManager.getWorld(-1).getSpawnPoint() :*/ par1Entity.worldObj.getSpawnPoint();
 
-        if (nether)
-        {
-            transferEntityToDimension(par1Entity, spawn.posX, spawn.posY, spawn.posZ, 0f, (WorldServer) par1Entity.worldObj, DimensionManager.getWorld(-1), -1, -1, false);
-        }
-        else
-        {
-            transferEntityWithinDimension(par1Entity, spawn.posX, spawn.posY, spawn.posZ, 0f, -1, -1, false);
-        }
+        //if (nether)
+        //{
+        //    transferEntityToDimension(par1Entity, spawn.posX, spawn.posY, spawn.posZ, 0f, (WorldServer) par1Entity.worldObj, DimensionManager.getWorld(-1), -1, -1, false);
+        //}
+        //else
+        //{
+            transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posY), spawn.posZ, 0f, -1, -1, false);
+        //}
     }
 
     public static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)

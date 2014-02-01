@@ -6,14 +6,14 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.IGuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementBase;
 
 public class ElementGlyph extends ElementBase
 {
     int glyph;
 
-    public ElementGlyph(GuiBase gui, int posX, int posY, int glyph)
+    public ElementGlyph(IGuiBase gui, int posX, int posY, int glyph)
     {
         super(gui, posX, posY, 18, 18);
         this.glyph = glyph;

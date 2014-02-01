@@ -51,7 +51,6 @@ public class GuiDiallingDevice extends GuiBase
         warningMessage = "";
         warningTimer = 0;
         showOverlay = false;
-        drawInventory = false;
     }
 
     @Override
@@ -124,9 +123,9 @@ public class GuiDiallingDevice extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    public void drawGuiBackgroundLayer(float f, int i, int j)
     {
-        super.drawGuiContainerBackgroundLayer(f, i, j);
+        super.drawGuiBackgroundLayer(f, i, j);
 
         if (showOverlay)
         {
@@ -141,9 +140,9 @@ public class GuiDiallingDevice extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    public void drawGuiForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiContainerForegroundLayer(par1, par2);
+        super.drawGuiForegroundLayer(mouseX, mouseY);
 
         fontRenderer.drawStringWithShadow(Localization.getGuiString("dialDevice"), xSize / 2 - fontRenderer.getStringWidth(Localization.getGuiString("dialDevice")) / 2, -13, showOverlay ? 0x444444 : 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("storedIdentifiers"), 7, 7, showOverlay ? 0x222222 : 0x404040);

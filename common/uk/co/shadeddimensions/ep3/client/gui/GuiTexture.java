@@ -21,7 +21,7 @@ import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
 import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
 import uk.co.shadeddimensions.library.gui.element.ElementBase;
@@ -31,12 +31,13 @@ import uk.co.shadeddimensions.library.gui.element.ElementScrollPanelOverlay;
 import uk.co.shadeddimensions.library.gui.element.ElementText;
 import uk.co.shadeddimensions.library.gui.tab.TabBase;
 import uk.co.shadeddimensions.library.gui.tab.TabToggleButton;
+import uk.co.shadeddimensions.library.util.GuiUtils;
 
-public class GuiTexture extends GuiBase
+public class GuiTexture extends GuiBaseContainer
 {
     class ColourTab extends TabBase
     {
-        public ColourTab(GuiBase gui)
+        public ColourTab(GuiBaseContainer gui)
         {
             super(gui);
             backgroundColor = 0x5396da;
@@ -47,7 +48,7 @@ public class GuiTexture extends GuiBase
         public void draw()
         {
             drawBackground();
-            drawIcon(ItemPaintbrush.texture, posX + 2, posY + 4, 1);
+            GuiUtils.drawIcon(gui, ItemPaintbrush.texture, posX + 2, posY + 4, 1);
 
             if (isFullyOpened())
             {
@@ -136,12 +137,6 @@ public class GuiTexture extends GuiBase
             payload.data.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", Integer.parseInt(String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()), 16));
             ClientProxy.sendGuiPacket(payload);
         }
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
-    {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
     }
 
     @Override

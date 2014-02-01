@@ -3,9 +3,12 @@ package uk.co.shadeddimensions.ep3.block;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -16,8 +19,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import uk.co.shadeddimensions.ep3.client.PortalRenderer;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -25,17 +30,18 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPortal extends BlockEnhancedPortals
+public class BlockPortal extends BlockContainer
 {
     Icon texture;
 
     public BlockPortal(int id, String name)
     {
-        super(id, Material.portal, false);
+        super(id, Material.portal);
         setBlockUnbreakable();
         setResistance(2000);
         setUnlocalizedName(name);
         setLightOpacity(0);
+        setCreativeTab(Reference.creativeTab);
         setStepSound(soundGlassFootstep);
     }
 
@@ -65,7 +71,7 @@ public class BlockPortal extends BlockEnhancedPortals
 
         if (controller != null)
         {
-            ItemStack stack = controller.getStackInSlot(1);
+            ItemStack stack = controller.activeTextureData.getPortalItem();
 
             if (controller.activeTextureData.hasCustomPortalTexture() && ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
             {
@@ -215,7 +221,7 @@ public class BlockPortal extends BlockEnhancedPortals
     {
         return PortalRenderer.ID;
     }
-    
+
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
@@ -264,5 +270,43 @@ public class BlockPortal extends BlockEnhancedPortals
         }
 
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
+    {
+        ((TilePortal) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);        
+        super.breakBlock(world, x, y, z, oldID, newID);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        return ((TilePortal) world.getBlockTileEntity(x, y, z)).activate(player);
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    {
+        if (!world.isRemote)
+        {
+            if (EntityManager.isEntityFitForTravel(entity))
+            {
+                if (entity instanceof EntityPlayer)
+                {
+                    ((EntityPlayer) entity).closeScreen();
+                }
+
+                ((TilePortal) world.getBlockTileEntity(x, y, z)).onEntityCollidedWithBlock(entity);
+            }
+
+            EntityManager.setEntityPortalCooldown(entity);
+        }
+    }
+
+    @Override
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
+    {
+        return ((TilePortal) blockAccess.getBlockTileEntity(x, y, z)).getColourMultiplier();
     }
 }

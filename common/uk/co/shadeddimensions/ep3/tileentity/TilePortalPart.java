@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,11 +13,10 @@ import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 
-public class TilePortalPart extends TileEnhancedPortals implements IInventory
+public class TilePortalPart extends TileEnhancedPortals
 {
     public ChunkCoordinates portalController;
 
-    @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
         if (!worldObj.isRemote)
@@ -39,34 +36,10 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     }
 
     @Override
-    public void closeChest()
-    {
-
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        return null;
-    }
-
-    @Override
     public void fillPacket(DataOutputStream stream) throws IOException
     {
         super.fillPacket(stream);
         GeneralUtils.writeChunkCoord(stream, portalController);
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return null;
     }
 
     public TilePortalController getPortalController()
@@ -86,44 +59,6 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
         return null;
     }
 
-    /* IInventory */
-    @Override
-    public int getSizeInventory()
-    {
-        return 0;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
     public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
     {
         if (!worldObj.isRemote)
@@ -142,22 +77,10 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     }
 
     @Override
-    public void openChest()
-    {
-
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
         portalController = GeneralUtils.loadChunkCoord(tag, "Controller");
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack)
-    {
-
     }
 
     @Override
@@ -172,5 +95,17 @@ public class TilePortalPart extends TileEnhancedPortals implements IInventory
     {
         super.writeToNBT(tag);
         GeneralUtils.saveChunkCoord(tag, portalController, "Controller");
+    }
+    
+    public int getColourMultiplier()
+    {
+        TilePortalController controller = getPortalController();
+
+        if (controller != null)
+        {
+            return controller.activeTextureData.getFrameColour();
+        }
+
+        return 0xFFFFFF;
     }
 }

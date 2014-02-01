@@ -20,6 +20,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
+    public static int renderPass = 0;
+    
     public class ParticleSet
     {
         public int[] frames;

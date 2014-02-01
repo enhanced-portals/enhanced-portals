@@ -10,7 +10,6 @@ import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TileFrame extends TilePortalFrame
 {
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack stack = player.inventory.getCurrentItem();

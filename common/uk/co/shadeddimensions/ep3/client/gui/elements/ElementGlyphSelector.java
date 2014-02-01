@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.ep3.client.gui.elements;
 import java.util.ArrayList;
 
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.IGuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementBaseContainer;
 
 public class ElementGlyphSelector extends ElementBaseContainer
@@ -11,7 +11,7 @@ public class ElementGlyphSelector extends ElementBaseContainer
     ArrayList<Integer> selectedGlyphs = new ArrayList<Integer>();
     int[] glyphCount = new int[27];
 
-    public ElementGlyphSelector(GuiBase parent, int x, int y)
+    public ElementGlyphSelector(IGuiBase parent, int x, int y)
     {
         super(parent, x, y, 162, 54);
 

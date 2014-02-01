@@ -160,7 +160,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == GUIs.Guide.ordinal())
             {
-                return new ContainerBase();
+                
             }
         }
 

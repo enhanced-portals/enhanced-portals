@@ -1,26 +1,30 @@
 package uk.co.shadeddimensions.ep3.block;
 
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 
-public class BlockStabilizer extends BlockEnhancedPortals
+public class BlockStabilizer extends BlockContainer
 {
     static ConnectedTextures connectedTextures;
 
     public BlockStabilizer(int id, String name)
     {
-        super(id, Material.rock, true);
+        super(id, Material.rock);
         setHardness(5);
         setResistance(2000);
         setUnlocalizedName(name);
         setStepSound(soundStoneFootstep);
+        setCreativeTab(Reference.creativeTab);
         connectedTextures = new ConnectedTextures("enhancedportals:bridge/bridge_%s", id, -1);
     }
 
@@ -68,5 +72,39 @@ public class BlockStabilizer extends BlockEnhancedPortals
     public void registerIcons(IconRegister iconRegister)
     {
         connectedTextures.registerIcons(iconRegister);
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileStabilizer)
+        {
+            ((TileStabilizer) tile).breakBlock(oldID, newID);
+        }
+        else if (tile instanceof TileStabilizerMain)
+        {
+            ((TileStabilizerMain) tile).breakBlock(oldID, newID);
+        }
+         
+        super.breakBlock(world, x, y, z, oldID, newID);
+    }
+    
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        
+        if (tile instanceof TileStabilizer)
+        {
+            return ((TileStabilizer) tile).activate(player);
+        }
+        else if (tile instanceof TileStabilizerMain)
+        {
+            return ((TileStabilizerMain) tile).activate(player);
+        }
+        
+        return false;
     }
 }

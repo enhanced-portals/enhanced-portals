@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.IGuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementButton;
 
 public class ElementParticleToggleButton extends ElementButton
@@ -15,7 +15,7 @@ public class ElementParticleToggleButton extends ElementButton
     boolean selected;
     int num, drawCounter;
 
-    public ElementParticleToggleButton(GuiBase parent, int x, int y, String id, ParticleSet p)
+    public ElementParticleToggleButton(IGuiBase parent, int x, int y, String id, ParticleSet p)
     {
         super(parent, x, y, 0, id, null, "");
         this.set = p;

@@ -56,7 +56,6 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
         glyphList = new ArrayList<GlyphElement>();
     }
 
-    @Override
     public boolean activate(EntityPlayer player)
     {
         TilePortalController controller = getPortalController();

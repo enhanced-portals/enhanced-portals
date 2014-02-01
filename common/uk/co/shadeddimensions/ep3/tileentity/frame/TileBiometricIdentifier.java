@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -18,7 +19,7 @@ import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileBiometricIdentifier extends TilePortalFrameSpecial
+public class TileBiometricIdentifier extends TilePortalFrameSpecial implements IInventory
 {
     public long lastUpdateTime;
     public ArrayList<EntityData> entityList;
@@ -27,12 +28,11 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial
 
     public TileBiometricIdentifier()
     {
-        inventory = new ItemStack[2];
+        inventory = new ItemStack[1];
         entityList = new ArrayList<EntityData>();
         defaultPermissions = isActive = true;
     }
 
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
@@ -252,7 +252,6 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial
         return true;
     }
 
-    @Override
     public void onNeighborBlockChange(int blockID)
     {
         isActive = getHighestPowerState() == 0;
@@ -352,5 +351,17 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial
         }
 
         tag.setTag("Inventory", itemList);
+    }
+
+    @Override
+    public void openChest()
+    {
+        
+    }
+
+    @Override
+    public void closeChest()
+    {
+        
     }
 }

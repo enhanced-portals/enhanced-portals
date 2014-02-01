@@ -35,7 +35,6 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
         state = timeUntilOff = previousRedstoneState = 0;
     }
 
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
@@ -138,7 +137,6 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
         }
     }
 
-    @Override
     public int isProvidingStrongPower(int side)
     {
         if (timeUntilOff != 0)
@@ -146,10 +144,9 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
             return 15;
         }
 
-        return super.isProvidingStrongPower(side);
+        return 0;
     }
 
-    @Override
     public int isProvidingWeakPower(int side)
     {
         if (timeUntilOff != 0)
@@ -157,7 +154,7 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
             return 15;
         }
 
-        return super.isProvidingWeakPower(side);
+        return 0;
     }
 
     private void notifyNeighbors()
@@ -171,7 +168,6 @@ public class TileRedstoneInterface extends TilePortalFrameSpecial
         }
     }
 
-    @Override
     public void onNeighborBlockChange(int id)
     {
         if (!isOutput && System.currentTimeMillis() - lastInteractTime > 250 && !worldObj.isRemote)

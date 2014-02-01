@@ -4,10 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -22,16 +19,6 @@ public class TileEnhancedPortals extends TileEntity
     public boolean canUpdate()
     {
         return false;
-    }
-    
-    public boolean activate(EntityPlayer player)
-    {
-        return false;
-    }
-
-    public void breakBlock(int oldBlockID, int oldMetadata)
-    {
-
     }
 
     public void fillPacket(DataOutputStream stream) throws IOException
@@ -72,31 +59,6 @@ public class TileEnhancedPortals extends TileEntity
 
     }
 
-    public int isProvidingStrongPower(int side)
-    {
-        return 0;
-    }
-
-    public int isProvidingWeakPower(int side)
-    {
-        return 0;
-    }
-
-    public void onBlockPlacedBy(EntityLivingBase entity, ItemStack stack)
-    {
-
-    }
-
-    public void onEntityCollidedWithBlock(Entity entity)
-    {
-
-    }
-
-    public void onNeighborBlockChange(int blockID)
-    {
-
-    }
-
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
@@ -123,10 +85,5 @@ public class TileEnhancedPortals extends TileEntity
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-    }
-
-    public int getColourMultiplier()
-    {
-        return 0xFFFFFF;
     }
 }

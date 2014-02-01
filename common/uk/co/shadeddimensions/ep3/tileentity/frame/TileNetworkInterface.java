@@ -13,7 +13,6 @@ import dan200.computer.api.IPeripheral;
 
 public class TileNetworkInterface extends TilePortalFrameSpecial implements IPeripheral
 {
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();

@@ -8,13 +8,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TilePortal extends TilePortalPart
 {
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
@@ -60,25 +58,14 @@ public class TilePortal extends TilePortalPart
         }
     }
 
-    @Override
     public void onEntityCollidedWithBlock(Entity entity)
     {
-        if (entity instanceof EntityPlayer)
-        {
-            ((EntityPlayer) entity).closeScreen();
-        }
+        TilePortalController controller = getPortalController();
 
-        if (!entity.worldObj.isRemote && EntityManager.isEntityFitForTravel(entity))
+        if (controller != null && controller.isFullyInitialized() && controller.isPortalActive)
         {
-            TilePortalController controller = getPortalController();
-
-            if (controller != null && controller.isFullyInitialized() && controller.isPortalActive)
-            {
-                controller.onEntityEnterPortal(entity, this);
-            }
+            controller.onEntityEnterPortal(entity, this);
         }
-        
-        EntityManager.setEntityPortalCooldown(entity);
     }
 
     @Override

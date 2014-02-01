@@ -68,7 +68,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         energyStorage = new EnergyStorage(0);
     }
 
-    @Override
     public boolean activate(EntityPlayer player)
     {
         CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, this);
@@ -161,7 +160,6 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     {
     }
 
-    @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
         for (int i = activeConnections.size() - 1; i > -1; i--) // Go backwards so we don't get messed up by connections getting removed from this list

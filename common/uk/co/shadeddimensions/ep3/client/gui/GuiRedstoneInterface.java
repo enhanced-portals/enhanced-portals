@@ -17,7 +17,6 @@ public class GuiRedstoneInterface extends GuiBase
         super(new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
         redstone = tile;
         ySize = 58;
-        drawInventory = false;
     }
 
     @Override
@@ -29,11 +28,11 @@ public class GuiRedstoneInterface extends GuiBase
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    public void drawGuiForegroundLayer(int par1, int par2)
     {
         drawCenteredString(fontRenderer, Localization.getGuiString("redstoneInterface"), xSize / 2, -13, 0xFFFFFF);
 
-        super.drawGuiContainerForegroundLayer(par1, par2);
+        super.drawGuiForegroundLayer(par1, par2);
     }
 
     @SuppressWarnings("unchecked")

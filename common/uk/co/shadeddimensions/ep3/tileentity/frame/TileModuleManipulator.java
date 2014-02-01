@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,16 +18,15 @@ import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileModuleManipulator extends TilePortalFrameSpecial
+public class TileModuleManipulator extends TilePortalFrameSpecial implements IInventory
 {
     ItemStack[] inventory;
 
     public TileModuleManipulator()
     {
-        inventory = new ItemStack[10];
+        inventory = new ItemStack[9];
     }
     
-    @Override
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
@@ -224,7 +224,7 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return stack != null && (i < 9 && stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack)));
+        return stack != null && (stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack)));
     }
 
     public boolean isPortalInvisible()
@@ -322,5 +322,29 @@ public class TileModuleManipulator extends TilePortalFrameSpecial
         }
 
         tagCompound.setTag("Inventory", list);
+    }
+
+    @Override
+    public boolean isInvNameLocalized()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void openChest()
+    {
+        
+    }
+
+    @Override
+    public void closeChest()
+    {
+        
     }
 }

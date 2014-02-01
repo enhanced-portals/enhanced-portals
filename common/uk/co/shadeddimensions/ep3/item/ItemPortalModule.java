@@ -39,7 +39,7 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
         super(par1, true);
         setUnlocalizedName(name);
         setMaxDamage(0);
-        setMaxStackSize(32);
+        setMaxStackSize(64);
         setHasSubtypes(true);
     }
 
