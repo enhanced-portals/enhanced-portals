@@ -441,7 +441,8 @@ public class GuiTexture extends GuiBaseContainer
                         else
                         {
                             b.setSelected(false);
-                            payload.data.setInteger("particleType", -1);
+                            payload.data.setInteger("particleType", 0);
+                            ((ElementParticleToggleButton) particleList.getElements().get(1)).setSelected(true);
                         }
 
                         ClientProxy.sendGuiPacket(payload);

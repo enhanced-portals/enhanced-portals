@@ -41,7 +41,6 @@ public class BlockPortal extends BlockContainer
         setResistance(2000);
         setUnlocalizedName(name);
         setLightOpacity(0);
-        setCreativeTab(Reference.creativeTab);
         setStepSound(soundGlassFootstep);
     }
 

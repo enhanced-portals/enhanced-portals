@@ -28,21 +28,28 @@ public class PortalFX extends EntityFX
         portalPosY = posY = portalY;
         portalPosZ = posZ = portalZ;
 
-        Color c = new Color(controller != null ? controller.activeTextureData.getParticleColour() : 0x0077D8);
-        particleRed = c.getRed() / 255f;
-        particleGreen = c.getGreen() / 255f;
-        particleBlue = c.getBlue() / 255f;
-
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
-        particle = ClientProxy.particleSets.get(controller != null ? controller.activeTextureData.getParticleType() : 0);
-
-        setParticleTextureIndex(particle.type == 0 ? particle.frames[ClientProxy.random.nextInt(particle.frames.length)] : particle.frames[0]);
-
-        if (module != null)
+        
+        if (controller == null || ClientProxy.particleSets.size() <= controller.activeTextureData.getParticleType())
         {
-            module.particleCreated(this);
+            setDead();
+        }
+        else
+        {
+            Color c = new Color(controller.activeTextureData.getParticleColour());
+            particleRed = c.getRed() / 255f;
+            particleGreen = c.getGreen() / 255f;
+            particleBlue = c.getBlue() / 255f;
+            
+            particle = ClientProxy.particleSets.get(controller.activeTextureData.getParticleType());    
+            setParticleTextureIndex(particle.type == 0 ? particle.frames[ClientProxy.random.nextInt(particle.frames.length)] : particle.frames[0]);
+    
+            if (module != null)
+            {
+                module.particleCreated(this);
+            }
         }
     }
 
@@ -83,6 +90,16 @@ public class PortalFX extends EntityFX
     @Override
     public void onUpdate()
     {
+        if (particle == null) // Kill it off as soon as possible
+        {
+            if (!isDead)
+            {
+                setDead();
+            }
+            
+            return;
+        }
+        
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;

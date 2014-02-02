@@ -424,6 +424,7 @@ public class GuiTextureDialler extends GuiBaseContainer
                         {
                             b.setSelected(false);
                             ClientProxy.dialEntryTexture.setParticleType(0);
+                            ((ElementParticleToggleButton) particleList.getElements().get(1)).setSelected(true);
                         }
                     }
                     else
