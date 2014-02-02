@@ -226,6 +226,12 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
     @Override
     public void breakBlock(int oldBlockID, int oldMetadata)
     {
+        if (oldBlockID == -1 && oldMetadata == -1)
+        {
+            partBroken(false);
+            return; // This is from placing down a block. We don't want to terminate the entire thing
+        }
+        
         partBroken(false);
 
         GlyphIdentifier uID = getUniqueIdentifier(), nID = getNetworkIdentifier();

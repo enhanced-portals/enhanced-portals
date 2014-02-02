@@ -70,7 +70,7 @@ public class TilePortalPart extends TileEnhancedPortals
 
                 if (tile != null && tile instanceof TilePortalPart)
                 {
-                    ((TilePortalPart) tile).breakBlock(0, 0);
+                    ((TilePortalPart) tile).breakBlock(-1, -1);
                 }
             }
         }
