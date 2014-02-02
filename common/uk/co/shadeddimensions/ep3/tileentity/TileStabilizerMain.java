@@ -841,6 +841,11 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
     @Override
     public void usePacket(DataInputStream stream) throws IOException
     {
+        if (stream.available() == 1)
+        {
+            return; // Stops EOF exceptions from old invalid packets
+        }
+        
         intActiveConnections = stream.readInt();
         powerState = stream.readInt();
         instability = stream.readInt();

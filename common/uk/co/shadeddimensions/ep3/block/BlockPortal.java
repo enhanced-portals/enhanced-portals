@@ -19,7 +19,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import uk.co.shadeddimensions.ep3.client.PortalRenderer;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;

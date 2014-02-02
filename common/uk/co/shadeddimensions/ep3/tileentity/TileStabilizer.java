@@ -66,17 +66,14 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
                     topLeft = topLeft.offset(ForgeDirection.UP);
                 }
 
-                System.out.println("Checking 3x3");
                 ArrayList<ChunkCoordinates> blocks = checkShapeThreeWide(topLeft); // 3x3
                 
                 if (blocks.isEmpty())
                 {
-                    System.out.println("Checking 3x2 X");
                     blocks = checkShapeTwoWide(topLeft, true); // Try the 3x2 X axis
     
                     if (blocks.isEmpty())
                     {
-                        System.out.println("Checking 3x2 Z");
                         blocks = checkShapeTwoWide(topLeft, false); // Try the 3x2 Z axis before failing
                     }
                 }
@@ -91,12 +88,13 @@ public class TileStabilizer extends TileEnhancedPortals implements IEnergyHandle
                         {
                             if (((TileStabilizer) tile).getMainBlock() != null)
                             {
-                                return false;
+                                TileStabilizerMain m = ((TileStabilizer) tile).getMainBlock();
+                                m.deconstruct();
                             }
                         }
                         else if (tile instanceof TileStabilizerMain)
                         {
-                            return false;
+                            ((TileStabilizerMain) tile).deconstruct();
                         }
                     }
                     

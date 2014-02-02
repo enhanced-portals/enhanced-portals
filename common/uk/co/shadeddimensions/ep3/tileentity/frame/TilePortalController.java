@@ -709,7 +709,11 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
             return;
         }
 
-        removePortal();
+        if (isPortalActive)
+        {
+            removePortal();
+        }
+        
         portalState = 2; // Set the portal to inactive - this portal is no longer functional
         WorldCoordinates dbs = blockManager.getDimensionalBridgeStabilizer();
 
@@ -720,16 +724,26 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
 
         for (ChunkCoordinates c : blockManager.getPortalFrames())
         {
-            TilePortalPart tile = (TilePortalPart) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            tile.portalController = null;
-            CommonProxy.sendUpdatePacketToAllAround(tile);
+            TileEntity t = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            
+            if (t instanceof TilePortalPart)
+            {
+                TilePortalPart tile = (TilePortalPart) t;
+                tile.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(tile);
+            }
         }
 
         for (ChunkCoordinates c : blockManager.getRedstoneInterfaces())
         {
-            TilePortalPart tile = (TilePortalPart) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
-            tile.portalController = null;
-            CommonProxy.sendUpdatePacketToAllAround(tile);
+            TileEntity t = worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ);
+            
+            if (t instanceof TilePortalPart)
+            {
+                TilePortalPart tile = (TilePortalPart) t;
+                tile.portalController = null;
+                CommonProxy.sendUpdatePacketToAllAround(tile);
+            }
         }
 
         TileNetworkInterface network = blockManager.getNetworkInterface(worldObj);
