@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -70,6 +71,13 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
 
     public boolean activate(EntityPlayer player)
     {
+        ItemStack stack = player.inventory.getCurrentItem();
+        
+        if (stack != null && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlockID() == CommonProxy.blockStabilizer.blockID)
+        {
+            return false;
+        }
+        
         CommonProxy.openGui(player, GUIs.DimensionalBridgeStabilizer, this);
         return true;
     }
