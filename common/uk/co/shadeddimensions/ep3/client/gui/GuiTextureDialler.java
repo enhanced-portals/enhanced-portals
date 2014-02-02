@@ -27,13 +27,13 @@ import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
 import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
 import uk.co.shadeddimensions.library.gui.element.ElementBase;
+import uk.co.shadeddimensions.library.gui.element.ElementClickBlocker;
 import uk.co.shadeddimensions.library.gui.element.ElementFakeItemSlot;
 import uk.co.shadeddimensions.library.gui.element.ElementScrollBar;
 import uk.co.shadeddimensions.library.gui.element.ElementScrollPanelOverlay;
 import uk.co.shadeddimensions.library.gui.element.ElementText;
 import uk.co.shadeddimensions.library.gui.tab.TabBase;
 import uk.co.shadeddimensions.library.gui.tab.TabToggleButton;
-import uk.co.shadeddimensions.library.util.GuiUtils;
 
 public class GuiTextureDialler extends GuiBaseContainer
 {
@@ -44,31 +44,17 @@ public class GuiTextureDialler extends GuiBaseContainer
             super(gui);
             backgroundColor = 0x5396da;
             maxHeight += 90;
+            name = Localization.getGuiString("colour");
+            icon = ItemPaintbrush.texture;
+            
+            addElement(new ElementClickBlocker(gui, 3, 21, maxWidth - 7, maxHeight - 25));
         }
 
         @Override
         public void draw()
         {
-            drawBackground();
-            GuiUtils.drawIcon(gui, ItemPaintbrush.texture, posX + 2, posY + 4, 1);
-
-            if (isFullyOpened())
-            {
-                fontRenderer.drawStringWithShadow(Localization.getGuiString("colour"), posX + 24, posY + 7, 0xe1c92f);
-            }
-
+            super.draw();
             redSlider.drawButton = greenSlider.drawButton = blueSlider.drawButton = colourSaveButton.drawButton = colourResetButton.drawButton = isFullyOpened();
-        }
-
-        @Override
-        public boolean handleMouseClicked(int x, int y, int mouseButton)
-        {
-            if (isFullyOpened() && mouseButton == 0)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 
