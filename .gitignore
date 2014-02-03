@@ -1,1 +1,31 @@
-build.properties
+##Forge
+CREDITS-fml.txt
+LICENSE-FML.txt
+MinecraftForge-Credits.txt
+MinecraftForge-License.txt
+
+## gradle
+/.gradle
+/build
+/gradle
+/gradlew
+/gradlew.bat
+
+## ForgeGradle
+/run
+
+## eclipse
+/eclipse
+/.settings
+/.metadata
+/.classpath
+/.project
+/bin
+
+## intellij
+/out
+/.idea
+/*.iml
+/*.ipr
+/*.iws
+/atlassian-ide-plugin.xml

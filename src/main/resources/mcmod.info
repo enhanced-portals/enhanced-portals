@@ -1,0 +1,18 @@
+[
+{
+  "modid" : "EnhancedPortals3",
+  "name" : "EnhancedPortals",
+  "version" : "${version}",
+  "url" : "http://shadeddimensions.co.uk",
+  "credits" : "",
+  "authors": [
+    "Alz454"
+  ],
+  "description": "",
+  "logoFile" : "",
+  "updateUrl" : "http://shadeddimensions.co.uk",
+  "parent" : "",
+  "screenshots": [
+  ]
+}
+]
