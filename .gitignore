@@ -7,9 +7,6 @@ MinecraftForge-License.txt
 ## gradle
 /.gradle
 /build
-/gradle
-/gradlew
-/gradlew.bat
 
 ## ForgeGradle
 /run

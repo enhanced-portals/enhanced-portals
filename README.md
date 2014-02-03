@@ -7,4 +7,9 @@ Useful Links:
 
 
 ###Compiling
-// todo when updated to Gradle
+Compiling EnhancedPortals is the same as compiling any other mod that uses ForgeGradle.
+
+1. Clone EnhancedPortals into any directory.
+2. Open up a command line and navigate to that directory.
+3. Execute `gradlew build`.
+4. If `BUILD SUCCESSFUL` appears, you'll find the `EnhancedPortals-{mcversion}-{version}.jar` in `build\libs\`.
