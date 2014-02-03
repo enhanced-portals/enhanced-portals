@@ -102,11 +102,14 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
                 {
                     if (!stabilizer.equals(blockManager.getDimensionalBridgeStabilizer()))
                     {
-                        item.stackSize--;
-
-                        if (item.stackSize <= 0)
+                        if (!player.capabilities.isCreativeMode)
                         {
-                            player.inventory.mainInventory[player.inventory.currentItem] = null;
+                            item.stackSize--;
+    
+                            if (item.stackSize <= 0)
+                            {
+                                player.inventory.mainInventory[player.inventory.currentItem] = null;
+                            }
                         }
 
                         blockManager.setDimensionalBridgeStabilizer(stabilizer);
@@ -203,11 +206,15 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         if (!isReconfiguring)
         {
             blockManager.setDimensionalBridgeStabilizer(ItemLocationCard.getDBSLocation(item));
-            item.stackSize--;
-
-            if (item.stackSize <= 0)
+            
+            if (!player.capabilities.isCreativeMode)
             {
-                player.inventory.mainInventory[player.inventory.currentItem] = null;
+                item.stackSize--;
+    
+                if (item.stackSize <= 0)
+                {
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
+                }
             }
 
             player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("success")));
