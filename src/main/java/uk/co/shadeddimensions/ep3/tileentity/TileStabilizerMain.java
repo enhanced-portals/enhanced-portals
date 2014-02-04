@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.ep3.tileentity;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -26,6 +27,7 @@ import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
+import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.portal.PortalUtils;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
@@ -547,6 +549,32 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
         return energyStorage.receiveEnergy(maxReceive, simulate);
     }
 
+    void setInstability(int newInstability)
+    {
+        if (newInstability == instability)
+        {
+            return;
+        }
+        
+        instability = newInstability;
+        
+        for (Entry<String, String> pair : activeConnections.entrySet())
+        {
+            TilePortalController controllerA = CommonProxy.networkManager.getPortalController(new GlyphIdentifier(pair.getKey()));
+            TilePortalController controllerB = CommonProxy.networkManager.getPortalController(new GlyphIdentifier(pair.getValue()));
+            
+            if (controllerA != null)
+            {
+                controllerA.updateInstability(newInstability);
+            }
+            
+            if (controllerB != null)
+            {
+                controllerB.updateInstability(newInstability);
+            }
+        }
+    }
+    
     /***
      * Removes a connection from the active list.
      */
@@ -559,7 +587,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
 
         if (activeConnections.size() == 0 && powerState == 0 && instability > 0)
         {
-            instability = 0;
+            setInstability(0);
         }
     }
 
@@ -780,22 +808,22 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
             if (powerState == 0 && extractEnergy(null, powerRequirement, true) == powerRequirement) // Simulate the full power requirement
             {
                 extractEnergy(null, powerRequirement, false);
-                instability = 0;
+                setInstability(0);
             }
             else if ((powerState == 1 || powerState == 0) && extractEnergy(null, (int) (powerRequirement * 0.8), true) == (int) (powerRequirement * 0.8)) // Otherwise, try it at 80%
             {
                 extractEnergy(null, (int) (powerRequirement * 0.8), false);
-                instability = 20;
+                setInstability(20);
             }
             else if ((powerState == 2 || powerState == 0) && extractEnergy(null, (int) (powerRequirement * 0.5), true) == (int) (powerRequirement * 0.5)) // Otherwise, try it at 50%
             {
                 extractEnergy(null, (int) (powerRequirement * 0.5), false);
-                instability = 50;
+                setInstability(50);
             }
             else if ((powerState == 3 || powerState == 0) && extractEnergy(null, (int) (powerRequirement * 0.3), true) == (int) (powerRequirement * 0.3)) // Otherwise, try it at 30%
             {
                 extractEnergy(null, (int) (powerRequirement * 0.3), false);
-                instability = 70;
+                setInstability(70);
             }
             else
             {
@@ -811,7 +839,7 @@ public class TileStabilizerMain extends TileEnhancedPortals implements IInventor
                     }
                 }
 
-                instability = 0;
+                setInstability(0);
             }
 
             tickTimer = -1;

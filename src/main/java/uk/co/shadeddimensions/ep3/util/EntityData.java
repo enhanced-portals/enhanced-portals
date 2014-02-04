@@ -23,10 +23,13 @@ public class EntityData
         {
             return "Animal";
         }
-        //else if (EntityList.classToIDMapping.containsKey(data.EntityClass)) // TODO
-        //{
-        //    return (String) EntityList.classToStringMapping.get(data.EntityClass);
-        //}
+        
+        String name = (String) EntityList.classToStringMapping.get(data.EntityClass);
+        
+        if (name != null)
+        {
+        	return name;
+        }
 
         return "Unknown";
     }
@@ -68,10 +71,19 @@ public class EntityData
         {
             return -3;
         }
-        //else if (EntityList.classToIDMapping.containsKey(clazz)) // TODO
-        //{
-        //    return Integer.parseInt(EntityList.classToIDMapping.get(clazz).toString());
-        //}
+        
+        String name = (String) EntityList.classToStringMapping.get(clazz);
+        
+        if (name != null)
+        {
+        	Entity entity = EntityList.createEntityByName(name, null);
+        	
+        	if (entity != null)
+        	{
+	        	int entityID = EntityList.getEntityID(entity);
+	        	return entityID;
+        	}
+        }
 
         return 0;
     }

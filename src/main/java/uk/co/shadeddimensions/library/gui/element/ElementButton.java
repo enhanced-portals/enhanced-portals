@@ -31,6 +31,22 @@ public class ElementButton extends ElementBase
         displayText = text;
         hoverString = hover;
     }
+    
+    protected ElementButton(IGuiBase parent, int x, int y, int w, int h, String id, String text, String hover)
+    {
+        super(parent, x, y, w, h);
+        ID = id;
+        displayText = text;
+        hoverString = hover;
+    }
+    
+    protected ElementButton(IGuiBase parent, int x, int y, int w, int h, String id, String text, ArrayList<String> hover)
+    {
+        super(parent, x, y, w, h);
+        ID = id;
+        displayText = text;
+        hoverText = hover;
+    }
 
     @Override
     public void addTooltip(List<String> list)

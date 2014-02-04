@@ -56,6 +56,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
     public boolean processing;
     boolean processingPortal;
     public int connectedPortals;
+    public int instability;
 
     @SideOnly(Side.CLIENT)
     public GlyphIdentifier uniqueID, networkID;
@@ -69,8 +70,15 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         activeTextureData = new PortalTextureManager();
         inactiveTextureData = null;
         isPortalActive = processing = processingPortal = false;
+        instability = 0;
     }
 
+    public void updateInstability(int newInstability)
+    {
+        instability = newInstability;
+        CommonProxy.sendUpdatePacketToAllAround(this);
+    }
+    
     public boolean activate(EntityPlayer player)
     {
         ItemStack item = player.inventory.getCurrentItem();
@@ -353,6 +361,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         stream.writeByte(portalType);
         stream.writeBoolean(isPortalActive);
         stream.writeInt(nID == null ? -1 : CommonProxy.networkManager.getNetworkSize(nID));
+        stream.writeInt(instability);
     }
 
     @Override
@@ -805,6 +814,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         portalType = tagCompound.getByte("PortalType");
         activeTextureData.readFromNBT(tagCompound, "ActiveTextureData");
         isPortalActive = tagCompound.getBoolean("IsPortalActive");
+        instability = tagCompound.getInteger("instability");
 
         if (tagCompound.hasKey("InactiveTextureData"))
         {
@@ -896,6 +906,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         portalType = stream.readByte();
         isPortalActive = stream.readBoolean();
         connectedPortals = stream.readInt();
+        instability = stream.readInt();
 
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
@@ -909,6 +920,7 @@ public class TilePortalController extends TilePortalFrameSpecial implements IPer
         tagCompound.setByte("PortalType", portalType);
         activeTextureData.writeToNBT(tagCompound, "ActiveTextureData");
         tagCompound.setBoolean("IsPortalActive", isPortalActive);
+        tagCompound.setInteger("instability", instability);
 
         if (inactiveTextureData != null)
         {

@@ -160,7 +160,7 @@ public abstract class GuiBaseContainer extends GuiContainer implements INEIGuiHa
 
         TabBase tab = getTabAtPosition(mouseX - guiLeft, mouseY - guiTop);
 
-        if (tab != null)
+        if (tab != null && tab.isVisible())
         {
             List<String> list = new ArrayList<String>();
             tab.addTooltip(list);
@@ -174,7 +174,7 @@ public abstract class GuiBaseContainer extends GuiContainer implements INEIGuiHa
 
         ElementBase element = getElementAtPosition(mouseX - guiLeft, mouseY - guiTop);
 
-        if (element != null && !element.isDisabled())
+        if (element != null && !element.isDisabled() && element.isVisible())
         {
             List<String> list = new ArrayList<String>();
             element.addTooltip(list);
