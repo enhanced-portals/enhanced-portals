@@ -7,8 +7,8 @@ import uk.co.shadeddimensions.library.container.ContainerBase;
 
 public class ContainerTransferFluid extends ContainerBase
 {
-    private int lastFluidID, lastFluidAmt;
-    boolean lastState;
+    private int lastFluidID = -1, lastFluidAmt = -1;
+    byte lastState = -1;
     
     public ContainerTransferFluid(TileTransferFluid fluid)
     {
@@ -21,6 +21,7 @@ public class ContainerTransferFluid extends ContainerBase
         super.detectAndSendChanges();
         TileTransferFluid fluid = (TileTransferFluid) object;
         int fluidID = fluid.tank.getFluid() == null ? -1 : fluid.tank.getFluid().fluidID, fluidAmt = fluid.tank.getFluidAmount();
+        byte state = (byte) (fluid.isSending ? 1 : 0);
         
         for (int i = 0; i < crafters.size(); i++)
         {
@@ -34,15 +35,15 @@ public class ContainerTransferFluid extends ContainerBase
             {
                 icrafting.sendProgressBarUpdate(this, 2, fluidAmt);
             }
-            if (lastState != fluid.isSending)
+            if (lastState != state)
             {
-                icrafting.sendProgressBarUpdate(this, 3, fluid.isSending ? 1 : 0);
+                icrafting.sendProgressBarUpdate(this, 3, state);
             }
         }
 
         lastFluidID = fluidID;
         lastFluidAmt = fluidAmt;
-        lastState = fluid.isSending;
+        lastState = state;
     }
 
     @Override

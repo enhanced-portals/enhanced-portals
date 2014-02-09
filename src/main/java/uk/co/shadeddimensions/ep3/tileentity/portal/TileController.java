@@ -1052,6 +1052,9 @@ public class TileController extends TileFrame
         redstoneInterfaces = GeneralUtils.loadChunkCoordList(tagCompound, "RedstoneInterfaces");
         networkInterfaces = GeneralUtils.loadChunkCoordList(tagCompound, "NetworkInterface");
         diallingDevices = GeneralUtils.loadChunkCoordList(tagCompound, "DialDevice");
+        transferEnergy = GeneralUtils.loadChunkCoordList(tagCompound, "TransferEnergy");
+        transferFluids = GeneralUtils.loadChunkCoordList(tagCompound, "TransferFluid");
+        transferItems = GeneralUtils.loadChunkCoordList(tagCompound, "TransferItems");
         biometricIdentifier = GeneralUtils.loadChunkCoord(tagCompound, "BiometricIdentifier");
         moduleManipulator = GeneralUtils.loadChunkCoord(tagCompound, "ModuleManipulator");
         dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tagCompound, "DimensionalBridgeStabilizer");
@@ -1306,6 +1309,9 @@ public class TileController extends TileFrame
         GeneralUtils.saveChunkCoordList(tagCompound, getRedstoneInterfaces(), "RedstoneInterfaces");
         GeneralUtils.saveChunkCoordList(tagCompound, getNetworkInterfaces(), "NetworkInterface");
         GeneralUtils.saveChunkCoordList(tagCompound, getDiallingDevices(), "DialDevice");
+        GeneralUtils.saveChunkCoordList(tagCompound, getTransferEnergy(), "TransferEnergy");
+        GeneralUtils.saveChunkCoordList(tagCompound, getTransferFluids(), "TransferFluid");
+        GeneralUtils.saveChunkCoordList(tagCompound, getTransferItems(), "TransferItems");
         GeneralUtils.saveChunkCoord(tagCompound, biometricIdentifier, "BiometricIdentifier");
         GeneralUtils.saveChunkCoord(tagCompound, moduleManipulator, "ModuleManipulator");
         GeneralUtils.saveWorldCoord(tagCompound, dimensionalBridgeStabilizer, "DimensionalBridgeStabilizer");

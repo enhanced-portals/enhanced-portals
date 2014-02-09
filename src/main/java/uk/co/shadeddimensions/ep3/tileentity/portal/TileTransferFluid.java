@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,8 +26,8 @@ import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler
 {
-    public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
-    
+    public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
+
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
@@ -62,7 +63,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
             isSending = !isSending;
         }
     }
-    
+
     @Override
     public void packetGuiFill(DataOutputStream stream) throws IOException
     {
@@ -77,7 +78,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
             stream.writeBoolean(false);
         }
     }
-    
+
     @Override
     public void packetGuiUse(DataInputStream stream) throws IOException
     {
@@ -90,7 +91,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
             tank.setFluid(null);
         }
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
@@ -118,14 +119,14 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
         {
             return null;
         }
-        
+
         return tank.drain(resource.amount, doDrain);
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
     {
-         return tank.drain(maxDrain, doDrain);
+        return tank.drain(maxDrain, doDrain);
     }
 
     @Override
@@ -145,55 +146,121 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     {
         return new FluidTankInfo[] { tank.getInfo() };
     }
-    
+
     int tickTimer = 20, time = 0;
-    
+
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        
-        if (!worldObj.isRemote && isSending)
+
+        if (!worldObj.isRemote)
         {
-            if (time >= tickTimer)
+            if (isSending)
             {
-                time = 0;
-                
-                TileController controller = getPortalController();
-                
-                if (controller != null && controller.isPortalActive() && tank.getFluidAmount() > 0)
+                if (time >= tickTimer)
                 {
-                    TileController exitController =  (TileController) controller.getDestinationLocation().getBlockTileEntity();
-                    
-                    if (exitController != null)
+                    time = 0;
+
+                    TileController controller = getPortalController();
+
+                    if (controller != null && controller.isPortalActive() && tank.getFluidAmount() > 0)
                     {
-                        for (ChunkCoordinates c : exitController.getTransferFluids())
+                        TileController exitController =  (TileController) controller.getDestinationLocation().getBlockTileEntity();
+
+                        if (exitController != null)
                         {
-                            TileEntity tile = WorldUtils.getTileEntity(exitController.worldObj, c);
-                            
-                            if (tile != null && tile instanceof TileTransferFluid)
+                            for (ChunkCoordinates c : exitController.getTransferFluids())
                             {
-                                TileTransferFluid fluid = (TileTransferFluid) tile;
-                                
-                                if (!fluid.isSending)
+                                TileEntity tile = WorldUtils.getTileEntity(exitController.worldObj, c);
+
+                                if (tile != null && tile instanceof TileTransferFluid)
                                 {
-                                    if (fluid.fill(null, tank.getFluid(), false) > 0)
+                                    TileTransferFluid fluid = (TileTransferFluid) tile;
+
+                                    if (!fluid.isSending)
                                     {
-                                        tank.drain(fluid.fill(null, tank.getFluid(), true), true);
+                                        if (fluid.fill(null, tank.getFluid(), false) > 0)
+                                        {
+                                            tank.drain(fluid.fill(null, tank.getFluid(), true), true);
+                                        }
                                     }
                                 }
-                            }
-                            
-                            if (tank.getFluidAmount() == 0)
-                            {
-                                break;
+
+                                if (tank.getFluidAmount() == 0)
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+
+                time++;
             }
-            
-            time++;
+            else
+            {
+                if (!cached)
+                {
+                    updateFluidHandlers();
+                }
+                
+                for (int i = outputTracker; (i < 6) && (tank.getFluidAmount() > 0); i++)
+                {
+                    transferFluid(i);
+                }
+                
+                outputTracker++;
+                outputTracker = (byte) (outputTracker % 6);
+            }
         }
+    }
+
+    IFluidHandler[] handlers = new IFluidHandler[6];
+    boolean cached = false;
+    byte outputTracker = 0;
+
+    @Override
+    public void onNeighborChanged()
+    {
+        updateFluidHandlers();
+    }
+
+    void transferFluid(int side)
+    {
+        if (handlers[side] == null)
+        {
+            return;
+        }
+
+        tank.drain(handlers[side].fill(ForgeDirection.getOrientation(side).getOpposite(), tank.getFluid(), true), true);
+    }
+
+    void updateFluidHandlers()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            TileEntity tile = WorldUtils.getTileEntity(this, ForgeDirection.getOrientation(i));
+
+            if (tile != null && tile instanceof IFluidHandler)
+            {
+                IFluidHandler fluid = (IFluidHandler) tile;
+
+                if (fluid.getTankInfo(ForgeDirection.getOrientation(i).getOpposite()) != null)
+                {
+                    handlers[i] = fluid;
+                }
+                else
+                {
+                    handlers[i] = null;
+                }
+            }
+            else
+            {
+                handlers[i] = null;
+            }
+        }
+
+        cached = true;
     }
 }

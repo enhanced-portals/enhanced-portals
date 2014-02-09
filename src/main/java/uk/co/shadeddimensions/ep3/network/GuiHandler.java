@@ -16,13 +16,17 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTextureDialler;
+import uk.co.shadeddimensions.ep3.client.gui.GuiTransferEnergy;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTransferFluid;
+import uk.co.shadeddimensions.ep3.client.gui.GuiTransferItem;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
+import uk.co.shadeddimensions.ep3.container.ContainerTransferEnergy;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferFluid;
+import uk.co.shadeddimensions.ep3.container.ContainerTransferItem;
 import uk.co.shadeddimensions.ep3.item.ItemHandheldScanner;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
@@ -30,7 +34,9 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -124,6 +130,14 @@ public class GuiHandler implements IGuiHandler
             {
                 return new GuiTransferFluid((TileTransferFluid) tile);
             }
+            else if (ID == TRANSFER_ENERGY)
+            {
+                return new GuiTransferEnergy((TileTransferEnergy) tile);
+            }
+            else if (ID == TRANSFER_ITEM)
+            {
+                return new GuiTransferItem((TileTransferItem) tile);
+            }
         }
 
         return null;
@@ -198,6 +212,14 @@ public class GuiHandler implements IGuiHandler
             else if (ID == TRANSFER_FLUID)
             {
                 return new ContainerTransferFluid((TileTransferFluid) tile);
+            }
+            else if (ID == TRANSFER_ENERGY)
+            {
+                return new ContainerTransferEnergy((TileTransferEnergy) tile);
+            }
+            else if (ID == TRANSFER_ITEM)
+            {
+                return new ContainerTransferItem((TileTransferItem) tile);
             }
         }
 

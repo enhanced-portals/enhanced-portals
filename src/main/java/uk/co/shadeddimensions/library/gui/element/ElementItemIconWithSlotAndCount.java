@@ -28,6 +28,11 @@ public class ElementItemIconWithSlotAndCount extends ElementItemIcon
         gui.getTextureManager().bindTexture(texture);
         drawTexturedModalRect(posX, posY, sizeX == 18 ? 0 : 18, 0, sizeX, sizeY);
 
+        if (item == null)
+        {
+            return;
+        }
+        
         int buffer = sizeX == 18 ? 1 : 5;
         GuiUtils.drawItemStack(gui, item, posX + buffer, posY + buffer);
         gui.getItemRenderer().renderItemOverlayIntoGUI(gui.getFontRenderer(), gui.getTextureManager(), item, posX + buffer, posY + buffer, item.stackSize > 999 ? "+" : null);

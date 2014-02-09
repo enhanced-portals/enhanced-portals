@@ -19,13 +19,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.portal.PortalException;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrameBasic;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrameTransfer;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortalPart;
@@ -267,6 +266,10 @@ public class BlockFrame extends BlockContainer implements IDismantleable
         else if (tile instanceof TileBiometricIdentifier)
         {
             ((TileBiometricIdentifier) tile).onNeighborBlockChange(id);
+        }
+        else if (tile instanceof TileFrameTransfer)
+        {
+            ((TileFrameTransfer) tile).onNeighborChanged();
         }
     }
     

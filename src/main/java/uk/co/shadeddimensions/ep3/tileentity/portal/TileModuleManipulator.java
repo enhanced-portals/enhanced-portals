@@ -59,10 +59,26 @@ public class TileModuleManipulator extends TileFrame implements IInventory
     @Override
     public ItemStack decrStackSize(int i, int j)
     {
-        ItemStack s = getStackInSlot(i);
-        s.stackSize -= j;
+        ItemStack stack = getStackInSlot(i);
 
-        return s;
+        if (stack != null)
+        {
+            if (stack.stackSize <= j)
+            {
+                setInventorySlotContents(i, null);
+            }
+            else
+            {
+                stack = stack.splitStack(j);
+
+                if (stack.stackSize == 0)
+                {
+                    setInventorySlotContents(i, null);
+                }
+            }
+        }
+
+        return stack;
     }
 
     @Override

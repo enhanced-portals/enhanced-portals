@@ -25,4 +25,9 @@ public class TileFrameTransfer extends TileFrame
         super.writeToNBT(tag);
         tag.setBoolean("Sending", isSending);
     }
+
+    public void onNeighborChanged()
+    {
+        
+    }
 }

@@ -5,9 +5,12 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.library.gui.IGuiBase;
+import cofh.api.energy.EnergyStorage;
 
 public class ElementRedstoneFlux extends ElementProgressBar
 {
+    EnergyStorage s;
+    
     public ElementRedstoneFlux(IGuiBase parent, int x, int y, int max)
     {
         this(parent, x, y, 0, max);
@@ -20,6 +23,24 @@ public class ElementRedstoneFlux extends ElementProgressBar
         sizeY = 42;
     }
 
+    public ElementRedstoneFlux(IGuiBase parent, int x, int y, EnergyStorage storage)
+    {
+        this(parent, x, y, 0, 0);
+        s = storage;
+        maxProgress = s.getMaxEnergyStored();
+    }
+    
+    @Override
+    public void update()
+    {
+        super.update();
+        
+        if (s != null)
+        {
+            currentProgress = s.getEnergyStored();
+        }
+    }
+    
     @Override
     public void addTooltip(List<String> list)
     {
