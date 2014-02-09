@@ -20,15 +20,19 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalFrame;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.portal.PortalException;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrame;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrameBasic;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileNetworkInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortalPart;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
 import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 import uk.co.shadeddimensions.library.ct.ConnectedTexturesDetailed;
 import cofh.api.block.IDismantleable;
@@ -36,21 +40,26 @@ import cofh.api.tileentity.ISidedBlockTexture;
 
 public class BlockFrame extends BlockContainer implements IDismantleable
 {
-    public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, FRAME_TYPES = 7;
+    public static int ID;
+    public static BlockFrame instance;
+    
+    public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, TRANSFER_FLUID = 7, TRANSFER_ITEM = 8, TRANSFER_ENERGY = 9;
+    public static int FRAME_TYPES = 10;
 
     static Icon[] fullIcons;
     public static Icon[] overlayIcons;
     public static ConnectedTextures connectedTextures;
 
-    public BlockFrame(int id, String name)
+    public BlockFrame()
     {
-        super(id, Material.rock);
+        super(ID, Material.rock);
+        instance = this;
         setCreativeTab(Reference.creativeTab);
         setHardness(5);
         setResistance(2000);
-        setUnlocalizedName(name);
+        setUnlocalizedName("frame");
         setStepSound(soundStoneFootstep);
-        connectedTextures = new ConnectedTexturesDetailed("enhancedportals:frame/%s", id, -1);
+        connectedTextures = new ConnectedTexturesDetailed("enhancedportals:frame/%s", ID, -1);
     }
 
     @Override
@@ -89,11 +98,11 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     {
         if (metadata == 0)
         {
-            return new TileFrame();
+            return new TileFrameBasic();
         }
         else if (metadata == PORTAL_CONTROLLER)
         {
-            return new TilePortalController();
+            return new TileController();
         }
         else if (metadata == REDSTONE_INTERFACE)
         {
@@ -115,6 +124,18 @@ public class BlockFrame extends BlockContainer implements IDismantleable
         {
             return new TileModuleManipulator();
         }
+        else if (metadata == TRANSFER_FLUID)
+        {
+        	return new TileTransferFluid();
+        }
+        else if (metadata == TRANSFER_ITEM)
+        {
+        	return new TileTransferItem();
+        }
+        else if (metadata == TRANSFER_ENERGY)
+        {
+        	return new TileTransferEnergy();
+        }
 
         return null;
     }
@@ -132,9 +153,9 @@ public class BlockFrame extends BlockContainer implements IDismantleable
 
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (tile instanceof TilePortalFrame)
+        if (tile instanceof TileFrame)
         {
-            ((TilePortalFrame) tile).blockDismantled();
+            ((TileFrame) tile).onBlockDismantled();
         }
 
         world.setBlockToAir(x, y, z);
@@ -168,7 +189,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(CommonProxy.blockFrame.blockID, 1, world.getBlockMetadata(x, y, z));
+        return new ItemStack(blockID, 1, world.getBlockMetadata(x, y, z));
     }
 
     @Override
@@ -205,7 +226,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     @Override
     public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
     {
-        ((TilePortalPart) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);        
+        ((TileFrame) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);        
         super.breakBlock(world, x, y, z, oldID, newID);
     }
     
@@ -216,31 +237,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable
         
         if (tile instanceof TileFrame)
         {
-            return ((TileFrame) tile).activate(player);
-        }
-        else if (tile instanceof TilePortalController)
-        {
-            return ((TilePortalController) tile).activate(player);
-        }
-        else if (tile instanceof TileRedstoneInterface)
-        {
-            return ((TileRedstoneInterface) tile).activate(player);
-        }
-        else if (tile instanceof TileNetworkInterface)
-        {
-            return ((TileNetworkInterface) tile).activate(player);
-        }
-        else if (tile instanceof TileDiallingDevice)
-        {
-            return ((TileDiallingDevice) tile).activate(player);
-        }
-        else if (tile instanceof TileBiometricIdentifier)
-        {
-            return ((TileBiometricIdentifier) tile).activate(player);
-        }
-        else if (tile instanceof TileModuleManipulator)
-        {
-            return ((TileModuleManipulator) tile).activate(player);
+            return ((TileFrame) tile).activate(player, player.inventory.getCurrentItem());
         }
         
         return false;
@@ -249,13 +246,13 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
     {
-        ((TilePortalPart) world.getBlockTileEntity(x, y, z)).onBlockPlacedBy(entity, stack);
+        ((TilePortalPart) world.getBlockTileEntity(x, y, z)).onBlockPlaced(entity, stack);
     }
     
     @Override
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
     {
-        return ((TilePortalPart) blockAccess.getBlockTileEntity(x, y, z)).getColourMultiplier();
+        return ((TileFrame) blockAccess.getBlockTileEntity(x, y, z)).getColour();
     }
     
     @Override

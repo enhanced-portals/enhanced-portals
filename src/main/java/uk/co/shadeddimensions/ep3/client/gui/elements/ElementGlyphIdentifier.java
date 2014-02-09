@@ -16,6 +16,11 @@ public class ElementGlyphIdentifier extends ElementBaseContainer
     @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
+        if (selector.isDisabled())
+        {
+            return false;
+        }
+        
         for (int i = 0; i < elements.size(); i++)
         {
             if (elements.get(i).intersectsWith(x, y))

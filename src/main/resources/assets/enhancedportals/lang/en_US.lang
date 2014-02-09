@@ -1,16 +1,19 @@
 # Blocks
-tile.ep3.portalFrame.frame.name=Portal Frame
-tile.ep3.portalFrame.controller.name=Portal Controller
-tile.ep3.portalFrame.redstone.name=Redstone Interface
-tile.ep3.portalFrame.networkInterface.name=Network Interface
-tile.ep3.portalFrame.dialDevice.name=Dialling Device
-tile.ep3.portalFrame.biometric.name=Biometric Identifier
-tile.ep3.portalFrame.upgrade.name=Module Manipulator
-tile.ep3.portal.name=Portal
-tile.ep3.stabilizer.name=Dimensional Bridge Stabilizer
-tile.ep3.decoration.frame.name=Bordered Quartz
-tile.ep3.decoration.stabilizer.name=Stabilizer
-tile.ep3.crafting.name=Dimensional Bridge Stabilizer (Empty)
+tile.frame.frame.name=Portal Frame
+tile.frame.controller.name=Portal Controller
+tile.frame.redstone.name=Redstone Interface
+tile.frame.networkInterface.name=Network Interface
+tile.frame.dialDevice.name=Dialling Device
+tile.frame.biometric.name=Biometric Identifier
+tile.frame.upgrade.name=Module Manipulator
+tile.frame.fluid.name=Fluid Something
+tile.frame.item.name=Item Something
+tile.frame.energy.name=Energy Something
+tile.portal.name=Portal
+tile.stabilizer.name=Dimensional Bridge Stabilizer
+tile.decoration.frame.name=Bordered Quartz
+tile.decoration.stabilizer.name=Stabilizer
+tile.crafting.name=Dimensional Bridge Stabilizer (Empty)
 
 # Block Misc
 ep3.block.portalFramePart=Portal Frame Part
@@ -21,16 +24,16 @@ ep3.block.activePortalConnections=active portal connections
 ep3.block.decorativeBlock=Decorative Block
 
 # Items
-item.ep3.wrench.name=Wrench
-item.ep3.paintbrush.name=Nanobrush
-item.ep3.goggles.name=Glasses
-item.ep3.locationCard.name=Location Card
-item.ep3.synchronizer.name=Synchronizer
-item.ep3.entityCard.name=Identification Card
-item.ep3.handheldScanner.name=Handheld Scanner
-item.ep3.miscItems.blankPortalModule.name=Blank Portal Module
-item.ep3.miscItems.blankUpgrade.name=Blank Upgrade
-item.ep3.guide.name=EnhancedPortals Manual
+item.wrench.name=Wrench
+item.nanobrush.name=Nanobrush
+item.glasses.name=Glasses
+item.locationCard.name=Location Card
+item.synchronizer.name=Synchronizer
+item.entityCard.name=Identification Card
+item.scanner.name=Handheld Scanner
+item.miscItems.blankPortalModule.name=Blank Portal Module
+item.miscItems.blankUpgrade.name=Blank Upgrade
+item.guide.name=EnhancedPortals Manual
 
 # Items Misc
 ep3.item.charge=Charge:
@@ -39,29 +42,29 @@ ep3.item.contains=Contains:
 ep3.item.andMore=And %s more...
 
 # In-place upgrades
-item.ep3.inPlaceUpgrade.redstone.name=Redstone Interface Upgrade
-item.ep3.inPlaceUpgrade.networkInterface.name=Network Interface Upgrade
-item.ep3.inPlaceUpgrade.dialDevice.name=Dialling Device Upgrade
-item.ep3.inPlaceUpgrade.biometric.name=Biometric Identifier Upgrade
-item.ep3.inPlaceUpgrade.upgrade.name=Module Manipulator Upgrade
+item.upgrade.redstone.name=Redstone Interface Upgrade
+item.upgrade.networkInterface.name=Network Interface Upgrade
+item.upgrade.dialDevice.name=Dialling Device Upgrade
+item.upgrade.biometric.name=Biometric Identifier Upgrade
+item.upgrade.upgrade.name=Module Manipulator Upgrade
 
 # Upgrades
-item.ep3.portalModule.0.name=Particle Destroyer
-item.ep3.portalModule.0.desc=Stops particles from getting created
-item.ep3.portalModule.1.name=Rainbow Particles
-item.ep3.portalModule.1.desc=Every particle will have a random colour
-item.ep3.portalModule.2.name=Portal Silencer
-item.ep3.portalModule.2.desc=Silences the portal
-item.ep3.portalModule.3.name=Momentum
-item.ep3.portalModule.3.desc=Entities keep their momentum
-item.ep3.portalModule.4.name=Portal Cloaking
-item.ep3.portalModule.4.desc=Makes the portal completely invisible
-item.ep3.portalModule.5.name=Particle Shader
-item.ep3.portalModule.5.desc=Particles randomly spawn lighter or darker
-item.ep3.portalModule.6.name=Ethereal Frame [Deprecated]
-item.ep3.portalModule.6.desc=I no longer do anything.
-item.ep3.portalModule.7.name=Featherfall
-item.ep3.portalModule.7.desc=Negates fall damage
+item.portalModule.0.name=Particle Destroyer
+item.portalModule.0.desc=Stops particles from getting created
+item.portalModule.1.name=Rainbow Particles
+item.portalModule.1.desc=Every particle will have a random colour
+item.portalModule.2.name=Portal Silencer
+item.portalModule.2.desc=Silences the portal
+item.portalModule.3.name=Momentum
+item.portalModule.3.desc=Entities keep their momentum
+item.portalModule.4.name=Portal Cloaking
+item.portalModule.4.desc=Makes the portal completely invisible
+item.portalModule.5.name=Particle Shader
+item.portalModule.5.desc=Particles randomly spawn lighter or darker
+item.portalModule.6.name=Ethereal Frame [Deprecated]
+item.portalModule.6.desc=I no longer do anything.
+item.portalModule.7.name=Featherfall
+item.portalModule.7.desc=Negates fall damage
 
 # Creative Tab
 itemGroup.EnhancedPortals3=EnhancedPortals 3

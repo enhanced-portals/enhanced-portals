@@ -1,17 +1,25 @@
 package uk.co.shadeddimensions.ep3.item;
 
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.item.Item;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 
-public class ItemPaintbrush extends ItemEnhancedPortals
+public class ItemPaintbrush extends Item
 {
+    public static int ID;
+    public static ItemPaintbrush instance;
+    
     public static Icon texture;
 
-    public ItemPaintbrush(int id, String name)
+    public ItemPaintbrush()
     {
-        super(id, true);
-        setUnlocalizedName(name);
+        super(ID);
+        ID += 256;
+        instance = this;
+        setCreativeTab(Reference.creativeTab);
+        setUnlocalizedName("nanobrush");
         setMaxStackSize(1);
     }
 

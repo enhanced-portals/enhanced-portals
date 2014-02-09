@@ -14,15 +14,18 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.EntityData;
 import cofh.api.energy.ItemEnergyContainer;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
 {
+    public static int ID;
+    public static ItemHandheldScanner instance;
+    
     public static InventoryScanner getInventory(ItemStack stack)
     {
         return new InventoryScanner(stack);
@@ -30,10 +33,12 @@ public class ItemHandheldScanner extends ItemEnergyContainer
 
     Icon texture;
 
-    public ItemHandheldScanner(int par1, String name)
+    public ItemHandheldScanner()
     {
-        super(par1, 2000, 250, 250);
-        setUnlocalizedName(name);
+        super(ID, 2000, 250, 250);
+        ID += 256;
+        instance = this;
+        setUnlocalizedName("scanner");
         setCreativeTab(Reference.creativeTab);
         setMaxDamage(0);
         setMaxStackSize(1);
@@ -89,7 +94,7 @@ public class ItemHandheldScanner extends ItemEnergyContainer
                 return par1ItemStack;
             }
 
-            par3EntityPlayer.openGui(EnhancedPortals.instance, GUIs.Scanner.ordinal(), par2World, 0, 0, 0);
+            par3EntityPlayer.openGui(EnhancedPortals.instance, GuiHandler.SCANNER, par2World, 0, 0, 0);
         }
 
         return par1ItemStack;
@@ -120,7 +125,7 @@ public class ItemHandheldScanner extends ItemEnergyContainer
                         if (scanner.scannerInventory.getStackInSlot(1) == null)
                         {
                             NBTTagList list = itemStack.getTagCompound().getTagList("scanned");
-                            ItemStack s = new ItemStack(CommonProxy.itemEntityCard, 1);
+                            ItemStack s = new ItemStack(ItemEntityCard.instance, 1);
                             NBTTagCompound t = new NBTTagCompound();
                             t.setTag("entities", list);
                             s.setTagCompound(t);

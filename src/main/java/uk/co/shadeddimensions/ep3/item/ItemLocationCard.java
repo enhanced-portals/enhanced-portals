@@ -4,14 +4,19 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 
-public class ItemLocationCard extends ItemEnhancedPortals
+public class ItemLocationCard extends Item
 {
+    public static int ID;
+    public static ItemLocationCard instance;
+    
     public static void clearDBSLocation(ItemStack s)
     {
         s.setTagCompound(null);
@@ -46,10 +51,13 @@ public class ItemLocationCard extends ItemEnhancedPortals
 
     Icon texture;
 
-    public ItemLocationCard(int id, String name)
+    public ItemLocationCard()
     {
-        super(id, true);
-        setUnlocalizedName(name);
+        super(ID);
+        ID += 256;
+        instance = this;
+        setCreativeTab(Reference.creativeTab);
+        setUnlocalizedName("locationCard");
         setMaxDamage(0);
         setHasSubtypes(true);
     }

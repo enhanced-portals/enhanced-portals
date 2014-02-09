@@ -6,17 +6,17 @@ import java.util.Random;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
+import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphSelector;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.library.gui.GuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementItemIconWithCount;
 import uk.co.shadeddimensions.library.gui.element.ElementItemStackPanel;
@@ -24,15 +24,17 @@ import uk.co.shadeddimensions.library.util.GuiUtils;
 
 public class GuiPortalController extends GuiBase
 {
-    TilePortalController controller;
+    TileController controller;
     GuiButton resetButton, saveButton;
     boolean overlayActive;
+    String warningMessage;
+    int warningTimer;
 
     ElementGlyphSelector selector;
     ElementGlyphIdentifier identifier;
     ElementItemStackPanel portalComponents;
 
-    public GuiPortalController(TilePortalController tile)
+    public GuiPortalController(TileController tile)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/portalController.png"));
         ySize = 144;
@@ -40,6 +42,16 @@ public class GuiPortalController extends GuiBase
         overlayActive = false;
     }
 
+    public void setWarningMessage(int type)
+    {
+        if (type == 0)
+        {
+            selector.setIdentifierTo(null);
+            warningMessage = Localization.getGuiString("uidInUse");
+            warningTimer = 100;
+        }
+    }
+    
     @Override
     protected void actionPerformed(GuiButton button)
     {
@@ -66,14 +78,14 @@ public class GuiPortalController extends GuiBase
         {
             if (button.id == resetButton.id) // Reset Changes
             {
-                selector.setIdentifierTo(controller.getUniqueIdentifier());
+                selector.setIdentifierTo(controller.getIdentifierUnique());
                 toggleState();
             }
             else if (button.id == saveButton.id) // Save Changes
             {
-                GuiPayload payload = new GuiPayload();
-                payload.data.setString("uniqueIdentifier", selector.getGlyphIdentifier().getGlyphString());
-                ClientProxy.sendGuiPacket(payload);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("uid", selector.getGlyphIdentifier().getGlyphString());
+                PacketHandlerClient.sendGuiPacket(tag);
                 toggleState();
             }
         }
@@ -85,38 +97,53 @@ public class GuiPortalController extends GuiBase
         selector = new ElementGlyphSelector(this, 7, 57);
         identifier = new ElementGlyphIdentifier(this, 7, 20, selector);
         portalComponents = new ElementItemStackPanel(this, 10, 59, 158, 75);
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockPortal, controller.blockManager.getPortalCount())));
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getFrameCount(), 0)));
-        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, 1)));
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockPortal.instance, controller.getPortalCount())));
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getFrameCount(), 0)));
+        portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, 1, 1)));
 
-        if (controller.blockManager.getRedstoneInterfaceCount() > 0)
+        if (controller.getRedstoneInterfaceCount() > 0)
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, controller.blockManager.getRedstoneInterfaceCount(), BlockFrame.REDSTONE_INTERFACE)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getRedstoneInterfaceCount(), BlockFrame.REDSTONE_INTERFACE)));
         }
 
-        if (controller.blockManager.getHasNetworkInterface())
+        if (controller.getNetworkInterfaceCount() > 0)
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.NETWORK_INTERFACE)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getNetworkInterfaceCount(), BlockFrame.NETWORK_INTERFACE)));
         }
-        else if (controller.blockManager.getHasDialDevice())
+        else if (controller.getDiallingDeviceCount() > 0)
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.DIALLING_DEVICE)));
-        }
-
-        if (controller.blockManager.getHasBiometricIdentifier())
-        {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.BIOMETRIC_IDENTIFIER)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getDiallingDeviceCount(), BlockFrame.DIALLING_DEVICE)));
         }
 
-        if (controller.blockManager.getHasModuleManipulator())
+        if (controller.getHasBiometricIdentifier())
         {
-            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(CommonProxy.blockFrame, 1, BlockFrame.MODULE_MANIPULATOR)));
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, 1, BlockFrame.BIOMETRIC_IDENTIFIER)));
         }
 
+        if (controller.getHasModuleManipulator())
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, 1, BlockFrame.MODULE_MANIPULATOR)));
+        }
+
+        if (controller.getTransferEnergyCount() > 0)
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getTransferEnergyCount(), BlockFrame.TRANSFER_ENERGY)));
+        }
+        
+        if (controller.getTransferFluidCount() > 0)
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getTransferFluidCount(), BlockFrame.TRANSFER_FLUID)));
+        }
+        
+        if (controller.getTransferItemCount() > 0)
+        {
+            portalComponents.addElement(new ElementItemIconWithCount(this, 0, 0, new ItemStack(BlockFrame.instance, controller.getTransferItemCount(), BlockFrame.TRANSFER_ITEM)));
+        }
+        
         identifier.setDisabled(!overlayActive);
         portalComponents.setVisible(!overlayActive);
         selector.setVisible(overlayActive);
-        selector.setIdentifierTo(controller.getUniqueIdentifier());
+        selector.setIdentifierTo(controller.getIdentifierUnique());
 
         addElement(identifier);
         addElement(portalComponents);
@@ -153,6 +180,11 @@ public class GuiPortalController extends GuiBase
                     GuiUtils.drawTooltipHoveringText(this, list, x - guiLeft, y - guiTop);
                 }
             }
+        }
+        
+        if (warningTimer > 0)
+        {
+            fontRenderer.drawString(warningMessage, xSize / 2 - fontRenderer.getStringWidth(warningMessage) / 2, 125, 0xFF0000);
         }
 
         super.drawGuiForegroundLayer(x, y);
@@ -218,6 +250,16 @@ public class GuiPortalController extends GuiBase
                 resetButton.displayString = Localization.getGuiString("cancel");
                 saveButton.displayString = Localization.getGuiString("save");
             }
+            
+            if (warningTimer > 0)
+            {
+                warningTimer = 0;
+            }
+        }
+        
+        if (warningTimer > 0)
+        {
+            warningTimer--;
         }
     }
 }

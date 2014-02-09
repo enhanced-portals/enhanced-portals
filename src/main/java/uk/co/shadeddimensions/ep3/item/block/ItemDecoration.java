@@ -1,7 +1,8 @@
-package uk.co.shadeddimensions.ep3.item;
+package uk.co.shadeddimensions.ep3.item.block;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -9,14 +10,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
+import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemDecoration extends ItemBlock
 {
-    public ItemDecoration(int par1)
+    public ItemDecoration(int id)
     {
-        super(par1);
+        super(id);
         setMaxDamage(0);
         setHasSubtypes(true);
     }
@@ -31,7 +33,7 @@ public class ItemDecoration extends ItemBlock
     @Override
     public Icon getIconFromDamage(int meta)
     {
-        return meta == 0 ? CommonProxy.blockFrame.getIcon(0, 0) : meta == 1 ? CommonProxy.blockStabilizer.getIcon(0, 1) : null;
+        return meta == 0 ? BlockFrame.instance.getIcon(0, 0) : meta == 1 ? BlockStabilizer.instance.getIcon(0, 1) : null;
     }
 
     @Override

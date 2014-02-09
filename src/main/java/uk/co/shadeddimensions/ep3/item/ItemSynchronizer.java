@@ -2,28 +2,37 @@ package uk.co.shadeddimensions.ep3.item;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.lib.Localization;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortalPart;
 
-public class ItemSynchronizer extends ItemEnhancedPortals
+public class ItemSynchronizer extends Item
 {
+    public static int ID;
+    public static ItemSynchronizer instance;
+    
     Icon texture;
 
-    public ItemSynchronizer(int id, String name)
+    public ItemSynchronizer()
     {
-        super(id, true);
-        setUnlocalizedName(name);
+        super(ID);
+        ID += 256;
+        instance = this;
+        setCreativeTab(Reference.creativeTab);
+        setUnlocalizedName("synchronizer");
     }
 
     @Override
@@ -50,30 +59,30 @@ public class ItemSynchronizer extends ItemEnhancedPortals
 
         if (tile != null && tile instanceof TilePortalPart)
         {
-            TilePortalController controller = ((TilePortalPart) tile).getPortalController();
+            TileController controller = ((TilePortalPart) tile).getPortalController();
 
             if (controller == null)
             {
                 return false;
             }
-            else if (!controller.isPortalActive)
+            else if (!controller.isPortalActive())
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("portalNotActive")));
                 return false;
             }
 
-            TileStabilizerMain stabilizer = controller.blockManager.getDimensionalBridgeStabilizerTile();
+            TileStabilizerMain stabilizer = controller.getDimensionalBridgeStabilizer();
 
             if (stabilizer != null)
             {
-                GlyphIdentifier i = stabilizer.getConnectedPortal(controller.getUniqueIdentifier());
+                GlyphIdentifier i = stabilizer.getConnectedPortal(controller.getIdentifierUnique());
 
                 if (i == null)
                 {
                     return false;
                 }
 
-                TilePortalController pairedController = CommonProxy.networkManager.getPortalController(i);
+                TileController pairedController = CommonProxy.networkManager.getPortalController(i);
 
                 if (pairedController == null)
                 {
@@ -82,26 +91,27 @@ public class ItemSynchronizer extends ItemEnhancedPortals
 
                 if (tile instanceof TileBiometricIdentifier)
                 {
-                    TileBiometricIdentifier thisIdentifier = (TileBiometricIdentifier) tile, pairedIdentifier = pairedController.blockManager.getBiometricIdentifier(world);
+                    TileBiometricIdentifier thisIdentifier = (TileBiometricIdentifier) tile, pairedIdentifier = pairedController.getBiometricIdentifier();
 
                     if (pairedIdentifier != null)
                     {
                         pairedIdentifier.defaultPermissions = thisIdentifier.defaultPermissions;
                         pairedIdentifier.entityList = thisIdentifier.copySendingEntityTypes();
-                        CommonProxy.sendUpdatePacketToAllAround(pairedIdentifier);
+                        PacketHandlerServer.sendUpdatePacketToAllAround(pairedIdentifier);
                     }
 
                     return true;
                 }
                 else if (tile instanceof TileDiallingDevice)
                 {
-                    TileDiallingDevice thisDialler = (TileDiallingDevice) tile, pairedDialler = pairedController.blockManager.getDialDevice(world);
+                    // TODO
+                    //TileDiallingDevice thisDialler = (TileDiallingDevice) tile, pairedDialler = pairedController.getDialDevice(world);
 
-                    if (pairedDialler != null)
-                    {
-                        pairedDialler.glyphList = thisDialler.copyGlyphList();
-                        CommonProxy.sendUpdatePacketToAllAround(pairedDialler);
-                    }
+                    //if (pairedDialler != null)
+                    //{
+                    //    pairedDialler.glyphList = thisDialler.copyGlyphList();
+                    //    CommonProxy.sendUpdatePacketToAllAround(pairedDialler);
+                    //}
 
                     return true;
                 }

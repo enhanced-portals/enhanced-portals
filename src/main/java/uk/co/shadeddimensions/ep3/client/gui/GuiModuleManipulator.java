@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 
 public class GuiModuleManipulator extends GuiBaseContainer

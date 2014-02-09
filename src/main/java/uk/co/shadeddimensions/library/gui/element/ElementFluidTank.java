@@ -6,9 +6,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import uk.co.shadeddimensions.ep3.client.gui.GuiTransferFluid;
 import uk.co.shadeddimensions.library.gui.IGuiBase;
 import uk.co.shadeddimensions.library.util.GuiUtils;
 
@@ -16,6 +18,8 @@ public class ElementFluidTank extends ElementProgressBar
 {
     byte scale;
     Fluid fluid;
+    
+    FluidTank tank;
 
     public ElementFluidTank(IGuiBase parent, int x, int y, int progress, int max, Fluid f, int scale)
     {
@@ -26,6 +30,15 @@ public class ElementFluidTank extends ElementProgressBar
         fluid = f;
     }
 
+    public ElementFluidTank(IGuiBase parent, int x, int y, FluidTank tank, int scale)
+    {
+        super(parent, x, y, 0, 0);
+        sizeX = 18;
+        sizeY = 62;
+        this.scale = (byte) scale;
+        this.tank = tank;
+    }
+
     @Override
     public void addTooltip(List<String> list)
     {
@@ -33,6 +46,16 @@ public class ElementFluidTank extends ElementProgressBar
         list.set(0, list.get(0) + " mB");
     }
 
+    @Override
+    public void update()
+    {
+        super.update();
+        
+        maxProgress = tank.getCapacity();
+        currentProgress = tank.getFluidAmount();
+        fluid = tank.getFluid() != null ? tank.getFluid().getFluid() : null;
+    }
+    
     @Override
     public void draw()
     {

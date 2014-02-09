@@ -3,10 +3,10 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.nbt.NBTTagCompound;
 import uk.co.shadeddimensions.ep3.client.gui.slot.SlotDBS;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -48,9 +48,9 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerBase
 
             if (lastPower != currentPower)
             {
-                GuiPayload payload = new GuiPayload();
-                payload.data.setInteger("energy", currentPower);
-                PacketDispatcher.sendPacketToPlayer(new PacketGuiData(payload).getPacket(), (Player) icrafting);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setInteger("energy", currentPower);
+                PacketDispatcher.sendPacketToPlayer(new PacketGuiData(tag).getPacket(), (Player) icrafting);
             }
             if (lastPortals != currentPortals)
             {

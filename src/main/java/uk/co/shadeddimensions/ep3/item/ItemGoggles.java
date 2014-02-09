@@ -11,13 +11,18 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 
 public class ItemGoggles extends ItemArmor
 {
+    public static int ID;
+    public static ItemGoggles instance;
+    
     Icon icon;
 
-    public ItemGoggles(int id, String name)
+    public ItemGoggles()
     {
-        super(id, EnumArmorMaterial.CLOTH, EnhancedPortals.proxy.gogglesRenderIndex, 0);
+        super(ID, EnumArmorMaterial.CLOTH, EnhancedPortals.proxy.gogglesRenderIndex, 0);
+        ID += 256;
+        instance = this;
         setCreativeTab(Reference.creativeTab);
-        setUnlocalizedName(name);
+        setUnlocalizedName("glasses");
     }
 
     @Override

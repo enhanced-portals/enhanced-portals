@@ -2,17 +2,17 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementRedstoneFlux;
 import uk.co.shadeddimensions.library.gui.tab.TabRedstoneFlux;
@@ -59,9 +59,9 @@ public class GuiDimensionalBridgeStabilizer extends GuiBaseContainer
     {
         if (button.id == 0)
         {
-            GuiPayload payload = new GuiPayload();
-            payload.data.setBoolean("button", false);
-            ClientProxy.sendGuiPacket(payload);
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setBoolean("button", false);
+            PacketHandlerClient.sendGuiPacket(tag);
         }
     }
 
@@ -114,7 +114,7 @@ public class GuiDimensionalBridgeStabilizer extends GuiBaseContainer
         
         if (GeneralUtils.hasEnergyCost())
         {
-            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + 56, 140, 20, DBS.powerState == 0 ? Localization.getGuiString("powerModeNormal") : DBS.powerState == 1 ? Localization.getGuiString("powerModeRisky") : DBS.powerState == 2 ? Localization.getGuiString("powerModeUnstable") : Localization.getGuiString("powerModeUnpredictable")));
+            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + 56, 140, 20, CommonProxy.redstoneFluxPowerMultiplier == 0 ? Localization.getGuiString("powerModeFree") : Localization.getGuiString("powerModeNormal")));
         }
     }
 

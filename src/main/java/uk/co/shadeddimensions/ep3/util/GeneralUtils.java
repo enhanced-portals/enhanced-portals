@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -34,7 +35,7 @@ public class GeneralUtils
             }
 
             ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
-            return stack != null && stack.itemID == CommonProxy.itemGoggles.itemID;
+            return stack != null && stack.itemID == ItemGoggles.ID;
         }
         
         return false;

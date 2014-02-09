@@ -2,27 +2,31 @@ package uk.co.shadeddimensions.ep3.client.gui;
 
 import java.awt.Color;
 
+import codechicken.nei.VisiblityData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
+import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementIconToggleButton;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementParticleToggleButton;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
 import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
@@ -58,7 +62,7 @@ public class GuiTextureDialler extends GuiBaseContainer
         }
     }
 
-    TilePortalController controller;
+    TileController controller;
     TileDiallingDevice dial;
     int screenState;
     GuiButton colourResetButton, colourSaveButton, mainCancelButton, mainSaveButton;
@@ -121,7 +125,7 @@ public class GuiTextureDialler extends GuiBaseContainer
         }
         else if (button.id == mainCancelButton.id)
         {
-            CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
+            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.DIALLING_DEVICE);
         }
         else if (button.id == mainSaveButton.id)
         {
@@ -130,12 +134,12 @@ public class GuiTextureDialler extends GuiBaseContainer
                 return;
             }
 
-            GuiPayload payload = new GuiPayload();
-            payload.data.setInteger("SetDialTexture", ClientProxy.editingDialEntry);
-            ClientProxy.dialEntryTexture.writeToNBT(payload.data, "TextureData");
-            ClientProxy.sendGuiPacket(payload);
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setInteger("SetDialTexture", ClientProxy.editingDialEntry);
+            ClientProxy.dialEntryTexture.writeToNBT(tag, "TextureData");
+            PacketHandlerClient.sendGuiPacket(tag);
             ClientProxy.editingDialEntry = -1;
-            CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.DiallingDevice, dial);
+            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.DIALLING_DEVICE);
         }
     }
 
@@ -291,8 +295,8 @@ public class GuiTextureDialler extends GuiBaseContainer
     @Override
     public void addTabs()
     {
-        addTab(new TabToggleButton(this, "frame", Localization.getGuiString("frame"), new ItemStack(CommonProxy.blockFrame, 1, 0)));
-        addTab(new TabToggleButton(this, "portal", Localization.getGuiString("portal"), new ItemStack(CommonProxy.blockPortal)));
+        addTab(new TabToggleButton(this, "frame", Localization.getGuiString("frame"), new ItemStack(BlockFrame.instance, 1, 0)));
+        addTab(new TabToggleButton(this, "portal", Localization.getGuiString("portal"), new ItemStack(BlockPortal.instance)));
         addTab(new TabToggleButton(this, "particle", Localization.getGuiString("particle"), new ItemStack(Item.blazePowder)));
         addTab(new ColourTab(this));
     }
@@ -458,5 +462,12 @@ public class GuiTextureDialler extends GuiBaseContainer
         redSlider.sliderValue = c.getRed() / 255f;
         greenSlider.sliderValue = c.getGreen() / 255f;
         blueSlider.sliderValue = c.getBlue() / 255f;
+    }
+    
+    @Override
+    public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility)
+    {
+        currentVisibility.showSearchSection = false;
+        return currentVisibility;
     }
 }

@@ -22,10 +22,10 @@ public class Reference
         }
         catch (Exception e)
         {
-
+            
         }
 
-        VERSION = properties.getProperty("version");
+        VERSION = properties.containsKey("version") ? properties.getProperty("version") : ""; 
     }
     
     public static final String ID = "EnhancedPortals3";

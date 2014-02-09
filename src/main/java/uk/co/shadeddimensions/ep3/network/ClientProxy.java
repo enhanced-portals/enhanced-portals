@@ -9,14 +9,9 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.PortalRenderer;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
-import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ClientProxy extends CommonProxy
 {
@@ -34,6 +29,7 @@ public class ClientProxy extends CommonProxy
         }
     }
 
+    public static String manualPage = "mainMain";
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
 
@@ -41,11 +37,6 @@ public class ClientProxy extends CommonProxy
     public static ArrayList<Icon> customPortalTextures = new ArrayList<Icon>();
     public static ArrayList<ParticleSet> particleSets = new ArrayList<ParticleSet>();
     public static Random random = new Random();
-
-    public static void requestTileData(TileEnhancedPortals tile)
-    {
-        PacketDispatcher.sendPacketToServer(new PacketRequestData(tile).getPacket());
-    }
 
     public static boolean resourceExists(String file)
     {
@@ -60,11 +51,6 @@ public class ClientProxy extends CommonProxy
         {
             return false;
         }
-    }
-
-    public static void sendGuiPacket(GuiPayload payload)
-    {
-        PacketDispatcher.sendPacketToServer(new PacketGuiData(payload).getPacket());
     }
 
     @Override

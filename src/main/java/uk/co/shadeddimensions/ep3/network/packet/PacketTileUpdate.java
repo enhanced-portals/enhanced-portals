@@ -7,21 +7,21 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
+import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketTileUpdate extends PacketEnhancedPortals
 {
     DataInputStream s;
     int x, y, z;
-    TileEnhancedPortals t;
+    TileEP t;
 
     public PacketTileUpdate()
     {
 
     }
 
-    public PacketTileUpdate(TileEnhancedPortals tile)
+    public PacketTileUpdate(TileEP tile)
     {
         t = tile;
         isChunkDataPacket = true;
@@ -32,11 +32,11 @@ public class PacketTileUpdate extends PacketEnhancedPortals
     {
         TileEntity t = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
-        if (t != null && t instanceof TileEnhancedPortals)
+        if (t != null && t instanceof TileEP)
         {
             try
             {
-                ((TileEnhancedPortals) t).usePacket(s);
+                ((TileEP) t).packetUse(s);
             }
             catch (IOException e)
             {
@@ -61,6 +61,6 @@ public class PacketTileUpdate extends PacketEnhancedPortals
         stream.writeInt(t.yCoord);
         stream.writeInt(t.zCoord);
 
-        t.fillPacket(stream);
+        t.packetFill(stream);
     }
 }

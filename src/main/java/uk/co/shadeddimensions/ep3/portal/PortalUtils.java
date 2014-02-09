@@ -10,15 +10,14 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortalPart;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileNetworkInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortalPart;
 
 public class PortalUtils
 {
@@ -107,7 +106,7 @@ public class PortalUtils
                     if (sides >= 2)
                     {
                         processed.add(c);
-                        world.setBlock(c.posX, c.posY, c.posZ, CommonProxy.blockPortal.blockID, portalDirection, 2);
+                        world.setBlock(c.posX, c.posY, c.posZ, BlockPortal.ID, portalDirection, 2);
                         addNearbyBlocks(world, c, portalDirection, toProcess);
                     }
                 }
@@ -125,9 +124,9 @@ public class PortalUtils
     /***
      * Creates a portal from the specified portal controller.
      */
-    public static boolean createPortalFrom(TilePortalController controller)
+    public static boolean createPortalFrom(TileController controller)
     {
-        if (controller.worldObj.isRemote || controller.isPortalActive || controller.processing || !controller.isFullyInitialized())
+        /*if (controller.worldObj.isRemote || controller.isPortalActive || controller.processing || !controller.isFullyInitialized())
         {
             return false;
         }
@@ -170,11 +169,11 @@ public class PortalUtils
         }
 
         //CommonProxy.sendPacketToAllAround(controller, new PacketPortalCreated(controller).getPacket());
-        controller.setPortalActive(true);
+        controller.setPortalActive(true);*/
         return true;
     }
 
-    public static Queue<ChunkCoordinates> findAllAttachedPortalParts(TilePortalController controller, Queue<ChunkCoordinates> portalBlocks, EntityPlayer player)
+    public static Queue<ChunkCoordinates> findAllAttachedPortalParts(TileController controller, Queue<ChunkCoordinates> portalBlocks, EntityPlayer player)
     {
         Queue<ChunkCoordinates> portalParts = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
@@ -196,7 +195,7 @@ public class PortalUtils
                 {
                     if (t != null)
                     {
-                        if (!(t instanceof TilePortalController) && ((TilePortalPart) t).getPortalController() != null)
+                        if (!(t instanceof TileController) && ((TilePortalPart) t).getPortalController() != null)
                         {
                             continue;
                         }
@@ -251,7 +250,7 @@ public class PortalUtils
 
                             moduleCounter++;
                         }
-                        else if (t instanceof TilePortalController && processed.size() > 1)
+                        else if (t instanceof TileController && processed.size() > 1)
                         {
                             player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multiplePortalControllers")));
                             return null;
@@ -259,7 +258,7 @@ public class PortalUtils
                     }
 
                     portalParts.add(c);
-                    addNearbyBlocks(controller.worldObj, c, controller.portalType, toProcess);
+                    //addNearbyBlocks(controller.worldObj, c, controller.portalType, toProcess);
                     addNearbyBlocks(controller.worldObj, c, 0, toProcess);
                 }
             }
@@ -308,7 +307,7 @@ public class PortalUtils
         return sides;
     }
 
-    public static Queue<ChunkCoordinates> getGhostedPortals(TilePortalController c)
+    public static Queue<ChunkCoordinates> getGhostedPortals(TileController c)
     {
         for (int j = 0; j < 6; j++)
         {
@@ -318,7 +317,7 @@ public class PortalUtils
 
                 if (!portalBlocks.isEmpty())
                 {
-                    c.portalType = (byte) i;
+                    //c.portalType = (byte) i;
                     return portalBlocks;
                 }
             }
@@ -407,9 +406,9 @@ public class PortalUtils
     /***
      * Removes an active portal from the specified portal controller.
      */
-    public static void removePortalFrom(TilePortalController controller)
+    public static void removePortalFrom(TileController controller)
     {
-        if (controller.worldObj.isRemote || !controller.isPortalActive || controller.processing || !controller.isFullyInitialized())
+        /*if (controller.worldObj.isRemote || !controller.isPortalActive || controller.processing || !controller.isFullyInitialized())
         {
             return;
         }
@@ -419,7 +418,7 @@ public class PortalUtils
             controller.worldObj.setBlockToAir(w.posX, w.posY, w.posZ);
         }
 
-        controller.setPortalActive(false);
+        controller.setPortalActive(false);*/
     }
 
     /**

@@ -15,9 +15,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockNetherPortal extends net.minecraft.block.BlockPortal
 {
-    public BlockNetherPortal(int id)
+    public static int ID;
+    public static BlockNetherPortal instance;
+    
+    public BlockNetherPortal()
     {
-        super(id);
+        super(ID);
+        instance = this;
     }
     
     @Override

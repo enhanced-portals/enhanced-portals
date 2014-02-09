@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.tileentity.frame;
+package uk.co.shadeddimensions.ep3.tileentity.portal;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,55 +14,45 @@ import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileModuleManipulator extends TilePortalFrameSpecial implements IInventory
+public class TileModuleManipulator extends TileFrame implements IInventory
 {
-    ItemStack[] inventory;
-
-    public TileModuleManipulator()
-    {
-        inventory = new ItemStack[9];
-    }
+    ItemStack[] inventory = new ItemStack[9];
     
-    public boolean activate(EntityPlayer player)
+    @Override
+    public boolean activate(EntityPlayer player, ItemStack stack)
     {
-        ItemStack item = player.inventory.getCurrentItem();
+    	if (player.isSneaking())
+		{
+			return false;
+		}
+    	
+        TileController controller = getPortalController();
 
-        if (item != null)
+        if (stack != null && controller != null && controller.isFinalized())
         {
-            if (ItemHelper.isWrench(item) && !player.isSneaking())
+            if (ItemHelper.isWrench(stack) && !player.isSneaking())
             {
-                CommonProxy.openGui(player, GUIs.ModuleManipulator, this);
+                GuiHandler.openGui(player, this, GuiHandler.MODULE_MANIPULATOR);
                 return true;
             }
-            else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
+            else if (stack.itemID == ItemPaintbrush.ID)
             {
-                TilePortalController controller = getPortalController();
-
-                if (controller != null && controller.isFullyInitialized())
-                {
-                    CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
-                    return true;
-                }
+                GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_FRAME);
+                return true;
             }
         }
 
         return false;
     }
 
-    public boolean canSendEntity(Entity entity)
+    @Override
+    public boolean canUpdate()
     {
-        for (ItemStack i : getModules())
-        {
-            if (((IPortalModule) i.getItem()).onEntityTeleportStart(entity, this, i))
-            {
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -76,9 +66,9 @@ public class TileModuleManipulator extends TilePortalFrameSpecial implements IIn
     }
 
     @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
+    public void packetFill(DataOutputStream stream) throws IOException
     {
-        super.fillPacket(stream);
+        super.packetFill(stream);
 
         for (int i = 0; i < getSizeInventory(); i++)
         {
@@ -93,17 +83,6 @@ public class TileModuleManipulator extends TilePortalFrameSpecial implements IIn
                 stream.writeInt(0);
             }
         }
-    }
-
-    @Override
-    public Icon getBlockTexture(int side, int pass)
-    {
-        if (pass == 0)
-        {
-            return super.getBlockTexture(side, pass);
-        }
-
-        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[6] : BlockFrame.overlayIcons[0];
     }
 
     public IPortalModule[] getInstalledUpgrades()
@@ -167,7 +146,7 @@ public class TileModuleManipulator extends TilePortalFrameSpecial implements IIn
 
         return list;
     }
-    
+
     public ItemStack getModifierItem()
     {
         return inventory[9];
@@ -205,7 +184,7 @@ public class TileModuleManipulator extends TilePortalFrameSpecial implements IIn
                     s.stackSize = 1;
 
                     setInventorySlotContents(i, s);
-                    CommonProxy.sendUpdatePacketToAllAround(this);
+                    PacketHandlerServer.sendUpdatePacketToAllAround(this);
                     return true;
                 }
             }
@@ -288,9 +267,9 @@ public class TileModuleManipulator extends TilePortalFrameSpecial implements IIn
     }
 
     @Override
-    public void usePacket(java.io.DataInputStream stream) throws IOException
+    public void packetUse(java.io.DataInputStream stream) throws IOException
     {
-        super.usePacket(stream);
+        super.packetUse(stream);
 
         for (int i = 0; i < getSizeInventory(); i++)
         {
@@ -339,12 +318,12 @@ public class TileModuleManipulator extends TilePortalFrameSpecial implements IIn
     @Override
     public void openChest()
     {
-        
+
     }
 
     @Override
     public void closeChest()
     {
-        
+
     }
 }

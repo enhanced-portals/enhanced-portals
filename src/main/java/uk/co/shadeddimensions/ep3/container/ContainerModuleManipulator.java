@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import uk.co.shadeddimensions.ep3.client.gui.slot.SlotPortalModule;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 
 public class ContainerModuleManipulator extends ContainerBase

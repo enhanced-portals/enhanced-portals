@@ -6,15 +6,11 @@ import java.lang.reflect.Modifier;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockCrafting;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -23,7 +19,6 @@ import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.crafting.ThermalExpansion;
 import uk.co.shadeddimensions.ep3.crafting.Vanilla;
-import uk.co.shadeddimensions.ep3.item.ItemDecoration;
 import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
 import uk.co.shadeddimensions.ep3.item.ItemGoggles;
 import uk.co.shadeddimensions.ep3.item.ItemGuide;
@@ -35,52 +30,33 @@ import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
 import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.ItemUpgrade;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
+import uk.co.shadeddimensions.ep3.item.block.ItemDecoration;
 import uk.co.shadeddimensions.ep3.item.block.ItemFrame;
 import uk.co.shadeddimensions.ep3.item.block.ItemStabilizer;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.network.packet.PacketTileUpdate;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
-import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileFrame;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileNetworkInterface;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrameBasic;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileNetworkInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortal;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
 import uk.co.shadeddimensions.ep3.util.ConfigHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
     public static final int REDSTONE_FLUX_COST = 10000;
     public static final int REDSTONE_FLUX_TIMER = 20;
-
-    public static BlockFrame blockFrame;
-    public static BlockPortal blockPortal;
-    public static BlockStabilizer blockStabilizer;
-    public static BlockDecoration blockDecoration;
-    public static BlockCrafting blockCrafting;
-    
-    public static ItemWrench itemWrench;
-    public static ItemPaintbrush itemPaintbrush;
-    public static ItemGoggles itemGoggles;
-    public static ItemPortalModule itemPortalModule;
-    public static ItemLocationCard itemLocationCard;
-    public static ItemSynchronizer itemSynchronizer;
-    public static ItemEntityCard itemEntityCard;
-    public static ItemHandheldScanner itemScanner;
-    public static ItemUpgrade itemInPlaceUpgrade;
-    public static ItemMisc itemMisc;
-    public static ItemGuide itemGuide;
 
     public int gogglesRenderIndex = 0;
 
@@ -91,31 +67,6 @@ public class CommonProxy
 
     public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles, forceShowFrameOverlays, disablePigmen, netherDisableParticles, netherDisableSounds;
     public static int redstoneFluxPowerMultiplier;
-
-    public static void openGui(EntityPlayer player, GUIs gui, TileEnhancedPortals tile)
-    {
-        openGui(player, gui.ordinal(), tile);
-    }
-
-    public static void openGui(EntityPlayer player, int id, TileEnhancedPortals tile)
-    {
-        player.openGui(EnhancedPortals.instance, id, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
-    }
-
-    public static void sendPacketToAllAround(TileEntity tile, Packet250CustomPayload packet)
-    {
-        PacketDispatcher.sendPacketToAllAround(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5, 128, tile.worldObj.provider.dimensionId, packet);
-    }
-
-    public static void sendUpdatePacketToAllAround(TileEnhancedPortals tile)
-    {
-        sendPacketToAllAround(tile, new PacketTileUpdate(tile).getPacket());
-    }
-
-    public static void sendUpdatePacketToPlayer(TileEnhancedPortals tile, EntityPlayer player)
-    {
-        PacketDispatcher.sendPacketToPlayer(new PacketTileUpdate(tile).getPacket(), (Player) player);
-    }
 
     public File getBaseDir()
     {
@@ -180,17 +131,17 @@ public class CommonProxy
 
     public void miscSetup()
     {
-        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(itemPortalModule, 1, 4), 1, 1, 2));
+        ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(ItemPortalModule.instance, 1, 4), 1, 1, 2));
 
         if (customNetherPortals)
         {
-            int portalID = Block.portal.blockID;
-            Block.blocksList[portalID] = null;
+            BlockNetherPortal.ID = Block.portal.blockID;
+            Block.blocksList[BlockNetherPortal.ID] = null;
 
-            if (!reflectBlock(new BlockNetherPortal(portalID), net.minecraft.block.BlockPortal.class))
+            if (!reflectBlock(new BlockNetherPortal(), net.minecraft.block.BlockPortal.class))
             {
-                Block.blocksList[portalID] = null;
-                Block.blocksList[portalID] = new net.minecraft.block.BlockPortal(portalID);
+                Block.blocksList[BlockNetherPortal.ID] = null;
+                Block.blocksList[BlockNetherPortal.ID] = new net.minecraft.block.BlockPortal(BlockNetherPortal.ID);
                 logger.warning("Unable to modify BlockPortal. Custom Nether Portals have been disabled.");
             }
         }
@@ -198,63 +149,51 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        blockFrame = new BlockFrame(configuration.getBlockId("Frame"), "ep3.portalFrame");
-        GameRegistry.registerBlock(blockFrame, ItemFrame.class, "ep3.portalFrame");
-
-        blockPortal = new BlockPortal(configuration.getBlockId("Portal"), "ep3.portal");
-        GameRegistry.registerBlock(blockPortal, "ep3.portal");
-
-        blockStabilizer = new BlockStabilizer(configuration.getBlockId("DimensionalBridgeStabilizer"), "ep3.stabilizer");
-        GameRegistry.registerBlock(blockStabilizer, ItemStabilizer.class, "ep3.stabilizer");
-
-        blockDecoration = new BlockDecoration(configuration.getBlockId("Decoration"), "ep3.decoration");
-        GameRegistry.registerBlock(blockDecoration, ItemDecoration.class, "ep3.decoration");
+        BlockFrame.ID = configuration.getBlockId("Frame");
+        BlockPortal.ID = configuration.getBlockId("Portal");
+        BlockStabilizer.ID = configuration.getBlockId("DimensionalBridgeStabilizer");
+        BlockDecoration.ID = configuration.getBlockId("Decoration");
+        BlockCrafting.ID = configuration.getBlockId("Crafting");
         
-        blockCrafting = new BlockCrafting(configuration.getBlockId("Crafting"), "ep3.crafting");
-        GameRegistry.registerBlock(blockCrafting, "ep3.crafting");
+        GameRegistry.registerBlock(new BlockFrame(), ItemFrame.class, "portalFrame");
+        GameRegistry.registerBlock(new BlockPortal(), "portal");
+        GameRegistry.registerBlock(new BlockStabilizer(), ItemStabilizer.class, "stabilizer");
+        GameRegistry.registerBlock(new BlockDecoration(), ItemDecoration.class, "ep3.decoration");
+        GameRegistry.registerBlock(new BlockCrafting(), "crafting");
     }
 
     public void registerItems()
     {
-        itemWrench = new ItemWrench(configuration.getItemId("Wrench"), "ep3.wrench");
-        GameRegistry.registerItem(itemWrench, "ep3.wrench");
-
-        itemPaintbrush = new ItemPaintbrush(configuration.getItemId("Paintbrush"), "ep3.paintbrush");
-        GameRegistry.registerItem(itemPaintbrush, "ep3.paintbrush");
-
-        itemGoggles = new ItemGoggles(configuration.getItemId("Glasses"), "ep3.goggles");
-        GameRegistry.registerItem(itemGoggles, "ep3.goggles");
-
-        itemLocationCard = new ItemLocationCard(configuration.getItemId("LocationCard"), "ep3.locationCard");
-        GameRegistry.registerItem(itemLocationCard, "ep3.locationCard");
-
-        itemPortalModule = new ItemPortalModule(configuration.getItemId("PortalModule"), "ep3.portalModule");
-        GameRegistry.registerItem(itemPortalModule, "ep3.portalModule");
-
-        itemSynchronizer = new ItemSynchronizer(configuration.getItemId("Synchronizer"), "ep3.synchronizer");
-        GameRegistry.registerItem(itemSynchronizer, "ep3.synchronizer");
-
-        itemEntityCard = new ItemEntityCard(configuration.getItemId("EntityCard"), "ep3.entityCard");
-        GameRegistry.registerItem(itemEntityCard, "ep3.entityCard");
-
-        itemScanner = new ItemHandheldScanner(configuration.getItemId("HandheldScanner"), "ep3.handheldScanner");
-        GameRegistry.registerItem(itemScanner, "ep3.handheldScanner");
-
-        itemInPlaceUpgrade = new ItemUpgrade(configuration.getItemId("InPlaceUpgrade"), "ep3.inPlaceUpgrade");
-        GameRegistry.registerItem(itemInPlaceUpgrade, "ep3.inPlaceUpgrade");
-
-        itemMisc = new ItemMisc(configuration.getItemId("MiscItems"), "ep3.miscItems");
-        GameRegistry.registerItem(itemMisc, "ep3.miscItems");
-
-        itemGuide = new ItemGuide(configuration.getItemId("Manual"), "ep3.guide");
-        GameRegistry.registerItem(itemGuide, "ep3.guide");
+        ItemWrench.ID = configuration.getItemId("Wrench");
+        ItemPaintbrush.ID = configuration.getItemId("Paintbrush");
+        ItemGoggles.ID = configuration.getItemId("Glasses");
+        ItemLocationCard.ID = configuration.getItemId("LocationCard");
+        ItemPortalModule.ID = configuration.getItemId("PortalModule");
+        ItemSynchronizer.ID = configuration.getItemId("Synchronizer");
+        ItemEntityCard.ID = configuration.getItemId("EntityCard");
+        ItemHandheldScanner.ID = configuration.getItemId("HandheldScanner");
+        ItemUpgrade.ID = configuration.getItemId("InPlaceUpgrade");
+        ItemMisc.ID = configuration.getItemId("MiscItems");
+        ItemGuide.ID = configuration.getItemId("Manual");
+        
+        GameRegistry.registerItem(new ItemWrench(), "wrench");
+        GameRegistry.registerItem(new ItemPaintbrush(), "paintbrush");
+        GameRegistry.registerItem(new ItemGoggles(), "goggles");
+        GameRegistry.registerItem(new ItemLocationCard(), "locationCard");
+        GameRegistry.registerItem(new ItemPortalModule(), "portalModule");
+        GameRegistry.registerItem(new ItemSynchronizer(), "synchronizer");
+        GameRegistry.registerItem(new ItemEntityCard(), "entityCard");
+        GameRegistry.registerItem(new ItemHandheldScanner(), "handheldScanner");
+        GameRegistry.registerItem(new ItemUpgrade(), "inPlaceUpgrade");
+        GameRegistry.registerItem(new ItemMisc(), "miscItems");
+        GameRegistry.registerItem(new ItemGuide(), "guide");
     }
 
     public void registerTileEntities()
     {
         GameRegistry.registerTileEntity(TilePortal.class, "epPortal");
-        GameRegistry.registerTileEntity(TileFrame.class, "epPortalFrame");
-        GameRegistry.registerTileEntity(TilePortalController.class, "epPortalController");
+        GameRegistry.registerTileEntity(TileFrameBasic.class, "epPortalFrame");
+        GameRegistry.registerTileEntity(TileController.class, "epPortalController");
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRedstoneInterface");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNetworkInterface");
         GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDiallingDevice");
@@ -262,6 +201,9 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epModuleManipulator");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epStabilizer");
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epStabilizerMain");
+        GameRegistry.registerTileEntity(TileTransferEnergy.class, "epTEnergy");
+        GameRegistry.registerTileEntity(TileTransferFluid.class, "epTFluid");
+        GameRegistry.registerTileEntity(TileTransferItem.class, "epTItem");
     }
 
     public void setupConfiguration(Configuration theConfig)

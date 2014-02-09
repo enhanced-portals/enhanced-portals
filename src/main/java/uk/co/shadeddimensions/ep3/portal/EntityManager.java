@@ -20,37 +20,37 @@ import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class EntityManager
 {
     static final int PLAYER_COOLDOWN_RATE = 10;
 
-    private static ChunkCoordinates getActualExitLocation(Entity entity, TilePortalController controller)
+    static ChunkCoordinates getActualExitLocation(Entity entity, TileController controller)
     {
         int entityHeight = Math.round(entity.height);
-        boolean horizontal = controller.portalType == 3;
+        //boolean horizontal = controller.portalType == 3;
 
-        forloop:
-        for (ChunkCoordinates c : new ArrayList<ChunkCoordinates>(controller.blockManager.getPortals()))
+        //forloop:
+        for (ChunkCoordinates c : new ArrayList<ChunkCoordinates>(controller.getPortals()))
         {
-            if (!horizontal)
-            {
-                for (int i = 0; i < entityHeight; i++)
-                {
-                    if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
-                    {
-                        continue forloop;
-                    }
-                }
-            }
-            else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
-            {
-                return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
-            }
+            //if (!horizontal)
+            //{
+            //    for (int i = 0; i < entityHeight; i++)
+            //    {
+            //        if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
+            //        {
+            //            continue forloop;
+            //        }
+            //    }
+            //}
+            //else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
+            //{
+            //    return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
+            //}
 
             return new ChunkCoordinates(c.posX, c.posY, c.posZ);
         }
@@ -58,7 +58,7 @@ public class EntityManager
         return null;
     }
 
-    private static float getRotation(Entity entity, TilePortalController controller, ChunkCoordinates loc)
+    static float getRotation(Entity entity, TileController controller, ChunkCoordinates loc)
     {
         if (controller.portalType == 1)
         {
@@ -84,7 +84,7 @@ public class EntityManager
             {
                 return 135f;
             }
-            
+
             return -45f;
         }
         else if (controller.portalType == 5)
@@ -93,14 +93,14 @@ public class EntityManager
             {
                 return -135f;
             }
-            
+
             return 45f;
         }
 
         return entity.rotationYaw;
     }
 
-    private static void handleMomentum(Entity entity, int touchedPortalType, int exitPortalType, float exitYaw, boolean keepMomentum)
+    static void handleMomentum(Entity entity, int touchedPortalType, int exitPortalType, float exitYaw, boolean keepMomentum)
     {
         if (!keepMomentum)
         {
@@ -183,7 +183,7 @@ public class EntityManager
         {
             return;
         }
-        
+
         if (CommonProxy.fasterPortalCooldown || entity instanceof EntityPlayer || entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse)
         {
             entity.timeUntilPortal = PLAYER_COOLDOWN_RATE;
@@ -194,7 +194,7 @@ public class EntityManager
         }
     }
 
-    public static void teleportEntityHighestInstability(Entity par1Entity)
+    public static void teleportEntityHighestInstability(Entity par1Entity) // TODO: CRIMSON
     {
         //boolean nether = MinecraftServer.getServer().getAllowNether();
         ChunkCoordinates spawn = /*nether ? DimensionManager.getWorld(-1).getSpawnPoint() :*/ par1Entity.worldObj.getSpawnPoint();
@@ -205,11 +205,11 @@ public class EntityManager
         //}
         //else
         //{
-            transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posY), spawn.posZ, 0f, -1, -1, false);
+        transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posY), spawn.posZ, 0f, -1, -1, false);
         //}
     }
 
-    public static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
         {
@@ -221,62 +221,46 @@ public class EntityManager
         }
     }
 
-    public static void transferEntity(Entity entity, GlyphIdentifier entryID, GlyphIdentifier exitID, int portalType)
+    public static void transferEntity(Entity entity, TileController entry, TileController exit) throws PortalException
     {
-        TilePortalController controllerEntry = CommonProxy.networkManager.getPortalController(entryID), controllerDest = CommonProxy.networkManager.getPortalController(exitID);
+        TileBiometricIdentifier bio1 = entry.getBiometricIdentifier(), bio2 = exit.getBiometricIdentifier();
 
-        if (controllerDest == null)
+        if (bio1 != null && !bio1.canEntityTravel(entity))
         {
-            CommonProxy.logger.fine("Failed to teleport entity - Cannot get TileEntity of exit Portal Controller!");
-            return;
-        }
-        else if (!controllerDest.isPortalActive)
-        {
-            CommonProxy.logger.fine("Failed to teleport entity - Portal is not active!");
-            return;
+            throw new PortalException("noValidEntitySignatureSend");
         }
 
-        TileBiometricIdentifier bio = controllerDest.blockManager.getBiometricIdentifier(controllerDest.worldObj);
-
-        if (bio != null)
+        if (bio2 != null && !bio2.canEntityTravel(entity))
         {
-            if (!bio.canEntityTravel(entity))
-            {
-                setEntityPortalCooldown(entity);
-                return;
-            }
+            throw new PortalException("noValidEntitySignatureReceive");
         }
 
-        ChunkCoordinates exit = getActualExitLocation(entity, controllerDest);
+        ChunkCoordinates exitLoc = getActualExitLocation(entity, exit);
 
-        if (exit == null)
+        if (exitLoc == null)
         {
-            CommonProxy.logger.fine("Failed to teleport entity (" + entity.getEntityName() + ") - Could not find a suitable exit location.");
-            return;
+            throw new PortalException("failedToTransfer");
         }
         else
         {
             boolean keepMomentum = false;
-            TileModuleManipulator manip = controllerEntry.blockManager.getModuleManipulator(controllerEntry.worldObj);
+            TileModuleManipulator manip = exit.getModuleManipulator();
 
             if (manip != null)
             {
                 keepMomentum = manip.shouldKeepMomentumOnTeleport();
             }
 
-            CommonProxy.logger.fine(String.format("Found a suitable exit location for Entity (%s): %s, %s, %s", entity.getEntityName(), exit.posX, exit.posY, exit.posZ));
-
             while (entity.ridingEntity != null)
             {
                 entity = entity.ridingEntity;
             }
 
-            transferEntityWithRider(entity, exit.posX + 0.5, exit.posY, exit.posZ + 0.5, getRotation(entity, controllerDest, exit), (WorldServer) controllerDest.worldObj, portalType, controllerDest.portalType, keepMomentum);
+            transferEntityWithRider(entity, exitLoc.posX + 0.5, exitLoc.posY, exitLoc.posZ + 0.5, getRotation(entity, exit, exitLoc), (WorldServer) exit.worldObj, entry.portalType, exit.portalType, keepMomentum);
         }
     }
-
-    @SuppressWarnings("rawtypes")
-    public static Entity transferEntityToDimension(Entity entity, double x, double y, double z, float yaw, WorldServer exitingWorld, WorldServer enteringWorld, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    
+    static Entity transferEntityToDimension(Entity entity, double x, double y, double z, float yaw, WorldServer exitingWorld, WorldServer enteringWorld, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         if (touchedPortalType == -1 && exitPortalType == -1)
         {
@@ -373,7 +357,7 @@ public class EntityManager
         }
     }
 
-    public static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         if (entity == null)
         {
@@ -428,7 +412,7 @@ public class EntityManager
         }
     }
 
-    public static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         Entity rider = entity.riddenByEntity;
 

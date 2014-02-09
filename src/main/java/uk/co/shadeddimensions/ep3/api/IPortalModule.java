@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.ep3.api;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 
 public interface IPortalModule
 {

@@ -5,7 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
 import uk.co.shadeddimensions.library.gui.slot.SlotOutput;
 import uk.co.shadeddimensions.library.gui.slot.SlotSpecificItem;
 
@@ -23,7 +23,7 @@ public class ContainerScanner extends Container
         hasChanged = false;
         stack = s;
 
-        addSlotToContainer(new SlotSpecificItem(scanner, 0, 56, 35, new ItemStack(CommonProxy.itemEntityCard)));
+        addSlotToContainer(new SlotSpecificItem(scanner, 0, 56, 35, new ItemStack(ItemEntityCard.instance)));
         addSlotToContainer(new SlotOutput(scanner, 1, 116, 35));
 
         for (int i = 0; i < 3; i++)

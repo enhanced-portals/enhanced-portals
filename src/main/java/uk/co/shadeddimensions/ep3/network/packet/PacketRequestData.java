@@ -7,8 +7,8 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
+import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketRequestData extends PacketEnhancedPortals
@@ -20,7 +20,7 @@ public class PacketRequestData extends PacketEnhancedPortals
 
     }
 
-    public PacketRequestData(TileEnhancedPortals tile)
+    public PacketRequestData(TileEP tile)
     {
         x = tile.xCoord;
         y = tile.yCoord;
@@ -41,9 +41,9 @@ public class PacketRequestData extends PacketEnhancedPortals
     {
         TileEntity tile = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
-        if (tile != null && tile instanceof TileEnhancedPortals)
+        if (tile != null && tile instanceof TileEP)
         {
-            CommonProxy.sendUpdatePacketToPlayer((TileEnhancedPortals) tile, (EntityPlayer) player);
+            PacketHandlerServer.sendUpdatePacketToPlayer((TileEP) tile, (EntityPlayer) player);
         }
     }
 

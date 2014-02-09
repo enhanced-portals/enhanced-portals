@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphSelector;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.library.gui.GuiBase;
 import uk.co.shadeddimensions.library.util.GuiUtils;
 
@@ -21,11 +21,11 @@ public class GuiNetworkInterface extends GuiBase
 {
     ElementGlyphSelector selector;
     ElementGlyphIdentifier identifier;
-    TilePortalController controller;
+    TileController controller;
     GuiButton resetButton, saveButton;
     boolean overlayActive;
 
-    public GuiNetworkInterface(TilePortalController tile)
+    public GuiNetworkInterface(TileController tile)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
         ySize = 144;
@@ -59,14 +59,14 @@ public class GuiNetworkInterface extends GuiBase
         {
             if (button.id == resetButton.id) // Reset Changes
             {
-                selector.setIdentifierTo(controller.getNetworkIdentifier());
+                selector.setIdentifierTo(controller.getIdentifierNetwork());
                 toggleState();
             }
             else if (button.id == saveButton.id) // Save Changes
             {
-                GuiPayload payload = new GuiPayload();
-                payload.data.setString("networkIdentifier", selector.getGlyphIdentifier().getGlyphString());
-                ClientProxy.sendGuiPacket(payload);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("nid", selector.getGlyphIdentifier().getGlyphString());
+                PacketHandlerClient.sendGuiPacket(tag);
                 toggleState();
             }
         }
@@ -80,7 +80,7 @@ public class GuiNetworkInterface extends GuiBase
 
         identifier.setDisabled(!overlayActive);
         selector.setVisible(overlayActive);
-        selector.setIdentifierTo(controller.getNetworkIdentifier());
+        selector.setIdentifierTo(controller.getIdentifierNetwork());
 
         addElement(identifier);
         addElement(selector);

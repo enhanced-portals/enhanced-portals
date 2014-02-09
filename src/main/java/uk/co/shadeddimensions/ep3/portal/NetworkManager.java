@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
@@ -60,7 +60,7 @@ public class NetworkManager
             e.printStackTrace();
         }
     }
-
+    
     /***
      * Creates a new network if one does not already exist
      */
@@ -135,7 +135,7 @@ public class NetworkManager
     /***
      * Gets the portal controller for the specified portal identifier
      */
-    public TilePortalController getPortalController(GlyphIdentifier portal)
+    public TileController getPortalController(GlyphIdentifier portal)
     {
         WorldCoordinates w = getPortalLocation(portal);
 
@@ -146,12 +146,12 @@ public class NetworkManager
 
         TileEntity tile = w.getBlockTileEntity();
 
-        if (tile == null || !(tile instanceof TilePortalController))
+        if (tile == null || !(tile instanceof TileController))
         {
             return null;
         }
 
-        return (TilePortalController) tile;
+        return (TileController) tile;
     }
 
     /***

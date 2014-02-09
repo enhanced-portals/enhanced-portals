@@ -6,36 +6,38 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.client.particle.PortalCreationFX;
-import uk.co.shadeddimensions.ep3.tileentity.TileEnhancedPortals;
-import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraft.tileentity.TileEntity;
+import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import cpw.mods.fml.common.network.Player;
 
-public class PacketPortalCreated extends PacketEnhancedPortals
+public class PacketTileGui extends PacketTileUpdate
 {
-    int x, y, z;
-
-    public PacketPortalCreated()
+    public PacketTileGui()
     {
 
     }
 
-    public PacketPortalCreated(TileEnhancedPortals tile)
+    public PacketTileGui(TileEP tile)
     {
-        x = tile.xCoord;
-        y = tile.yCoord;
-        z = tile.zCoord;
+        t = tile;
+        isChunkDataPacket = true;
     }
-
+    
     @Override
     public void clientPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
-        World w = ((EntityPlayer) player).worldObj;
+        TileEntity t = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 
-        for (int i = 0; i < 70; i++)
+        if (t != null && t instanceof TileEP)
         {
-            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalCreationFX(w, x, y + 1, z));
+            try
+            {
+                ((TileEP) t).packetGuiUse(s);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -45,13 +47,16 @@ public class PacketPortalCreated extends PacketEnhancedPortals
         x = stream.readInt();
         y = stream.readInt();
         z = stream.readInt();
+        s = stream;
     }
 
     @Override
     public void writePacketData(DataOutputStream stream) throws IOException
     {
-        stream.writeInt(x);
-        stream.writeInt(y);
-        stream.writeInt(z);
+        stream.writeInt(t.xCoord);
+        stream.writeInt(t.yCoord);
+        stream.writeInt(t.zCoord);
+
+        t.packetGuiFill(stream);
     }
 }

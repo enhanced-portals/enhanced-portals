@@ -2,8 +2,8 @@ package uk.co.shadeddimensions.ep3.client.gui.slot;
 
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 
 public class SlotBiometricIdentifier extends Slot
 {
@@ -18,7 +18,7 @@ public class SlotBiometricIdentifier extends Slot
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        return stack == null || stack.itemID == CommonProxy.itemEntityCard.itemID && stack.hasTagCompound() && stack.getTagCompound().hasKey("entities");
+        return stack == null || stack.itemID == ItemEntityCard.ID && stack.hasTagCompound() && stack.getTagCompound().hasKey("entities");
     }
 
     @Override

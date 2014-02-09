@@ -8,9 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import uk.co.shadeddimensions.ep3.block.BlockFrame;
+import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementIconToggleButton;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementParticleToggleButton;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
@@ -18,9 +21,8 @@ import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
 import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
@@ -56,7 +58,7 @@ public class GuiTexture extends GuiBaseContainer
         }
     }
 
-    TilePortalController controller;
+    TileController controller;
     int screenState;
     GuiButton colourResetButton, colourSaveButton;
     GuiRGBSlider redSlider, greenSlider, blueSlider;
@@ -64,7 +66,7 @@ public class GuiTexture extends GuiBaseContainer
     ElementFakeItemSlot fakeItem;
     ElementScrollPanelOverlay frameList, portalList, particleList;
 
-    public GuiTexture(TilePortalController t, EntityPlayer p, int startScreen)
+    public GuiTexture(TileController t, EntityPlayer p, int startScreen)
     {
         super(new ContainerTexture(t, p), new ResourceLocation("enhancedportals", "textures/gui/colourInterface.png"));
         ySize += 10;
@@ -92,9 +94,9 @@ public class GuiTexture extends GuiBaseContainer
                 controller.activeTextureData.setParticleColour(hex);
             }
 
-            GuiPayload payload = new GuiPayload();
-            payload.data.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", hex);
-            ClientProxy.sendGuiPacket(payload);
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", hex);
+            PacketHandlerClient.sendGuiPacket(tag);
         }
         else if (button.id == colourResetButton.id)
         {
@@ -119,9 +121,9 @@ public class GuiTexture extends GuiBaseContainer
             greenSlider.sliderValue = c.getGreen() / 255f;
             blueSlider.sliderValue = c.getBlue() / 255f;
 
-            GuiPayload payload = new GuiPayload();
-            payload.data.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", Integer.parseInt(String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()), 16));
-            ClientProxy.sendGuiPacket(payload);
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setInteger((screenState == 0 ? "frame" : screenState == 1 ? "portal" : "particle") + "Colour", Integer.parseInt(String.format("%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()), 16));
+            PacketHandlerClient.sendGuiPacket(tag);
         }
     }
 
@@ -271,8 +273,8 @@ public class GuiTexture extends GuiBaseContainer
     @Override
     public void addTabs()
     {
-        addTab(new TabToggleButton(this, "frame", Localization.getGuiString("frame"), new ItemStack(CommonProxy.blockFrame, 1, 0)));
-        addTab(new TabToggleButton(this, "portal", Localization.getGuiString("portal"), new ItemStack(CommonProxy.blockPortal)));
+        addTab(new TabToggleButton(this, "frame", Localization.getGuiString("frame"), new ItemStack(BlockFrame.instance, 1, 0)));
+        addTab(new TabToggleButton(this, "portal", Localization.getGuiString("portal"), new ItemStack(BlockPortal.instance)));
         addTab(new TabToggleButton(this, "particle", Localization.getGuiString("particle"), new ItemStack(Item.blazePowder)));
         addTab(new ColourTab(this));
     }
@@ -299,7 +301,7 @@ public class GuiTexture extends GuiBaseContainer
     public void handleElementFakeSlotItemChange(ElementFakeItemSlot slot)
     {
         ItemStack s = slot.getStack();
-        GuiPayload payload = new GuiPayload();
+        NBTTagCompound tag = new NBTTagCompound();
 
         if (screenState == 0)
         {
@@ -307,13 +309,13 @@ public class GuiTexture extends GuiBaseContainer
 
             if (s == null)
             {
-                payload.data.setInteger("frameItemID", 0);
-                payload.data.setInteger("frameItemMeta", 0);
+                tag.setInteger("frameItemID", 0);
+                tag.setInteger("frameItemMeta", 0);
             }
             else
             {
-                payload.data.setInteger("frameItemID", s.itemID);
-                payload.data.setInteger("frameItemMeta", s.getItemDamage());
+                tag.setInteger("frameItemID", s.itemID);
+                tag.setInteger("frameItemMeta", s.getItemDamage());
             }
         }
         else if (screenState == 1)
@@ -322,19 +324,19 @@ public class GuiTexture extends GuiBaseContainer
 
             if (s == null)
             {
-                payload.data.setInteger("portalItemID", 0);
-                payload.data.setInteger("portalItemMeta", 0);
+                tag.setInteger("portalItemID", 0);
+                tag.setInteger("portalItemMeta", 0);
             }
             else
             {
-                payload.data.setInteger("portalItemID", s.itemID);
-                payload.data.setInteger("portalItemMeta", s.getItemDamage());
+                tag.setInteger("portalItemID", s.itemID);
+                tag.setInteger("portalItemMeta", s.getItemDamage());
             }
         }
 
-        if (payload.data.hasKey("frameItemID") || payload.data.hasKey("portalItemID"))
+        if (tag.hasKey("frameItemID") || tag.hasKey("portalItemID"))
         {
-            ClientProxy.sendGuiPacket(payload);
+            PacketHandlerClient.sendGuiPacket(tag);
         }
     }
 
@@ -363,22 +365,22 @@ public class GuiTexture extends GuiBaseContainer
 
                     if (b.getID().equals(buttonName))
                     {
-                        GuiPayload payload = new GuiPayload();
+                        NBTTagCompound tag = new NBTTagCompound();
 
                         if (mouseButton == 0)
                         {
                             fakeItem.setDisabled(true);
                             b.setSelected(true);
-                            payload.data.setInteger("customPortalTexture", Integer.parseInt(buttonName.replace("P", "")));
+                            tag.setInteger("customPortalTexture", Integer.parseInt(buttonName.replace("P", "")));
                         }
                         else
                         {
                             fakeItem.setDisabled(false);
                             b.setSelected(false);
-                            payload.data.setInteger("customPortalTexture", -1);
+                            tag.setInteger("customPortalTexture", -1);
                         }
 
-                        ClientProxy.sendGuiPacket(payload);
+                        PacketHandlerClient.sendGuiPacket(tag);
                     }
                     else
                     {
@@ -397,22 +399,22 @@ public class GuiTexture extends GuiBaseContainer
 
                     if (b.getID().equals(buttonName))
                     {
-                        GuiPayload payload = new GuiPayload();
+                        NBTTagCompound payload = new NBTTagCompound();
 
                         if (mouseButton == 0)
                         {
                             fakeItem.setDisabled(true);
                             b.setSelected(true);
-                            payload.data.setInteger("customFrameTexture", Integer.parseInt(buttonName.replace("F", "")));
+                            payload.setInteger("customFrameTexture", Integer.parseInt(buttonName.replace("F", "")));
                         }
                         else
                         {
                             fakeItem.setDisabled(false);
                             b.setSelected(false);
-                            payload.data.setInteger("customFrameTexture", -1);
+                            payload.setInteger("customFrameTexture", -1);
                         }
 
-                        ClientProxy.sendGuiPacket(payload);
+                        PacketHandlerClient.sendGuiPacket(payload);
                     }
                     else
                     {
@@ -431,21 +433,21 @@ public class GuiTexture extends GuiBaseContainer
 
                     if (b.getID().equals(buttonName))
                     {
-                        GuiPayload payload = new GuiPayload();
+                        NBTTagCompound tag = new NBTTagCompound();
 
                         if (mouseButton == 0)
                         {
                             b.setSelected(true);
-                            payload.data.setInteger("particleType", Integer.parseInt(buttonName.replace("X", "")));
+                            tag.setInteger("particleType", Integer.parseInt(buttonName.replace("X", "")));
                         }
                         else
                         {
                             b.setSelected(false);
-                            payload.data.setInteger("particleType", 0);
+                            tag.setInteger("particleType", 0);
                             ((ElementParticleToggleButton) particleList.getElements().get(1)).setSelected(true);
                         }
 
-                        ClientProxy.sendGuiPacket(payload);
+                        PacketHandlerClient.sendGuiPacket(tag);
                     }
                     else
                     {

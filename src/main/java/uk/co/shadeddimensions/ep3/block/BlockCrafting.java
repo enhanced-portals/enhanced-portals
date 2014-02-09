@@ -9,15 +9,18 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 
 public class BlockCrafting extends Block
 {
+    public static int ID;
+    public static BlockCrafting instance;
     public static final int UNFILLED_STABILIZER = 0;
 
-    public BlockCrafting(int id, String name)
+    public BlockCrafting()
     {
-        super(id, Material.rock);
+        super(ID, Material.rock);
+        instance = this;
         setCreativeTab(Reference.creativeTab);
         setHardness(5);
         setResistance(2000);
-        setUnlocalizedName(name);
+        setUnlocalizedName("crafting");
         setStepSound(soundStoneFootstep);
     }
 

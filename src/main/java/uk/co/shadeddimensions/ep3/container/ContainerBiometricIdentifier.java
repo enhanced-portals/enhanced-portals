@@ -3,7 +3,7 @@ package uk.co.shadeddimensions.ep3.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import uk.co.shadeddimensions.ep3.client.gui.slot.SlotBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 
 public class ContainerBiometricIdentifier extends ContainerBase

@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.ClientProxy.ParticleSet;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 
 public class PortalFX extends EntityFX
 {
@@ -18,7 +18,7 @@ public class PortalFX extends EntityFX
     private ParticleSet particle;
     private int nextFrame = 1;
 
-    public PortalFX(World par1World, TilePortalController controller, TileModuleManipulator module, double portalX, double portalY, double portalZ, double xMotion, double yMotion, double zMotion)
+    public PortalFX(World par1World, TileController controller, double portalX, double portalY, double portalZ, double xMotion, double yMotion, double zMotion)
     {
         super(par1World, portalX, portalY, portalZ, xMotion, yMotion, zMotion);
         motionX = xMotion;
@@ -45,11 +45,6 @@ public class PortalFX extends EntityFX
             
             particle = ClientProxy.particleSets.get(controller.activeTextureData.getParticleType());    
             setParticleTextureIndex(particle.type == 0 ? particle.frames[ClientProxy.random.nextInt(particle.frames.length)] : particle.frames[0]);
-    
-            if (module != null)
-            {
-                module.particleCreated(this);
-            }
         }
     }
 

@@ -82,6 +82,11 @@ public class ElementScrollPanel extends ElementBaseContainer
     @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
+        if (disabled)
+        {
+            return false;
+        }
+        
         for (ElementBase element : elements)
         {
             if (element.isVisible() && element.intersectsWith(x, y))

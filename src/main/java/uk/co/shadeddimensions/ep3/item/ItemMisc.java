@@ -2,20 +2,28 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 
-public class ItemMisc extends ItemEnhancedPortals
+public class ItemMisc extends Item
 {
+    public static int ID;
+    public static ItemMisc instance;
+    
     final static String[] NAMES = new String[] { "blankPortalModule", "blankUpgrade" };
     Icon[] texture;
 
-    public ItemMisc(int par1, String name)
+    public ItemMisc()
     {
-        super(par1, true);
-        setUnlocalizedName(name);
+        super(ID);
+        ID += 256;
+        instance = this;
+        setCreativeTab(Reference.creativeTab);
+        setUnlocalizedName("miscItems");
         setMaxDamage(0);
         setHasSubtypes(true);
     }

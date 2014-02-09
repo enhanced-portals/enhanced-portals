@@ -3,20 +3,28 @@ package uk.co.shadeddimensions.ep3.item;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.lib.Reference;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.block.IDismantleable;
 
-public class ItemWrench extends ItemEnhancedPortals implements IToolWrench
+public class ItemWrench extends Item implements IToolWrench
 {
+    public static int ID;
+    public static ItemWrench instance;
+    
     Icon texture;
 
-    public ItemWrench(int id, String name)
+    public ItemWrench()
     {
-        super(id, true);
-        setUnlocalizedName(name);
+        super(ID);
+        ID += 256;
+        instance = this;
+        setCreativeTab(Reference.creativeTab);
+        setUnlocalizedName("wrench");
         setMaxStackSize(1);
     }
 

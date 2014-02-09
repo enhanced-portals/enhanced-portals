@@ -15,8 +15,8 @@ public class ElementIconToggleButton extends ElementButton
     {
         super(parent, x, y, 0, id, null, "");
         this.icon = icon;
-        this.sizeY = icon.getIconHeight() + 2;
-        this.sizeX = icon.getIconWidth() + 2;
+        this.sizeY = 18;
+        this.sizeX = 18;
     }
     
     public void setSelected(boolean b)

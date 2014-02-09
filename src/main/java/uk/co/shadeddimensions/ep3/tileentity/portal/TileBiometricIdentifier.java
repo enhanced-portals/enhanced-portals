@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.tileentity.frame;
+package uk.co.shadeddimensions.ep3.tileentity.portal;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,46 +13,42 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
+import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.util.EntityData;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileBiometricIdentifier extends TilePortalFrameSpecial implements IInventory
+public class TileBiometricIdentifier extends TileFrame implements IInventory
 {
     public long lastUpdateTime;
-    public ArrayList<EntityData> entityList;
-    public boolean defaultPermissions, isActive;
-    ItemStack[] inventory;
-
-    public TileBiometricIdentifier()
+    public ArrayList<EntityData> entityList = new ArrayList<EntityData>();
+    public boolean defaultPermissions = true, isActive = true;
+    ItemStack[] inventory = new ItemStack[1];
+    
+    @Override
+    public boolean activate(EntityPlayer player, ItemStack stack)
     {
-        inventory = new ItemStack[1];
-        entityList = new ArrayList<EntityData>();
-        defaultPermissions = isActive = true;
-    }
+    	if (player.isSneaking())
+		{
+			return false;
+		}
+    	
+        TileController controller = getPortalController();
 
-    public boolean activate(EntityPlayer player)
-    {
-        ItemStack item = player.inventory.getCurrentItem();
-
-        if (item != null)
+        if (stack != null && controller != null && controller.isFinalized())
         {
-            if (ItemHelper.isWrench(item) && !player.isSneaking())
+            if (ItemHelper.isWrench(stack) && !player.isSneaking())
             {
-                CommonProxy.openGui(player, GUIs.BiometricIdentifier, this);
+                GuiHandler.openGui(player, this, GuiHandler.BIOMETRIC_IDENTIFIER);
                 return true;
             }
-            else if (item != null && item.itemID == CommonProxy.itemPaintbrush.itemID)
+            else if (stack != null && stack.itemID == ItemPaintbrush.ID)
             {
-                TilePortalController controller = getPortalController();
-
-                if (controller != null && controller.isFullyInitialized())
-                {
-                    CommonProxy.openGui(player, GUIs.TexturesFrame, controller);
-                    return true;
-                }
+                GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_FRAME);
+                return true;
             }
         }
 
@@ -71,8 +67,6 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
             entityList.add(entity);
             lastUpdateTime = System.currentTimeMillis();
         }
-
-        CommonProxy.sendUpdatePacketToAllAround(this);
     }
 
     public boolean canEntityTravel(Entity entity)
@@ -81,21 +75,33 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
         {
             return true;
         }
-        
+
         boolean skippedAll = true, decision = defaultPermissions;
-        
+
         for (EntityData data : entityList)
         {
             int var = data.isEntityAcceptable(entity);
-            
+
             if (var != -1)
             {
                 skippedAll = false;
                 decision = var == 1;
             }
         }
-        
+
         return skippedAll ? defaultPermissions : decision;
+    }
+
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
+
+    @Override
+    public void closeChest()
+    {
+
     }
 
     public ArrayList<EntityData> copySendingEntityTypes()
@@ -136,35 +142,6 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
     }
 
     @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
-    {
-        super.fillPacket(stream);
-
-        stream.writeBoolean(isActive);
-        stream.writeBoolean(defaultPermissions);
-        stream.writeByte(entityList.size());
-
-        for (EntityData d : entityList)
-        {
-            stream.writeUTF(d.EntityDisplayName);
-            stream.writeInt(EntityData.getEntityID(d.EntityClass));
-            stream.writeBoolean(d.disallow);
-            stream.writeByte(d.checkType);
-        }
-    }
-
-    @Override
-    public Icon getBlockTexture(int side, int pass)
-    {
-        if (pass == 0)
-        {
-            return super.getBlockTexture(side, pass);
-        }
-
-        return CommonProxy.forceShowFrameOverlays || wearingGoggles ? BlockFrame.overlayIcons[5] : BlockFrame.overlayIcons[0];
-    }
-
-    @Override
     public int getInventoryStackLimit()
     {
         return 1;
@@ -196,45 +173,6 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
     }
 
     @Override
-    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
-    {
-        super.guiActionPerformed(payload, player);
-
-        if (payload.data.hasKey("invert"))
-        {
-            int id = payload.data.getInteger("invert");
-
-            entityList.get(id).disallow = !entityList.get(id).disallow;
-            lastUpdateTime = System.currentTimeMillis();
-        }
-        else if (payload.data.hasKey("type"))
-        {
-            int id = payload.data.getInteger("type");
-
-            entityList.get(id).checkType++;
-
-            if (entityList.get(id).checkType > 2)
-            {
-                entityList.get(id).checkType = 0;
-                lastUpdateTime = System.currentTimeMillis();
-            }
-        }
-        else if (payload.data.hasKey("remove"))
-        {
-            int id = payload.data.getInteger("remove");
-
-            entityList.remove(id);
-            lastUpdateTime = System.currentTimeMillis();
-        }
-        else if (payload.data.hasKey("default"))
-        {
-            defaultPermissions = !defaultPermissions;
-        }
-
-        CommonProxy.sendUpdatePacketToAllAround(this);
-    }
-
-    @Override
     public boolean isInvNameLocalized()
     {
         return false;
@@ -254,7 +192,82 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
 
     public void onNeighborBlockChange(int blockID)
     {
-        isActive = getHighestPowerState() == 0;
+        isActive = WorldUtils.getHighestPowerState(this) == 0;
+    }
+
+    @Override
+    public void openChest()
+    {
+
+    }
+
+    @Override
+    public void packetGui(NBTTagCompound tag, EntityPlayer player)
+    {
+    	if (tag.hasKey("invert"))
+        {
+            int id = tag.getInteger("invert");
+
+            entityList.get(id).disallow = !entityList.get(id).disallow;
+            lastUpdateTime = System.currentTimeMillis();
+        }
+        else if (tag.hasKey("type"))
+        {
+            int id = tag.getInteger("type");
+
+            entityList.get(id).checkType++;
+
+            if (entityList.get(id).checkType > 2)
+            {
+                entityList.get(id).checkType = 0;
+                lastUpdateTime = System.currentTimeMillis();
+            }
+        }
+        else if (tag.hasKey("remove"))
+        {
+            int id = tag.getInteger("remove");
+
+            entityList.remove(id);
+            lastUpdateTime = System.currentTimeMillis();
+        }
+        else if (tag.hasKey("default"))
+        {
+            defaultPermissions = !defaultPermissions;
+        }
+    	
+    	PacketHandlerServer.sendGuiPacketToPlayer(this, player);
+    }
+
+    @Override
+    public void packetGuiFill(DataOutputStream stream) throws IOException
+    {
+        stream.writeBoolean(isActive);
+        stream.writeBoolean(defaultPermissions);
+        stream.writeByte(entityList.size());
+
+        for (EntityData d : entityList)
+        {
+            stream.writeUTF(d.EntityDisplayName);
+            stream.writeInt(EntityData.getEntityID(d.EntityClass));
+            stream.writeBoolean(d.disallow);
+            stream.writeByte(d.checkType);
+        }
+    }
+
+    @Override
+    public void packetGuiUse(DataInputStream stream) throws IOException
+    {
+        isActive = stream.readBoolean();
+        defaultPermissions = stream.readBoolean();
+        entityList.clear();
+        lastUpdateTime = System.currentTimeMillis();
+
+        byte size = stream.readByte();
+
+        for (int i = 0; i < size; i++)
+        {
+            entityList.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
+        }
     }
 
     @Override
@@ -300,24 +313,6 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
     }
 
     @Override
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        super.usePacket(stream);
-
-        isActive = stream.readBoolean();
-        defaultPermissions = stream.readBoolean();
-        entityList.clear();
-        lastUpdateTime = System.currentTimeMillis();
-
-        byte size = stream.readByte();
-
-        for (int i = 0; i < size; i++)
-        {
-            entityList.add(new EntityData(stream.readUTF(), EntityData.getClassFromID(stream.readInt()), stream.readBoolean(), stream.readByte()));
-        }
-    }
-
-    @Override
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
@@ -351,17 +346,5 @@ public class TileBiometricIdentifier extends TilePortalFrameSpecial implements I
         }
 
         tag.setTag("Inventory", itemList);
-    }
-
-    @Override
-    public void openChest()
-    {
-        
-    }
-
-    @Override
-    public void closeChest()
-    {
-        
     }
 }

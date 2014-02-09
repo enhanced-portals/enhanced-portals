@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
@@ -16,17 +17,20 @@ import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 
-public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModule
+public class ItemPortalModule extends Item implements IPortalModule
 {
+    public static int ID;
+    public static ItemPortalModule instance;
+    
     public static enum PortalModules
     {
         REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, WALL, FEATHERFALL;
 
         public String getUniqueID()
         {
-            ItemStack s = new ItemStack(CommonProxy.itemPortalModule, 1, ordinal());
+            ItemStack s = new ItemStack(instance, 1, ordinal());
             return ((IPortalModule) s.getItem()).getID(s);
         }
     }
@@ -34,10 +38,13 @@ public class ItemPortalModule extends ItemEnhancedPortals implements IPortalModu
     static Icon baseIcon;
     static Icon[] overlayIcons = new Icon[PortalModules.values().length];
 
-    public ItemPortalModule(int par1, String name)
+    public ItemPortalModule()
     {
-        super(par1, true);
-        setUnlocalizedName(name);
+        super(ID);
+        ID += 256;
+        instance = this;
+        setCreativeTab(Reference.creativeTab);
+        setUnlocalizedName("portalModule");
         setMaxDamage(0);
         setMaxStackSize(64);
         setHasSubtypes(true);

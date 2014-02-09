@@ -7,8 +7,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
+import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemStabilizer extends ItemBlock
 {
@@ -32,7 +32,7 @@ public class ItemStabilizer extends ItemBlock
     @Override
     public Icon getIconFromDamage(int par1)
     {
-        return CommonProxy.blockStabilizer.getBlockTextureFromSide(0);
+        return BlockStabilizer.instance.getBlockTextureFromSide(0);
     }
 
     @Override

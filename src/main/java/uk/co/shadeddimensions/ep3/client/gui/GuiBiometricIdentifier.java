@@ -3,15 +3,15 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.util.EntityData;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementButton;
 import uk.co.shadeddimensions.library.gui.element.ElementButtonIcon;
@@ -80,7 +80,7 @@ public class GuiBiometricIdentifier extends GuiBaseContainer
 
             sendList.addElement(new ElementButton(this, 2, i * 21, 200, "E" + i, (data.disallow ? EnumChatFormatting.RED : EnumChatFormatting.GREEN) + (data.shouldCheckClass() ? EntityData.getClassDisplayName(data) : data.shouldCheckNameAndClass() ? data.EntityDisplayName + " (" + EntityData.getClassDisplayName(data) + ")" : data.EntityDisplayName), entityList));
             sendList.addElement(new ElementButton(this, 203, i * 21, 15, "M" + i, data.checkType + "", modeList));
-            sendList.addElement(new ElementButtonIcon(this, 218, i * 21, "R" + i, "Remove", CommonProxy.itemWrench.getIconFromDamage(0)));
+            sendList.addElement(new ElementButtonIcon(this, 218, i * 21, "R" + i, "Remove", ItemWrench.instance.getIconFromDamage(0)));
             i++;
         }
     }
@@ -102,25 +102,25 @@ public class GuiBiometricIdentifier extends GuiBaseContainer
     @Override
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {
-        GuiPayload p = new GuiPayload();
+        NBTTagCompound tag = new NBTTagCompound();
 
         if (buttonName.equals("mainToggle"))
         {
-            p.data.setBoolean("default", false);
+            tag.setBoolean("default", false);
         }
         else if (buttonName.startsWith("E"))
         {
-            p.data.setInteger("invert", Integer.parseInt(buttonName.replace("E", "")));
+            tag.setInteger("invert", Integer.parseInt(buttonName.replace("E", "")));
         }
         else if (buttonName.startsWith("M"))
         {
-            p.data.setInteger("type", Integer.parseInt(buttonName.replace("M", "")));
+            tag.setInteger("type", Integer.parseInt(buttonName.replace("M", "")));
         }
         else if (buttonName.startsWith("R"))
         {
-            p.data.setInteger("remove", Integer.parseInt(buttonName.replace("R", "")));
+            tag.setInteger("remove", Integer.parseInt(buttonName.replace("R", "")));
         }
 
-        ClientProxy.sendGuiPacket(p);
+        PacketHandlerClient.sendGuiPacket(tag);
     }
 }

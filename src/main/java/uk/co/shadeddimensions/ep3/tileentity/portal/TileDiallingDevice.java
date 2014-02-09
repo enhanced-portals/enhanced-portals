@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.tileentity.frame;
+package uk.co.shadeddimensions.ep3.tileentity.portal;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -6,22 +6,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
-import dan200.computer.api.IPeripheral;
 
-public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
+public class TileDiallingDevice extends TileFrame //implements IPeripheral
 {
     public class GlyphElement
     {
@@ -48,32 +46,91 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
         }
     }
 
-    public ArrayList<GlyphElement> glyphList;
+    public ArrayList<GlyphElement> glyphList = new ArrayList<GlyphElement>();
 
-    public TileDiallingDevice()
+    @Override
+    public void packetGui(NBTTagCompound tag, EntityPlayer player)
     {
-        super();
-        glyphList = new ArrayList<GlyphElement>();
+        if (tag.hasKey("DialRequest"))
+        {
+            String id = tag.getString("DialRequest");
+            getPortalController().connectionDial(new GlyphIdentifier(id), null, player);
+            
+            return;
+        }
+        else if (tag.hasKey("DialStored"))
+        {
+            /*String id = tag.getString("DialRequest");
+              
+            for (GlyphElement el : glyphList) // Check to see if this is in the list of stored addresses, use its texture if it is.
+            {
+                if (el.identifier.getGlyphString().equals(id))
+                {
+                    //getPortalController().dialRequest(new GlyphIdentifier(id), el.texture, player);
+                    return;
+                }
+            }*/
+        }
+        else if (tag.hasKey("DialTerminateRequest"))
+        {
+            getPortalController().connectionTerminate();
+            
+            return;
+        }
+
+        if (tag.hasKey("SetDialTexture") && tag.hasKey("TextureData"))
+        {
+            PortalTextureManager ptm = new PortalTextureManager();
+            ptm.readFromNBT(tag, "TextureData");
+            glyphList.get(tag.getInteger("SetDialTexture")).texture = ptm;
+            
+            PacketHandlerServer.sendGuiPacketToPlayer(this, player);
+        }
+
+        if (tag.hasKey("GlyphName") && tag.hasKey("Glyphs"))
+        {
+            glyphList.add(new GlyphElement(tag.getString("GlyphName"), new GlyphIdentifier(tag.getString("Glyphs"))));
+            
+            PacketHandlerServer.sendGuiPacketToPlayer(this, player);
+        }
+
+        if (tag.hasKey("DeleteGlyph"))
+        {
+            int g = tag.getInteger("DeleteGlyph");
+
+            if (glyphList.size() > g)
+            {
+                glyphList.remove(g);
+                
+                PacketHandlerServer.sendGuiPacketToPlayer(this, player);
+            }
+        }
     }
-
-    public boolean activate(EntityPlayer player)
+    
+    @Override
+    public boolean activate(EntityPlayer player, ItemStack stack)
     {
-        TilePortalController controller = getPortalController();
+    	if (player.isSneaking())
+		{
+			return false;
+		}
+    	
+        TileController controller = getPortalController();
         
         if (worldObj.isRemote)
         {
             return controller != null;
         }
         
-        if (controller != null && controller.isFullyInitialized())
+        if (controller != null && controller.isFinalized())
         {
-            if (controller.getUniqueIdentifier() == null)
+            if (controller.getIdentifierUnique() == null)
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
             }
             else if (!player.isSneaking())
             {
-                CommonProxy.openGui(player, GUIs.DiallingDevice, this);
+                GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE);
             }
 
             return true;
@@ -82,58 +139,9 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
         return false;
     }
     
-    void dial(GlyphIdentifier id) throws Exception
-    {
-        TilePortalController controller = getPortalController();
-        
-        if (controller == null)
-        {
-            throw new Exception("Can't find portal controller");
-        }
-        
-        controller.dialRequest(id, null, null);
-    }
-    
-    void dialStored(int i) throws Exception
-    {
-        TilePortalController controller = getPortalController();
-        
-        if (controller == null)
-        {
-            throw new Exception("Can't find portal controller");
-        }
-        
-        controller.dialRequest(glyphList.get(i).identifier, glyphList.get(i).texture, null);
-    }
-    
-    void terminate() throws Exception
-    {
-        TilePortalController controller = getPortalController();
-        
-        if (controller == null)
-        {
-            throw new Exception("Can't find portal controller");
-        }
-        
-        controller.removePortal();
-    }
-
-    public ArrayList<GlyphElement> copyGlyphList()
-    {
-        ArrayList<GlyphElement> list = new ArrayList<GlyphElement>();
-
-        for (GlyphElement e : glyphList)
-        {
-            list.add(new GlyphElement(e.name, e.identifier, e.texture));
-        }
-
-        return list;
-    }
-
     @Override
-    public void fillPacket(DataOutputStream stream) throws IOException
+    public void packetGuiFill(DataOutputStream stream) throws IOException
     {
-        super.fillPacket(stream);
         stream.writeInt(glyphList.size());
 
         for (int i = 0; i < glyphList.size(); i++)
@@ -142,71 +150,19 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
             stream.writeUTF(glyphList.get(i).identifier.getGlyphString());
         }
     }
-
+    
     @Override
-    public Icon getBlockTexture(int side, int pass)
+    public void packetGuiUse(DataInputStream stream) throws IOException
     {
-        if (pass == 0)
+        int max = stream.readInt();
+        glyphList.clear();
+
+        for (int i = 0; i < max; i++)
         {
-            return super.getBlockTexture(side, pass);
-        }
-
-        return BlockFrame.overlayIcons[4];
-    }
-
-    @Override
-    public void guiActionPerformed(GuiPayload payload, EntityPlayer player)
-    {
-        super.guiActionPerformed(payload, player);
-
-        if (payload.data.hasKey("DialRequest"))
-        {
-            String id = payload.data.getString("DialRequest");
-
-            for (GlyphElement el : glyphList) // Check to see if this is in the list of stored addresses, use its texture if it is.
-            {
-                if (el.identifier.getGlyphString().equals(id))
-                {
-                    getPortalController().dialRequest(new GlyphIdentifier(id), el.texture, player);
-                    return;
-                }
-            }
-
-            getPortalController().dialRequest(new GlyphIdentifier(id), null, player); // If not, use no texture
-            return;
-        }
-        else if (payload.data.hasKey("DialTerminateRequest"))
-        {
-            getPortalController().removePortal();
-            return;
-        }
-
-        if (payload.data.hasKey("SetDialTexture") && payload.data.hasKey("TextureData"))
-        {
-            PortalTextureManager ptm = new PortalTextureManager();
-            ptm.readFromNBT(payload.data, "TextureData");
-            glyphList.get(payload.data.getInteger("SetDialTexture")).texture = ptm;
-            CommonProxy.sendUpdatePacketToAllAround(this);
-        }
-
-        if (payload.data.hasKey("GlyphName") && payload.data.hasKey("Glyphs"))
-        {
-            glyphList.add(new GlyphElement(payload.data.getString("GlyphName"), new GlyphIdentifier(payload.data.getString("Glyphs"))));
-            CommonProxy.sendUpdatePacketToAllAround(this);
-        }
-
-        if (payload.data.hasKey("DeleteGlyph"))
-        {
-            int g = payload.data.getInteger("DeleteGlyph");
-
-            if (glyphList.size() > g)
-            {
-                glyphList.remove(g);
-                CommonProxy.sendUpdatePacketToAllAround(this);
-            }
+            glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
         }
     }
-
+    
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
@@ -229,19 +185,6 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
             {
                 glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph)));
             }
-        }
-    }
-
-    @Override
-    public void usePacket(DataInputStream stream) throws IOException
-    {
-        super.usePacket(stream);
-        int max = stream.readInt();
-        glyphList.clear();
-
-        for (int i = 0; i < max; i++)
-        {
-            glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
         }
     }
 
@@ -270,7 +213,7 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
     }
     
     /* IPeripheral */
-    @Override
+    /*@Override
     public String getType()
     {
         return "Dialling Device";
@@ -431,5 +374,5 @@ public class TileDiallingDevice extends TilePortalFrame implements IPeripheral
     public void detach(IComputerAccess computer)
     {
         
-    }
+    }*/
 }

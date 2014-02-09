@@ -17,22 +17,7 @@ public class Localization
 
     public static String getGuiString(String s)
     {
-        String str = StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s);
-        
-        if (str != null)
-        {
-            if (str.contains("<N>"))
-            {
-                str = str.replace("<N>", "\n");
-            }
-            
-            if (str.contains("<MODVERSION>") && Reference.VERSION != null)
-            {
-                str = str.replace("<MODVERSION>", Reference.VERSION);
-            }
-        }
-        
-        return str;
+        return StatCollector.translateToLocal(Reference.SHORT_ID + ".gui." + s).replace("<N>", "\n").replace("<MODVERSION>", Reference.VERSION);
     }
 
     public static String getItemString(String s)
@@ -43,5 +28,10 @@ public class Localization
     public static String getErrorString(String s)
     {
         return EnumChatFormatting.RED + StatCollector.translateToLocal(Reference.SHORT_ID + ".error.prefix") + EnumChatFormatting.WHITE + StatCollector.translateToLocal(Reference.SHORT_ID + ".error." + s);
+    }
+
+    public static String getSuccessString(String s)
+    {
+        return EnumChatFormatting.GREEN + StatCollector.translateToLocal(Reference.SHORT_ID + ".success.prefix") + EnumChatFormatting.WHITE + StatCollector.translateToLocal(Reference.SHORT_ID + ".success." + s);
     }
 }

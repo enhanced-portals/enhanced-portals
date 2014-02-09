@@ -5,7 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.item.ItemEntityCard;
 
 public class InventoryScanner implements IInventory
 {
@@ -88,7 +88,7 @@ public class InventoryScanner implements IInventory
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return itemstack == null || i == 0 && itemstack.itemID == CommonProxy.itemEntityCard.itemID;
+        return itemstack == null || i == 0 && itemstack.itemID == ItemEntityCard.ID;
     }
 
     @Override

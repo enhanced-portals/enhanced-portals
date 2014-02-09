@@ -2,45 +2,52 @@ package uk.co.shadeddimensions.ep3.block;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import uk.co.shadeddimensions.ep3.client.PortalRenderer;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.portal.EntityManager;
-import uk.co.shadeddimensions.ep3.tileentity.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortal;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPortal extends BlockContainer
 {
+    public static int ID;
+    public static BlockPortal instance;
+    
     Icon texture;
 
-    public BlockPortal(int id, String name)
+    public BlockPortal()
     {
-        super(id, Material.portal);
+        super(ID, Material.portal);
+        instance = this;
         setBlockUnbreakable();
         setResistance(2000);
-        setUnlocalizedName(name);
+        setUnlocalizedName("portal");
         setLightOpacity(0);
         setStepSound(soundGlassFootstep);
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
+    {
+        ((TilePortal) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);
+        super.breakBlock(world, x, y, z, oldID, newID);
     }
 
     @Override
@@ -56,6 +63,12 @@ public class BlockPortal extends BlockContainer
     }
 
     @Override
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
+    {
+        return ((TilePortal) blockAccess.getBlockTileEntity(x, y, z)).getColour();
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World world)
     {
         return new TilePortal();
@@ -64,31 +77,7 @@ public class BlockPortal extends BlockContainer
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
-        TilePortalController controller = portal.getPortalController();
-
-        if (controller != null)
-        {
-            ItemStack stack = controller.activeTextureData.getPortalItem();
-
-            if (controller.activeTextureData.hasCustomPortalTexture() && ClientProxy.customPortalTextures.size() > controller.activeTextureData.getCustomPortalTexture() && ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture()) != null)
-            {
-                return ClientProxy.customPortalTextures.get(controller.activeTextureData.getCustomPortalTexture());
-            }
-            else if (stack != null)
-            {
-                if (FluidContainerRegistry.isFilledContainer(stack))
-                {
-                    return FluidContainerRegistry.getFluidForFilledItem(stack).getFluid().getIcon();
-                }
-                else
-                {
-                    return Block.blocksList[stack.itemID].getIcon(side, stack.getItemDamage());
-                }
-            }
-        }
-
-        return texture;
+        return ((TilePortal) blockAccess.getBlockTileEntity(x, y, z)).getBlockTexture(side);
     }
 
     @Override
@@ -116,6 +105,12 @@ public class BlockPortal extends BlockContainer
     }
 
     @Override
+    public int getRenderType()
+    {
+        return PortalRenderer.ID;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public int idPicked(World par1World, int par2, int par3, int par4)
     {
@@ -126,6 +121,31 @@ public class BlockPortal extends BlockContainer
     public boolean isOpaqueCube()
     {
         return false;
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
+    {
+        return ((TilePortal) world.getBlockTileEntity(x, y, z)).activate(player, player.inventory.getCurrentItem());
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    {
+        if (!world.isRemote)
+        {
+            if (EntityManager.isEntityFitForTravel(entity))
+            {
+                if (entity instanceof EntityPlayer)
+                {
+                    ((EntityPlayer) entity).closeScreen();
+                }
+
+                ((TilePortal) world.getBlockTileEntity(x, y, z)).onEntityCollidedWithBlock(entity);
+            }
+
+            EntityManager.setEntityPortalCooldown(entity);
+        }
     }
 
     @Override
@@ -144,21 +164,27 @@ public class BlockPortal extends BlockContainer
         }
 
         int metadata = world.getBlockMetadata(x, y, z);
-        TilePortalController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
-        TileModuleManipulator module = controller == null ? null : controller.blockManager.getModuleManipulator(world);
-
-        if (!CommonProxy.disablePortalSounds && random.nextInt(100) == 0 && (module == null || !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID())))
+        TileController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
+        TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
+        boolean doSounds = !CommonProxy.disablePortalSounds && random.nextInt(100) == 0, doParticles = !CommonProxy.disableParticles;
+        
+        if (module != null)
+        {
+        	if (doSounds) // Don't want to force to play sounds 100% of the time with no upgrade
+        	{
+        		doSounds = !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID());
+        	}
+        	
+        	doParticles = !module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID());
+        }
+        
+        if (doSounds)
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
 
-        if (!CommonProxy.disableParticles)
+        if (doParticles)
         {
-            if (module != null && module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID()))
-            {
-                return;
-            }
-
             for (int l = 0; l < 4; ++l)
             {
                 double d0 = x + random.nextFloat();
@@ -197,7 +223,14 @@ public class BlockPortal extends BlockContainer
                     d3 = -d3;
                 }
 
-                FMLClientHandler.instance().getClient().effectRenderer.addEffect(new PortalFX(world, controller, module, d0, d1, d2, d3, d4, d5));
+                PortalFX fx = new PortalFX(world, controller, d0, d1, d2, d3, d4, d5);
+                
+                if (module != null)
+                {
+                    module.particleCreated(fx);
+                }
+                
+                FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
             }
         }
     }
@@ -215,17 +248,11 @@ public class BlockPortal extends BlockContainer
     }
 
     @Override
-    public int getRenderType()
-    {
-        return PortalRenderer.ID;
-    }
-
-    @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         TilePortal portal = (TilePortal) blockAccess.getBlockTileEntity(x, y, z);
-        TilePortalController controller = portal.getPortalController();
-        TileModuleManipulator manip = controller == null ? null : controller.blockManager.getModuleManipulator(controller.worldObj);
+        TileController controller = portal.getPortalController();
+        TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
 
         if (controller != null && manip != null && manip.isPortalInvisible())
         {
@@ -262,49 +289,11 @@ public class BlockPortal extends BlockContainer
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        if (blockAccess.getBlockMaterial(x, y, z) == Material.portal || blockAccess.getBlockId(x, y, z) == CommonProxy.blockFrame.blockID)
+        if (blockAccess.getBlockMaterial(x, y, z) == Material.portal || blockAccess.getBlockId(x, y, z) == BlockFrame.ID)
         {
             return false;
         }
 
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
-    {
-        ((TilePortal) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);        
-        super.breakBlock(world, x, y, z, oldID, newID);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
-    {
-        return ((TilePortal) world.getBlockTileEntity(x, y, z)).activate(player);
-    }
-
-    @Override
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-    {
-        if (!world.isRemote)
-        {
-            if (EntityManager.isEntityFitForTravel(entity))
-            {
-                if (entity instanceof EntityPlayer)
-                {
-                    ((EntityPlayer) entity).closeScreen();
-                }
-
-                ((TilePortal) world.getBlockTileEntity(x, y, z)).onEntityCollidedWithBlock(entity);
-            }
-
-            EntityManager.setEntityPortalCooldown(entity);
-        }
-    }
-
-    @Override
-    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
-    {
-        return ((TilePortal) blockAccess.getBlockTileEntity(x, y, z)).getColourMultiplier();
     }
 }

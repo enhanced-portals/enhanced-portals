@@ -16,13 +16,17 @@ import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 
 public class BlockDecoration extends Block
 {
+    public static int ID;
+    public static BlockDecoration instance;
+    
     public static final int BLOCK_TYPES = 2;
     ConnectedTextures[] connectedTextures;
 
-    public BlockDecoration(int par1, String name)
+    public BlockDecoration()
     {
-        super(par1, Material.rock);
-        setUnlocalizedName(name);
+        super(ID, Material.rock);
+        instance = this;
+        setUnlocalizedName("decoration");
         setHardness(3);
         setStepSound(soundStoneFootstep);
         setCreativeTab(Reference.creativeTab);

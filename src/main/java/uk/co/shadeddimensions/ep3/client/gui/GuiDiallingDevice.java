@@ -3,6 +3,7 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
@@ -10,15 +11,16 @@ import org.lwjgl.opengl.GL11;
 
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.elements.ElementGlyphSelector;
-import uk.co.shadeddimensions.ep3.lib.GUIs;
+import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
+import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTextureData;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TileDiallingDevice.GlyphElement;
-import uk.co.shadeddimensions.ep3.tileentity.frame.TilePortalController;
-import uk.co.shadeddimensions.ep3.util.GuiPayload;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice.GlyphElement;
 import uk.co.shadeddimensions.library.gui.GuiBase;
 import uk.co.shadeddimensions.library.gui.element.ElementButton;
 import uk.co.shadeddimensions.library.gui.element.ElementButtonIcon;
@@ -29,13 +31,13 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiDiallingDevice extends GuiBase
 {
-    TilePortalController controller;
+    TileController controller;
     TileDiallingDevice dial;
     GuiButton cancelButton, acceptButton;
     GuiTextField textField;
-    public boolean showOverlay;
-    String warningMessage;
-    int warningTimer, elementsAdded;
+    public boolean showOverlay = false;
+    String warningMessage = "";
+    int warningTimer = 0, elementsAdded;
 
     ElementGlyphIdentifier identifier;
     ElementGlyphSelector selector;
@@ -48,9 +50,6 @@ public class GuiDiallingDevice extends GuiBase
         controller = dialler.getPortalController();
         xSize = 256;
         ySize = 200;
-        warningMessage = "";
-        warningTimer = 0;
-        showOverlay = false;
     }
 
     @Override
@@ -58,17 +57,17 @@ public class GuiDiallingDevice extends GuiBase
     {
         if (button.id == 1) // DIAL
         {
-            if (controller.isPortalActive)
+            if (controller.isPortalActive())
             {
-                GuiPayload payload = new GuiPayload();
-                payload.data.setBoolean("DialTerminateRequest", true);
-                ClientProxy.sendGuiPacket(payload);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setBoolean("DialTerminateRequest", true);
+                PacketHandlerClient.sendGuiPacket(tag);
             }
             else if (selector.getGlyphIdentifier().size() > 0)
             {
-                GuiPayload payload = new GuiPayload();
-                payload.data.setString("DialRequest", selector.getGlyphIdentifier().getGlyphString());
-                ClientProxy.sendGuiPacket(payload);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("DialRequest", selector.getGlyphIdentifier().getGlyphString());
+                PacketHandlerClient.sendGuiPacket(tag);
             }
             else
             {
@@ -97,10 +96,10 @@ public class GuiDiallingDevice extends GuiBase
         {
             if (!textField.getText().equals("") && selector.getGlyphIdentifier().size() > 0)
             {
-                GuiPayload payload = new GuiPayload();
-                payload.data.setString("GlyphName", textField.getText());
-                payload.data.setString("Glyphs", selector.getGlyphIdentifier().getGlyphString());
-                ClientProxy.sendGuiPacket(payload);
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setString("GlyphName", textField.getText());
+                tag.setString("Glyphs", selector.getGlyphIdentifier().getGlyphString());
+                PacketHandlerClient.sendGuiPacket(tag);
             }
 
             toggleState();
@@ -120,6 +119,13 @@ public class GuiDiallingDevice extends GuiBase
         addElement(new ElementScrollBar(this, xSize - 15, 20, 10, 82, panel));
 
         reloadList();
+        
+        if (controller.isPortalActive())
+        {
+            selector.setIdentifierTo(controller.getDestination());
+            selector.setDisabled(true);
+            panel.setDisabled(true);
+        }
     }
 
     @Override
@@ -172,15 +178,15 @@ public class GuiDiallingDevice extends GuiBase
         {
             ClientProxy.editingDialEntry = num;
             PacketDispatcher.sendPacketToServer(new PacketTextureData(num, dial.xCoord, dial.yCoord, dial.zCoord).getPacket());
-            CommonProxy.openGui(Minecraft.getMinecraft().thePlayer, GUIs.TexturesDiallingDevice, dial);
+            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.TEXTURE_DIALLER);
         }
         else if (buttonName.startsWith("R"))
         {
             selector.reset();
 
-            GuiPayload p = new GuiPayload();
-            p.data.setInteger("DeleteGlyph", num);
-            ClientProxy.sendGuiPacket(p);
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setInteger("DeleteGlyph", num);
+            PacketHandlerClient.sendGuiPacket(tag);
         }
     }
 
@@ -194,7 +200,7 @@ public class GuiDiallingDevice extends GuiBase
         acceptButton = new GuiButton(11, guiLeft + xSize - 22 - 100, guiTop + 70, 100, 20, Localization.getGuiString("accept"));
         textField = new GuiTextField(fontRenderer, guiLeft + 20, guiTop + 47, xSize - 42, 20);
 
-        buttonList.add(new GuiButton(1, guiLeft + 175, guiTop + 104, 75, 20, controller.isPortalActive ? Localization.getGuiString("terminate") : Localization.getGuiString("dial")));
+        buttonList.add(new GuiButton(1, guiLeft + 175, guiTop + 104, 75, 20, controller.isPortalActive() ? Localization.getGuiString("terminate") : Localization.getGuiString("dial")));
         buttonList.add(new GuiButton(2, guiLeft + 175, guiTop + 150, 75, 20, Localization.getGuiString("add")));
         buttonList.add(new GuiButton(3, guiLeft + 175, guiTop + 172, 75, 20, Localization.getGuiString("clear")));
         buttonList.add(cancelButton);
@@ -202,6 +208,12 @@ public class GuiDiallingDevice extends GuiBase
 
         cancelButton.drawButton = acceptButton.drawButton = showOverlay;
         ((GuiButton) buttonList.get(0)).enabled = ((GuiButton) buttonList.get(1)).enabled = ((GuiButton) buttonList.get(2)).enabled = !showOverlay;
+        
+        if (controller.isPortalActive())
+        {
+            ((GuiButton) buttonList.get(1)).enabled = false;
+            ((GuiButton) buttonList.get(2)).enabled = false;
+        }
     }
 
     @Override
@@ -249,14 +261,14 @@ public class GuiDiallingDevice extends GuiBase
         {
             GlyphElement glyph = dial.glyphList.get(i);
             panel.addElement(new ElementButton(this, 4, i * 21, 190, "D" + i, glyph.name));
-            panel.addElement(new ElementButtonIcon(this, 195, i * 21, "T" + i, "Texture", CommonProxy.itemPaintbrush.getIconFromDamage(0)));
-            panel.addElement(new ElementButtonIcon(this, 216, i * 21, "R" + i, "Remove", CommonProxy.itemWrench.getIconFromDamage(0)));
+            panel.addElement(new ElementButtonIcon(this, 195, i * 21, "T" + i, "Texture", ItemPaintbrush.instance.getIconFromDamage(0)));
+            panel.addElement(new ElementButtonIcon(this, 216, i * 21, "R" + i, "Remove", ItemWrench.instance.getIconFromDamage(0)));
         }
 
         elementsAdded = dial.glyphList.size();
     }
 
-    private void setWarningMessage(int type)
+    public void setWarningMessage(int type)
     {
         if (type == 0)
         {
@@ -291,12 +303,19 @@ public class GuiDiallingDevice extends GuiBase
                 reloadList();
             }
         }
+        
+        boolean portalActive = controller.isPortalActive();
+        
+        selector.setDisabled(portalActive);
+        panel.setDisabled(portalActive);
+        ((GuiButton) buttonList.get(1)).enabled = !showOverlay && !portalActive;
+        ((GuiButton) buttonList.get(2)).enabled = !showOverlay && !portalActive;
 
         if (warningTimer > 0)
         {
             warningTimer--;
         }
 
-        ((GuiButton) buttonList.get(0)).displayString = controller.isPortalActive ? Localization.getGuiString("terminate") : Localization.getGuiString("dial");
+        ((GuiButton) buttonList.get(0)).displayString = controller.isPortalActive() ? Localization.getGuiString("terminate") : Localization.getGuiString("dial");
     }
 }

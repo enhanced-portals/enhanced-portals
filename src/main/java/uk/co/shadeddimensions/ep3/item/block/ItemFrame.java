@@ -12,11 +12,11 @@ import uk.co.shadeddimensions.ep3.network.CommonProxy;
 
 public class ItemFrame extends ItemBlockWithMetadata
 {
-    public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "biometric", "upgrade" };
+    public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "biometric", "upgrade", "fluid", "item", "energy" };
 
     public ItemFrame(int par1)
     {
-        super(par1, CommonProxy.blockFrame);
+        super(par1, BlockFrame.instance);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -37,7 +37,7 @@ public class ItemFrame extends ItemBlockWithMetadata
     {
         for (int i = 0; i < BlockFrame.FRAME_TYPES; i++)
         {
-            list.add(new ItemStack(CommonProxy.blockFrame.blockID, 1, i));
+            list.add(new ItemStack(BlockFrame.ID, 1, i));
         }
     }
 

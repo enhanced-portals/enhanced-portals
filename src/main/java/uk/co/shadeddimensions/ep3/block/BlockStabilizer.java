@@ -15,17 +15,21 @@ import uk.co.shadeddimensions.library.ct.ConnectedTextures;
 
 public class BlockStabilizer extends BlockContainer
 {
+    public static int ID;
+    public static BlockStabilizer instance;
+    
     static ConnectedTextures connectedTextures;
 
-    public BlockStabilizer(int id, String name)
+    public BlockStabilizer()
     {
-        super(id, Material.rock);
+        super(ID, Material.rock);
+        instance = this;
         setHardness(5);
         setResistance(2000);
-        setUnlocalizedName(name);
+        setUnlocalizedName("stabilizer");
         setStepSound(soundStoneFootstep);
         setCreativeTab(Reference.creativeTab);
-        connectedTextures = new ConnectedTextures("enhancedportals:bridge/bridge_%s", id, -1);
+        connectedTextures = new ConnectedTextures("enhancedportals:bridge/bridge_%s", ID, -1);
     }
 
     @Override
