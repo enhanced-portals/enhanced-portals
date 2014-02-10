@@ -13,8 +13,8 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.6.4-3.0.0b5"
-group= "uk.co.shadeddimensions.ep3"
+version = "1.6.4-3.0.0b5-dev"
+group= "uk.co.shadeddimensions"
 archivesBaseName = "EnhancedPortals"
 
 minecraft {
