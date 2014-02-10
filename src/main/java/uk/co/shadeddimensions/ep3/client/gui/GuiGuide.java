@@ -17,7 +17,6 @@ import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemMisc;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.ItemUpgrade;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Localization;
@@ -135,7 +134,6 @@ public class GuiGuide extends GuiBase
 			addTab(new TabToggleButton(this, 1, "itemWrench", Localization.getGuiString("itemWrench"), new ItemStack(ItemWrench.instance)));
 			addTab(new TabToggleButton(this, 1, "itemNanobrush", Localization.getGuiString("itemNanobrush"), new ItemStack(ItemPaintbrush.instance)));
 			addTab(new TabToggleButton(this, 1, "itemLocationCard", Localization.getGuiString("itemLocationCard"), new ItemStack(ItemLocationCard.instance)));
-			addTab(new TabToggleButton(this, 1, "itemSynchronizer", Localization.getGuiString("itemSynchronizer"), new ItemStack(ItemSynchronizer.instance)));
 			addTab(new TabToggleButton(this, 1, "itemIdCard", Localization.getGuiString("itemIdCard"), new ItemStack(ItemEntityCard.instance)));
 			addTab(new TabToggleButton(this, 1, "itemScanner", Localization.getGuiString("itemScanner"), new ItemStack(ItemHandheldScanner.instance)));
 			addTab(new TabToggleButton(this, 1, "itemPortalModules", Localization.getGuiString("itemPortalModules"), new ItemStack(ItemMisc.instance, 1, 0)));
@@ -244,11 +242,6 @@ public class GuiGuide extends GuiBase
 			{
 				craft.addOutputSlot(new ItemStack(ItemLocationCard.instance, 16));
 				craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotIron), new ItemStack(Item.paper), new ItemStack(Item.ingotIron), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.paper), new ItemStack(Item.ingotIron), new ItemStack(Item.dyePowder, 0, 4), new ItemStack(Item.ingotIron) });
-			}
-			else if (ClientProxy.manualPage.equals("itemSynchronizer"))
-			{
-				craft.addOutputSlot(new ItemStack(ItemSynchronizer.instance));
-				craft.addAllGridSlots(new ItemStack[] { new ItemStack(Item.ingotGold), new ItemStack(Item.ingotGold), new ItemStack(Item.ingotGold), new ItemStack(Item.ingotIron), new ItemStack(Item.netherQuartz), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron), new ItemStack(Item.ingotIron) });
 			}
 			else if (ClientProxy.manualPage.equals("itemIdCard"))
 			{

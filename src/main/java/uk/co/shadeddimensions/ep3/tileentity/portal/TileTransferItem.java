@@ -4,21 +4,21 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 
-public class TileTransferItem extends TileFrameTransfer implements IInventory
+public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral
 {
     ItemStack stack;
     
@@ -232,5 +232,58 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory
                 time++;
             }
         }
+    }
+    
+    @Override
+    public String getType()
+    {
+        return "ITM";
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "getItemStored", "getAmountStored", "hasStack", "isSending" };
+    }
+
+    @Override
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0)
+        {
+            return new Object[] { stack != null ? stack.itemID : 0 };
+        }
+        else if (method == 1)
+        {
+            return new Object[] { stack != null ? stack.stackSize : 0 };
+        }
+        else if (method == 2)
+        {
+            return new Object[] { stack != null };
+        }
+        else if (method == 3)
+        {
+            return new Object[] { isSending };
+        }
+        
+        return null;
+    }
+
+    @Override
+    public boolean canAttachToSide(int side)
+    {
+        return true;
+    }
+
+    @Override
+    public void attach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void detach(IComputerAccess computer)
+    {
+        
     }
 }

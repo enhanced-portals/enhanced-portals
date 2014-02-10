@@ -3,14 +3,15 @@ package uk.co.shadeddimensions.ep3.tileentity.portal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 
-public class TileNetworkInterface extends TileFrame //implements IPeripheral
+public class TileNetworkInterface extends TileFrame implements IPeripheral
 {
 	@Override
 	public boolean activate(EntityPlayer player, ItemStack stack)
@@ -54,8 +55,7 @@ public class TileNetworkInterface extends TileFrame //implements IPeripheral
 		return true;
 	}
 
-	/* IPeripheral */
-	/*@Override
+	@Override
     public String getType()
     {
         return "Network Interface";
@@ -72,11 +72,11 @@ public class TileNetworkInterface extends TileFrame //implements IPeripheral
     {
         if (method == 0) // dial
         {
-            dial();
+            getPortalController().connectionDial();
         }
         else if (method == 1) // terminate
         {
-            terminate();
+            getPortalController().connectionTerminate();
         }
 
         return null;
@@ -98,5 +98,5 @@ public class TileNetworkInterface extends TileFrame //implements IPeripheral
     public void detach(IComputerAccess computer)
     {
 
-    }*/
+    }
 }

@@ -5,6 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import cofh.api.energy.IEnergyHandler;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +27,7 @@ import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler
+public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler, IPeripheral
 {
     public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
 
@@ -262,5 +265,62 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
         }
 
         cached = true;
+    }
+    
+    @Override
+    public String getType()
+    {
+        return "FTM";
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "getFluidStored", "getAmountStored", "isFull", "isEmpty", "isSending" };
+    }
+
+    @Override
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0)
+        {
+            return new Object[] { tank.getFluid() != null ? tank.getFluid().getFluid().getName() : "" };
+        }
+        else if (method == 1)
+        {
+            return new Object[] { tank.getFluidAmount() };
+        }
+        else if (method == 2)
+        {
+            return new Object[] { tank.getFluidAmount() == tank.getCapacity() };
+        }
+        else if (method == 3)
+        {
+            return new Object[] { tank.getFluidAmount() == 0 };
+        }
+        else if (method == 4)
+        {
+            return new Object[] { isSending };
+        }
+        
+        return null;
+    }
+
+    @Override
+    public boolean canAttachToSide(int side)
+    {
+        return true;
+    }
+
+    @Override
+    public void attach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void detach(IComputerAccess computer)
+    {
+        
     }
 }

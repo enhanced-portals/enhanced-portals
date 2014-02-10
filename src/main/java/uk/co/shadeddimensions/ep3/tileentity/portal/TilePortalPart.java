@@ -18,6 +18,7 @@ import uk.co.shadeddimensions.ep3.util.WorldUtils;
 public class TilePortalPart extends TileEP
 {
     ChunkCoordinates portalController;
+    TileController cachedController;
 
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
@@ -36,11 +37,17 @@ public class TilePortalPart extends TileEP
 
     public TileController getPortalController()
     {
+        if (cachedController != null)
+        {
+            return cachedController;
+        }
+        
         TileEntity tile = WorldUtils.getTileEntity(worldObj, portalController);
 
         if (tile != null && tile instanceof TileController)
         {
-            return (TileController) tile;
+            cachedController = (TileController) tile;
+            return cachedController;
         }
 
         return null;

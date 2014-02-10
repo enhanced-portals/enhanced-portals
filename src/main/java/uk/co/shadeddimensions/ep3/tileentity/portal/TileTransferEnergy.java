@@ -2,6 +2,9 @@ package uk.co.shadeddimensions.ep3.tileentity.portal;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +16,7 @@ import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler
+public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPeripheral
 {
     public EnergyStorage storage = new EnergyStorage(16000);
 
@@ -212,5 +215,58 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
         }
         
         cached = true;
+    }
+
+    @Override
+    public String getType()
+    {
+        return "ETM";
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "getEnergyStored", "isFull", "isEmpty", "isSending" };
+    }
+
+    @Override
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0)
+        {
+            return new Object[] { storage.getEnergyStored() };
+        }
+        else if (method == 1)
+        {
+            return new Object[] { storage.getEnergyStored() == storage.getMaxEnergyStored() };
+        }
+        else if (method == 2)
+        {
+            return new Object[] { storage.getEnergyStored() == 0 };
+        }
+        else if (method == 3)
+        {
+            return new Object[] { isSending };
+        }
+        
+        return null;
+    }
+
+    @Override
+    public boolean canAttachToSide(int side)
+    {
+        return true;
+    }
+
+    @Override
+    public void attach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void detach(IComputerAccess computer)
+    {
+        
     }
 }

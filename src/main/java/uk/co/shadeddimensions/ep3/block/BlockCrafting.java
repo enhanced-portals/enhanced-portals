@@ -13,6 +13,8 @@ public class BlockCrafting extends Block
     public static BlockCrafting instance;
     public static final int UNFILLED_STABILIZER = 0;
 
+    Icon dbsEmpty;
+    
     public BlockCrafting()
     {
         super(ID, Material.rock);
@@ -31,7 +33,7 @@ public class BlockCrafting extends Block
 
         if (meta == 0)
         {
-            return BlockStabilizer.connectedTextures.getBaseIcon();
+            return dbsEmpty;
         }
 
         return super.getBlockTexture(blockAccess, x, y, z, side);
@@ -42,7 +44,7 @@ public class BlockCrafting extends Block
     {
         if (meta == 0)
         {
-            return BlockStabilizer.connectedTextures.getBaseIcon();
+            return dbsEmpty;
         }
 
         return super.getIcon(side, meta);
@@ -51,6 +53,6 @@ public class BlockCrafting extends Block
     @Override
     public void registerIcons(IconRegister register)
     {
-
+        dbsEmpty = register.registerIcon("enhancedportals:dbs_empty");
     }
 }

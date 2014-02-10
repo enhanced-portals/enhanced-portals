@@ -27,7 +27,6 @@ import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemMisc;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.ItemUpgrade;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.item.block.ItemDecoration;
@@ -169,7 +168,6 @@ public class CommonProxy
         ItemGoggles.ID = configuration.getItemId("Glasses");
         ItemLocationCard.ID = configuration.getItemId("LocationCard");
         ItemPortalModule.ID = configuration.getItemId("PortalModule");
-        ItemSynchronizer.ID = configuration.getItemId("Synchronizer");
         ItemEntityCard.ID = configuration.getItemId("EntityCard");
         ItemHandheldScanner.ID = configuration.getItemId("HandheldScanner");
         ItemUpgrade.ID = configuration.getItemId("InPlaceUpgrade");
@@ -181,7 +179,6 @@ public class CommonProxy
         GameRegistry.registerItem(new ItemGoggles(), "goggles");
         GameRegistry.registerItem(new ItemLocationCard(), "locationCard");
         GameRegistry.registerItem(new ItemPortalModule(), "portalModule");
-        GameRegistry.registerItem(new ItemSynchronizer(), "synchronizer");
         GameRegistry.registerItem(new ItemEntityCard(), "entityCard");
         GameRegistry.registerItem(new ItemHandheldScanner(), "handheldScanner");
         GameRegistry.registerItem(new ItemUpgrade(), "inPlaceUpgrade");
@@ -221,7 +218,6 @@ public class CommonProxy
         configuration.addItemEntry("Glasses");
         configuration.addItemEntry("Paintbrush");
         configuration.addItemEntry("LocationCard");
-        configuration.addItemEntry("Synchronizer");
         configuration.addItemEntry("EntityCard");
         configuration.addItemEntry("HandheldScanner");
         configuration.addItemEntry("MiscItems");

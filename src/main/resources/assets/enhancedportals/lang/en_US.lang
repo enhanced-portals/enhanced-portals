@@ -6,9 +6,9 @@ tile.frame.networkInterface.name=Network Interface
 tile.frame.dialDevice.name=Dialling Device
 tile.frame.biometric.name=Biometric Identifier
 tile.frame.upgrade.name=Module Manipulator
-tile.frame.fluid.name=Fluid Something
-tile.frame.item.name=Item Something
-tile.frame.energy.name=Energy Something
+tile.frame.fluid.name=Fluid Transportation Module
+tile.frame.item.name=Item Transportation Module
+tile.frame.energy.name=Energy Transportation Module
 tile.portal.name=Portal
 tile.stabilizer.name=Dimensional Bridge Stabilizer
 tile.decoration.frame.name=Bordered Quartz
@@ -47,6 +47,9 @@ item.upgrade.networkInterface.name=Network Interface Upgrade
 item.upgrade.dialDevice.name=Dialling Device Upgrade
 item.upgrade.biometric.name=Biometric Identifier Upgrade
 item.upgrade.upgrade.name=Module Manipulator Upgrade
+item.upgrade.fluid.name=Fluid Transportation Upgrade
+item.upgrade.item.name=Item Transportation Upgrade
+item.upgrade.energy.name=Energy Transportation Upgrade
 
 # Upgrades
 item.portalModule.0.name=Particle Destroyer
@@ -212,6 +215,11 @@ ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed
 ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
 ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
 ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
+
+# Success
+ep3.success.prefix=[Success] 
+ep3.success.create=Portal initialized
+ep3.success.reconfigure=Portal reconfigured
 
 # Particle Types
 ep3.gui.particleType.0.name=Random

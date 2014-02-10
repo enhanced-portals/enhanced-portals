@@ -16,7 +16,6 @@ import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemMisc;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemPortalModule;
-import uk.co.shadeddimensions.ep3.item.ItemSynchronizer;
 import uk.co.shadeddimensions.ep3.item.ItemUpgrade;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
@@ -53,9 +52,6 @@ public class Vanilla
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(ItemMisc.instance, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(ItemMisc.instance, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 4), new ItemStack(ItemMisc.instance, 1, 1), Item.diamond, Item.emerald, new ItemStack(ItemMisc.instance, 1, 0)));
-
-        // Synchronizer
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemSynchronizer.instance), new Object[] { "GGG", "IQI", "III", 'G', Item.ingotGold, 'I', Item.ingotIron, 'Q', Item.netherQuartz }));
 
         // Handheld Scanner
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemHandheldScanner.instance), new Object[] { "GRG", "IQI", "IEI", 'G', Item.ingotGold, 'I', Item.ingotIron, 'R', Item.redstone, 'Q', Item.netherQuartz, 'E', ItemEntityCard.instance }));

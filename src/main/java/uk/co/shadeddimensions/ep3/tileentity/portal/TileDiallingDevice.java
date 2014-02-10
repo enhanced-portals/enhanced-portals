@@ -10,16 +10,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 
-public class TileDiallingDevice extends TileFrame //implements IPeripheral
+public class TileDiallingDevice extends TileFrame implements IPeripheral
 {
     public class GlyphElement
     {
@@ -54,27 +54,22 @@ public class TileDiallingDevice extends TileFrame //implements IPeripheral
         if (tag.hasKey("DialRequest"))
         {
             String id = tag.getString("DialRequest");
-            getPortalController().connectionDial(new GlyphIdentifier(id), null, player);
             
-            return;
-        }
-        else if (tag.hasKey("DialStored"))
-        {
-            /*String id = tag.getString("DialRequest");
-              
             for (GlyphElement el : glyphList) // Check to see if this is in the list of stored addresses, use its texture if it is.
             {
                 if (el.identifier.getGlyphString().equals(id))
                 {
-                    //getPortalController().dialRequest(new GlyphIdentifier(id), el.texture, player);
+                    getPortalController().connectionDial(new GlyphIdentifier(id), el.texture, player);
                     return;
                 }
-            }*/
+            }
+            
+            getPortalController().connectionDial(new GlyphIdentifier(id), null, player);
+            return;
         }
         else if (tag.hasKey("DialTerminateRequest"))
         {
             getPortalController().connectionTerminate();
-            
             return;
         }
 
@@ -212,8 +207,7 @@ public class TileDiallingDevice extends TileFrame //implements IPeripheral
         tag.setTag("glyphList", list);
     }
     
-    /* IPeripheral */
-    /*@Override
+    @Override
     public String getType()
     {
         return "Dialling Device";
@@ -277,7 +271,7 @@ public class TileDiallingDevice extends TileFrame //implements IPeripheral
                     throw new Exception("Glyph ID is not formatted correctly");
                 }
 
-                dial(new GlyphIdentifier(s));
+                getPortalController().connectionDial(new GlyphIdentifier(s), null, null);
             }
             else
             {
@@ -286,12 +280,16 @@ public class TileDiallingDevice extends TileFrame //implements IPeripheral
         }
         else if (method == 1) // terminate
         {
-            terminate();
+            getPortalController().connectionTerminate();
         }
         else if (method == 2) // dialStored
         {
             int num = getSelectedEntry(arguments);
-            dialStored(num);
+            
+            if (num > 0 && num < glyphList.size())
+            {
+                getPortalController().connectionDial(glyphList.get(num).identifier, null, null);
+            }
         }
         else if (method == 3) // getStoredName
         {
@@ -374,5 +372,5 @@ public class TileDiallingDevice extends TileFrame //implements IPeripheral
     public void detach(IComputerAccess computer)
     {
         
-    }*/
+    }
 }

@@ -12,6 +12,7 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.library.ct.ConnectedTextures;
+import uk.co.shadeddimensions.library.ct.ConnectedTexturesDetailed;
 
 public class BlockStabilizer extends BlockContainer
 {
@@ -29,7 +30,7 @@ public class BlockStabilizer extends BlockContainer
         setUnlocalizedName("stabilizer");
         setStepSound(soundStoneFootstep);
         setCreativeTab(Reference.creativeTab);
-        connectedTextures = new ConnectedTextures("enhancedportals:bridge/bridge_%s", ID, -1);
+        connectedTextures = new ConnectedTexturesDetailed("enhancedportals:bridge/%s", ID, -1);
     }
 
     @Override

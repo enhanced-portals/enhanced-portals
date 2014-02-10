@@ -13,10 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Icon;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
@@ -41,8 +39,11 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
+import dan200.computer.api.IPeripheral;
 
-public class TileController extends TileFrame
+public class TileController extends TileFrame implements IPeripheral
 {
     enum ControlState
     {
@@ -1328,5 +1329,186 @@ public class TileController extends TileFrame
             GeneralUtils.saveWorldCoord(tagCompound, cachedDestinationLoc, "CachedDestinationLoc");
             tagCompound.setString("CachedDestinationUID", cachedDestinationUID.getGlyphString());
         }
+    }
+
+    @Override
+    public String getType()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String[] getMethodNames()
+    {
+        return new String[] { "isPortalActive", "getUniqueIdentifier", "setUniqueIdentifier", "getFrameColour", "setFrameColour", "getPortalColour", "setPortalColour", "getParticleColour", "setParticleColour" };
+    }
+
+    @Override
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0) // isPortalActive
+        {
+            return new Object[] { isPortalActive() };
+        }
+        else if (method == 1) // getUniqueIdentifier
+        {
+            GlyphIdentifier identifier = getIdentifierUnique();
+
+            if (identifier == null || identifier.isEmpty())
+            {
+                return new Object[] { "" };
+            }
+            else
+            {
+                return new Object[] { identifier.getGlyphString() };
+            }
+        }
+        else if (method == 2) // setUniqueIdentifier
+        {
+            if (arguments.length == 0)
+            {
+                setIdentifierUnique(new GlyphIdentifier());
+                return callMethod(computer, context, 1, null);
+            }
+            else if (arguments.length == 1)
+            {
+                String s = arguments[0].toString();
+                s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
+
+                if (s.length() == 0)
+                {
+                    throw new Exception("Glyph ID is not formatted correctly");
+                }
+                
+                try
+                {
+                    if (s.contains(GlyphIdentifier.GLYPH_SEPERATOR))
+                    {
+                        String[] nums = s.split(GlyphIdentifier.GLYPH_SEPERATOR);
+
+                        if (nums.length > 9)
+                        {
+                            throw new Exception("Glyph ID is too long. Must be a maximum of 9 IDs");
+                        }
+
+                        for (String num : nums)
+                        {
+
+                            int n = Integer.parseInt(num);
+
+                            if (n < 0 || n > 27)
+                            {
+                                throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int n = Integer.parseInt(s);
+
+                        if (n < 0 || n > 27)
+                        {
+                            throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
+                        }
+                    }
+                }
+                catch (NumberFormatException ex)
+                {
+                    throw new Exception("Glyph ID is not formatted correctly");
+                }
+
+                setIdentifierUnique(new GlyphIdentifier(s));
+            }
+            else
+            {
+                throw new Exception("Invalid arguments");
+            }
+
+            return callMethod(computer, context, 1, null);
+        }
+        else if (method == 3) // getFrameColour
+        {
+            return new Object[] { activeTextureData.getFrameColour() };
+        }
+        else if (method == 4) // setFrameColour
+        {
+            if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
+            {
+                throw new Exception("Invalid arguments");
+            }
+            
+            try
+            {
+                int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16);
+                setFrameColour(hex);
+            }
+            catch (NumberFormatException ex)
+            {
+                throw new Exception("Couldn't parse input as hexidecimal");
+            }
+        }
+        else if (method == 5) // getPortalColour
+        {
+            return new Object[] { activeTextureData.getPortalColour() };
+        }
+        else if (method == 6) // setPortalColour
+        {
+            if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
+            {
+                throw new Exception("Invalid arguments");
+            }
+            
+            try
+            {
+                int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16);
+                setPortalColour(hex);
+            }
+            catch (NumberFormatException ex)
+            {
+                throw new Exception("Couldn't parse input as hexidecimal");
+            }
+        }
+        else if (method == 7) // getParticleColour
+        {
+            return new Object[] { activeTextureData.getParticleColour() };
+        }
+        else if (method == 8) // setParticleColour
+        {
+            if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
+            {
+                throw new Exception("Invalid arguments");
+            }
+            
+            try
+            {
+                int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16); // TODO default particle colour
+                setParticleColour(hex);
+            }
+            catch (NumberFormatException ex)
+            {
+                throw new Exception("Couldn't parse input as hexidecimal");
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean canAttachToSide(int side)
+    {
+        return true;
+    }
+
+    @Override
+    public void attach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void detach(IComputerAccess computer)
+    {
+        
     }
 }
