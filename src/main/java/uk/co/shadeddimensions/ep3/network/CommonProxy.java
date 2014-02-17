@@ -56,7 +56,8 @@ public class CommonProxy
 {
     public static final int REDSTONE_FLUX_COST = 10000;
     public static final int REDSTONE_FLUX_TIMER = 20;
-
+    public static final int RF_PER_MJ = 10;
+    
     public int gogglesRenderIndex = 0;
 
     public static NetworkManager networkManager;
@@ -66,7 +67,7 @@ public class CommonProxy
 
     public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles, forceShowFrameOverlays, disablePigmen, netherDisableParticles, netherDisableSounds;
     public static int redstoneFluxPowerMultiplier;
-
+    
     public File getBaseDir()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");

@@ -1,5 +1,10 @@
 package uk.co.shadeddimensions.ep3.tileentity.portal;
 
+import buildcraft.api.power.IPowerEmitter;
+import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import dan200.computer.api.IComputerAccess;
@@ -10,16 +15,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
+import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPeripheral
+public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPowerReceptor, IPeripheral
 {
-    public EnergyStorage storage = new EnergyStorage(16000);
-
+    public final EnergyStorage storage = new EnergyStorage(16000);
+    public final PowerHandler mjHandler;
+    
+    public TileTransferEnergy() {
+    	mjHandler = new PowerHandler(this, Type.MACHINE);
+    	mjHandler.configure(2.0f, 32.0f, 2.0f, (float)(storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ));
+    	mjHandler.configurePowerPerdition(0, 0);
+    }
+    
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
@@ -269,4 +283,20 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     {
         
     }
+
+	@Override
+	public PowerReceiver getPowerReceiver(ForgeDirection side) {
+		return mjHandler.getPowerReceiver();
+	}
+
+	@Override
+	public void doWork(PowerHandler workProvider) {
+		int acceptedEnergy = storage.receiveEnergy((int)(mjHandler.useEnergy(1.0F, storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
+		mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
+	}
+
+	@Override
+	public World getWorld() {
+		return this.worldObj;
+	}
 }
