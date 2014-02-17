@@ -11,6 +11,7 @@ import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.Property;
 import uk.co.shadeddimensions.ep3.block.BlockCrafting;
 import uk.co.shadeddimensions.ep3.block.BlockDecoration;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
@@ -54,10 +55,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy
 {
-    public static final int REDSTONE_FLUX_COST = 10000;
-    public static final int REDSTONE_FLUX_TIMER = 20;
-    public static final int RF_PER_MJ = 10;
-    
     public int gogglesRenderIndex = 0;
 
     public static NetworkManager networkManager;
@@ -65,9 +62,20 @@ public class CommonProxy
     public static final Logger logger = Logger.getLogger(Reference.NAME);
     public static ConfigHandler configuration;
 
-    public static boolean useAlternateGlyphs, customNetherPortals, portalsDestroyBlocks, fasterPortalCooldown, disableVanillaRecipes, disableTERecipes, disablePortalSounds, disableParticles, forceShowFrameOverlays, disablePigmen, netherDisableParticles, netherDisableSounds;
-    public static int redstoneFluxPowerMultiplier;
+    public static class Properties
+    {
+        public static Property useAlternateGlyphs, forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, powerMultiplier;
+    }
+
+    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20;
+    public static final int RF_PER_MJ = 10;
     
+    public int glassesRenderIndex;
+    
+    public static boolean customNetherPortals, useAlternateGlyphs, forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, disableVanillaRecipes, disableTERecipes;
+    public static int powerMultiplier;
+    static Configuration config;
+
     public File getBaseDir()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
@@ -206,6 +214,7 @@ public class CommonProxy
 
     public void setupConfiguration(Configuration theConfig)
     {
+        config = theConfig;
         configuration = new ConfigHandler(Reference.VERSION);
         configuration.setConfiguration(theConfig);
 
@@ -226,30 +235,46 @@ public class CommonProxy
         configuration.addItemEntry("InPlaceUpgrade");
         configuration.addItemEntry("Manual");
 
-        useAlternateGlyphs = configuration.get("Misc", "UseAlternateGlyphs", false);
-        forceShowFrameOverlays = configuration.get("Misc", "ForceShowFrameOverlays", false);
+        Properties.useAlternateGlyphs = config.get("Misc", "UseAlternateGlyphs", false);
+        Properties.forceShowFrameOverlays = config.get("Misc", "ForceShowFrameOverlays", false);
+        Properties.disableSounds = config.get("Overrides", "DisableSounds", false);
+        Properties.disableParticles = config.get("Overrides", "DisableParticles", false);
+        Properties.portalsDestroyBlocks = config.get("Portal", "PortalsDestroyBlocks", true);
+        Properties.fasterPortalCooldown = config.get("Portal", "FasterPortalCooldown", false);
+        Properties.requirePower = config.get("Power", "RequirePower", true);
+        Properties.powerMultiplier = config.get("Power", "PowerMultiplier", 1);
 
-        customNetherPortals = configuration.get("Overrides", "CustomNetherPortals", true);
-        disablePigmen = configuration.get("Overrides", "StopPigmenFromSpawningAtPortals", false);
-        netherDisableParticles = configuration.get("Overrides", "DisableNetherParticles", false);
-        netherDisableSounds = configuration.get("Overrides", "DisableNetherSounds", false);
-        disablePortalSounds = configuration.get("Overrides", "DisablePortalSounds", false);
-        disableParticles = configuration.get("Overrides", "DisableParticles", false);
+        useAlternateGlyphs = Properties.useAlternateGlyphs.getBoolean(false);
+        forceShowFrameOverlays = Properties.forceShowFrameOverlays.getBoolean(false);
+        disableSounds = Properties.disableSounds.getBoolean(false);
+        disableParticles = Properties.disableParticles.getBoolean(false);
+        portalsDestroyBlocks = Properties.portalsDestroyBlocks.getBoolean(true);
+        fasterPortalCooldown = Properties.fasterPortalCooldown.getBoolean(false);
+        requirePower = Properties.requirePower.getBoolean(true);
+        powerMultiplier = Properties.powerMultiplier.getInt(1);
+        disableVanillaRecipes = config.get("Recipes", "DisableVanillaRecipes", false).getBoolean(false);
+        disableTERecipes = config.get("Recipes", "DisableTERecipes", false).getBoolean(false);
+        config.save();
 
-        portalsDestroyBlocks = configuration.get("Portal", "PortalsDestroyBlocks", true);
-        fasterPortalCooldown = configuration.get("Portal", "FasterPortalCooldown", false);
-
-        redstoneFluxPowerMultiplier = configuration.get("Power", "PowerMultiplier", 1);
-
-        disableVanillaRecipes = configuration.get("Recipes", "DisableVanillaRecipes", false);
-        disableTERecipes = configuration.get("Recipes", "DisableTERecipes", false);
-
-        if (redstoneFluxPowerMultiplier < 0)
+        if (powerMultiplier < 0)
         {
-            redstoneFluxPowerMultiplier = 0;
+            powerMultiplier = 0;
         }
 
         configuration.init();
+    }
+    
+    public static void saveConfigs()
+    {
+        Properties.useAlternateGlyphs.set(useAlternateGlyphs);
+        Properties.forceShowFrameOverlays.set(forceShowFrameOverlays);
+        Properties.disableParticles.set(disableParticles);
+        Properties.disableSounds.set(disableSounds);
+        Properties.portalsDestroyBlocks.set(portalsDestroyBlocks);
+        Properties.fasterPortalCooldown.set(fasterPortalCooldown);
+        Properties.requirePower.set(requirePower);
+        Properties.powerMultiplier.set(powerMultiplier);
+        config.save();
     }
 
     public void setupCrafting()

@@ -95,7 +95,7 @@ public class TileController extends TileFrame implements IPeripheral
     boolean hasBio;
 
     @SideOnly(Side.CLIENT)
-    GlyphIdentifier uID;
+    GlyphIdentifier uID, nID;
 
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
@@ -630,6 +630,11 @@ public class TileController extends TileFrame implements IPeripheral
      */
     public GlyphIdentifier getIdentifierNetwork()
     {
+        if (worldObj.isRemote)
+        {
+            return nID;
+        }
+        
         return CommonProxy.networkManager.getPortalNetwork(getIdentifierUnique());
     }
 
@@ -638,6 +643,11 @@ public class TileController extends TileFrame implements IPeripheral
      */
     public GlyphIdentifier getIdentifierUnique()
     {
+        if (worldObj.isRemote)
+        {
+            return uID;
+        }
+        
         return CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
     }
 
@@ -794,6 +804,8 @@ public class TileController extends TileFrame implements IPeripheral
             try
             {
                 EntityManager.transferEntity(entity, this, control);
+                control.onEntityTeleported(entity);
+                control.onEntityTouchPortal(entity);
             }
             catch (PortalException e)
             {
@@ -819,7 +831,7 @@ public class TileController extends TileFrame implements IPeripheral
     {
         for (ChunkCoordinates c : getRedstoneInterfaces())
         {
-            ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).entityTeleport(entity);
+            ((TileRedstoneInterface) worldObj.getBlockTileEntity(c.posX, c.posY, c.posZ)).onEntityTeleport(entity);
         }
     }
 
@@ -938,6 +950,7 @@ public class TileController extends TileFrame implements IPeripheral
     public void packetGuiFill(DataOutputStream stream) throws IOException
     {
         stream.writeUTF(getHasIdentifierUnique() ? getIdentifierUnique().getGlyphString() : "");
+        stream.writeUTF(getHasIdentifierNetwork() ? getIdentifierNetwork().getGlyphString() : "");
         stream.writeInt(getPortalCount());
         stream.writeInt(getFrameCount());
         stream.writeInt(getRedstoneInterfaceCount());
@@ -954,6 +967,7 @@ public class TileController extends TileFrame implements IPeripheral
     public void packetGuiUse(DataInputStream stream) throws IOException
     {
         uID = new GlyphIdentifier(stream.readUTF());
+        nID = new GlyphIdentifier(stream.readUTF());
         countPortals = stream.readInt();
         countFrames = stream.readInt();
         countRedstone = stream.readInt();
@@ -1020,6 +1034,12 @@ public class TileController extends TileFrame implements IPeripheral
             TilePortal portal = (TilePortal) WorldUtils.getTileEntity(worldObj, c);
             portal.portalController = getChunkCoordinates();
         }
+        
+        for (ChunkCoordinates c : getRedstoneInterfaces())
+        {
+            TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
+            ri.onPortalCreated();
+        }
     }
 
     public void portalRemove()
@@ -1034,6 +1054,12 @@ public class TileController extends TileFrame implements IPeripheral
         for (ChunkCoordinates c : portalBlocks)
         {
             worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
+        }
+        
+        for (ChunkCoordinates c : getRedstoneInterfaces())
+        {
+            TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
+            ri.onPortalRemoved();
         }
         
         processing = false;
@@ -1182,21 +1208,13 @@ public class TileController extends TileFrame implements IPeripheral
             return;
         }
 
-        GlyphIdentifier uID = getIdentifierUnique();
-        TileStabilizerMain dbs = getDimensionalBridgeStabilizer();
-
-        if (dbs != null && isPortalActive())
+        if (isPortalActive())
         {
-            try
-            {
-                dbs.terminateExistingConnection(getIdentifierUnique());
-            }
-            catch (Exception e)
-            {
-                System.out.println(e.getMessage());
-            }
+            connectionTerminate();
         }
-
+        
+        GlyphIdentifier uID = getIdentifierUnique();
+        
         if (getHasIdentifierNetwork())
         {
             CommonProxy.networkManager.removePortalFromNetwork(uID, getIdentifierNetwork());
@@ -1220,6 +1238,11 @@ public class TileController extends TileFrame implements IPeripheral
             throw new PortalException("");
         }
 
+        if (isPortalActive())
+        {
+            connectionTerminate();
+        }
+        
         if (getHasIdentifierUnique()) // If already have an identifier
         {
             GlyphIdentifier networkIdentifier = null;

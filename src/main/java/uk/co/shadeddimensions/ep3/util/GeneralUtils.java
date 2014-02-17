@@ -22,7 +22,12 @@ public class GeneralUtils
 {
     public static boolean hasEnergyCost()
     {
-        return CommonProxy.redstoneFluxPowerMultiplier > 0;
+        return CommonProxy.requirePower;
+    }
+    
+    public static int getPowerMultiplier()
+    {
+        return hasEnergyCost() ? CommonProxy.powerMultiplier : 0;
     }
 
     public static boolean isWearingGoggles()

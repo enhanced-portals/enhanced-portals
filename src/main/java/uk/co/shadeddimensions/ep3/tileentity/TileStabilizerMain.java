@@ -20,30 +20,30 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
-import uk.co.shadeddimensions.ep3.portal.EntityManager;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalException;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortal;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
-import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler
+public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler, IPowerReceptor
 {
 	static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
@@ -58,6 +58,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 	public int powerState, instability = 0;
 	Random rand = new Random();
 	public boolean is3x3 = false;
+	private final PowerHandler mjHandler;
 
 	@SideOnly(Side.CLIENT)
 	public int intActiveConnections;
@@ -68,6 +69,11 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		activeConnections = new HashMap<String, String>();
 		activeConnectionsReverse = new HashMap<String, String>();
 		energyStorage = new EnergyStorage(0);
+		
+		float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
+		mjHandler = new PowerHandler(this, Type.MACHINE);
+		mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, energyUsage * 0.2f);
+		mjHandler.configurePowerPerdition(0, 0);
 	}
 
 	public boolean activate(EntityPlayer player)
@@ -315,12 +321,12 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 	 */
 	public boolean hasEnoughPowerToStart()
 	{
-		if (CommonProxy.redstoneFluxPowerMultiplier == 0)
+		if (!GeneralUtils.hasEnergyCost())
 		{
 			return true;
 		}
 
-		int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * 1 * CommonProxy.REDSTONE_FLUX_COST;
+		int powerRequirement = GeneralUtils.getPowerMultiplier() * 1 * CommonProxy.REDSTONE_FLUX_COST;
 		return extractEnergy(null, (int) (powerRequirement * 0.3), true) == (int) (powerRequirement * 0.3);
 	}
 
@@ -686,9 +692,9 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 	@Override
 	public void updateEntity()
 	{
-		if (activeConnections.size() > 0 && CommonProxy.redstoneFluxPowerMultiplier > 0 && tickTimer >= CommonProxy.REDSTONE_FLUX_TIMER)
+		if (activeConnections.size() > 0 && GeneralUtils.hasEnergyCost() && tickTimer >= CommonProxy.REDSTONE_FLUX_TIMER)
 		{
-			int powerRequirement = CommonProxy.redstoneFluxPowerMultiplier * activeConnections.size() * CommonProxy.REDSTONE_FLUX_COST;
+			int powerRequirement = GeneralUtils.getPowerMultiplier() * activeConnections.size() * CommonProxy.REDSTONE_FLUX_COST;
 
 			if (powerState == 0 && extractEnergy(null, powerRequirement, true) == powerRequirement) // Simulate the full power requirement
 			{
@@ -785,4 +791,23 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 			tag.setTag("inventory", t);
 		}
 	}
+
+    @Override
+    public PowerReceiver getPowerReceiver(ForgeDirection side)
+    {
+        return mjHandler.getPowerReceiver();
+    }
+
+    @Override
+    public void doWork(PowerHandler workProvider)
+    {
+        int acceptedEnergy = receiveEnergy(null, (int)(mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
+        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
+    }
+
+    @Override
+    public World getWorld()
+    {
+        return this.worldObj;
+    }
 }

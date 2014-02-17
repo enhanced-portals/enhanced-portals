@@ -274,13 +274,25 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     }
     
     @Override
+    public boolean isBlockNormalCube(World world, int x, int y, int z)
+    {
+        return true;
+    }
+    
+    @Override
+    public boolean canProvidePower()
+    {
+        return true;
+    }
+    
+    @Override
     public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
         
         if (tile instanceof TileRedstoneInterface)
         {
-            return ((TileRedstoneInterface) tile).isProvidingStrongPower(side);
+            return ((TileRedstoneInterface) tile).isProvidingPower(side);
         }
         
         return 0;
@@ -293,7 +305,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable
         
         if (tile instanceof TileRedstoneInterface)
         {
-            return ((TileRedstoneInterface) tile).isProvidingWeakPower(side);
+            return ((TileRedstoneInterface) tile).isProvidingPower(side);
         }
         
         return 0;

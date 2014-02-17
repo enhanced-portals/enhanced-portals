@@ -19,6 +19,7 @@ import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.EntityData;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import cofh.api.energy.ItemEnergyContainer;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
@@ -61,15 +62,15 @@ public class ItemHandheldScanner extends ItemEnergyContainer
 
     private boolean drainPower(ItemStack itemStack)
     {
-        if (CommonProxy.redstoneFluxPowerMultiplier > 0)
+        if (GeneralUtils.hasEnergyCost())
         {
-            if (((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * CommonProxy.redstoneFluxPowerMultiplier, true) != 50 * CommonProxy.redstoneFluxPowerMultiplier)
+            if (((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * GeneralUtils.getPowerMultiplier(), true) != 50 * GeneralUtils.getPowerMultiplier())
             {
                 return false;
             }
             else
             {
-                ((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * CommonProxy.redstoneFluxPowerMultiplier, false);
+                ((ItemEnergyContainer) itemStack.getItem()).extractEnergy(itemStack, 50 * GeneralUtils.getPowerMultiplier(), false);
                 return true;
             }
         }

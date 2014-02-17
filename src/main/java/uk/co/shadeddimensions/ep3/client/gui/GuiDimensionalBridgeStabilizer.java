@@ -35,7 +35,7 @@ public class GuiDimensionalBridgeStabilizer extends GuiBaseContainer
             if (isFullyOpened() && elementFlux != null)
             {
                 int instability = DBS.powerState == 0 ? DBS.instability : DBS.powerState == 1 ? 20 : DBS.powerState == 2 ? 50 : 70;
-                int powerCost = DBS.intActiveConnections * CommonProxy.REDSTONE_FLUX_COST * CommonProxy.redstoneFluxPowerMultiplier;
+                int powerCost = DBS.intActiveConnections * CommonProxy.REDSTONE_FLUX_COST * GeneralUtils.getPowerMultiplier();
                 powerCost -= (int) (powerCost * (instability / 100f));
 
                 gui.getFontRenderer().drawStringWithShadow("Energy Usage:", posX + 10, posY + 70, 0xAAAAAA);
@@ -114,7 +114,7 @@ public class GuiDimensionalBridgeStabilizer extends GuiBaseContainer
         
         if (GeneralUtils.hasEnergyCost())
         {
-            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + 56, 140, 20, CommonProxy.redstoneFluxPowerMultiplier == 0 ? Localization.getGuiString("powerModeFree") : Localization.getGuiString("powerModeNormal")));
+            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + 56, 140, 20, !GeneralUtils.hasEnergyCost() ? Localization.getGuiString("powerModeFree") : Localization.getGuiString("powerModeNormal")));
         }
     }
 

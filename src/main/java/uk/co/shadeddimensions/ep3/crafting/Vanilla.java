@@ -48,10 +48,18 @@ public class Vanilla
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BlockFrame.instance, 1, BlockFrame.BIOMETRIC_IDENTIFIER), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(BlockFrame.instance, 1, 0), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BlockFrame.instance, 1, BlockFrame.MODULE_MANIPULATOR), new ItemStack(BlockFrame.instance, 1, 0), Item.diamond, Item.emerald, new ItemStack(ItemMisc.instance, 1, 0)));
 
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ENERGY), new ItemStack(BlockFrame.instance, 1, 0), Item.enderPearl, Item.diamond, Block.blockRedstone));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_FLUID), new ItemStack(BlockFrame.instance, 1, 0), Item.enderPearl, Item.diamond, Item.bucketEmpty));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ITEM), new ItemStack(BlockFrame.instance, 1, 0), Item.enderPearl, Item.diamond, Block.chest));
+
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 2), new ItemStack(ItemUpgrade.instance, 1, 1), Item.diamond));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(ItemMisc.instance, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkRaw, 'B', Item.beefRaw, 'C', Item.chickenRaw }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(ItemMisc.instance, 1, 1), 'Z', Item.blazePowder, 'P', Item.porkCooked, 'B', Item.beefCooked, 'C', Item.chickenCooked }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 4), new ItemStack(ItemMisc.instance, 1, 1), Item.diamond, Item.emerald, new ItemStack(ItemMisc.instance, 1, 0)));
+        
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 7), new ItemStack(ItemMisc.instance, 1, 1), Item.enderPearl, Item.diamond, Block.blockRedstone));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 5), new ItemStack(ItemMisc.instance, 1, 1), Item.enderPearl, Item.diamond, Item.bucketEmpty));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 6), new ItemStack(ItemMisc.instance, 1, 1), Item.enderPearl, Item.diamond, Block.chest));
 
         // Handheld Scanner
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemHandheldScanner.instance), new Object[] { "GRG", "IQI", "IEI", 'G', Item.ingotGold, 'I', Item.ingotIron, 'R', Item.redstone, 'Q', Item.netherQuartz, 'E', ItemEntityCard.instance }));

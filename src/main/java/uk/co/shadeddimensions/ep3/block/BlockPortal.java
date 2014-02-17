@@ -158,7 +158,7 @@ public class BlockPortal extends BlockContainer
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random random)
     {
-        if (CommonProxy.disablePortalSounds && CommonProxy.disableParticles)
+        if (CommonProxy.disableSounds && CommonProxy.disableParticles)
         {
             return;
         }
@@ -166,7 +166,7 @@ public class BlockPortal extends BlockContainer
         int metadata = world.getBlockMetadata(x, y, z);
         TileController controller = ((TilePortal) world.getBlockTileEntity(x, y, z)).getPortalController();
         TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
-        boolean doSounds = !CommonProxy.disablePortalSounds && random.nextInt(100) == 0, doParticles = !CommonProxy.disableParticles;
+        boolean doSounds = !CommonProxy.disableSounds && random.nextInt(100) == 0, doParticles = !CommonProxy.disableParticles;
         
         if (module != null)
         {

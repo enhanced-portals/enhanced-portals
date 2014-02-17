@@ -34,4 +34,9 @@ public class Localization
     {
         return EnumChatFormatting.GREEN + StatCollector.translateToLocal(Reference.SHORT_ID + ".success.prefix") + EnumChatFormatting.WHITE + StatCollector.translateToLocal(Reference.SHORT_ID + ".success." + s);
     }
+
+    public static String getConfigString(String s)
+    {
+        return StatCollector.translateToLocal(Reference.SHORT_ID + ".config." + s);
+    }
 }

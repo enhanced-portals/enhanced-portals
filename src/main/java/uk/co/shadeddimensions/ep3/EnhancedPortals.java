@@ -61,6 +61,7 @@ public class EnhancedPortals
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
+        event.registerServerCommand(new CommandConfig());
         CommonProxy.networkManager = new NetworkManager(event);
     }
 

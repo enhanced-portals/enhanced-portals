@@ -3,9 +3,11 @@ package uk.co.shadeddimensions.ep3.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidRegistry;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferFluid;
+import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
 import uk.co.shadeddimensions.library.gui.GuiBase;
@@ -23,6 +25,14 @@ public class GuiTransferFluid extends GuiBaseContainer
         ySize = 72;
         name = BlockFrame.instance.getUnlocalizedName() + ".fluid.name";
         drawInventory = false;
+        drawName = false;
+    }
+    
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+    {
+        getFontRenderer().drawStringWithShadow(StatCollector.translateToLocal(name), xSize / 2 - getFontRenderer().getStringWidth(StatCollector.translateToLocal(name)) / 2, -15, 0xFFFFFF);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
     
     @Override
@@ -43,13 +53,13 @@ public class GuiTransferFluid extends GuiBaseContainer
     public void initGui()
     {
         super.initGui();
-        buttonList.add(new GuiButton(0, guiLeft + 26, guiTop + 46, xSize - 31, 20, fluid.isSending ? "Sending" : "Receiving"));
+        buttonList.add(new GuiButton(0, guiLeft + 26, guiTop + ySize / 2 - 10, xSize - 31, 20, fluid.isSending ? Localization.getGuiString("sending") : Localization.getGuiString("receiving")));
     }
     
     @Override
     public void updateScreen()
     {
         super.updateScreen();
-        ((GuiButton) buttonList.get(0)).displayString = fluid.isSending ? "Sending" : "Receiving";
+        ((GuiButton) buttonList.get(0)).displayString = fluid.isSending ? Localization.getGuiString("sending") : Localization.getGuiString("receiving");
     }
 }

@@ -98,7 +98,7 @@ public class TileRedstoneInterface extends TileFrame
 		return false;
 	}
 
-	public void entityTeleport(Entity entity)
+	public void onEntityTeleport(Entity entity)
 	{
 		if (isOutput)
 		{
@@ -118,17 +118,7 @@ public class TileRedstoneInterface extends TileFrame
 		stream.writeByte(state);
 	}
 
-	public int isProvidingStrongPower(int side)
-	{
-		if (timeUntilOff != 0)
-		{
-			return 15;
-		}
-
-		return 0;
-	}
-
-	public int isProvidingWeakPower(int side)
+	public int isProvidingPower(int side)
 	{
 		if (timeUntilOff != 0)
 		{
@@ -149,116 +139,7 @@ public class TileRedstoneInterface extends TileFrame
 		}
 	}
 
-	/*public void onNeighborBlockChange(int id)
-    {
-        if (!isOutput && System.currentTimeMillis() - lastInteractTime > 250 && !worldObj.isRemote)
-        {
-            lastInteractTime = System.currentTimeMillis();            
-            TileController controller = getPortalController();
-
-            if (controller == null)
-            {
-                return;
-            }
-
-            boolean hasDialler = controller.blockManager.getHasDialDevice();
-            byte redstoneInputState = WorldUtils.getHighestPowerState(this);
-
-            if (state == 1) // Remove portal on signal
-            {
-                if (redstoneInputState > 0 && controller.isPortalActive())
-                {
-                    controller.removePortal();
-                }
-                else if (redstoneInputState == 0 && !controller.isPortalActive())
-                {
-                    controller.handleNewConnection(null, null);
-                }
-            }
-            else if (state == 3 && redstoneInputState > 0 && previousRedstoneState == 0 && controller.isPortalActive()) // Remove portal on pulse
-            {
-                controller.removePortal();
-            }
-            else if (!hasDialler) // These require no dialler
-            {
-                if (state == 0) // Create portal on signal
-                {
-                    if (redstoneInputState > 0 && !controller.isPortalActive())
-                    {
-                        controller.createPortal();
-                    }
-                    else if (redstoneInputState == 0 && controller.isPortalActive())
-                    {
-                        controller.removePortal();
-                    }
-                }
-                else if (state == 2 && redstoneInputState > 0 && previousRedstoneState == 0 && !controller.isPortalActive()) // Create portal on pulse
-                {
-                    controller.createPortal();
-                }
-            }
-            else
-            // These require a dialler
-            {
-                TileDiallingDevice dialler = controller.blockManager.getDialDevice(worldObj);
-
-                if (dialler == null)
-                {
-                    return;
-                }
-
-                int glyphCount = dialler.glyphList.size();
-
-                if (glyphCount == 0)
-                {
-                    return;
-                }
-
-                if (state == 4 && redstoneInputState > 0 && !controller.isPortalActive()) // Dial specific identifier
-                {
-                    if (redstoneInputState - 1 < glyphCount)
-                    {
-                        GlyphElement e = dialler.glyphList.get(redstoneInputState - 1);
-                        controller.dialRequest(e.identifier, e.texture, null);
-                    }
-                }
-                else if (state == 5) // Dial specific identifier II
-                {
-                    if (redstoneInputState > 0 && !controller.isPortalActive())
-                    {
-                        if (redstoneInputState - 1 < glyphCount)
-                        {
-                            GlyphElement e = dialler.glyphList.get(redstoneInputState - 1);
-                            controller.dialRequest(e.identifier, e.texture, null);
-                        }
-                    }
-                    else if (redstoneInputState == 0 && controller.isPortalActive())
-                    {
-                        controller.removePortal();
-                    }
-                }
-                else if (state == 6 && redstoneInputState > 0 && !controller.isPortalActive()) // Dial random identifier
-                {
-                    GlyphElement e = dialler.glyphList.get(new Random().nextInt(glyphCount));
-                    controller.dialRequest(e.identifier, e.texture, null);
-                }
-                else if (state == 7) // Dial random identifier II
-                {
-                    if (redstoneInputState > 0 && !controller.isPortalActive())
-                    {
-                        GlyphElement e = dialler.glyphList.get(new Random().nextInt(glyphCount));
-                        controller.dialRequest(e.identifier, e.texture, null);
-                    }
-                    else if (redstoneInputState == 0 && controller.isPortalActive())
-                    {
-                        controller.removePortal();
-                    }
-                }
-            }
-        }
-    }*/
-
-	public void portalCreated()
+	public void onPortalCreated()
 	{
 		if (isOutput)
 		{
@@ -279,7 +160,7 @@ public class TileRedstoneInterface extends TileFrame
 		}
 	}
 
-	public void portalRemoved()
+	public void onPortalRemoved()
 	{
 		if (isOutput)
 		{

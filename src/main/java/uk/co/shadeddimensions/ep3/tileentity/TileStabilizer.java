@@ -5,10 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.PowerHandler.Type;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +17,10 @@ import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import uk.co.shadeddimensions.library.util.ItemHelper;
+import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,10 +38,10 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     public TileStabilizer()
     {
         mainBlock = null;
-    	float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
-    	mjHandler = new PowerHandler(this, Type.MACHINE);
-    	mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, energyUsage * 2.0f);
-    	mjHandler.configurePowerPerdition(0, 0);
+        float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
+        mjHandler = new PowerHandler(this, Type.MACHINE);
+        mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, energyUsage * 2.0f);
+        mjHandler.configurePowerPerdition(0, 0);
     }
 
     public boolean activate(EntityPlayer player)
@@ -327,26 +327,29 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
         return main.receiveEnergy(from, maxReceive, simulate);
     }
 
-	@Override
-	public PowerReceiver getPowerReceiver(ForgeDirection side) {
-		return mjHandler.getPowerReceiver();
-	}
-
-	@Override
-	public void doWork(PowerHandler workProvider) {
-		int acceptedEnergy = receiveEnergy(null, (int)(mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
-		mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
-	}
-
-	@Override
-	public World getWorld() {
-		return this.worldObj;
-	}
-
     @Override
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
         GeneralUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
+    }
+
+    @Override
+    public PowerReceiver getPowerReceiver(ForgeDirection side)
+    {
+        return mjHandler.getPowerReceiver();
+    }
+
+    @Override
+    public void doWork(PowerHandler workProvider)
+    {
+        int acceptedEnergy = receiveEnergy(null, (int)(mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
+        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
+    }
+
+    @Override
+    public World getWorld()
+    {
+        return this.worldObj;
     }
 }

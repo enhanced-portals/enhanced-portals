@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.client.gui.GuiConfig;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.client.gui.GuiGuide;
@@ -61,6 +62,8 @@ public class GuiHandler implements IGuiHandler
     public static final int SCANNER = 15;
     public static final int GUIDE = 16;
     
+    public static final int CONFIG = 17;
+    
     public static void openGui(EntityPlayer player, TileEntity tile, int gui)
     {
         player.openGui(EnhancedPortals.instance, gui, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
@@ -73,6 +76,10 @@ public class GuiHandler implements IGuiHandler
         {
             ItemStack stack = player.inventory.getCurrentItem();
             return new GuiScanner(ItemHandheldScanner.getInventory(stack), player, stack);
+        }
+        else if (ID == CONFIG)
+        {
+            return new GuiConfig();
         }
         else
         {
@@ -150,6 +157,10 @@ public class GuiHandler implements IGuiHandler
         {
             ItemStack stack = player.inventory.getCurrentItem();
             return new ContainerScanner(ItemHandheldScanner.getInventory(stack), player, stack);
+        }
+        else if (ID == CONFIG)
+        {
+            return new ContainerBase();
         }
         else
         {
