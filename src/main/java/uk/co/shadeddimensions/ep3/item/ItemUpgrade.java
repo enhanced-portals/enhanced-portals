@@ -25,6 +25,7 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 
 public class ItemUpgrade extends Item
 {
@@ -159,7 +160,7 @@ public class ItemUpgrade extends Item
 				}
 
 				t.setPortalController(controller.getChunkCoordinates());
-				PacketHandlerServer.sendUpdatePacketToAllAround(controller);
+				WorldUtils.markForUpdate(controller);
 				return true;
 			}
 		}

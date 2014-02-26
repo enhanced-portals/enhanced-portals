@@ -339,7 +339,7 @@ public class GuiTexture extends GuiBaseContainer
             PacketHandlerClient.sendGuiPacket(tag);
         }
     }
-
+    
     @Override
     public void handleElementButtonClick(String buttonName, int mouseButton)
     {

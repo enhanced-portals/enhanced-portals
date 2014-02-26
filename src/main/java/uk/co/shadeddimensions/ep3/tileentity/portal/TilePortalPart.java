@@ -1,21 +1,19 @@
 package uk.co.shadeddimensions.ep3.tileentity.portal;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeDirection;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 
-public class TilePortalPart extends TileEP
+public abstract class TilePortalPart extends TileEP
 {
     ChunkCoordinates portalController;
     TileController cachedController;
@@ -90,39 +88,40 @@ public class TilePortalPart extends TileEP
         }
     }
 
+    public abstract void addDataToPacket(NBTTagCompound tag);
+    public abstract void onDataPacket(NBTTagCompound tag);
+    
     @Override
-    public void packetFill(DataOutputStream stream) throws IOException
+    public Packet getDescriptionPacket()
     {
-        if (portalController == null)
+        NBTTagCompound tag = new NBTTagCompound();
+        
+        if (portalController != null)
         {
-            stream.writeInt(0);
-            stream.writeInt(-1);
-            stream.writeInt(0);
-        }
-        else
-        {
-            stream.writeInt(portalController.posX);
-            stream.writeInt(portalController.posY);
-            stream.writeInt(portalController.posZ);
-        }
-    }
-
-    @Override
-    public void packetUse(DataInputStream stream) throws IOException
-    {
-        int pcX = stream.readInt(), pcY = stream.readInt(), pcZ = stream.readInt();
-
-        if (pcY != -1)
-        {
-            portalController = new ChunkCoordinates(pcX, pcY, pcZ);
-        }
-        else
-        {
-            portalController = null;
+            tag.setInteger("PortalControllerX", portalController.posX);
+            tag.setInteger("PortalControllerY", portalController.posY);
+            tag.setInteger("PortalControllerZ", portalController.posZ);
         }
         
+        addDataToPacket(tag);
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
+    }
+    
+    @Override
+    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
+    {
+        NBTTagCompound tag = pkt.data;
+        
+        portalController = null;
         cachedController = null;
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        
+        if (tag.hasKey("PortalControllerX"))
+        {
+            portalController = new ChunkCoordinates(tag.getInteger("PortalControllerX"), tag.getInteger("PortalControllerY"), tag.getInteger("PortalControllerZ"));
+        }
+        
+        onDataPacket(tag);        
+        WorldUtils.markForUpdate(this);
     }
 
     @Override
@@ -145,7 +144,8 @@ public class TilePortalPart extends TileEP
     {
         portalController = c;
         cachedController = null;
-        PacketHandlerServer.sendUpdatePacketToAllAround(this);
+        onInventoryChanged();
+        WorldUtils.markForUpdate(this);
     }
 
     @Override

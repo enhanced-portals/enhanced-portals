@@ -67,7 +67,7 @@ public class PacketGuiData extends PacketEnhancedPortals
     public void serverPacket(INetworkManager manager, PacketEnhancedPortals packet, Player player)
     {
         Container container = ((EntityPlayer) player).openContainer;
-        
+        System.out.println(container);
         if (container != null && container instanceof ContainerBase)
         {
             ((TileEP) ((ContainerBase) container).object).packetGui(tag, (EntityPlayer) player);

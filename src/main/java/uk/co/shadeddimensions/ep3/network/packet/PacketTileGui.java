@@ -10,8 +10,12 @@ import net.minecraft.tileentity.TileEntity;
 import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import cpw.mods.fml.common.network.Player;
 
-public class PacketTileGui extends PacketTileUpdate
+public class PacketTileGui extends PacketEnhancedPortals
 {
+    DataInputStream s;
+    int x, y, z;
+    TileEP t;
+    
     public PacketTileGui()
     {
 

@@ -8,6 +8,16 @@ import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 
 public class WorldUtils
 {
+    public static void markForUpdate(TileEntity tile)
+    {
+        markForUpdate(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
+    }
+
+    public static void markForUpdate(World world, int posX, int posY, int posZ)
+    {
+        world.markBlockForUpdate(posX, posY, posZ);
+    }
+    
     public static ChunkCoordinates getChunkCoordinatesOffset(ChunkCoordinates c, ForgeDirection d)
     {
         if (c == null)

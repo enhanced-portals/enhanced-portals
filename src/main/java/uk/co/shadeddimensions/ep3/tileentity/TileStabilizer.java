@@ -7,15 +7,19 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
+import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
@@ -40,7 +44,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
         mainBlock = null;
         float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
         mjHandler = new PowerHandler(this, Type.MACHINE);
-        mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, energyUsage * 2.0f);
+        mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, 1500);
         mjHandler.configurePowerPerdition(0, 0);
     }
 
@@ -120,7 +124,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                         {
                             TileStabilizer t = (TileStabilizer) tile;
                             t.mainBlock = topLeft;
-                            PacketHandlerServer.sendUpdatePacketToAllAround(t);
+                            WorldUtils.markForUpdate(t);
                         }
                     }
 
@@ -299,21 +303,22 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     }
 
     @Override
-    public void packetUse(DataInputStream stream) throws IOException
+    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
     {
-        if (stream.available() == 1)
-        {
-            isFormed = stream.readBoolean();
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-        }
+        NBTTagCompound tag = pkt.data;
+        isFormed = tag.getBoolean("formed");
+        WorldUtils.markForUpdate(this);
     }
-
+    
     @Override
-    public void packetFill(DataOutputStream stream) throws IOException
+    public Packet getDescriptionPacket()
     {
-        stream.writeBoolean(mainBlock != null);
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setBoolean("formed", mainBlock != null);
+        
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
     }
-
+    
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
     {

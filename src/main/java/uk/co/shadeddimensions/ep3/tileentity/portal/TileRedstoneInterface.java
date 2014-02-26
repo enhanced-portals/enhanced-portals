@@ -62,6 +62,7 @@ public class TileRedstoneInterface extends TileFrame
 			setState((byte) s);
 		}
 
+		onInventoryChanged();
 		PacketHandlerServer.sendGuiPacketToPlayer(this, player);
 	}
 
@@ -345,4 +346,16 @@ public class TileRedstoneInterface extends TileFrame
             }
         }
 	}
+
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+        
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        
+    }
 }

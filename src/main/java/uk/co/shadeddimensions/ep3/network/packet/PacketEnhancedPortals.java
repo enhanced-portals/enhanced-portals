@@ -16,7 +16,7 @@ public abstract class PacketEnhancedPortals
 {
     enum Packets
     {
-        PacketRequestData(PacketRequestData.class), PacketTileUpdate(PacketTileUpdate.class), PacketTileGui(PacketTileGui.class), PacketGuiData(PacketGuiData.class), PacketTextureData(PacketTextureData.class), PacketRerender(PacketRerender.class);
+        PacketTileGui(PacketTileGui.class), PacketGuiData(PacketGuiData.class), PacketTextureData(PacketTextureData.class), PacketRerender(PacketRerender.class);
 
         public static Packets getID(Class<? extends PacketEnhancedPortals> c)
         {

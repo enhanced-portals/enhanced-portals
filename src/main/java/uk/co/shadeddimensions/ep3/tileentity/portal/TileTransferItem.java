@@ -21,15 +21,15 @@ import dan200.computer.api.IPeripheral;
 public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral
 {
     ItemStack stack;
-    
+
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
-    	if (player.isSneaking())
-		{
-			return false;
-		}
-    	
+        if (player.isSneaking())
+        {
+            return false;
+        }
+
         TileController controller = getPortalController();
 
         if (ItemHelper.isWrench(stack) && controller != null && controller.isFinalized())
@@ -37,10 +37,10 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
             GuiHandler.openGui(player, this, GuiHandler.TRANSFER_ITEM);
             return true;
         }
-        
+
         return false;
     }
-    
+
     @Override
     public void packetGui(NBTTagCompound tag, EntityPlayer player)
     {
@@ -49,7 +49,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
             isSending = !isSending;
         }
     }
-    
+
     @Override
     public void packetGuiFill(DataOutputStream stream) throws IOException
     {
@@ -58,7 +58,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
             stream.writeBoolean(true);
             NBTTagCompound tag = new NBTTagCompound();
             stack.writeToNBT(tag);
-            
+
             byte[] compressed = CompressedStreamTools.compress(tag);
             stream.writeShort(compressed.length);
             stream.write(compressed);
@@ -68,7 +68,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
             stream.writeBoolean(false);
         }
     }
-    
+
     @Override
     public void packetGuiUse(DataInputStream stream) throws IOException
     {
@@ -162,13 +162,13 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     @Override
     public void openChest()
     {
-        
+
     }
 
     @Override
     public void closeChest()
     {
-        
+
     }
 
     @Override
@@ -176,14 +176,14 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     {
         return true;
     }
-    
+
     int tickTimer = 20, time = 0;
-    
+
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        
+
         if (!worldObj.isRemote)
         {
             if (isSending)
@@ -191,23 +191,23 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
                 if (time >= tickTimer)
                 {
                     time = 0;
-                    
+
                     TileController controller = getPortalController();
-                    
+
                     if (controller != null && controller.isPortalActive() && stack != null)
                     {
                         TileController exitController =  (TileController) controller.getDestinationLocation().getBlockTileEntity();
-                        
+
                         if (exitController != null)
                         {
                             for (ChunkCoordinates c : exitController.getTransferItems())
                             {
                                 TileEntity tile = WorldUtils.getTileEntity(exitController.worldObj, c);
-                                
+
                                 if (tile != null && tile instanceof TileTransferItem)
                                 {
                                     TileTransferItem item = (TileTransferItem) tile;
-                                    
+
                                     if (!item.isSending)
                                     {
                                         if (item.getStackInSlot(0) == null)
@@ -217,9 +217,41 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
                                             stack = null;
                                             onInventoryChanged();
                                         }
+                                        else if (item.getStackInSlot(0).getItem() == stack.getItem())
+                                        {
+                                            int amount = 0;
+
+                                            if (item.getStackInSlot(0).stackSize + stack.stackSize <= stack.getMaxStackSize())
+                                            {
+                                                amount = item.getStackInSlot(0).stackSize;
+                                            }
+                                            else
+                                            {
+                                                amount = stack.stackSize - ((item.getStackInSlot(0).stackSize + stack.stackSize) - 64);
+                                            }
+
+                                            if (amount <= 0)
+                                            {
+                                                continue;
+                                            }
+
+                                            item.getStackInSlot(0).stackSize += amount;
+                                            item.onInventoryChanged();
+
+                                            if (amount == stack.stackSize)
+                                            {
+                                                stack = null;
+                                            }
+                                            else
+                                            {
+                                                stack.stackSize -= amount;
+                                            }
+                                            
+                                            onInventoryChanged();
+                                        }
                                     }
                                 }
-                                
+
                                 if (stack == null)
                                 {
                                     break;
@@ -228,12 +260,12 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
                         }
                     }
                 }
-                
+
                 time++;
             }
         }
     }
-    
+
     @Override
     public String getType()
     {
@@ -265,7 +297,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
         {
             return new Object[] { isSending };
         }
-        
+
         return null;
     }
 
@@ -278,12 +310,12 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     @Override
     public void attach(IComputerAccess computer)
     {
-        
+
     }
 
     @Override
     public void detach(IComputerAccess computer)
     {
-        
+
     }
 }

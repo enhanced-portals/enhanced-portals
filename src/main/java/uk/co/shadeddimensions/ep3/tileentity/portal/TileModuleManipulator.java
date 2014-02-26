@@ -17,6 +17,7 @@ import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
 public class TileModuleManipulator extends TileFrame implements IInventory
@@ -80,24 +81,36 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
         return stack;
     }
-
+    
     @Override
-    public void packetFill(DataOutputStream stream) throws IOException
+    public void addDataToPacket(NBTTagCompound tag)
     {
-        super.packetFill(stream);
-
+        NBTTagList items = new NBTTagList();
+        
         for (int i = 0; i < getSizeInventory(); i++)
         {
-            if (getStackInSlot(i) != null)
+            NBTTagCompound t = new NBTTagCompound();
+            ItemStack s = getStackInSlot(i);
+            
+            if (s != null)
             {
-                stream.writeInt(getStackInSlot(i).itemID);
-                stream.writeInt(getStackInSlot(i).getItemDamage());
+                s.writeToNBT(t);
             }
-            else
-            {
-                stream.writeInt(0);
-                stream.writeInt(0);
-            }
+            
+            items.appendTag(t);
+        }
+        
+        tag.setTag("Items", items);
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        NBTTagList items = tag.getTagList("Items");
+        
+        for (int i = 0; i < items.tagCount(); i++)
+        {
+            setInventorySlotContents(i, ItemStack.loadItemStackFromNBT((NBTTagCompound) items.tagAt(i)));
         }
     }
 
@@ -200,7 +213,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
                     s.stackSize = 1;
 
                     setInventorySlotContents(i, s);
-                    PacketHandlerServer.sendUpdatePacketToAllAround(this);
+                    WorldUtils.markForUpdate(this);
                     return true;
                 }
             }
@@ -281,25 +294,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
         return false;
     }
-
-    @Override
-    public void packetUse(java.io.DataInputStream stream) throws IOException
-    {
-        super.packetUse(stream);
-
-        for (int i = 0; i < getSizeInventory(); i++)
-        {
-            int id = stream.readInt(), meta = stream.readInt();
-
-            if (id != 0)
-            {
-                setInventorySlotContents(i, new ItemStack(id, 1, meta));
-            }
-        }
-
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-    }
-
+    
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {

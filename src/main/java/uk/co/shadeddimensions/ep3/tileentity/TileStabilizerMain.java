@@ -32,6 +32,7 @@ import uk.co.shadeddimensions.ep3.portal.PortalException;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
@@ -72,7 +73,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		
 		float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
 		mjHandler = new PowerHandler(this, Type.MACHINE);
-		mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, energyUsage * 0.2f);
+		mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, 1500);
 		mjHandler.configurePowerPerdition(0, 0);
 	}
 
@@ -178,7 +179,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 			{
 				TileStabilizer t = (TileStabilizer) tile;
 				t.mainBlock = null;
-				PacketHandlerServer.sendUpdatePacketToAllAround(t);
+				WorldUtils.markForUpdate(t);
 			}
 		}
 	}
@@ -455,7 +456,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		rows = rows2;
 		blockList = blocks;
 		energyStorage = new EnergyStorage(rows * getEnergyStoragePerRow());
-		PacketHandlerServer.sendUpdatePacketToAllAround(this);
+		WorldUtils.markForUpdate(this);
 	}
 
 	void setInstability(int newInstability)
@@ -552,10 +553,10 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		{
 			throw new PortalException("receivingPortalNotInitialized");
 		}
-		else if (!cA.getDimensionalBridgeStabilizer().getWorldCoordinates().equals(cB.getDimensionalBridgeStabilizer().getWorldCoordinates())) // And make sure they're on the same DBS. We're getting the tile instead of the worldcoordinates to make sure the DBS hasn't expanded
-		{
-			throw new PortalException("notOnSameStabilizer");
-		}
+		//else if (!cA.getDimensionalBridgeStabilizer().getWorldCoordinates().equals(cB.getDimensionalBridgeStabilizer().getWorldCoordinates())) // And make sure they're on the same DBS. We're getting the tile instead of the worldcoordinates to make sure the DBS hasn't expanded
+		//{
+		//	throw new PortalException("notOnSameStabilizer");
+		//}
 		else if (cA.getDiallingDeviceCount() > 0 && cB.getNetworkInterfaceCount() > 0)
 		{
 			throw new PortalException("receivingPortalNoDialler");
@@ -564,6 +565,20 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		{
 			throw new PortalException("sendingPortalNoDialler"); // Should never happen but it doesn't hurt to check.
 		}
+		
+		TileStabilizerMain sA = cA.getDimensionalBridgeStabilizer(), sB = cB.getDimensionalBridgeStabilizer();
+        
+        if (!sA.getWorldCoordinates().equals(sB.getWorldCoordinates()))
+        {
+            if (cB.isPublic())
+            {
+                cB.setupTemporaryDBS(sA);
+            }
+            else
+            {
+                throw new PortalException("notOnSameStabilizer");
+            }
+        }
 
 		if (textureManager != null)
 		{

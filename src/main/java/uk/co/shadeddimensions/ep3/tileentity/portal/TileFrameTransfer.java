@@ -30,4 +30,16 @@ public class TileFrameTransfer extends TileFrame
     {
         
     }
+
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+        
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        
+    }
 }

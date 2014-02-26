@@ -67,6 +67,8 @@ public class TileBiometricIdentifier extends TileFrame implements IInventory
             entityList.add(entity);
             lastUpdateTime = System.currentTimeMillis();
         }
+        
+        onInventoryChanged();
     }
 
     public boolean canEntityTravel(Entity entity)
@@ -346,5 +348,17 @@ public class TileBiometricIdentifier extends TileFrame implements IInventory
         }
 
         tag.setTag("Inventory", itemList);
+    }
+
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+        
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        
     }
 }

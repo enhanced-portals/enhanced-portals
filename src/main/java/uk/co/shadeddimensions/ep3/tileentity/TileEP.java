@@ -28,26 +28,6 @@ public class TileEP extends TileEntity
     {
         return new WorldCoordinates(getChunkCoordinates(), worldObj.provider.dimensionId);
     }
-
-    /**
-     * Should only be used for essential data to display the block in-world. If it only needs to be displayed in the GUI, use packetGuiFill/packetGuiUse.
-     * @param stream
-     * @throws IOException
-     */
-    public void packetFill(DataOutputStream stream) throws IOException
-    {
-
-    }
-
-    /**
-     * Should only be used for essential data to display the block in-world. If it only needs to be displayed in the GUI, use packetGuiFill/packetGuiUse.
-     * @param stream
-     * @throws IOException
-     */
-    public void packetUse(DataInputStream stream) throws IOException
-    {
-
-    }
     
     /**
      * Should only be used for data that needs to be displayed ONLY in the GUI. If it needs to be displayed in-world as well as the GUI, use packetFill/packetUse.
@@ -77,16 +57,5 @@ public class TileEP extends TileEntity
     public void packetGui(NBTTagCompound tag, EntityPlayer player)
     {
         
-    }
-    
-    @Override
-    public void validate()
-    {
-        super.validate();
-        
-        if (worldObj.isRemote)
-        {
-            PacketHandlerClient.requestTileData(this);
-        }
     }
 }

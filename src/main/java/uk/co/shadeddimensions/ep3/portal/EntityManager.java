@@ -3,6 +3,8 @@ package uk.co.shadeddimensions.ep3.portal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityBoat;
@@ -19,6 +21,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fluids.BlockFluidBase;
+import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
@@ -32,27 +36,27 @@ public class EntityManager
     static ChunkCoordinates getActualExitLocation(Entity entity, TileController controller)
     {
         int entityHeight = Math.round(entity.height);
-        //boolean horizontal = controller.portalType == 3;
+        boolean horizontal = controller.portalType == 3;
 
-        //forloop:
+        forloop:
         for (ChunkCoordinates c : new ArrayList<ChunkCoordinates>(controller.getPortals()))
         {
-            //if (!horizontal)
-            //{
-            //    for (int i = 0; i < entityHeight; i++)
-            //    {
-            //        if (controller.worldObj.getBlockId(c.posX, c.posY + i, c.posZ) != CommonProxy.blockPortal.blockID && !controller.worldObj.isAirBlock(c.posX, c.posY + i, c.posZ))
-            //        {
-            //            continue forloop;
-            //        }
-            //    }
-            //}
-            //else if (horizontal && !controller.worldObj.isAirBlock(c.posX, c.posY + 1, c.posZ))
-            //{
-            //    return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
-            //}
-
-            return new ChunkCoordinates(c.posX, c.posY, c.posZ);
+            for (int i = 0; i < entityHeight; i++)
+            {
+                if (controller.getWorldObj().getBlockId(c.posX, c.posY + i, c.posZ) != BlockPortal.ID && !controller.getWorldObj().isAirBlock(c.posX, c.posY + i, c.posZ))
+                {
+                    continue forloop;
+                }
+            }
+            
+            if (horizontal && !controller.getWorldObj().isAirBlock(c.posX, c.posY + 1, c.posZ))
+            {
+                return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
+            }
+            else
+            {
+                return new ChunkCoordinates(c.posX, c.posY, c.posZ);
+            }
         }
 
         return null;
@@ -196,17 +200,15 @@ public class EntityManager
 
     public static void teleportEntityHighestInstability(Entity par1Entity) // TODO: CRIMSON
     {
-        //boolean nether = MinecraftServer.getServer().getAllowNether();
-        ChunkCoordinates spawn = /*nether ? DimensionManager.getWorld(-1).getSpawnPoint() :*/ par1Entity.worldObj.getSpawnPoint();
-
-        //if (nether)
-        //{
-        //    transferEntityToDimension(par1Entity, spawn.posX, spawn.posY, spawn.posZ, 0f, (WorldServer) par1Entity.worldObj, DimensionManager.getWorld(-1), -1, -1, false);
-        //}
-        //else
-        //{
-        transferEntityWithinDimension(par1Entity, spawn.posX, par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posY), spawn.posZ, 0f, -1, -1, false);
-        //}
+        ChunkCoordinates spawn = par1Entity.worldObj.getSpawnPoint();
+        spawn.posY = par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posY);
+        
+        if (par1Entity.worldObj.isAirBlock(spawn.posX, spawn.posY, spawn.posZ) || Block.blocksList[par1Entity.worldObj.getBlockId(spawn.posX, spawn.posY, spawn.posZ)] instanceof BlockFluid || Block.blocksList[par1Entity.worldObj.getBlockId(spawn.posX, spawn.posY, spawn.posZ)] instanceof BlockFluidBase)
+        {
+            par1Entity.worldObj.setBlock(spawn.posX, spawn.posY, spawn.posZ, Block.stone.blockID);
+        }
+        
+        transferEntityWithinDimension(par1Entity, spawn.posX, spawn.posY + 1, spawn.posZ, 0f, -1, -1, false);
     }
 
     static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)

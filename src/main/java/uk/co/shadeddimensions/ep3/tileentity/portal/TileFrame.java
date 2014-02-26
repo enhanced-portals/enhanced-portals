@@ -12,7 +12,7 @@ import cofh.api.tileentity.ISidedBlockTexture;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileFrame extends TilePortalPart implements ISidedBlockTexture
+public abstract class TileFrame extends TilePortalPart implements ISidedBlockTexture
 {
     protected boolean wearingGoggles = GeneralUtils.isWearingGoggles();
 

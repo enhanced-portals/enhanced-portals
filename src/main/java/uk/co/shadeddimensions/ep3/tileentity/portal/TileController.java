@@ -15,6 +15,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
@@ -73,7 +74,7 @@ public class TileController extends TileFrame implements IPeripheral
     ChunkCoordinates biometricIdentifier;
     ChunkCoordinates moduleManipulator;
 
-    WorldCoordinates dimensionalBridgeStabilizer;
+    WorldCoordinates dimensionalBridgeStabilizer, temporaryDBS;
 
     public PortalTextureManager activeTextureData = new PortalTextureManager(), inactiveTextureData;
 
@@ -83,7 +84,7 @@ public class TileController extends TileFrame implements IPeripheral
     
     Random random = new Random();
 
-    boolean processing;
+    boolean processing, isPublic;
     
     GlyphIdentifier cachedDestinationUID;
     WorldCoordinates cachedDestinationLoc;
@@ -194,8 +195,8 @@ public class TileController extends TileFrame implements IPeripheral
     {
         cachedDestinationUID = id;
         cachedDestinationLoc = wc;
-
-        PacketHandlerServer.sendUpdatePacketToAllAround(this);
+        onInventoryChanged();
+        WorldUtils.markForUpdate(this);
     }
 
     @Override
@@ -261,10 +262,9 @@ public class TileController extends TileFrame implements IPeripheral
             ((TilePortalPart) tile).setPortalController(getChunkCoordinates());
         }
 
-        System.out.println("Portal Components: " + portalStructure.size());
-
         portalState = ControlState.FINALIZED;
-        PacketHandlerServer.sendUpdatePacketToAllAround(this);
+        onInventoryChanged();
+        WorldUtils.markForUpdate(this);
     }
 
     public void connectionDial()
@@ -294,6 +294,8 @@ public class TileController extends TileFrame implements IPeripheral
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(e.getMessage()));
             }
         }
+    	
+    	onInventoryChanged();
 	}
 
     public void connectionDial(GlyphIdentifier id, PortalTextureManager m, EntityPlayer player)
@@ -326,6 +328,8 @@ public class TileController extends TileFrame implements IPeripheral
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(e.getMessage()));
             }
         }
+        
+        onInventoryChanged();
     }
 
     public void connectionTerminate()
@@ -350,6 +354,9 @@ public class TileController extends TileFrame implements IPeripheral
         {
             System.out.println(e.getMessage());
         }
+        
+        temporaryDBS = null;
+        onInventoryChanged();
     }
 
     /**
@@ -468,7 +475,8 @@ public class TileController extends TileFrame implements IPeripheral
         biometricIdentifier = null;
         moduleManipulator = null;
         portalState = ControlState.REQUIRES_WRENCH;
-        PacketHandlerServer.sendUpdatePacketToAllAround(this);
+        onInventoryChanged();
+        WorldUtils.markForUpdate(this);
     }
 
     public TileBiometricIdentifier getBiometricIdentifier()
@@ -548,6 +556,30 @@ public class TileController extends TileFrame implements IPeripheral
 
     public TileStabilizerMain getDimensionalBridgeStabilizer()
     {
+        if (temporaryDBS != null)
+        {
+            World w = temporaryDBS.getWorld();
+            TileEntity tile = w.getBlockTileEntity(temporaryDBS.posX, temporaryDBS.posY, temporaryDBS.posZ);
+
+            if (tile instanceof TileStabilizerMain)
+            {
+                return (TileStabilizerMain) tile;
+            }
+            else if (tile instanceof TileStabilizer)
+            {
+                TileStabilizer t = (TileStabilizer) tile;
+                TileStabilizerMain m = t.getMainBlock();
+
+                if (m != null)
+                {
+                    temporaryDBS = m.getWorldCoordinates();
+                    return m;
+                }
+            }
+
+            temporaryDBS = null;
+        }
+        
         if (dimensionalBridgeStabilizer != null)
         {
             World w = dimensionalBridgeStabilizer.getWorld();
@@ -841,29 +873,53 @@ public class TileController extends TileFrame implements IPeripheral
     }
 
     @Override
-    public void packetFill(DataOutputStream stream) throws IOException
+    public void addDataToPacket(NBTTagCompound tag)
     {
-        stream.writeInt(portalState.ordinal());
-        stream.writeBoolean(isPortalActive());
-
+        tag.setByte("PortalState", (byte) portalState.ordinal());
+        tag.setBoolean("PortalActive", isPortalActive());
+        tag.setInteger("Instability", instability);
+        
         if (isPortalActive())
         {
-            stream.writeUTF(cachedDestinationUID.getGlyphString());
-            stream.writeInt(cachedDestinationLoc.posX);
-            stream.writeInt(cachedDestinationLoc.posY);
-            stream.writeInt(cachedDestinationLoc.posZ);
-            stream.writeInt(cachedDestinationLoc.dimension);
+            tag.setString("DestUID", cachedDestinationUID.getGlyphString());
+            tag.setInteger("destX", cachedDestinationLoc.posX);
+            tag.setInteger("destY", cachedDestinationLoc.posY);
+            tag.setInteger("destZ", cachedDestinationLoc.posZ);
+            tag.setInteger("destD", cachedDestinationLoc.dimension);
         }
         
-        activeTextureData.writeToPacket(stream);
-        stream.writeInt(instability);
+        activeTextureData.writeToNBT(tag, "Texture");
         
-        stream.writeBoolean(moduleManipulator != null);
         if (moduleManipulator != null)
         {
-        	stream.writeInt(moduleManipulator.posX);
-        	stream.writeInt(moduleManipulator.posY);
-        	stream.writeInt(moduleManipulator.posZ);
+            tag.setInteger("ModX", moduleManipulator.posX);
+            tag.setInteger("ModY", moduleManipulator.posY);
+            tag.setInteger("ModZ", moduleManipulator.posZ);
+        }
+    }
+    
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        portalState = ControlState.values()[tag.getByte("PortalState")];
+
+        if (tag.hasKey("DestUID"))
+        {
+            cachedDestinationUID = new GlyphIdentifier(tag.getString("DestUID"));
+            cachedDestinationLoc = new WorldCoordinates(tag.getInteger("destX"), tag.getInteger("destY"), tag.getInteger("destZ"), tag.getInteger("destD"));
+        }
+        else
+        {
+            cachedDestinationUID = null;
+            cachedDestinationLoc = null;
+        }
+
+        activeTextureData.readFromNBT(tag, "Texture");
+        instability = tag.getInteger("Instability");
+
+        if (tag.hasKey("ModX"))
+        {
+            moduleManipulator = new ChunkCoordinates(tag.getInteger("ModX"), tag.getInteger("ModY"), tag.getInteger("ModZ"));
         }
     }
 
@@ -944,6 +1000,12 @@ public class TileController extends TileFrame implements IPeripheral
         {
             setFrameItem(tag.getInteger("frameItemID"), tag.getInteger("frameItemMeta"));
         }
+        
+        if (tag.hasKey("public"))
+        {
+            isPublic = !isPublic;
+            PacketHandlerServer.sendGuiPacketToPlayer(this, player);
+        }
     }
 
     @Override
@@ -961,6 +1023,7 @@ public class TileController extends TileFrame implements IPeripheral
         stream.writeInt(getTransferFluidCount());
         stream.writeInt(getTransferItemCount());
         stream.writeInt(getHasIdentifierNetwork() ? CommonProxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
+        stream.writeBoolean(isPublic);
     }
 
     @Override
@@ -978,35 +1041,9 @@ public class TileController extends TileFrame implements IPeripheral
         countFluids = stream.readInt();
         countItems = stream.readInt();
         connectedPortals = stream.readInt();
+        isPublic = stream.readBoolean();
     }
-
-    @Override
-    public void packetUse(DataInputStream stream) throws IOException
-    {
-        portalState = ControlState.values()[stream.readInt()];
-        
-        if (stream.readBoolean())
-        {
-            cachedDestinationUID = new GlyphIdentifier(stream.readUTF());
-            cachedDestinationLoc = new WorldCoordinates(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt());
-        }
-        else
-        {
-            cachedDestinationUID = null;
-            cachedDestinationLoc = null;
-        }
-
-        activeTextureData.usePacket(stream);
-        instability = stream.readInt();
-        
-        if (stream.readBoolean())
-        {
-        	moduleManipulator = new ChunkCoordinates(stream.readInt(), stream.readInt(), stream.readInt());
-        }
-        
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-    }
-
+    
     /**
      * Creates the portal block. Throws an {@link PortalException} if an error occurs.
      */
@@ -1085,6 +1122,7 @@ public class TileController extends TileFrame implements IPeripheral
         biometricIdentifier = GeneralUtils.loadChunkCoord(tagCompound, "BiometricIdentifier");
         moduleManipulator = GeneralUtils.loadChunkCoord(tagCompound, "ModuleManipulator");
         dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tagCompound, "DimensionalBridgeStabilizer");
+        temporaryDBS = GeneralUtils.loadWorldCoord(tagCompound, "TemporaryDBS");
 
         activeTextureData.readFromNBT(tagCompound, "ActiveTextureData");
 
@@ -1125,7 +1163,7 @@ public class TileController extends TileFrame implements IPeripheral
      */
     void sendUpdatePacket(boolean updateChunks)
     {
-        PacketHandlerServer.sendUpdatePacketToAllAround(this);
+        WorldUtils.markForUpdate(this);
 
         if (updateChunks)
         {
@@ -1186,18 +1224,22 @@ public class TileController extends TileFrame implements IPeripheral
                 dimensionalBridgeStabilizer = stabilizer;
             }
         }
+        
+        onInventoryChanged();
     }
 
     void setFrameColour(int colour)
     {
         activeTextureData.setFrameColour(colour);
+        onInventoryChanged();
         sendUpdatePacket(true);
     }
 
     void setFrameItem(int ID, int Meta)
     {
         ItemStack s = ID == 0 ? null : new ItemStack(ID, 1, Meta);
-        activeTextureData.setFrameItem(s);        
+        activeTextureData.setFrameItem(s);    
+        onInventoryChanged();
         sendUpdatePacket(true);
     }
 
@@ -1280,36 +1322,42 @@ public class TileController extends TileFrame implements IPeripheral
     public void setInstability(int instabil)
     {
         instability = instabil;
+        onInventoryChanged();
         sendUpdatePacket(true);
     }
 
 	public void setModuleManipulator(ChunkCoordinates chunkCoordinates)
 	{
 		moduleManipulator = chunkCoordinates;
+		onInventoryChanged();
 	}
 
 	void setParticleColour(int colour)
     {
         activeTextureData.setParticleColour(colour);
+        onInventoryChanged();
         sendUpdatePacket(false); // Particles are generated by querying this
     }
 
 	void setParticleType(int type)
     {
         activeTextureData.setParticleType(type);
+        onInventoryChanged();
         sendUpdatePacket(false); // Particles are generated by querying this
     }
 
 	void setPortalColour(int colour)
     {
         activeTextureData.setPortalColour(colour);
+        onInventoryChanged();
         sendUpdatePacket(true);
     }
 
 	void setPortalItem(int ID, int Meta)
     {
         ItemStack s = ID == 0 ? null : new ItemStack(ID, 1, Meta);
-        activeTextureData.setPortalItem(s);        
+        activeTextureData.setPortalItem(s);    
+        onInventoryChanged();
         sendUpdatePacket(true);
     }
 
@@ -1317,6 +1365,7 @@ public class TileController extends TileFrame implements IPeripheral
     {
         inactiveTextureData = new PortalTextureManager(activeTextureData);
         activeTextureData = textureManager;
+        onInventoryChanged();
     }
 
 	@Override
@@ -1339,6 +1388,7 @@ public class TileController extends TileFrame implements IPeripheral
         GeneralUtils.saveChunkCoord(tagCompound, biometricIdentifier, "BiometricIdentifier");
         GeneralUtils.saveChunkCoord(tagCompound, moduleManipulator, "ModuleManipulator");
         GeneralUtils.saveWorldCoord(tagCompound, dimensionalBridgeStabilizer, "DimensionalBridgeStabilizer");
+        GeneralUtils.saveWorldCoord(tagCompound, temporaryDBS, "TemporaryDBS");
 
         activeTextureData.writeToNBT(tagCompound, "ActiveTextureData");
 
@@ -1357,8 +1407,7 @@ public class TileController extends TileFrame implements IPeripheral
     @Override
     public String getType()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return "Portal Controller";
     }
 
     @Override
@@ -1533,5 +1582,16 @@ public class TileController extends TileFrame implements IPeripheral
     public void detach(IComputerAccess computer)
     {
         
+    }
+    
+    public void setupTemporaryDBS(TileStabilizerMain sA)
+    {
+        temporaryDBS = sA.getWorldCoordinates();
+        onInventoryChanged();
+    }
+    
+    public boolean isPublic()
+    {
+        return isPublic;
     }
 }

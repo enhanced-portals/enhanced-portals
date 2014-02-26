@@ -129,7 +129,7 @@ ep3.gui.notSet=Not Set
 # GUI Biometric Identifier
 ep3.gui.biometricIdentifier=Biometric Identifier
 ep3.gui.sending=Sending
-ep3.gui.recieving=Recieving
+ep3.gui.receiving=Receiving
 ep3.gui.allow=Allow
 ep3.gui.allowing=Allowing
 ep3.gui.disallow=Disallow
@@ -179,6 +179,7 @@ ep3.gui.random=Random
 ep3.gui.add=Add
 ep3.gui.accept=Accept
 ep3.gui.clickToModify=Click to modify
+ep3.gui.uidInUse=That UID is already in use
 
 # Chat
 ep3.chat.multiplePortalControllers=Failed: You cannot have multiple Portal Controllers
@@ -215,6 +216,7 @@ ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed
 ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
 ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
 ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
+ep3.error.failedToTransfer=The receiving portal is too small
 
 # Success
 ep3.success.prefix=[Success] 
@@ -230,6 +232,30 @@ ep3.gui.particleType.2.name=Static
 ep3.gui.particleType.2.info=Does not change at all
 ep3.gui.particleType.3.name=Loop
 ep3.gui.particleType.3.info=Continuously loops through its sequence
+
+# Config
+ep3.config.alternateGlyph.false=Glyphs: Normal
+ep3.config.alternateGlyph.true=Glyphs: Alternate
+ep3.config.sounds.false=Sounds: NO
+ep3.config.sounds.true=Sounds: YES
+ep3.config.portalsDestroy.false=Destroy Blocks: NO
+ep3.config.portalsDestroy.true=Destroy Blocks: YES
+ep3.config.showOverlays.false=Force Overlays: NO
+ep3.config.showOverlays.true=Force Overlays: YES
+ep3.config.particles.false=Particles: NO
+ep3.config.particles.true=Particles: YES
+ep3.config.requirePower.false=Require Power: NO
+ep3.config.requirePower.true=Require Power: YES
+ep3.config.multiplier=Multiplier: 
+ep3.config.fastCooldown.false=Fast Cooldown: NO
+ep3.config.fastCooldown.true=Fast Cooldown: YES
+ep3.config.general=General
+ep3.config.portal=Portal
+ep3.config.power=Power
+ep3.config.teleportation=Teleportation
+
+ep3.gui.public=Public
+ep3.gui.private=Private
 
 # Guide
 ep3.gui.mainMain=Welcome!

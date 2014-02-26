@@ -8,19 +8,12 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import uk.co.shadeddimensions.ep3.network.packet.PacketEnhancedPortals;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestData;
-import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketHandlerClient implements IPacketHandler
 {
-    public static void requestTileData(TileEP tile)
-    {
-        PacketDispatcher.sendPacketToServer(new PacketRequestData(tile).getPacket());
-    }
-    
     public static void sendGuiPacket(NBTTagCompound tag)
     {
         PacketDispatcher.sendPacketToServer(new PacketGuiData(tag).getPacket());

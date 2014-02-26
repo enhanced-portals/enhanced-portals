@@ -199,7 +199,7 @@ public class GuiHandler implements IGuiHandler
             {
                 return new ContainerTexture((TileController) tile, player);
             }
-            else if (ID == TEXTURE_PARTICLE)
+            else if (ID == TEXTURE_PORTAL)
             {
                 return new ContainerTexture((TileController) tile, player);
             }

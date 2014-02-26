@@ -100,6 +100,8 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral
                 PacketHandlerServer.sendGuiPacketToPlayer(this, player);
             }
         }
+        
+        onInventoryChanged();
     }
     
     @Override
@@ -370,6 +372,18 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral
 
     @Override
     public void detach(IComputerAccess computer)
+    {
+        
+    }
+
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+        
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
     {
         
     }

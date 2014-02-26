@@ -42,7 +42,11 @@ public class WorldCoordinates extends ChunkCoordinates
     public int getBlockId()
     {
         WorldServer world = getWorld();
-        world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+
+        if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
+        {
+            world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        }
 
         return world.getBlockId(posX, posY, posZ);
     }
@@ -50,7 +54,11 @@ public class WorldCoordinates extends ChunkCoordinates
     public int getBlockMetadata()
     {
         WorldServer world = getWorld();
-        world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        
+        if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
+        {
+            world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        }
 
         return world.getBlockMetadata(posX, posY, posZ);
     }
@@ -70,7 +78,10 @@ public class WorldCoordinates extends ChunkCoordinates
             }
         }
 
-        world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
+        {
+            world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);
+        }
 
         return world.getBlockTileEntity(posX, posY, posZ);
     }
