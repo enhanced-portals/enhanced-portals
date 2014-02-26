@@ -41,7 +41,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable
 {
     public static int ID;
     public static BlockFrame instance;
-    
+
     public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, BIOMETRIC_IDENTIFIER = 5, MODULE_MANIPULATOR = 6, TRANSFER_FLUID = 7, TRANSFER_ITEM = 8, TRANSFER_ENERGY = 9;
     public static int FRAME_TYPES = 10;
 
@@ -125,15 +125,15 @@ public class BlockFrame extends BlockContainer implements IDismantleable
         }
         else if (metadata == TRANSFER_FLUID)
         {
-        	return new TileTransferFluid();
+            return new TileTransferFluid();
         }
         else if (metadata == TRANSFER_ITEM)
         {
-        	return new TileTransferItem();
+            return new TileTransferItem();
         }
         else if (metadata == TRANSFER_ENERGY)
         {
-        	return new TileTransferEnergy();
+            return new TileTransferEnergy();
         }
 
         return null;
@@ -176,7 +176,14 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     @Override
     public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return ((ISidedBlockTexture) blockAccess.getBlockTileEntity(x, y, z)).getBlockTexture(side, ClientProxy.renderPass);
+        TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
+
+        if (tile instanceof TileFrame)
+        {
+            return ((ISidedBlockTexture) blockAccess.getBlockTileEntity(x, y, z)).getBlockTexture(side, ClientProxy.renderPass);
+        }
+
+        return fullIcons[0];
     }
 
     @Override
@@ -221,44 +228,51 @@ public class BlockFrame extends BlockContainer implements IDismantleable
 
         connectedTextures.registerIcons(register);
     }
-    
+
     @Override
     public void breakBlock(World world, int x, int y, int z, int oldID, int newID)
     {
         ((TileFrame) world.getBlockTileEntity(x, y, z)).breakBlock(oldID, newID);        
         super.breakBlock(world, x, y, z, oldID, newID);
     }
-    
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (tile instanceof TileFrame)
         {
             return ((TileFrame) tile).activate(player, player.inventory.getCurrentItem());
         }
-        
+
         return false;
     }
-    
+
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
     {
         ((TilePortalPart) world.getBlockTileEntity(x, y, z)).onBlockPlaced(entity, stack);
     }
-    
+
     @Override
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
     {
-        return ((TileFrame) blockAccess.getBlockTileEntity(x, y, z)).getColour();
+        TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
+
+        if (tile instanceof TileFrame)
+        {
+            return ((TileFrame) blockAccess.getBlockTileEntity(x, y, z)).getColour();
+        }
+
+        return 0xFFFFFF;
     }
-    
+
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int id)
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        
+
         if (tile instanceof TileRedstoneInterface)
         {
             ((TileRedstoneInterface) tile).onNeighborBlockChange(id);
@@ -272,42 +286,42 @@ public class BlockFrame extends BlockContainer implements IDismantleable
             ((TileFrameTransfer) tile).onNeighborChanged();
         }
     }
-    
+
     @Override
     public boolean isBlockNormalCube(World world, int x, int y, int z)
     {
         return true;
     }
-    
+
     @Override
     public boolean canProvidePower()
     {
         return true;
     }
-    
+
     @Override
     public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
-        
+
         if (tile instanceof TileRedstoneInterface)
         {
             return ((TileRedstoneInterface) tile).isProvidingPower(side);
         }
-        
+
         return 0;
     }
-    
+
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         TileEntity tile = blockAccess.getBlockTileEntity(x, y, z);
-        
+
         if (tile instanceof TileRedstoneInterface)
         {
             return ((TileRedstoneInterface) tile).isProvidingPower(side);
         }
-        
+
         return 0;
     }
 }
