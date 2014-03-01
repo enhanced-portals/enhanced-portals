@@ -41,19 +41,19 @@ public class ConnectedTextures
     {
         if (blockID == blockAccess.getBlockId(x, y, z))
         {
+        	if(blockMeta == -1) {
+        		return true;
+        	}
+        	
             int meta = blockAccess.getBlockMetadata(x, y, z);
 
-            if (blockMeta == -1)
+            if(blockMeta == meta)
             {
-                return true;
+            	return true;
             }
-            else if (subMeta == -1)
+            else // check if subMeta is valid, if not return false
             {
-                return blockMeta == meta;
-            }
-            else
-            {
-                return blockMeta == meta || meta == subMeta;
+            	return subMeta == -1 ? false : meta == subMeta;
             }
         }
 
@@ -85,10 +85,17 @@ public class ConnectedTextures
     {
         return textures[0];
     }
+    
+    private static final short[] connectionToIndex = {
+    	0, 15, 13, 11,
+    	12, 5, 3, 9,
+    	14, 4, 2, 10,
+    	8, 7, 6, 1
+    };
 
     public Icon getIconForSide(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        boolean[] connectingBlock = new boolean[6];
+        boolean[] connectingBlock = new boolean[4];
         int index = 0;
 
         if (side == 0 || side == 1)
@@ -127,70 +134,9 @@ public class ConnectedTextures
             connectingBlock[3] = canConnectTo(blockAccess, x, y + 1, z);
         }
 
-        if ((connectingBlock[0] & !connectingBlock[1] & !connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 14;
-        }
-        else if ((!connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 12;
-        }
-        else if ((!connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 13;
-        }
-        else if ((!connectingBlock[0] & !connectingBlock[1] & !connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 15;
-        }
-        else if ((connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 8;
-        }
-        else if ((!connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 11;
-        }
-        else if ((connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 2;
-        }
-        else if ((connectingBlock[0] & !connectingBlock[1] & !connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 4;
-        }
-        else if ((!connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 3;
-        }
-        else if ((!connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 5;
-        }
-        else if ((!connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 9;
-        }
-        else if ((connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 10;
-        }
-        else if ((connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 7;
-        }
-        else if ((connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & !connectingBlock[3]) != false)
-        {
-            index = 6;
-        }
-        else if ((connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & connectingBlock[3]) != false)
-        {
-            index = 1;
-        }
-
-        return textures[index];
+        return textures[connectionToIndex[(connectingBlock[0] ? 8 : 0) | (connectingBlock[1] ? 4 : 0) | (connectingBlock[2] ? 2 : 0) | (connectingBlock[3] ? 1 : 0)]];
     }
-
+    
     public void registerIcons(IconRegister register)
     {
         for (int i = 0; i < textures.length; i++)
