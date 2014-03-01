@@ -49,11 +49,25 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
 
         return ct;
     }
+    
+    private static final short[] connectionToIndex = {
+    	0, 36, 12, 24,
+    	1, 37, 13, 25,
+    	3, 39, 15, 27,
+    	2, 38, 14, 26
+    };
+    
+    private static final short[] transformIndex26 = {
+    	26, 45, 44, 22,
+    	33, 23, 35,  9,
+    	32, 34, 10, 21,
+    	11,  8, 20, 46
+    };
 
     @Override
     public Icon getIconForSide(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        boolean[] connectingBlock = new boolean[6], diagonal = new boolean[6];
+        boolean[] connectingBlock = new boolean[4], diagonal = new boolean[4];
         int index = 0;
 
         if (side == 0 || side == 1)
@@ -92,67 +106,8 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
             connectingBlock[3] = canConnectTo(blockAccess, x, y + 1, z);
         }
 
-        if (connectingBlock[0] & !connectingBlock[1] & !connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 3;
-        }
-        else if (!connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 1;
-        }
-        else if (!connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 12;
-        }
-        else if (!connectingBlock[0] & !connectingBlock[1] & !connectingBlock[2] & connectingBlock[3])
-        {
-            index = 36;
-        }
-        else if (connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 2;
-        }
-        else if (!connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & connectingBlock[3])
-        {
-            index = 24;
-        }
-        else if (connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 15;
-        }
-        else if (connectingBlock[0] & !connectingBlock[1] & !connectingBlock[2] & connectingBlock[3])
-        {
-            index = 39;
-        }
-        else if (!connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 13;
-        }
-        else if (!connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & connectingBlock[3])
-        {
-            index = 37;
-        }
-        else if (!connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & connectingBlock[3])
-        {
-            index = 25;
-        }
-        else if (connectingBlock[0] & !connectingBlock[1] & connectingBlock[2] & connectingBlock[3])
-        {
-            index = 27;
-        }
-        else if (connectingBlock[0] & connectingBlock[1] & !connectingBlock[2] & connectingBlock[3])
-        {
-            index = 38;
-        }
-        else if (connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & !connectingBlock[3])
-        {
-            index = 14;
-        }
-        else if (connectingBlock[0] & connectingBlock[1] & connectingBlock[2] & connectingBlock[3])
-        {
-            index = 26;
-        }
-
+        index = connectionToIndex[(connectingBlock[0] ? 8 : 0) | (connectingBlock[1] ? 4 : 0) | (connectingBlock[2] ? 2 : 0) | (connectingBlock[3] ? 1 : 0)];
+        
         if (side == 0 || side == 1)
         {
             diagonal[0] = !canConnectTo(blockAccess, x + 1, y, z + 1);
@@ -253,67 +208,11 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         {
             index = 42;
         }
-        else if (index == 26 && diagonal[0] && diagonal[1] && diagonal[2] && diagonal[3])
+        else if (index == 26)
         {
-            index = 46;
+        	index = transformIndex26[(diagonal[0] ? 8 : 0) | (diagonal[1] ? 4 : 0) | (diagonal[2] ? 2 : 0) | (diagonal[3] ? 1 : 0)];
         }
-        else if (index == 26 && !diagonal[0] && diagonal[1] && diagonal[2] && diagonal[3])
-        {
-            index = 9;
-        }
-        else if (index == 26 && diagonal[0] && !diagonal[1] && diagonal[2] && diagonal[3])
-        {
-            index = 21;
-        }
-        else if (index == 26 && diagonal[0] && diagonal[1] && !diagonal[2] && diagonal[3])
-        {
-            index = 8;
-        }
-        else if (index == 26 && diagonal[0] && diagonal[1] && diagonal[2] && !diagonal[3])
-        {
-            index = 20;
-        }
-        else if (index == 26 && diagonal[0] && diagonal[1] && !diagonal[2] && !diagonal[3])
-        {
-            index = 11;
-        }
-        else if (index == 26 && !diagonal[0] && !diagonal[1] && diagonal[2] && diagonal[3])
-        {
-            index = 22;
-        }
-        else if (index == 26 && !diagonal[0] && diagonal[1] && !diagonal[2] && diagonal[3])
-        {
-            index = 23;
-        }
-        else if (index == 26 && diagonal[0] && !diagonal[1] && diagonal[2] && !diagonal[3])
-        {
-            index = 10;
-        }
-        else if (index == 26 && diagonal[0] && !diagonal[1] && !diagonal[2] && diagonal[3])
-        {
-            index = 34;
-        }
-        else if (index == 26 && !diagonal[0] && diagonal[1] && diagonal[2] && !diagonal[3])
-        {
-            index = 35;
-        }
-        else if (index == 26 && diagonal[0] && !diagonal[1] && !diagonal[2] && !diagonal[3])
-        {
-            index = 32;
-        }
-        else if (index == 26 && !diagonal[0] && diagonal[1] && !diagonal[2] && !diagonal[3])
-        {
-            index = 33;
-        }
-        else if (index == 26 && !diagonal[0] && !diagonal[1] && diagonal[2] && !diagonal[3])
-        {
-            index = 44;
-        }
-        else if (index == 26 && !diagonal[0] && !diagonal[1] && !diagonal[2] && diagonal[3])
-        {
-            index = 45;
-        }
-
+        
         return textures[index];
     }
 }
