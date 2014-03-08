@@ -1202,7 +1202,7 @@ public class TileController extends TileFrame implements IPeripheral
     {
         WorldCoordinates stabilizer = ItemLocationCard.getDBSLocation(stack);
 
-        if (!(stabilizer.getBlockTileEntity() instanceof TileStabilizerMain))
+        if (stabilizer == null || !(stabilizer.getBlockTileEntity() instanceof TileStabilizerMain))
         {
             ItemLocationCard.clearDBSLocation(stack);
             throw new PortalException("voidLinkCard");
