@@ -188,7 +188,6 @@ ep3.chat.multipleDiallingDevices=Failed: You cannot have multiple Dialling Devic
 ep3.chat.multipleBiometricIdentifiers=Failed: You cannot have multiple Biometric Identifiers
 ep3.chat.multipleModuleManipulators=Failed: You cannot have multiple Module Manipulators
 ep3.chat.dialDeviceAndNetworkInterface=Failed: You cannot have a Dialling Device and a Network Interface
-ep3.chat.voidLinkCard=This card no longer links to a valid Dimensional Bridge Stabilizer
 ep3.chat.portalCouldNotBeCreatedHere=Failed: A portal could not be created at this location.
 ep3.chat.success=The portal was initialized successfully
 ep3.chat.reconfigureSuccess=The portal was successfully reconfigured
@@ -196,6 +195,7 @@ ep3.chat.noUidSet=You must set a Unique Identifier before doing this
 
 # Errors
 ep3.error.prefix=[Error] 
+ep3.error.voidLinkCard=This card no longer links to a valid Dimensional Bridge Stabilizer
 ep3.error.receivingPortalNotInitialized=The receiving portal has not been initialized
 ep3.error.sendingPortalNotInitialized=The sending portal has not been initialized
 ep3.error.stabilizerNotFound=The DBS could not be found. Insert a new valid Location Card to continue
