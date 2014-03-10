@@ -33,6 +33,7 @@ import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrame;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
@@ -195,21 +196,9 @@ public class GuiHandler implements IGuiHandler
             	PacketHandlerServer.sendGuiPacketToPlayer((TileDiallingDevice) tile, player);
                 return new ContainerBase(tile);
             }
-            else if (ID == TEXTURE_FRAME)
+            else if (ID == TEXTURE_FRAME || ID == TEXTURE_PORTAL || ID == TEXTURE_PARTICLE || ID == TEXTURE_DIALLER)
             {
-                return new ContainerTexture((TileController) tile, player);
-            }
-            else if (ID == TEXTURE_PORTAL)
-            {
-                return new ContainerTexture((TileController) tile, player);
-            }
-            else if (ID == TEXTURE_PARTICLE)
-            {
-                return new ContainerTexture((TileController) tile, player);
-            }
-            else if (ID == TEXTURE_DIALLER)
-            {
-                return new ContainerTexture((TileController) tile, player);
+                return new ContainerTexture((TileFrame) tile, player);
             }
             else if (ID == BIOMETRIC_IDENTIFIER)
             {

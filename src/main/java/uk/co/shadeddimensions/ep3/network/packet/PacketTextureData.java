@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -86,6 +87,7 @@ public class PacketTextureData extends PacketEnhancedPortals
 
         if (dial != null)
         {
+        	GuiHandler.openGui((EntityPlayer)player, dial, GuiHandler.TEXTURE_DIALLER);
             PortalTextureManager PTM = dial.glyphList.get(id).texture;
             PacketDispatcher.sendPacketToPlayer(new PacketTextureData(PTM).getPacket(), player);
         }

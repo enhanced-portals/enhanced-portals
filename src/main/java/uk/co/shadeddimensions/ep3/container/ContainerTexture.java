@@ -2,12 +2,12 @@ package uk.co.shadeddimensions.ep3.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileFrame;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 
 public class ContainerTexture extends ContainerBase
 {
-    public ContainerTexture(TileController t, EntityPlayer player)
+    public ContainerTexture(TileFrame t, EntityPlayer player)
     {
         super(t);
 
