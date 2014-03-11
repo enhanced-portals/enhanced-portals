@@ -1,5 +1,9 @@
 package uk.co.shadeddimensions.ep3.tileentity.portal;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +26,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPowerReceptor, IPeripheral
+public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPowerReceptor, IPeripheral, SimpleComponent
 {
     public final EnergyStorage storage = new EnergyStorage(16000);
     public final PowerHandler mjHandler;
@@ -302,4 +306,26 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     {
         return this.worldObj;
     }
+
+    // OpenComputers
+    
+	@Override
+	public String getComponentName() {
+		return "ep_transfer_energy";
+	}
+	
+	@Callback(direct = true)
+	public Object[] getEnergy(Context context, Arguments args) {
+		return new Object[]{storage.getEnergyStored()};
+	}
+	
+	@Callback(direct = true)
+	public Object[] getMaxEnergy(Context context, Arguments args) {
+		return new Object[]{storage.getMaxEnergyStored()};
+	}
+	
+	@Callback(direct = true)
+	public Object[] isSending(Context context, Arguments args) {
+		return new Object[]{isSending};
+	}
 }

@@ -1,5 +1,9 @@
 package uk.co.shadeddimensions.ep3.tileentity.portal;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +16,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TileNetworkInterface extends TileFrame implements IPeripheral
+public class TileNetworkInterface extends TileFrame implements IPeripheral, SimpleComponent
 {
 	@Override
 	public boolean activate(EntityPlayer player, ItemStack stack)
@@ -112,4 +116,23 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral
     {
         
     }
+
+    // OpenComputers
+    
+	@Override
+	public String getComponentName() {
+		return "ep_interface_network";
+	}
+	
+	@Callback
+	public Object[] dial(Context context, Arguments args) {
+		getPortalController().connectionDial();
+		return new Object[]{true};
+	}
+	
+	@Callback
+	public Object[] terminate(Context context, Arguments args) {
+		getPortalController().connectionTerminate();
+		return new Object[]{true};
+	}
 }

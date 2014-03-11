@@ -3,7 +3,12 @@ package uk.co.shadeddimensions.ep3.tileentity.portal;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import cofh.api.energy.IEnergyHandler;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
@@ -27,7 +32,7 @@ import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 
-public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler, IPeripheral
+public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler, IPeripheral, SimpleComponent
 {
     public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
 
@@ -323,4 +328,38 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     {
         
     }
+    
+    // OpenComputers
+    
+	@Override
+	public String getComponentName() {
+		return "ep_transfer_fluid";
+	}
+	
+	@Callback(direct = true, limit = 1)
+	public Object[] getFluid(Context context, Arguments args) {
+		final HashMap<String, Object> map = new HashMap<String, Object>();
+		FluidTankInfo value = tank.getInfo();
+		
+		// Code taken from OpenComponents by Sangar
+		// https://github.com/MightyPirates/OpenComponents
+        map.put("capacity", value.capacity);
+        if (value.fluid != null) {
+            map.put("amount", value.fluid.amount);
+            map.put("id", value.fluid.fluidID);
+            final Fluid fluid = value.fluid.getFluid();
+            if (fluid != null) {
+                map.put("name", fluid.getName());
+                map.put("label", fluid.getLocalizedName());
+            }
+        } else {
+            map.put("amount", 0);
+        }
+		return new Object[]{ map };
+	}
+	
+	@Callback(direct = true)
+	public Object[] isSending(Context context, Arguments args) {
+		return new Object[]{isSending};
+	}
 }

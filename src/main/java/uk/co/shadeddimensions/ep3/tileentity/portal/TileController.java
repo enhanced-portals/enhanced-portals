@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,6 +35,7 @@ import uk.co.shadeddimensions.ep3.portal.PortalException;
 import uk.co.shadeddimensions.ep3.portal.PortalUtilsNew;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
+import uk.co.shadeddimensions.ep3.util.ComputerUtils;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
@@ -44,7 +49,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TileController extends TileFrame implements IPeripheral
+public class TileController extends TileFrame implements IPeripheral, SimpleComponent
 {
     enum ControlState
     {
@@ -1448,47 +1453,8 @@ public class TileController extends TileFrame implements IPeripheral
                 String s = arguments[0].toString();
                 s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
 
-                if (s.length() == 0)
-                {
-                    throw new Exception("Glyph ID is not formatted correctly");
-                }
-                
-                try
-                {
-                    if (s.contains(GlyphIdentifier.GLYPH_SEPERATOR))
-                    {
-                        String[] nums = s.split(GlyphIdentifier.GLYPH_SEPERATOR);
-
-                        if (nums.length > 9)
-                        {
-                            throw new Exception("Glyph ID is too long. Must be a maximum of 9 IDs");
-                        }
-
-                        for (String num : nums)
-                        {
-
-                            int n = Integer.parseInt(num);
-
-                            if (n < 0 || n > 27)
-                            {
-                                throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        int n = Integer.parseInt(s);
-
-                        if (n < 0 || n > 27)
-                        {
-                            throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
-                        }
-                    }
-                }
-                catch (NumberFormatException ex)
-                {
-                    throw new Exception("Glyph ID is not formatted correctly");
-                }
+                String error = ComputerUtils.verifyGlyphArguments(s);
+                if(error != null) throw new Exception(error);
 
                 setIdentifierUnique(new GlyphIdentifier(s));
             }
@@ -1593,5 +1559,57 @@ public class TileController extends TileFrame implements IPeripheral
     public boolean isPublic()
     {
         return isPublic;
+    }
+
+    // OpenComputers
+    
+	@Override
+	public String getComponentName() {
+		return "ep_controller";
+	}
+	
+	@Callback(direct = true)
+	public Object[] isPortalActive(Context context, Arguments args) {
+		return new Object[] { isPortalActive() };
+	}
+	
+	@Callback(direct = true)
+	public Object[] getUniqueIdentifier(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 1, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback
+	public Object[] setUniqueIdentifier(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback(direct = true)
+	public Object[] getFrameColour(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback
+	public Object[] setFrameColour(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback(direct = true)
+	public Object[] getPortalColour(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 5, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback
+	public Object[] setPortalColour(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 6, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback(direct = true)
+	public Object[] getParticleColour(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 7, ComputerUtils.argsToArray(args));
+    }
+	
+	@Callback
+	public Object[] setParticleColour(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 8, ComputerUtils.argsToArray(args));
     }
 }
