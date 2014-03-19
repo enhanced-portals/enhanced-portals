@@ -3,7 +3,12 @@ package uk.co.shadeddimensions.ep3.tileentity.portal;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -18,7 +23,7 @@ import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral
+public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral, SimpleComponent
 {
     ItemStack stack;
 
@@ -265,6 +270,8 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
             }
         }
     }
+    
+    // ComputerCraft
 
     @Override
     public String getType()
@@ -318,4 +325,30 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     {
 
     }
+    
+    // OpenComputers
+
+	@Override
+	public String getComponentName() {
+		return "ep_transfer_item";
+	}
+	
+	@Callback(direct = true)
+	public Object[] getStack(Context context, Arguments args) {
+		HashMap<String, Object> hstack = new HashMap<String, Object>();
+		hstack.put("id", stack.itemID);
+		hstack.put("meta", stack.getItemDamage());
+		hstack.put("amount", stack.stackSize);
+		return new Object[]{hstack};
+	}
+	
+	@Callback(direct = true)
+	public Object[] hasStack(Context context, Arguments args) {
+		return new Object[]{stack != null};
+	}
+	
+	@Callback(direct = true)
+	public Object[] isSending(Context context, Arguments args) {
+		return new Object[]{isSending};
+	}
 }

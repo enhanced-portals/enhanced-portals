@@ -5,6 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,12 +18,14 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
+import uk.co.shadeddimensions.ep3.util.ComputerUtils;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
-public class TileDiallingDevice extends TileFrame implements IPeripheral
+public class TileDiallingDevice extends TileFrame implements IPeripheral, SimpleComponent
 {
     public class GlyphElement
     {
@@ -231,47 +237,8 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral
                 String s = arguments[0].toString();
                 s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
 
-                if (s.length() == 0)
-                {
-                    throw new Exception("Glyph ID is not formatted correctly");
-                }
-                
-                try
-                {
-                    if (s.contains(GlyphIdentifier.GLYPH_SEPERATOR))
-                    {
-                        String[] nums = s.split(GlyphIdentifier.GLYPH_SEPERATOR);
-
-                        if (nums.length > 9)
-                        {
-                            throw new Exception("Glyph ID is too long. Must be a maximum of 9 IDs");
-                        }
-
-                        for (String num : nums)
-                        {
-
-                            int n = Integer.parseInt(num);
-
-                            if (n < 0 || n > 27)
-                            {
-                                throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        int n = Integer.parseInt(s);
-
-                        if (n < 0 || n > 27)
-                        {
-                            throw new Exception("Glyph ID must be between 0 and 27 (inclusive)");
-                        }
-                    }
-                }
-                catch (NumberFormatException ex)
-                {
-                    throw new Exception("Glyph ID is not formatted correctly");
-                }
+                String error = ComputerUtils.verifyGlyphArguments(s);
+                if(error != null) throw new Exception(error);
 
                 getPortalController().connectionDial(new GlyphIdentifier(s), null, null);
             }
@@ -387,4 +354,43 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral
     {
         
     }
+
+    // OpenComputers
+    
+	@Override
+	public String getComponentName() {
+		return "ep_dialing_device";
+	}
+	
+	@Callback
+	public Object[] dial(Context context, Arguments args) throws Exception {
+		if(args.count() < 1) return null;
+		return callMethod(null, null, 0, ComputerUtils.argsToArray(args));
+	}
+	
+	@Callback
+	public Object[] terminate(Context context, Arguments args) {
+		getPortalController().connectionTerminate();
+		return new Object[]{true};
+	}
+
+	@Callback
+	public Object[] dialStored(Context context, Arguments args) throws Exception {
+		return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
+	}
+	
+	@Callback(direct = true)
+	public Object[] getStoredName(Context context, Arguments args) throws Exception {
+		return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
+	}
+	
+	@Callback(direct = true)
+	public Object[] getStoredGlyph(Context context, Arguments args) throws Exception {
+		return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
+	}
+	
+	@Callback(direct = true)
+	public Object[] getStoredCount(Context context, Arguments args) {
+		return new Object[] { glyphList.size() };
+	}
 }

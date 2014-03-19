@@ -1,0 +1,326 @@
+# Blocks
+tile.frame.frame.name=Ramka Portalu
+tile.frame.controller.name=Kontroler Portalu
+tile.frame.redstone.name=Interfejs Redstone
+tile.frame.networkInterface.name=Interfejs Sieci
+tile.frame.dialDevice.name=Urządzenie Wybierające
+tile.frame.biometric.name=Identyfikator Biometryczny
+tile.frame.upgrade.name=Modyfikator Modułów
+tile.frame.fluid.name=Moduł Transportu Cieczy
+tile.frame.item.name=Moduł Transportu Przedmiotów
+tile.frame.energy.name=Moduł Transportu Energii
+tile.portal.name=Portal
+tile.stabilizer.name=Stabilizator Bramy Międzywymiarowej
+tile.decoration.frame.name=Obramowany Kwarc
+tile.decoration.stabilizer.name=Stabilizator
+tile.crafting.name=
+
+# Block Misc
+ep3.block.portalFramePart=Portal Frame Part
+ep3.block.multiblockStructure=Multiblock Structure
+ep3.block.dbsSize=2x3x2 to 2x3x256
+ep3.block.eachRowAddsToTheMaximum=Each row adds to the maximum
+ep3.block.activePortalConnections=active portal connections
+ep3.block.decorativeBlock=Decorative Block
+
+# Items
+item.wrench.name=Wrench
+item.nanobrush.name=Nanobrush
+item.glasses.name=Glasses
+item.locationCard.name=Location Card
+item.synchronizer.name=Synchronizer
+item.entityCard.name=Identification Card
+item.scanner.name=Handheld Scanner
+item.miscItems.blankPortalModule.name=Blank Portal Module
+item.miscItems.blankUpgrade.name=Blank Upgrade
+item.guide.name=EnhancedPortals Manual
+
+# Items Misc
+ep3.item.charge=Charge:
+ep3.item.scanned=Scanned:
+ep3.item.contains=Contains:
+ep3.item.andMore=And %s more...
+
+# In-place upgrades
+item.upgrade.redstone.name=Redstone Interface Upgrade
+item.upgrade.networkInterface.name=Network Interface Upgrade
+item.upgrade.dialDevice.name=Dialling Device Upgrade
+item.upgrade.biometric.name=Biometric Identifier Upgrade
+item.upgrade.upgrade.name=Module Manipulator Upgrade
+item.upgrade.fluid.name=Fluid Transportation Upgrade
+item.upgrade.item.name=Item Transportation Upgrade
+item.upgrade.energy.name=Energy Transportation Upgrade
+
+# Upgrades
+item.portalModule.0.name=Particle Destroyer
+item.portalModule.0.desc=Stops particles from getting created
+item.portalModule.1.name=Rainbow Particles
+item.portalModule.1.desc=Every particle will have a random colour
+item.portalModule.2.name=Portal Silencer
+item.portalModule.2.desc=Silences the portal
+item.portalModule.3.name=Momentum
+item.portalModule.3.desc=Entities keep their momentum
+item.portalModule.4.name=Portal Cloaking
+item.portalModule.4.desc=Makes the portal completely invisible
+item.portalModule.5.name=Particle Shader
+item.portalModule.5.desc=Particles randomly spawn lighter or darker
+item.portalModule.6.name=Ethereal Frame [Deprecated]
+item.portalModule.6.desc=I no longer do anything.
+item.portalModule.7.name=Featherfall
+item.portalModule.7.desc=Negates fall damage
+
+# Creative Tab
+itemGroup.EnhancedPortals3=EnhancedPortals 3
+
+# GUI Handheld Scanner
+ep3.gui.scanner=Handheld Scanner
+
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=Dimensional Bridge Stabilizer
+ep3.gui.information=Information
+ep3.gui.activePortals=Active Portals
+ep3.gui.redstoneFluxPerSecond=RF/s
+ep3.gui.redstoneFluxShort=RF
+ep3.gui.instability=Instability
+ep3.gui.powerModeFree=Mode: Free
+ep3.gui.powerModeNormal=Mode: Normal
+ep3.gui.powerModeRisky=Mode: Risky
+ep3.gui.powerModeUnstable=Mode: Unstable
+ep3.gui.powerModeUnpredictable=Mode: Unpredictable
+
+# GUI Portal Controller
+ep3.gui.portalController=Portal Controller
+ep3.gui.uniqueIdentifier=Unique Identifier
+ep3.gui.portalComponents=Portal Components
+
+# GUI Dialler
+ep3.gui.dialDevice=Dialling Device
+ep3.gui.storedIdentifiers=Stored Identifiers
+ep3.gui.terminate=Terminate
+ep3.gui.dial=Dial
+ep3.gui.identifierCannotBeBlank=Identifier cannot be blank
+ep3.gui.noEntriesFound=No entries found
+ep3.gui.name=Name
+ep3.gui.identifierName=Identifier Name
+
+# GUI Texture
+ep3.gui.customIcon=Custom Icon
+ep3.gui.facade=Facade
+ep3.gui.frame=Frame
+ep3.gui.portal=Portal
+ep3.gui.particle=Particles
+ep3.gui.colour=Colour
+ep3.gui.red=Red
+ep3.gui.green=Green
+ep3.gui.blue=Blue
+ep3.gui.noCustomIconsFound=No custom Icons found
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=Module Manipulator
+ep3.gui.modules=Portal Modules
+
+# GUI Network Interface
+ep3.gui.networkInterface=Network Interface
+ep3.gui.networkIdentifier=Network Identifier
+ep3.gui.networkInformation=Network Information
+ep3.gui.networkedPortals=Networked Portals
+ep3.gui.notSet=Not Set
+
+# GUI Biometric Identifier
+ep3.gui.biometricIdentifier=Biometric Identifier
+ep3.gui.sending=Sending
+ep3.gui.receiving=Receiving
+ep3.gui.allow=Allow
+ep3.gui.allowing=Allowing
+ep3.gui.disallow=Disallow
+ep3.gui.disallowing=Disallowing
+ep3.gui.idCard=ID Card
+ep3.gui.active=Active
+ep3.gui.inactive=Inactive
+ep3.gui.anythingCalled=Anything called:
+ep3.gui.matchName=Match name
+ep3.gui.anythingOfTheType=Anything of the type:
+ep3.gui.matchType=Match type
+ep3.gui.withTheTypeOf=With the type of:
+ep3.gui.matchTypeAndName=Match name and type
+ep3.gui.anythingNotOnList=Anything that's not on the list
+
+# GUI Redstone
+ep3.gui.redstoneInterface=Redstone Interface
+
+ep3.gui.input=Input
+ep3.gui.createPortalOnSignal=Create portal on signal
+ep3.gui.removePortalOnSignal=Remove portal on signal
+ep3.gui.createPortalOnPulse=Create portal on pulse
+ep3.gui.removePortalOnPulse=Remove portal on pulse
+ep3.gui.dialStoredIdentifier=Dial specific identifier
+ep3.gui.dialRandomIdentifier=Dial random identifier
+ep3.gui.dialStoredIdentifier2=Dial specific identifier (2)
+ep3.gui.dialRandomIdentifier2=Dial random identifier (2)
+
+ep3.gui.output=Output
+ep3.gui.portalCreated=Portal Created
+ep3.gui.portalRemoved=Portal Removed
+ep3.gui.portalActive=Portal Active
+ep3.gui.portalInactive=Portal Inactive
+ep3.gui.entityTeleport=Entity Touch Portal
+ep3.gui.playerTeleport=Player Touch Portal
+ep3.gui.animalTeleport=Animal Touch Portal
+ep3.gui.monsterTeleport=Monster Touch Portal
+
+# GUI General
+ep3.gui.initialized=Initialized
+ep3.gui.glyphs=Glyphs
+ep3.gui.cancel=Cancel
+ep3.gui.save=Save
+ep3.gui.reset=Reset
+ep3.gui.clear=Clear
+ep3.gui.random=Random
+ep3.gui.add=Add
+ep3.gui.accept=Accept
+ep3.gui.clickToModify=Click to modify
+ep3.gui.uidInUse=That UID is already in use
+
+# Chat
+ep3.chat.multiplePortalControllers=Failed: You cannot have multiple Portal Controllers
+ep3.chat.multipleNetworkInterfaces=Failed: You cannot have multiple Network Interfaces
+ep3.chat.multipleDiallingDevices=Failed: You cannot have multiple Dialling Devices
+ep3.chat.multipleBiometricIdentifiers=Failed: You cannot have multiple Biometric Identifiers
+ep3.chat.multipleModuleManipulators=Failed: You cannot have multiple Module Manipulators
+ep3.chat.dialDeviceAndNetworkInterface=Failed: You cannot have a Dialling Device and a Network Interface
+ep3.chat.voidLinkCard=This card no longer links to a valid Dimensional Bridge Stabilizer
+ep3.chat.portalCouldNotBeCreatedHere=Failed: A portal could not be created at this location.
+ep3.chat.success=The portal was initialized successfully
+ep3.chat.reconfigureSuccess=The portal was successfully reconfigured
+ep3.chat.noUidSet=You must set a Unique Identifier before doing this
+
+# Errors
+ep3.error.prefix=[Error] 
+ep3.error.receivingPortalNotInitialized=The receiving portal has not been initialized
+ep3.error.sendingPortalNotInitialized=The sending portal has not been initialized
+ep3.error.stabilizerNotFound=The DBS could not be found. Insert a new valid Location Card to continue
+ep3.error.receivingPortalNoDialler=You cannot dial a portal that does not have a Dialling Device
+ep3.error.sendingPortalNoDialler=You cannot dial from a portal that does not have a Dialling Device
+ep3.error.uniqueIdentifierNotSet=You cannot dial without setting a unique identifier
+ep3.error.networkIdentifierNotSet=You cannot dial without setting a network identifier
+ep3.error.dialDeviceNotFound=You cannot dial without a Dialling Device
+ep3.error.diallingPortalAlreadyActive=You cannot dial from a portal that already has an active connection
+ep3.error.receivingPortalAlreadyActive=You cannot dial to a portal that is already active
+ep3.error.notEnoughPowerToStart=There is not enough power in the DBS to create a connection
+ep3.error.maxedConnectionLimit=The DBS has too many active connections
+ep3.error.cannotDialDiallingPortal=You cannot dial the same portal you're dialling from
+ep3.error.diallingPortalNotFound=Failed to locate the portal that you are dialling from
+ep3.error.receivingPortalNotFound=Failed to locate the receiving portal
+ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
+ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
+ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
+ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
+ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
+ep3.error.failedToTransfer=The receiving portal is too small
+
+# Success
+ep3.success.prefix=[Success] 
+ep3.success.create=Portal initialized
+ep3.success.reconfigure=Portal reconfigured
+
+# Particle Types
+ep3.gui.particleType.0.name=Random
+ep3.gui.particleType.0.info=Gets a random frame from its sequence
+ep3.gui.particleType.1.name=Sequential
+ep3.gui.particleType.1.info=Plays through its sequence, then dies
+ep3.gui.particleType.2.name=Static
+ep3.gui.particleType.2.info=Does not change at all
+ep3.gui.particleType.3.name=Loop
+ep3.gui.particleType.3.info=Continuously loops through its sequence
+
+# Config
+ep3.config.alternateGlyph.false=Glyphs: Normal
+ep3.config.alternateGlyph.true=Glyphs: Alternate
+ep3.config.sounds.false=Sounds: NO
+ep3.config.sounds.true=Sounds: YES
+ep3.config.portalsDestroy.false=Destroy Blocks: NO
+ep3.config.portalsDestroy.true=Destroy Blocks: YES
+ep3.config.showOverlays.false=Force Overlays: NO
+ep3.config.showOverlays.true=Force Overlays: YES
+ep3.config.particles.false=Particles: NO
+ep3.config.particles.true=Particles: YES
+ep3.config.requirePower.false=Require Power: NO
+ep3.config.requirePower.true=Require Power: YES
+ep3.config.multiplier=Multiplier: 
+ep3.config.fastCooldown.false=Fast Cooldown: NO
+ep3.config.fastCooldown.true=Fast Cooldown: YES
+ep3.config.general=General
+ep3.config.portal=Portal
+ep3.config.power=Power
+ep3.config.teleportation=Teleportation
+
+ep3.gui.public=Public
+ep3.gui.private=Private
+
+# Guide
+ep3.gui.mainMain=Welcome!
+ep3.gui.mainMain.information=This manual is split up into sections, you will find the categories on the left. When you have selected a category, its contents will show up in new tabs on the right.<N><N>Last Update: Beta 4.
+
+ep3.gui.mainBlocks=Blocks
+ep3.gui.mainBlocks.information=Use the tabs to the right to see information about a specific block.
+
+ep3.gui.mainItems=Items
+ep3.gui.mainItems.information=Use the tabs to the right to see information about a specific item.
+
+ep3.gui.information=Information
+ep3.gui.crafting=Crafting
+
+ep3.gui.blockFrame=Portal Frame
+ep3.gui.blockFrame.information=Portal Frames are used to contain the minor instabilities of the portal to allow portals to function correctly. Without them, the portal cannot take shape. <N><N>The Portal Frames must completely contain the portal on four opposite sides. You can arrange portals in many different shapes and sizes, varying from the standard vertical portal, to horizontal portals or even diagonally.<N><N>Portal Frames are also used as a base for the special frame blocks, many of them have GUIs you can open by activating them with a wrench. If you activate the basic Portal Frame with a wrench, it will open up the connected Portal Controller's GUI.
+
+ep3.gui.blockController=Portal Controller
+ep3.gui.blockController.information=Portal Controllers are the main block in the portal structure, its in control of most of the functions of each portal, and as such, you can only have one per portal structure.<N><N>You can destroy/replace any of the other frame blocks, but as long as you do not replace the Portal Controller, it will retain all of its customizations.<N><N>If you interrupt the portal structure by removing a block, or placing a new frame block next to a formed structure, you can reform the portal structure by activating the Portal Controller with a wrench. You can also update its connected Dimensional Bridge Stabilizer by activating it with another Location Card.
+
+ep3.gui.blockRedstoneInterface=Redstone Interface
+ep3.gui.blockRedstoneInterface.information=Redstone Interfaces are the only blocks that will directly interact with Redstone signals, with the exception of the Biometric Identifier.<N><N>There are two different modes, Input and Output. On Input the Redstone Interface is programmed to receive Redstone signals and complete the specified task. All of these tasks involve interacting with portal connections, you can set it to create/remove portals, or dial specific Unique Identifiers.<N><N>The other mode is Output, where the Redstone Interface will emit Redstone signals based on the Portal state, or whether or not an entity is touching it.
+
+ep3.gui.blockNetworkInterface=Network Interface
+ep3.gui.blockNetworkInterface.information=The Network Interface is the most basic form of networking multiple portals together. Simply set a Unique ID for the portal, then activate this block with a wrench to set a Network ID. Any portals with the same Network ID will be connected to each other, entering an active portal will take you to the next portal in the sequence.<N><N>A Network Interface is not the only thing required to actually create the portal, you will also need a Redstone Interface connected to create/terminate the connection.<N><N>You can only have one of these in a Portal structure as long as it does not already contain a Dialling Device.
+
+ep3.gui.blockDiallingDevice=Dialling Device
+ep3.gui.blockDiallingDevice.information=Dialling Devices are an upgrade to the Network Interface, they allow you to dial directly to a specific portal without the requirement of setting up a network. In addition, you do not need a Redstone Interface connected to dial, and you can even dial to portals that do not have a Dialling Device or Network Interface. You cannot dial to portals that have Network Interfaces.<N><N>Unlike other special Portal Frame parts, you do not need the Glasses equipped to see its icon, you also do not need to use a wrench to open its GUI.<N><N>You can only have one of these in a Portal structure as long as it already does not contain a Network Interface.
+
+ep3.gui.blockBiometric=Biometric Identifier
+ep3.gui.blockBiometric.information=Biometric Interfaces are effectively filters. You can filter specific players or entities to be allowed or disallowed through this portal.<N><N>You will need to put an Identification Card into the bottom left slot to add its stored entries to the list. From there, clicking on the name of the entry will toggle it between allowed/disallowed, and the GUI is self explanatory.<N><N>Elements lower on the list will overwrite those that come before it, meaning if you have 'Animals' disallowed at the top, and 'Pig' enabled below that, pigs are allowed. Swap them around and all animals aren't allowed, even pigs.<N><N>You can only have one of these in a Portal structure.
+
+ep3.gui.blockModule=Module Manipulator
+ep3.gui.blockModule.information=Module Manipulators store all the Portal Modules. Simply open the GUI with a wrench and put the modules inside.<N><N>You can only have one of these in a portal structure.
+
+ep3.gui.blockDBS=DBS
+ep3.gui.blockDbs=Dimensional Bridge Stabilizer
+ep3.gui.blockDbs.information=The Dimensional Bridge Stabilizer is responsible for creating and maintaining a wormhole between two points in space, allowing for instantaneous transportation.<N><N>You must place the component blocks in a 3x2x2 or 3x3x2 block, and then use a wrench on it to form the structure. You can also make the structure taller to gain additional simultaneous connections, and increase its Redstone Flux power capacity.<N><N>For every row you give it, you will gain an extra 15,000 RF and one more connection (two portals). However, if you made it 3x3 you will gain an extra 22,500 RF capacity per row.<N><N>The Dimensional Bridge Stabilizer requires a lot of power, and will request 10,000 RF every second (500RF per tick). If it cannot get that amount of power from its storage, it will attempt to try to preserve the connection for as long as possible, though this will make the portal increasingly unstable to the point where the Dimensional Bridge Stabilizer is forced to terminate the connection, before any damage occurs.
+
+ep3.gui.blockDecoration=Decorative Blocks
+ep3.gui.blockDecoration.information=The two decorative blocks available use the same texture as the Portal Frames and Dimensional Bridge Stabilizers.<N><N>They are exactly the same although they do not have Tile Entities and will not connect to their real counterparts.
+
+ep3.gui.itemGlasses=Glasses
+ep3.gui.itemGlasses.information=While wearing the glasses, you will be able to see things you wouldn't usually be able to see. The differences between the special frame blocks will become a lot more obvious and easier to differentiate. They also have the same durability and strength as a leather helmet.
+
+ep3.gui.itemWrench=Wrench
+ep3.gui.itemWrench.information=The wrench is the tool to open up every GUI in with the exception of the Dimensional Bridge Stabilizer and Dialling Device.<N><N>You can dismantle all portal frame blocks by sneak-right clicking on them. This removes the block instantly, and drops it on the ground.<N><N>This wrench is compatible with Buildcraft, and any Buildcraft-compatible wrench will work in place of this one.
+
+ep3.gui.itemNanobrush=Nanobrush
+ep3.gui.itemNanobrush.information=The Nanobrush is used to change the colour and texture of the particles, portal frame and portals.<N><N>There are a few shortcuts when selecting textures, you can right click on the Portal Frame to open the GUI at the Portal Frame texture screen. Right clicking on the portal will open it at the portal texture screen. Sneak right clicking on the portal will open it on the particles screen.
+
+ep3.gui.itemLocationCard=Location Card
+ep3.gui.itemLocationCard.information=The Location card must first be placed inside the slot of a formed Dimensional Bridge Stabilizer. Once the Dimensional Bridge Stabilizer has set its location information into the card, you can then take the card and use it on a Portal Controller to link it to the DBS.
+
+ep3.gui.itemSynchronizer=Synchronizer
+ep3.gui.itemSynchronizer.information=The Synchronizer will allow you to duplicate the Dialling Device data to other Dialling Devices through an active portal connection.<N><N>Simply create a connection between two portals using a Dialling Device, then providing the receiving portal has a Dialling Device, you can right click on the Dialling Device and it will copy its data to the receiving portal's dialling device.
+
+ep3.gui.itemIdCard=Identification Card
+ep3.gui.itemIdCard.information=Identification Cards store information about entities for storing them into a Biometric Identifier.<N><N>They must be inserted into a Handheld Scanner to get data written onto them, then they must be put into the left slot in the Biometric Identifier to add them to the list.
+
+ep3.gui.itemScanner=Handheld Scanner
+ep3.gui.itemScanner.information=The Handheld Scanner writes entity data onto Identification Cards. Unwritten Identification Cards go into the slot on the left, and written ones come out on the right.<N><N>The Handheld Scanner requires Redstone Flux power, and will drain 50RF per write operation, regardless of the amount of data it writes to the card. It writes the data to the card when you open up the GUI, to have multiple entities on the same card, don't open the GUI until you're done scanning.<N><N>You can scan entities by left clicking on them and you can scan yourself by sneak right clicking.
+
+ep3.gui.itemPortalModules=Portal Modules
+ep3.gui.itemPortalModules.information=Portal Modules are upgrades that directly affect the Portal or Portal Frame. They must be inserted into a Module Manipulator to function.
+
+ep3.gui.itemUpgrades=Upgrades
+ep3.gui.itemUpgrades.information=Upgrades allow you to change the basic Portal Frames into the special variants without replacing the block. In addition, it will not disrupt the portal, so you can apply it while the portal is active without reforming the portal structure.<N><N>The crafting recipes are exactly the same, swapping out the Portal Frame for a Blank Upgrade.
