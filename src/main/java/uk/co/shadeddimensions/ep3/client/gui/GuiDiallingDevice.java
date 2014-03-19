@@ -178,7 +178,7 @@ public class GuiDiallingDevice extends GuiBase
         {
             ClientProxy.editingDialEntry = num;
             PacketDispatcher.sendPacketToServer(new PacketTextureData(num, dial.xCoord, dial.yCoord, dial.zCoord).getPacket());
-            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.TEXTURE_DIALLER);
+            //GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.TEXTURE_DIALLER);
         }
         else if (buttonName.startsWith("R"))
         {
