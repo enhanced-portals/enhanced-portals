@@ -1,34 +1,39 @@
 # Blocks
-tile.ep3.portalFrame.frame.name=传送门框架
-tile.ep3.portalFrame.controller.name=传送门控制器
-tile.ep3.portalFrame.redstone.name=红石接口
-tile.ep3.portalFrame.networkInterface.name=网络接口
-tile.ep3.portalFrame.dialDevice.name=拨号设备
-tile.ep3.portalFrame.biometric.name=生物辨识器
-tile.ep3.portalFrame.upgrade.name=模块操作器
-tile.ep3.portal.name=传送门
-tile.ep3.stabilizer.name=位面之桥稳定器(DBS)
-tile.ep3.decoration.frame.name=镶边石英
-tile.ep3.decoration.stabilizer.name=稳定器
+tile.frame.frame.name=传送门框架
+tile.frame.controller.name=传送门控制器
+tile.frame.redstone.name=红石接口
+tile.frame.networkInterface.name=网络接口
+tile.frame.dialDevice.name=拨号设备
+tile.frame.biometric.name=生物辨识器
+tile.frame.upgrade.name=模块操作器
+tile.frame.fluid.name=液体传输模块
+tile.frame.item.name=物品传输模块
+tile.frame.energy.name=能量传输模块
+tile.portal.name=传送门
+tile.stabilizer.name=位面之桥稳定器(DBS)
+tile.decoration.frame.name=镶边石英
+tile.decoration.stabilizer.name=稳定器
+tile.crafting.name=位面之桥稳定器 (空)
 
 # Block Misc
 ep3.block.portalFramePart=传送门框架部分
 ep3.block.multiblockStructure=多方块结构
-ep3.block.dbsSize=2x3x2 ~ 2x3x256
+ep3.block.dbsSize=2x3x2 to 2x3x256
 ep3.block.eachRowAddsToTheMaximum=每行增加到最大数量
 ep3.block.activePortalConnections=激活传送门连接
 ep3.block.decorativeBlock=装饰方块
-item.ep3.synchronizer.name=同步器
-item.ep3.entityCard.name=ID卡
-item.ep3.handheldScanner.name=手持扫描仪
-item.ep3.miscItems.blankPortalModule.name=空白传送门模块
-item.ep3.miscItems.blankUpgrade.name=空白升级
 
 # Items
-item.ep3.wrench.name=扳手
-item.ep3.paintbrush.name=纳米刷子
-item.ep3.goggles.name=护目镜
-item.ep3.locationCard.name=位面之桥稳定器(DBS)定位卡片
+item.wrench.name=扳手
+item.nanobrush.name=纳米刷子
+item.glasses.name=护目镜
+item.locationCard.name=定位卡片
+item.synchronizer.name=同步器
+item.entityCard.name=ID卡
+item.scanner.name=手持扫描仪
+item.miscItems.blankPortalModule.name=空白传送门模块
+item.miscItems.blankUpgrade.name=空白升级
+item.guide.name=增强传送门手册
 
 # Items Misc
 ep3.item.charge=充能:
@@ -37,37 +42,38 @@ ep3.item.contains=包含:
 ep3.item.andMore=及更多%s...
 
 # In-place upgrades
-item.ep3.inPlaceUpgrade.redstone.name=红石接口升级
-item.ep3.inPlaceUpgrade.networkInterface.name=网络接口升级
-item.ep3.inPlaceUpgrade.dialDevice.name=拨号设备升级
-item.ep3.inPlaceUpgrade.biometric.name=生物辨识器升级
-item.ep3.inPlaceUpgrade.upgrade.name=模块操作器升级
+item.upgrade.redstone.name=红石接口升级
+item.upgrade.networkInterface.name=网络接口升级
+item.upgrade.dialDevice.name=拨号设备升级
+item.upgrade.biometric.name=生物辨识器升级
+item.upgrade.upgrade.name=模块操作器升级
+item.upgrade.fluid.name=液体传输升级
+item.upgrade.item.name=物品传输升级
+item.upgrade.energy.name=能量传输升级
 
 # Upgrades
-item.ep3.portalModule.0.name=粒子湮灭模块
-item.ep3.portalModule.0.desc=使传送门不再散发出粒子
-item.ep3.portalModule.1.name=彩虹粒子模块
-item.ep3.portalModule.1.desc=每个粒子都会有随机颜色
-item.ep3.portalModule.2.name=传送门静音模块
-item.ep3.portalModule.2.desc=消除传送门音效
-item.ep3.portalModule.3.name=动量模块
-item.ep3.portalModule.3.desc=实体经过传送门保持原有动量
-item.ep3.portalModule.4.name=传送门隐匿模块
-item.ep3.portalModule.4.desc=使得传送门完全隐形
-item.ep3.portalModule.5.name=粒子阴影模块
-item.ep3.portalModule.5.desc=散发的粒子忽明忽暗的粒子忽明忽暗
-item.ep3.portalModule.6.name=天域框架模块
-item.ep3.portalModule.6.desc=使得传送门框架透明
-item.ep3.portalModule.6.desc2=且允许你穿过框架
-item.ep3.portalModule.6.desc3=发光但不照亮周围
-item.ep3.portalModule.7.name=羽落模块
-item.ep3.portalModule.7.desc=消除掉落伤害
+item.portalModule.0.name=粒子湮灭模块
+item.portalModule.0.desc=使传送门不再散发出粒子
+item.portalModule.1.name=彩虹粒子模块
+item.portalModule.1.desc=每个粒子都会有随机颜色
+item.portalModule.2.name=传送门静音模块
+item.portalModule.2.desc=消除传送门音效
+item.portalModule.3.name=动量模块
+item.portalModule.3.desc=实体经过传送门保持原有动量
+item.portalModule.4.name=传送门隐匿模块
+item.portalModule.4.desc=使得传送门完全隐形
+item.portalModule.5.name=粒子阴影模块
+item.portalModule.5.desc=散发的粒子忽明忽暗
+item.portalModule.6.name=虚空框架 [过时]
+item.portalModule.6.desc=我不再做任何事。
+item.portalModule.7.name=羽落模块
+item.portalModule.7.desc=消除掉落伤害
 
 # Creative Tab
-itemGroup.EnhancedPortals3=强化传送门3
+itemGroup.EnhancedPortals3=增强传送门3
 
 # GUI Handheld Scanner
-ep3.gui.scanner=手持扫描仪
+ep3.gui.scanner=手持扫描器
 
 # GUI DBS
 ep3.gui.dimensionalBridgeStabilizer=位面之桥稳定器(DBS)
@@ -92,7 +98,7 @@ ep3.gui.dialDevice=拨号设备
 ep3.gui.storedIdentifiers=已存储标识符
 ep3.gui.terminate=终止
 ep3.gui.dial=拨号
-ep3.gui.identifierCannotBeBlank=标识符不能留空
+ep3.gui.identifierCannotBeBlank=标识符不能为空
 ep3.gui.noEntriesFound=未发现可连接项目
 ep3.gui.name=名称
 ep3.gui.identifierName=标识符名称
@@ -117,19 +123,17 @@ ep3.gui.modules=传送门模块
 ep3.gui.networkInterface=网络接口
 ep3.gui.networkIdentifier=网络标识符
 ep3.gui.networkInformation=网络信息
-ep3.gui.networkedPortals=已联网传送门
+ep3.gui.networkedPortals=已联网的传送门
 ep3.gui.notSet=未设置
 
 # GUI Biometric Identifier
 ep3.gui.biometricIdentifier=生物辨识器
 ep3.gui.sending=发送中…
-ep3.gui.recieving=接收中…
+ep3.gui.receiving=接收中…
 ep3.gui.allow=允许
 ep3.gui.allowing=允许中…
 ep3.gui.disallow=禁止
 ep3.gui.disallowing=禁止中…
-ep3.gui.activate=激活
-ep3.gui.deactivate=注销
 ep3.gui.idCard=ID卡
 ep3.gui.active=激活
 ep3.gui.inactive=注销
@@ -139,7 +143,7 @@ ep3.gui.anythingOfTheType=任意如下类型的物品:
 ep3.gui.matchType=匹配类型
 ep3.gui.withTheTypeOf=符合如下类型的物品:
 ep3.gui.matchTypeAndName=匹配名称与类型
-ep3.gui.listNotEnabled=该列表已被禁止
+ep3.gui.anythingNotOnList=任何未在列表上的物品
 
 # GUI Redstone
 ep3.gui.redstoneInterface=红石接口
@@ -165,16 +169,17 @@ ep3.gui.animalTeleport=动物触发传送门
 ep3.gui.monsterTeleport=怪物触发传送门
 
 # GUI General
-ep3.gui.initialized=已初始化
+ep3.gui.initialized=初始化
 ep3.gui.glyphs=铭文
 ep3.gui.cancel=取消
 ep3.gui.save=保存
 ep3.gui.reset=重置
-ep3.gui.clear=清除
+ep3.gui.clear=清楚
 ep3.gui.random=随机
 ep3.gui.add=添加
 ep3.gui.accept=接受
 ep3.gui.clickToModify=点击以修改
+ep3.gui.uidInUse=这个UID已被使用
 
 # Chat
 ep3.chat.multiplePortalControllers=创建传送门失败: 不能同时包含多个传送门控制器
@@ -188,3 +193,142 @@ ep3.chat.portalCouldNotBeCreatedHere=创建传送门失败:当前位置不能创
 ep3.chat.success=成功初始化传送门
 ep3.chat.reconfigureSuccess=传送门已成功重载配置.
 ep3.chat.noUidSet=你必须先设置一个唯一标识符才能继续操作
+
+# Errors
+ep3.error.prefix=[错误] 
+ep3.error.receivingPortalNotInitialized=接收中的传送门尚未初始化
+ep3.error.sendingPortalNotInitialized=发送中的传送门尚未初始化
+ep3.error.stabilizerNotFoundSend=发送中的传送门没有找到DBS
+ep3.error.stabilizerNotFoundReceive=接收中的传送门没有找到DBS
+ep3.error.receivingPortalNoDialler=你不能向没有拨号设备的传送门拨号
+ep3.error.sendingPortalNoDialler=你不能用没有拨号设备的传送门去拨号
+ep3.error.uniqueIdentifierNotSet=在未设置一个唯一标识符之前你无法拨号
+ep3.error.networkIdentifierNotSet=在未设置一个网络标识符之前你无法拨号
+ep3.error.dialDeviceNotFound=没有拨号设备，无法拨号
+ep3.error.diallingPortalAlreadyActive=你不能用一个已经开启的传送门去拨号
+ep3.error.receivingPortalAlreadyActive=你不能向一个已经开启的传送门拨号
+ep3.error.notEnoughPowerToStart=DBS没有足够的能量创建链接
+ep3.error.maxedConnectionLimit=DBS拥有太多激活的链接
+ep3.error.cannotDialDiallingPortal=你不能让这个传送门向自己拨号
+ep3.error.diallingPortalNotFound=你用来拨号的传送门无法定位
+ep3.error.receivingPortalNotFound=无法定位接收中的传送门
+ep3.error.notOnSameStabilizer=这些传送门没有链接到同一个DBS
+ep3.error.sendingPortalFailedToCreatePortal=发送中的传送门控制器创建传送门失败
+ep3.error.receivingPortalFailedToCreatePortal=接收中的传送门控制器创建传送门失败
+ep3.error.noPortalWithThatIdentifierReceiving=没有找到这个UID的出口传送门
+ep3.error.noPortalWithThatIdentifierSending=没有找到这个UID的发送中的传送门(那你怎么拨号的...? o_O)
+ep3.error.voidLinkCard=链接卡片不再链接到一个有效的DBS
+ep3.error.dialAndNetwork=你没有拨号设备和网络接口
+ep3.error.multipleBio=你没有多个生物辨识器
+ep3.error.multipleMod=你没有多个模块操作器
+ep3.error.couldNotCreatePortalHere=不能在这个位置创建传送门
+ep3.error.noUidSet=在设置一个唯一标识符前你不能这么做
+ep3.error.failedToTransfer=接收中的传送门太小
+ep3.error.couldNotCreatePortalHere=不能在这个位置创建传送门
+
+# Success
+ep3.success.prefix=[成功]
+ep3.success.create=传送门初始化
+ep3.success.reconfigure=传送门重载配置
+
+# Particle Types
+ep3.gui.particleType.0.name=随机
+ep3.gui.particleType.0.info=从队列中随机取得
+ep3.gui.particleType.1.name=顺序
+ep3.gui.particleType.1.info=按照队列顺序播放到结束
+ep3.gui.particleType.2.name=固定
+ep3.gui.particleType.2.info=完全不要改动
+ep3.gui.particleType.3.name=循环
+ep3.gui.particleType.3.info=播放完从头继续
+
+# Config
+ep3.config.alternateGlyph.false=雕文: 一般
+ep3.config.alternateGlyph.true=雕文: 选择
+ep3.config.sounds.false=声音: 无
+ep3.config.sounds.true=声音: 有
+ep3.config.portalsDestroy.false=摧毁方块: 不
+ep3.config.portalsDestroy.true=摧毁方块: 是
+ep3.config.showOverlays.false=强制覆盖: 不
+ep3.config.showOverlays.true=强制覆盖: 是
+ep3.config.particles.false=粒子: 无
+ep3.config.particles.true=粒子: 有
+ep3.config.requirePower.false=需要能量: 不
+ep3.config.requirePower.true=需要能量: 是
+ep3.config.multiplier=倍数: 
+ep3.config.fastCooldown.false=快速冷却: 不
+ep3.config.fastCooldown.true=快速冷却: 是
+ep3.config.general=常规
+ep3.config.portal=传送门
+ep3.config.power=能量
+ep3.config.teleportation=传送
+
+ep3.gui.public=公有
+ep3.gui.private=私有
+
+# Guide
+ep3.gui.mainMain=欢迎!
+ep3.gui.mainMain.information=你可以在左边看到这本手册的各个分类。你选择的分类内容会出现在右边的新标签中。<N><N>最后更新: Beta 4.
+
+ep3.gui.mainBlocks=方块
+ep3.gui.mainBlocks.information=点击右边的标签查看指定方块的信息.
+
+ep3.gui.mainItems=物品
+ep3.gui.mainItems.information=点击右边的标签查看指定物品的信息.
+
+ep3.gui.information=信息
+ep3.gui.crafting=合成
+
+ep3.gui.blockFrame=传送门框架
+ep3.gui.blockFrame.information=传送门框架用于遏制传送门的微小不稳定性，确保其正常运作。没有它们，传送门无法成形。 <N><N>传送门的四边都必须完全由传送门框架构成。你能以各种各样的形状和尺寸去搭建传送门，其中有基本的垂直传送门，也有水平传送门甚至可以是倾斜的传送门。<N><N>传送门框架也用作特殊框架方块的材料，这些特殊框架都有可用扳手开启的界面。如果你用扳手对着基础的传送门框架使用，则会打开传送门控制器的界面。
+
+ep3.gui.blockController=传送门控制器
+ep3.gui.blockController.information=传送门控制器是传送门结构中的主要方块，它控制着每一个传送门的大多数功能，所以每个传送门只能有一个这样的控制器。<N><N>你能摧毁、重放置其他类型的框架方块，你只要不替换掉传送门控制器，就可以保留该传送门所有的自定义设置。<N><N>如果你破坏了传送门的结构，例如移除一个方块，或是在已建好的传送门前放置一个新的框架，你可以用扳手对着传送门控制器使用一下以重新激活传送门。你也能用另外一张定位卡片更新传送门所链接的位面之桥稳定器(DBS)。
+
+ep3.gui.blockRedstoneInterface=红石接口
+ep3.gui.blockRedstoneInterface.information=红石接口是除了生物辨识器之外唯一能直接与红石信号互动的方块。<N><N>它有2种不同的模式，输入和输出。输入模式用于接收红石信号并完成指定的任务。所有这些任务都和传送门的链接互动有关，你可以将它设置为创建/移除传送门，或是向指定的唯一标识符拨号。<N><N>另一种模式是输出模式，可以根据传送门的状态让红石接口发出红石信号，不管有没有实体碰到传送门。
+
+ep3.gui.blockNetworkInterface=网络接口
+ep3.gui.blockNetworkInterface.information=网络接口是让多个传送门链接在一起的基础。只要传送门设置了一个独特的ID，就可以用扳手给它设置一个网络 ID。任何拥有相同网络ID的传送门都会互相链接起来，进入一个激活的传送门会将你送到下一个顺位的传送门那。<N><N>创建传送门不光需要一个网络接口，也需要一个红石接口去创建/终止链接。<N><N>一个传送门你只能在网络接口和拨号设备之间选装一个。
+
+ep3.gui.blockDiallingDevice=拨号设备
+ep3.gui.blockDiallingDevice.information=拨号设备是网络接口的升级版，允许你在没有设定网络的前提下直接向指定的传送门拨号。另外，你也不需要用红石接口去拨号，甚至能给没有拨号设备或网络接口的传送门拨号。你不能向拥有网络接口的传送门拨号。<N><N>不像其他特殊的传送门框架，你不需要护目镜就能看到拨号设备的纹理，也不需要用扳手就能打开它的GUI。<N><N>一个传送门你只能在网络接口和拨号设备之间选装一个。
+
+ep3.gui.blockBiometric=生物辨识器
+ep3.gui.blockBiometric.information=生物辨识器是个高效的过滤器。你能选择玩家或实体可不可以通过该传送门。<N><N>你需要将一张ID卡放进左下格，把卡片里面储存的实体加入辨识器列表。然后，点击实体名称选择允不允许，GUI会有相应的反应。<N><N>列表下排的元素会比前面的元素优先，好比你在上面选不允许'动物'，又在下面选允许'猪'，那么猪是允许通过传送门的。如果把这2条交换一下位置，那么所有的动物，包括猪在内，就都不允许通过了。<N><N>一个传送门你只能装一个生物辨识器。
+
+ep3.gui.blockModule=模块操作器
+ep3.gui.blockModule.information=模块操作器储存着所有的传送门模块。用扳手打开GUI就可以把模块放进去。<N><N>一个传送门你只能装一个模块操作器。
+
+ep3.gui.blockDBS=DBS
+ep3.gui.blockDbs=位面之桥稳定器
+ep3.gui.blockDbs.information=位面之桥稳定器负责创建和维持空间中链接两点的虫洞，从而瞬间传送。<N><N>你必须放置一个3x2x2或3x3x2的复合方块，然后用扳手对这个框架使用。你也可以把框架建的更高来获得额外的链接。<N><N>每层结构你可以获得额外15,000RF的储能空间，以及一个额外的链接(2个传送门)。另外，如果你每层搭建的是3x3那么你能获得额外22,500RF的储能空间。<N><N>位面之桥稳定器需要大量能量，每秒将消耗10,000RF(500RF每tick)。如果它没有储存足够的能量，位面之桥稳定器会试图维持传送门链接，但会变得越来越不稳定，而在发生危险前则会强制关闭传送门。
+
+ep3.gui.blockDecoration=装饰方块
+ep3.gui.blockDecoration.information=现在可用的两个装饰方块有着和传送门框架、位面之桥稳定器一样的纹理。<N><N>装饰方块之间完全一样，但不会有瓷砖一样的边界，也不会和真正的传送门框架链接。
+
+ep3.gui.itemGlasses=护目镜
+ep3.gui.itemGlasses.information=当带着护目镜，你就能看到你平常看不到的。区别就是特殊的框架方块会变得有很大不同且易于区分。护目镜有着和皮革帽子一样的耐久和防御。
+
+ep3.gui.itemWrench=扳手
+ep3.gui.itemWrench.information=扳手是用来打开除了位面之桥稳定器、拨号设备之外的所有传送门方块的GUI的工具。<N><N>你能用潜行+右键拆掉所有传送门方块，这样会使方块会立刻移除并掉到地上。<N><N>扳手也适用于Buildcraft，并且和Buildcraft适用的扳手都可以用在传送门方块上。
+
+ep3.gui.itemNanobrush=纳米刷子
+ep3.gui.itemNanobrush.information=纳米刷子用于改变粒子、传送门框架、传送门的颜色和纹理。<N><N>当你右键传送门框架会快速打开一个选择传送门框架纹理的GUI。右键传送门会打开传送门纹理界面。潜行+右键传送门则会打开粒子的界面。
+
+ep3.gui.itemLocationCard=定位卡片
+ep3.gui.itemLocationCard.information=定位卡片在使用前需要放进已建好的位面之桥稳定器的格子里。这样位面之桥稳定器会把定位信息设定到卡片里面，于是你就可以拿着卡片对着传送门控制器右键将其和DBS链接起来。
+
+ep3.gui.itemSynchronizer=同步器
+ep3.gui.itemSynchronizer.information=同步器允许你通过一个激活状态的传送门链接，将其拨号设备的数据复制给其他拨号设备。<N><N>先使用一个拨号设备就可以链接2个传送门，然后发送和接收的传送门各有一个拨号设备，你可以用同步器右键拨号设备，就可以拷贝它的数据给接收中的传送门的拨号设备。
+
+ep3.gui.itemIdCard=ID卡
+ep3.gui.itemIdCard.information=ID卡储存着实体的信息，以便放进生物辨识器。<N><N>ID卡必须插入手持扫描器才能把信息写进去，之后把卡片放进生物辨识器左边的格子，这样就可以把信息加入列表。
+
+ep3.gui.itemScanner=手持扫描器
+ep3.gui.itemScanner.information=手持扫描器用于将实体信息写入ID卡。未写入信息的ID卡放进左边的格子，写完的会出现在右边。<N><N>手持扫描器需要红石液态能量，不管每次写入操作写进了卡片多少数据，都要消耗50RF。当你打开GUI，就会写入数据。如果想将多个实体存入同一张卡片，只要你先扫描完所有数据为止再打开GUI即可。<N><N>你可以左键扫描实体，也可以潜行+右键扫描你自己。
+
+ep3.gui.itemPortalModules=传送门模块
+ep3.gui.itemPortalModules.information=传送门模块可以直接改变传送门或传送门框架的状态。模块必须事先放进模块操作器才能生效。
+
+ep3.gui.itemUpgrades=升级
+ep3.gui.itemUpgrades.information=升级允许你不经替换方块就将基本的传送门框架改为含有各种特殊效果的传送门方块。另外，他不会破坏传送门的结构，所以你能在传送门处于激活状态时更改传送门的结构。<N><N>合成配方除了将传送门框架替换成空白升级以外，都一样。
