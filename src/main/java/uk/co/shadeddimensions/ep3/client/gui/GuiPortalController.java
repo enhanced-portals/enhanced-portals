@@ -17,12 +17,12 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementItemIconWithCount;
 import uk.co.shadeddimensions.library.gui.element.ElementItemStackPanel;
 import uk.co.shadeddimensions.library.util.GuiUtils;
 
-public class GuiPortalController extends GuiBase
+public class GuiPortalController extends GuiBaseContainer
 {
     TileController controller;
     GuiButton resetButton, saveButton, publicButton;
@@ -37,6 +37,7 @@ public class GuiPortalController extends GuiBase
     public GuiPortalController(TileController tile)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/portalController.png"));
+        drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;
@@ -168,7 +169,7 @@ public class GuiPortalController extends GuiBase
     }
 
     @Override
-    public void drawGuiForegroundLayer(int x, int y)
+    public void drawGuiContainerForegroundLayer(int x, int y)
     {
         drawCenteredString(fontRenderer, Localization.getGuiString("portalController"), xSize / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("uniqueIdentifier"), 8, 8, 0x404040);
@@ -198,7 +199,7 @@ public class GuiPortalController extends GuiBase
             fontRenderer.drawString(warningMessage, xSize / 2 - fontRenderer.getStringWidth(warningMessage) / 2, 125, 0xFF0000);
         }
 
-        super.drawGuiForegroundLayer(x, y);
+        super.drawGuiContainerForegroundLayer(x, y);
     }
 
     @SuppressWarnings("unchecked")

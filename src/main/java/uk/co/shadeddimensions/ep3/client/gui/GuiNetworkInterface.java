@@ -14,10 +14,10 @@ import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.util.GuiUtils;
 
-public class GuiNetworkInterface extends GuiBase
+public class GuiNetworkInterface extends GuiBaseContainer
 {
     ElementGlyphSelector selector;
     ElementGlyphIdentifier identifier;
@@ -28,6 +28,7 @@ public class GuiNetworkInterface extends GuiBase
     public GuiNetworkInterface(TileController tile)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/networkInterface.png"));
+        drawInventory = false;
         ySize = 144;
         controller = tile;
         overlayActive = false;
@@ -98,9 +99,9 @@ public class GuiNetworkInterface extends GuiBase
     }
 
     @Override
-    public void drawGuiForegroundLayer(int x, int y)
+    public void drawGuiContainerForegroundLayer(int x, int y)
     {
-        super.drawGuiForegroundLayer(x, y);
+        super.drawGuiContainerForegroundLayer(x, y);
 
         drawCenteredString(fontRenderer, Localization.getGuiString("networkInterface"), xSize / 2, -13, 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("networkIdentifier"), 8, 8, 0x404040);
