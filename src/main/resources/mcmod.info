@@ -2,7 +2,7 @@
 {
   "modid" : "EnhancedPortals3",
   "name" : "EnhancedPortals",
-  "version" : "${version}",
+  "version" : "1.6.4-3.0.0b5e",
   "url" : "http://shadeddimensions.co.uk",
   "credits" : "",
   "authors": [

@@ -255,7 +255,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         {
             int num = getSelectedEntry(arguments);
             
-            if (num > 0 && num < glyphList.size())
+            if (num >= 0 && num < glyphList.size())
             {
                 getPortalController().connectionDial(glyphList.get(num).identifier, null, null);
             }
@@ -359,7 +359,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     
 	@Override
 	public String getComponentName() {
-		return "ep_dialing_device";
+		return "ep_dialling_device";
 	}
 	
 	@Callback
