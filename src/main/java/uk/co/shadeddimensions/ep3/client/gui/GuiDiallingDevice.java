@@ -15,13 +15,12 @@ import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.packet.PacketTextureData;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice.GlyphElement;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 import uk.co.shadeddimensions.library.gui.element.ElementButton;
 import uk.co.shadeddimensions.library.gui.element.ElementButtonIcon;
 import uk.co.shadeddimensions.library.gui.element.ElementScrollBar;
@@ -29,7 +28,7 @@ import uk.co.shadeddimensions.library.gui.element.ElementScrollPanel;
 import uk.co.shadeddimensions.library.gui.element.ElementScrollPanelOverlay;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class GuiDiallingDevice extends GuiBase
+public class GuiDiallingDevice extends GuiBaseContainer
 {
     TileController controller;
     TileDiallingDevice dial;
@@ -46,6 +45,7 @@ public class GuiDiallingDevice extends GuiBase
     public GuiDiallingDevice(TileDiallingDevice dialler)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png"));
+        drawInventory = false;
         dial = dialler;
         controller = dialler.getPortalController();
         xSize = 256;
@@ -129,9 +129,9 @@ public class GuiDiallingDevice extends GuiBase
     }
 
     @Override
-    public void drawGuiBackgroundLayer(float f, int i, int j)
+    public void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        super.drawGuiBackgroundLayer(f, i, j);
+        super.drawGuiContainerBackgroundLayer(f, i, j);
 
         if (showOverlay)
         {
@@ -146,9 +146,9 @@ public class GuiDiallingDevice extends GuiBase
     }
 
     @Override
-    public void drawGuiForegroundLayer(int mouseX, int mouseY)
+    public void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.drawGuiForegroundLayer(mouseX, mouseY);
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         fontRenderer.drawStringWithShadow(Localization.getGuiString("dialDevice"), xSize / 2 - fontRenderer.getStringWidth(Localization.getGuiString("dialDevice")) / 2, -13, showOverlay ? 0x444444 : 0xFFFFFF);
         fontRenderer.drawString(Localization.getGuiString("storedIdentifiers"), 7, 7, showOverlay ? 0x222222 : 0x404040);

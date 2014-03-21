@@ -6,15 +6,16 @@ import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
-import uk.co.shadeddimensions.library.gui.GuiBase;
+import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 
-public class GuiRedstoneInterface extends GuiBase
+public class GuiRedstoneInterface extends GuiBaseContainer
 {
     public TileRedstoneInterface redstone;
 
     public GuiRedstoneInterface(TileRedstoneInterface tile)
     {
         super(new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
+        drawInventory = false;
         redstone = tile;
         ySize = 58;
     }
@@ -28,11 +29,11 @@ public class GuiRedstoneInterface extends GuiBase
     }
 
     @Override
-    public void drawGuiForegroundLayer(int par1, int par2)
+    public void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         drawCenteredString(fontRenderer, Localization.getGuiString("redstoneInterface"), xSize / 2, -13, 0xFFFFFF);
 
-        super.drawGuiForegroundLayer(par1, par2);
+        super.drawGuiContainerForegroundLayer(par1, par2);
     }
 
     @SuppressWarnings("unchecked")
