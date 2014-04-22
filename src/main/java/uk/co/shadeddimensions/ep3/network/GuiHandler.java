@@ -4,15 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.client.gui.GuiConfig;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.client.gui.GuiGuide;
 import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
-import uk.co.shadeddimensions.ep3.client.gui.GuiNetworkInterface;
-import uk.co.shadeddimensions.ep3.client.gui.GuiPortalController;
 import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
@@ -21,6 +17,7 @@ import uk.co.shadeddimensions.ep3.client.gui.GuiTransferEnergy;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTransferFluid;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTransferItem;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
+import uk.co.shadeddimensions.ep3.container.ContainerDefault;
 import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
@@ -29,6 +26,7 @@ import uk.co.shadeddimensions.ep3.container.ContainerTransferEnergy;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferFluid;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferItem;
 import uk.co.shadeddimensions.ep3.item.ItemHandheldScanner;
+import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
@@ -41,12 +39,23 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.IGuiHandler;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
+import enhancedportals.client.gui.GuiPortalController;
+import enhancedportals.client.gui.GuiPortalControllerGlyphs;
+import enhancedportals.inventory.ContainerNetworkInterface;
+import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
+import enhancedportals.inventory.ContainerPortalController;
+import enhancedportals.inventory.ContainerPortalControllerGlyphs;
 
 public class GuiHandler implements IGuiHandler
 {
-    public static final int PORTAL_CONTROLLER = 1;
+    public static final int PORTAL_CONTROLLER_A = 100;
+    public static final int PORTAL_CONTROLLER_B = 101;
+    public static final int NETWORK_INTERFACE_A = 102;
+    public static final int NETWORK_INTERFACE_B = 103;
+    
     public static final int REDSTONE_INTERFACE = 2;
-    public static final int NETWORK_INTERFACE = 3;
     public static final int DIALLING_DEVICE = 4;
     public static final int BIOMETRIC_IDENTIFIER = 5;
     public static final int MODULE_MANIPULATOR = 6;
@@ -63,8 +72,6 @@ public class GuiHandler implements IGuiHandler
     public static final int SCANNER = 15;
     public static final int GUIDE = 16;
     
-    public static final int CONFIG = 17;
-    
     public static void openGui(EntityPlayer player, TileEntity tile, int gui)
     {
         player.openGui(EnhancedPortals.instance, gui, tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord);
@@ -78,25 +85,29 @@ public class GuiHandler implements IGuiHandler
             ItemStack stack = player.inventory.getCurrentItem();
             return new GuiScanner(ItemHandheldScanner.getInventory(stack), player, stack);
         }
-        else if (ID == CONFIG)
-        {
-            return new GuiConfig();
-        }
         else
         {
             TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-            if (ID == PORTAL_CONTROLLER)
+            if (ID == PORTAL_CONTROLLER_A)
             {
-                return new GuiPortalController((TileController) tile);
+                return new GuiPortalController((TileController) tile, player);
+            }
+            else if (ID == PORTAL_CONTROLLER_B)
+            {
+                return new GuiPortalControllerGlyphs((TileController) tile, player);
             }
             else if (ID == REDSTONE_INTERFACE)
             {
-                return new GuiRedstoneInterface((TileRedstoneInterface) tile);
+                return new GuiRedstoneInterface((TileRedstoneInterface) tile, player);
             }
-            else if (ID == NETWORK_INTERFACE)
+            else if (ID == NETWORK_INTERFACE_A)
             {
-                return new GuiNetworkInterface((TileController) tile);
+                return new enhancedportals.client.gui.GuiNetworkInterface((TileController) tile, player);
+            }
+            else if (ID == NETWORK_INTERFACE_B)
+            {
+                return new GuiNetworkInterfaceGlyphs((TileController) tile, player);
             }
             else if (ID == MODULE_MANIPULATOR)
             {
@@ -159,28 +170,34 @@ public class GuiHandler implements IGuiHandler
             ItemStack stack = player.inventory.getCurrentItem();
             return new ContainerScanner(ItemHandheldScanner.getInventory(stack), player, stack);
         }
-        else if (ID == CONFIG)
-        {
-            return new ContainerBase();
-        }
         else
         {
             TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-            if (ID == PORTAL_CONTROLLER)
+            if (ID == PORTAL_CONTROLLER_A)
             {
                 PacketHandlerServer.sendGuiPacketToPlayer((TileController) tile, player);
-                return new ContainerBase(tile);
+                return new ContainerPortalController((TileController) tile, player.inventory);
+            }
+            else if (ID == PORTAL_CONTROLLER_B)
+            {
+                PacketHandlerServer.sendGuiPacketToPlayer((TileController) tile, player);
+                return new ContainerPortalControllerGlyphs((TileController) tile, player.inventory);
             }
             else if (ID == REDSTONE_INTERFACE)
             {
                 PacketHandlerServer.sendGuiPacketToPlayer((TileRedstoneInterface) tile, player);
-                return new ContainerBase(tile);
+                return new ContainerDefault((TileEP) tile, player);
             }
-            else if (ID == NETWORK_INTERFACE)
+            else if (ID == NETWORK_INTERFACE_A)
             {
             	PacketHandlerServer.sendGuiPacketToPlayer((TileController) tile, player);
-                return new ContainerBase(tile);
+                return new ContainerNetworkInterface((TileController) tile, player.inventory);
+            }
+            else if (ID == NETWORK_INTERFACE_B)
+            {
+                PacketHandlerServer.sendGuiPacketToPlayer((TileController) tile, player);
+                return new ContainerNetworkInterfaceGlyphs((TileController) tile, player.inventory);
             }
             else if (ID == MODULE_MANIPULATOR)
             {

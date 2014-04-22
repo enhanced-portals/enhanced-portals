@@ -12,12 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
-import uk.co.shadeddimensions.ep3.api.IPortalModule;
 import uk.co.shadeddimensions.ep3.client.particle.PortalFX;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.common.IPortalModule;
 
 public class ItemPortalModule extends Item implements IPortalModule
 {
@@ -43,7 +42,7 @@ public class ItemPortalModule extends Item implements IPortalModule
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("portalModule");
         setMaxDamage(0);
         setMaxStackSize(64);
@@ -96,7 +95,7 @@ public class ItemPortalModule extends Item implements IPortalModule
     @Override
     public String getID(ItemStack upgrade)
     {
-        return Reference.SHORT_ID + "." + upgrade.getItemDamage();
+        return EnhancedPortals.SHORT_ID + "." + upgrade.getItemDamage();
     }
 
     @Override

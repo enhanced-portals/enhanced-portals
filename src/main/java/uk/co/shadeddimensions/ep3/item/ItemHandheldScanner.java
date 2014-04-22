@@ -11,16 +11,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.InventoryScanner;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.util.EntityData;
 import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import cofh.api.energy.ItemEnergyContainer;
+import enhancedportals.EnhancedPortals;
 
 public class ItemHandheldScanner extends ItemEnergyContainer
 {
@@ -40,7 +38,7 @@ public class ItemHandheldScanner extends ItemEnergyContainer
         ID += 256;
         instance = this;
         setUnlocalizedName("scanner");
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setMaxDamage(0);
         setMaxStackSize(1);
     }

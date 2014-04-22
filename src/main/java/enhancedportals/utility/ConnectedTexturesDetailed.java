@@ -1,15 +1,12 @@
-package uk.co.shadeddimensions.library.ct;
+package enhancedportals.utility;
 
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 
-/**
- * A more detailed version of {@link ConnectedTextures}. Contains inner corners.
- * 
- * @author Alz454
- */
 public class ConnectedTexturesDetailed extends ConnectedTextures
 {
+    private static final short[] connectionToIndex = { 0, 36, 12, 24, 1, 37, 13, 25, 3, 39, 15, 27, 2, 38, 14, 26 }, transformIndex26 = { 26, 45, 44, 22, 33, 23, 35, 9, 32, 34, 10, 21, 11, 8, 20, 46 };
+
     protected ConnectedTexturesDetailed()
     {
         super();
@@ -49,20 +46,6 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
 
         return ct;
     }
-    
-    private static final short[] connectionToIndex = {
-    	0, 36, 12, 24,
-    	1, 37, 13, 25,
-    	3, 39, 15, 27,
-    	2, 38, 14, 26
-    };
-    
-    private static final short[] transformIndex26 = {
-    	26, 45, 44, 22,
-    	33, 23, 35,  9,
-    	32, 34, 10, 21,
-    	11,  8, 20, 46
-    };
 
     @Override
     public Icon getIconForSide(IBlockAccess blockAccess, int x, int y, int z, int side)
@@ -107,7 +90,7 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         }
 
         index = connectionToIndex[(connectingBlock[0] ? 8 : 0) | (connectingBlock[1] ? 4 : 0) | (connectingBlock[2] ? 2 : 0) | (connectingBlock[3] ? 1 : 0)];
-        
+
         if (side == 0 || side == 1)
         {
             diagonal[0] = !canConnectTo(blockAccess, x + 1, y, z + 1);
@@ -210,9 +193,9 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         }
         else if (index == 26)
         {
-        	index = transformIndex26[(diagonal[0] ? 8 : 0) | (diagonal[1] ? 4 : 0) | (diagonal[2] ? 2 : 0) | (diagonal[3] ? 1 : 0)];
+            index = transformIndex26[(diagonal[0] ? 8 : 0) | (diagonal[1] ? 4 : 0) | (diagonal[2] ? 2 : 0) | (diagonal[3] ? 1 : 0)];
         }
-        
+
         return textures[index];
     }
 }

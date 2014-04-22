@@ -17,7 +17,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
@@ -32,10 +31,11 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
-import uk.co.shadeddimensions.library.ct.ConnectedTextures;
-import uk.co.shadeddimensions.library.ct.ConnectedTexturesDetailed;
 import cofh.api.block.IDismantleable;
 import cofh.api.tileentity.ISidedBlockTexture;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.utility.ConnectedTextures;
+import enhancedportals.utility.ConnectedTexturesDetailed;
 
 public class BlockFrame extends BlockContainer implements IDismantleable
 {
@@ -53,7 +53,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     {
         super(ID, Material.rock);
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setHardness(5);
         setResistance(2000);
         setUnlocalizedName("frame");

@@ -41,7 +41,7 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
 				}
 				else
 				{
-					GuiHandler.openGui(player, controller, GuiHandler.NETWORK_INTERFACE);
+					GuiHandler.openGui(player, controller, GuiHandler.NETWORK_INTERFACE_A);
 				}
 			}
 			else if (stack.itemID == ItemPaintbrush.ID)

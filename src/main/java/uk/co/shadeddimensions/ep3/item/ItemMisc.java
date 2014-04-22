@@ -2,12 +2,12 @@ package uk.co.shadeddimensions.ep3.item;
 
 import java.util.List;
 
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import enhancedportals.EnhancedPortals;
 
 public class ItemMisc extends Item
 {
@@ -22,7 +22,7 @@ public class ItemMisc extends Item
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("miscItems");
         setMaxDamage(0);
         setHasSubtypes(true);

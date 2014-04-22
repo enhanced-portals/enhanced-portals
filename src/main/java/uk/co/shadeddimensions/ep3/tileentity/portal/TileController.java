@@ -19,7 +19,6 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
 import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
@@ -48,6 +47,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
+import enhancedportals.EnhancedPortals;
 
 public class TileController extends TileFrame implements IPeripheral, SimpleComponent
 {
@@ -89,7 +89,8 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     
     Random random = new Random();
 
-    boolean processing, isPublic;
+    boolean processing;
+    public boolean isPublic;
     
     GlyphIdentifier cachedDestinationUID;
     WorldCoordinates cachedDestinationLoc;
@@ -141,7 +142,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 {
                     if (ItemHelper.isWrench(stack))
                     {
-                        GuiHandler.openGui(player, this, GuiHandler.PORTAL_CONTROLLER);
+                        GuiHandler.openGui(player, this, GuiHandler.PORTAL_CONTROLLER_A);
                         return true;
                     }
                     else if (stack.itemID == ItemPaintbrush.ID)
@@ -288,7 +289,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 throw new PortalException("stabilizerNotFound");
             }
             
-            dbs.setupNewConnection(getIdentifierUnique(), CommonProxy.networkManager.getDestination(getIdentifierUnique(),  getIdentifierNetwork()), null);
+            dbs.setupNewConnection(getIdentifierUnique(), EnhancedPortals.proxy.networkManager.getDestination(getIdentifierUnique(),  getIdentifierNetwork()), null);
         }
         catch (PortalException e)
         {
@@ -672,7 +673,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             return nID;
         }
         
-        return CommonProxy.networkManager.getPortalNetwork(getIdentifierUnique());
+        return EnhancedPortals.proxy.networkManager.getPortalNetwork(getIdentifierUnique());
     }
 
     /**
@@ -685,7 +686,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             return uID;
         }
         
-        return CommonProxy.networkManager.getPortalIdentifier(getWorldCoordinates());
+        return EnhancedPortals.proxy.networkManager.getPortalIdentifier(getWorldCoordinates());
     }
 
     public TileModuleManipulator getModuleManipulator()
@@ -931,20 +932,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     @Override
     public void packetGui(NBTTagCompound tag, EntityPlayer player)
     {
-        if (tag.hasKey("uid"))
-        {
-            try
-            {
-                setIdentifierUnique(new GlyphIdentifier(tag.getString("uid")));
-            }
-            catch (PortalException e)
-            {
-                NBTTagCompound errorTag = new NBTTagCompound();
-                errorTag.setInteger("controller", 0);
-                PacketDispatcher.sendPacketToPlayer(new PacketGuiData(errorTag).getPacket(), (Player) player);
-            }
-        }
-        else if (tag.hasKey("nid"))
+        if (tag.hasKey("nid"))
         {
             setIdentifierNetwork(new GlyphIdentifier(tag.getString("nid")));
             PacketHandlerServer.sendGuiPacketToPlayer(this, player);
@@ -1005,12 +993,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             setFrameItem(tag.getInteger("frameItemID"), tag.getInteger("frameItemMeta"));
         }
-        
-        if (tag.hasKey("public"))
-        {
-            isPublic = !isPublic;
-            PacketHandlerServer.sendGuiPacketToPlayer(this, player);
-        }
     }
 
     @Override
@@ -1027,7 +1009,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         stream.writeInt(getTransferEnergyCount());
         stream.writeInt(getTransferFluidCount());
         stream.writeInt(getTransferItemCount());
-        stream.writeInt(getHasIdentifierNetwork() ? CommonProxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
+        stream.writeInt(getHasIdentifierNetwork() ? EnhancedPortals.proxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
         stream.writeBoolean(isPublic);
     }
 
@@ -1264,18 +1246,18 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         
         if (getHasIdentifierNetwork())
         {
-            CommonProxy.networkManager.removePortalFromNetwork(uID, getIdentifierNetwork());
+            EnhancedPortals.proxy.networkManager.removePortalFromNetwork(uID, getIdentifierNetwork());
         }
 
         if (id.size() > 0)
         {
-            CommonProxy.networkManager.addPortalToNetwork(uID, id);
+            EnhancedPortals.proxy.networkManager.addPortalToNetwork(uID, id);
         }
     }
     
     public void setIdentifierUnique(GlyphIdentifier id) throws PortalException
     {
-        if (CommonProxy.networkManager.getPortalLocation(id) != null) // Check to see if we already have a portal with this ID
+        if (EnhancedPortals.proxy.networkManager.getPortalLocation(id) != null) // Check to see if we already have a portal with this ID
         {
             if (getHasIdentifierUnique() && getIdentifierUnique().equals(id)) // Make sure  it's  not  already  us
             {
@@ -1297,24 +1279,24 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             if (getHasIdentifierNetwork()) // Check to see if it's in a network
             {
                 networkIdentifier = getIdentifierNetwork();
-                CommonProxy.networkManager.removePortalFromNetwork(getIdentifierUnique(), networkIdentifier); // Remove it if it  is
+                EnhancedPortals.proxy.networkManager.removePortalFromNetwork(getIdentifierUnique(), networkIdentifier); // Remove it if it  is
             }
 
-            CommonProxy.networkManager.removePortal(getWorldCoordinates()); // Remove the old identifier
+            EnhancedPortals.proxy.networkManager.removePortal(getWorldCoordinates()); // Remove the old identifier
 
             if (id.size() > 0) // If the new identifier isn't blank
             {
-                CommonProxy.networkManager.addPortal(id, getWorldCoordinates()); // Add it
+                EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add it
 
                 if (networkIdentifier != null)
                 {
-                    CommonProxy.networkManager.addPortalToNetwork(id, networkIdentifier); // Re-add it to the network, if it was in  one
+                    EnhancedPortals.proxy.networkManager.addPortalToNetwork(id, networkIdentifier); // Re-add it to the network, if it was in  one
                 }
             }
         }
         else if (id.size() > 0) // Otherwise if the new identifier isn't blank
         {
-            CommonProxy.networkManager.addPortal(id, getWorldCoordinates()); // Add  the  portal
+            EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add  the  portal
         }
     }
 
@@ -1554,11 +1536,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         temporaryDBS = sA.getWorldCoordinates();
         onInventoryChanged();
-    }
-    
-    public boolean isPublic()
-    {
-        return isPublic;
     }
 
     // OpenComputers

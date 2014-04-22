@@ -24,7 +24,7 @@ public class TilePortal extends TilePortalPart
         {
             if (ItemHelper.isWrench(stack))
             {
-                GuiHandler.openGui(player, controller, GuiHandler.PORTAL_CONTROLLER);
+                GuiHandler.openGui(player, controller, GuiHandler.PORTAL_CONTROLLER_A);
                 return true;
             }
             else if (stack.itemID == ItemPaintbrush.ID)

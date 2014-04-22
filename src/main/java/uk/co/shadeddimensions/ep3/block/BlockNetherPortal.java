@@ -21,6 +21,7 @@ public class BlockNetherPortal extends net.minecraft.block.BlockPortal
     public BlockNetherPortal()
     {
         super(ID);
+        setBlockUnbreakable();
         instance = this;
     }
 

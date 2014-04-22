@@ -14,9 +14,6 @@ import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.block.ItemFrame;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
@@ -26,6 +23,7 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileNetworkInterface;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TilePortalPart;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
+import enhancedportals.EnhancedPortals;
 
 public class ItemUpgrade extends Item
 {
@@ -40,7 +38,7 @@ public class ItemUpgrade extends Item
 		super(ID);
 		ID += 256;
 		instance = this;
-		setCreativeTab(Reference.creativeTab);
+		setCreativeTab(EnhancedPortals.creativeTab);
 		setUnlocalizedName("upgrade");
 		setHasSubtypes(true);
 		setMaxDamage(0);

@@ -15,11 +15,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import enhancedportals.EnhancedPortals;
 
 public class NetworkManager
 {
@@ -49,7 +48,7 @@ public class NetworkManager
         portalNetworks = new HashMap<String, String>();
         networkedPortals = new HashMap<String, ArrayList<String>>();
         server = event.getServer();
-        dataFile = new File(EnhancedPortals.proxy.getWorldDir(), Reference.NAME + ".dat");
+        dataFile = new File(EnhancedPortals.proxy.getWorldDir(), EnhancedPortals.NAME + ".dat");
 
         try
         {

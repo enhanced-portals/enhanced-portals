@@ -1,19 +1,15 @@
-package uk.co.shadeddimensions.library.ct;
+package enhancedportals.utility;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 
-/***
- * A basic Connected Texture implementation. Does not contain inner corners.
- * 
- * @author Alz454
- */
 public class ConnectedTextures
 {
     protected Icon[] textures;
     protected int blockID, blockMeta, subMeta = -1;
     protected String textureLoc;
+    private static final short[] connectionToIndex = { 0, 15, 13, 11, 12, 5, 3, 9, 14, 4, 2, 10, 8, 7, 6, 1 };
 
     protected ConnectedTextures()
     {
@@ -41,19 +37,21 @@ public class ConnectedTextures
     {
         if (blockID == blockAccess.getBlockId(x, y, z))
         {
-        	if(blockMeta == -1) {
-        		return true;
-        	}
-        	
+            if (blockMeta == -1)
+            {
+                return true;
+            }
+
             int meta = blockAccess.getBlockMetadata(x, y, z);
 
-            if(blockMeta == meta)
+            if (blockMeta == meta)
             {
-            	return true;
+                return true;
             }
-            else // check if subMeta is valid, if not return false
+            else
+            // check if subMeta is valid, if not return false
             {
-            	return subMeta == -1 ? false : meta == subMeta;
+                return subMeta == -1 ? false : meta == subMeta;
             }
         }
 
@@ -85,13 +83,6 @@ public class ConnectedTextures
     {
         return textures[0];
     }
-    
-    private static final short[] connectionToIndex = {
-    	0, 15, 13, 11,
-    	12, 5, 3, 9,
-    	14, 4, 2, 10,
-    	8, 7, 6, 1
-    };
 
     public Icon getIconForSide(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
@@ -136,7 +127,7 @@ public class ConnectedTextures
 
         return textures[connectionToIndex[(connectingBlock[0] ? 8 : 0) | (connectingBlock[1] ? 4 : 0) | (connectingBlock[2] ? 2 : 0) | (connectingBlock[3] ? 1 : 0)]];
     }
-    
+
     public void registerIcons(IconRegister register)
     {
         for (int i = 0; i < textures.length; i++)

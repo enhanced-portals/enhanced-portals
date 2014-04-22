@@ -6,8 +6,7 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import enhancedportals.EnhancedPortals;
 
 public class ItemGoggles extends ItemArmor
 {
@@ -21,7 +20,7 @@ public class ItemGoggles extends ItemArmor
         super(ID, EnumArmorMaterial.CLOTH, EnhancedPortals.proxy.gogglesRenderIndex, 0);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("glasses");
     }
 

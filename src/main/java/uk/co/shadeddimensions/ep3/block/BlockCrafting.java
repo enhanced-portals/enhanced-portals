@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import enhancedportals.EnhancedPortals;
 
 public class BlockCrafting extends Block
 {
@@ -19,7 +19,7 @@ public class BlockCrafting extends Block
     {
         super(ID, Material.rock);
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setHardness(5);
         setResistance(2000);
         setUnlocalizedName("crafting");

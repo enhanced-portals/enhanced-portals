@@ -6,9 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.EnhancedPortals;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import enhancedportals.EnhancedPortals;
 
 public class ItemGuide extends Item
 {
@@ -22,7 +21,7 @@ public class ItemGuide extends Item
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("guide");
         setMaxStackSize(1);
     }

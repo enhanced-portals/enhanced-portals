@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.util.WorldCoordinates;
+import enhancedportals.EnhancedPortals;
 
 public class ItemLocationCard extends Item
 {
@@ -56,7 +56,7 @@ public class ItemLocationCard extends Item
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("locationCard");
         setMaxDamage(0);
         setHasSubtypes(true);

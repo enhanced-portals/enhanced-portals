@@ -4,20 +4,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import uk.co.shadeddimensions.ep3.client.gui.GuiPortalController;
-import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.tileentity.TileEP;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.Player;
+import enhancedportals.inventory.BaseContainer;
 
 public class PacketGuiData extends PacketEnhancedPortals
 {
@@ -42,15 +37,9 @@ public class PacketGuiData extends PacketEnhancedPortals
         {
             ((TileEP) ((ContainerBase) container).object).packetGui(tag, (EntityPlayer) player);
         }
-        else if (container == null || container instanceof ContainerPlayer)
+        else if (container != null && container instanceof BaseContainer)
         {
-            if (tag.hasKey("controller"))
-            {
-                if (Minecraft.getMinecraft().currentScreen instanceof GuiPortalController)
-                {
-                    ((GuiPortalController) Minecraft.getMinecraft().currentScreen).setWarningMessage(tag.getInteger("controller"));
-                }
-            }
+            ((BaseContainer) container).handleGuiPacket(tag, (EntityPlayer) player);
         }
     }
 
@@ -71,6 +60,10 @@ public class PacketGuiData extends PacketEnhancedPortals
         if (container != null && container instanceof ContainerBase)
         {
             ((TileEP) ((ContainerBase) container).object).packetGui(tag, (EntityPlayer) player);
+        }
+        else if (container != null && container instanceof BaseContainer)
+        {
+            ((BaseContainer) container).handleGuiPacket(tag, (EntityPlayer) player);
         }
     }
 

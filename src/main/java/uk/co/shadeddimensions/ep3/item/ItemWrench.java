@@ -7,9 +7,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.block.IDismantleable;
+import enhancedportals.EnhancedPortals;
 
 public class ItemWrench extends Item implements IToolWrench
 {
@@ -23,7 +23,7 @@ public class ItemWrench extends Item implements IToolWrench
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("wrench");
         setMaxStackSize(1);
     }

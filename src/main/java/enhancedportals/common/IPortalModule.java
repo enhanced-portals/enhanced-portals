@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.api;
+package enhancedportals.common;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;

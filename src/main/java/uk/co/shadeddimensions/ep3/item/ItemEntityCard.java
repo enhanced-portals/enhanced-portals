@@ -12,7 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import enhancedportals.EnhancedPortals;
 
 public class ItemEntityCard extends Item
 {
@@ -26,7 +26,7 @@ public class ItemEntityCard extends Item
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("entityCard");
     }
 

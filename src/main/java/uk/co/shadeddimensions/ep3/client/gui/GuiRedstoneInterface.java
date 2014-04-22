@@ -1,23 +1,22 @@
 package uk.co.shadeddimensions.ep3.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
-import uk.co.shadeddimensions.library.gui.GuiBaseContainer;
 
-public class GuiRedstoneInterface extends GuiBaseContainer
+public class GuiRedstoneInterface extends GuiDefault
 {
     public TileRedstoneInterface redstone;
 
-    public GuiRedstoneInterface(TileRedstoneInterface tile)
+    public GuiRedstoneInterface(TileRedstoneInterface tile, EntityPlayer player)
     {
-        super(new ResourceLocation("enhancedportals", "textures/gui/redstoneInterface.png"));
-        drawInventory = false;
+        super(tile, player, 68);
         redstone = tile;
-        ySize = 58;
+        name = Localization.getGuiString("redstoneInterface");
     }
 
     @Override
@@ -28,22 +27,14 @@ public class GuiRedstoneInterface extends GuiBaseContainer
         PacketHandlerClient.sendGuiPacket(tag);
     }
 
-    @Override
-    public void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
-        drawCenteredString(fontRenderer, Localization.getGuiString("redstoneInterface"), xSize / 2, -13, 0xFFFFFF);
-
-        super.drawGuiContainerForegroundLayer(par1, par2);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
         super.initGui();
 
-        buttonList.add(new GuiButton(0, guiLeft + 8, guiTop + 8, xSize - 16, 20, ""));
-        buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 30, xSize - 16, 20, ""));
+        buttonList.add(new GuiButton(0, guiLeft + 8, guiTop + 18, xSize - 16, 20, ""));
+        buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 40, xSize - 16, 20, ""));
     }
 
     @Override

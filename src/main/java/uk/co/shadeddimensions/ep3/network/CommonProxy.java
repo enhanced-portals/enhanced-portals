@@ -33,7 +33,6 @@ import uk.co.shadeddimensions.ep3.item.ItemWrench;
 import uk.co.shadeddimensions.ep3.item.block.ItemDecoration;
 import uk.co.shadeddimensions.ep3.item.block.ItemFrame;
 import uk.co.shadeddimensions.ep3.item.block.ItemStabilizer;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import uk.co.shadeddimensions.ep3.portal.NetworkManager;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizer;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
@@ -52,14 +51,15 @@ import uk.co.shadeddimensions.ep3.util.ConfigHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import enhancedportals.EnhancedPortals;
 
 public class CommonProxy
 {
     public int gogglesRenderIndex = 0;
 
-    public static NetworkManager networkManager;
+    public NetworkManager networkManager;
 
-    public static final Logger logger = Logger.getLogger(Reference.NAME);
+    public static final Logger logger = Logger.getLogger(EnhancedPortals.NAME);
     public static ConfigHandler configuration;
 
     public static class Properties
@@ -215,7 +215,7 @@ public class CommonProxy
     public void setupConfiguration(Configuration theConfig)
     {
         config = theConfig;
-        configuration = new ConfigHandler(Reference.VERSION);
+        configuration = new ConfigHandler(EnhancedPortals.VERSION);
         configuration.setConfiguration(theConfig);
 
         configuration.addBlockEntry("Portal");

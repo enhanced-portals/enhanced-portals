@@ -11,8 +11,8 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.lib.Reference;
-import uk.co.shadeddimensions.library.ct.ConnectedTextures;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.utility.ConnectedTextures;
 
 public class BlockDecoration extends Block
 {
@@ -29,7 +29,7 @@ public class BlockDecoration extends Block
         setUnlocalizedName("decoration");
         setHardness(3);
         setStepSound(soundStoneFootstep);
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
     }
 
     @Override

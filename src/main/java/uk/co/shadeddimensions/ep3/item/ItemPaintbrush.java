@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import uk.co.shadeddimensions.ep3.lib.Reference;
+import enhancedportals.EnhancedPortals;
 
 public class ItemPaintbrush extends Item
 {
@@ -18,7 +18,7 @@ public class ItemPaintbrush extends Item
         super(ID);
         ID += 256;
         instance = this;
-        setCreativeTab(Reference.creativeTab);
+        setCreativeTab(EnhancedPortals.creativeTab);
         setUnlocalizedName("nanobrush");
         setMaxStackSize(1);
     }

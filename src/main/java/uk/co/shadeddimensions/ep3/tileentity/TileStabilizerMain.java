@@ -26,7 +26,6 @@ import uk.co.shadeddimensions.ep3.block.BlockStabilizer;
 import uk.co.shadeddimensions.ep3.item.ItemLocationCard;
 import uk.co.shadeddimensions.ep3.network.CommonProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalException;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
@@ -43,6 +42,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedportals.EnhancedPortals;
 
 public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler, IPowerReceptor
 {
@@ -470,8 +470,8 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
 		for (Entry<String, String> pair : activeConnections.entrySet())
 		{
-			TileController controllerA = CommonProxy.networkManager.getPortalController(new GlyphIdentifier(pair.getKey()));
-			TileController controllerB = CommonProxy.networkManager.getPortalController(new GlyphIdentifier(pair.getValue()));
+			TileController controllerA = EnhancedPortals.proxy.networkManager.getPortalController(new GlyphIdentifier(pair.getKey()));
+			TileController controllerB = EnhancedPortals.proxy.networkManager.getPortalController(new GlyphIdentifier(pair.getValue()));
 
 			if (controllerA != null)
 			{
@@ -518,16 +518,16 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		{
 			throw new PortalException("cannotDialDiallingPortal");
 		}
-		else if (!CommonProxy.networkManager.portalIdentifierExists(portalA))
+		else if (!EnhancedPortals.proxy.networkManager.portalIdentifierExists(portalA))
 		{
 			throw new PortalException("noPortalWithThatIdentifierSending");
 		}
-		else if (!CommonProxy.networkManager.portalIdentifierExists(portalB))
+		else if (!EnhancedPortals.proxy.networkManager.portalIdentifierExists(portalB))
 		{
 			throw new PortalException("noPortalWithThatIdentifierReceiving");
 		}
 
-		TileController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
+		TileController cA = EnhancedPortals.proxy.networkManager.getPortalController(portalA), cB = EnhancedPortals.proxy.networkManager.getPortalController(portalB);
 
 		if (cA == null)
 		{
@@ -570,7 +570,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         
         if (!sA.getWorldCoordinates().equals(sB.getWorldCoordinates()))
         {
-            if (cB.isPublic())
+            if (cB.isPublic)
             {
                 cB.setupTemporaryDBS(sA);
             }
@@ -657,7 +657,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 			throw new PortalException("No identifier found for second portal");
 		}
 
-		TileController cA = CommonProxy.networkManager.getPortalController(portalA), cB = CommonProxy.networkManager.getPortalController(portalB);
+		TileController cA = EnhancedPortals.proxy.networkManager.getPortalController(portalA), cB = EnhancedPortals.proxy.networkManager.getPortalController(portalB);
 
 		if (cA == null || cB == null)
 		{

@@ -9,14 +9,14 @@ import java.util.Map;
 
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import uk.co.shadeddimensions.ep3.lib.Reference;
 import cpw.mods.fml.common.network.Player;
+import enhancedportals.EnhancedPortals;
 
 public abstract class PacketEnhancedPortals
 {
     enum Packets
     {
-        PacketTileGui(PacketTileGui.class), PacketGuiData(PacketGuiData.class), PacketTextureData(PacketTextureData.class), PacketRerender(PacketRerender.class);
+        PacketTileGui(PacketTileGui.class), PacketGuiData(PacketGuiData.class), PacketTextureData(PacketTextureData.class), PacketRerender(PacketRerender.class), PacketRequestGui(PacketRequestGui.class);
 
         public static Packets getID(Class<? extends PacketEnhancedPortals> c)
         {
@@ -84,7 +84,7 @@ public abstract class PacketEnhancedPortals
         }
 
         Packet250CustomPayload p = new Packet250CustomPayload();
-        p.channel = Reference.SHORT_ID;
+        p.channel = EnhancedPortals.SHORT_ID;
         p.data = baos.toByteArray();
         p.length = p.data.length;
         p.isChunkDataPacket = isChunkDataPacket;
