@@ -6,8 +6,18 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 public class ComputerUtils {
 	public static Object[] argsToArray(Arguments args) {
 		Object[] data = new Object[args.count()];
-		for(int i = 0; i < data.length; i++)
-			data[i] = args.checkAny(i);
+		for(int i = 0; i < data.length; i++) {
+			// The explicit check for strings is required because OC returns
+			// them as byte arrays otherwise (because that's what they are in
+			// Lua). Which is usually not what we wan when auto-converting.
+			if (args.isString(i)) {
+				data[i] = args.checkString(i);
+			}
+			else
+			{
+				data[i] = args.checkAny(i);
+			}
+		} 
 		return data;
 	}
 	
