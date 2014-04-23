@@ -6,27 +6,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
-import uk.co.shadeddimensions.ep3.client.gui.GuiDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.client.gui.GuiGuide;
-import uk.co.shadeddimensions.ep3.client.gui.GuiModuleManipulator;
-import uk.co.shadeddimensions.ep3.client.gui.GuiRedstoneInterface;
 import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
-import uk.co.shadeddimensions.ep3.client.gui.GuiTexture;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTextureDialler;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTransferEnergy;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTransferFluid;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTransferItem;
 import uk.co.shadeddimensions.ep3.container.ContainerBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.container.ContainerDefault;
-import uk.co.shadeddimensions.ep3.container.ContainerDimensionalBridgeStabilizer;
-import uk.co.shadeddimensions.ep3.container.ContainerModuleManipulator;
 import uk.co.shadeddimensions.ep3.container.ContainerScanner;
 import uk.co.shadeddimensions.ep3.container.ContainerTexture;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferEnergy;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferFluid;
 import uk.co.shadeddimensions.ep3.container.ContainerTransferItem;
 import uk.co.shadeddimensions.ep3.item.ItemHandheldScanner;
-import uk.co.shadeddimensions.ep3.tileentity.TileEP;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileBiometricIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
@@ -40,13 +32,26 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
 import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.IGuiHandler;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
+import enhancedportals.client.gui.GuiModuleManipulator;
+import enhancedportals.client.gui.GuiNetworkInterface;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.client.gui.GuiPortalControllerGlyphs;
+import enhancedportals.client.gui.GuiRedstoneInterface;
+import enhancedportals.client.gui.GuiTextureFrame;
+import enhancedportals.client.gui.GuiTextureParticle;
+import enhancedportals.client.gui.GuiTexturePortal;
+import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
+import enhancedportals.inventory.ContainerModuleManipulator;
 import enhancedportals.inventory.ContainerNetworkInterface;
 import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
 import enhancedportals.inventory.ContainerPortalController;
 import enhancedportals.inventory.ContainerPortalControllerGlyphs;
+import enhancedportals.inventory.ContainerRedstoneInterface;
+import enhancedportals.inventory.ContainerTextureFrame;
+import enhancedportals.inventory.ContainerTextureParticle;
+import enhancedportals.inventory.ContainerTexturePortal;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -103,7 +108,7 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == NETWORK_INTERFACE_A)
             {
-                return new enhancedportals.client.gui.GuiNetworkInterface((TileController) tile, player);
+                return new GuiNetworkInterface((TileController) tile, player);
             }
             else if (ID == NETWORK_INTERFACE_B)
             {
@@ -123,15 +128,15 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == TEXTURE_FRAME)
             {
-                return new GuiTexture((TileController) tile, player, 0);
+                return new GuiTextureFrame((TileController) tile, player);
             }
             else if (ID == TEXTURE_PORTAL)
             {
-                return new GuiTexture((TileController) tile, player, 1);
+                return new GuiTexturePortal((TileController) tile, player);
             }
             else if (ID == TEXTURE_PARTICLE)
             {
-                return new GuiTexture((TileController) tile, player, 2);
+                return new GuiTextureParticle((TileController) tile, player);
             }
             else if (ID == TEXTURE_DIALLER)
             {
@@ -187,7 +192,7 @@ public class GuiHandler implements IGuiHandler
             else if (ID == REDSTONE_INTERFACE)
             {
                 PacketHandlerServer.sendGuiPacketToPlayer((TileRedstoneInterface) tile, player);
-                return new ContainerDefault((TileEP) tile, player);
+                return new ContainerRedstoneInterface((TileRedstoneInterface) tile, player.inventory);
             }
             else if (ID == NETWORK_INTERFACE_A)
             {
@@ -201,19 +206,31 @@ public class GuiHandler implements IGuiHandler
             }
             else if (ID == MODULE_MANIPULATOR)
             {
-                return new ContainerModuleManipulator((TileModuleManipulator) tile, player);
+                return new ContainerModuleManipulator((TileModuleManipulator) tile, player.inventory);
             }
             else if (ID == DIMENSIONAL_BRIDGE_STABILIZER)
             {
                 PacketHandlerServer.sendGuiPacketToPlayer((TileStabilizerMain) tile, player);
-                return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
+                return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player.inventory);
             }
             else if (ID == DIALLING_DEVICE)
             {
             	PacketHandlerServer.sendGuiPacketToPlayer((TileDiallingDevice) tile, player);
                 return new ContainerBase(tile);
             }
-            else if (ID == TEXTURE_FRAME || ID == TEXTURE_PORTAL || ID == TEXTURE_PARTICLE || ID == TEXTURE_DIALLER)
+            else if (ID == TEXTURE_FRAME)
+            {
+                return new ContainerTextureFrame((TileController) tile, player.inventory);
+            }
+            else if (ID == TEXTURE_PORTAL)
+            {
+                return new ContainerTexturePortal((TileController) tile, player.inventory);
+            }
+            else if (ID == TEXTURE_PARTICLE)
+            {
+                return new ContainerTextureParticle((TileController) tile, player.inventory);
+            }
+            else if (ID == TEXTURE_DIALLER)
             {
                 return new ContainerTexture((TileFrame) tile, player);
             }

@@ -1,24 +1,33 @@
-package uk.co.shadeddimensions.ep3.client.gui;
+package enhancedportals.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
+import enhancedportals.inventory.ContainerRedstoneInterface;
 
-public class GuiRedstoneInterface extends GuiDefault
+public class GuiRedstoneInterface extends BaseGui
 {
-    public TileRedstoneInterface redstone;
+    public static final int CONTAINER_SIZE = 68;
+    TileRedstoneInterface redstone;
 
-    public GuiRedstoneInterface(TileRedstoneInterface tile, EntityPlayer player)
+    public GuiRedstoneInterface(TileRedstoneInterface ri, EntityPlayer p)
     {
-        super(tile, player, 68);
-        redstone = tile;
-        name = Localization.getGuiString("redstoneInterface");
+        super(new ContainerRedstoneInterface(ri, p.inventory), CONTAINER_SIZE);
+        name = "gui.redstoneInterface";
+        redstone = ri;
     }
 
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+        buttonList.add(new GuiButton(0, guiLeft + 8, guiTop + 18, xSize - 16, 20, ""));
+        buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 40, xSize - 16, 20, ""));
+    }
+    
     @Override
     protected void actionPerformed(GuiButton button)
     {
@@ -26,17 +35,7 @@ public class GuiRedstoneInterface extends GuiDefault
         tag.setInteger("id", button.id);
         PacketHandlerClient.sendGuiPacket(tag);
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-
-        buttonList.add(new GuiButton(0, guiLeft + 8, guiTop + 18, xSize - 16, 20, ""));
-        buttonList.add(new GuiButton(1, guiLeft + 8, guiTop + 40, xSize - 16, 20, ""));
-    }
-
+    
     @Override
     public void updateScreen()
     {

@@ -3,19 +3,24 @@ package enhancedportals.client.gui.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
+import uk.co.shadeddimensions.library.gui.IGuiBase;
+import uk.co.shadeddimensions.library.util.GuiUtils;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 
 public abstract class BaseTab
 {
-    public static int tabExpandSpeed = 8;
+    static int tabExpandSpeed = 8;
     protected BaseGui parent;
     protected boolean visible = true, disabled = false;
     protected ArrayList<String> hoverText;
@@ -60,6 +65,32 @@ public abstract class BaseTab
         }
     }
 
+    void drawIcon(Icon icon, int x, int y, int spriteSheet)
+    {
+        if (spriteSheet == 0)
+        {
+            parent.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+        }
+        else
+        {
+            parent.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+        }
+
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
+    }
+    
+    void drawItemStack(ItemStack stack, int x, int y)
+    {
+        if (stack != null)
+        {
+            RenderHelper.enableGUIStandardItemLighting();
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            parent.getItemRenderer().renderItemAndEffectIntoGUI(parent.getFontRenderer(), parent.getTextureManager(), stack, x, y);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            RenderHelper.disableStandardItemLighting();
+        }
+    }
+    
     public void draw()
     {
         drawBackground();
@@ -67,12 +98,12 @@ public abstract class BaseTab
         if (icon != null)
         {
             int offsetX = side == 0 ? 4 - currentWidth : 2;
-            //GuiUtils.drawIcon(gui, icon, posX + offsetX, posY + 3, 1);
+            drawIcon(icon, posX + offsetX, posY + 3, 1);
         }
         else if (stack != null)
         {
             int offsetX = side == 0 ? 4 - currentWidth : 2;
-            //GuiUtils.drawItemStack(gui, stack, posX + offsetX, posY + 3);
+            drawItemStack(stack, posX + offsetX, posY + 3);
         }
 
         if (isFullyOpened() && drawName)

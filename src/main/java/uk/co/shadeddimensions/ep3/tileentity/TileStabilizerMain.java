@@ -357,19 +357,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 	@Override
 	public void packetGui(NBTTagCompound tag, EntityPlayer player)
 	{
-		if (tag.hasKey("energy"))
-		{
-			energyStorage.setEnergyStored(tag.getInteger("energy"));
-		}
-		else if (tag.hasKey("button"))
-		{
-			powerState++;
-
-			if (powerState >= 4)
-			{
-				powerState = 0;
-			}
-		}
+		
 	}
 
 	@Override

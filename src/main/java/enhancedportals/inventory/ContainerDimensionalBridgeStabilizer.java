@@ -1,45 +1,55 @@
-package uk.co.shadeddimensions.ep3.container;
+package enhancedportals.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.inventory.Slot;
-import net.minecraft.nbt.NBTTagCompound;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import enhancedportals.client.gui.BaseGui;
+import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
 import uk.co.shadeddimensions.ep3.client.gui.slot.SlotDBS;
 import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
 import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.library.container.ContainerBase;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import uk.co.shadeddimensions.ep3.util.GeneralUtils;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class ContainerDimensionalBridgeStabilizer extends ContainerBase
+public class ContainerDimensionalBridgeStabilizer extends BaseContainer
 {
-    private int lastPower, lastPortals, lastInstability, lastPowerState;
-
-    public ContainerDimensionalBridgeStabilizer(TileStabilizerMain t, EntityPlayer player)
+    int lastPower, lastPortals, lastInstability, lastPowerState;
+    TileStabilizerMain stabilizer;
+    
+    public ContainerDimensionalBridgeStabilizer(TileStabilizerMain s, InventoryPlayer p)
     {
-        super(t);
-
-        addSlotToContainer(new SlotDBS(t, 0, 152, 58));
-
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 94 + i * 18));
-            }
-        }
-
-        for (int i = 0; i < 9; i++)
-        {
-            addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 152));
-        }
+        super(s, p, (GeneralUtils.hasEnergyCost() ? GuiDimensionalBridgeStabilizer.CONTAINER_SIZE : GuiDimensionalBridgeStabilizer.CONTAINER_SIZE_SMALL) + BaseGui.bufferSpace + BaseGui.playerInventorySize);
+        stabilizer = s;
+        
+        int container = GeneralUtils.hasEnergyCost() ? GuiDimensionalBridgeStabilizer.CONTAINER_SIZE : GuiDimensionalBridgeStabilizer.CONTAINER_SIZE_SMALL;
+        addSlotToContainer(new SlotDBS(s, 0, 152, container - 25));
     }
 
+    @Override
+    public void handleGuiPacket(NBTTagCompound tag, EntityPlayer player)
+    {
+        if (tag.hasKey("button"))
+        {
+            stabilizer.powerState++;
+
+            if (stabilizer.powerState >= 4)
+            {
+                stabilizer.powerState = 0;
+            }
+        }
+        else if (tag.hasKey("energy"))
+        {
+            stabilizer.getEnergyStorage().setEnergyStored(tag.getInteger("energy"));
+        }
+    }
+    
     @Override
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        TileStabilizerMain stabilizer = (TileStabilizerMain) object;
         int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
 
         for (int i = 0; i < crafters.size(); i++)
@@ -52,14 +62,17 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerBase
                 tag.setInteger("energy", currentPower);
                 PacketDispatcher.sendPacketToPlayer(new PacketGuiData(tag).getPacket(), (Player) icrafting);
             }
+            
             if (lastPortals != currentPortals)
             {
                 icrafting.sendProgressBarUpdate(this, 2, currentPortals);
             }
+            
             if (lastInstability != currentInstability)
             {
                 icrafting.sendProgressBarUpdate(this, 3, currentInstability);
             }
+            
             if (lastPowerState != currentPowerState)
             {
                 icrafting.sendProgressBarUpdate(this, 4, currentPowerState);
@@ -75,8 +88,6 @@ public class ContainerDimensionalBridgeStabilizer extends ContainerBase
     @Override
     public void updateProgressBar(int par1, int par2)
     {
-        TileStabilizerMain stabilizer = (TileStabilizerMain) object;
-
         if (par1 == 2)
         {
             stabilizer.intActiveConnections = par2;

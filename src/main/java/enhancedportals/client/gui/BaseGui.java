@@ -6,12 +6,12 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.library.util.GuiUtils;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.BaseElement;
 import enhancedportals.client.gui.tabs.BaseTab;
@@ -20,6 +20,7 @@ import enhancedportals.inventory.BaseContainer;
 
 public abstract class BaseGui extends GuiContainer
 {
+    RenderItem itemRenderer = new RenderItem();
     protected static final ResourceLocation playerInventoryTexture = new ResourceLocation("enhancedportals", "textures/gui/playerInventory.png"), resizableInterfaceTexture = new ResourceLocation("enhancedportals", "textures/gui/resizableInterace.png");
     protected int mouseX = 0, mouseY = 0;
     protected ResourceLocation texture;
@@ -56,7 +57,7 @@ public abstract class BaseGui extends GuiContainer
                 element.handleMouseClicked(mouseX - guiLeft, mouseY - guiTop, mouseButton);
             }
         }
-        
+
         BaseTab tab = getTabAtPosition(mouseX - guiLeft, mouseY - guiTop);
 
         if (tab != null && tab.isVisible() && !tab.handleMouseClicked(mouseX - guiLeft, mouseY - guiTop, mouseButton))
@@ -72,7 +73,7 @@ public abstract class BaseGui extends GuiContainer
             tab.toggleOpen();
         }
     }
-    
+
     public BaseTab getTabAtPosition(int mouseX, int mouseY)
     {
         int xShift = 0;
@@ -119,7 +120,7 @@ public abstract class BaseGui extends GuiContainer
 
         return null;
     }
-    
+
     public BaseElement getElementAtPosition(int mouseX, int mouseY)
     {
         for (BaseElement element : elements)
@@ -132,7 +133,7 @@ public abstract class BaseGui extends GuiContainer
 
         return null;
     }
-    
+
     public BaseElement addElement(BaseElement element)
     {
         elements.add(element);
@@ -170,15 +171,16 @@ public abstract class BaseGui extends GuiContainer
         else
         {
             mc.renderEngine.bindTexture(resizableInterfaceTexture);
+
             drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize - 4, containerSize - 4);
             drawTexturedModalRect(guiLeft + xSize - 4, guiTop, 252, 0, 4, containerSize - 4);
             drawTexturedModalRect(guiLeft, guiTop + containerSize - 4, 0, 252, xSize - 4, 4);
             drawTexturedModalRect(guiLeft + xSize - 4, guiTop + containerSize - 4, 252, 252, 4, 4);
         }
-        
+
         mouseX = i - guiLeft;
         mouseY = j - guiTop;
-        
+
         for (BaseElement element : elements)
         {
             element.update();
@@ -189,7 +191,7 @@ public abstract class BaseGui extends GuiContainer
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             }
         }
-        
+
         int yPosRight = 4;
         int yPosLeft = 4;
 
@@ -218,12 +220,12 @@ public abstract class BaseGui extends GuiContainer
     {
         return mouseX;
     }
-    
+
     public int getMouseY()
     {
         return mouseY;
     }
-    
+
     public int getGuiLeft()
     {
         return guiLeft;
@@ -241,7 +243,7 @@ public abstract class BaseGui extends GuiContainer
         {
             fontRenderer.drawString(EnhancedPortals.localize(name), (xSize - mc.fontRenderer.getStringWidth(EnhancedPortals.localize(name))) / 2, 6, 0x404040);
         }
-        
+
         BaseElement element = getElementAtPosition(mouseX, mouseY);
 
         if (element != null && !element.isDisabled())
@@ -257,7 +259,7 @@ public abstract class BaseGui extends GuiContainer
                 return;
             }
         }
-        
+
         BaseTab tab = getTabAtPosition(mouseX, mouseY);
 
         if (tab != null)
@@ -302,5 +304,10 @@ public abstract class BaseGui extends GuiContainer
     public TextureManager getTextureManager()
     {
         return getMinecraft().renderEngine;
+    }
+
+    public RenderItem getItemRenderer()
+    {
+        return itemRenderer;
     }
 }

@@ -27,43 +27,13 @@ public class TileRedstoneInterface extends TileFrame
 	public byte state = 0, previousRedstoneState = 0;
 	byte timeUntilOff = 0;
 	static int TPS = 20;
-	static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
+	public static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
 	long lastInteractTime = 0l;
 
 	@Override
 	public void packetGui(NBTTagCompound tag, EntityPlayer player)
 	{
-		int id = tag.getInteger("id");
-
-		if (id == 0)
-		{
-			isOutput = !isOutput;
-			setState((byte) 0);
-		}
-		else 
-		{
-			int s = state + 1;
-
-			if (isOutput)
-			{
-				if (s >= MAX_OUTPUT_STATE)
-				{
-					s = 0;
-				}
-			}
-			else if (!isOutput)
-			{
-				if (s >= MAX_INPUT_STATE)
-				{
-					s = 0;
-				}
-			}
-			
-			setState((byte) s);
-		}
-
-		onInventoryChanged();
-		PacketHandlerServer.sendGuiPacketToPlayer(this, player);
+		
 	}
 
 	@Override

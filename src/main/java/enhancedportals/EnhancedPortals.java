@@ -24,7 +24,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.common.CreativeTabEP3;
 
-@Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, dependencies = EnhancedPortals.DEPENDENCIES, acceptedMinecraftVersions = EnhancedPortals.MC_VERSION)
+@Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, version = EnhancedPortals.VERSION, dependencies = EnhancedPortals.DEPENDENCIES, acceptedMinecraftVersions = EnhancedPortals.MC_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, serverPacketHandlerSpec = @SidedPacketHandler(channels = EnhancedPortals.SHORT_ID, packetHandler = PacketHandlerServer.class), clientPacketHandlerSpec = @SidedPacketHandler(channels = EnhancedPortals.SHORT_ID, packetHandler = PacketHandlerClient.class))
 public class EnhancedPortals
 {
@@ -43,7 +43,6 @@ public class EnhancedPortals
         proxy.setupCrafting();
         proxy.miscSetup();
 
-        MinecraftForge.EVENT_BUS.register(this);
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
     }
 
@@ -51,9 +50,8 @@ public class EnhancedPortals
     public void preInit(FMLPreInitializationEvent event)
     {
         CommonProxy.logger.setParent(FMLLog.getLogger());
-        event.getModMetadata().version = VERSION;
-        proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
 
+        proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();

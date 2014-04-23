@@ -16,7 +16,7 @@ public class TabTip extends BaseTab
         tip = EnhancedPortals.localize("tab." + n + ".info");
         List l = gui.getFontRenderer().listFormattedStringToWidth(tip, maxWidth - 14);
         maxHeight = l.size() * gui.getFontRenderer().FONT_HEIGHT + 30;
-        backgroundColor = 0x6666CC;
+        backgroundColor = 0x33AA00;
     }
 
     @Override
