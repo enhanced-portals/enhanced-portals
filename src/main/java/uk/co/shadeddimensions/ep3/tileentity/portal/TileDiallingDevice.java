@@ -57,28 +57,6 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     @Override
     public void packetGui(NBTTagCompound tag, EntityPlayer player)
     {
-        if (tag.hasKey("DialRequest"))
-        {
-            String id = tag.getString("DialRequest");
-            
-            for (GlyphElement el : glyphList) // Check to see if this is in the list of stored addresses, use its texture if it is.
-            {
-                if (el.identifier.getGlyphString().equals(id))
-                {
-                    getPortalController().connectionDial(new GlyphIdentifier(id), el.texture, player);
-                    return;
-                }
-            }
-            
-            getPortalController().connectionDial(new GlyphIdentifier(id), null, player);
-            return;
-        }
-        else if (tag.hasKey("DialTerminateRequest"))
-        {
-            getPortalController().connectionTerminate();
-            return;
-        }
-
         if (tag.hasKey("SetDialTexture") && tag.hasKey("TextureData"))
         {
             PortalTextureManager ptm = new PortalTextureManager();

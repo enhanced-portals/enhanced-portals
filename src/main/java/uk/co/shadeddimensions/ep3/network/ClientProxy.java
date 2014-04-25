@@ -9,6 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.PortalRenderer;
+import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -29,6 +30,10 @@ public class ClientProxy extends CommonProxy
         }
     }
 
+    public static GlyphIdentifier saveGlyph;
+    public static PortalTextureManager saveTexture;
+    public static String saveName;    
+    
     public static String manualPage = "mainMain";
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();

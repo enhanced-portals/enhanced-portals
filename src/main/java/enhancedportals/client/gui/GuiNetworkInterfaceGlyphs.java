@@ -30,6 +30,7 @@ public class GuiNetworkInterfaceGlyphs extends BaseGui
         super(new ContainerNetworkInterfaceGlyphs(c, p.inventory), CONTAINER_SIZE);
         controller = c;
         name = "gui.networkInterface";
+        setHidePlayerInventory();
     }
     
     @Override

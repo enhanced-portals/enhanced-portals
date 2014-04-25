@@ -18,6 +18,7 @@ public class GuiRedstoneInterface extends BaseGui
         super(new ContainerRedstoneInterface(ri, p.inventory), CONTAINER_SIZE);
         name = "gui.redstoneInterface";
         redstone = ri;
+        setHidePlayerInventory();
     }
 
     @Override

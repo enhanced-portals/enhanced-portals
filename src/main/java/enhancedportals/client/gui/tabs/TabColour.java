@@ -15,7 +15,7 @@ public class TabColour extends BaseTab
     {
         super(gui);
         backgroundColor = 0x5396da;
-        maxHeight += 90;
+        maxHeight += 88;
         name = "gui.colour";
         icon = ItemPaintbrush.texture;
         sliderR = r;
@@ -35,7 +35,7 @@ public class TabColour extends BaseTab
     @Override
     public void drawFullyOpened()
     {
-        parent.drawRect(posX + 3, posY + 21, posX + 3 + maxWidth - 7, posY + 21 + maxHeight - 25, 0x66000000);
+        parent.drawRect(posX + 2, posY + 18, posX + 3 + maxWidth - 8, posY + 21 + maxHeight - 26, 0x66000000);
     }
 
     @Override

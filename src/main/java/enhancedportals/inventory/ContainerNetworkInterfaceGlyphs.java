@@ -22,6 +22,7 @@ public class ContainerNetworkInterfaceGlyphs extends BaseContainer
     {
         super(null, p, GuiNetworkInterfaceGlyphs.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         controller = c;
+        hideInventorySlots();
     }
 
     @Override

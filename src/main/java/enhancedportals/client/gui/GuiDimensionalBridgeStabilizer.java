@@ -21,6 +21,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         super(new ContainerDimensionalBridgeStabilizer(s, p.inventory), GeneralUtils.hasEnergyCost() ? CONTAINER_SIZE : CONTAINER_SIZE_SMALL);
         stabilizer = s;
         name = "gui.dimensionalBridgeStabilizer";
+        setCombinedInventory();
     }
 
     @Override

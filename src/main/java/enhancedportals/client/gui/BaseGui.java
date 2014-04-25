@@ -29,6 +29,7 @@ public abstract class BaseGui extends GuiContainer
     protected ArrayList<BaseElement> elements = new ArrayList<BaseElement>();
     public static final int defaultContainerSize = 144, playerInventorySize = 90, bufferSpace = 2, defaultGuiSize = defaultContainerSize + playerInventorySize + bufferSpace;
     protected int containerSize = defaultContainerSize, guiSize = defaultGuiSize, leftNudge = 0;
+    protected boolean hasSeperateInventories = true, isHidingPlayerInventory = false;
 
     public BaseGui(BaseContainer container)
     {
@@ -40,6 +41,21 @@ public abstract class BaseGui extends GuiContainer
         super(container);
         containerSize = cSize;
         guiSize = containerSize + playerInventorySize + bufferSpace;
+        ySize = guiSize;
+    }
+
+    /** It's stupid that I'm forced to do this, some range/null checks in certain other mods would make this unnecessary. **/
+    public void setHidePlayerInventory()
+    {
+        isHidingPlayerInventory = true;
+        guiSize = containerSize;
+        ySize = guiSize;
+    }
+
+    public void setCombinedInventory()
+    {
+        hasSeperateInventories = false;
+        guiSize = containerSize + playerInventorySize;
         ySize = guiSize;
     }
 
@@ -160,8 +176,12 @@ public abstract class BaseGui extends GuiContainer
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(playerInventoryTexture);
-        drawTexturedModalRect(guiLeft + leftNudge, guiTop + containerSize + bufferSpace, 0, 0, xSize, playerInventorySize);
+
+        if (!isHidingPlayerInventory)
+        {
+            mc.renderEngine.bindTexture(playerInventoryTexture);
+            drawTexturedModalRect(guiLeft + leftNudge, guiTop + containerSize + bufferSpace, 0, 0, xSize, playerInventorySize);
+        }
 
         if (texture != null)
         {
@@ -172,10 +192,18 @@ public abstract class BaseGui extends GuiContainer
         {
             mc.renderEngine.bindTexture(resizableInterfaceTexture);
 
-            drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize - 4, containerSize - 4);
-            drawTexturedModalRect(guiLeft + xSize - 4, guiTop, 252, 0, 4, containerSize - 4);
-            drawTexturedModalRect(guiLeft, guiTop + containerSize - 4, 0, 252, xSize - 4, 4);
-            drawTexturedModalRect(guiLeft + xSize - 4, guiTop + containerSize - 4, 252, 252, 4, 4);
+            if (hasSeperateInventories)
+            {
+                drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize - 4, containerSize - 4);
+                drawTexturedModalRect(guiLeft + xSize - 4, guiTop, 252, 0, 4, containerSize - 4);
+                drawTexturedModalRect(guiLeft, guiTop + containerSize - 4, 0, 252, xSize - 4, 4);
+                drawTexturedModalRect(guiLeft + xSize - 4, guiTop + containerSize - 4, 252, 252, 4, 4);
+            }
+            else
+            {
+                drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize - 4, containerSize + 4 + bufferSpace);
+                drawTexturedModalRect(guiLeft + xSize - 4, guiTop, 252, 0, 4, containerSize + 4 + bufferSpace);
+            }
         }
 
         mouseX = i - guiLeft;

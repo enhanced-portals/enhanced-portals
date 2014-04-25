@@ -15,6 +15,7 @@ public class ContainerNetworkInterface extends BaseContainer
     {
         super(null, p, GuiNetworkInterface.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         controller = c;
+        hideInventorySlots();
     }
 
     @Override

@@ -32,6 +32,7 @@ public class GuiPortalControllerGlyphs extends BaseGui
         super(new ContainerPortalControllerGlyphs(c, p.inventory), CONTAINER_SIZE);
         controller = c;
         name = "gui.portalController";
+        setHidePlayerInventory();
     }
 
     @Override

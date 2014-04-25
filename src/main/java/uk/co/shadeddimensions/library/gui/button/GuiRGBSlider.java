@@ -10,7 +10,12 @@ public class GuiRGBSlider extends GuiBetterSlider
 
     public GuiRGBSlider(int id, int x, int y, String displayText, float initialValue)
     {
-        super(id, x, y, displayText + ": " + (int) (255 * initialValue), initialValue, 113);
+        this(id, x, y, displayText, initialValue, 113);
+    }
+    
+    public GuiRGBSlider(int id, int x, int y, String displayText, float initialValue, int w)
+    {
+        super(id, x, y, displayText + ": " + (int) (255 * initialValue), initialValue, w);
         originalText = displayText;
     }
 

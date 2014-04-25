@@ -10,6 +10,7 @@ import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.elements.ElementGlyphDisplay;
 import enhancedportals.client.gui.elements.ElementGlyphSelector;
 import enhancedportals.inventory.ContainerNetworkInterface;
 
@@ -23,6 +24,7 @@ public class GuiNetworkInterface extends BaseGui
         super(new ContainerNetworkInterface(c, p.inventory), CONTAINER_SIZE);
         controller = c;
         name = "gui.networkInterface";
+        setHidePlayerInventory();
     }
     
     @Override
@@ -37,29 +39,12 @@ public class GuiNetworkInterface extends BaseGui
     }
     
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    public void initGui()
     {
-        super.drawGuiContainerBackgroundLayer(f, i, j);
-        getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/playerInventory.png"));
-        drawTexturedModalRect(guiLeft + 7, guiTop + 29, 7, 7, 18 * 9, 18);
-        getMinecraft().renderEngine.bindTexture(ElementGlyphSelector.glyphs);
-        GlyphIdentifier g = controller.getIdentifierNetwork();
-        
-        if (g != null)
-        {
-            for (int k = 0; k < 9; k++)
-            {
-                if (g.size() <= k)
-                {
-                    break;
-                }
-    
-                int glyph = g.get(k), X2 = k % 9 * 18, X = glyph % 9 * 18, Y = glyph / 9 * 18;
-                drawTexturedModalRect(guiLeft + 7 + X2, guiTop + 29, X, Y, 18, 18);
-            }
-        }
+        super.initGui();
+        addElement(new ElementGlyphDisplay(this, guiLeft + 7, guiTop + 29, controller.getIdentifierNetwork()));
     }
-
+    
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {

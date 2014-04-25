@@ -17,6 +17,7 @@ public class ContainerRedstoneInterface extends BaseContainer
     {
         super(null, p, GuiRedstoneInterface.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         ri = i;
+        hideInventorySlots();
     }
 
     @Override

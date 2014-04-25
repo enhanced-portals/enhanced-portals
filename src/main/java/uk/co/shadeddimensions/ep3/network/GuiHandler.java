@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import uk.co.shadeddimensions.ep3.client.gui.GuiBiometricIdentifier;
-import uk.co.shadeddimensions.ep3.client.gui.GuiDiallingDevice;
 import uk.co.shadeddimensions.ep3.client.gui.GuiGuide;
 import uk.co.shadeddimensions.ep3.client.gui.GuiScanner;
 import uk.co.shadeddimensions.ep3.client.gui.GuiTextureDialler;
@@ -29,9 +28,11 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
-import uk.co.shadeddimensions.library.container.ContainerBase;
 import cpw.mods.fml.common.network.IGuiHandler;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.GuiDiallingDevice;
+import enhancedportals.client.gui.GuiDiallingDeviceManual;
+import enhancedportals.client.gui.GuiDiallingDeviceSave;
 import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
 import enhancedportals.client.gui.GuiModuleManipulator;
 import enhancedportals.client.gui.GuiNetworkInterface;
@@ -42,6 +43,9 @@ import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.client.gui.GuiTextureFrame;
 import enhancedportals.client.gui.GuiTextureParticle;
 import enhancedportals.client.gui.GuiTexturePortal;
+import enhancedportals.inventory.ContainerDiallingDevice;
+import enhancedportals.inventory.ContainerDiallingDeviceManual;
+import enhancedportals.inventory.ContainerDiallingDeviceSave;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
 import enhancedportals.inventory.ContainerModuleManipulator;
 import enhancedportals.inventory.ContainerNetworkInterface;
@@ -59,6 +63,9 @@ public class GuiHandler implements IGuiHandler
     public static final int PORTAL_CONTROLLER_B = 101;
     public static final int NETWORK_INTERFACE_A = 102;
     public static final int NETWORK_INTERFACE_B = 103;
+    public static final int DIALLING_DEVICE_A = 104;
+    public static final int DIALLING_DEVICE_B = 105;
+    public static final int DIALLING_DEVICE_C = 106;
     
     public static final int REDSTONE_INTERFACE = 2;
     public static final int DIALLING_DEVICE = 4;
@@ -122,9 +129,17 @@ public class GuiHandler implements IGuiHandler
             {
                 return new GuiDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
             }
-            else if (ID == DIALLING_DEVICE)
+            else if (ID == DIALLING_DEVICE || ID == DIALLING_DEVICE_A)
             {
-                return new GuiDiallingDevice((TileDiallingDevice) tile);
+                return new GuiDiallingDevice((TileDiallingDevice) tile, player);
+            }
+            else if (ID == DIALLING_DEVICE_B)
+            {
+                return new GuiDiallingDeviceManual((TileDiallingDevice) tile, player);
+            }
+            else if (ID == DIALLING_DEVICE_C)
+            {
+                return new GuiDiallingDeviceSave((TileDiallingDevice) tile, player);
             }
             else if (ID == TEXTURE_FRAME)
             {
@@ -213,10 +228,18 @@ public class GuiHandler implements IGuiHandler
                 PacketHandlerServer.sendGuiPacketToPlayer((TileStabilizerMain) tile, player);
                 return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player.inventory);
             }
-            else if (ID == DIALLING_DEVICE)
+            else if (ID == DIALLING_DEVICE || ID == DIALLING_DEVICE_A)
             {
-            	PacketHandlerServer.sendGuiPacketToPlayer((TileDiallingDevice) tile, player);
-                return new ContainerBase(tile);
+                PacketHandlerServer.sendGuiPacketToPlayer((TileDiallingDevice) tile, player);
+                return new ContainerDiallingDevice((TileDiallingDevice) tile, player.inventory);
+            }
+            else if (ID == DIALLING_DEVICE_B)
+            {
+                return new ContainerDiallingDeviceManual((TileDiallingDevice) tile, player.inventory);
+            }
+            else if (ID == DIALLING_DEVICE_C)
+            {
+                return new ContainerDiallingDeviceSave((TileDiallingDevice) tile, player.inventory);
             }
             else if (ID == TEXTURE_FRAME)
             {

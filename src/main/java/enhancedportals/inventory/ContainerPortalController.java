@@ -16,6 +16,7 @@ public class ContainerPortalController extends BaseContainer
     {
         super(null, p, GuiPortalController.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         controller = c;
+        hideInventorySlots();
     }
 
     @Override

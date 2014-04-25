@@ -36,6 +36,20 @@ public abstract class BaseContainer extends Container
     {
         return inventory == null ? true : inventory.isUseableByPlayer(entityplayer);
     }
+    
+    /** It's stupid that I'm forced to do this, even though it's not my issue. **/
+    protected void hideInventorySlots()
+    {
+        for (Object o : inventorySlots)
+        {
+            if (o instanceof Slot)
+            {
+                Slot slot = (Slot) o;
+                slot.xDisplayPosition = -1000000;
+                slot.yDisplayPosition = -1000000;
+            }
+        }
+    }
 
     protected void addPlayerInventory(int containerSize, int xOffset)
     {
