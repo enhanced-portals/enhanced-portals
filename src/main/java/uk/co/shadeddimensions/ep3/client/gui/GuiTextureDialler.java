@@ -125,7 +125,7 @@ public class GuiTextureDialler extends GuiBaseContainer
         }
         else if (button.id == mainCancelButton.id)
         {
-            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.DIALLING_DEVICE);
+            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.DIALLING_DEVICE_A);
         }
         else if (button.id == mainSaveButton.id)
         {
@@ -139,7 +139,7 @@ public class GuiTextureDialler extends GuiBaseContainer
             ClientProxy.dialEntryTexture.writeToNBT(tag, "TextureData");
             PacketHandlerClient.sendGuiPacket(tag);
             ClientProxy.editingDialEntry = -1;
-            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.DIALLING_DEVICE);
+            GuiHandler.openGui(Minecraft.getMinecraft().thePlayer, dial, GuiHandler.DIALLING_DEVICE_A);
         }
     }
 

@@ -17,41 +17,16 @@ import net.minecraft.util.ChatMessageComponent;
 import uk.co.shadeddimensions.ep3.lib.Localization;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
+import uk.co.shadeddimensions.ep3.portal.GlyphElement;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
+import uk.co.shadeddimensions.ep3.portal.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.util.ComputerUtils;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
-import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
 public class TileDiallingDevice extends TileFrame implements IPeripheral, SimpleComponent
 {
-    public class GlyphElement
-    {
-        public String name;
-        public GlyphIdentifier identifier;
-        public PortalTextureManager texture;
-
-        public GlyphElement(String n, GlyphIdentifier i)
-        {
-            name = n;
-            identifier = i;
-            texture = null;
-        }
-
-        public GlyphElement(String n, GlyphIdentifier i, PortalTextureManager t)
-        {
-            this(n, i);
-            texture = t;
-        }
-
-        public boolean hasSpecificTexture()
-        {
-            return texture != null;
-        }
-    }
-
     public ArrayList<GlyphElement> glyphList = new ArrayList<GlyphElement>();
 
     @Override
@@ -111,7 +86,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
             }
             else if (!player.isSneaking())
             {
-                GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE);
+                GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE_A);
             }
 
             return true;

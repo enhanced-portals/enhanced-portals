@@ -23,7 +23,9 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
+        renderer.setOverrideBlockTexture(BlockPortal.instance.getBlockTextureFromSide(0));
         renderer.renderBlockAsItem(Block.portal, 0, 0xFFFFFF);
+        renderer.clearOverrideBlockTexture();
     }
 
     @Override
@@ -33,8 +35,7 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
         TileController controller = portal.getPortalController();
         Tessellator tessellator = Tessellator.instance;
         int meta = world.getBlockMetadata(x, y, z), light = 230, colour = BlockPortal.instance.colorMultiplier(world, x, y, z);
-        float r = (float)(colour >> 16 & 255) / 255.0F, g = (float)(colour >> 8 & 255) / 255.0F, b = (float)(colour & 255) / 255.0F;
-
+        
         if (controller != null && controller.instability > 0)
         {
             light = 240 + (controller.instability / 10);
@@ -45,9 +46,9 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
         float f14 = f5;
         float f17 = f5;
 
-        f11 = f5 * r;
-        f14 = f5 * g;
-        f17 = f5 * b;
+        f11 = f5 * ((colour >> 16 & 255) / 255F);
+        f14 = f5 * ((colour >> 8 & 255) / 255F);
+        f17 = f5 * ((colour & 255) / 255F);
 
         if (meta < 4)
         {

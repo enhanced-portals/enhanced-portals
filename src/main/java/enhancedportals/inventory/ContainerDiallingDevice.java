@@ -2,11 +2,9 @@ package enhancedportals.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
+import uk.co.shadeddimensions.ep3.portal.GlyphElement;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice.GlyphElement;
 
 public class ContainerDiallingDevice extends BaseContainer
 {

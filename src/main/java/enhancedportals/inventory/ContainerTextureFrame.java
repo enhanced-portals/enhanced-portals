@@ -9,7 +9,7 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 
 public class ContainerTextureFrame extends BaseContainer
 {
-    TileController controller;
+    protected TileController controller;
 
     public ContainerTextureFrame(TileController c, InventoryPlayer p)
     {

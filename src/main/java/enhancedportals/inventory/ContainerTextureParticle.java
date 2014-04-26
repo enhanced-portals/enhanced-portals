@@ -9,7 +9,7 @@ import enhancedportals.client.gui.GuiTextureParticle;
 
 public class ContainerTextureParticle extends BaseContainer
 {
-    TileController controller;
+    protected TileController controller;
 
     public ContainerTextureParticle(TileController c, InventoryPlayer p)
     {

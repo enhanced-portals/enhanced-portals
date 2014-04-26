@@ -40,6 +40,9 @@ import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.client.gui.GuiPortalControllerGlyphs;
 import enhancedportals.client.gui.GuiRedstoneInterface;
+import enhancedportals.client.gui.GuiTextureDialFrame;
+import enhancedportals.client.gui.GuiTextureDialParticle;
+import enhancedportals.client.gui.GuiTextureDialPortal;
 import enhancedportals.client.gui.GuiTextureFrame;
 import enhancedportals.client.gui.GuiTextureParticle;
 import enhancedportals.client.gui.GuiTexturePortal;
@@ -53,6 +56,9 @@ import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
 import enhancedportals.inventory.ContainerPortalController;
 import enhancedportals.inventory.ContainerPortalControllerGlyphs;
 import enhancedportals.inventory.ContainerRedstoneInterface;
+import enhancedportals.inventory.ContainerTextureDialFrame;
+import enhancedportals.inventory.ContainerTextureDialParticle;
+import enhancedportals.inventory.ContainerTextureDialPortal;
 import enhancedportals.inventory.ContainerTextureFrame;
 import enhancedportals.inventory.ContainerTextureParticle;
 import enhancedportals.inventory.ContainerTexturePortal;
@@ -66,9 +72,11 @@ public class GuiHandler implements IGuiHandler
     public static final int DIALLING_DEVICE_A = 104;
     public static final int DIALLING_DEVICE_B = 105;
     public static final int DIALLING_DEVICE_C = 106;
+    public static final int TEXTURE_DIALLING_A = 107;
+    public static final int TEXTURE_DIALLING_B = 108;
+    public static final int TEXTURE_DIALLING_C = 109;
     
     public static final int REDSTONE_INTERFACE = 2;
-    public static final int DIALLING_DEVICE = 4;
     public static final int BIOMETRIC_IDENTIFIER = 5;
     public static final int MODULE_MANIPULATOR = 6;
     public static final int TRANSFER_FLUID = 7;
@@ -129,7 +137,7 @@ public class GuiHandler implements IGuiHandler
             {
                 return new GuiDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
             }
-            else if (ID == DIALLING_DEVICE || ID == DIALLING_DEVICE_A)
+            else if (ID == DIALLING_DEVICE_A)
             {
                 return new GuiDiallingDevice((TileDiallingDevice) tile, player);
             }
@@ -140,6 +148,18 @@ public class GuiHandler implements IGuiHandler
             else if (ID == DIALLING_DEVICE_C)
             {
                 return new GuiDiallingDeviceSave((TileDiallingDevice) tile, player);
+            }
+            else if (ID == TEXTURE_DIALLING_A)
+            {
+                return new GuiTextureDialFrame((TileDiallingDevice) tile, player);
+            }
+            else if (ID == TEXTURE_DIALLING_B)
+            {
+                return new GuiTextureDialPortal((TileDiallingDevice) tile, player);
+            }
+            else if (ID == TEXTURE_DIALLING_C)
+            {
+                return new GuiTextureDialParticle((TileDiallingDevice) tile, player);
             }
             else if (ID == TEXTURE_FRAME)
             {
@@ -228,7 +248,7 @@ public class GuiHandler implements IGuiHandler
                 PacketHandlerServer.sendGuiPacketToPlayer((TileStabilizerMain) tile, player);
                 return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player.inventory);
             }
-            else if (ID == DIALLING_DEVICE || ID == DIALLING_DEVICE_A)
+            else if (ID == DIALLING_DEVICE_A)
             {
                 PacketHandlerServer.sendGuiPacketToPlayer((TileDiallingDevice) tile, player);
                 return new ContainerDiallingDevice((TileDiallingDevice) tile, player.inventory);
@@ -240,6 +260,18 @@ public class GuiHandler implements IGuiHandler
             else if (ID == DIALLING_DEVICE_C)
             {
                 return new ContainerDiallingDeviceSave((TileDiallingDevice) tile, player.inventory);
+            }
+            else if (ID == TEXTURE_DIALLING_A)
+            {
+                return new ContainerTextureDialFrame((TileDiallingDevice) tile, player.inventory);
+            }
+            else if (ID == TEXTURE_DIALLING_B)
+            {
+                return new ContainerTextureDialPortal((TileDiallingDevice) tile, player.inventory);
+            }
+            else if (ID == TEXTURE_DIALLING_C)
+            {
+                return new ContainerTextureDialParticle((TileDiallingDevice) tile, player.inventory);
             }
             else if (ID == TEXTURE_FRAME)
             {

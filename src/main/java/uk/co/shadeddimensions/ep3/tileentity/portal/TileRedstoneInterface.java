@@ -11,13 +11,11 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import uk.co.shadeddimensions.ep3.block.BlockFrame;
 import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice.GlyphElement;
+import uk.co.shadeddimensions.ep3.portal.GlyphElement;
 import uk.co.shadeddimensions.ep3.util.WorldUtils;
 import uk.co.shadeddimensions.library.util.ItemHelper;
 

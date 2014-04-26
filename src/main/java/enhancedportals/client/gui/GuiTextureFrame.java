@@ -19,9 +19,9 @@ import enhancedportals.inventory.ContainerTextureFrame;
 public class GuiTextureFrame extends BaseGui
 {
     public static final int CONTAINER_SIZE = 75;
-    TileController controller;
-    GuiRGBSlider sliderR, sliderG, sliderB;
-    GuiButton buttonReset, buttonSave;
+    protected TileController controller;
+    protected GuiRGBSlider sliderR, sliderG, sliderB;
+    protected GuiButton buttonReset, buttonSave;
 
     public GuiTextureFrame(TileController c, EntityPlayer p)
     {
@@ -81,7 +81,7 @@ public class GuiTextureFrame extends BaseGui
         addTab(new TabColour(this, sliderR, sliderG, sliderB, buttonSave, buttonReset));
         addTab(new TabTip(this, "colourTip"));
     }
-    
+
     @Override
     protected void mouseMovedOrUp(int par1, int par2, int par3)
     {

@@ -1,4 +1,4 @@
-package uk.co.shadeddimensions.ep3.util;
+package uk.co.shadeddimensions.ep3.portal;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

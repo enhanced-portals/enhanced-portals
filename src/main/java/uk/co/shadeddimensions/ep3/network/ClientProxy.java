@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import uk.co.shadeddimensions.ep3.client.PortalRenderer;
 import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.util.PortalTextureManager;
+import uk.co.shadeddimensions.ep3.portal.PortalTextureManager;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
