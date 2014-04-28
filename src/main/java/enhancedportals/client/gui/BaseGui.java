@@ -36,6 +36,16 @@ public abstract class BaseGui extends GuiContainer
         this(container, defaultContainerSize);
     }
 
+    public int getSizeX()
+    {
+        return xSize;
+    }
+
+    public int getSizeY()
+    {
+        return ySize;
+    }
+    
     public BaseGui(BaseContainer container, int cSize)
     {
         super(container);
@@ -240,6 +250,7 @@ public abstract class BaseGui extends GuiContainer
                     yPosRight += tab.currentHeight;
                 }
             }
+            
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }

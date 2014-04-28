@@ -16,12 +16,18 @@ import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
 public class GuiTextureDialFrame extends GuiTextureFrame
 {
     TileDiallingDevice dial;
-    boolean didSave;
+    boolean didSave, returnToEdit;
 
     public GuiTextureDialFrame(TileDiallingDevice d, EntityPlayer p)
     {
+        this(d, p, false);
+    }
+    
+    public GuiTextureDialFrame(TileDiallingDevice d, EntityPlayer p, boolean r)
+    {
         super(d.getPortalController(), p);
         dial = d;
+        returnToEdit = r;
     }
 
     @Override
@@ -57,7 +63,7 @@ public class GuiTextureDialFrame extends GuiTextureFrame
         else if (button.id == 1000)
         {
             didSave = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_C).getPacket());
+            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C).getPacket());
         }
     }
     

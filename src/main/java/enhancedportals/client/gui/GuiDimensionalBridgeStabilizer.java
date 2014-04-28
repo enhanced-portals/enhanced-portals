@@ -43,7 +43,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         if (GeneralUtils.hasEnergyCost())
         {
             buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + containerSize - 27, 140, 20, Localization.getGuiString("powerModeNormal")));
-            addElement(new ElementRedstoneFlux(this, guiLeft + xSize - 23, guiTop + 18, stabilizer.getEnergyStorage()));
+            addElement(new ElementRedstoneFlux(this, xSize - 23, 18, stabilizer.getEnergyStorage()));
             addTab(new TabRedstoneFlux(this, stabilizer));
         }
     }

@@ -219,7 +219,7 @@ public class TileRedstoneInterface extends TileFrame
                 return;
             }
 
-            boolean hasDialler = controller.getDiallingDeviceCount() > 0;
+            boolean hasDialler = controller.getDiallingDevices().size() > 0;
             int redstoneInputState = WorldUtils.getHighestPowerState(this);
 
             if (state == 1) // Remove portal on signal

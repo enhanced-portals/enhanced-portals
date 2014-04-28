@@ -15,6 +15,11 @@ public class ElementGlyphDisplay extends BaseElement
         super(gui, x, y, 162, 18);
         id = i;
     }
+    
+    public void setIdentifier(GlyphIdentifier i)
+    {
+        id = i;
+    }
 
     @Override
     public void addTooltip(List<String> list)

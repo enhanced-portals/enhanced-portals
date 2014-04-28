@@ -545,11 +545,11 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 		//{
 		//	throw new PortalException("notOnSameStabilizer");
 		//}
-		else if (cA.getDiallingDeviceCount() > 0 && cB.getNetworkInterfaceCount() > 0)
+		else if (cA.getDiallingDevices().size() > 0 && cB.getNetworkInterfaces().size() > 0)
 		{
 			throw new PortalException("receivingPortalNoDialler");
 		}
-		else if (cA.getNetworkInterfaceCount() > 0 && cB.getDiallingDeviceCount() > 0)
+		else if (cA.getNetworkInterfaces().size() > 0 && cB.getDiallingDevices().size() > 0)
 		{
 			throw new PortalException("sendingPortalNoDialler"); // Should never happen but it doesn't hurt to check.
 		}

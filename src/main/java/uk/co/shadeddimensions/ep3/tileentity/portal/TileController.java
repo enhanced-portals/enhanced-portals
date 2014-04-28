@@ -93,12 +93,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     WorldCoordinates cachedDestinationLoc;
 
     @SideOnly(Side.CLIENT)
-    int countPortals, countFrames, countRedstone, countNetwork, countDial, countFluids, countItems, countEnergy;
-
-    @SideOnly(Side.CLIENT)
-    boolean hasBio;
-
-    @SideOnly(Side.CLIENT)
     GlyphIdentifier uID, nID;
 
     @Override
@@ -540,18 +534,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 		return null;
 	}
 
-    public int getDiallingDeviceCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countDial;
-        }
-        else
-        {
-            return getDiallingDevices().size();
-        }
-    }
-
     public ArrayList<ChunkCoordinates> getDiallingDevices()
     {
         return diallingDevices;
@@ -610,33 +592,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return null;
     }
 
-    public int getFrameCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countFrames;
-        }
-        else
-        {
-            return getFrames().size();
-        }
-    }
-
     public ArrayList<ChunkCoordinates> getFrames()
     {
         return portalFrames;
-    }
-
-    public boolean getHasBiometricIdentifier()
-    {
-        if (worldObj.isRemote)
-        {
-            return hasBio;
-        }
-        else
-        {
-            return getBiometricIdentifier() != null;
-        }
     }
 
     /***
@@ -653,11 +611,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     public boolean getHasIdentifierUnique()
     {
         return getIdentifierUnique() != null;
-    }
-
-    public boolean getHasModuleManipulator()
-    {
-        return moduleManipulator != null;
     }
 
     /**
@@ -701,18 +654,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return null;
     }
 
-    public int getNetworkInterfaceCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countNetwork;
-        }
-        else
-        {
-            return getNetworkInterfaces().size();
-        }
-    }
-
     public ArrayList<ChunkCoordinates> getNetworkInterfaces()
     {
         return networkInterfaces;
@@ -724,33 +665,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return isFinalized() ? this : null;
     }
 
-    public int getPortalCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countPortals;
-        }
-        else
-        {
-            return getPortals().size();
-        }
-    }
-
     public ArrayList<ChunkCoordinates> getPortals()
     {
         return portalBlocks;
-    }
-
-    public int getRedstoneInterfaceCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countRedstone;
-        }
-        else
-        {
-            return getRedstoneInterfaces().size();
-        }
     }
 
     public ArrayList<ChunkCoordinates> getRedstoneInterfaces()
@@ -762,46 +679,10 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         return transferEnergy;
     }
-
-    public int getTransferEnergyCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countEnergy;
-        }
-        else
-        {
-            return getTransferEnergy().size();
-        }
-    }
-
-    public int getTransferFluidCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countFluids;
-        }
-        else
-        {
-            return getTransferFluids().size();
-        }
-    }
     
     public ArrayList<ChunkCoordinates> getTransferFluids()
     {
         return transferFluids;
-    }
-
-    public int getTransferItemCount()
-    {
-        if (worldObj.isRemote)
-        {
-            return countItems;
-        }
-        else
-        {
-            return getTransferItems().size();
-        }
     }
 
     public ArrayList<ChunkCoordinates> getTransferItems()
@@ -986,15 +867,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         stream.writeUTF(getHasIdentifierUnique() ? getIdentifierUnique().getGlyphString() : "");
         stream.writeUTF(getHasIdentifierNetwork() ? getIdentifierNetwork().getGlyphString() : "");
-        stream.writeInt(getPortalCount());
-        stream.writeInt(getFrameCount());
-        stream.writeInt(getRedstoneInterfaceCount());
-        stream.writeInt(getNetworkInterfaceCount());
-        stream.writeInt(getDiallingDeviceCount());
-        stream.writeBoolean(getHasBiometricIdentifier());
-        stream.writeInt(getTransferEnergyCount());
-        stream.writeInt(getTransferFluidCount());
-        stream.writeInt(getTransferItemCount());
         stream.writeInt(getHasIdentifierNetwork() ? EnhancedPortals.proxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
         stream.writeBoolean(isPublic);
     }
@@ -1004,15 +876,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         uID = new GlyphIdentifier(stream.readUTF());
         nID = new GlyphIdentifier(stream.readUTF());
-        countPortals = stream.readInt();
-        countFrames = stream.readInt();
-        countRedstone = stream.readInt();
-        countNetwork = stream.readInt();
-        countDial = stream.readInt();
-        hasBio = stream.readBoolean();
-        countEnergy = stream.readInt();
-        countFluids = stream.readInt();
-        countItems = stream.readInt();
         connectedPortals = stream.readInt();
         isPublic = stream.readBoolean();
     }
@@ -1083,6 +946,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         portalState = ControlState.values()[tagCompound.getInteger("PortalState")];
         instability = tagCompound.getInteger("Instability");
         portalType = tagCompound.getInteger("PortalType");
+        isPublic = tagCompound.getBoolean("isPublic");
 
         portalFrames = GeneralUtils.loadChunkCoordList(tagCompound, "Frames");
         portalBlocks = GeneralUtils.loadChunkCoordList(tagCompound, "Portals");
@@ -1349,6 +1213,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         tagCompound.setInteger("PortalState", portalState.ordinal());
         tagCompound.setInteger("Instability", instability);
         tagCompound.setInteger("PortalType", portalType);
+        tagCompound.setBoolean("isPublic", isPublic);
 
         GeneralUtils.saveChunkCoordList(tagCompound, getFrames(), "Frames");
         GeneralUtils.saveChunkCoordList(tagCompound, getPortals(), "Portals");

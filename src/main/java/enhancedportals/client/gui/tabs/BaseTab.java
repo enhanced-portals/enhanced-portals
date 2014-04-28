@@ -63,6 +63,13 @@ public abstract class BaseTab
         {
             texture = DEFAULT_TEXTURE_RIGHT;
         }
+        
+        int guiLeft = gui.getGuiLeft();
+        
+        if (guiLeft < maxWidth)
+        {
+            maxWidth = guiLeft - 1;
+        }
     }
 
     void drawIcon(Icon icon, int x, int y, int spriteSheet)

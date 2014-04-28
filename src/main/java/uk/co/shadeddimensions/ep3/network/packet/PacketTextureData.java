@@ -10,16 +10,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.portal.GlyphElement;
+import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import uk.co.shadeddimensions.ep3.portal.PortalTextureManager;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import enhancedportals.client.gui.GuiDiallingDeviceEdit;
 
 public class PacketTextureData extends PacketEnhancedPortals
 {
     int id, x, y, z;
     PortalTextureManager ptm;
+    String name;
+    String glyphs;
 
     public PacketTextureData()
     {
@@ -34,10 +39,12 @@ public class PacketTextureData extends PacketEnhancedPortals
         this.z = z;
     }
 
-    public PacketTextureData(PortalTextureManager t)
+    public PacketTextureData(String n, String g, PortalTextureManager t)
     {
         id = -1;
         ptm = t;
+        name = n;
+        glyphs = g;
     }
 
     @Override
@@ -48,8 +55,10 @@ public class PacketTextureData extends PacketEnhancedPortals
             return;
         }
 
-        ClientProxy.dialEntryTexture = ptm;
-        FMLClientHandler.instance().getClient().currentScreen.initGui(); // Force the UI elements to update to reflect the data that should be shown
+        ClientProxy.saveName = name;
+        ClientProxy.saveGlyph = new GlyphIdentifier(glyphs);
+        ClientProxy.saveTexture = ptm;
+        ((GuiDiallingDeviceEdit) FMLClientHandler.instance().getClient().currentScreen).receivedData();
     }
 
     @Override
@@ -70,6 +79,8 @@ public class PacketTextureData extends PacketEnhancedPortals
             NBTTagCompound data = CompressedStreamTools.decompress(compressed);
 
             ptm = new PortalTextureManager();
+            name = stream.readUTF();
+            glyphs = stream.readUTF();
 
             if (data.hasKey("Texture"))
             {
@@ -88,8 +99,8 @@ public class PacketTextureData extends PacketEnhancedPortals
         if (dial != null)
         {
         	GuiHandler.openGui((EntityPlayer)player, dial, GuiHandler.TEXTURE_DIALLER);
-            PortalTextureManager PTM = dial.glyphList.get(id).texture;
-            PacketDispatcher.sendPacketToPlayer(new PacketTextureData(PTM).getPacket(), player);
+        	GlyphElement e = dial.glyphList.get(id);
+            PacketDispatcher.sendPacketToPlayer(new PacketTextureData(e.name, e.identifier.getGlyphString(), e.texture).getPacket(), player);
         }
     }
 
@@ -117,6 +128,8 @@ public class PacketTextureData extends PacketEnhancedPortals
             byte[] compressed = CompressedStreamTools.compress(data);
             stream.writeShort(compressed.length);
             stream.write(compressed);
+            stream.writeUTF(name);
+            stream.writeUTF(glyphs);
         }
     }
 }

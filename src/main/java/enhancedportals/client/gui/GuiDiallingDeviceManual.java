@@ -1,6 +1,5 @@
 package enhancedportals.client.gui;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +8,9 @@ import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
+import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementGlyphSelector;
 import enhancedportals.client.gui.elements.ElementGlyphViewer;
@@ -19,14 +20,17 @@ public class GuiDiallingDeviceManual extends BaseGui
 {
     public static final int CONTAINER_SIZE = 163;
     TileDiallingDevice dial;
+    TileController controller;
     ElementGlyphSelector selector;
     int warningTimer;
+    GuiButton buttonDial;
 
     public GuiDiallingDeviceManual(TileDiallingDevice d, EntityPlayer p)
     {
         super(new ContainerDiallingDeviceManual(d, p.inventory), CONTAINER_SIZE);
         dial = d;
         name = "gui.dialDevice";
+        controller = dial.getPortalController();
         setHidePlayerInventory();
     }
     
@@ -35,14 +39,17 @@ public class GuiDiallingDeviceManual extends BaseGui
     {
         super.initGui();
         
-        selector = new ElementGlyphSelector(this, guiLeft + 7, guiTop + 59);
-        addElement(new ElementGlyphViewer(this, guiLeft + 7, guiTop + 27, selector));
+        selector = new ElementGlyphSelector(this, 7, 59);
+        addElement(new ElementGlyphViewer(this, 7, 27, selector));
         addElement(selector);
+        
+        buttonDial = new GuiButton(3, guiLeft + xSize - 87, guiTop + 136, 80, 20, EnhancedPortals.localize("gui.dial"));
+        buttonDial.enabled = !controller.isPortalActive();
         
         buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + 115, 80, 20, EnhancedPortals.localize("gui.clear")));
         buttonList.add(new GuiButton(1, guiLeft + xSize - 87, guiTop + 115, 80, 20, EnhancedPortals.localize("gui.save")));
         buttonList.add(new GuiButton(2, guiLeft + 7, guiTop + 136, 80, 20, EnhancedPortals.localize("gui.cancel")));
-        buttonList.add(new GuiButton(3, guiLeft + xSize - 87, guiTop + 136, 80, 20, EnhancedPortals.localize("gui.dial")));
+        buttonList.add(buttonDial);
     }
     
     @Override
@@ -70,6 +77,8 @@ public class GuiDiallingDeviceManual extends BaseGui
         {
             warningTimer--;
         }
+        
+        buttonDial.enabled = !controller.isPortalActive();
     }
     
     @Override

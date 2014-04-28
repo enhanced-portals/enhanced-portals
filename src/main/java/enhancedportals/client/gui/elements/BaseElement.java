@@ -22,8 +22,8 @@ public abstract class BaseElement
     public BaseElement(BaseGui gui, int x, int y, int w, int h)
     {
         parent = gui;
-        posX = x;
-        posY = y;
+        posX = gui.getGuiLeft() + x;
+        posY = gui.getGuiTop() + y;
         sizeX = w;
         sizeY = h;
     }

@@ -42,7 +42,6 @@ public class EnhancedPortals
     {
         proxy.setupCrafting();
         proxy.miscSetup();
-
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
     }
 

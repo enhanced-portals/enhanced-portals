@@ -14,12 +14,18 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 public class GuiTextureDialPortal extends GuiTexturePortal
 {
     TileDiallingDevice dial;
-    boolean didSave;
+    boolean didSave, returnToEdit;
     
     public GuiTextureDialPortal(TileDiallingDevice d, EntityPlayer p)
     {
+        this(d, p, false);
+    }
+    
+    public GuiTextureDialPortal(TileDiallingDevice d, EntityPlayer p, boolean r)
+    {
         super(d.getPortalController(), p);
         dial = d;
+        returnToEdit = r;
     }
 
     @Override
@@ -55,7 +61,7 @@ public class GuiTextureDialPortal extends GuiTexturePortal
         else if (button.id == 1000)
         {
             didSave = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_C).getPacket());
+            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C).getPacket());
         }
     }
     

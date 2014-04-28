@@ -109,22 +109,22 @@ public class ItemUpgrade extends Item
 			}
 			else
 			{
-				if (controller.getHasBiometricIdentifier() && blockMeta == BlockFrame.BIOMETRIC_IDENTIFIER)
+				if (controller.getBiometricIdentifier() != null && blockMeta == BlockFrame.BIOMETRIC_IDENTIFIER)
 				{
 					player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleBiometricIdentifiers")));
 					return false;
 				}
-				else if (controller.getDiallingDeviceCount() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
+				else if (controller.getDiallingDevices().size() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
 				{
 					player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
 					return false;
 				}
-				else if (controller.getNetworkInterfaceCount() > 0 && blockMeta == BlockFrame.DIALLING_DEVICE)
+				else if (controller.getNetworkInterfaces().size() > 0 && blockMeta == BlockFrame.DIALLING_DEVICE)
 				{
 					player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("dialDeviceAndNetworkInterface")));
 					return false;
 				}
-				else if (controller.getHasModuleManipulator() && blockMeta == BlockFrame.MODULE_MANIPULATOR)
+				else if (controller.getModuleManipulator() != null && blockMeta == BlockFrame.MODULE_MANIPULATOR)
 				{
 					player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("multipleModuleManipulators")));
 					return false;

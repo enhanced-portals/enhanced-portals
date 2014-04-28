@@ -5,16 +5,16 @@ import java.util.List;
 import net.minecraft.util.Icon;
 import enhancedportals.client.gui.BaseGui;
 
-public class ElementIconScroll extends BaseElement
+public class ElementScrollIcon extends BaseElement
 {
     List<Icon> icons;
 
-    public ElementIconScroll(BaseGui gui, int x, int y)
+    public ElementScrollIcon(BaseGui gui, int x, int y)
     {
         super(gui, x, y, 150, 200);
     }
     
-    public ElementIconScroll addIcon(Icon i)
+    public ElementScrollIcon addIcon(Icon i)
     {
         icons.add(i);
         return this;

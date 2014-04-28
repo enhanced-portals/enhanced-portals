@@ -33,6 +33,7 @@ public class ClientProxy extends CommonProxy
     public static GlyphIdentifier saveGlyph;
     public static PortalTextureManager saveTexture;
     public static String saveName;    
+    public static int editingID = -1;
     
     public static String manualPage = "mainMain";
     public static int editingDialEntry = -1;

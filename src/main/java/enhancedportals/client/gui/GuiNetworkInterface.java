@@ -42,7 +42,7 @@ public class GuiNetworkInterface extends BaseGui
     public void initGui()
     {
         super.initGui();
-        addElement(new ElementGlyphDisplay(this, guiLeft + 7, guiTop + 29, controller.getIdentifierNetwork()));
+        addElement(new ElementGlyphDisplay(this, 7, 29, controller.getIdentifierNetwork()));
     }
     
     @Override

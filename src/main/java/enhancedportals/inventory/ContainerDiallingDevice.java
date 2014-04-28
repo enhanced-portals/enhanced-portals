@@ -2,9 +2,17 @@ package enhancedportals.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
+import uk.co.shadeddimensions.ep3.network.GuiHandler;
+import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
+import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
+import uk.co.shadeddimensions.ep3.network.packet.PacketTextureData;
 import uk.co.shadeddimensions.ep3.portal.GlyphElement;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import enhancedportals.EnhancedPortals;
 
 public class ContainerDiallingDevice extends BaseContainer
 {
@@ -16,7 +24,7 @@ public class ContainerDiallingDevice extends BaseContainer
         dial = d;
         hideInventorySlots();
     }
-
+    
     @Override
     public void handleGuiPacket(NBTTagCompound tag, EntityPlayer player)
     {
@@ -27,8 +35,34 @@ public class ContainerDiallingDevice extends BaseContainer
         else if (tag.hasKey("dial"))
         {
             int id = tag.getInteger("dial");
-            GlyphElement e = dial.glyphList.get(id);
-            dial.getPortalController().connectionDial(e.identifier, e.texture, player);
+
+            if (dial.glyphList.size() > id)
+            {
+                GlyphElement e = dial.glyphList.get(id);
+                dial.getPortalController().connectionDial(e.identifier, e.texture, player);
+            }
+        }
+        else if (tag.hasKey("edit"))
+        {
+            int id = tag.getInteger("edit");
+
+            if (dial.glyphList.size() > id)
+            {
+                GlyphElement e = dial.glyphList.get(id);
+                player.openGui(EnhancedPortals.instance, GuiHandler.DIALLING_DEVICE_D, dial.worldObj, dial.xCoord, dial.yCoord, dial.zCoord);
+                PacketDispatcher.sendPacketToPlayer(new PacketTextureData(e.name, e.identifier.getGlyphString(), e.texture).getPacket(), (Player) player);
+            }
+        }
+        else if (tag.hasKey("delete"))
+        {
+            int id = tag.getInteger("delete");
+
+            if (dial.glyphList.size() > id)
+            {
+                dial.glyphList.remove(id);
+            }
+            
+            PacketHandlerServer.sendGuiPacketToPlayer(dial, player);
         }
     }
 }

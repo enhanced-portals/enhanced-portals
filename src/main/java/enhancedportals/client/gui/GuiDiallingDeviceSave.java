@@ -23,16 +23,18 @@ import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementGlyphDisplay;
+import enhancedportals.inventory.BaseContainer;
 import enhancedportals.inventory.ContainerDiallingDeviceManual;
 
 public class GuiDiallingDeviceSave extends BaseGui
 {
     public static final int CONTAINER_SIZE = 131;
-    TileDiallingDevice dial;
-    GuiTextField text;
-    boolean isEditing = false;
-    int particleFrameType = -1, particleFrame, particleFrameCycle;
-    int[] particleFrames = new int[] { 0 };
+    protected TileDiallingDevice dial;
+    protected GuiTextField text;
+    protected boolean isEditing = false;
+    protected int particleFrameType = -1, particleFrame, particleFrameCycle;
+    protected int[] particleFrames = new int[] { 0 };
+    protected ElementGlyphDisplay display;
 
     public GuiDiallingDeviceSave(TileDiallingDevice d, EntityPlayer p)
     {
@@ -47,6 +49,11 @@ public class GuiDiallingDeviceSave extends BaseGui
         {
             ClientProxy.saveTexture = new PortalTextureManager();
         }
+    }
+    
+    protected GuiDiallingDeviceSave(BaseContainer container, int cSize)
+    {
+        super(container, cSize);
     }
     
     @Override
@@ -72,8 +79,10 @@ public class GuiDiallingDeviceSave extends BaseGui
         
         text = new GuiTextField(fontRenderer, guiLeft + 7, guiTop + 18, 162, 20);
         text.setText(ClientProxy.saveName);
+        text.setCursorPosition(0);
         
-        addElement(new ElementGlyphDisplay(this, guiLeft + 7, guiTop + 52, ClientProxy.saveGlyph));
+        display = new ElementGlyphDisplay(this, 7, 52, ClientProxy.saveGlyph);
+        addElement(display);
         
         buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + ySize - 27, 80, 20, EnhancedPortals.localize("gui.cancel")));
         buttonList.add(new GuiButton(1, guiLeft + xSize - 87, guiTop + ySize - 27, 80, 20, EnhancedPortals.localize("gui.save")));
@@ -170,6 +179,10 @@ public class GuiDiallingDeviceSave extends BaseGui
             ClientProxy.saveGlyph = null;
             ClientProxy.saveName = null;
             ClientProxy.saveTexture = null;
+        }
+        else
+        {
+            ClientProxy.saveName = text.getText();
         }
         
         Keyboard.enableRepeatEvents(false);

@@ -39,7 +39,7 @@ public class GuiPortalController extends BaseGui
         super.initGui();
         buttonLock = new GuiButton(10, guiLeft + 7, guiTop + containerSize - 27, 162, 20, EnhancedPortals.localize("gui." + (controller.isPublic ? "public" : "private")));
         buttonList.add(buttonLock);
-        addElement(new ElementGlyphDisplay(this, guiLeft + 7, guiTop + 29, controller.getIdentifierUnique()));
+        addElement(new ElementGlyphDisplay(this, 7, 29, controller.getIdentifierUnique()));
         addTab(new TabTip(this, "privatePublic"));
     }
 

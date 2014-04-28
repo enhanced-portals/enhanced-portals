@@ -45,10 +45,10 @@ public class GuiPortalControllerGlyphs extends BaseGui
         buttonList.add(buttonCancel);
         buttonList.add(buttonSave);
         addTab(new TabTip(this, "glyphs"));
-        selector = new ElementGlyphSelector(this, guiLeft + 7, guiTop + 52);
+        selector = new ElementGlyphSelector(this, 7, 52);
         selector.setIdentifierTo(controller.getIdentifierUnique());
         addElement(selector);
-        addElement(new ElementGlyphViewer(this, guiLeft + 7, guiTop + 29, selector));
+        addElement(new ElementGlyphViewer(this, 7, 29, selector));
     }
 
     public void setWarningMessage()
