@@ -2,105 +2,180 @@ package enhancedportals.client.gui.elements;
 
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.portal.GlyphElement;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import enhancedportals.client.gui.GuiDiallingDevice;
 
 public class ElementScrollDiallingDevice extends BaseElement
 {
-    static final ResourceLocation buttonTextures = new ResourceLocation("textures/gui/widgets.png");
     TileDiallingDevice dial;
-    int scrollIndex = 0;
+    float currentScroll = 0f;
+    boolean isScrolling = false, wasClicking = false;
+    int scrollAmount = 0;
 
     public ElementScrollDiallingDevice(GuiDiallingDevice gui, TileDiallingDevice d, int x, int y)
     {
         super(gui, x, y, gui.getSizeX() - 14, gui.getSizeY() - 57);
         dial = d;
+        texture = gui.getTexture();
     }
 
     @Override
     public void addTooltip(List<String> list)
     {
-        
+
     }
 
     @Override
     public boolean handleMouseClicked(int x, int y, int mouseButton)
     {
-        int offsetX = 5, offsetY = 5, buttonHalf = 100, buttonSmallHalf = 10, buttonSpacing = 2, entryHeight = 22;
+        x += parent.getGuiLeft();
+        y += parent.getGuiTop();
+        int offsetX = 5, offsetY = 5, sizeMButton = 196, sizeSButton = 20, buttonSpacing = 2, entryHeight = 22;
         
-        for (int i = scrollIndex; i < scrollIndex + 5; i++)
+        for (int i = 0; i < 5; i++)
         {
-            if (i >= dial.glyphList.size())
+            if (scrollAmount + i >= dial.glyphList.size())
             {
                 break;
             }
-            
-            GlyphElement e = dial.glyphList.get(i);
-            int entryOffset = i * entryHeight, mouseX = parent.getMouseX() + parent.getGuiLeft(), mouseY = parent.getMouseY() + parent.getGuiTop();
-            boolean mouseOverEntry = mouseY >= posY + offsetY + entryOffset && mouseY <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && mouseX >= posX + offsetX && mouseX < posX + offsetX + buttonHalf + buttonHalf, mouseOverSmall = mouseOverEntry && mouseX >= posX + offsetX + buttonHalf + buttonHalf + buttonSpacing && mouseX < posX + offsetX + buttonHalf + buttonHalf + buttonSpacing + buttonSmallHalf + buttonSmallHalf, delete = parent.isShiftKeyDown();
-            
+
+            GlyphElement e = dial.glyphList.get(scrollAmount + i);
+            int entryOffset = i * entryHeight;
+            boolean mouseOverEntry = y >= posY + offsetY + entryOffset && y <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && x >= posX + offsetX && x < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && x >= posX + offsetX + sizeMButton + buttonSpacing && x < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton, delete = parent.isShiftKeyDown();
+
             if (mouseOverMain)
             {
-                ((GuiDiallingDevice) parent).onEntrySelected(i);
+                ((GuiDiallingDevice) parent).onEntrySelected(scrollAmount + i);
             }
             else if (mouseOverSmall)
             {
                 if (parent.isShiftKeyDown())
                 {
-                    ((GuiDiallingDevice) parent).onEntryDeleted(i);
+                    ((GuiDiallingDevice) parent).onEntryDeleted(scrollAmount + i);
                 }
                 else
                 {
-                    ((GuiDiallingDevice) parent).onEntryEdited(i);
+                    ((GuiDiallingDevice) parent).onEntryEdited(scrollAmount + i);
                 }
             }
         }
-        
+
         return true;
+    }
+
+    protected void handleMouse()
+    {
+        boolean isMouseDown = Mouse.isButtonDown(0), ignoreScroll = false;
+        int mouseX = parent.getMouseX() + parent.getGuiLeft(), mouseY = parent.getMouseY() + parent.getGuiTop();
+        int scrollbarX = posX + sizeX - 13, scrollbarY = posY + 1, scrollbarX2 = scrollbarX + 11, scrollbarY2 = scrollbarY + sizeY - 3;
+
+        if (!wasClicking && isMouseDown && mouseX >= scrollbarX && mouseX <= scrollbarX2 && mouseY >= scrollbarY && mouseY <= scrollbarY2)
+        {
+            isScrolling = true;
+        }
+
+        if (!isMouseDown)
+        {
+            isScrolling = false;
+        }
+
+        wasClicking = isMouseDown;
+
+        if (!isScrolling && !isMouseDown && intersectsWith(mouseX - parent.getGuiLeft(), mouseY - parent.getGuiTop()))
+        {
+            int wheel = Mouse.getDWheel();
+
+            if (wheel < 0)
+            {
+                currentScroll += 0.1;
+                isScrolling = ignoreScroll = true;
+            }
+            else if (wheel > 0)
+            {
+                currentScroll -= 0.1;
+                isScrolling = ignoreScroll = true;
+            }
+        }
+
+        if (isScrolling)
+        {
+            if (!ignoreScroll)
+            {
+                currentScroll = ((mouseY - scrollbarY) - 7.5F) / ((scrollbarY2 - scrollbarY) - 15f);
+            }
+
+            if (currentScroll < 0f)
+            {
+                currentScroll = 0f;
+            }
+            else if (currentScroll > 1f)
+            {
+                currentScroll = 1f;
+            }
+
+            int items = dial.glyphList.size() - 5 + 1;
+            scrollAmount = (int)((currentScroll * items) + 0.5D);
+
+            if (scrollAmount < 0)
+            {
+                scrollAmount = 0;
+            }
+
+            int max = dial.glyphList.size() - 5;
+
+            if (scrollAmount > max)
+            {
+                scrollAmount = max;
+            }
+        }
+    }
+
+    @Override
+    protected void drawBackground()
+    {
+        
     }
     
     @Override
     protected void drawContent()
     {
-        parent.drawRect(posX, posY, posX + sizeX, posY + sizeY, 0xFF000000);
-        parent.drawRect(posX + 1, posY + 1, posX + sizeX - 1, posY + sizeY - 1, 0xAAFFFFFF);
+        boolean canScroll = false;
         
-        parent.drawRect(posX + sizeX - 10, posY + 1, posX + sizeX - 1, posY + sizeY - 1, 0x44000000);
-        parent.drawRect(posX + sizeX - 10, posY + 1, posX + sizeX - 1, posY + 10, 0x66000000);
-        parent.drawRect(posX + sizeX - 10, posY + sizeY - 10, posX + sizeX - 1, posY + sizeY - 1, 0x66000000);
-        
-        int offsetX = 5, offsetY = 5, buttonHalf = 100, buttonSmallHalf = 10, buttonSpacing = 2, entryHeight = 22;
-        
-        for (int i = scrollIndex; i < scrollIndex + 5; i++)
+        if (dial.glyphList.size() >= 6)
         {
-            if (i >= dial.glyphList.size())
+            canScroll = true;
+            handleMouse();
+        }
+
+        int l = posY + 1, k = l + sizeY - 1;
+        GL11.glColor3f(1f, 1f, 1f);
+        parent.getMinecraft().getTextureManager().bindTexture(texture);
+        drawTexturedModalRect(posX + sizeX - 13, posY + 1 + (int)((float)(k - l - 16) * this.currentScroll), 244, 226 + (canScroll ? 0 : 15), 12, 15);
+        
+        int offsetX = 5, offsetY = 5, sizeMButton = 196, sizeSButton = 20, buttonSpacing = 2, entryHeight = 22;
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (scrollAmount + i >= dial.glyphList.size())
             {
                 break;
             }
             
-            GlyphElement e = dial.glyphList.get(i);
+            GL11.glColor3f(1f, 1f, 1f);
+            GlyphElement e = dial.glyphList.get(scrollAmount + i);
             int entryOffset = i * entryHeight, mouseX = parent.getMouseX() + parent.getGuiLeft(), mouseY = parent.getMouseY() + parent.getGuiTop(), fontColour = 0xFFFFFF;
-            boolean mouseOverEntry = mouseY >= posY + offsetY + entryOffset && mouseY <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && mouseX >= posX + offsetX && mouseX < posX + offsetX + buttonHalf + buttonHalf, mouseOverSmall = mouseOverEntry && mouseX >= posX + offsetX + buttonHalf + buttonHalf + buttonSpacing && mouseX < posX + offsetX + buttonHalf + buttonHalf + buttonSpacing + buttonSmallHalf + buttonSmallHalf, delete = parent.isShiftKeyDown();
+            boolean mouseOverEntry = mouseY >= posY + offsetY + entryOffset && mouseY <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && mouseX >= posX + offsetX && mouseX < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && mouseX >= posX + offsetX + sizeMButton + buttonSpacing && mouseX < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton, delete = parent.isShiftKeyDown();
+
+            parent.getTextureManager().bindTexture(texture);
+            parent.drawTexturedModalRect(posX + offsetX, posY + entryOffset + offsetY, 0, 216 + (mouseOverMain ? 20 : 0), sizeMButton, 20);
+            parent.drawTexturedModalRect(posX + offsetX + sizeMButton + buttonSpacing, posY + entryOffset + offsetY, 196 + (delete ? 20 : 0), 216 + (mouseOverSmall ? 20 : 0), sizeSButton, 20);
             
-            parent.getTextureManager().bindTexture(buttonTextures);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            
-            parent.drawTexturedModalRect(posX + offsetX, posY + entryOffset + offsetY, 0, 66 + (mouseOverMain ? 20 : 0), buttonHalf, 20);
-            parent.drawTexturedModalRect(posX + offsetX + buttonHalf, posY + entryOffset + offsetY, 200 - buttonHalf, 66 + (mouseOverMain ? 20 : 0), buttonHalf, 20);
-            
-            if (delete)
-            {
-                GL11.glColor4f(1.0F, 0.6F, 0.6F, 1.0F);
-            }
-            
-            parent.drawTexturedModalRect(posX + offsetX + (buttonHalf * 2) + buttonSpacing, posY + entryOffset + offsetY, 0, 66 + (mouseOverSmall ? 20 : 0), buttonSmallHalf, 20);
-            parent.drawTexturedModalRect(posX + offsetX + (buttonHalf * 2) + buttonSpacing + buttonSmallHalf, posY + entryOffset + offsetY, 200 - buttonSmallHalf, 66 + (mouseOverSmall ? 20 : 0), buttonSmallHalf, 20);
-            
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             parent.getFontRenderer().drawStringWithShadow(e.name, posX + offsetX + 5, posY + offsetY + 6 + entryOffset, fontColour);
         }
     }

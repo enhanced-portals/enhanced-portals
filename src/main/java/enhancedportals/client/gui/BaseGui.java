@@ -41,6 +41,11 @@ public abstract class BaseGui extends GuiContainer
         return xSize;
     }
 
+    public ResourceLocation getTexture()
+    {
+        return texture;
+    }
+    
     public int getSizeY()
     {
         return ySize;
@@ -196,7 +201,7 @@ public abstract class BaseGui extends GuiContainer
         if (texture != null)
         {
             mc.renderEngine.bindTexture(texture);
-            drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, containerSize);
+            drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, containerSize + (hasSeperateInventories ? 0 : 6));
         }
         else
         {

@@ -35,7 +35,7 @@ public class GuiTextureDialFrame extends GuiTextureFrame
     {
         super.initGui();
 
-        buttonList.add(new GuiButton(1000, guiLeft + 7, guiTop + ySize + 7, xSize - 14, 20, "Save"));
+        buttonList.add(new GuiButton(1000, guiLeft + 7, guiTop + ySize + 1, xSize - 14, 20, "Save"));
 
         Color c = new Color(ClientProxy.saveTexture.getFrameColour());
         sliderR.sliderValue = c.getRed() / 255f;

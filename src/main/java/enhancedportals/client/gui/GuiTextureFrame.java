@@ -2,11 +2,10 @@ package enhancedportals.client.gui;
 
 import java.awt.Color;
 
-import com.sun.istack.internal.localization.Localizable;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
@@ -18,7 +17,7 @@ import enhancedportals.inventory.ContainerTextureFrame;
 
 public class GuiTextureFrame extends BaseGui
 {
-    public static final int CONTAINER_SIZE = 75;
+    public static final int CONTAINER_SIZE = 100, CONTAINER_WIDTH = 190;
     protected TileController controller;
     protected GuiRGBSlider sliderR, sliderG, sliderB;
     protected GuiButton buttonReset, buttonSave;
@@ -27,8 +26,10 @@ public class GuiTextureFrame extends BaseGui
     {
         super(new ContainerTextureFrame(c, p.inventory), CONTAINER_SIZE);
         controller = c;
+        xSize = CONTAINER_WIDTH;
         name = "gui.frame";
-        setCombinedInventory();
+        texture = new ResourceLocation("enhancedportals", "textures/gui/textures.png");
+        leftNudge = 7;
     }
 
     @Override

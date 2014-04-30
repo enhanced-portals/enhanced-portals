@@ -5,6 +5,7 @@ import java.awt.Color;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
 import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
@@ -16,7 +17,7 @@ import enhancedportals.inventory.ContainerTextureParticle;
 
 public class GuiTextureParticle extends BaseGui
 {
-    public static final int CONTAINER_SIZE = 75;
+    public static final int CONTAINER_SIZE = 102;
     protected TileController controller;
     protected GuiRGBSlider sliderR, sliderG, sliderB;
     protected GuiButton buttonReset, buttonSave;
@@ -26,6 +27,7 @@ public class GuiTextureParticle extends BaseGui
         super(new ContainerTextureParticle(c, p.inventory), CONTAINER_SIZE);
         controller = c;
         name = "gui.particle";
+        texture = new ResourceLocation("enhancedportals", "textures/gui/textures.png");
         setCombinedInventory();
     }
 

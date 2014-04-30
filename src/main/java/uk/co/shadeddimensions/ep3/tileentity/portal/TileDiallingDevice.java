@@ -37,14 +37,14 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
             PortalTextureManager ptm = new PortalTextureManager();
             ptm.readFromNBT(tag, "TextureData");
             glyphList.get(tag.getInteger("SetDialTexture")).texture = ptm;
-            
+
             PacketHandlerServer.sendGuiPacketToPlayer(this, player);
         }
 
         if (tag.hasKey("GlyphName") && tag.hasKey("Glyphs"))
         {
             glyphList.add(new GlyphElement(tag.getString("GlyphName"), new GlyphIdentifier(tag.getString("Glyphs"))));
-            
+
             PacketHandlerServer.sendGuiPacketToPlayer(this, player);
         }
 
@@ -55,38 +55,43 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
             if (glyphList.size() > g)
             {
                 glyphList.remove(g);
-                
+
                 PacketHandlerServer.sendGuiPacketToPlayer(this, player);
             }
         }
-        
+
         onInventoryChanged();
     }
-    
+
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
-    	if (player.isSneaking())
-		{
-			return false;
-		}
-    	
         TileController controller = getPortalController();
-        
+
         if (worldObj.isRemote)
         {
             return controller != null;
         }
-        
+
         if (controller != null && controller.isFinalized())
         {
             if (controller.getIdentifierUnique() == null)
             {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText(Localization.getChatString("noUidSet")));
             }
-            else if (!player.isSneaking())
+            else
             {
-                GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE_A);
+                if (!player.isSneaking())
+                {
+                    GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE_A);
+                }
+                else
+                {
+                    if (controller.isPortalActive())
+                    {
+                        controller.connectionTerminate();
+                    }
+                }
             }
 
             return true;
@@ -94,7 +99,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
 
         return false;
     }
-    
+
     @Override
     public void packetGuiFill(DataOutputStream stream) throws IOException
     {
@@ -106,7 +111,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
             stream.writeUTF(glyphList.get(i).identifier.getGlyphString());
         }
     }
-    
+
     @Override
     public void packetGuiUse(DataInputStream stream) throws IOException
     {
@@ -118,7 +123,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
             glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
         }
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
@@ -167,7 +172,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
 
         tag.setTag("glyphList", list);
     }
-    
+
     @Override
     public String getType()
     {
@@ -207,7 +212,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         else if (method == 2) // dialStored
         {
             int num = getSelectedEntry(arguments);
-            
+
             if (num >= 0 && num < glyphList.size())
             {
                 getPortalController().connectionDial(glyphList.get(num).identifier, null, null);
@@ -217,7 +222,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         {
             int num = getSelectedEntry(arguments);
             GlyphElement entry = glyphList.get(num);
-            
+
             if (entry != null)
             {
                 return new Object[] { entry.name };
@@ -231,7 +236,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         {
             int num = getSelectedEntry(arguments);
             GlyphElement entry = glyphList.get(num);
-            
+
             if (entry != null)
             {
                 return new Object[] { entry.identifier.getGlyphString() };
@@ -245,10 +250,10 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         {
             return new Object[] { glyphList.size() };
         }
-        
+
         return null;
     }
-    
+
     int getSelectedEntry(Object[] arguments) throws Exception
     {
         try
@@ -259,14 +264,14 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
                 {
                     arguments[0] = arguments[0].toString().substring(0, arguments[0].toString().indexOf("."));
                 }
-                
+
                 int i = Integer.parseInt(arguments[0].toString());
-                
+
                 if (i < 0 || i >= glyphList.size())
                 {
                     throw new Exception("There is no entry in location " + i);
                 }
-                
+
                 return i;
             }
         }
@@ -274,7 +279,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         {
             throw new Exception(arguments[0].toString() + " is not an integer.");
         }
-        
+
         throw new Exception("Invalid number of arguments.");
     }
 
@@ -287,63 +292,63 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     @Override
     public void attach(IComputerAccess computer)
     {
-        
+
     }
 
     @Override
     public void detach(IComputerAccess computer)
     {
-        
+
     }
 
     @Override
     public void addDataToPacket(NBTTagCompound tag)
     {
-        
+
     }
 
     @Override
     public void onDataPacket(NBTTagCompound tag)
     {
-        
+
     }
 
     // OpenComputers
-    
-	@Override
-	public String getComponentName() {
-		return "ep_dialling_device";
-	}
-	
-	@Callback
-	public Object[] dial(Context context, Arguments args) throws Exception {
-		if(args.count() < 1) return null;
-		return callMethod(null, null, 0, ComputerUtils.argsToArray(args));
-	}
-	
-	@Callback
-	public Object[] terminate(Context context, Arguments args) {
-		getPortalController().connectionTerminate();
-		return new Object[]{true};
-	}
 
-	@Callback
-	public Object[] dialStored(Context context, Arguments args) throws Exception {
-		return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
-	}
-	
-	@Callback(direct = true)
-	public Object[] getStoredName(Context context, Arguments args) throws Exception {
-		return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
-	}
-	
-	@Callback(direct = true)
-	public Object[] getStoredGlyph(Context context, Arguments args) throws Exception {
-		return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
-	}
-	
-	@Callback(direct = true)
-	public Object[] getStoredCount(Context context, Arguments args) {
-		return new Object[] { glyphList.size() };
-	}
+    @Override
+    public String getComponentName() {
+        return "ep_dialling_device";
+    }
+
+    @Callback
+    public Object[] dial(Context context, Arguments args) throws Exception {
+        if(args.count() < 1) return null;
+        return callMethod(null, null, 0, ComputerUtils.argsToArray(args));
+    }
+
+    @Callback
+    public Object[] terminate(Context context, Arguments args) {
+        getPortalController().connectionTerminate();
+        return new Object[]{true};
+    }
+
+    @Callback
+    public Object[] dialStored(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
+    }
+
+    @Callback(direct = true)
+    public Object[] getStoredName(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
+    }
+
+    @Callback(direct = true)
+    public Object[] getStoredGlyph(Context context, Arguments args) throws Exception {
+        return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
+    }
+
+    @Callback(direct = true)
+    public Object[] getStoredCount(Context context, Arguments args) {
+        return new Object[] { glyphList.size() };
+    }
 }

@@ -8,6 +8,9 @@ import enhancedportals.client.gui.BaseGui;
 public class ElementScrollIcon extends BaseElement
 {
     List<Icon> icons;
+    float currentScroll = 0f;
+    boolean isScrolling = false, wasClicking = false;
+    int scrollAmount = 0;
 
     public ElementScrollIcon(BaseGui gui, int x, int y)
     {

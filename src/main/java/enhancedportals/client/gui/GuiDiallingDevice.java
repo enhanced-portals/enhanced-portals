@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import uk.co.shadeddimensions.ep3.network.ClientProxy;
 import uk.co.shadeddimensions.ep3.network.GuiHandler;
 import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
@@ -26,6 +27,7 @@ public class GuiDiallingDevice extends BaseGui
     public GuiDiallingDevice(TileDiallingDevice d, EntityPlayer p)
     {
         super(new ContainerDiallingDevice(d, p.inventory), CONTAINER_SIZE);
+        texture = new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png");
         xSize = CONTAINER_WIDTH;
         dial = d;
         controller = dial.getPortalController();

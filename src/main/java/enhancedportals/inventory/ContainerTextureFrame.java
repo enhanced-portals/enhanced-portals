@@ -13,7 +13,7 @@ public class ContainerTextureFrame extends BaseContainer
 
     public ContainerTextureFrame(TileController c, InventoryPlayer p)
     {
-        super(null, p, GuiTextureFrame.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
+        super(null, p, GuiTextureFrame.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize, 7);
         controller = c;
     }
 
