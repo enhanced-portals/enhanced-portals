@@ -285,7 +285,7 @@ public abstract class BaseGui extends GuiContainer
     {
         if (name != null)
         {
-            fontRenderer.drawString(EnhancedPortals.localize(name), (xSize - mc.fontRenderer.getStringWidth(EnhancedPortals.localize(name))) / 2, 6, 0x404040);
+            getFontRenderer().drawString(EnhancedPortals.localize(name), (xSize - mc.fontRenderer.getStringWidth(EnhancedPortals.localize(name))) / 2, 6, 0x404040);
         }
 
         BaseElement element = getElementAtPosition(mouseX, mouseY);
@@ -297,7 +297,7 @@ public abstract class BaseGui extends GuiContainer
 
             if (!list.isEmpty())
             {
-                drawHoveringText(list, mouseX, mouseY, fontRenderer);
+                drawHoveringText(list, mouseX, mouseY, getFontRenderer());
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glDisable(GL11.GL_LIGHTING);
                 return;
@@ -313,7 +313,7 @@ public abstract class BaseGui extends GuiContainer
 
             if (!list.isEmpty())
             {
-                drawHoveringText(list, mouseX, mouseY, fontRenderer);
+                drawHoveringText(list, mouseX, mouseY, getFontRenderer());
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glDisable(GL11.GL_LIGHTING);
                 return;
@@ -342,7 +342,7 @@ public abstract class BaseGui extends GuiContainer
 
     public FontRenderer getFontRenderer()
     {
-        return fontRenderer;
+        return fontRendererObj;
     }
 
     public TextureManager getTextureManager()

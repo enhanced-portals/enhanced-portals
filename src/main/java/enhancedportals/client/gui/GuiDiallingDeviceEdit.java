@@ -6,16 +6,15 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.portal.PortalTextureManager;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.inventory.ContainerDiallingDeviceEdit;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.portal.GlyphIdentifier;
+import enhancedportals.portal.PortalTextureManager;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiDiallingDeviceEdit extends GuiDiallingDeviceSave
 {
@@ -71,7 +70,7 @@ public class GuiDiallingDeviceEdit extends GuiDiallingDeviceSave
         }
         else
         {
-            if (par2 == 1 || par2 == this.mc.gameSettings.keyBindInventory.keyCode)
+            if (par2 == 1 || par2 == this.mc.gameSettings.keyBindInventory.getKeyCode())
             {
                 this.mc.thePlayer.closeScreen();
             }
@@ -87,7 +86,7 @@ public class GuiDiallingDeviceEdit extends GuiDiallingDeviceSave
         {
             drawRect(0, 0, xSize, ySize, 0xCC000000);
             String s = EnhancedPortals.localize("gui.waitingForDataFromServer");
-            fontRenderer.drawSplitString(s, xSize / 2 - fontRenderer.getStringWidth(s) / 2, ySize / 2 - fontRenderer.FONT_HEIGHT / 2, xSize, 0xFF0000);
+            getFontRenderer().drawSplitString(s, xSize / 2 - getFontRenderer().getStringWidth(s) / 2, ySize / 2 - getFontRenderer().FONT_HEIGHT / 2, xSize, 0xFF0000);
         }
     }
     
@@ -96,7 +95,7 @@ public class GuiDiallingDeviceEdit extends GuiDiallingDeviceSave
     {
         if (button.id == 0) // cancel
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_A).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_A));
         }
         else if (button.id == 1) // save
         {
@@ -105,22 +104,22 @@ public class GuiDiallingDeviceEdit extends GuiDiallingDeviceSave
             tag.setString("name", text.getText());
             tag.setString("uid", ClientProxy.saveGlyph.getGlyphString());
             ClientProxy.saveTexture.writeToNBT(tag, "texture");
-            PacketDispatcher.sendPacketToServer(new PacketGuiData(tag).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
         }
         else if (button.id == 100)
         {
             isEditing = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_A2).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_A));
         }
         else if (button.id == 101)
         {
             isEditing = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_B2).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_B));
         }
         else if (button.id == 102)
         {
             isEditing = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_C2).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_C));
         }
     }
     

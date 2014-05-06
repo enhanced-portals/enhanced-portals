@@ -1,9 +1,9 @@
 package enhancedportals.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.inventory.ContainerModuleManipulator;
+import enhancedportals.tileentity.portal.TileModuleManipulator;
 
 public class GuiModuleManipulator extends BaseGui
 {
@@ -21,7 +21,7 @@ public class GuiModuleManipulator extends BaseGui
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        fontRenderer.drawString(Localization.getGuiString("modules"), 8, containerSize - 35, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.modules"), 8, containerSize - 35, 0x404040);
     }
     
     @Override

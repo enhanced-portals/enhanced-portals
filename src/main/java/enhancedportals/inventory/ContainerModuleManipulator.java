@@ -1,13 +1,12 @@
 package enhancedportals.inventory;
 
-import enhancedportals.client.gui.BaseGui;
-import enhancedportals.client.gui.GuiModuleManipulator;
-import uk.co.shadeddimensions.ep3.client.gui.slot.SlotPortalModule;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileModuleManipulator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import enhancedportals.client.gui.BaseGui;
+import enhancedportals.client.gui.GuiModuleManipulator;
+import enhancedportals.inventory.slot.SlotPortalModule;
+import enhancedportals.tileentity.portal.TileModuleManipulator;
 
 public class ContainerModuleManipulator extends BaseContainer
 {

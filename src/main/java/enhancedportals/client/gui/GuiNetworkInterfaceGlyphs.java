@@ -2,21 +2,20 @@ package enhancedportals.client.gui;
 
 import java.util.Random;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementGlyphSelector;
 import enhancedportals.client.gui.elements.ElementGlyphViewer;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.portal.GlyphIdentifier;
+import enhancedportals.tileentity.portal.TileController;
 
 public class GuiNetworkInterfaceGlyphs extends BaseGui
 {
@@ -75,13 +74,13 @@ public class GuiNetworkInterfaceGlyphs extends BaseGui
         {
             if (button.id == buttonCancel.id) // Cancel
             {
-                PacketDispatcher.sendPacketToServer(new PacketRequestGui(controller, GuiHandler.NETWORK_INTERFACE_A).getPacket());
+                EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(controller, GuiHandler.NETWORK_INTERFACE_A));
             }
             else if (button.id == buttonSave.id) // Save Changes
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setString("nid", selector.getGlyphIdentifier().getGlyphString());
-                PacketHandlerClient.sendGuiPacket(tag);
+                EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
             }
         }
     }
@@ -90,7 +89,7 @@ public class GuiNetworkInterfaceGlyphs extends BaseGui
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        fontRenderer.drawString(EnhancedPortals.localize("gui.networkIdentifier"), 7, 19, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.networkIdentifier"), 7, 19, 0x404040);
     }
     
     @Override

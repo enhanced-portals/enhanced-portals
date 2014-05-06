@@ -3,13 +3,13 @@ package enhancedportals.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.lib.Localization;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementRedstoneFlux;
 import enhancedportals.client.gui.tabs.TabRedstoneFlux;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.utility.GeneralUtils;
 
 public class GuiDimensionalBridgeStabilizer extends BaseGui
 {
@@ -31,7 +31,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setBoolean("button", false);
-            PacketHandlerClient.sendGuiPacket(tag);
+            EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
         }
     }
     
@@ -42,7 +42,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         
         if (GeneralUtils.hasEnergyCost())
         {
-            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + containerSize - 27, 140, 20, Localization.getGuiString("powerModeNormal")));
+            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + containerSize - 27, 140, 20, stabilizer.powerState == 0 ? EnhancedPortals.localize("gui.powerModeNormal") : stabilizer.powerState == 1 ? EnhancedPortals.localize("gui.powerModeRisky") : stabilizer.powerState == 2 ? EnhancedPortals.localize("gui.powerModeUnstable") : EnhancedPortals.localize("gui.powerModeUnpredictable")));
             addElement(new ElementRedstoneFlux(this, xSize - 23, 18, stabilizer.getEnergyStorage()));
             addTab(new TabRedstoneFlux(this, stabilizer));
         }
@@ -63,17 +63,17 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         super.drawGuiContainerForegroundLayer(par1, par2);
         
         String s1 = "" + stabilizer.intActiveConnections * 2;
-        fontRenderer.drawString(Localization.getGuiString("information"), 8, 18, 0x404040);
-        fontRenderer.drawString(Localization.getGuiString("activePortals"), 12, 28, 0x777777);
-        fontRenderer.drawString(s1, xSize - 27 - fontRenderer.getStringWidth(s1), 28, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.information"), 8, 18, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.activePortals"), 12, 28, 0x777777);
+        getFontRenderer().drawString(s1, xSize - 27 - getFontRenderer().getStringWidth(s1), 28, 0x404040);
         
         if (GeneralUtils.hasEnergyCost())
         {
             int instability = stabilizer.powerState == 0 ? stabilizer.instability : stabilizer.powerState == 1 ? 20 : stabilizer.powerState == 2 ? 50 : 70;
             String s2 = instability + "%";
             
-            fontRenderer.drawString(Localization.getGuiString("instability"), 12, 38, 0x777777);
-            fontRenderer.drawString(s2, xSize - 27 - fontRenderer.getStringWidth(s2), 38, instability == 0 ? 0x00BB00 : instability == 20 ? 0xDD6644 : instability == 50 ? 0xDD4422 : 0xFF0000);
+            getFontRenderer().drawString(EnhancedPortals.localize("gui.instability"), 12, 38, 0x777777);
+            getFontRenderer().drawString(s2, xSize - 27 - getFontRenderer().getStringWidth(s2), 38, instability == 0 ? 0x00BB00 : instability == 20 ? 0xDD6644 : instability == 50 ? 0xDD4422 : 0xFF0000);
         }
     }
     
@@ -84,7 +84,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         
         if (GeneralUtils.hasEnergyCost())
         {
-            ((GuiButton) buttonList.get(0)).displayString = stabilizer.powerState == 0 ? Localization.getGuiString("powerModeNormal") : stabilizer.powerState == 1 ? Localization.getGuiString("powerModeRisky") : stabilizer.powerState == 2 ? Localization.getGuiString("powerModeUnstable") : Localization.getGuiString("powerModeUnpredictable");
+            ((GuiButton) buttonList.get(0)).displayString = stabilizer.powerState == 0 ? EnhancedPortals.localize("gui.powerModeNormal") : stabilizer.powerState == 1 ? EnhancedPortals.localize("gui.powerModeRisky") : stabilizer.powerState == 2 ? EnhancedPortals.localize("gui.powerModeUnstable") : EnhancedPortals.localize("gui.powerModeUnpredictable");
         }
     }
 }

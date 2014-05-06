@@ -2,14 +2,13 @@ package enhancedportals.client.gui;
 
 import java.awt.Color;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiTextureDialPortal extends GuiTexturePortal
 {
@@ -61,7 +60,7 @@ public class GuiTextureDialPortal extends GuiTexturePortal
         else if (button.id == 1000)
         {
             didSave = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C));
         }
     }
     

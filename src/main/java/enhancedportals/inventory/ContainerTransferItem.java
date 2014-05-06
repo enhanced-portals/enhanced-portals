@@ -3,9 +3,9 @@ package enhancedportals.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferItem;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTransferItem;
+import enhancedportals.tileentity.portal.TileTransferItem;
 
 public class ContainerTransferItem extends BaseContainer
 {

@@ -1,18 +1,17 @@
 package enhancedportals.inventory;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
-import enhancedportals.client.gui.BaseGui;
-import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
-import uk.co.shadeddimensions.ep3.client.gui.slot.SlotDBS;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.BaseGui;
+import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
+import enhancedportals.inventory.slot.SlotDBS;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.utility.GeneralUtils;
 
 public class ContainerDimensionalBridgeStabilizer extends BaseContainer
 {
@@ -60,7 +59,7 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger("energy", currentPower);
-                PacketDispatcher.sendPacketToPlayer(new PacketGuiData(tag).getPacket(), (Player) icrafting);
+                EnhancedPortals.packetPipeline.sendTo(new PacketGuiData(tag), (EntityPlayerMP) icrafting);
             }
             
             if (lastPortals != currentPortals)

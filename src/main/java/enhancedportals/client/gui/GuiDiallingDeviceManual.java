@@ -4,17 +4,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementGlyphSelector;
 import enhancedportals.client.gui.elements.ElementGlyphViewer;
 import enhancedportals.inventory.ContainerDiallingDeviceManual;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiDiallingDeviceManual extends BaseGui
 {
@@ -57,14 +56,14 @@ public class GuiDiallingDeviceManual extends BaseGui
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
         
-        fontRenderer.drawString(EnhancedPortals.localize("gui.uniqueIdentifier"), 7, 18, 0x404040);
-        fontRenderer.drawString(EnhancedPortals.localize("gui.glyphs"), 7, 50, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.uniqueIdentifier"), 7, 18, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.glyphs"), 7, 50, 0x404040);
         
         if (warningTimer > 0)
         {
             drawRect(7, 27, 7 + 162, 27 + 18, 0xAA000000);
             String s = EnhancedPortals.localize("gui.noUidSet");
-            fontRenderer.drawString(s, xSize / 2 - fontRenderer.getStringWidth(s) / 2, 33, 0xff4040);
+            getFontRenderer().drawString(s, xSize / 2 - getFontRenderer().getStringWidth(s) / 2, 33, 0xff4040);
         }
     }
     
@@ -94,7 +93,7 @@ public class GuiDiallingDeviceManual extends BaseGui
             {
                 ClientProxy.saveGlyph = selector.getGlyphIdentifier();
                 ClientProxy.saveName = "Unnamed Portal";
-                PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_C).getPacket());
+                EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_C));
             }
             else
             {
@@ -103,7 +102,7 @@ public class GuiDiallingDeviceManual extends BaseGui
         }
         else if (button.id == 2) // cancel
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_A).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_A));
         }
         else if (button.id == 3) // dial
         {
@@ -111,7 +110,7 @@ public class GuiDiallingDeviceManual extends BaseGui
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setString("dial", selector.getGlyphIdentifier().getGlyphString());
-                PacketHandlerClient.sendGuiPacket(tag);
+                EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
                 Minecraft.getMinecraft().thePlayer.closeScreen();
             }
             else

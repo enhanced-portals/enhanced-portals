@@ -1,18 +1,14 @@
 package enhancedportals.inventory;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.portal.PortalException;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.portal.GlyphIdentifier;
+import enhancedportals.tileentity.portal.TileController;
 
 public class ContainerNetworkInterfaceGlyphs extends BaseContainer
 {
@@ -31,7 +27,7 @@ public class ContainerNetworkInterfaceGlyphs extends BaseContainer
         if (tag.hasKey("nid"))
         {
             controller.setIdentifierNetwork(new GlyphIdentifier(tag.getString("nid")));
-            player.openGui(EnhancedPortals.instance, GuiHandler.NETWORK_INTERFACE_A, controller.worldObj, controller.xCoord, controller.yCoord, controller.zCoord);
+            player.openGui(EnhancedPortals.instance, GuiHandler.NETWORK_INTERFACE_A, controller.getWorldObj(), controller.xCoord, controller.yCoord, controller.zCoord);
         }
     }
 }

@@ -7,14 +7,12 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import uk.co.shadeddimensions.library.gui.IGuiBase;
-import uk.co.shadeddimensions.library.util.GuiUtils;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 
@@ -39,7 +37,7 @@ public abstract class BaseTab
     public static final ResourceLocation DEFAULT_TEXTURE_LEFT = new ResourceLocation("alzlib", "textures/gui/tabLeft.png");
     public static final ResourceLocation DEFAULT_TEXTURE_RIGHT = new ResourceLocation("alzlib", "textures/gui/tabRight.png");
     public int titleColour = 0xFFFFFF;
-    public Icon icon;
+    public IIcon icon;
     public ItemStack stack;
     public String name;
     public int currentShiftX = 0;
@@ -72,7 +70,7 @@ public abstract class BaseTab
         }
     }
 
-    void drawIcon(Icon icon, int x, int y, int spriteSheet)
+    void drawIcon(IIcon icon, int x, int y, int spriteSheet)
     {
         if (spriteSheet == 0)
         {

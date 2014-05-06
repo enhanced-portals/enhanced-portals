@@ -1,7 +1,5 @@
 package enhancedportals.client.gui.tabs;
 
-import uk.co.shadeddimensions.library.gui.tab.TabBase;
-
 public class TabTracker
 {
     private static Class<? extends BaseTab> openedLeftTab;

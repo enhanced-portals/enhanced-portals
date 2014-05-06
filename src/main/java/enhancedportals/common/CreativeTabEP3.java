@@ -1,9 +1,10 @@
 package enhancedportals.common;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import uk.co.shadeddimensions.ep3.block.BlockPortal;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.block.BlockPortal;
 
 public class CreativeTabEP3 extends CreativeTabs
 {
@@ -12,9 +13,9 @@ public class CreativeTabEP3 extends CreativeTabs
         super(EnhancedPortals.ID);
     }
 
-    @Override
-    public ItemStack getIconItemStack()
-    {
-        return new ItemStack(BlockPortal.instance, 1, 0);
-    }
+	@Override
+	public Item getTabIconItem()
+	{
+		return new ItemStack(BlockPortal.instance).getItem();
+	}
 }

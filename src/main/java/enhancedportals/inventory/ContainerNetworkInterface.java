@@ -3,9 +3,9 @@ package enhancedportals.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiNetworkInterface;
+import enhancedportals.tileentity.portal.TileController;
 
 public class ContainerNetworkInterface extends BaseContainer
 {

@@ -1,8 +1,8 @@
 package enhancedportals.inventory;
 
+import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 import net.minecraft.entity.player.InventoryPlayer;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 
 public class ContainerTextureDialFrame extends ContainerTextureFrame
 {

@@ -1,10 +1,9 @@
 package enhancedportals.client.gui.tabs;
 
 import net.minecraft.client.gui.GuiButton;
-import uk.co.shadeddimensions.ep3.item.ItemPaintbrush;
-import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
-import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
+import enhancedportals.client.gui.button.GuiRGBSlider;
+import enhancedportals.item.ItemPaintbrush;
 
 public class TabColour extends BaseTab
 {
@@ -29,7 +28,7 @@ public class TabColour extends BaseTab
     public void draw()
     {
         super.draw();
-        sliderR.drawButton = sliderG.drawButton = sliderB.drawButton = buttonSave.drawButton = buttonReset.drawButton = isFullyOpened();
+        sliderR.visible = sliderG.visible = sliderB.visible = buttonSave.visible = buttonReset.visible = isFullyOpened();
     }
 
     @Override

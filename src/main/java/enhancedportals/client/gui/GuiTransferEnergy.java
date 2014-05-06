@@ -1,8 +1,8 @@
 package enhancedportals.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferEnergy;
 import enhancedportals.inventory.ContainerTransferEnergy;
+import enhancedportals.tileentity.portal.TileTransferEnergy;
 
 public class GuiTransferEnergy extends BaseGui
 {

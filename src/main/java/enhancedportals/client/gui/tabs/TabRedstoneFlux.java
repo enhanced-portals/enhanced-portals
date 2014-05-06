@@ -1,10 +1,10 @@
 package enhancedportals.client.gui.tabs;
 
-import uk.co.shadeddimensions.ep3.network.CommonProxy;
-import uk.co.shadeddimensions.ep3.tileentity.TileStabilizerMain;
-import uk.co.shadeddimensions.ep3.util.GeneralUtils;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
+import enhancedportals.network.CommonProxy;
+import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.utility.GeneralUtils;
 
 public class TabRedstoneFlux extends BaseTab
 {
@@ -24,7 +24,7 @@ public class TabRedstoneFlux extends BaseTab
     public void drawFullyOpened()
     {
         int instability = stabilizer.powerState == 0 ? stabilizer.instability : stabilizer.powerState == 1 ? 20 : stabilizer.powerState == 2 ? 50 : 70;
-        int powerCost = stabilizer.intActiveConnections * CommonProxy.REDSTONE_FLUX_COST * GeneralUtils.getPowerMultiplier();
+        int powerCost = (int) (stabilizer.intActiveConnections * CommonProxy.REDSTONE_FLUX_COST * GeneralUtils.getPowerMultiplier());
         powerCost -= (int) (powerCost * (instability / 100f));
 
         parent.getFontRenderer().drawStringWithShadow(EnhancedPortals.localize("tab.redstoneFlux.maxPower"), posX + 10, posY + 20, 0xAAAAAA);

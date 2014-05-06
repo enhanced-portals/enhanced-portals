@@ -1,10 +1,10 @@
 package enhancedportals.inventory;
 
+import enhancedportals.portal.GlyphIdentifier;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 
 public class ContainerDiallingDeviceManual extends BaseContainer
 {

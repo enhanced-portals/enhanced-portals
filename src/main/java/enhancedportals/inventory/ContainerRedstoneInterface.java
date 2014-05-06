@@ -1,13 +1,11 @@
 package enhancedportals.inventory;
 
-import enhancedportals.client.gui.BaseGui;
-import enhancedportals.client.gui.GuiRedstoneInterface;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileRedstoneInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import enhancedportals.client.gui.BaseGui;
+import enhancedportals.client.gui.GuiRedstoneInterface;
+import enhancedportals.tileentity.portal.TileRedstoneInterface;
 
 public class ContainerRedstoneInterface extends BaseContainer
 {
@@ -52,7 +50,7 @@ public class ContainerRedstoneInterface extends BaseContainer
             ri.setState((byte) s);
         }
 
-        ri.onInventoryChanged();
-        PacketHandlerServer.sendGuiPacketToPlayer(ri, player);
+        ri.markDirty();
+        //PacketHandlerServer.sendGuiPacketToPlayer(ri, player);  // TODO
     }
 }

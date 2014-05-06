@@ -5,17 +5,16 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementScrollDiallingDevice;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerDiallingDevice;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiDiallingDevice extends BaseGui
 {
@@ -60,7 +59,7 @@ public class GuiDiallingDevice extends BaseGui
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        fontRenderer.drawString(EnhancedPortals.localize("gui.storedIdentifiers"), 7, 18, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.storedIdentifiers"), 7, 18, 0x404040);
     }
     
     @Override
@@ -68,7 +67,7 @@ public class GuiDiallingDevice extends BaseGui
     {
         if (button.id == 0)
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_B).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_B));
         }
         else if (button.id == 1)
         {
@@ -76,7 +75,7 @@ public class GuiDiallingDevice extends BaseGui
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setBoolean("terminate", true);
-                PacketHandlerClient.sendGuiPacket(tag);
+                EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
             }
         }
     }
@@ -87,7 +86,7 @@ public class GuiDiallingDevice extends BaseGui
         {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setInteger("dial", entry);
-            PacketHandlerClient.sendGuiPacket(tag);
+            EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
             Minecraft.getMinecraft().thePlayer.closeScreen();
         }
     }
@@ -97,13 +96,13 @@ public class GuiDiallingDevice extends BaseGui
         ClientProxy.editingID = entry;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("edit", entry);
-        PacketHandlerClient.sendGuiPacket(tag);
+        EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
     }
     
     public void onEntryDeleted(int entry)
     {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("delete", entry);
-        PacketHandlerClient.sendGuiPacket(tag);
+        EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
     }
 }

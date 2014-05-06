@@ -3,10 +3,9 @@ package enhancedportals.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerServer;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiPortalController;
+import enhancedportals.tileentity.portal.TileController;
 
 public class ContainerPortalController extends BaseContainer
 {
@@ -25,7 +24,7 @@ public class ContainerPortalController extends BaseContainer
         if (tag.hasKey("public"))
         {
             controller.isPublic = !controller.isPublic;
-            PacketHandlerServer.sendGuiPacketToPlayer(controller, player);
+            //PacketHandlerServer.sendGuiPacketToPlayer(controller, player);  // TODO
         }
     }
 }

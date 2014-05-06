@@ -1,8 +1,8 @@
 package enhancedportals.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileTransferFluid;
 import enhancedportals.inventory.ContainerTransferFluid;
+import enhancedportals.tileentity.portal.TileTransferFluid;
 
 public class GuiTransferFluid extends BaseGui
 {

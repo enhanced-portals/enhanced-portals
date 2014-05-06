@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import enhancedportals.client.gui.BaseGui;
+import enhancedportals.portal.GlyphIdentifier;
 
 public class ElementGlyphSelector extends BaseElement
 {
@@ -72,7 +72,7 @@ public class ElementGlyphSelector extends BaseElement
                     }
                 }
 
-                parent.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                // TODO parent.getMinecraft().sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                 return true;
             }
         }

@@ -1,6 +1,9 @@
 package enhancedportals.utility;
 
-import net.minecraft.util.Icon;
+import javax.swing.Icon;
+
+import net.minecraft.block.Block;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 public class ConnectedTexturesDetailed extends ConnectedTextures
@@ -12,35 +15,35 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         super();
     }
 
-    public ConnectedTexturesDetailed(String textureLocation, int block, int meta)
+    public ConnectedTexturesDetailed(String textureLocation, Block block, int meta)
     {
         super(textureLocation, block, meta);
-        textures = new Icon[47];
+        textures = new IIcon[47];
     }
 
-    public ConnectedTexturesDetailed(String textureLocation, int block, int meta, int meta2)
+    public ConnectedTexturesDetailed(String textureLocation, Block block, int meta, int meta2)
     {
         super(textureLocation, block, meta, meta2);
-        textures = new Icon[47];
+        textures = new IIcon[47];
     }
 
     @Override
-    public ConnectedTexturesDetailed copy(int id, int meta)
+    public ConnectedTexturesDetailed copy(Block b, int meta)
     {
         ConnectedTexturesDetailed ct = new ConnectedTexturesDetailed();
         ct.textures = textures;
-        ct.blockID = id;
+        ct.block = b;
         ct.blockMeta = meta;
 
         return ct;
     }
 
     @Override
-    public ConnectedTexturesDetailed copy(int id, int meta, int meta2)
+    public ConnectedTexturesDetailed copy(Block b, int meta, int meta2)
     {
         ConnectedTexturesDetailed ct = new ConnectedTexturesDetailed();
         ct.textures = textures;
-        ct.blockID = id;
+        ct.block = b;
         ct.blockMeta = meta;
         ct.subMeta = meta2;
 
@@ -48,7 +51,7 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
     }
 
     @Override
-    public Icon getIconForSide(IBlockAccess blockAccess, int x, int y, int z, int side)
+    public IIcon getIconForSide(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
         boolean[] connectingBlock = new boolean[4], diagonal = new boolean[4];
         int index = 0;

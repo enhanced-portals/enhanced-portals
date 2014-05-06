@@ -7,9 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.portal.GlyphElement;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
 import enhancedportals.client.gui.GuiDiallingDevice;
+import enhancedportals.portal.GlyphElement;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class ElementScrollDiallingDevice extends BaseElement
 {

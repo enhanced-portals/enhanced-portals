@@ -6,14 +6,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.network.PacketHandlerClient;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileController;
-import uk.co.shadeddimensions.library.gui.button.GuiBetterSlider;
-import uk.co.shadeddimensions.library.gui.button.GuiRGBSlider;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.button.GuiBetterSlider;
+import enhancedportals.client.gui.button.GuiRGBSlider;
 import enhancedportals.client.gui.tabs.TabColour;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerTextureFrame;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.tileentity.portal.TileController;
 
 public class GuiTextureFrame extends BaseGui
 {
@@ -55,7 +55,7 @@ public class GuiTextureFrame extends BaseGui
             
             NBTTagCompound tag = new NBTTagCompound();
             tag.setInteger("colour", Integer.parseInt(String.format("%02x%02x%02x", sliderR.getValue(), sliderG.getValue(), sliderB.getValue()), 16));
-            PacketHandlerClient.sendGuiPacket(tag);
+            EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
         }
     }
 

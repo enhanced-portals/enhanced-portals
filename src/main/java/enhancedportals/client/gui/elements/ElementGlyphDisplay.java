@@ -3,8 +3,8 @@ package enhancedportals.client.gui.elements;
 import java.util.List;
 
 import net.minecraft.util.ResourceLocation;
-import uk.co.shadeddimensions.ep3.portal.GlyphIdentifier;
 import enhancedportals.client.gui.BaseGui;
+import enhancedportals.portal.GlyphIdentifier;
 
 public class ElementGlyphDisplay extends BaseElement
 {

@@ -12,19 +12,18 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import uk.co.shadeddimensions.ep3.block.BlockFrame;
-import uk.co.shadeddimensions.ep3.block.BlockPortal;
-import uk.co.shadeddimensions.ep3.network.ClientProxy;
-import uk.co.shadeddimensions.ep3.network.GuiHandler;
-import uk.co.shadeddimensions.ep3.network.packet.PacketGuiData;
-import uk.co.shadeddimensions.ep3.network.packet.PacketRequestGui;
-import uk.co.shadeddimensions.ep3.portal.PortalTextureManager;
-import uk.co.shadeddimensions.ep3.tileentity.portal.TileDiallingDevice;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.block.BlockFrame;
+import enhancedportals.block.BlockPortal;
 import enhancedportals.client.gui.elements.ElementGlyphDisplay;
 import enhancedportals.inventory.BaseContainer;
 import enhancedportals.inventory.ContainerDiallingDeviceManual;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketGuiData;
+import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.portal.PortalTextureManager;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiDiallingDeviceSave extends BaseGui
 {
@@ -77,7 +76,7 @@ public class GuiDiallingDeviceSave extends BaseGui
     {
         super.initGui();
         
-        text = new GuiTextField(fontRenderer, guiLeft + 7, guiTop + 18, 162, 20);
+        text = new GuiTextField(getFontRenderer(), guiLeft + 7, guiTop + 18, 162, 20);
         text.setText(ClientProxy.saveName);
         text.setCursorPosition(0);
         
@@ -123,13 +122,13 @@ public class GuiDiallingDeviceSave extends BaseGui
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        fontRenderer.drawString(EnhancedPortals.localize("gui.uniqueIdentifier"), 7, 43, 0x404040);
-        fontRenderer.drawString(EnhancedPortals.localize("gui.textures"), 7, 73, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.uniqueIdentifier"), 7, 43, 0x404040);
+        getFontRenderer().drawString(EnhancedPortals.localize("gui.textures"), 7, 73, 0x404040);
         
         GL11.glColor3f(1f, 1f, 1f);
         
         itemRenderer.renderWithColor = false;
-        ItemStack frame = new ItemStack(BlockFrame.ID, 0, 0), portal = new ItemStack(BlockPortal.ID, 0, 0);
+        ItemStack frame = new ItemStack(BlockFrame.instance, 0, 0), portal = new ItemStack(BlockPortal.instance, 0, 0);
         Color frameColour = new Color(0xFFFFFF), portalColour = new Color(0xFFFFFF), particleColour = new Color(0x0077D8);
         int particleType = 0;
         
@@ -160,9 +159,9 @@ public class GuiDiallingDeviceSave extends BaseGui
         }
 
         GL11.glColor3f(frameColour.getRed() / 255F, frameColour.getGreen() / 255F, frameColour.getBlue() / 255F);
-        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, frame, 59, 85);
+        itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, frame, 59, 85);
         GL11.glColor3f(portalColour.getRed() / 255F, portalColour.getGreen() / 255F, portalColour.getBlue() / 255F);
-        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, portal, 80, 85);
+        itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, portal, 80, 85);
         GL11.glColor3f(particleColour.getRed() / 255F, particleColour.getGreen() / 255F, particleColour.getBlue() / 255F);
         getTextureManager().bindTexture(new ResourceLocation("textures/particle/particles.png"));
         drawTexturedModalRect(101, 85, particleFrames[particleFrame] % 16 * 16, particleFrames[particleFrame] / 16 * 16, 16, 16);
@@ -193,7 +192,7 @@ public class GuiDiallingDeviceSave extends BaseGui
     {
         if (button.id == 0) // cancel
         {
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_B).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_B));
         }
         else if (button.id == 1) // save
         {
@@ -201,22 +200,22 @@ public class GuiDiallingDeviceSave extends BaseGui
             tag.setString("name", text.getText());
             tag.setString("uid", ClientProxy.saveGlyph.getGlyphString());
             ClientProxy.saveTexture.writeToNBT(tag, "texture");
-            PacketDispatcher.sendPacketToServer(new PacketGuiData(tag).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
         }
         else if (button.id == 100)
         {
             isEditing = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_A).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_A));
         }
         else if (button.id == 101)
         {
             isEditing = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_B).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_B));
         }
         else if (button.id == 102)
         {
             isEditing = true;
-            PacketDispatcher.sendPacketToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_C).getPacket());
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_C));
         }
     }
 }
