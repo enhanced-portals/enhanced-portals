@@ -16,8 +16,6 @@ import enhancedportals.portal.PortalTextureManager;
 
 public class ClientProxy extends CommonProxy
 {
-    public static int renderPass = 0;
-    
     public class ParticleSet
     {
         public int[] frames;
@@ -30,11 +28,13 @@ public class ClientProxy extends CommonProxy
         }
     }
 
+    public static int renderPass = 0;
+
     public static GlyphIdentifier saveGlyph;
     public static PortalTextureManager saveTexture;
-    public static String saveName;    
+    public static String saveName;
     public static int editingID = -1;
-    
+
     public static String manualPage = "mainMain";
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy
 
     public static boolean resourceExists(String file)
     {
-    	IReloadableResourceManager resourceManager = (IReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
+        IReloadableResourceManager resourceManager = (IReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
 
         try
         {
@@ -99,8 +99,8 @@ public class ClientProxy extends CommonProxy
         particleSets.add(new ParticleSet(2, new int[] { 83 }));
 
         // Will play through their animation until they die
-        //particleSets.add(new ParticleSet(3, new int[] { 164, 165 }));
-        
+        // particleSets.add(new ParticleSet(3, new int[] { 164, 165 }));
+
         // Rendering
         PortalRenderer.ID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(PortalRenderer.ID, new PortalRenderer());

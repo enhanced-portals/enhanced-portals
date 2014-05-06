@@ -13,15 +13,13 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.particle.PortalFX;
+import enhancedportals.client.PortalFX;
 import enhancedportals.common.IPortalModule;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.tileentity.portal.TileModuleManipulator;
 
 public class ItemPortalModule extends Item implements IPortalModule
 {
-    public static ItemPortalModule instance;
-    
     public static enum PortalModules
     {
         REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, WALL, FEATHERFALL;
@@ -33,15 +31,17 @@ public class ItemPortalModule extends Item implements IPortalModule
         }
     }
 
+    public static ItemPortalModule instance;
+
     static IIcon baseIcon;
     static IIcon[] overlayIcons = new IIcon[PortalModules.values().length];
 
-    public ItemPortalModule()
+    public ItemPortalModule(String n)
     {
         super();
         instance = this;
         setCreativeTab(EnhancedPortals.creativeTab);
-        setUnlocalizedName("portalModule");
+        setUnlocalizedName(n);
         setMaxDamage(0);
         setMaxStackSize(64);
         setHasSubtypes(true);

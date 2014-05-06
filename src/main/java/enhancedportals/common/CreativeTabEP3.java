@@ -13,9 +13,9 @@ public class CreativeTabEP3 extends CreativeTabs
         super(EnhancedPortals.ID);
     }
 
-	@Override
-	public Item getTabIconItem()
-	{
-		return new ItemStack(BlockPortal.instance).getItem();
-	}
+    @Override
+    public Item getTabIconItem()
+    {
+        return new ItemStack(BlockPortal.instance).getItem();
+    }
 }

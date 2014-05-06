@@ -15,6 +15,7 @@ public class TabColour extends BaseTab
         super(gui);
         backgroundColor = 0x5396da;
         maxHeight += 88;
+        maxWidth = 116;
         name = "gui.colour";
         icon = ItemPaintbrush.texture;
         sliderR = r;

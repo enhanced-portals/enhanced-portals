@@ -55,7 +55,7 @@ public class WorldCoordinates extends ChunkCoordinates
     public int getMetadata()
     {
         WorldServer world = getWorld();
-        
+
         if (!world.getChunkProvider().chunkExists(posX >> 4, posY >> 4))
         {
             world.getChunkProvider().loadChunk(posX >> 4, posY >> 4);

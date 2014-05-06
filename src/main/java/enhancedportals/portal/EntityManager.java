@@ -3,10 +3,6 @@ package enhancedportals.portal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import enhancedportals.block.BlockPortal;
-import enhancedportals.network.CommonProxy;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityBoat;
@@ -25,6 +21,10 @@ import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.BlockFluidBase;
+import enhancedportals.block.BlockPortal;
+import enhancedportals.network.CommonProxy;
+import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.portal.TileModuleManipulator;
 
 public class EntityManager
 {
@@ -45,7 +45,7 @@ public class EntityManager
                     continue forloop;
                 }
             }
-            
+
             if (horizontal && !controller.getWorldObj().isAirBlock(c.posX, c.posY + 1, c.posZ))
             {
                 return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
@@ -199,12 +199,12 @@ public class EntityManager
     {
         ChunkCoordinates spawn = par1Entity.worldObj.getSpawnPoint();
         spawn.posY = par1Entity.worldObj.getTopSolidOrLiquidBlock(spawn.posX, spawn.posY);
-        
+
         if (par1Entity.worldObj.isAirBlock(spawn.posX, spawn.posY, spawn.posZ) || par1Entity.worldObj.getBlock(spawn.posX, spawn.posY, spawn.posZ) instanceof BlockFluidBase)
         {
             par1Entity.worldObj.setBlock(spawn.posX, spawn.posY, spawn.posZ, Blocks.stone);
         }
-        
+
         transferEntityWithinDimension(par1Entity, spawn.posX, spawn.posY + 1, spawn.posZ, 0f, -1, -1, false);
     }
 
@@ -222,17 +222,13 @@ public class EntityManager
 
     public static void transferEntity(Entity entity, TileController entry, TileController exit) throws PortalException
     {
-        /*TileBiometricIdentifier bio1 = entry.getBiometricIdentifier(), bio2 = exit.getBiometricIdentifier();
-
-        if (bio1 != null && !bio1.canEntityTravel(entity))
-        {
-            throw new PortalException("noValidEntitySignatureSend");
-        }
-
-        if (bio2 != null && !bio2.canEntityTravel(entity))
-        {
-            throw new PortalException("noValidEntitySignatureReceive");
-        }*/ // TODO
+        /*
+         * TileBiometricIdentifier bio1 = entry.getBiometricIdentifier(), bio2 = exit.getBiometricIdentifier();
+         * 
+         * if (bio1 != null && !bio1.canEntityTravel(entity)) { throw new PortalException("noValidEntitySignatureSend"); }
+         * 
+         * if (bio2 != null && !bio2.canEntityTravel(entity)) { throw new PortalException("noValidEntitySignatureReceive"); }
+         */// TODO
 
         ChunkCoordinates exitLoc = getActualExitLocation(entity, exit);
 
@@ -258,7 +254,7 @@ public class EntityManager
             transferEntityWithRider(entity, exitLoc.posX + 0.5, exitLoc.posY, exitLoc.posZ + 0.5, getRotation(entity, exit, exitLoc), (WorldServer) exit.getWorldObj(), entry.portalType, exit.portalType, keepMomentum);
         }
     }
-    
+
     static Entity transferEntityToDimension(Entity entity, double x, double y, double z, float yaw, WorldServer exitingWorld, WorldServer enteringWorld, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
         if (touchedPortalType == -1 && exitPortalType == -1)
@@ -312,11 +308,11 @@ public class EntityManager
             Iterator potion = player.getActivePotionEffects().iterator();
             while (potion.hasNext())
             {
-            	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
+                player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
             }
 
             player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
-            //GameRegistry.onPlayerChangedDimension(player); // TODO
+            // GameRegistry.onPlayerChangedDimension(player); // TODO
 
             setEntityPortalCooldown(player);
             return player;

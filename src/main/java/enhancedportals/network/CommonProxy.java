@@ -9,22 +9,20 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.block.BlockCrafting;
-import enhancedportals.block.BlockDecoration;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.block.BlockStabilizer;
-import enhancedportals.crafting.ThermalExpansion;
-import enhancedportals.crafting.Vanilla;
-import enhancedportals.item.ItemDecoration;
+import enhancedportals.block.BlockStabilizerEmpty;
+import enhancedportals.block.decoration.BlockDimensionalBridgeStabilizer;
+import enhancedportals.block.decoration.BlockPortalFrame;
+import enhancedportals.item.ItemBlankPortalModule;
+import enhancedportals.item.ItemBlankUpgrade;
 import enhancedportals.item.ItemFrame;
-import enhancedportals.item.ItemGoggles;
+import enhancedportals.item.ItemGlasses;
 import enhancedportals.item.ItemGuide;
 import enhancedportals.item.ItemLocationCard;
-import enhancedportals.item.ItemMisc;
 import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.item.ItemPortalModule;
 import enhancedportals.item.ItemStabilizer;
@@ -43,6 +41,7 @@ import enhancedportals.tileentity.portal.TileFrameBasic;
 import enhancedportals.tileentity.portal.TileModuleManipulator;
 import enhancedportals.tileentity.portal.TileNetworkInterface;
 import enhancedportals.tileentity.portal.TilePortal;
+import enhancedportals.tileentity.portal.TileProgrammableInterface;
 import enhancedportals.tileentity.portal.TileRedstoneInterface;
 import enhancedportals.tileentity.portal.TileTransferEnergy;
 import enhancedportals.tileentity.portal.TileTransferFluid;
@@ -50,14 +49,15 @@ import enhancedportals.tileentity.portal.TileTransferItem;
 
 public class CommonProxy
 {
-	public static final Logger logger = Logger.getLogger(EnhancedPortals.NAME);
+    public static final Logger logger = Logger.getLogger(EnhancedPortals.NAME);
     public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20;
     public static final int RF_PER_MJ = 10;
     public int gogglesRenderIndex = 0;
     public NetworkManager networkManager;
-    public static boolean useAlternateGlyphs, forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, disableVanillaRecipes, disableTERecipes;
+    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower;
     public static double powerMultiplier;
     static Configuration config;
+    static File craftingDir;
 
     public File getBaseDir()
     {
@@ -73,14 +73,6 @@ public class CommonProxy
     {
         return new File(getBaseDir(), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
     }
-    
-    public void registerPackets()
-    {
-        EnhancedPortals.packetPipeline.registerPacket(PacketRequestGui.class);
-        EnhancedPortals.packetPipeline.registerPacket(PacketTextureData.class);
-        EnhancedPortals.packetPipeline.registerPacket(PacketRerender.class);
-        EnhancedPortals.packetPipeline.registerPacket(PacketGuiData.class);
-    }
 
     public void miscSetup()
     {
@@ -89,46 +81,57 @@ public class CommonProxy
 
     public void registerBlocks()
     {
-        GameRegistry.registerBlock(new BlockFrame(), ItemFrame.class, "frame");
-        GameRegistry.registerBlock(new BlockPortal(), "portal");
-        GameRegistry.registerBlock(new BlockStabilizer(), ItemStabilizer.class, "stabilizer");
-        GameRegistry.registerBlock(new BlockDecoration(), ItemDecoration.class, "decoration");
-        GameRegistry.registerBlock(new BlockCrafting(), "crafting");
+        GameRegistry.registerBlock(new BlockFrame("frame"), ItemFrame.class, "frame");
+        GameRegistry.registerBlock(new BlockPortal("portal"), "portal");
+        GameRegistry.registerBlock(new BlockStabilizer("dbs"), ItemStabilizer.class, "dbs");
+        GameRegistry.registerBlock(new BlockPortalFrame("decor_frame"), "decor_frame");
+        GameRegistry.registerBlock(new BlockDimensionalBridgeStabilizer("decor_dbs"), "decor_dbs");
+        GameRegistry.registerBlock(new BlockStabilizerEmpty("dbs_empty"), "dbs_empty");
     }
 
     public void registerItems()
     {
-        GameRegistry.registerItem(new ItemWrench(), "wrench");
-        GameRegistry.registerItem(new ItemPaintbrush(), "paintbrush");
-        GameRegistry.registerItem(new ItemGoggles(), "goggles");
-        GameRegistry.registerItem(new ItemLocationCard(), "location_card");
-        GameRegistry.registerItem(new ItemPortalModule(), "portal_module");
-        GameRegistry.registerItem(new ItemUpgrade(), "upgrade");
-        GameRegistry.registerItem(new ItemMisc(), "misc");
-        GameRegistry.registerItem(new ItemGuide(), "guide");
+        GameRegistry.registerItem(new ItemWrench("wrench"), "wrench");
+        GameRegistry.registerItem(new ItemPaintbrush("nanobrush"), "nanobrush");
+        GameRegistry.registerItem(new ItemGlasses("glasses"), "glasses");
+        GameRegistry.registerItem(new ItemLocationCard("location_card"), "location_card");
+        GameRegistry.registerItem(new ItemPortalModule("portal_module"), "portal_module");
+        GameRegistry.registerItem(new ItemUpgrade("upgrade"), "upgrade");
+        GameRegistry.registerItem(new ItemBlankPortalModule("blank_portal_module"), "blank_portal_module");
+        GameRegistry.registerItem(new ItemBlankUpgrade("blank_upgrade"), "blank_upgrade");
+        GameRegistry.registerItem(new ItemGuide("guide"), "guide");
+    }
+
+    public void registerPackets()
+    {
+        EnhancedPortals.packetPipeline.registerPacket(PacketRequestGui.class);
+        EnhancedPortals.packetPipeline.registerPacket(PacketTextureData.class);
+        EnhancedPortals.packetPipeline.registerPacket(PacketRerender.class);
+        EnhancedPortals.packetPipeline.registerPacket(PacketGuiData.class);
     }
 
     public void registerTileEntities()
     {
-        GameRegistry.registerTileEntity(TilePortal.class, "epPortal");
-        GameRegistry.registerTileEntity(TileFrameBasic.class, "epPortalFrame");
-        GameRegistry.registerTileEntity(TileController.class, "epPortalController");
-        GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRedstoneInterface");
-        GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNetworkInterface");
-        GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDiallingDevice");
-        //GameRegistry.registerTileEntity(TileBiometricIdentifier.class, "epBiometricIdentifier"); // TODO
-        GameRegistry.registerTileEntity(TileModuleManipulator.class, "epModuleManipulator");
-        GameRegistry.registerTileEntity(TileStabilizer.class, "epStabilizer");
-        GameRegistry.registerTileEntity(TileStabilizerMain.class, "epStabilizerMain");
-        GameRegistry.registerTileEntity(TileTransferEnergy.class, "epTEnergy");
-        GameRegistry.registerTileEntity(TileTransferFluid.class, "epTFluid");
-        GameRegistry.registerTileEntity(TileTransferItem.class, "epTItem");
+        GameRegistry.registerTileEntity(TilePortal.class, "epP");
+        GameRegistry.registerTileEntity(TileFrameBasic.class, "epF");
+        GameRegistry.registerTileEntity(TileController.class, "epPC");
+        GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRI");
+        GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNI");
+        GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDD");
+        GameRegistry.registerTileEntity(TileProgrammableInterface.class, "epPI");
+        GameRegistry.registerTileEntity(TileModuleManipulator.class, "epMM");
+        GameRegistry.registerTileEntity(TileStabilizer.class, "epDBS");
+        GameRegistry.registerTileEntity(TileStabilizerMain.class, "epDBSM");
+        GameRegistry.registerTileEntity(TileTransferEnergy.class, "epTE");
+        GameRegistry.registerTileEntity(TileTransferFluid.class, "epTF");
+        GameRegistry.registerTileEntity(TileTransferItem.class, "epTI");
     }
 
-    public void setupConfiguration(Configuration theConfig)
+    public void setupConfiguration(File c)
     {
-        config = theConfig;
-        useAlternateGlyphs = config.get("Misc", "UseAlternateGlyphs", false).getBoolean(false);
+        config = new Configuration(c);
+        craftingDir = new File(c.getParentFile(), "crafting");
+        craftingDir.mkdirs();
         forceShowFrameOverlays = config.get("Misc", "ForceShowFrameOverlays", false).getBoolean(false);
         disableSounds = config.get("Overrides", "DisableSounds", false).getBoolean(false);
         disableParticles = config.get("Overrides", "DisableParticles", false).getBoolean(false);
@@ -136,8 +139,6 @@ public class CommonProxy
         fasterPortalCooldown = config.get("Portal", "FasterPortalCooldown", false).getBoolean(false);
         requirePower = config.get("Power", "RequirePower", true).getBoolean(true);
         powerMultiplier = config.get("Power", "PowerMultiplier", 1.0).getDouble(1.0);
-        disableVanillaRecipes = config.get("Recipes", "DisableVanillaRecipes", false).getBoolean(false);
-        disableTERecipes = config.get("Recipes", "DisableTERecipes", false).getBoolean(false);
         config.save();
 
         if (powerMultiplier < 0)
@@ -145,15 +146,9 @@ public class CommonProxy
             powerMultiplier = 0;
         }
     }
-    
+
     public void setupCrafting()
     {
-        Vanilla.registerRecipes();
-        
-        if (Loader.isModLoaded("ThermalExpansion") && !CommonProxy.disableTERecipes)
-        {
-            ThermalExpansion.registerRecipes();
-            ThermalExpansion.registerMachineRecipes();
-        }
+        // TODO
     }
 }

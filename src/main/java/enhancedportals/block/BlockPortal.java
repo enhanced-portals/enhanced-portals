@@ -17,8 +17,8 @@ import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedportals.client.PortalFX;
 import enhancedportals.client.PortalRenderer;
-import enhancedportals.client.particle.PortalFX;
 import enhancedportals.item.ItemPortalModule;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.portal.EntityManager;
@@ -29,16 +29,15 @@ import enhancedportals.tileentity.portal.TilePortal;
 public class BlockPortal extends BlockContainer
 {
     public static BlockPortal instance;
-    
     IIcon texture;
 
-    public BlockPortal()
+    public BlockPortal(String n)
     {
         super(Material.portal);
         instance = this;
         setBlockUnbreakable();
         setResistance(2000);
-        setBlockName("portal");
+        setBlockName(n);
         setLightOpacity(0);
         setStepSound(soundTypeGlass);
     }
@@ -57,9 +56,9 @@ public class BlockPortal extends BlockContainer
     }
 
     @Override
-    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
+    public TileEntity createNewTileEntity(World var1, int var2)
     {
-        return ((TilePortal) blockAccess.getTileEntity(x, y, z)).getBlockTexture(side);
+        return new TilePortal();
     }
 
     @Override
@@ -69,9 +68,21 @@ public class BlockPortal extends BlockContainer
     }
 
     @Override
+    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
+    {
+        return ((TilePortal) blockAccess.getTileEntity(x, y, z)).getBlockTexture(side);
+    }
+
+    @Override
     public IIcon getIcon(int side, int meta)
     {
         return texture;
+    }
+
+    @Override
+    public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_)
+    {
+        return null;
     }
 
     @Override
@@ -90,12 +101,6 @@ public class BlockPortal extends BlockContainer
     public int getRenderType()
     {
         return PortalRenderer.ID;
-    }
-    
-    @Override
-    public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_)
-    {
-    	return null;
     }
 
     @Override
@@ -148,17 +153,17 @@ public class BlockPortal extends BlockContainer
         TileController controller = ((TilePortal) world.getTileEntity(x, y, z)).getPortalController();
         TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
         boolean doSounds = !CommonProxy.disableSounds && random.nextInt(100) == 0, doParticles = !CommonProxy.disableParticles;
-        
+
         if (module != null)
         {
-        	if (doSounds) // Don't want to force to play sounds 100% of the time with no upgrade
-        	{
-        		doSounds = !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID());
-        	}
-        	
-        	doParticles = !module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID());
+            if (doSounds) // Don't want to force to play sounds 100% of the time with no upgrade
+            {
+                doSounds = !module.hasModule(ItemPortalModule.PortalModules.REMOVE_SOUNDS.getUniqueID());
+            }
+
+            doParticles = !module.hasModule(ItemPortalModule.PortalModules.REMOVE_PARTICLES.getUniqueID());
         }
-        
+
         if (doSounds)
         {
             world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
@@ -205,12 +210,12 @@ public class BlockPortal extends BlockContainer
                 }
 
                 PortalFX fx = new PortalFX(world, controller, d0, d1, d2, d3, d4, d5);
-                
+
                 if (module != null)
                 {
                     module.particleCreated(fx);
                 }
-                
+
                 FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
             }
         }
@@ -277,10 +282,4 @@ public class BlockPortal extends BlockContainer
 
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
     }
-
-	@Override
-	public TileEntity createNewTileEntity(World var1, int var2)
-	{
-		return new TilePortal();
-	}
 }

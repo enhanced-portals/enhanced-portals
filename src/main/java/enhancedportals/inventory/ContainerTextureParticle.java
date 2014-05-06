@@ -13,7 +13,7 @@ public class ContainerTextureParticle extends BaseContainer
 
     public ContainerTextureParticle(TileController c, InventoryPlayer p)
     {
-        super(null, p, GuiTextureParticle.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
+        super(null, p, GuiTextureParticle.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize, 7);
         controller = c;
     }
 

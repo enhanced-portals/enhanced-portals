@@ -1,7 +1,5 @@
 package enhancedportals.utility;
 
-import javax.swing.Icon;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;

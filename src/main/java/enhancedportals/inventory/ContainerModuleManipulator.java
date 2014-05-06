@@ -16,7 +16,7 @@ public class ContainerModuleManipulator extends BaseContainer
     {
         super(m, p, GuiModuleManipulator.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         module = m;
-        
+
         for (int i = 0; i < 9; i++)
         {
             addSlotToContainer(new SlotPortalModule(module, i, 8 + i * 18, GuiModuleManipulator.CONTAINER_SIZE - 24));

@@ -15,7 +15,7 @@ import enhancedportals.utility.WorldCoordinates;
 public class ItemLocationCard extends Item
 {
     public static ItemLocationCard instance;
-    
+
     public static void clearDBSLocation(ItemStack s)
     {
         s.setTagCompound(null);
@@ -50,12 +50,12 @@ public class ItemLocationCard extends Item
 
     IIcon texture;
 
-    public ItemLocationCard()
+    public ItemLocationCard(String n)
     {
         super();
         instance = this;
         setCreativeTab(EnhancedPortals.creativeTab);
-        setUnlocalizedName("locationCard");
+        setUnlocalizedName(n);
         setMaxDamage(0);
         setHasSubtypes(true);
     }

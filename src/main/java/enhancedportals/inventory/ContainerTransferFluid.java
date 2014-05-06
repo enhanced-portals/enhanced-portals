@@ -10,7 +10,7 @@ import enhancedportals.tileentity.portal.TileTransferFluid;
 public class ContainerTransferFluid extends BaseContainer
 {
     TileTransferFluid fluid;
-    
+
     public ContainerTransferFluid(TileTransferFluid f, InventoryPlayer p)
     {
         super(null, p, GuiTransferFluid.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);

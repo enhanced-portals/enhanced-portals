@@ -21,6 +21,12 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
     }
 
     @Override
+    public int getRenderId()
+    {
+        return ID;
+    }
+
+    @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
         renderer.setOverrideBlockTexture(BlockPortal.instance.getBlockTextureFromSide(0));
@@ -35,10 +41,10 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
         TileController controller = portal.getPortalController();
         Tessellator tessellator = Tessellator.instance;
         int meta = world.getBlockMetadata(x, y, z), light = 230, colour = BlockPortal.instance.colorMultiplier(world, x, y, z);
-        
+
         if (controller != null && controller.instability > 0)
         {
-            light = 240 + (controller.instability / 10);
+            light = 240 + controller.instability / 10;
         }
 
         float f5 = 0.8F;
@@ -56,42 +62,42 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
             {
                 tessellator.setBrightness(light);
                 tessellator.setColorOpaque_F(f11, f14, f17);
-                renderer.renderFaceYNeg(BlockPortal.instance, (double)x, (double)y, (double)z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 0));
+                renderer.renderFaceYNeg(BlockPortal.instance, x, y, z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 0));
             }
 
             if (BlockPortal.instance.shouldSideBeRendered(world, x, y + 1, z, 1))
             {
                 tessellator.setBrightness(light);
                 tessellator.setColorOpaque_F(f11, f14, f17);
-                renderer.renderFaceYPos(BlockPortal.instance, (double)x, (double)y, (double)z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 1));
+                renderer.renderFaceYPos(BlockPortal.instance, x, y, z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 1));
             }
 
             if (BlockPortal.instance.shouldSideBeRendered(world, x, y, z - 1, 2))
             {
                 tessellator.setBrightness(light);
                 tessellator.setColorOpaque_F(f11, f14, f17);
-                renderer.renderFaceZNeg(BlockPortal.instance, (double)x, (double)y, (double)z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 2));
+                renderer.renderFaceZNeg(BlockPortal.instance, x, y, z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 2));
             }
 
             if (BlockPortal.instance.shouldSideBeRendered(world, x, y, z + 1, 3))
             {
                 tessellator.setBrightness(light);
                 tessellator.setColorOpaque_F(f11, f14, f17);
-                renderer.renderFaceZPos(BlockPortal.instance, (double)x, (double)y, (double)z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 3));
+                renderer.renderFaceZPos(BlockPortal.instance, x, y, z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 3));
             }
 
             if (BlockPortal.instance.shouldSideBeRendered(world, x - 1, y, z, 4))
             {
                 tessellator.setBrightness(light);
                 tessellator.setColorOpaque_F(f11, f14, f17);
-                renderer.renderFaceXNeg(BlockPortal.instance, (double)x, (double)y, (double)z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 4));
+                renderer.renderFaceXNeg(BlockPortal.instance, x, y, z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 4));
             }
 
             if (BlockPortal.instance.shouldSideBeRendered(world, x + 1, y, z, 5))
             {
                 tessellator.setBrightness(light);
                 tessellator.setColorOpaque_F(f11, f14, f17);
-                renderer.renderFaceXPos(BlockPortal.instance, (double)x, (double)y, (double)z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 5));
+                renderer.renderFaceXPos(BlockPortal.instance, x, y, z, renderer.getBlockIcon(BlockPortal.instance, world, x, y, z, 5));
             }
         }
         else if (meta > 3)
@@ -113,15 +119,11 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
                 tessellator.addVertexWithUV(0, 1, 1, u, v);
                 tessellator.addVertexWithUV(0, 0, 1, u, V);
 
-                /*tessellator.addVertexWithUV(1, 0, 0.2, U, V);
-                    tessellator.addVertexWithUV(1, 1, 0.2, u, V);
-                    tessellator.addVertexWithUV(0.2, 1, 1, u, v);
-                    tessellator.addVertexWithUV(0.2, 0, 1, u, V);
-
-                    tessellator.addVertexWithUV(0, 0, 0.8, U, V);
-                    tessellator.addVertexWithUV(0, 1, 0.8, u, V);
-                    tessellator.addVertexWithUV(0.8, 1, 0, u, v);
-                    tessellator.addVertexWithUV(0.8, 0, 0, u, V);*/
+                /*
+                 * tessellator.addVertexWithUV(1, 0, 0.2, U, V); tessellator.addVertexWithUV(1, 1, 0.2, u, V); tessellator.addVertexWithUV(0.2, 1, 1, u, v); tessellator.addVertexWithUV(0.2, 0, 1, u, V);
+                 * 
+                 * tessellator.addVertexWithUV(0, 0, 0.8, U, V); tessellator.addVertexWithUV(0, 1, 0.8, u, V); tessellator.addVertexWithUV(0.8, 1, 0, u, v); tessellator.addVertexWithUV(0.8, 0, 0, u, V);
+                 */
             }
             else if (meta == 5)
             {
@@ -130,15 +132,11 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
                 tessellator.addVertexWithUV(0, 1, 0, u, v);
                 tessellator.addVertexWithUV(0, 0, 0, u, V);
 
-                /*tessellator.addVertexWithUV(1, 0, 0.8, U, V);
-                    tessellator.addVertexWithUV(1, 1, 0.8, u, V);
-                    tessellator.addVertexWithUV(0.2, 1, 0, u, v);
-                    tessellator.addVertexWithUV(0.2, 0, 0, u, V);
-
-                    tessellator.addVertexWithUV(0, 0, 0.2, U, V);
-                    tessellator.addVertexWithUV(0, 1, 0.2, u, V);
-                    tessellator.addVertexWithUV(0.8, 1, 1, u, v);
-                    tessellator.addVertexWithUV(0.8, 0, 1, u, V);*/
+                /*
+                 * tessellator.addVertexWithUV(1, 0, 0.8, U, V); tessellator.addVertexWithUV(1, 1, 0.8, u, V); tessellator.addVertexWithUV(0.2, 1, 0, u, v); tessellator.addVertexWithUV(0.2, 0, 0, u, V);
+                 * 
+                 * tessellator.addVertexWithUV(0, 0, 0.2, U, V); tessellator.addVertexWithUV(0, 1, 0.2, u, V); tessellator.addVertexWithUV(0.8, 1, 1, u, v); tessellator.addVertexWithUV(0.8, 0, 1, u, V);
+                 */
             }
 
             tessellator.addTranslation(-x, -y, -z);
@@ -148,14 +146,8 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
     }
 
     @Override
-    public int getRenderId()
+    public boolean shouldRender3DInInventory(int modelId)
     {
-        return ID;
+        return true;
     }
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return true;
-	}
 }

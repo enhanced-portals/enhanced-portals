@@ -10,16 +10,22 @@ import enhancedportals.EnhancedPortals;
 public class ItemPaintbrush extends Item
 {
     public static ItemPaintbrush instance;
-    
+
     public static IIcon texture;
 
-    public ItemPaintbrush()
+    public ItemPaintbrush(String n)
     {
         super();
         instance = this;
         setCreativeTab(EnhancedPortals.creativeTab);
-        setUnlocalizedName("nanobrush");
+        setUnlocalizedName(n);
         setMaxStackSize(1);
+    }
+
+    @Override
+    public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player)
+    {
+        return true;
     }
 
     @Override
@@ -32,11 +38,5 @@ public class ItemPaintbrush extends Item
     public void registerIcons(IIconRegister register)
     {
         texture = register.registerIcon("enhancedportals:paintbrush");
-    }
-    
-    @Override
-    public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player)
-    {
-    	return true;
     }
 }

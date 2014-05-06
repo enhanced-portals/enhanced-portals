@@ -7,21 +7,19 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import enhancedportals.EnhancedPortals;
 
-public class BlockCrafting extends Block
+public class BlockStabilizerEmpty extends Block
 {
-    public static BlockCrafting instance;
-    public static final int UNFILLED_STABILIZER = 0;
-
+    public static BlockStabilizerEmpty instance;
     IIcon dbsEmpty;
-    
-    public BlockCrafting()
+
+    public BlockStabilizerEmpty(String n)
     {
         super(Material.rock);
         instance = this;
         setCreativeTab(EnhancedPortals.creativeTab);
         setHardness(5);
         setResistance(2000);
-        setBlockName("crafting");
+        setBlockName(n);
         setStepSound(soundTypeStone);
     }
 
@@ -48,7 +46,7 @@ public class BlockCrafting extends Block
 
         return super.getIcon(side, meta);
     }
-    
+
     @Override
     public void registerBlockIcons(IIconRegister register)
     {

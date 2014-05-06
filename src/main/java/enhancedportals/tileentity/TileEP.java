@@ -4,9 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import enhancedportals.utility.WorldCoordinates;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import enhancedportals.utility.WorldCoordinates;
 
 public class TileEP extends TileEntity
 {
@@ -25,7 +25,7 @@ public class TileEP extends TileEntity
     {
         return new WorldCoordinates(getChunkCoordinates(), worldObj.provider.dimensionId);
     }
-    
+
     public void packetGuiFill(DataOutputStream stream) throws IOException
     {
 

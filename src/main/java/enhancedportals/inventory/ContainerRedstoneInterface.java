@@ -28,29 +28,29 @@ public class ContainerRedstoneInterface extends BaseContainer
             ri.isOutput = !ri.isOutput;
             ri.setState((byte) 0);
         }
-        else 
+        else
         {
             int s = ri.state + 1;
 
             if (ri.isOutput)
             {
-                if (s >= ri.MAX_OUTPUT_STATE)
+                if (s >= TileRedstoneInterface.MAX_OUTPUT_STATE)
                 {
                     s = 0;
                 }
             }
             else if (!ri.isOutput)
             {
-                if (s >= ri.MAX_INPUT_STATE)
+                if (s >= TileRedstoneInterface.MAX_INPUT_STATE)
                 {
                     s = 0;
                 }
             }
-            
+
             ri.setState((byte) s);
         }
 
         ri.markDirty();
-        //PacketHandlerServer.sendGuiPacketToPlayer(ri, player);  // TODO
+        // PacketHandlerServer.sendGuiPacketToPlayer(ri, player); // TODO
     }
 }

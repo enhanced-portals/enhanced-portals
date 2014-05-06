@@ -20,7 +20,7 @@ public class ContainerDiallingDevice extends BaseContainer
         dial = d;
         hideInventorySlots();
     }
-    
+
     @Override
     public void handleGuiPacket(NBTTagCompound tag, EntityPlayer player)
     {
@@ -57,8 +57,8 @@ public class ContainerDiallingDevice extends BaseContainer
             {
                 dial.glyphList.remove(id);
             }
-            
-            //PacketHandlerServer.sendGuiPacketToPlayer(dial, player); // TODO
+
+            // PacketHandlerServer.sendGuiPacketToPlayer(dial, player); // TODO
         }
     }
 }

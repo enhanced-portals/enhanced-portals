@@ -78,11 +78,11 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                 }
 
                 ArrayList<ChunkCoordinates> blocks = checkShapeThreeWide(topLeft); // 3x3
-                
+
                 if (blocks.isEmpty())
                 {
                     blocks = checkShapeTwoWide(topLeft, true); // Try the 3x2 X axis
-    
+
                     if (blocks.isEmpty())
                     {
                         blocks = checkShapeTwoWide(topLeft, false); // Try the 3x2 Z axis before failing
@@ -94,7 +94,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                     for (ChunkCoordinates c : blocks) // make sure we're not interrupting something
                     {
                         TileEntity tile = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
-                        
+
                         if (tile instanceof TileStabilizer)
                         {
                             if (((TileStabilizer) tile).getMainBlock() != null)
@@ -108,11 +108,11 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                             ((TileStabilizerMain) tile).deconstruct();
                         }
                     }
-                    
+
                     for (ChunkCoordinates c : blocks)
                     {
                         worldObj.setBlock(c.posX, c.posY, c.posZ, BlockStabilizer.instance, 0, 2);
-                        
+
                         TileEntity tile = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
                         if (tile instanceof TileStabilizer)
@@ -124,7 +124,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                     }
 
                     worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, BlockStabilizer.instance, 1, 3);
-                    
+
                     TileEntity tile = topLeft.getTileEntity();
 
                     if (tile instanceof TileStabilizerMain)
@@ -168,7 +168,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
             heightChecker.posY--;
             rows++;
         }
-        
+
         if (rows < 2)
         {
             rows = 0;
@@ -185,16 +185,16 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                     {
                         return new ArrayList<ChunkCoordinates>();
                     }
-    
+
                     blocks.add(new ChunkCoordinates(topLeft.posX + i, topLeft.posY - k, topLeft.posZ + j));
                 }
             }
         }
-        
+
         is3x3 = true;
         return blocks;
     }
-    
+
     ArrayList<ChunkCoordinates> checkShapeTwoWide(WorldCoordinates topLeft, boolean isX)
     {
         ArrayList<ChunkCoordinates> blocks = new ArrayList<ChunkCoordinates>();
@@ -212,7 +212,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
             rows = 0;
             return new ArrayList<ChunkCoordinates>();
         }
-        
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 2; j++)
@@ -234,6 +234,13 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     }
 
     @Override
+    public void doWork(PowerHandler workProvider)
+    {
+        int acceptedEnergy = receiveEnergy(null, (int) (mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
+        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
+    }
+
+    @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
     {
         TileStabilizerMain main = getMainBlock();
@@ -244,6 +251,15 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
         }
 
         return main.extractEnergy(from, maxExtract, simulate);
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setBoolean("formed", mainBlock != null);
+
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
     }
 
     @Override
@@ -291,29 +307,32 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     }
 
     @Override
+    public PowerReceiver getPowerReceiver(ForgeDirection side)
+    {
+        return mjHandler.getPowerReceiver();
+    }
+
+    @Override
+    public World getWorld()
+    {
+        return worldObj;
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.NetworkManager net, S35PacketUpdateTileEntity pkt)
+    {
+        NBTTagCompound tag = pkt.func_148857_g();
+        isFormed = tag.getBoolean("formed");
+        WorldUtils.markForUpdate(this);
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
         mainBlock = GeneralUtils.loadChunkCoord(tag, "mainBlock");
     }
 
-    @Override
-    public void onDataPacket(net.minecraft.network.NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-    	NBTTagCompound tag = pkt.func_148857_g();
-        isFormed = tag.getBoolean("formed");
-        WorldUtils.markForUpdate(this);
-    }
-    
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setBoolean("formed", mainBlock != null);
-        
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
-    }
-    
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
     {
@@ -332,24 +351,5 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     {
         super.writeToNBT(tag);
         GeneralUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
-    }
-
-    @Override
-    public PowerReceiver getPowerReceiver(ForgeDirection side)
-    {
-        return mjHandler.getPowerReceiver();
-    }
-
-    @Override
-    public void doWork(PowerHandler workProvider)
-    {
-        int acceptedEnergy = receiveEnergy(null, (int)(mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
-        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
-    }
-
-    @Override
-    public World getWorld()
-    {
-        return this.worldObj;
     }
 }

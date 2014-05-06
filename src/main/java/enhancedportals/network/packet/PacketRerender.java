@@ -1,9 +1,9 @@
 package enhancedportals.network.packet;
 
-import enhancedportals.utility.WorldUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
+import enhancedportals.utility.WorldUtils;
 
 public class PacketRerender extends PacketEP
 {
@@ -11,22 +11,14 @@ public class PacketRerender extends PacketEP
 
     public PacketRerender()
     {
-        
+
     }
-    
+
     public PacketRerender(int x, int y, int z)
     {
         posX = x;
         posY = y;
         posZ = z;
-    }
-
-    @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
-    {
-        buffer.writeInt(posX);
-        buffer.writeInt(posY);
-        buffer.writeInt(posZ);
     }
 
     @Override
@@ -38,14 +30,22 @@ public class PacketRerender extends PacketEP
     }
 
     @Override
+    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    {
+        buffer.writeInt(posX);
+        buffer.writeInt(posY);
+        buffer.writeInt(posZ);
+    }
+
+    @Override
     public void handleClientSide(EntityPlayer player)
     {
-        WorldUtils.markForUpdate(((EntityPlayer) player).worldObj, posX, posY, posZ);
+        WorldUtils.markForUpdate(player.worldObj, posX, posY, posZ);
     }
 
     @Override
     public void handleServerSide(EntityPlayer player)
     {
-        
+
     }
 }

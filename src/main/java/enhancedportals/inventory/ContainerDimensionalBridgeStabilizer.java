@@ -17,14 +17,53 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
 {
     int lastPower, lastPortals, lastInstability, lastPowerState;
     TileStabilizerMain stabilizer;
-    
+
     public ContainerDimensionalBridgeStabilizer(TileStabilizerMain s, InventoryPlayer p)
     {
         super(s, p, (GeneralUtils.hasEnergyCost() ? GuiDimensionalBridgeStabilizer.CONTAINER_SIZE : GuiDimensionalBridgeStabilizer.CONTAINER_SIZE_SMALL) + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         stabilizer = s;
-        
+
         int container = GeneralUtils.hasEnergyCost() ? GuiDimensionalBridgeStabilizer.CONTAINER_SIZE : GuiDimensionalBridgeStabilizer.CONTAINER_SIZE_SMALL;
         addSlotToContainer(new SlotDBS(s, 0, 152, container - 25));
+    }
+
+    @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
+
+        for (int i = 0; i < crafters.size(); i++)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+
+            if (lastPower != currentPower)
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setInteger("energy", currentPower);
+                EnhancedPortals.packetPipeline.sendTo(new PacketGuiData(tag), (EntityPlayerMP) icrafting);
+            }
+
+            if (lastPortals != currentPortals)
+            {
+                icrafting.sendProgressBarUpdate(this, 2, currentPortals);
+            }
+
+            if (lastInstability != currentInstability)
+            {
+                icrafting.sendProgressBarUpdate(this, 3, currentInstability);
+            }
+
+            if (lastPowerState != currentPowerState)
+            {
+                icrafting.sendProgressBarUpdate(this, 4, currentPowerState);
+            }
+        }
+
+        lastPower = currentPower;
+        lastPortals = currentPortals;
+        lastInstability = currentInstability;
+        lastPowerState = currentPowerState;
     }
 
     @Override
@@ -43,45 +82,6 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
         {
             stabilizer.getEnergyStorage().setEnergyStored(tag.getInteger("energy"));
         }
-    }
-    
-    @Override
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
-
-        for (int i = 0; i < crafters.size(); i++)
-        {
-            ICrafting icrafting = (ICrafting) crafters.get(i);
-
-            if (lastPower != currentPower)
-            {
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setInteger("energy", currentPower);
-                EnhancedPortals.packetPipeline.sendTo(new PacketGuiData(tag), (EntityPlayerMP) icrafting);
-            }
-            
-            if (lastPortals != currentPortals)
-            {
-                icrafting.sendProgressBarUpdate(this, 2, currentPortals);
-            }
-            
-            if (lastInstability != currentInstability)
-            {
-                icrafting.sendProgressBarUpdate(this, 3, currentInstability);
-            }
-            
-            if (lastPowerState != currentPowerState)
-            {
-                icrafting.sendProgressBarUpdate(this, 4, currentPowerState);
-            }
-        }
-
-        lastPower = currentPower;
-        lastPortals = currentPortals;
-        lastInstability = currentInstability;
-        lastPowerState = currentPowerState;
     }
 
     @Override

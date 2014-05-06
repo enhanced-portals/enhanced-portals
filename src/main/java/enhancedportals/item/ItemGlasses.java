@@ -7,18 +7,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import enhancedportals.EnhancedPortals;
 
-public class ItemGoggles extends ItemArmor
+public class ItemGlasses extends ItemArmor
 {
-    public static ItemGoggles instance;
-    
+    public static ItemGlasses instance;
+
     IIcon icon;
 
-    public ItemGoggles()
+    public ItemGlasses(String n)
     {
         super(ArmorMaterial.CLOTH, EnhancedPortals.proxy.gogglesRenderIndex, 0);
         instance = this;
         setCreativeTab(EnhancedPortals.creativeTab);
-        setUnlocalizedName("glasses");
+        setUnlocalizedName(n);
     }
 
     @Override

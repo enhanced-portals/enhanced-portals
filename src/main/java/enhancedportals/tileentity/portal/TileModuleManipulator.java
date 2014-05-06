@@ -8,7 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import enhancedportals.client.particle.PortalFX;
+import enhancedportals.client.PortalFX;
 import enhancedportals.common.IPortalModule;
 import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.network.GuiHandler;

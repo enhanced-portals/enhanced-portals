@@ -65,16 +65,16 @@ public class GuiTextureFrame extends BaseGui
         super.initGui();
         
         Color c = new Color(controller.activeTextureData.getFrameColour());
-        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 24, EnhancedPortals.localize("gui.red"), c.getRed() / 255f);
-        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 45, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f);
-        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 66, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f);
+        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 24, EnhancedPortals.localize("gui.red"), c.getRed() / 255f, 105);
+        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 45, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f, 105);
+        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 66, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f, 105);
         
         buttonList.add(sliderR);
         buttonList.add(sliderG);
         buttonList.add(sliderB);
 
-        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 87, 57, 20, EnhancedPortals.localize("gui.save"));
-        buttonReset = new GuiButton(111, guiLeft + xSize + 61, guiTop + 87, 57, 20, EnhancedPortals.localize("gui.reset"));
+        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.save"));
+        buttonReset = new GuiButton(111, guiLeft + xSize + 57, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.reset"));
 
         buttonList.add(buttonSave);
         buttonList.add(buttonReset);

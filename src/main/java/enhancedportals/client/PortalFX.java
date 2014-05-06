@@ -1,14 +1,13 @@
-package enhancedportals.client.particle;
+package enhancedportals.client;
 
 import java.awt.Color;
 
-import enhancedportals.network.ClientProxy;
-import enhancedportals.network.ClientProxy.ParticleSet;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.ClientProxy.ParticleSet;
+import enhancedportals.tileentity.portal.TileController;
 
 public class PortalFX extends EntityFX
 {
@@ -31,7 +30,7 @@ public class PortalFX extends EntityFX
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleMaxAge = (int) (Math.random() * 10.0D) + 40;
         noClip = true;
-        
+
         if (controller == null || ClientProxy.particleSets.size() <= controller.activeTextureData.getParticleType())
         {
             setDead();
@@ -42,8 +41,8 @@ public class PortalFX extends EntityFX
             particleRed = c.getRed() / 255f;
             particleGreen = c.getGreen() / 255f;
             particleBlue = c.getBlue() / 255f;
-            
-            particle = ClientProxy.particleSets.get(controller.activeTextureData.getParticleType());    
+
+            particle = ClientProxy.particleSets.get(controller.activeTextureData.getParticleType());
             setParticleTextureIndex(particle.type == 0 ? particle.frames[ClientProxy.random.nextInt(particle.frames.length)] : particle.frames[0]);
         }
     }
@@ -91,10 +90,10 @@ public class PortalFX extends EntityFX
             {
                 setDead();
             }
-            
+
             return;
         }
-        
+
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;

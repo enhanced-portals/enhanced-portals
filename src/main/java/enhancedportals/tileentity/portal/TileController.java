@@ -49,18 +49,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 {
     enum ControlState
     {
-        /**
-         * Nothing has happened with me yet. Waiting for a Location Card
-         */
-        REQUIRES_LOCATION,
-        /**
-         * Portal was broken. Waiting to be wrenched.
-         */
-        REQUIRES_WRENCH,
-        /**
-         * All is OK
-         */
-        FINALIZED
+        REQUIRES_LOCATION, REQUIRES_WRENCH, FINALIZED
     }
 
     ArrayList<ChunkCoordinates> portalFrames = new ArrayList<ChunkCoordinates>();
@@ -72,7 +61,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     ArrayList<ChunkCoordinates> transferItems = new ArrayList<ChunkCoordinates>();
     ArrayList<ChunkCoordinates> transferEnergy = new ArrayList<ChunkCoordinates>();
 
-    //ChunkCoordinates biometricIdentifier;  // TODO
+    ChunkCoordinates programmableInterface;
     ChunkCoordinates moduleManipulator;
 
     WorldCoordinates dimensionalBridgeStabilizer, temporaryDBS;
@@ -229,10 +218,10 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 diallingDevices.add(c);
             }
-            //else if (tile instanceof TileBiometricIdentifier) // TODO
-            //{
-            //    biometricIdentifier = c;
-            //}
+            else if (tile instanceof TileProgrammableInterface)
+            {
+                programmableInterface = c;
+            }
             else if (tile instanceof TileModuleManipulator)
             {
                 moduleManipulator = c;
@@ -440,15 +429,15 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             }
         }
 
-        /*if (biometricIdentifier != null)  // TODO
+        if (programmableInterface != null)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, biometricIdentifier);
+            TileEntity t = WorldUtils.getTileEntity(worldObj, programmableInterface);
 
             if (t != null && t instanceof TilePortalPart)
             {
                 ((TilePortalPart) t).setPortalController(null);
             }
-        }*/
+        }
 
         if (moduleManipulator != null)
         {
@@ -468,27 +457,27 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         transferFluids.clear();
         transferItems.clear();
         transferEnergy.clear();
-        //biometricIdentifier = null;
+        programmableInterface = null;
         moduleManipulator = null;
         portalState = ControlState.REQUIRES_WRENCH;
         markDirty();
         WorldUtils.markForUpdate(this);
     }
 
-    /*public TileBiometricIdentifier getBiometricIdentifier()  // TODO
+    public TileProgrammableInterface getProgrammableInterface()
     {
-        if (biometricIdentifier != null)
+        if (programmableInterface != null)
         {
-            TileEntity tile = worldObj.getTileEntity(biometricIdentifier.posX, biometricIdentifier.posY, biometricIdentifier.posZ);
+            TileEntity tile = worldObj.getTileEntity(programmableInterface.posX, programmableInterface.posY, programmableInterface.posZ);
 
-            if (tile instanceof TileBiometricIdentifier)
+            if (tile instanceof TileProgrammableInterface)
             {
-                return (TileBiometricIdentifier) tile;
+                return (TileProgrammableInterface) tile;
             }
         }
 
         return null;
-    }*/
+    }
 
     /**
      * @return Returns the destination portal UID.
@@ -901,7 +890,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         transferEnergy = GeneralUtils.loadChunkCoordList(tagCompound, "TransferEnergy");
         transferFluids = GeneralUtils.loadChunkCoordList(tagCompound, "TransferFluid");
         transferItems = GeneralUtils.loadChunkCoordList(tagCompound, "TransferItems");
-        //biometricIdentifier = GeneralUtils.loadChunkCoord(tagCompound, "BiometricIdentifier");  // TODO
+        programmableInterface = GeneralUtils.loadChunkCoord(tagCompound, "ProgrammableInterface");
         moduleManipulator = GeneralUtils.loadChunkCoord(tagCompound, "ModuleManipulator");
         dimensionalBridgeStabilizer = GeneralUtils.loadWorldCoord(tagCompound, "DimensionalBridgeStabilizer");
         temporaryDBS = GeneralUtils.loadWorldCoord(tagCompound, "TemporaryDBS");
@@ -963,10 +952,10 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         }
     }
 
-    //public void setBiometricIdentifier(ChunkCoordinates chunkCoordinates)  // TODO
-	//{
-	//	biometricIdentifier = chunkCoordinates;
-	//}
+    public void setProgrammableInterface(ChunkCoordinates chunkCoordinates)
+	{
+        programmableInterface = chunkCoordinates;
+	}
 
     public void setCustomFrameTexture(int tex)
     {
@@ -1168,7 +1157,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         GeneralUtils.saveChunkCoordList(tagCompound, getTransferEnergy(), "TransferEnergy");
         GeneralUtils.saveChunkCoordList(tagCompound, getTransferFluids(), "TransferFluid");
         GeneralUtils.saveChunkCoordList(tagCompound, getTransferItems(), "TransferItems");
-        //GeneralUtils.saveChunkCoord(tagCompound, biometricIdentifier, "BiometricIdentifier");  // TODO
+        GeneralUtils.saveChunkCoord(tagCompound, programmableInterface, "ProgrammableInterface");
         GeneralUtils.saveChunkCoord(tagCompound, moduleManipulator, "ModuleManipulator");
         GeneralUtils.saveWorldCoord(tagCompound, dimensionalBridgeStabilizer, "DimensionalBridgeStabilizer");
         GeneralUtils.saveWorldCoord(tagCompound, temporaryDBS, "TemporaryDBS");
@@ -1298,8 +1287,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             
             try
             {
-                int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16); // TODO default particle colour
-                setParticleColour(hex);
+                setParticleColour(new PortalTextureManager().getParticleColour());
             }
             catch (NumberFormatException ex)
             {

@@ -10,7 +10,7 @@ import enhancedportals.tileentity.portal.TileTransferItem;
 public class ContainerTransferItem extends BaseContainer
 {
     TileTransferItem item;
-    
+
     public ContainerTransferItem(TileTransferItem i, InventoryPlayer p)
     {
         super(null, p, GuiTransferItem.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);

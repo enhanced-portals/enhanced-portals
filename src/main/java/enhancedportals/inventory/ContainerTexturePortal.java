@@ -13,7 +13,7 @@ public class ContainerTexturePortal extends BaseContainer
 
     public ContainerTexturePortal(TileController c, InventoryPlayer p)
     {
-        super(null, p, GuiTexturePortal.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
+        super(null, p, GuiTexturePortal.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize, 7);
         controller = c;
     }
 

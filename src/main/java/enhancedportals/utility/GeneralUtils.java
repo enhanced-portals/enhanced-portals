@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,32 +13,28 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.api.tools.IToolWrench;
+import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import enhancedportals.item.ItemGoggles;
+import enhancedportals.item.ItemGlasses;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.portal.GlyphIdentifier;
 
 public class GeneralUtils
 {
-	public static boolean isWrench(ItemStack i)
-	{
-		return i != null && i.getItem() instanceof IToolWrench;
-	}
-	
-	public static boolean isEnergyContainerItem(ItemStack i)
-	{
-		return i != null && i.getItem() instanceof IEnergyContainerItem;
-	}
-	
+    public static double getPowerMultiplier()
+    {
+        return hasEnergyCost() ? CommonProxy.powerMultiplier : 0;
+    }
+
     public static boolean hasEnergyCost()
     {
         return CommonProxy.requirePower;
     }
-    
-    public static double getPowerMultiplier()
+
+    public static boolean isEnergyContainerItem(ItemStack i)
     {
-        return hasEnergyCost() ? CommonProxy.powerMultiplier : 0;
+        return i != null && i.getItem() instanceof IEnergyContainerItem;
     }
 
     public static boolean isWearingGoggles()
@@ -52,10 +47,15 @@ public class GeneralUtils
             }
 
             ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.armorItemInSlot(3);
-            return stack != null && stack.getItem() == ItemGoggles.instance;
+            return stack != null && stack.getItem() == ItemGlasses.instance;
         }
-        
+
         return false;
+    }
+
+    public static boolean isWrench(ItemStack i)
+    {
+        return i != null && i.getItem() instanceof IToolWrench;
     }
 
     public static ChunkCoordinates loadChunkCoord(NBTTagCompound tagCompound, String string)
@@ -106,7 +106,7 @@ public class GeneralUtils
 
         for (int i = 0; i < tagList.tagCount(); i++)
         {
-            NBTTagCompound t =tagList.getCompoundTagAt(i);
+            NBTTagCompound t = tagList.getCompoundTagAt(i);
 
             list.add(new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D")));
         }

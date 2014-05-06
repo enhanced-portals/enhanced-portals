@@ -13,13 +13,13 @@ public class ItemGuide extends Item
 {
     public static ItemGuide instance;
     IIcon texture;
-    
-    public ItemGuide()
+
+    public ItemGuide(String n)
     {
         super();
         instance = this;
         setCreativeTab(EnhancedPortals.creativeTab);
-        setUnlocalizedName("guide");
+        setUnlocalizedName(n);
         setMaxStackSize(1);
     }
 
@@ -28,17 +28,17 @@ public class ItemGuide extends Item
     {
         return texture;
     }
-    
-    @Override
-    public void registerIcons(IIconRegister iconRegister)
-    {
-        texture = iconRegister.registerIcon("enhancedportals:guide");
-    }
-    
+
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         player.openGui(EnhancedPortals.instance, GuiHandler.GUIDE, world, 0, 0, 0);
         return super.onItemRightClick(stack, world, player);
+    }
+
+    @Override
+    public void registerIcons(IIconRegister iconRegister)
+    {
+        texture = iconRegister.registerIcon("enhancedportals:guide");
     }
 }

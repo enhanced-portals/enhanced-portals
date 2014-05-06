@@ -1,18 +1,15 @@
 [
 {
-  "modid" : "EnhancedPortals3",
+  "modid" : "enhancedportals",
   "name" : "EnhancedPortals",
-  "version" : "1.6.4-3.0.0b5e",
+  "version" : "3.0.0rc1",
   "url" : "http://shadeddimensions.co.uk",
   "credits" : "",
-  "authors": [
-    "Alz454"
-  ],
+  "authors": [ "Alz454" ],
   "description": "",
   "logoFile" : "",
   "updateUrl" : "http://shadeddimensions.co.uk",
   "parent" : "",
-  "screenshots": [
-  ]
+  "screenshots": [ ]
 }
 ]

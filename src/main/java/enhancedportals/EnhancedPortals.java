@@ -1,5 +1,7 @@
 package enhancedportals;
 
+import java.io.File;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -30,16 +32,31 @@ import enhancedportals.portal.NetworkManager;
 @Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, version = EnhancedPortals.VERSION, dependencies = EnhancedPortals.DEPENDENCIES, acceptedMinecraftVersions = EnhancedPortals.MC_VERSION)
 public class EnhancedPortals
 {
-    public static final String NAME = "EnhancedPortals", ID = "EnhancedPortals3", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", MC_VERSION = "[1.6.4,)", VERSION = "1.6.4-3.0.0b5f", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy";
+    public static final String NAME = "EnhancedPortals", ID = "enhancedportals", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", MC_VERSION = "[1.6.4,)", VERSION = "1.6.4-3.0.0rc1", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy";
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     public static final Logger logger = LogManager.getLogger("EnhancedPortals");
     public static CreativeTabs creativeTab = new CreativeTabEP3();
-    
+
     @Instance(ID)
     public static EnhancedPortals instance;
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
     public static CommonProxy proxy;
+
+    public static String localize(String s)
+    {
+        return StatCollector.translateToLocal(SHORT_ID + "." + s);
+    }
+
+    public static String localizeError(String s)
+    {
+        return EnumChatFormatting.RED + localize("error") + EnumChatFormatting.WHITE + localize("error." + s);
+    }
+
+    public static String localizeSuccess(String s)
+    {
+        return EnumChatFormatting.GREEN + localize("success") + EnumChatFormatting.WHITE + localize("success." + s);
+    }
 
     public EnhancedPortals()
     {
@@ -47,7 +64,7 @@ public class EnhancedPortals
         LoggerConfig modConf = new LoggerConfig(logger.getName(), Level.ALL, true);
         modConf.setParent(fml);
     }
-    
+
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
@@ -57,20 +74,20 @@ public class EnhancedPortals
     }
 
     @EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        packetPipeline.postInitialise();
+    }
+
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        //proxy.setupConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
-    	packetPipeline.initalise();
+        proxy.setupConfiguration(new File(event.getSuggestedConfigurationFile().getParentFile(), NAME + File.separator + "config.cfg"));
+        packetPipeline.initalise();
         proxy.registerBlocks();
         proxy.registerTileEntities();
         proxy.registerItems();
         proxy.registerPackets();
-    }
-    
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-    	packetPipeline.postInitialise();
     }
 
     @EventHandler
@@ -86,24 +103,6 @@ public class EnhancedPortals
         {
             proxy.networkManager.saveAllData();
         }
-    }
-
-    /**
-     * Localizes an EP3 string. (Prepends the mod ID, then localizes)
-     */
-    public static String localize(String s)
-    {
-        return StatCollector.translateToLocal(SHORT_ID + "." + s);
-    }
-    
-    public static String localizeError(String s)
-    {
-    	return EnumChatFormatting.RED + localize("error") + EnumChatFormatting.WHITE + localize("error." + s);
-    }
-    
-    public static String localizeSuccess(String s)
-    {
-    	return EnumChatFormatting.GREEN + localize("success") + EnumChatFormatting.WHITE + localize("success." + s);
     }
 
     /*

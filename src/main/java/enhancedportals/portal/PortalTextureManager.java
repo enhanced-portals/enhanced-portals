@@ -113,7 +113,7 @@ public class PortalTextureManager
     public void setCustomFrameTexture(int i)
     {
         customFrameTexture = i;
-        
+
         if (controller != null)
         {
             controller.markDirty();
@@ -123,7 +123,7 @@ public class PortalTextureManager
     public void setCustomPortalTexture(int i)
     {
         customPortalTexture = i;
-        
+
         if (controller != null)
         {
             controller.markDirty();

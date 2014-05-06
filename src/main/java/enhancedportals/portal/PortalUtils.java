@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
-import enhancedportals.tileentity.portal.TileNetworkInterface;
-import enhancedportals.tileentity.portal.TilePortalPart;
-import enhancedportals.utility.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.portal.TileDiallingDevice;
+import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.portal.TileNetworkInterface;
+import enhancedportals.tileentity.portal.TilePortalPart;
+import enhancedportals.tileentity.portal.TileProgrammableInterface;
+import enhancedportals.utility.WorldUtils;
 
 public class PortalUtils
 {
@@ -31,20 +32,16 @@ public class PortalUtils
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
-            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North
-            // East
-            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South
-            // West
+            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North East
+            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South West
         }
         else if (portalDirection == 5)
         {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
-            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North
-            // West
-            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South
-            // East
+            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North West
+            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South East
         }
         else
         {
@@ -83,7 +80,7 @@ public class PortalUtils
 
         System.out.println("Parsing portal components with " + portalBlocks.size() + " portal blocks.");
 
-        boolean /*bio = false,*/ mod = false, dialler = false, network = false; // TODO
+        boolean program = false, mod = false, dialler = false, network = false;
 
         while (!toProcess.isEmpty())
         {
@@ -113,17 +110,18 @@ public class PortalUtils
 
                         dialler = true;
                     }
-                    /*else if (t instanceof TileBiometricIdentifier) // TODO
+
+                    else if (t instanceof TileProgrammableInterface)
                     {
-                        if (!bio)
+                        if (!program)
                         {
-                            bio = true;
+                            program = true;
                         }
                         else
                         {
-                            throw new PortalException("multipleBio");
+                            throw new PortalException("multipleProgram");
                         }
-                    }*/
+                    }
                     else if (t instanceof TileModuleManipulator)
                     {
                         if (!mod)

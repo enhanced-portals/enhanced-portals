@@ -223,23 +223,25 @@ public class NetworkManager
             return;
         }
 
-        Type type = new TypeToken<HashMap<String, WorldCoordinates>>() { }.getType();
+        Type type = new TypeToken<HashMap<String, WorldCoordinates>>()
+        {
+        }.getType();
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         String portalData = FileUtils.readFileToString(portalFile), networkData = FileUtils.readFileToString(networkFile);
 
         portalCoordinates = gson.fromJson(portalData, type);
         portalNetworks = gson.fromJson(networkData, portalNetworks.getClass());
-        
+
         if (portalCoordinates == null) // because for some reason fromJson can return null
         {
             portalCoordinates = new HashMap<String, WorldCoordinates>();
         }
-        
+
         if (portalNetworks == null) // because for some reason fromJson can return null
         {
             portalNetworks = new HashMap<String, String>();
         }
-        
+
         if (!portalCoordinates.isEmpty())
         {
             for (Entry<String, WorldCoordinates> entry : portalCoordinates.entrySet())

@@ -29,7 +29,7 @@ public class ContainerDiallingDeviceSave extends BaseContainer
             PortalTextureManager ptm = new PortalTextureManager();
             ptm.readFromNBT(tag, "texture");
             dial.glyphList.add(new GlyphElement(tag.getString("name"), new GlyphIdentifier(tag.getString("uid")), ptm));
-            player.openGui(EnhancedPortals.instance, GuiHandler.DIALLING_DEVICE_A,  dial.getWorldObj(), dial.xCoord, dial.yCoord, dial.zCoord);
+            player.openGui(EnhancedPortals.instance, GuiHandler.DIALLING_DEVICE_A, dial.getWorldObj(), dial.xCoord, dial.yCoord, dial.zCoord);
         }
     }
 }

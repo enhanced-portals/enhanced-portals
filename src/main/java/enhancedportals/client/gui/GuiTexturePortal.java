@@ -17,7 +17,7 @@ import enhancedportals.tileentity.portal.TileController;
 
 public class GuiTexturePortal extends BaseGui
 {
-    public static final int CONTAINER_SIZE = 102;
+    public static final int CONTAINER_SIZE = 100, CONTAINER_WIDTH = 190;
     protected TileController controller;
     protected GuiRGBSlider sliderR, sliderG, sliderB;
     protected GuiButton buttonReset, buttonSave;
@@ -26,9 +26,10 @@ public class GuiTexturePortal extends BaseGui
     {
         super(new ContainerTexturePortal(c, p.inventory), CONTAINER_SIZE);
         controller = c;
+        xSize = CONTAINER_WIDTH;
         name = "gui.portal";
         texture = new ResourceLocation("enhancedportals", "textures/gui/textures.png");
-        setCombinedInventory();
+        leftNudge = 7;
     }
 
     @Override
@@ -64,16 +65,16 @@ public class GuiTexturePortal extends BaseGui
         super.initGui();
         
         Color c = new Color(controller.activeTextureData.getPortalColour());
-        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 24, EnhancedPortals.localize("gui.red"), c.getRed() / 255f);
-        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 45, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f);
-        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 66, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f);
+        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 24, EnhancedPortals.localize("gui.red"), c.getRed() / 255f, 105);
+        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 45, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f, 105);
+        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 66, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f, 105);
         
         buttonList.add(sliderR);
         buttonList.add(sliderG);
         buttonList.add(sliderB);
 
-        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 87, 57, 20, EnhancedPortals.localize("gui.save"));
-        buttonReset = new GuiButton(111, guiLeft + xSize + 61, guiTop + 87, 57, 20, EnhancedPortals.localize("gui.reset"));
+        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.save"));
+        buttonReset = new GuiButton(111, guiLeft + xSize + 57, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.reset"));
 
         buttonList.add(buttonSave);
         buttonList.add(buttonReset);

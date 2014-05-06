@@ -31,12 +31,30 @@ public abstract class BaseContainer extends Container
         addPlayerInventory(containerSize, xOffset);
     }
 
+    protected void addPlayerInventory(int containerSize, int xOffset)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, xOffset + 8 + j * 18, containerSize - 82 + i * 18));
+            }
+        }
+
+        for (int i = 0; i < 9; i++)
+        {
+            addSlotToContainer(new Slot(inventoryPlayer, i, xOffset + 8 + i * 18, containerSize - 24));
+        }
+    }
+
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
         return inventory == null ? true : inventory.isUseableByPlayer(entityplayer);
     }
-    
+
+    public abstract void handleGuiPacket(NBTTagCompound tag, EntityPlayer player);
+
     /** It's stupid that I'm forced to do this, even though it's not my issue. **/
     protected void hideInventorySlots()
     {
@@ -51,27 +69,9 @@ public abstract class BaseContainer extends Container
         }
     }
 
-    protected void addPlayerInventory(int containerSize, int xOffset)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, xOffset + 8 + j * 18, (containerSize - 82) + i * 18));
-            }
-        }
-
-        for (int i = 0; i < 9; i++)
-        {
-            addSlotToContainer(new Slot(inventoryPlayer, i, xOffset + 8 + i * 18, containerSize - 24));
-        }
-    }
-
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int par2)
     {
         return null;
     }
-
-    public abstract void handleGuiPacket(NBTTagCompound tag, EntityPlayer player);
 }

@@ -1,9 +1,9 @@
 package enhancedportals.common;
 
-import enhancedportals.client.particle.PortalFX;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import enhancedportals.client.PortalFX;
+import enhancedportals.tileentity.portal.TileModuleManipulator;
 
 public interface IPortalModule
 {

@@ -35,7 +35,7 @@ public class PacketTextureData extends PacketEP
         this.y = y;
         this.z = z;
     }
-    
+
     public PacketTextureData(String n, String g, PortalTextureManager t)
     {
         id = -1;
@@ -45,36 +45,9 @@ public class PacketTextureData extends PacketEP
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
-    {
-    	if (id > -1)
-        {
-    		buffer.writeBoolean(true);
-            buffer.writeInt(id);
-            buffer.writeInt(x);
-            buffer.writeInt(y);
-            buffer.writeInt(z);
-        }
-        else
-        {
-        	buffer.writeBoolean(false);
-            NBTTagCompound data = new NBTTagCompound();
-
-            if (ptm != null)
-            {
-                ptm.writeToNBT(data, "Texture");
-            }
-
-            ByteBufUtils.writeTag(buffer, data);
-            ByteBufUtils.writeUTF8String(buffer, name);
-            ByteBufUtils.writeUTF8String(buffer, glyphs);
-        }
-    }
-
-    @Override
     public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
     {
-    	if (buffer.readBoolean())
+        if (buffer.readBoolean())
         {
             id = buffer.readInt();
             x = buffer.readInt();
@@ -101,9 +74,36 @@ public class PacketTextureData extends PacketEP
     }
 
     @Override
+    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    {
+        if (id > -1)
+        {
+            buffer.writeBoolean(true);
+            buffer.writeInt(id);
+            buffer.writeInt(x);
+            buffer.writeInt(y);
+            buffer.writeInt(z);
+        }
+        else
+        {
+            buffer.writeBoolean(false);
+            NBTTagCompound data = new NBTTagCompound();
+
+            if (ptm != null)
+            {
+                ptm.writeToNBT(data, "Texture");
+            }
+
+            ByteBufUtils.writeTag(buffer, data);
+            ByteBufUtils.writeUTF8String(buffer, name);
+            ByteBufUtils.writeUTF8String(buffer, glyphs);
+        }
+    }
+
+    @Override
     public void handleClientSide(EntityPlayer player)
     {
-    	if (id != -1)
+        if (id != -1)
         {
             return;
         }
@@ -117,12 +117,12 @@ public class PacketTextureData extends PacketEP
     @Override
     public void handleServerSide(EntityPlayer player)
     {
-    	TileDiallingDevice dial = (TileDiallingDevice) ((EntityPlayer) player).worldObj.getTileEntity(x, y, z);
+        TileDiallingDevice dial = (TileDiallingDevice) player.worldObj.getTileEntity(x, y, z);
 
         if (dial != null)
         {
-        	GuiHandler.openGui((EntityPlayer)player, dial, GuiHandler.TEXTURE_DIALLING_A);
-        	GlyphElement e = dial.glyphList.get(id);
+            GuiHandler.openGui(player, dial, GuiHandler.TEXTURE_DIALLING_A);
+            GlyphElement e = dial.glyphList.get(id);
             EnhancedPortals.packetPipeline.sendTo(new PacketTextureData(e.name, e.identifier.getGlyphString(), e.texture), (EntityPlayerMP) player);
         }
     }

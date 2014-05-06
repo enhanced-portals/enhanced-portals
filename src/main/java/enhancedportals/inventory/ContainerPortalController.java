@@ -24,7 +24,7 @@ public class ContainerPortalController extends BaseContainer
         if (tag.hasKey("public"))
         {
             controller.isPublic = !controller.isPublic;
-            //PacketHandlerServer.sendGuiPacketToPlayer(controller, player);  // TODO
+            // PacketHandlerServer.sendGuiPacketToPlayer(controller, player); // TODO
         }
     }
 }
