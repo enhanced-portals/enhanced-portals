@@ -24,5 +24,9 @@ public class ContainerTextureFrame extends BaseContainer
         {
             controller.setFrameColour(tag.getInteger("colour"));
         }
+        else if (tag.hasKey("custom"))
+        {
+            controller.setCustomFrameTexture(tag.getInteger("custom"));
+        }
     }
 }

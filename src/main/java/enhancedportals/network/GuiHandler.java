@@ -1,6 +1,7 @@
 package enhancedportals.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -19,6 +20,9 @@ import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.client.gui.GuiTextureDialFrame;
 import enhancedportals.client.gui.GuiTextureDialParticle;
 import enhancedportals.client.gui.GuiTextureDialPortal;
+import enhancedportals.client.gui.GuiTextureFrame;
+import enhancedportals.client.gui.GuiTextureParticle;
+import enhancedportals.client.gui.GuiTexturePortal;
 import enhancedportals.inventory.ContainerDiallingDevice;
 import enhancedportals.inventory.ContainerDiallingDeviceEdit;
 import enhancedportals.inventory.ContainerDiallingDeviceManual;
@@ -33,6 +37,11 @@ import enhancedportals.inventory.ContainerRedstoneInterface;
 import enhancedportals.inventory.ContainerTextureDialFrame;
 import enhancedportals.inventory.ContainerTextureDialParticle;
 import enhancedportals.inventory.ContainerTextureDialPortal;
+import enhancedportals.inventory.ContainerTextureFrame;
+import enhancedportals.inventory.ContainerTextureParticle;
+import enhancedportals.inventory.ContainerTexturePortal;
+import enhancedportals.network.packet.PacketGui;
+import enhancedportals.tileentity.TileEP;
 import enhancedportals.tileentity.TileStabilizerMain;
 import enhancedportals.tileentity.portal.TileController;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
@@ -57,7 +66,7 @@ public class GuiHandler implements IGuiHandler
     public static final int TEXTURE_DIALLING_C = 113;
 
     public static final int REDSTONE_INTERFACE = 2;
-    // public static final int BIOMETRIC_IDENTIFIER = 5; // TODO
+    public static final int PROGRAMMABLE_INTERFACE = 5;
     public static final int MODULE_MANIPULATOR = 6;
     public static final int TRANSFER_FLUID = 7;
     public static final int TRANSFER_ENERGY = 8;
@@ -74,7 +83,14 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        TileEntity tile = world.getTileEntity(x, y, z);
+        TileEntity t = world.getTileEntity(x, y, z);
+        
+        if (!(t instanceof TileEP))
+        {
+            return null;
+        }
+        
+        TileEP tile = (TileEP) t;
 
         if (ID == PORTAL_CONTROLLER_A)
         {
@@ -122,15 +138,15 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == TEXTURE_A)
         {
-            return new GuiTextureDialFrame((TileDiallingDevice) tile, player);
+            return new GuiTextureFrame((TileController) tile, player);
         }
         else if (ID == TEXTURE_B)
         {
-            return new GuiTextureDialPortal((TileDiallingDevice) tile, player);
+            return new GuiTexturePortal((TileController) tile, player);
         }
         else if (ID == TEXTURE_C)
         {
-            return new GuiTextureDialParticle((TileDiallingDevice) tile, player);
+            return new GuiTextureParticle((TileController) tile, player);
         }
         else if (ID == TEXTURE_DIALLING_A)
         {
@@ -171,10 +187,19 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        TileEntity tile = world.getTileEntity(x, y, z);
+        TileEntity t = world.getTileEntity(x, y, z);
+        
+        if (!(t instanceof TileEP))
+        {
+            return null;
+        }
+        
+        TileEP tile = (TileEP) t;
+
 
         if (ID == PORTAL_CONTROLLER_A)
         {
+            EnhancedPortals.packetPipeline.sendTo(new PacketGui(tile), (EntityPlayerMP) player);
             return new ContainerPortalController((TileController) tile, player.inventory);
         }
         else if (ID == PORTAL_CONTROLLER_B)
@@ -183,10 +208,12 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == REDSTONE_INTERFACE)
         {
+            EnhancedPortals.packetPipeline.sendTo(new PacketGui(tile), (EntityPlayerMP) player);
             return new ContainerRedstoneInterface((TileRedstoneInterface) tile, player.inventory);
         }
         else if (ID == NETWORK_INTERFACE_A)
         {
+            EnhancedPortals.packetPipeline.sendTo(new PacketGui(tile), (EntityPlayerMP) player);
             return new ContainerNetworkInterface((TileController) tile, player.inventory);
         }
         else if (ID == NETWORK_INTERFACE_B)
@@ -203,6 +230,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == DIALLING_DEVICE_A)
         {
+            EnhancedPortals.packetPipeline.sendTo(new PacketGui(tile), (EntityPlayerMP) player);
             return new ContainerDiallingDevice((TileDiallingDevice) tile, player.inventory);
         }
         else if (ID == DIALLING_DEVICE_B)
@@ -217,15 +245,27 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerDiallingDeviceEdit((TileDiallingDevice) tile, player.inventory);
         }
-        else if (ID == TEXTURE_A || ID == TEXTURE_DIALLING_A)
+        else if (ID == TEXTURE_A)
+        {
+            return new ContainerTextureFrame((TileController) tile, player.inventory);
+        }
+        else if (ID == TEXTURE_B)
+        {
+            return new ContainerTexturePortal((TileController) tile, player.inventory);
+        }
+        else if (ID == TEXTURE_C)
+        {
+            return new ContainerTextureParticle((TileController) tile, player.inventory);
+        }
+        else if (ID == TEXTURE_DIALLING_A)
         {
             return new ContainerTextureDialFrame((TileDiallingDevice) tile, player.inventory);
         }
-        else if (ID == TEXTURE_B || ID == TEXTURE_DIALLING_B)
+        else if (ID == TEXTURE_DIALLING_B)
         {
             return new ContainerTextureDialPortal((TileDiallingDevice) tile, player.inventory);
         }
-        else if (ID == TEXTURE_C || ID == TEXTURE_DIALLING_C)
+        else if (ID == TEXTURE_DIALLING_C)
         {
             return new ContainerTextureDialParticle((TileDiallingDevice) tile, player.inventory);
         }

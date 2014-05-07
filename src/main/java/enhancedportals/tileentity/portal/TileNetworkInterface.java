@@ -110,22 +110,23 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
     {
         
     }
-
-    // OpenComputers
     
 	@Override
-	public String getComponentName() {
+	public String getComponentName()
+	{
 		return "ep_interface_network";
 	}
 	
 	@Callback
-	public Object[] dial(Context context, Arguments args) {
+	public Object[] dial(Context context, Arguments args)
+	{
 		getPortalController().connectionDial();
 		return new Object[]{true};
 	}
 	
 	@Callback
-	public Object[] terminate(Context context, Arguments args) {
+	public Object[] terminate(Context context, Arguments args)
+	{
 		getPortalController().connectionTerminate();
 		return new Object[]{true};
 	}

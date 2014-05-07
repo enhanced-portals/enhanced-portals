@@ -1,8 +1,7 @@
 package enhancedportals.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -280,7 +279,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
     public int getEnergyStoragePerRow()
     {
-        return is3x3 ? ENERGY_STORAGE_PER_ROW + ENERGY_STORAGE_PER_ROW / 2 : ENERGY_STORAGE_PER_ROW;
+        return (int) ((is3x3 ? ENERGY_STORAGE_PER_ROW + ENERGY_STORAGE_PER_ROW / 2 : ENERGY_STORAGE_PER_ROW) * CommonProxy.powerStorageMultiplier);
     }
 
     @Override
@@ -376,28 +375,28 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     }
 
     @Override
-    public void packetGuiFill(DataOutputStream stream) throws IOException
+    public void packetGuiFill(ByteBuf buffer)
     {
-        stream.writeInt(activeConnections.size());
-        stream.writeInt(powerState);
-        stream.writeInt(instability);
-        stream.writeInt(energyStorage.getMaxEnergyStored());
-        stream.writeInt(energyStorage.getEnergyStored());
+        buffer.writeInt(activeConnections.size());
+        buffer.writeInt(powerState);
+        buffer.writeInt(instability);
+        buffer.writeInt(energyStorage.getMaxEnergyStored());
+        buffer.writeInt(energyStorage.getEnergyStored());
     }
 
     @Override
-    public void packetGuiUse(DataInputStream stream) throws IOException
+    public void packetGuiUse(ByteBuf buffer)
     {
-        if (stream.available() == 1)
+        if (buffer.readableBytes() <= 1)
         {
             return; // Stops EOF exceptions from old invalid packets
         }
 
-        intActiveConnections = stream.readInt();
-        powerState = stream.readInt();
-        instability = stream.readInt();
-        energyStorage.setCapacity(stream.readInt());
-        energyStorage.setEnergyStored(stream.readInt());
+        intActiveConnections = buffer.readInt();
+        powerState = buffer.readInt();
+        instability = buffer.readInt();
+        energyStorage.setCapacity(buffer.readInt());
+        energyStorage.setEnergyStored(buffer.readInt());
     }
 
     @Override
@@ -744,7 +743,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
                     }
                     catch (PortalException e)
                     {
-                        CommonProxy.logger.warning(e.getMessage());
+                        EnhancedPortals.logger.warn(e.getMessage());
                     }
                 }
 

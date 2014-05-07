@@ -17,9 +17,11 @@ import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.client.PortalFX;
 import enhancedportals.client.PortalRenderer;
 import enhancedportals.item.ItemPortalModule;
+import enhancedportals.network.ClientProxy;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.portal.EntityManager;
 import enhancedportals.tileentity.portal.TileController;
@@ -225,6 +227,15 @@ public class BlockPortal extends BlockContainer
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         texture = iconRegister.registerIcon("enhancedportals:portal");
+        int counter = 0;
+        ClientProxy.customPortalTextures.clear();
+        
+        while (ClientProxy.resourceExists("textures/blocks/customPortal/" + String.format("%02d", counter) + ".png"))
+        {
+            EnhancedPortals.logger.info("Registered custom portal Icon: " + String.format("%02d", counter) + ".png");
+            ClientProxy.customPortalTextures.add(iconRegister.registerIcon("enhancedportals:customPortal/" + String.format("%02d", counter)));
+            counter++;
+        }
     }
 
     @Override

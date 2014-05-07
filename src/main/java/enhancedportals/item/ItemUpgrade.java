@@ -19,6 +19,7 @@ import enhancedportals.tileentity.portal.TileFrame;
 import enhancedportals.tileentity.portal.TileModuleManipulator;
 import enhancedportals.tileentity.portal.TileNetworkInterface;
 import enhancedportals.tileentity.portal.TilePortalPart;
+import enhancedportals.tileentity.portal.TileProgrammableInterface;
 import enhancedportals.tileentity.portal.TileRedstoneInterface;
 import enhancedportals.utility.WorldUtils;
 
@@ -104,9 +105,12 @@ public class ItemUpgrade extends Item
             }
             else
             {
-                /*
-                 * if (controller.getBiometricIdentifier() != null && blockMeta == BlockFrame.BIOMETRIC_IDENTIFIER) // TODO { player.addChatComponentMessage(new ChatComponentText(Localization.getChatString("multipleBiometricIdentifiers"))); return false; } else
-                 */if (controller.getDiallingDevices().size() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
+                if (controller.getProgrammableInterface() != null && blockMeta == BlockFrame.PROGRAMMABLE_INTERFACE)
+                {
+                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localize("chat.multipleProgramInterface")));
+                    return false;
+                }
+                else if (controller.getDiallingDevices().size() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
                 {
                     player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localize("chat.dialDeviceAndNetworkInterface")));
                     return false;
@@ -136,9 +140,10 @@ public class ItemUpgrade extends Item
                 {
                     controller.addDialDevice(t.getChunkCoordinates());
                 }
-                /*
-                 * else if (t instanceof TileBiometricIdentifier) // TODO { controller.setBiometricIdentifier(t.getChunkCoordinates()); }
-                 */
+                else if (t instanceof TileProgrammableInterface)
+                {
+                    controller.setProgrammableInterface(t.getChunkCoordinates());
+                }
                 else if (t instanceof TileNetworkInterface)
                 {
                     controller.addNetworkInterface(t.getChunkCoordinates());
@@ -160,7 +165,7 @@ public class ItemUpgrade extends Item
     @Override
     public void registerIcons(IIconRegister register)
     {
-        baseIcon = register.registerIcon("enhancedportals:blankUpgrade");
+        baseIcon = register.registerIcon("enhancedportals:blank_upgrade");
 
         for (int i = 0; i < overlayIcons.length; i++)
         {

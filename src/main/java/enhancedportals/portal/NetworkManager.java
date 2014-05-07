@@ -50,8 +50,8 @@ public class NetworkManager
         portalNetworks = new HashMap<String, String>();
         networkedPortals = new HashMap<String, ArrayList<String>>();
         server = event.getServer();
-        portalFile = new File(EnhancedPortals.proxy.getWorldDir(), "EP3_PortalLocations.dat");
-        networkFile = new File(EnhancedPortals.proxy.getWorldDir(), "EP3_PortalNetworks.dat");
+        portalFile = new File(EnhancedPortals.proxy.getWorldDir(), "EP3_PortalLocations.json");
+        networkFile = new File(EnhancedPortals.proxy.getWorldDir(), "EP3_PortalNetworks.json");
 
         try
         {

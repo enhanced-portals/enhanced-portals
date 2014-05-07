@@ -1,8 +1,7 @@
 package enhancedportals.tileentity.portal;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -21,6 +20,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -796,21 +796,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
 
     @Override
-    public void packetGuiFill(DataOutputStream stream) throws IOException
+    public void packetGuiFill(ByteBuf buffer)
     {
-        stream.writeUTF(getHasIdentifierUnique() ? getIdentifierUnique().getGlyphString() : "");
-        stream.writeUTF(getHasIdentifierNetwork() ? getIdentifierNetwork().getGlyphString() : "");
-        stream.writeInt(getHasIdentifierNetwork() ? EnhancedPortals.proxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
-        stream.writeBoolean(isPublic);
+        ByteBufUtils.writeUTF8String(buffer, getHasIdentifierUnique() ? getIdentifierUnique().getGlyphString() : "");
+        ByteBufUtils.writeUTF8String(buffer, getHasIdentifierNetwork() ? getIdentifierNetwork().getGlyphString() : "");
+        buffer.writeInt(getHasIdentifierNetwork() ? EnhancedPortals.proxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
+        buffer.writeBoolean(isPublic);
     }
 
     @Override
-    public void packetGuiUse(DataInputStream stream) throws IOException
+    public void packetGuiUse(ByteBuf buffer)
     {
-        uID = new GlyphIdentifier(stream.readUTF());
-        nID = new GlyphIdentifier(stream.readUTF());
-        connectedPortals = stream.readInt();
-        isPublic = stream.readBoolean();
+        uID = new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer));
+        nID = new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer));
+        connectedPortals = buffer.readInt();
+        isPublic = buffer.readBoolean();
     }
     
     /**

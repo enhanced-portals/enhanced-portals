@@ -1,7 +1,8 @@
 package enhancedportals.tileentity.portal;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -62,26 +63,26 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     }
 
     @Override
-    public void packetGuiFill(DataOutputStream stream) throws IOException
+    public void packetGuiFill(ByteBuf buffer)
     {
         if (tank.getFluid() != null)
         {
-            stream.writeBoolean(false);
-            stream.writeInt(tank.getFluid().fluidID);
-            stream.writeInt(tank.getFluidAmount());
+            buffer.writeBoolean(false);
+            buffer.writeInt(tank.getFluid().fluidID);
+            buffer.writeInt(tank.getFluidAmount());
         }
         else
         {
-            stream.writeBoolean(false);
+            buffer.writeBoolean(false);
         }
     }
 
     @Override
-    public void packetGuiUse(DataInputStream stream) throws IOException
+    public void packetGuiUse(ByteBuf buffer)
     {
-        if (stream.readBoolean())
+        if (buffer.readBoolean())
         {
-            tank.setFluid(new FluidStack(FluidRegistry.getFluid(stream.readInt()), stream.readInt()));
+            tank.setFluid(new FluidStack(FluidRegistry.getFluid(buffer.readInt()), buffer.readInt()));
         }
         else
         {

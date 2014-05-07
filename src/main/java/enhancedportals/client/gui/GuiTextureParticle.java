@@ -100,4 +100,11 @@ public class GuiTextureParticle extends BaseGui
             }
         }
     }
+    
+    public void particleSelected(int icon)
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("custom", icon);
+        EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
+    }
 }

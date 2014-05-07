@@ -93,6 +93,6 @@ public class ItemLocationCard extends Item
     @Override
     public void registerIcons(IIconRegister register)
     {
-        texture = register.registerIcon("enhancedportals:locationCard");
+        texture = register.registerIcon("enhancedportals:location_card");
     }
 }

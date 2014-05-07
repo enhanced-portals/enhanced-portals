@@ -1,10 +1,12 @@
 package enhancedportals.tileentity.portal;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -66,26 +68,26 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Override
-    public void packetGuiFill(DataOutputStream stream) throws IOException
+    public void packetGuiFill(ByteBuf buffer)
     {
-        stream.writeInt(glyphList.size());
+        buffer.writeInt(glyphList.size());
 
         for (int i = 0; i < glyphList.size(); i++)
         {
-            stream.writeUTF(glyphList.get(i).name);
-            stream.writeUTF(glyphList.get(i).identifier.getGlyphString());
+            ByteBufUtils.writeUTF8String(buffer, glyphList.get(i).name);
+            ByteBufUtils.writeUTF8String(buffer, glyphList.get(i).identifier.getGlyphString());
         }
     }
 
     @Override
-    public void packetGuiUse(DataInputStream stream) throws IOException
+    public void packetGuiUse(ByteBuf buffer)
     {
-        int max = stream.readInt();
+        int max = buffer.readInt();
         glyphList.clear();
 
         for (int i = 0; i < max; i++)
         {
-            glyphList.add(new GlyphElement(stream.readUTF(), new GlyphIdentifier(stream.readUTF())));
+            glyphList.add(new GlyphElement(ByteBufUtils.readUTF8String(buffer), new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer))));
         }
     }
 

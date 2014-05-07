@@ -6,6 +6,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.GuiHandler;
+import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
@@ -58,7 +59,7 @@ public class ContainerDiallingDevice extends BaseContainer
                 dial.glyphList.remove(id);
             }
 
-            // PacketHandlerServer.sendGuiPacketToPlayer(dial, player); // TODO
+            EnhancedPortals.packetPipeline.sendTo(new PacketGui(dial), (EntityPlayerMP) player);
         }
     }
 }

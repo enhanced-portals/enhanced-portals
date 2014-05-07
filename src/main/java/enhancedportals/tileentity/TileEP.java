@@ -1,7 +1,7 @@
 package enhancedportals.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import io.netty.buffer.ByteBuf;
+
 import java.io.IOException;
 
 import net.minecraft.tileentity.TileEntity;
@@ -26,12 +26,12 @@ public class TileEP extends TileEntity
         return new WorldCoordinates(getChunkCoordinates(), worldObj.provider.dimensionId);
     }
 
-    public void packetGuiFill(DataOutputStream stream) throws IOException
+    public void packetGuiFill(ByteBuf buffer)
     {
 
     }
 
-    public void packetGuiUse(DataInputStream stream) throws IOException
+    public void packetGuiUse(ByteBuf buffer)
     {
 
     }

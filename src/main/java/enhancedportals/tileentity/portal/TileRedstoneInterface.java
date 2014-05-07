@@ -1,16 +1,11 @@
 package enhancedportals.tileentity.portal;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
-import enhancedportals.block.BlockFrame;
-import enhancedportals.item.ItemPaintbrush;
-import enhancedportals.network.GuiHandler;
-import enhancedportals.portal.GlyphElement;
-import enhancedportals.utility.GeneralUtils;
-import enhancedportals.utility.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
@@ -19,6 +14,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import enhancedportals.block.BlockFrame;
+import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.portal.GlyphElement;
+import enhancedportals.utility.GeneralUtils;
+import enhancedportals.utility.WorldUtils;
 
 public class TileRedstoneInterface extends TileFrame
 {
@@ -76,10 +77,10 @@ public class TileRedstoneInterface extends TileFrame
 	}
 
 	@Override
-	public void packetGuiFill(DataOutputStream stream) throws IOException
+	public void packetGuiFill(ByteBuf buffer)
 	{
-		stream.writeBoolean(isOutput);
-		stream.writeByte(state);
+	    buffer.writeBoolean(isOutput);
+	    buffer.writeByte(state);
 	}
 
 	public int isProvidingPower(int side)
@@ -186,10 +187,10 @@ public class TileRedstoneInterface extends TileFrame
 	}
 
 	@Override
-	public void packetGuiUse(DataInputStream stream) throws IOException
+	public void packetGuiUse(ByteBuf buffer)
 	{
-		isOutput = stream.readBoolean();
-		setState(stream.readByte());
+		isOutput = buffer.readBoolean();
+		setState(buffer.readByte());
 	}
 
 	@Override

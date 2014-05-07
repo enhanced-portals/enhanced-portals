@@ -24,5 +24,9 @@ public class ContainerTexturePortal extends BaseContainer
         {
             controller.setPortalColour(tag.getInteger("colour"));
         }
+        else if (tag.hasKey("custom"))
+        {
+            controller.setCustomPortalTexture(tag.getInteger("custom"));
+        }
     }
 }

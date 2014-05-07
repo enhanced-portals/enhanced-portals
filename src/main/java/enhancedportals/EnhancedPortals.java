@@ -5,6 +5,7 @@ import java.io.File;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 
 import org.apache.logging.log4j.Level;
@@ -63,6 +64,7 @@ public class EnhancedPortals
         LoggerConfig fml = new LoggerConfig(FMLCommonHandler.instance().getFMLLogger().getName(), Level.ALL, true);
         LoggerConfig modConf = new LoggerConfig(logger.getName(), Level.ALL, true);
         modConf.setParent(fml);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @EventHandler
@@ -104,16 +106,4 @@ public class EnhancedPortals
             proxy.networkManager.saveAllData();
         }
     }
-
-    /*
-     * @ForgeSubscribe
-     * 
-     * @SideOnly(Side.CLIENT) public void textureHook(TextureStitchEvent.Pre event) { if (event.map.textureType == 0) { ClientProxy.customPortalTextures.clear(); ClientProxy.customFrameTextures.clear(); int counter = 0;
-     * 
-     * while (ClientProxy.resourceExists("textures/blocks/customPortal/" + String.format("%02d", counter) + ".png")) { CommonProxy.logger.info("Registered custom portal Icon: " + String.format("%02d", counter) + ".png"); ClientProxy.customPortalTextures.add(event.map.registerIcon("enhancedportals:customPortal/" + String.format("%02d", counter))); counter++; }
-     * 
-     * counter = 0;
-     * 
-     * while (ClientProxy.resourceExists("textures/blocks/customFrame/" + String.format("%02d", counter) + ".png")) { CommonProxy.logger.info("Registered custom frame Icon: " + String.format("%02d", counter) + ".png"); ClientProxy.customFrameTextures.add(event.map.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter))); counter++; } } }
-     */
 }

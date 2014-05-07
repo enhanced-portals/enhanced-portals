@@ -1,8 +1,7 @@
 package enhancedportals.tileentity.portal;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import io.netty.buffer.ByteBuf;
+
 import java.util.HashMap;
 
 import li.cil.oc.api.network.Arguments;
@@ -13,10 +12,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -48,34 +46,25 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     }
 
     @Override
-    public void packetGuiFill(DataOutputStream stream) throws IOException
+    public void packetGuiFill(ByteBuf buffer)
     {
         if (stack != null)
         {
-            stream.writeBoolean(true);
-            NBTTagCompound tag = new NBTTagCompound();
-            stack.writeToNBT(tag);
-
-            byte[] compressed = CompressedStreamTools.compress(tag);
-            stream.writeShort(compressed.length);
-            stream.write(compressed);
+            buffer.writeBoolean(true);
+            ByteBufUtils.writeItemStack(buffer, stack);
         }
         else
         {
-            stream.writeBoolean(false);
+            buffer.writeBoolean(false);
         }
     }
 
     @Override
-    public void packetGuiUse(DataInputStream stream) throws IOException
+    public void packetGuiUse(ByteBuf buffer)
     {
-        if (stream.readBoolean())
+        if (buffer.readBoolean())
         {
-            short length = stream.readShort();
-            byte[] compressed = new byte[length];
-            stream.readFully(compressed);
-            NBTTagCompound tag = CompressedStreamTools.decompress(compressed);
-            stack = ItemStack.loadItemStackFromNBT(tag);
+            stack = ByteBufUtils.readItemStack(buffer);
         }
         else
         {

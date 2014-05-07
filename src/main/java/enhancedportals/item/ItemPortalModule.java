@@ -209,11 +209,11 @@ public class ItemPortalModule extends Item implements IPortalModule
     @Override
     public void registerIcons(IIconRegister register)
     {
-        baseIcon = register.registerIcon("enhancedportals:blankPortalModule");
+        baseIcon = register.registerIcon("enhancedportals:blank_portal_module");
 
         for (int i = 0; i < overlayIcons.length; i++)
         {
-            overlayIcons[i] = register.registerIcon("enhancedportals:portalModule_" + i);
+            overlayIcons[i] = register.registerIcon("enhancedportals:portal_module_" + i);
         }
     }
 

@@ -20,7 +20,7 @@ public class ItemBlankUpgrade extends Item
     }
 
     @Override
-    public IIcon getIcon(ItemStack stack, int pass)
+    public IIcon getIconFromDamage(int meta)
     {
         return texture;
     }
@@ -28,6 +28,6 @@ public class ItemBlankUpgrade extends Item
     @Override
     public void registerIcons(IIconRegister ir)
     {
-        texture = ir.registerIcon("blankUpgrade");
+        texture = ir.registerIcon("enhancedportals:blank_upgrade");
     }
 }

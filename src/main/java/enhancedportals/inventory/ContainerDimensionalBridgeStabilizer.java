@@ -15,7 +15,7 @@ import enhancedportals.utility.GeneralUtils;
 
 public class ContainerDimensionalBridgeStabilizer extends BaseContainer
 {
-    int lastPower, lastPortals, lastInstability, lastPowerState;
+    int lastPower = 0, lastPortals = -1, lastInstability = 0, lastPowerState = -1;
     TileStabilizerMain stabilizer;
 
     public ContainerDimensionalBridgeStabilizer(TileStabilizerMain s, InventoryPlayer p)

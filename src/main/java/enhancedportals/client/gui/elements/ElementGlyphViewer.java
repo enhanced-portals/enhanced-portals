@@ -16,7 +16,7 @@ public class ElementGlyphViewer extends BaseElement
     {
         super(gui, x, y, 162, 18);
         selector = s;
-        texture = new ResourceLocation("enhancedportals", "textures/gui/playerInventory.png");
+        texture = new ResourceLocation("enhancedportals", "textures/gui/player_inventory.png");
     }
 
     @Override

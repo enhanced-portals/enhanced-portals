@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.button.GuiBetterSlider;
 import enhancedportals.client.gui.button.GuiRGBSlider;
+import enhancedportals.client.gui.elements.ElementScrollFrameIcons;
 import enhancedportals.client.gui.tabs.TabColour;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerTextureFrame;
@@ -81,6 +82,7 @@ public class GuiTextureFrame extends BaseGui
 
         addTab(new TabColour(this, sliderR, sliderG, sliderB, buttonSave, buttonReset));
         addTab(new TabTip(this, "colourTip"));
+        addElement(new ElementScrollFrameIcons(this, 7, 17, texture));
     }
 
     @Override
@@ -99,5 +101,17 @@ public class GuiTextureFrame extends BaseGui
                 }
             }
         }
+    }
+    
+    public void iconSelected(int icon)
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("custom", icon);
+        EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
+    }
+
+    public int getSelectedIcon()
+    {
+        return controller.activeTextureData.getCustomFrameTexture();
     }
 }

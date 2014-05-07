@@ -21,7 +21,7 @@ import enhancedportals.inventory.BaseContainer;
 public abstract class BaseGui extends GuiContainer
 {
     RenderItem itemRenderer = new RenderItem();
-    protected static final ResourceLocation playerInventoryTexture = new ResourceLocation("enhancedportals", "textures/gui/playerInventory.png"), resizableInterfaceTexture = new ResourceLocation("enhancedportals", "textures/gui/resizableInterace.png");
+    protected static final ResourceLocation playerInventoryTexture = new ResourceLocation("enhancedportals", "textures/gui/player_inventory.png"), resizableInterfaceTexture = new ResourceLocation("enhancedportals", "textures/gui/resizable_interace.png");
     protected int mouseX = 0, mouseY = 0;
     protected ResourceLocation texture;
     protected String name;

@@ -1,7 +1,6 @@
 package enhancedportals.network;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -28,6 +27,7 @@ import enhancedportals.item.ItemPortalModule;
 import enhancedportals.item.ItemStabilizer;
 import enhancedportals.item.ItemUpgrade;
 import enhancedportals.item.ItemWrench;
+import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.network.packet.PacketRerender;
@@ -49,13 +49,11 @@ import enhancedportals.tileentity.portal.TileTransferItem;
 
 public class CommonProxy
 {
-    public static final Logger logger = Logger.getLogger(EnhancedPortals.NAME);
-    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20;
-    public static final int RF_PER_MJ = 10;
+    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20, RF_PER_MJ = 10;
     public int gogglesRenderIndex = 0;
     public NetworkManager networkManager;
     public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower;
-    public static double powerMultiplier;
+    public static double powerMultiplier, powerStorageMultiplier;
     static Configuration config;
     static File craftingDir;
 
@@ -108,6 +106,7 @@ public class CommonProxy
         EnhancedPortals.packetPipeline.registerPacket(PacketTextureData.class);
         EnhancedPortals.packetPipeline.registerPacket(PacketRerender.class);
         EnhancedPortals.packetPipeline.registerPacket(PacketGuiData.class);
+        EnhancedPortals.packetPipeline.registerPacket(PacketGui.class);
     }
 
     public void registerTileEntities()
@@ -139,11 +138,17 @@ public class CommonProxy
         fasterPortalCooldown = config.get("Portal", "FasterPortalCooldown", false).getBoolean(false);
         requirePower = config.get("Power", "RequirePower", true).getBoolean(true);
         powerMultiplier = config.get("Power", "PowerMultiplier", 1.0).getDouble(1.0);
+        powerStorageMultiplier = config.get("Power", "DBSPowerStorageMultiplier", 1.0).getDouble(1.0);
         config.save();
 
         if (powerMultiplier < 0)
         {
-            powerMultiplier = 0;
+            requirePower = false;
+        }
+        
+        if (powerStorageMultiplier < 0.01)
+        {
+            powerStorageMultiplier = 0.01;
         }
     }
 

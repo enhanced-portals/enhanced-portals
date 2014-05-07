@@ -19,7 +19,7 @@ public class ElementGlyphSelector extends BaseElement
     public ElementGlyphSelector(BaseGui gui, int x, int y)
     {
         super(gui, x, y, 162, 54);
-        texture = new ResourceLocation("enhancedportals", "textures/gui/playerInventory.png");
+        texture = new ResourceLocation("enhancedportals", "textures/gui/player_inventory.png");
     }
 
     @Override

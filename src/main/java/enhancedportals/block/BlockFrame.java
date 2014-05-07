@@ -22,6 +22,7 @@ import cofh.api.block.IDismantleable;
 import cofh.api.tileentity.ISidedBlockTexture;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.ClientProxy;
+import enhancedportals.network.CommonProxy;
 import enhancedportals.tileentity.portal.TileController;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
 import enhancedportals.tileentity.portal.TileFrame;
@@ -295,10 +296,19 @@ public class BlockFrame extends BlockContainer implements IDismantleable
 
         for (int i = 0; i < overlayIcons.length; i++)
         {
-            overlayIcons[i] = register.registerIcon("enhancedportals:portalFrame_" + i);
-            fullIcons[i] = register.registerIcon("enhancedportals:portalFrameFull_" + i);
+            overlayIcons[i] = register.registerIcon("enhancedportals:frame_" + i);
+            fullIcons[i] = register.registerIcon("enhancedportals:frame_" + i + "b");
         }
 
         connectedTextures.registerIcons(register);
+        int counter = 0;
+        ClientProxy.customFrameTextures.clear();
+        
+        while (ClientProxy.resourceExists("textures/blocks/customFrame/" + String.format("%02d", counter) + ".png"))
+        {
+            EnhancedPortals.logger.info("Registered custom frame Icon: " + String.format("%02d", counter) + ".png");
+            ClientProxy.customFrameTextures.add(register.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));
+            counter++;
+        }
     }
 }

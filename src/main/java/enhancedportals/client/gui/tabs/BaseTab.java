@@ -34,8 +34,8 @@ public abstract class BaseTab
     public int minHeight = 22;
     public int maxHeight = 22;
     public int currentHeight = minHeight;
-    public static final ResourceLocation DEFAULT_TEXTURE_LEFT = new ResourceLocation("alzlib", "textures/gui/tabLeft.png");
-    public static final ResourceLocation DEFAULT_TEXTURE_RIGHT = new ResourceLocation("alzlib", "textures/gui/tabRight.png");
+    public static final ResourceLocation DEFAULT_TEXTURE_LEFT = new ResourceLocation("enhancedportals", "textures/gui/tab_left.png");
+    public static final ResourceLocation DEFAULT_TEXTURE_RIGHT = new ResourceLocation("enhancedportals", "textures/gui/tab_right.png");
     public int titleColour = 0xFFFFFF;
     public IIcon icon;
     public ItemStack stack;

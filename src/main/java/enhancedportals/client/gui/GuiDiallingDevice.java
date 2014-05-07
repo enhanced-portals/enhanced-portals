@@ -26,7 +26,7 @@ public class GuiDiallingDevice extends BaseGui
     public GuiDiallingDevice(TileDiallingDevice d, EntityPlayer p)
     {
         super(new ContainerDiallingDevice(d, p.inventory), CONTAINER_SIZE);
-        texture = new ResourceLocation("enhancedportals", "textures/gui/diallingDevice.png");
+        texture = new ResourceLocation("enhancedportals", "textures/gui/dialling_device.png");
         xSize = CONTAINER_WIDTH;
         dial = d;
         controller = dial.getPortalController();

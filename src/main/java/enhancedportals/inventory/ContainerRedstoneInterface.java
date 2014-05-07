@@ -1,10 +1,13 @@
 package enhancedportals.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiRedstoneInterface;
+import enhancedportals.network.packet.PacketGui;
 import enhancedportals.tileentity.portal.TileRedstoneInterface;
 
 public class ContainerRedstoneInterface extends BaseContainer
@@ -51,6 +54,6 @@ public class ContainerRedstoneInterface extends BaseContainer
         }
 
         ri.markDirty();
-        // PacketHandlerServer.sendGuiPacketToPlayer(ri, player); // TODO
+        EnhancedPortals.packetPipeline.sendTo(new PacketGui(ri), (EntityPlayerMP) player);
     }
 }

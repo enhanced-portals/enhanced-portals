@@ -10,36 +10,25 @@ tile.frame.fluid.name=Fluid Transportation Module
 tile.frame.item.name=Item Transportation Module
 tile.frame.energy.name=Energy Transportation Module
 tile.portal.name=Portal
-tile.stabilizer.name=Dimensional Bridge Stabilizer
-tile.decoration.frame.name=Bordered Quartz
-tile.decoration.stabilizer.name=Stabilizer
-tile.crafting.name=Dimensional Bridge Stabilizer (Empty)
+tile.dbs.name=Dimensional Bridge Stabilizer
+tile.dbs_empty.name=Dimensional Bridge Stabilizer (Empty)
+tile.decor_dbs.name=Stabilizer
+tile.decor_frame.name=Bordered Quartz
 
 # Block Misc
 ep3.block.portalFramePart=Portal Frame Part
 ep3.block.multiblockStructure=Multiblock Structure
 ep3.block.dbsSize=2x3x2 to 2x3x256
-ep3.block.eachRowAddsToTheMaximum=Each row adds to the maximum
-ep3.block.activePortalConnections=active portal connections
 ep3.block.decorativeBlock=Decorative Block
 
 # Items
 item.wrench.name=Wrench
 item.nanobrush.name=Nanobrush
 item.glasses.name=Glasses
-item.locationCard.name=Location Card
-item.synchronizer.name=Synchronizer
-item.entityCard.name=Identification Card
-item.scanner.name=Handheld Scanner
-item.miscItems.blankPortalModule.name=Blank Portal Module
-item.miscItems.blankUpgrade.name=Blank Upgrade
+item.location_card.name=Location Card
+item.miscItems.blank_portal_module.name=Blank Portal Module
+item.miscItems.blank_upgrade.name=Blank Upgrade
 item.guide.name=EnhancedPortals Manual
-
-# Items Misc
-ep3.item.charge=Charge:
-ep3.item.scanned=Scanned:
-ep3.item.contains=Contains:
-ep3.item.andMore=And %s more...
 
 # In-place upgrades
 item.upgrade.redstone.name=Redstone Interface Upgrade
@@ -52,28 +41,25 @@ item.upgrade.item.name=Item Transportation Upgrade
 item.upgrade.energy.name=Energy Transportation Upgrade
 
 # Upgrades
-item.portalModule.0.name=Particle Destroyer
-item.portalModule.0.desc=Stops particles from getting created
-item.portalModule.1.name=Rainbow Particles
-item.portalModule.1.desc=Every particle will have a random colour
-item.portalModule.2.name=Portal Silencer
-item.portalModule.2.desc=Silences the portal
-item.portalModule.3.name=Momentum
-item.portalModule.3.desc=Entities keep their momentum
-item.portalModule.4.name=Portal Cloaking
-item.portalModule.4.desc=Makes the portal completely invisible
-item.portalModule.5.name=Particle Shader
-item.portalModule.5.desc=Particles randomly spawn lighter or darker
-item.portalModule.6.name=Ethereal Frame [Deprecated]
-item.portalModule.6.desc=I no longer do anything.
-item.portalModule.7.name=Featherfall
-item.portalModule.7.desc=Negates fall damage
+item.portal_module.0.name=Particle Destroyer
+item.portal_module.0.desc=Stops particles from getting created
+item.portal_module.1.name=Rainbow Particles
+item.portal_module.1.desc=Every particle will have a random colour
+item.portal_module.2.name=Portal Silencer
+item.portal_module.2.desc=Silences the portal
+item.portal_module.3.name=Momentum
+item.portal_module.3.desc=Entities keep their momentum
+item.portal_module.4.name=Portal Cloaking
+item.portal_module.4.desc=Makes the portal completely invisible
+item.portal_module.5.name=Particle Shader
+item.portal_module.5.desc=Particles randomly spawn lighter or darker
+item.portal_module.6.name=[Deprecated]
+item.portal_module.6.desc=I no longer do anything.
+item.portal_module.7.name=Featherfall
+item.portal_module.7.desc=Negates fall damage
 
 # Creative Tab
-itemGroup.EnhancedPortals3=EnhancedPortals 3
-
-# GUI Handheld Scanner
-ep3.gui.scanner=Handheld Scanner
+itemGroup.enhancedportals=EnhancedPortals 3
 
 # GUI DBS
 ep3.gui.dimensionalBridgeStabilizer=Dimensional Bridge Stabilizer
@@ -88,10 +74,25 @@ ep3.gui.powerModeRisky=Mode: Risky
 ep3.gui.powerModeUnstable=Mode: Unstable
 ep3.gui.powerModeUnpredictable=Mode: Unpredictable
 
+# RF Tab
+ep3.tab.redstoneFlux=Energy
+ep3.tab.redstoneFlux.maxPower=Maximum Energy:
+ep3.tab.redstoneFlux.storedPower=Stored Energy:
+ep3.tab.redstoneFlux.powerUsage=Power Usage:
+
 # GUI Portal Controller
 ep3.gui.portalController=Portal Controller
 ep3.gui.uniqueIdentifier=Unique Identifier
-ep3.gui.portalComponents=Portal Components
+ep3.gui.public=Public
+ep3.gui.private=Private
+
+# Private/Public Tip Tab
+ep3.tab.privatePublic=Private or Public?
+ep3.tab.privatePublic.info=<6>Public<0><NL>Allow connections from anywhere<NL><6>Private<0><NL>Only allow connections from the same DBS
+
+# Glyphs Tab
+ep3.tab.glyphs=Glyphs
+ep3.tab.glyphs.info=Glyph informations!
 
 # GUI Dialler
 ep3.gui.dialDevice=Dialling Device
@@ -99,9 +100,9 @@ ep3.gui.storedIdentifiers=Stored Identifiers
 ep3.gui.terminate=Terminate
 ep3.gui.dial=Dial
 ep3.gui.identifierCannotBeBlank=Identifier cannot be blank
-ep3.gui.noEntriesFound=No entries found
 ep3.gui.name=Name
 ep3.gui.identifierName=Identifier Name
+ep3.gui.manualEntry=Manual Entry
 
 # GUI Texture
 ep3.gui.customIcon=Custom Icon
@@ -113,7 +114,7 @@ ep3.gui.colour=Colour
 ep3.gui.red=Red
 ep3.gui.green=Green
 ep3.gui.blue=Blue
-ep3.gui.noCustomIconsFound=No custom Icons found
+ep3.gui.textures=Textures
 
 # GUI Module Manipulator
 ep3.gui.moduleManipulator=Module Manipulator
@@ -125,25 +126,6 @@ ep3.gui.networkIdentifier=Network Identifier
 ep3.gui.networkInformation=Network Information
 ep3.gui.networkedPortals=Networked Portals
 ep3.gui.notSet=Not Set
-
-# GUI Biometric Identifier
-ep3.gui.biometricIdentifier=Biometric Identifier
-ep3.gui.sending=Sending
-ep3.gui.receiving=Receiving
-ep3.gui.allow=Allow
-ep3.gui.allowing=Allowing
-ep3.gui.disallow=Disallow
-ep3.gui.disallowing=Disallowing
-ep3.gui.idCard=ID Card
-ep3.gui.active=Active
-ep3.gui.inactive=Inactive
-ep3.gui.anythingCalled=Anything called:
-ep3.gui.matchName=Match name
-ep3.gui.anythingOfTheType=Anything of the type:
-ep3.gui.matchType=Match type
-ep3.gui.withTheTypeOf=With the type of:
-ep3.gui.matchTypeAndName=Match name and type
-ep3.gui.anythingNotOnList=Anything that's not on the list
 
 # GUI Redstone
 ep3.gui.redstoneInterface=Redstone Interface
@@ -181,20 +163,9 @@ ep3.gui.accept=Accept
 ep3.gui.clickToModify=Click to modify
 ep3.gui.uidInUse=That UID is already in use
 
-# Chat
-ep3.chat.multiplePortalControllers=Failed: You cannot have multiple Portal Controllers
-ep3.chat.multipleNetworkInterfaces=Failed: You cannot have multiple Network Interfaces
-ep3.chat.multipleDiallingDevices=Failed: You cannot have multiple Dialling Devices
-ep3.chat.multipleBiometricIdentifiers=Failed: You cannot have multiple Biometric Identifiers
-ep3.chat.multipleModuleManipulators=Failed: You cannot have multiple Module Manipulators
-ep3.chat.dialDeviceAndNetworkInterface=Failed: You cannot have a Dialling Device and a Network Interface
-ep3.chat.portalCouldNotBeCreatedHere=Failed: A portal could not be created at this location.
-ep3.chat.success=The portal was initialized successfully
-ep3.chat.reconfigureSuccess=The portal was successfully reconfigured
-ep3.chat.noUidSet=You must set a Unique Identifier before doing this
-
 # Errors
-ep3.error.prefix=[Error] 
+ep3.error=[Error] 
+ep3.error.noUidSet=You must set a Unique Identifier before doing this
 ep3.error.voidLinkCard=This card no longer links to a valid Dimensional Bridge Stabilizer
 ep3.error.receivingPortalNotInitialized=The receiving portal has not been initialized
 ep3.error.sendingPortalNotInitialized=The sending portal has not been initialized
@@ -217,45 +188,16 @@ ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller fa
 ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
 ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
 ep3.error.failedToTransfer=The receiving portal is too small
+ep3.error.multiplePortalControllers=You cannot have multiple Portal Controllers
+ep3.error.multipleProgramInterface=You cannot have multiple Programmable Interfaces
+ep3.error.multipleModuleManipulators=You cannot have multiple Module Manipulators
+ep3.error.dialDeviceAndNetworkInterface=You cannot have a Dialling Device and a Network Interface
+ep3.error.portalCouldNotBeCreatedHere=A portal could not be created at this location
 
 # Success
-ep3.success.prefix=[Success] 
+ep3.success=[Success] 
 ep3.success.create=Portal initialized
 ep3.success.reconfigure=Portal reconfigured
-
-# Particle Types
-ep3.gui.particleType.0.name=Random
-ep3.gui.particleType.0.info=Gets a random frame from its sequence
-ep3.gui.particleType.1.name=Sequential
-ep3.gui.particleType.1.info=Plays through its sequence, then dies
-ep3.gui.particleType.2.name=Static
-ep3.gui.particleType.2.info=Does not change at all
-ep3.gui.particleType.3.name=Loop
-ep3.gui.particleType.3.info=Continuously loops through its sequence
-
-# Config
-ep3.config.alternateGlyph.false=Glyphs: Normal
-ep3.config.alternateGlyph.true=Glyphs: Alternate
-ep3.config.sounds.false=Sounds: NO
-ep3.config.sounds.true=Sounds: YES
-ep3.config.portalsDestroy.false=Destroy Blocks: NO
-ep3.config.portalsDestroy.true=Destroy Blocks: YES
-ep3.config.showOverlays.false=Force Overlays: NO
-ep3.config.showOverlays.true=Force Overlays: YES
-ep3.config.particles.false=Particles: NO
-ep3.config.particles.true=Particles: YES
-ep3.config.requirePower.false=Require Power: NO
-ep3.config.requirePower.true=Require Power: YES
-ep3.config.multiplier=Multiplier: 
-ep3.config.fastCooldown.false=Fast Cooldown: NO
-ep3.config.fastCooldown.true=Fast Cooldown: YES
-ep3.config.general=General
-ep3.config.portal=Portal
-ep3.config.power=Power
-ep3.config.teleportation=Teleportation
-
-ep3.gui.public=Public
-ep3.gui.private=Private
 
 # Guide
 ep3.gui.mainMain=Welcome!

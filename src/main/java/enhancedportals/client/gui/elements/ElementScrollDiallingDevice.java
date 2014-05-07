@@ -52,16 +52,19 @@ public class ElementScrollDiallingDevice extends BaseElement
             if (mouseOverMain)
             {
                 ((GuiDiallingDevice) parent).onEntrySelected(scrollAmount + i);
+                break;
             }
             else if (mouseOverSmall)
             {
                 if (parent.isShiftKeyDown())
                 {
                     ((GuiDiallingDevice) parent).onEntryDeleted(scrollAmount + i);
+                    break;
                 }
                 else
                 {
                     ((GuiDiallingDevice) parent).onEntryEdited(scrollAmount + i);
+                    break;
                 }
             }
         }

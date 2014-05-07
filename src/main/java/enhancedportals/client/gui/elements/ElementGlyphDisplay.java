@@ -30,7 +30,7 @@ public class ElementGlyphDisplay extends BaseElement
     @Override
     protected void drawContent()
     {
-        parent.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/playerInventory.png"));
+        parent.getMinecraft().renderEngine.bindTexture(new ResourceLocation("enhancedportals", "textures/gui/player_inventory.png"));
         drawTexturedModalRect(posX, posY, 7, 7, sizeX, sizeY);
         
         parent.getMinecraft().renderEngine.bindTexture(ElementGlyphSelector.glyphs);
