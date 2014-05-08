@@ -1,15 +1,14 @@
-[
-{
-  "modid" : "enhancedportals",
-  "name" : "EnhancedPortals",
-  "version" : "3.0.0rc1",
-  "url" : "http://shadeddimensions.co.uk",
-  "credits" : "",
-  "authors": [ "Alz454" ],
-  "description": "",
-  "logoFile" : "",
-  "updateUrl" : "http://shadeddimensions.co.uk",
-  "parent" : "",
+[{
+  "modid": "${mod_id}",
+  "name": "EnhancedPortals",
+  "version": "${mod_version}",
+  "mcversion": "${mc_version}",
+  "url": "http://shadeddimensions.co.uk",
+  "credits": "",
+  "authorList": [ "Alz454" ],
+  "description": "An advanced technological portal teleportation system",
+  "logoFile": "",
+  "updateUrl": "http://shadeddimensions.co.uk",
+  "parent": "",
   "screenshots": [ ]
-}
-]
+}]

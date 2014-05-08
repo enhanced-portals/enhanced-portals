@@ -45,7 +45,7 @@ import enhancedportals.utility.WorldUtils;
 
 public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler, IPowerReceptor
 {
-    static final int ACTIVE_PORTALS_PER_ROW = 2, ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
+    static final int ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
     ArrayList<ChunkCoordinates> blockList;
 
@@ -188,7 +188,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
      */
     public boolean canAcceptNewConnection()
     {
-        return activeConnections.size() * 2 + 2 <= ACTIVE_PORTALS_PER_ROW * rows;
+        return activeConnections.size() * 2 + 2 <= CommonProxy.activePortalsPerRow * rows;
     }
 
     @Override

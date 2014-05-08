@@ -54,6 +54,7 @@ public class CommonProxy
     public NetworkManager networkManager;
     public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower;
     public static double powerMultiplier, powerStorageMultiplier;
+    public static int activePortalsPerRow = 2;
     static Configuration config;
     static File craftingDir;
 
@@ -139,6 +140,7 @@ public class CommonProxy
         requirePower = config.get("Power", "RequirePower", true).getBoolean(true);
         powerMultiplier = config.get("Power", "PowerMultiplier", 1.0).getDouble(1.0);
         powerStorageMultiplier = config.get("Power", "DBSPowerStorageMultiplier", 1.0).getDouble(1.0);
+        activePortalsPerRow = config.get("Portal", "ActivePortalsPerRow", 2).getInt(2);
         config.save();
 
         if (powerMultiplier < 0)

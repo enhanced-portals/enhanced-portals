@@ -30,10 +30,10 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketPipeline;
 import enhancedportals.portal.NetworkManager;
 
-@Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, version = EnhancedPortals.VERSION, dependencies = EnhancedPortals.DEPENDENCIES, acceptedMinecraftVersions = EnhancedPortals.MC_VERSION)
+@Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, version = "3.0.0", dependencies = EnhancedPortals.DEPENDENCIES)
 public class EnhancedPortals
 {
-    public static final String NAME = "EnhancedPortals", ID = "enhancedportals", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", MC_VERSION = "[1.6.4,)", VERSION = "1.6.4-3.0.0rc1", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy";
+    public static final String NAME = "EnhancedPortals", ID = "enhancedportals", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy";
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     public static final Logger logger = LogManager.getLogger("EnhancedPortals");
     public static CreativeTabs creativeTab = new CreativeTabEP3();

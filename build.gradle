@@ -17,31 +17,59 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "3.0.0rc1"
-group= "enhancedportals"
-archivesBaseName = "EnhancedPortals"
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = config.mod_version
+group = config.mod_id
+archivesBaseName = "EnhancedPortals_${config.minecraft_version}"
 
 minecraft {
-    version = "1.7.2-10.12.1.1065"
+    version = config.minecraft_version + "-" + config.forge_version
     assetDir = "eclipse/assets"
 }
 
 processResources
 {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
+        include '**/*.info'
+        include '**/*.properties'
         
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        expand ([
+            'mod_version': version,
+            'mc_version': project.config.minecraft_version,
+            'mod_id': project.config.mod_id
+            
+        ])
     }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.info'
+        exclude '**/*.properties'
+    }
+}
+
+
+jar {
+    appendix = 'universal'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    appendix = 'src'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    appendix = 'deobf'
+}
+
+artifacts {
+    archives sourceJar
+    archives deobfJar
 }
