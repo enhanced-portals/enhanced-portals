@@ -13,7 +13,7 @@ import enhancedportals.block.BlockFrame;
 
 public class ItemFrame extends ItemBlockWithMetadata
 {
-    public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "biometric", "upgrade", "fluid", "item", "energy" };
+    public static String[] unlocalizedName = new String[] { "frame", "controller", "redstone", "networkInterface", "dialDevice", "programInterface", "upgrade", "fluid", "item", "energy" };
 
     public ItemFrame(Block b)
     {

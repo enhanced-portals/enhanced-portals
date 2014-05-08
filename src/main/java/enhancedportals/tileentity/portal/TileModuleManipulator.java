@@ -8,7 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import enhancedportals.client.PortalFX;
+import enhancedportals.client.PortalParticleFX;
 import enhancedportals.common.IPortalModule;
 import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.network.GuiHandler;
@@ -251,7 +251,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         }
     }
 
-    public void particleCreated(PortalFX portalFX)
+    public void particleCreated(PortalParticleFX portalFX)
     {
         for (ItemStack i : getModules())
         {

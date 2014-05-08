@@ -1006,9 +1006,8 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         sendUpdatePacket(true);
     }
 
-    public void setFrameItem(int ID, int Meta)
+    public void setFrameItem(ItemStack s)
     {
-        ItemStack s = ID == 0 ? null : new ItemStack(Item.getItemById(ID), 1, Meta);
         activeTextureData.setFrameItem(s);    
         markDirty();
         sendUpdatePacket(true);
@@ -1124,10 +1123,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         sendUpdatePacket(true);
     }
 
-	public void setPortalItem(int ID, int Meta)
+	public void setPortalItem(ItemStack s)
     {
-        ItemStack s = ID == 0 ? null : new ItemStack(Item.getItemById(ID), 1, Meta);
-        activeTextureData.setPortalItem(s);    
+        activeTextureData.setPortalItem(s);
         markDirty();
         sendUpdatePacket(true);
     }

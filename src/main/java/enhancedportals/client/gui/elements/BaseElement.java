@@ -141,31 +141,4 @@ public abstract class BaseElement
         tessellator.addVertexWithUV((double)(par1 + 0), (double)(par2 + 0), 0, (double)((float)(par3 + 0) * f), (double)((float)(par4 + 0) * f1));
         tessellator.draw();
     }
-    
-    void drawIcon(IIcon icon, int x, int y, int spriteSheet)
-    {
-        if (spriteSheet == 0)
-        {
-            parent.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-        }
-        else
-        {
-            parent.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
-        }
-
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
-        parent.drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
-    }
-    
-    void drawItemStack(ItemStack stack, int x, int y)
-    {
-        if (stack != null)
-        {
-            RenderHelper.enableGUIStandardItemLighting();
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            parent.getItemRenderer().renderItemAndEffectIntoGUI(parent.getFontRenderer(), parent.getTextureManager(), stack, x, y);
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            RenderHelper.disableStandardItemLighting();
-        }
-    }
 }

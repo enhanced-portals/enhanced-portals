@@ -7,16 +7,17 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import enhancedportals.client.gui.GuiTextureFrame;
+import enhancedportals.client.gui.GuiTextureParticle;
 import enhancedportals.network.ClientProxy;
+import enhancedportals.network.ClientProxy.ParticleSet;
 
-public class ElementScrollFrameIcons extends BaseElement
+public class ElementScrollParticles extends BaseElement
 {
     float currentScroll = 0f;
     boolean isScrolling = false, wasClicking = false;
-    int scrollAmount = 0;
+    int scrollAmount = 0, particleFrame, particleCounter;
 
-    public ElementScrollFrameIcons(GuiTextureFrame gui, int x, int y, ResourceLocation t)
+    public ElementScrollParticles(GuiTextureParticle gui, int x, int y, ResourceLocation t)
     {
         super(gui, x, y, 176, 54);
         texture = t;
@@ -33,7 +34,7 @@ public class ElementScrollFrameIcons extends BaseElement
     {
         if (mouseButton == 1)
         {
-            ((GuiTextureFrame) parent).iconSelected(-1);
+            ((GuiTextureParticle) parent).particleSelected(0);
             return true;
         }
         
@@ -42,7 +43,7 @@ public class ElementScrollFrameIcons extends BaseElement
         
         for (int i = 0; i < 27; i++)
         {
-            if (scrollAmount + i >= ClientProxy.customFrameTextures.size())
+            if (scrollAmount + i >= ClientProxy.particleSets.size())
             {
                 break;
             }
@@ -51,7 +52,7 @@ public class ElementScrollFrameIcons extends BaseElement
 
             if (x >= x2 && x < x2 + 16 && y >= y2 && y < y2 + 16)
             {
-                ((GuiTextureFrame) parent).iconSelected(scrollAmount + i);
+                ((GuiTextureParticle) parent).particleSelected(scrollAmount + i);
                 break;
             }
         }
@@ -137,20 +138,21 @@ public class ElementScrollFrameIcons extends BaseElement
     {
         boolean canScroll = false;
 
-        if (ClientProxy.customFrameTextures.size() > 27)
+        if (ClientProxy.particleSets.size() > 27)
         {
             canScroll = true;
             handleMouse();
         }
 
-        int l = posY + 1, k = l + sizeY - 1, selectedIcon = ((GuiTextureFrame) parent).getSelectedIcon();
+        int l = posY + 1, k = l + sizeY - 1, selectedIcon = ((GuiTextureParticle) parent).getSelectedParticle();
         GL11.glColor3f(1f, 1f, 1f);
-        parent.getMinecraft().getTextureManager().bindTexture(texture);
+        parent.getTextureManager().bindTexture(texture);
         drawTexturedModalRect(posX + sizeX - 13, posY + 1 + (int)((float)(k - l - 16) * this.currentScroll), 244, 226 + (canScroll ? 0 : 15), 12, 15);
+        parent.getTextureManager().bindTexture(new ResourceLocation("textures/particle/particles.png"));
 
         for (int i = 0; i < 27; i++)
         {
-            if (scrollAmount + i >= ClientProxy.customFrameTextures.size())
+            if (scrollAmount + i >= ClientProxy.particleSets.size())
             {
                 break;
             }
@@ -165,13 +167,22 @@ public class ElementScrollFrameIcons extends BaseElement
                 parent.drawRect(x + 16, y - 1, x + 17, y + 17, 0xFF00FF00);
             }
             
-            parent.drawIcon(ClientProxy.customFrameTextures.get(scrollAmount + i), x, y, 0);
+            GL11.glColor3f(1f, 1f, 1f);
+            ParticleSet particles = ClientProxy.particleSets.get(scrollAmount + i);
+            int particle = particles.frames[particleFrame % particles.frames.length];
+            drawTexturedModalRect(x, y, particle % 16 * 16, particle / 16 * 16, 16, 16);
         }
     }
 
     @Override
     public void update()
     {
-
+        particleCounter++;
+        
+        if (particleCounter > 75)
+        {
+            particleCounter = 0;
+            particleFrame++;
+        }
     }
 }

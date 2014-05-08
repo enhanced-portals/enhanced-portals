@@ -159,9 +159,27 @@ public class GuiDiallingDeviceSave extends BaseGui
         }
 
         GL11.glColor3f(frameColour.getRed() / 255F, frameColour.getGreen() / 255F, frameColour.getBlue() / 255F);
-        itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, frame, 59, 85);
+        
+        if (ClientProxy.saveTexture.hasCustomFrameTexture())
+        {
+            drawIconNoReset(ClientProxy.customFrameTextures.get(ClientProxy.saveTexture.getCustomFrameTexture()), 59, 85, 0);
+        }
+        else
+        {
+            itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, frame, 59, 85);
+        }
+        
         GL11.glColor3f(portalColour.getRed() / 255F, portalColour.getGreen() / 255F, portalColour.getBlue() / 255F);
-        itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, portal, 80, 85);
+        
+        if (ClientProxy.saveTexture.hasCustomPortalTexture())
+        {
+            drawIconNoReset(ClientProxy.customPortalTextures.get(ClientProxy.saveTexture.getCustomPortalTexture()), 80, 85, 0);
+        }
+        else
+        {
+            itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, portal, 80, 85);
+        }
+        
         GL11.glColor3f(particleColour.getRed() / 255F, particleColour.getGreen() / 255F, particleColour.getBlue() / 255F);
         getTextureManager().bindTexture(new ResourceLocation("textures/particle/particles.png"));
         drawTexturedModalRect(101, 85, particleFrames[particleFrame] % 16 * 16, particleFrames[particleFrame] / 16 * 16, 16, 16);

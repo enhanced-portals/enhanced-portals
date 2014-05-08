@@ -165,7 +165,7 @@ public class ElementScrollPortalIcons extends BaseElement
                 parent.drawRect(x + 16, y - 1, x + 17, y + 17, 0xFF00FF00);
             }
             
-            drawIcon(ClientProxy.customPortalTextures.get(scrollAmount + i), x, y, 0);
+            parent.drawIcon(ClientProxy.customPortalTextures.get(scrollAmount + i), x, y, 0);
         }
     }
 

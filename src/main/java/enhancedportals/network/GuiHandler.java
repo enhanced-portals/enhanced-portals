@@ -50,30 +50,30 @@ import enhancedportals.tileentity.portal.TileRedstoneInterface;
 
 public class GuiHandler implements IGuiHandler
 {
-    public static final int PORTAL_CONTROLLER_A = 100;
-    public static final int PORTAL_CONTROLLER_B = 101;
-    public static final int NETWORK_INTERFACE_A = 102;
-    public static final int NETWORK_INTERFACE_B = 103;
-    public static final int DIALLING_DEVICE_A = 104;
-    public static final int DIALLING_DEVICE_B = 105;
-    public static final int DIALLING_DEVICE_C = 106;
-    public static final int DIALLING_DEVICE_D = 107;
-    public static final int TEXTURE_A = 108;
-    public static final int TEXTURE_B = 109;
-    public static final int TEXTURE_C = 110;
-    public static final int TEXTURE_DIALLING_A = 111;
-    public static final int TEXTURE_DIALLING_B = 112;
-    public static final int TEXTURE_DIALLING_C = 113;
+    public static final int PORTAL_CONTROLLER_A = 0;
+    public static final int PORTAL_CONTROLLER_B = 1;
+    public static final int NETWORK_INTERFACE_A = 2;
+    public static final int NETWORK_INTERFACE_B = 3;
+    public static final int DIALLING_DEVICE_A = 4;
+    public static final int DIALLING_DEVICE_B = 5;
+    public static final int DIALLING_DEVICE_C = 6;
+    public static final int DIALLING_DEVICE_D = 7;
+    public static final int TEXTURE_A = 8;
+    public static final int TEXTURE_B = 9;
+    public static final int TEXTURE_C = 10;
+    public static final int TEXTURE_DIALLING_A = 11;
+    public static final int TEXTURE_DIALLING_B = 12;
+    public static final int TEXTURE_DIALLING_C = 13;
 
-    public static final int REDSTONE_INTERFACE = 2;
-    public static final int PROGRAMMABLE_INTERFACE = 5;
-    public static final int MODULE_MANIPULATOR = 6;
-    public static final int TRANSFER_FLUID = 7;
-    public static final int TRANSFER_ENERGY = 8;
-    public static final int TRANSFER_ITEM = 9;
+    public static final int REDSTONE_INTERFACE = 14;
+    public static final int PROGRAMMABLE_INTERFACE = 15;
+    public static final int MODULE_MANIPULATOR = 16;
+    public static final int TRANSFER_FLUID = 17;
+    public static final int TRANSFER_ENERGY = 18;
+    public static final int TRANSFER_ITEM = 19;
 
-    public static final int DIMENSIONAL_BRIDGE_STABILIZER = 14;
-    public static final int GUIDE = 16;
+    public static final int DIMENSIONAL_BRIDGE_STABILIZER = 20;
+    public static final int GUIDE = 21;
 
     public static void openGui(EntityPlayer player, TileEntity tile, int gui)
     {

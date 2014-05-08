@@ -9,7 +9,7 @@ import enhancedportals.network.ClientProxy;
 import enhancedportals.network.ClientProxy.ParticleSet;
 import enhancedportals.tileentity.portal.TileController;
 
-public class PortalFX extends EntityFX
+public class PortalParticleFX extends EntityFX
 {
     private float portalParticleScale;
     private double portalPosX, portalPosY, portalPosZ;
@@ -17,7 +17,7 @@ public class PortalFX extends EntityFX
     private ParticleSet particle;
     private int nextFrame = 1;
 
-    public PortalFX(World par1World, TileController controller, double portalX, double portalY, double portalZ, double xMotion, double yMotion, double zMotion)
+    public PortalParticleFX(World par1World, TileController controller, double portalX, double portalY, double portalZ, double xMotion, double yMotion, double zMotion)
     {
         super(par1World, portalX, portalY, portalZ, xMotion, yMotion, zMotion);
         motionX = xMotion;

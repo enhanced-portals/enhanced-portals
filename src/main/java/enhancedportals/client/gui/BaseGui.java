@@ -6,11 +6,16 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.BaseElement;
@@ -29,7 +34,7 @@ public abstract class BaseGui extends GuiContainer
     protected ArrayList<BaseElement> elements = new ArrayList<BaseElement>();
     public static final int defaultContainerSize = 144, playerInventorySize = 90, bufferSpace = 2, defaultGuiSize = defaultContainerSize + playerInventorySize + bufferSpace;
     protected int containerSize = defaultContainerSize, guiSize = defaultGuiSize, leftNudge = 0;
-    protected boolean hasSeperateInventories = true, isHidingPlayerInventory = false;
+    protected boolean hasSeperateInventories = true, isHidingPlayerInventory = false, hasSingleTexture = false;
 
     public BaseGui(BaseContainer container)
     {
@@ -192,7 +197,7 @@ public abstract class BaseGui extends GuiContainer
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (!isHidingPlayerInventory)
+        if (!isHidingPlayerInventory && !hasSingleTexture)
         {
             mc.renderEngine.bindTexture(playerInventoryTexture);
             drawTexturedModalRect(guiLeft + leftNudge, guiTop + containerSize + bufferSpace, 0, 0, xSize, playerInventorySize);
@@ -201,7 +206,7 @@ public abstract class BaseGui extends GuiContainer
         if (texture != null)
         {
             mc.renderEngine.bindTexture(texture);
-            drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, containerSize + (hasSeperateInventories ? 0 : 6));
+            drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, (hasSingleTexture ? ySize : containerSize + (hasSeperateInventories ? 0 : 6)));
         }
         else
         {
@@ -353,5 +358,37 @@ public abstract class BaseGui extends GuiContainer
     public RenderItem getItemRenderer()
     {
         return itemRenderer;
+    }
+    
+    public void drawIconNoReset(IIcon icon, int x, int y, int spriteSheet)
+    {
+        if (spriteSheet == 0)
+        {
+            getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+        }
+        else
+        {
+            getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+        }
+
+        drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
+    }
+    
+    public void drawIcon(IIcon icon, int x, int y, int spriteSheet)
+    {
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
+        drawIconNoReset(icon, x, y, spriteSheet);
+    }
+    
+    public void drawItemStack(ItemStack stack, int x, int y)
+    {
+        if (stack != null)
+        {
+            RenderHelper.enableGUIStandardItemLighting();
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            getItemRenderer().renderItemAndEffectIntoGUI(getFontRenderer(), getTextureManager(), stack, x, y);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            RenderHelper.disableStandardItemLighting();
+        }
     }
 }

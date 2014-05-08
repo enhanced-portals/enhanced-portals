@@ -66,7 +66,7 @@ public abstract class BaseTab
         
         if (guiLeft < maxWidth)
         {
-            maxWidth = guiLeft - 1;
+            maxWidth = guiLeft;
         }
     }
 
@@ -82,6 +82,7 @@ public abstract class BaseTab
         }
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
+        parent.drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
     }
     
     void drawItemStack(ItemStack stack, int x, int y)

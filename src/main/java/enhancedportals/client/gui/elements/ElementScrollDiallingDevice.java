@@ -172,11 +172,21 @@ public class ElementScrollDiallingDevice extends BaseElement
             
             GL11.glColor3f(1f, 1f, 1f);
             GlyphElement e = dial.glyphList.get(scrollAmount + i);
-            int entryOffset = i * entryHeight, mouseX = parent.getMouseX() + parent.getGuiLeft(), mouseY = parent.getMouseY() + parent.getGuiTop(), fontColour = 0xFFFFFF;
+            int state = 1, entryOffset = i * entryHeight, mouseX = parent.getMouseX() + parent.getGuiLeft(), mouseY = parent.getMouseY() + parent.getGuiTop(), fontColour = 0xFFFFFF;
             boolean mouseOverEntry = mouseY >= posY + offsetY + entryOffset && mouseY <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && mouseX >= posX + offsetX && mouseX < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && mouseX >= posX + offsetX + sizeMButton + buttonSpacing && mouseX < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton, delete = parent.isShiftKeyDown();
 
+            if (dial.getPortalController().isPortalActive())
+            {
+                state = 0;
+            }
+            
+            if (state == 1 && mouseOverMain)
+            {
+                state = 2;
+            }
+            
             parent.getTextureManager().bindTexture(texture);
-            parent.drawTexturedModalRect(posX + offsetX, posY + entryOffset + offsetY, 0, 216 + (mouseOverMain ? 20 : 0), sizeMButton, 20);
+            parent.drawTexturedModalRect(posX + offsetX, posY + entryOffset + offsetY, 0, 196 + (state * 20), sizeMButton, 20);
             parent.drawTexturedModalRect(posX + offsetX + sizeMButton + buttonSpacing, posY + entryOffset + offsetY, 196 + (delete ? 20 : 0), 216 + (mouseOverSmall ? 20 : 0), sizeSButton, 20);
             
             parent.getFontRenderer().drawStringWithShadow(e.name, posX + offsetX + 5, posY + offsetY + 6 + entryOffset, fontColour);

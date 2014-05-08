@@ -76,4 +76,16 @@ public class GuiTextureDialParticle extends GuiTextureParticle
             ClientProxy.saveTexture = null;
         }
     }
+    
+    @Override
+    public void particleSelected(int particle)
+    {
+        ClientProxy.saveTexture.setParticleType(particle);
+    }
+    
+    @Override
+    public int getSelectedParticle()
+    {
+        return ClientProxy.saveTexture.getParticleType();
+    }
 }

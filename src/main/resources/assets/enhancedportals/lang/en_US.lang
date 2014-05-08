@@ -3,7 +3,7 @@ tile.frame.frame.name=Portal Frame
 tile.frame.controller.name=Portal Controller
 tile.frame.redstone.name=Redstone Interface
 tile.frame.networkInterface.name=Network Interface
-tile.frame.dialDevice.name=Dialling Device
+tile.frame.programInterface.name=Programmable Interface
 tile.frame.biometric.name=Biometric Identifier
 tile.frame.upgrade.name=Module Manipulator
 tile.frame.fluid.name=Fluid Transportation Module
@@ -85,10 +85,11 @@ ep3.gui.portalController=Portal Controller
 ep3.gui.uniqueIdentifier=Unique Identifier
 ep3.gui.public=Public
 ep3.gui.private=Private
+ep3.gui.noUidSet=No UID set
 
 # Private/Public Tip Tab
 ep3.tab.privatePublic=Private or Public?
-ep3.tab.privatePublic.info=<6>Public<0><NL>Allow connections from anywhere<NL><6>Private<0><NL>Only allow connections from the same DBS
+ep3.tab.privatePublic.info=<6>Public:<0> Allow all connections<NL><6>Private:<0> Only allow connections from the same DBS
 
 # Glyphs Tab
 ep3.tab.glyphs=Glyphs
@@ -115,6 +116,18 @@ ep3.gui.red=Red
 ep3.gui.green=Green
 ep3.gui.blue=Blue
 ep3.gui.textures=Textures
+
+# Colour Tip Tab
+ep3.tab.colourTip=Wrong Colours?
+ep3.tab.colourTip.info=Colours are added by colour multiplication, not by magic. If you start with a yellow texture and add cyan, you get green. To solve this, use the most white/grayscale base texture you can find. 
+
+# Custom Frame Textures
+ep3.tab.frameCustomTexture=Custom Texture
+ep3.tab.frameCustomTexture.info=You can place custom frame textures in a resource pack to be usable here.
+
+# Custom Frame Textures
+ep3.tab.portalCustomTexture=Custom Texture
+ep3.tab.portalCustomTexture.info=You can place custom portal textures in a resource pack to be usable here.
 
 # GUI Module Manipulator
 ep3.gui.moduleManipulator=Module Manipulator

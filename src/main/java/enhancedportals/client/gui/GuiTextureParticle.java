@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.button.GuiBetterSlider;
 import enhancedportals.client.gui.button.GuiRGBSlider;
+import enhancedportals.client.gui.elements.ElementScrollFrameIcons;
+import enhancedportals.client.gui.elements.ElementScrollParticles;
 import enhancedportals.client.gui.tabs.TabColour;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerTextureParticle;
@@ -17,7 +19,7 @@ import enhancedportals.tileentity.portal.TileController;
 
 public class GuiTextureParticle extends BaseGui
 {
-    public static final int CONTAINER_SIZE = 100, CONTAINER_WIDTH = 190;
+    public static final int CONTAINER_SIZE = 70, CONTAINER_WIDTH = 190;
     protected TileController controller;
     protected GuiRGBSlider sliderR, sliderG, sliderB;
     protected GuiButton buttonReset, buttonSave;
@@ -28,10 +30,11 @@ public class GuiTextureParticle extends BaseGui
         controller = c;
         xSize = CONTAINER_WIDTH;
         name = "gui.particle";
-        texture = new ResourceLocation("enhancedportals", "textures/gui/textures.png");
+        texture = new ResourceLocation("enhancedportals", "textures/gui/textures_particles.png");
         leftNudge = 7;
+        hasSingleTexture = true;
     }
-
+        
     @Override
     protected void actionPerformed(GuiButton button)
     {
@@ -65,22 +68,23 @@ public class GuiTextureParticle extends BaseGui
         super.initGui();
         
         Color c = new Color(controller.activeTextureData.getParticleColour());
-        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 24, EnhancedPortals.localize("gui.red"), c.getRed() / 255f, 105);
-        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 45, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f, 105);
-        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 66, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f, 105);
+        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 25, EnhancedPortals.localize("gui.red"), c.getRed() / 255f, 105);
+        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 46, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f, 105);
+        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 67, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f, 105);
         
         buttonList.add(sliderR);
         buttonList.add(sliderG);
         buttonList.add(sliderB);
 
-        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.save"));
-        buttonReset = new GuiButton(111, guiLeft + xSize + 57, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.reset"));
+        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 88, 53, 20, EnhancedPortals.localize("gui.save"));
+        buttonReset = new GuiButton(111, guiLeft + xSize + 57, guiTop + 88, 53, 20, EnhancedPortals.localize("gui.reset"));
 
         buttonList.add(buttonSave);
         buttonList.add(buttonReset);
 
         addTab(new TabColour(this, sliderR, sliderG, sliderB, buttonSave, buttonReset));
         addTab(new TabTip(this, "colourTip"));
+        addElement(new ElementScrollParticles(this, 7, 17, texture));
     }
     
     @Override
@@ -101,10 +105,15 @@ public class GuiTextureParticle extends BaseGui
         }
     }
     
-    public void particleSelected(int icon)
+    public void particleSelected(int particle)
     {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("custom", icon);
+        tag.setInteger("type", particle);
         EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
+    }
+
+    public int getSelectedParticle()
+    {
+        return controller.activeTextureData.getParticleType();
     }
 }

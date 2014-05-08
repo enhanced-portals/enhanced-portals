@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
@@ -75,5 +76,23 @@ public class GuiTextureDialPortal extends GuiTexturePortal
             ClientProxy.saveName = null;
             ClientProxy.saveTexture = null;
         }
+    }
+    
+    @Override
+    public void iconSelected(int icon)
+    {
+        ClientProxy.saveTexture.setCustomPortalTexture(icon);
+    }
+    
+    @Override
+    public int getSelectedIcon()
+    {
+        return ClientProxy.saveTexture.getCustomPortalTexture();
+    }
+    
+    @Override
+    public void onItemChanged(ItemStack newItem)
+    {
+        ClientProxy.saveTexture.setPortalItem(newItem);
     }
 }

@@ -18,7 +18,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.PortalFX;
+import enhancedportals.client.PortalParticleFX;
 import enhancedportals.client.PortalRenderer;
 import enhancedportals.item.ItemPortalModule;
 import enhancedportals.network.ClientProxy;
@@ -211,7 +211,7 @@ public class BlockPortal extends BlockContainer
                     d3 = -d3;
                 }
 
-                PortalFX fx = new PortalFX(world, controller, d0, d1, d2, d3, d4, d5);
+                PortalParticleFX fx = new PortalParticleFX(world, controller, d0, d1, d2, d3, d4, d5);
 
                 if (module != null)
                 {

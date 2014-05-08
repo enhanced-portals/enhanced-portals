@@ -13,7 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.PortalFX;
+import enhancedportals.client.PortalParticleFX;
 import enhancedportals.common.IPortalModule;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.tileentity.portal.TileModuleManipulator;
@@ -154,7 +154,7 @@ public class ItemPortalModule extends Item implements IPortalModule
     }
 
     @Override
-    public void onParticleCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade, PortalFX particle)
+    public void onParticleCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade, PortalParticleFX particle)
     {
         if (upgrade.getItemDamage() == PortalModules.RAINBOW_PARTICLES.ordinal())
         {

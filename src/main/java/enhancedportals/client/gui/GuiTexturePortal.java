@@ -2,23 +2,30 @@ package enhancedportals.client.gui;
 
 import java.awt.Color;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.button.GuiBetterSlider;
 import enhancedportals.client.gui.button.GuiRGBSlider;
+import enhancedportals.client.gui.elements.ElementFakeItemSlot;
 import enhancedportals.client.gui.elements.ElementScrollPortalIcons;
 import enhancedportals.client.gui.tabs.TabColour;
 import enhancedportals.client.gui.tabs.TabTip;
+import enhancedportals.client.gui.tabs.TabTipSecondary;
+import enhancedportals.common.IFakeSlotHandler;
 import enhancedportals.inventory.ContainerTexturePortal;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.tileentity.portal.TileController;
 
-public class GuiTexturePortal extends BaseGui
+public class GuiTexturePortal extends BaseGui implements IFakeSlotHandler
 {
-    public static final int CONTAINER_SIZE = 100, CONTAINER_WIDTH = 190;
+    public static final int CONTAINER_SIZE = 92, CONTAINER_WIDTH = 190;
     protected TileController controller;
     protected GuiRGBSlider sliderR, sliderG, sliderB;
     protected GuiButton buttonReset, buttonSave;
@@ -31,6 +38,15 @@ public class GuiTexturePortal extends BaseGui
         name = "gui.portal";
         texture = new ResourceLocation("enhancedportals", "textures/gui/textures.png");
         leftNudge = 7;
+        hasSingleTexture = true;
+    }
+    
+    @Override
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    {
+        super.drawGuiContainerForegroundLayer(par1, par2);
+        String s = EnhancedPortals.localize("gui.facade");
+        getFontRenderer().drawString(s, xSize - 30 - getFontRenderer().getStringWidth(s), containerSize - 12, 0x404040);
     }
 
     @Override
@@ -66,23 +82,25 @@ public class GuiTexturePortal extends BaseGui
         super.initGui();
         
         Color c = new Color(controller.activeTextureData.getPortalColour());
-        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 24, EnhancedPortals.localize("gui.red"), c.getRed() / 255f, 105);
-        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 45, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f, 105);
-        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 66, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f, 105);
+        sliderR = new GuiRGBSlider(100, guiLeft + xSize + 4, guiTop + 25, EnhancedPortals.localize("gui.red"), c.getRed() / 255f, 105);
+        sliderG = new GuiRGBSlider(101, guiLeft + xSize + 4, guiTop + 46, EnhancedPortals.localize("gui.green"), c.getGreen() / 255f, 105);
+        sliderB = new GuiRGBSlider(102, guiLeft + xSize + 4, guiTop + 67, EnhancedPortals.localize("gui.blue"), c.getBlue() / 255f, 105);
         
         buttonList.add(sliderR);
         buttonList.add(sliderG);
         buttonList.add(sliderB);
 
-        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.save"));
-        buttonReset = new GuiButton(111, guiLeft + xSize + 57, guiTop + 87, 53, 20, EnhancedPortals.localize("gui.reset"));
+        buttonSave = new GuiButton(110, guiLeft + xSize + 4, guiTop + 88, 53, 20, EnhancedPortals.localize("gui.save"));
+        buttonReset = new GuiButton(111, guiLeft + xSize + 57, guiTop + 88, 53, 20, EnhancedPortals.localize("gui.reset"));
 
         buttonList.add(buttonSave);
         buttonList.add(buttonReset);
 
         addTab(new TabColour(this, sliderR, sliderG, sliderB, buttonSave, buttonReset));
         addTab(new TabTip(this, "colourTip"));
+        addTab(new TabTipSecondary(this, "portalCustomTexture"));
         addElement(new ElementScrollPortalIcons(this, 7, 17, texture));
+        addElement(new ElementFakeItemSlot(this, xSize - 24, containerSize - 16, controller.activeTextureData.getPortalItem()));
     }
     
     @Override
@@ -113,5 +131,45 @@ public class GuiTexturePortal extends BaseGui
     public int getSelectedIcon()
     {
         return controller.activeTextureData.getCustomPortalTexture();
+    }
+
+    @Override
+    public void onItemChanged(ItemStack newItem)
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        
+        if (newItem != null)
+        {
+            newItem.writeToNBT(tag);
+        }
+        else
+        {
+            tag.setBoolean("removeItem", true);
+        }
+        
+        EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
+    }
+
+    @Override
+    public boolean isItemValid(ItemStack s)
+    {
+        if (s == null)
+        {
+            return true;
+        }
+        
+        if (FluidContainerRegistry.isFilledContainer(s))
+        {
+            return true;
+        }
+        
+        Block b = Block.getBlockFromItem(s.getItem());
+        
+        if (b == Blocks.air)
+        {
+            return false;
+        }
+        
+        return true;
     }
 }

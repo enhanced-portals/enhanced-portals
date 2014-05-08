@@ -2,6 +2,7 @@ package enhancedportals.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTextureFrame;
@@ -27,6 +28,14 @@ public class ContainerTextureFrame extends BaseContainer
         else if (tag.hasKey("custom"))
         {
             controller.setCustomFrameTexture(tag.getInteger("custom"));
+        }
+        else if (tag.hasKey("removeItem"))
+        {
+            controller.setFrameItem(null);
+        }
+        else if (tag.hasKey("id") && tag.hasKey("Damage"))
+        {
+            controller.setFrameItem(ItemStack.loadItemStackFromNBT(tag));
         }
     }
 }

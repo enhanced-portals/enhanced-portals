@@ -2,7 +2,7 @@ package enhancedportals.common;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import enhancedportals.client.PortalFX;
+import enhancedportals.client.PortalParticleFX;
 import enhancedportals.tileentity.portal.TileModuleManipulator;
 
 public interface IPortalModule
@@ -83,7 +83,7 @@ public interface IPortalModule
      * @param moduleManipulator
      * @param upgrade
      */
-    public void onParticleCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade, PortalFX particle);
+    public void onParticleCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade, PortalParticleFX particle);
 
     /***
      * Called when a portal gets created.

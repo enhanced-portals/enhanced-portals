@@ -24,5 +24,9 @@ public class ContainerTextureParticle extends BaseContainer
         {
             controller.setParticleColour(tag.getInteger("colour"));
         }
+        else if (tag.hasKey("type"))
+        {
+            controller.setParticleType(tag.getInteger("type"));
+        }
     }
 }

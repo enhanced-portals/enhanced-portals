@@ -4,8 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.tileentity.portal.TileController;
@@ -42,9 +44,26 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
         Tessellator tessellator = Tessellator.instance;
         int meta = world.getBlockMetadata(x, y, z), light = 230, colour = BlockPortal.instance.colorMultiplier(world, x, y, z);
 
-        if (controller != null && controller.instability > 0)
+        if (controller != null)
         {
-            light = 240 + controller.instability / 10;
+            if (controller.instability > 0)
+            {
+                light = 240 + controller.instability / 10;
+            }
+
+            ItemStack i = controller.activeTextureData.getPortalItem();
+
+            if (i != null)
+            {
+                if (FluidContainerRegistry.isFilledContainer(i))
+                {
+                    renderer.setOverrideBlockTexture(FluidContainerRegistry.getFluidForFilledItem(i).getFluid().getStillIcon());
+                }
+                else
+                {
+                    renderer.setOverrideBlockTexture(Block.getBlockFromItem(i.getItem()).getIcon(0, i.getItemDamage()));
+                }
+            }
         }
 
         float f5 = 0.8F;
@@ -141,7 +160,8 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
 
             tessellator.addTranslation(-x, -y, -z);
         }
-
+        
+        renderer.clearOverrideBlockTexture();
         return true;
     }
 
