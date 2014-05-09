@@ -20,6 +20,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -83,6 +84,22 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     @SideOnly(Side.CLIENT)
     GlyphIdentifier uID, nID;
 
+    public void setUID(GlyphIdentifier i)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        {
+            uID = i;
+        }
+    }
+    
+    public void setNID(GlyphIdentifier i)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        {
+            nID = i;
+        }
+    }
+    
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
@@ -793,24 +810,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             moduleManipulator = new ChunkCoordinates(tag.getInteger("ModX"), tag.getInteger("ModY"), tag.getInteger("ModZ"));
         }
-    }
-
-    @Override
-    public void packetGuiFill(ByteBuf buffer)
-    {
-        ByteBufUtils.writeUTF8String(buffer, getHasIdentifierUnique() ? getIdentifierUnique().getGlyphString() : "");
-        ByteBufUtils.writeUTF8String(buffer, getHasIdentifierNetwork() ? getIdentifierNetwork().getGlyphString() : "");
-        buffer.writeInt(getHasIdentifierNetwork() ? EnhancedPortals.proxy.networkManager.getNetworkSize(getIdentifierNetwork()) : -1);
-        buffer.writeBoolean(isPublic);
-    }
-
-    @Override
-    public void packetGuiUse(ByteBuf buffer)
-    {
-        uID = new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer));
-        nID = new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer));
-        connectedPortals = buffer.readInt();
-        isPublic = buffer.readBoolean();
     }
     
     /**

@@ -15,7 +15,7 @@ import enhancedportals.utility.GeneralUtils;
 
 public class ContainerDimensionalBridgeStabilizer extends BaseContainer
 {
-    int lastPower = 0, lastPortals = -1, lastInstability = 0, lastPowerState = -1;
+    int lastPower = 0, lastMaxPower = 0, lastPortals = -1, lastInstability = 0, lastPowerState = -1;
     TileStabilizerMain stabilizer;
 
     public ContainerDimensionalBridgeStabilizer(TileStabilizerMain s, InventoryPlayer p)
@@ -31,16 +31,17 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
+        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentMaxPower = stabilizer.getEnergyStorage().getMaxEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
 
         for (int i = 0; i < crafters.size(); i++)
         {
             ICrafting icrafting = (ICrafting) crafters.get(i);
 
-            if (lastPower != currentPower)
+            if (lastPower != currentPower || lastMaxPower != currentMaxPower)
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setInteger("energy", currentPower);
+                tag.setInteger("max", currentMaxPower);
                 EnhancedPortals.packetPipeline.sendTo(new PacketGuiData(tag), (EntityPlayerMP) icrafting);
             }
 
@@ -61,6 +62,7 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
         }
 
         lastPower = currentPower;
+        lastMaxPower = currentMaxPower;
         lastPortals = currentPortals;
         lastInstability = currentInstability;
         lastPowerState = currentPowerState;
@@ -78,8 +80,9 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
                 stabilizer.powerState = 0;
             }
         }
-        else if (tag.hasKey("energy"))
+        else if (tag.hasKey("energy") && tag.hasKey("max"))
         {
+            stabilizer.getEnergyStorage().setCapacity(tag.getInteger("max"));
             stabilizer.getEnergyStorage().setEnergyStored(tag.getInteger("energy"));
         }
     }
@@ -91,11 +94,11 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
         {
             stabilizer.intActiveConnections = par2;
         }
-        if (par1 == 3)
+        else if (par1 == 3)
         {
             stabilizer.instability = par2;
         }
-        if (par1 == 4)
+        else if (par1 == 4)
         {
             stabilizer.powerState = par2;
         }

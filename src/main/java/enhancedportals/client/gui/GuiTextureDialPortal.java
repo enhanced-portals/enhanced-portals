@@ -9,6 +9,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiTextureDialPortal extends GuiTexturePortal
@@ -35,7 +36,7 @@ public class GuiTextureDialPortal extends GuiTexturePortal
 
         buttonList.add(new GuiButton(1000, guiLeft + 7, guiTop + ySize + 3, xSize - 14, 20, "Save"));
 
-        Color c = new Color(ClientProxy.saveTexture.getPortalColour());
+        Color c = new Color(getPTM().getPortalColour());
         sliderR.sliderValue = c.getRed() / 255f;
         sliderG.sliderValue = c.getGreen() / 255f;
         sliderB.sliderValue = c.getBlue() / 255f;
@@ -46,12 +47,12 @@ public class GuiTextureDialPortal extends GuiTexturePortal
     {
         if (button.id == buttonSave.id)
         {
-            ClientProxy.saveTexture.setPortalColour(Integer.parseInt(String.format("%02x%02x%02x", sliderR.getValue(), sliderG.getValue(), sliderB.getValue()), 16));
+            getPTM().setPortalColour(Integer.parseInt(String.format("%02x%02x%02x", sliderR.getValue(), sliderG.getValue(), sliderB.getValue()), 16));
         }
         else if (button.id == buttonReset.id)
         {
             int colour = 0xffffff;
-            ClientProxy.saveTexture.setPortalColour(colour);
+            getPTM().setPortalColour(colour);
 
             Color c = new Color(colour);
             sliderR.sliderValue = c.getRed() / 255f;
@@ -62,6 +63,16 @@ public class GuiTextureDialPortal extends GuiTexturePortal
         {
             didSave = true;
             EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C));
+        }
+        else if (button.id == 500)
+        {
+            didSave = true;
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit? GuiHandler.TEXTURE_DIALLING_EDIT_A  : GuiHandler.TEXTURE_DIALLING_SAVE_A));
+        }
+        else if (button.id == 501)
+        {
+            didSave = true;
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALLING_EDIT_C : GuiHandler.TEXTURE_DIALLING_SAVE_C));
         }
     }
     
@@ -81,18 +92,18 @@ public class GuiTextureDialPortal extends GuiTexturePortal
     @Override
     public void iconSelected(int icon)
     {
-        ClientProxy.saveTexture.setCustomPortalTexture(icon);
-    }
-    
-    @Override
-    public int getSelectedIcon()
-    {
-        return ClientProxy.saveTexture.getCustomPortalTexture();
+        getPTM().setCustomPortalTexture(icon);
     }
     
     @Override
     public void onItemChanged(ItemStack newItem)
     {
-        ClientProxy.saveTexture.setPortalItem(newItem);
+        getPTM().setPortalItem(newItem);
+    }
+    
+    @Override
+    public PortalTextureManager getPTM()
+    {
+        return ClientProxy.saveTexture;
     }
 }

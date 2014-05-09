@@ -143,7 +143,7 @@ public class ElementScrollPortalIcons extends BaseElement
             handleMouse();
         }
 
-        int l = posY + 1, k = l + sizeY - 1, selectedIcon = ((GuiTexturePortal) parent).getSelectedIcon();
+        int l = posY + 1, k = l + sizeY - 1, selectedIcon = ((GuiTexturePortal) parent).getPTM().getCustomPortalTexture();
         GL11.glColor3f(1f, 1f, 1f);
         parent.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(posX + sizeX - 13, posY + 1 + (int)((float)(k - l - 16) * this.currentScroll), 244, 226 + (canScroll ? 0 : 15), 12, 15);

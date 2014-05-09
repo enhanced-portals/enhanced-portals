@@ -109,17 +109,17 @@ public class GuiDiallingDeviceEdit extends GuiDiallingDeviceSave
         else if (button.id == 100)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_A));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_EDIT_A));
         }
         else if (button.id == 101)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_B));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_EDIT_B));
         }
         else if (button.id == 102)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_C));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_EDIT_C));
         }
     }
     

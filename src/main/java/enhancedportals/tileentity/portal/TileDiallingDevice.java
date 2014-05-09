@@ -277,45 +277,56 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     // OpenComputers
 
     @Override
-    public String getComponentName() {
+    public String getComponentName()
+    {
         return "ep_dialling_device";
     }
 
     @Callback
-    public Object[] dial(Context context, Arguments args) throws Exception {
-        if(args.count() < 1) return null;
+    public Object[] dial(Context context, Arguments args) throws Exception
+    {
+        if(args.count() < 1)
+        {
+            return null;
+        }
+        
         return callMethod(null, null, 0, ComputerUtils.argsToArray(args));
     }
 
     @Callback
-    public Object[] terminate(Context context, Arguments args) {
+    public Object[] terminate(Context context, Arguments args)
+    {
         getPortalController().connectionTerminate();
-        return new Object[]{true};
+        return new Object[]{ true };
     }
 
     @Callback
-    public Object[] dialStored(Context context, Arguments args) throws Exception {
+    public Object[] dialStored(Context context, Arguments args) throws Exception
+    {
         return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
     }
 
     @Callback(direct = true)
-    public Object[] getStoredName(Context context, Arguments args) throws Exception {
+    public Object[] getStoredName(Context context, Arguments args) throws Exception
+    {
         return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
     }
 
     @Callback(direct = true)
-    public Object[] getStoredGlyph(Context context, Arguments args) throws Exception {
+    public Object[] getStoredGlyph(Context context, Arguments args) throws Exception
+    {
         return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
     }
 
     @Callback(direct = true)
-    public Object[] getStoredCount(Context context, Arguments args) {
+    public Object[] getStoredCount(Context context, Arguments args)
+    {
         return new Object[] { glyphList.size() };
     }
 
-	@Override
-	public boolean equals(IPeripheral other)
-	{
-		return other == this;
-	}
+    @Override
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
 }

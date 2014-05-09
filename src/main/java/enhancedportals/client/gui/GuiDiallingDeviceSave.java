@@ -17,7 +17,7 @@ import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.client.gui.elements.ElementGlyphDisplay;
 import enhancedportals.inventory.BaseContainer;
-import enhancedportals.inventory.ContainerDiallingDeviceManual;
+import enhancedportals.inventory.ContainerDiallingDeviceSave;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
@@ -37,7 +37,7 @@ public class GuiDiallingDeviceSave extends BaseGui
 
     public GuiDiallingDeviceSave(TileDiallingDevice d, EntityPlayer p)
     {
-        super(new ContainerDiallingDeviceManual(d, p.inventory), CONTAINER_SIZE);
+        super(new ContainerDiallingDeviceSave(d, p.inventory), CONTAINER_SIZE);
         dial = d;
         name = "gui.dialDevice";
         setHidePlayerInventory();
@@ -69,6 +69,19 @@ public class GuiDiallingDeviceSave extends BaseGui
     {
         super.updateScreen();
         text.updateCursorCounter();
+        
+        if (particleFrameCycle >= 20)
+        {
+            particleFrame++;
+            particleFrameCycle = 0;
+            
+            if (particleFrame >= particleFrames.length)
+            {
+                particleFrame = 0;
+            }
+        }
+        
+        particleFrameCycle++;
     }
     
     @Override
@@ -103,19 +116,6 @@ public class GuiDiallingDeviceSave extends BaseGui
     {
         super.drawGuiContainerBackgroundLayer(f, i, j);
         text.drawTextBox();
-        
-        if (particleFrameCycle >= 100)
-        {
-            particleFrame++;
-            particleFrameCycle = 0;
-            
-            if (particleFrame >= particleFrames.length)
-            {
-                particleFrame = 0;
-            }
-        }
-        
-        particleFrameCycle++;
     }
     
     @Override
@@ -166,7 +166,7 @@ public class GuiDiallingDeviceSave extends BaseGui
         }
         else
         {
-            itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, frame, 59, 85);
+            drawItemStack(frame, 59, 85);
         }
         
         GL11.glColor3f(portalColour.getRed() / 255F, portalColour.getGreen() / 255F, portalColour.getBlue() / 255F);
@@ -177,7 +177,7 @@ public class GuiDiallingDeviceSave extends BaseGui
         }
         else
         {
-            itemRenderer.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, portal, 80, 85);
+            drawItemStack(portal, 80, 85);
         }
         
         GL11.glColor3f(particleColour.getRed() / 255F, particleColour.getGreen() / 255F, particleColour.getBlue() / 255F);
@@ -223,17 +223,17 @@ public class GuiDiallingDeviceSave extends BaseGui
         else if (button.id == 100)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_A));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_SAVE_A));
         }
         else if (button.id == 101)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_B));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_SAVE_B));
         }
         else if (button.id == 102)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_C));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_SAVE_C));
         }
     }
 }

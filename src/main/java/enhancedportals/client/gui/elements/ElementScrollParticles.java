@@ -144,7 +144,7 @@ public class ElementScrollParticles extends BaseElement
             handleMouse();
         }
 
-        int l = posY + 1, k = l + sizeY - 1, selectedIcon = ((GuiTextureParticle) parent).getSelectedParticle();
+        int l = posY + 1, k = l + sizeY - 1, selectedIcon = ((GuiTextureParticle) parent).getPTM().getParticleType();
         GL11.glColor3f(1f, 1f, 1f);
         parent.getTextureManager().bindTexture(texture);
         drawTexturedModalRect(posX + sizeX - 13, posY + 1 + (int)((float)(k - l - 16) * this.currentScroll), 244, 226 + (canScroll ? 0 : 15), 12, 15);

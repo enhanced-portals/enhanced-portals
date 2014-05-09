@@ -19,6 +19,7 @@ public class GuiPortalController extends BaseGui
     public static final int CONTAINER_SIZE = 78;
     TileController controller;
     GuiButton buttonLock;
+    ElementGlyphDisplay display;
 
     public GuiPortalController(TileController c, EntityPlayer p)
     {
@@ -34,7 +35,8 @@ public class GuiPortalController extends BaseGui
         super.initGui();
         buttonLock = new GuiButton(10, guiLeft + 7, guiTop + containerSize - 27, 162, 20, EnhancedPortals.localize("gui." + (controller.isPublic ? "public" : "private")));
         buttonList.add(buttonLock);
-        addElement(new ElementGlyphDisplay(this, 7, 29, controller.getIdentifierUnique()));
+        display = new ElementGlyphDisplay(this, 7, 29, controller.getIdentifierUnique());
+        addElement(display);
         addTab(new TabTip(this, "privatePublic"));
     }
 
@@ -77,5 +79,6 @@ public class GuiPortalController extends BaseGui
     {
         super.updateScreen();
         buttonLock.displayString = EnhancedPortals.localize("gui." + (controller.isPublic ? "public" : "private"));
+        display.setIdentifier(controller.getIdentifierUnique());
     }
 }

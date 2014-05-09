@@ -3,16 +3,19 @@ package enhancedportals.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.network.packet.PacketGui;
+import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.tileentity.portal.TileRedstoneInterface;
 
 public class ContainerRedstoneInterface extends BaseContainer
 {
     TileRedstoneInterface ri;
+    int firstState = -100, secondState = -100;
 
     public ContainerRedstoneInterface(TileRedstoneInterface i, InventoryPlayer p)
     {
@@ -54,6 +57,31 @@ public class ContainerRedstoneInterface extends BaseContainer
         }
 
         ri.markDirty();
-        EnhancedPortals.packetPipeline.sendTo(new PacketGui(ri), (EntityPlayerMP) player);
+    }
+    
+    @Override
+    public void updateProgressBar(int id, int val)
+    {
+        
+    }
+    
+    @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        int fs = ri.isOutput ? 1 : 0, ss = ri.state;
+        
+        for (int i = 0; i < crafters.size(); i++)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+            
+            if (firstState != fs || secondState != ss)
+            {
+                EnhancedPortals.packetPipeline.sendTo(new PacketGui(ri), (EntityPlayerMP) icrafting);
+            }
+        }
+        
+        firstState = fs;
+        secondState = ss;
     }
 }

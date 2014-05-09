@@ -8,6 +8,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
+import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
 
 public class GuiTextureDialParticle extends GuiTextureParticle
@@ -34,7 +35,7 @@ public class GuiTextureDialParticle extends GuiTextureParticle
 
         buttonList.add(new GuiButton(1000, guiLeft + 7, guiTop + ySize + 3, xSize - 14, 20, "Save"));
 
-        Color c = new Color(ClientProxy.saveTexture.getParticleColour());
+        Color c = new Color(getPTM().getParticleColour());
         sliderR.sliderValue = c.getRed() / 255f;
         sliderG.sliderValue = c.getGreen() / 255f;
         sliderB.sliderValue = c.getBlue() / 255f;
@@ -45,12 +46,12 @@ public class GuiTextureDialParticle extends GuiTextureParticle
     {
         if (button.id == buttonSave.id)
         {
-            ClientProxy.saveTexture.setParticleColour(Integer.parseInt(String.format("%02x%02x%02x", sliderR.getValue(), sliderG.getValue(), sliderB.getValue()), 16));
+            getPTM().setParticleColour(Integer.parseInt(String.format("%02x%02x%02x", sliderR.getValue(), sliderG.getValue(), sliderB.getValue()), 16));
         }
         else if (button.id == buttonReset.id)
         {
             int colour = 0xffffff;
-            ClientProxy.saveTexture.setParticleColour(colour);
+            getPTM().setParticleColour(colour);
 
             Color c = new Color(colour);
             sliderR.sliderValue = c.getRed() / 255f;
@@ -61,6 +62,16 @@ public class GuiTextureDialParticle extends GuiTextureParticle
         {
             didSave = true;
             EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C));
+        }
+        else if (button.id == 500)
+        {
+            didSave = true;
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALLING_EDIT_A : GuiHandler.TEXTURE_DIALLING_SAVE_A));
+        }
+        else if (button.id == 501)
+        {
+            didSave = true;
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALLING_EDIT_B : GuiHandler.TEXTURE_DIALLING_SAVE_B));
         }
     }
     
@@ -80,12 +91,12 @@ public class GuiTextureDialParticle extends GuiTextureParticle
     @Override
     public void particleSelected(int particle)
     {
-        ClientProxy.saveTexture.setParticleType(particle);
+        getPTM().setParticleType(particle);
     }
     
     @Override
-    public int getSelectedParticle()
+    public PortalTextureManager getPTM()
     {
-        return ClientProxy.saveTexture.getParticleType();
+        return ClientProxy.saveTexture;
     }
 }

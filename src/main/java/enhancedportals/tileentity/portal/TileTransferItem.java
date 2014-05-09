@@ -191,7 +191,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
 
                                             if (item.getStackInSlot(0).stackSize + stack.stackSize <= stack.getMaxStackSize())
                                             {
-                                                amount = item.getStackInSlot(0).stackSize;
+                                                amount = stack.stackSize;
                                             }
                                             else
                                             {

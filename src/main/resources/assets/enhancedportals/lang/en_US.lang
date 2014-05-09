@@ -3,8 +3,8 @@ tile.frame.frame.name=Portal Frame
 tile.frame.controller.name=Portal Controller
 tile.frame.redstone.name=Redstone Interface
 tile.frame.networkInterface.name=Network Interface
+tile.frame.dialDevice.name=Dialling Device
 tile.frame.programInterface.name=Programmable Interface
-tile.frame.biometric.name=Biometric Identifier
 tile.frame.upgrade.name=Module Manipulator
 tile.frame.fluid.name=Fluid Transportation Module
 tile.frame.item.name=Item Transportation Module
@@ -26,15 +26,15 @@ item.wrench.name=Wrench
 item.nanobrush.name=Nanobrush
 item.glasses.name=Glasses
 item.location_card.name=Location Card
-item.miscItems.blank_portal_module.name=Blank Portal Module
-item.miscItems.blank_upgrade.name=Blank Upgrade
+item.blank_portal_module.name=Blank Portal Module
+item.blank_upgrade.name=Blank Upgrade
 item.guide.name=EnhancedPortals Manual
 
 # In-place upgrades
 item.upgrade.redstone.name=Redstone Interface Upgrade
 item.upgrade.networkInterface.name=Network Interface Upgrade
 item.upgrade.dialDevice.name=Dialling Device Upgrade
-item.upgrade.biometric.name=Biometric Identifier Upgrade
+item.upgrade.programInterface.name=Programmable Interface Upgrade
 item.upgrade.upgrade.name=Module Manipulator Upgrade
 item.upgrade.fluid.name=Fluid Transportation Upgrade
 item.upgrade.item.name=Item Transportation Upgrade
@@ -175,6 +175,19 @@ ep3.gui.add=Add
 ep3.gui.accept=Accept
 ep3.gui.clickToModify=Click to modify
 ep3.gui.uidInUse=That UID is already in use
+
+# GUI ITM
+ep3.gui.transferItem=Item Transfer Module
+
+# GUI FTM
+ep3.gui.transferFluid=Fluid Transfer Module
+
+# GUI ETM
+ep3.gui.transferEnergy=Energy Transfer Module
+
+# GUI Transfer
+ep3.gui.sending=Sending
+ep3.gui.receiving=Receiving
 
 # Errors
 ep3.error=[Error] 

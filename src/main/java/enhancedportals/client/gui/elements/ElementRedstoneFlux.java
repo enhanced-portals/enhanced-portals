@@ -17,7 +17,7 @@ public class ElementRedstoneFlux extends BaseElement
     {
         super(gui, x, y, 14, 42);
         s = es;
-        texture = new ResourceLocation("enhancedportals", "textures/gui/redstone_flux.png");
+        texture = new ResourceLocation("enhancedportals", "textures/gui/elements.png");
     }
 
     @Override

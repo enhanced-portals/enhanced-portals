@@ -14,6 +14,7 @@ public class GuiNetworkInterface extends BaseGui
 {
     public static final int CONTAINER_SIZE = 68;
     TileController controller;
+    ElementGlyphDisplay display;
 
     public GuiNetworkInterface(TileController c, EntityPlayer p)
     {
@@ -38,7 +39,15 @@ public class GuiNetworkInterface extends BaseGui
     public void initGui()
     {
         super.initGui();
-        addElement(new ElementGlyphDisplay(this, 7, 29, controller.getIdentifierNetwork()));
+        display = new ElementGlyphDisplay(this, 7, 29, controller.getIdentifierNetwork());
+        addElement(display);
+    }
+    
+    @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+        display.setIdentifier(controller.getIdentifierNetwork());
     }
     
     @Override
