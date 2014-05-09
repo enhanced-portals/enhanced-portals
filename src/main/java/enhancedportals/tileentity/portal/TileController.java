@@ -1176,7 +1176,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     @Override
     public String getType()
     {
-        return "Portal Controller";
+        return "portal_controller";
     }
 
     @Override

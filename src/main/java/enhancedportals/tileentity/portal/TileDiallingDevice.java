@@ -143,7 +143,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     @Override
     public String getType()
     {
-        return "Dialling Device";
+        return "dialling_device";
     }
 
     @Override

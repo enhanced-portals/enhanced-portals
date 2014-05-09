@@ -229,7 +229,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     @Override
     public String getType()
     {
-        return "ETM";
+        return "energy_transfer_module";
     }
 
     @Override

@@ -265,7 +265,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     @Override
     public String getType()
     {
-        return "FTM";
+        return "fluid_transfer_module";
     }
 
     @Override

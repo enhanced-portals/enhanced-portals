@@ -239,7 +239,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     @Override
     public String getType()
     {
-        return "ITM";
+        return "item_transfer_module";
     }
 
     @Override

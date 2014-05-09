@@ -63,7 +63,7 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
 	@Override
     public String getType()
     {
-        return "Network Interface";
+        return "network_nterface";
     }
 
     @Override

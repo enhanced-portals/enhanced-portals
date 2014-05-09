@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,6 +25,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import dan200.computercraft.api.ComputerCraftAPI;
+import enhancedportals.block.BlockFrame;
 import enhancedportals.common.CreativeTabEP3;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
@@ -79,6 +82,11 @@ public class EnhancedPortals
     public void postInit(FMLPostInitializationEvent event)
     {
         packetPipeline.postInitialise();
+        
+        if (Loader.isModLoaded("ComputerCraft"))
+        {
+            ComputerCraftAPI.registerPeripheralProvider(BlockFrame.instance);
+        }
     }
 
     @EventHandler

@@ -18,8 +18,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.block.IDismantleable;
 import cofh.api.tileentity.ISidedBlockTexture;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.CommonProxy;
@@ -39,7 +42,7 @@ import enhancedportals.tileentity.portal.TileTransferItem;
 import enhancedportals.utility.ConnectedTextures;
 import enhancedportals.utility.ConnectedTexturesDetailed;
 
-public class BlockFrame extends BlockContainer implements IDismantleable
+public class BlockFrame extends BlockContainer implements IDismantleable, IPeripheralProvider
 {
     public static BlockFrame instance;
     public static ConnectedTextures connectedTextures;
@@ -227,6 +230,24 @@ public class BlockFrame extends BlockContainer implements IDismantleable
     {
         return true;
     }
+    
+    @Override
+    public boolean isNormalCube()
+    {
+        return true;
+    }
+    
+    @Override
+    public boolean isNormalCube(IBlockAccess world, int x, int y, int z)
+    {
+        return true;
+    }
+    
+    @Override
+    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+    {
+        return true;
+    }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess blockAccess, int x, int y, int z, int side)
@@ -310,5 +331,18 @@ public class BlockFrame extends BlockContainer implements IDismantleable
             ClientProxy.customFrameTextures.add(register.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));
             counter++;
         }
+    }
+
+    @Override
+    public IPeripheral getPeripheral(World world, int x, int y, int z, int side)
+    {
+        TileEntity t = world.getTileEntity(x, y, z);
+        
+        if (t != null && (t instanceof TileController || t instanceof TileNetworkInterface || t instanceof TileDiallingDevice || t instanceof TileTransferEnergy || t instanceof TileTransferFluid || t instanceof TileTransferItem))
+        {
+            return (IPeripheral) t;
+        }
+        
+        return null;
     }
 }
