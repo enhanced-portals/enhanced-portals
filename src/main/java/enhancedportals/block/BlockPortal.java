@@ -129,7 +129,12 @@ public class BlockPortal extends BlockContainer
                     ((EntityPlayer) entity).closeScreen();
                 }
 
-                ((TilePortal) world.getTileEntity(x, y, z)).onEntityCollidedWithBlock(entity);
+                TileEntity t = world.getTileEntity(x, y, z);
+
+                if (t instanceof TilePortal)
+                {
+                    ((TilePortal) t).onEntityCollidedWithBlock(entity);
+                }
             }
 
             EntityManager.setEntityPortalCooldown(entity);
@@ -229,7 +234,7 @@ public class BlockPortal extends BlockContainer
         texture = iconRegister.registerIcon("enhancedportals:portal");
         int counter = 0;
         ClientProxy.customPortalTextures.clear();
-        
+
         while (ClientProxy.resourceExists("textures/blocks/customPortal/" + String.format("%02d", counter) + ".png"))
         {
             EnhancedPortals.logger.info("Registered custom portal Icon: " + String.format("%02d", counter) + ".png");
