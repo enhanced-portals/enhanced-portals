@@ -20,10 +20,7 @@ public class ConnectedTextures
 
     public ConnectedTextures(String textureLocation, Block b, int meta)
     {
-        textureLoc = textureLocation;
-        block = b;
-        blockMeta = meta;
-        textures = new IIcon[16];
+        this(textureLocation, b, meta, -1);
     }
 
     public ConnectedTextures(String textureLocation, Block b, int meta, int meta2)
@@ -100,8 +97,8 @@ public class ConnectedTextures
         }
         else if (side == 2)
         {
-            connectingBlock[0] = canConnectTo(blockAccess, x + 1, y, z);
-            connectingBlock[1] = canConnectTo(blockAccess, x - 1, y, z);
+            connectingBlock[0] = canConnectTo(blockAccess, x - 1, y, z);
+            connectingBlock[1] = canConnectTo(blockAccess, x + 1, y, z);
             connectingBlock[2] = canConnectTo(blockAccess, x, y - 1, z);
             connectingBlock[3] = canConnectTo(blockAccess, x, y + 1, z);
         }
@@ -121,8 +118,8 @@ public class ConnectedTextures
         }
         else
         {
-            connectingBlock[0] = canConnectTo(blockAccess, x, y, z + 1);
-            connectingBlock[1] = canConnectTo(blockAccess, x, y, z - 1);
+            connectingBlock[0] = canConnectTo(blockAccess, x, y, z - 1);
+            connectingBlock[1] = canConnectTo(blockAccess, x, y, z + 1);
             connectingBlock[2] = canConnectTo(blockAccess, x, y - 1, z);
             connectingBlock[3] = canConnectTo(blockAccess, x, y + 1, z);
         }

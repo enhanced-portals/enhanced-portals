@@ -15,8 +15,7 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
 
     public ConnectedTexturesDetailed(String textureLocation, Block block, int meta)
     {
-        super(textureLocation, block, meta);
-        textures = new IIcon[47];
+        this(textureLocation, block, meta, -1);
     }
 
     public ConnectedTexturesDetailed(String textureLocation, Block block, int meta, int meta2)
@@ -63,8 +62,8 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         }
         else if (side == 2)
         {
-            connectingBlock[0] = canConnectTo(blockAccess, x + 1, y, z);
-            connectingBlock[1] = canConnectTo(blockAccess, x - 1, y, z);
+            connectingBlock[0] = canConnectTo(blockAccess, x - 1, y, z);
+            connectingBlock[1] = canConnectTo(blockAccess, x + 1, y, z);
             connectingBlock[2] = canConnectTo(blockAccess, x, y - 1, z);
             connectingBlock[3] = canConnectTo(blockAccess, x, y + 1, z);
         }
@@ -84,8 +83,8 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         }
         else
         {
-            connectingBlock[0] = canConnectTo(blockAccess, x, y, z + 1);
-            connectingBlock[1] = canConnectTo(blockAccess, x, y, z - 1);
+            connectingBlock[0] = canConnectTo(blockAccess, x, y, z - 1);
+            connectingBlock[1] = canConnectTo(blockAccess, x, y, z + 1);
             connectingBlock[2] = canConnectTo(blockAccess, x, y - 1, z);
             connectingBlock[3] = canConnectTo(blockAccess, x, y + 1, z);
         }
@@ -101,10 +100,10 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         }
         else if (side == 2)
         {
-            diagonal[0] = !canConnectTo(blockAccess, x - 1, y - 1, z);
-            diagonal[1] = !canConnectTo(blockAccess, x + 1, y - 1, z);
-            diagonal[2] = !canConnectTo(blockAccess, x - 1, y + 1, z);
-            diagonal[3] = !canConnectTo(blockAccess, x + 1, y + 1, z);
+            diagonal[0] = !canConnectTo(blockAccess, x + 1, y - 1, z);
+            diagonal[1] = !canConnectTo(blockAccess, x - 1, y - 1, z);
+            diagonal[2] = !canConnectTo(blockAccess, x + 1, y + 1, z);
+            diagonal[3] = !canConnectTo(blockAccess, x - 1, y + 1, z);
         }
         else if (side == 3)
         {
@@ -122,10 +121,10 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         }
         else
         {
-            diagonal[0] = !canConnectTo(blockAccess, x, y - 1, z - 1);
-            diagonal[1] = !canConnectTo(blockAccess, x, y - 1, z + 1);
-            diagonal[2] = !canConnectTo(blockAccess, x, y + 1, z - 1);
-            diagonal[3] = !canConnectTo(blockAccess, x, y + 1, z + 1);
+            diagonal[0] = !canConnectTo(blockAccess, x, y - 1, z + 1);
+            diagonal[1] = !canConnectTo(blockAccess, x, y - 1, z - 1);
+            diagonal[2] = !canConnectTo(blockAccess, x, y + 1, z + 1);
+            diagonal[3] = !canConnectTo(blockAccess, x, y + 1, z - 1);
         }
 
         if (index == 13 && diagonal[0])
