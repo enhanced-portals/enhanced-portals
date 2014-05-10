@@ -47,14 +47,27 @@ public class BlockPortal extends BlockContainer
     @Override
     public void breakBlock(World world, int x, int y, int z, Block b, int newID)
     {
-        ((TilePortal) world.getTileEntity(x, y, z)).breakBlock(b, newID);
+        TileEntity tile = world.getTileEntity(x, y, z);
+
+        if (tile instanceof TilePortal)
+        {
+            ((TilePortal) tile).breakBlock(b, newID);
+        }
+
         super.breakBlock(world, x, y, z, b, newID);
     }
 
     @Override
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z)
     {
-        return ((TilePortal) blockAccess.getTileEntity(x, y, z)).getColour();
+        TileEntity tile = blockAccess.getTileEntity(x, y, z);
+
+        if (tile instanceof TilePortal)
+        {
+            return ((TilePortal) tile).getColour();
+        }
+
+        return 0xFFFFFF;
     }
 
     @Override
@@ -72,7 +85,14 @@ public class BlockPortal extends BlockContainer
     @Override
     public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        return ((TilePortal) blockAccess.getTileEntity(x, y, z)).getBlockTexture(side);
+        TileEntity tile = blockAccess.getTileEntity(x, y, z);
+
+        if (tile instanceof TilePortal)
+        {
+            return ((TilePortal) tile).getBlockTexture(side);
+        }
+
+        return null;
     }
 
     @Override
@@ -114,7 +134,14 @@ public class BlockPortal extends BlockContainer
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
-        return ((TilePortal) world.getTileEntity(x, y, z)).activate(player, player.inventory.getCurrentItem());
+        TileEntity tile = world.getTileEntity(x, y, z);
+        
+        if (tile instanceof TilePortal)
+        {
+            return ((TilePortal) tile).activate(player, player.inventory.getCurrentItem());
+        }
+        
+        return false;
     }
 
     @Override
@@ -155,9 +182,16 @@ public class BlockPortal extends BlockContainer
         {
             return;
         }
+        
+        TileEntity tile = world.getTileEntity(x, y, z);
+        
+        if (!(tile instanceof TilePortal))
+        {
+            return;
+        }
 
         int metadata = world.getBlockMetadata(x, y, z);
-        TileController controller = ((TilePortal) world.getTileEntity(x, y, z)).getPortalController();
+        TileController controller = ((TilePortal) tile).getPortalController();
         TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
         boolean doSounds = !CommonProxy.disableSounds && random.nextInt(100) == 0, doParticles = !CommonProxy.disableParticles;
 
@@ -252,33 +286,38 @@ public class BlockPortal extends BlockContainer
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
-        TilePortal portal = (TilePortal) blockAccess.getTileEntity(x, y, z);
-        TileController controller = portal.getPortalController();
-        TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
-
-        if (controller != null && manip != null && manip.isPortalInvisible())
+        TileEntity tile = blockAccess.getTileEntity(x, y, z);
+        
+        if (tile instanceof TilePortal)
         {
-            setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
-            return;
-        }
-
-        int meta = blockAccess.getBlockMetadata(x, y, z);
-
-        if (meta == 1) // X
-        {
-            setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);
-        }
-        else if (meta == 2) // Z
-        {
-            setBlockBounds(0.375f, 0f, 0f, 0.625f, 1f, 1f);
-        }
-        else if (meta == 3) // XZ
-        {
-            setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
-        }
-        else
-        {
-            setBlockBounds(0f, 0f, 0f, 1f, 1, 1f);
+            TilePortal portal = (TilePortal) tile;
+            TileController controller = portal.getPortalController();
+            TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
+    
+            if (controller != null && manip != null && manip.isPortalInvisible())
+            {
+                setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
+                return;
+            }
+    
+            int meta = blockAccess.getBlockMetadata(x, y, z);
+    
+            if (meta == 1) // X
+            {
+                setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);
+            }
+            else if (meta == 2) // Z
+            {
+                setBlockBounds(0.375f, 0f, 0f, 0.625f, 1f, 1f);
+            }
+            else if (meta == 3) // XZ
+            {
+                setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
+            }
+            else
+            {
+                setBlockBounds(0f, 0f, 0f, 1f, 1, 1f);
+            }
         }
     }
 

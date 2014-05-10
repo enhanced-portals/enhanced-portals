@@ -70,7 +70,12 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int unknown)
     {
-        ((TileFrame) world.getTileEntity(x, y, z)).breakBlock(block, unknown);
+        TileEntity t = world.getTileEntity(x, y, z);
+        
+        if (t != null && t instanceof TileFrame)
+        {
+            ((TileFrame) t).breakBlock(block, unknown);
+        }
 
         super.breakBlock(world, x, y, z, block, unknown);
     }
@@ -101,7 +106,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
 
         if (tile instanceof TileFrame)
         {
-            return ((TileFrame) blockAccess.getTileEntity(x, y, z)).getColour();
+            return ((TileFrame) tile).getColour();
         }
 
         return 0xFFFFFF;
@@ -195,7 +200,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
 
         if (tile instanceof TileFrame)
         {
-            return ((ISidedBlockTexture) blockAccess.getTileEntity(x, y, z)).getBlockTexture(side, ClientProxy.renderPass);
+            return ((ISidedBlockTexture) tile).getBlockTexture(side, ClientProxy.renderPass);
         }
 
         return fullIcons[0];
@@ -295,7 +300,12 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
     {
-        ((TilePortalPart) world.getTileEntity(x, y, z)).onBlockPlaced(entity, stack);
+        TileEntity tile = world.getTileEntity(x, y, z);
+        
+        if (tile instanceof TilePortalPart)
+        {
+            ((TilePortalPart) tile).onBlockPlaced(entity, stack);
+        }
     }
 
     @Override
