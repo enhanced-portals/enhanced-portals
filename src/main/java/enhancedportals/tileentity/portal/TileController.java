@@ -76,8 +76,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     ControlState portalState = ControlState.REQUIRES_LOCATION;
 
     public int connectedPortals = -1, instability = 0, portalType = 0;
-    
-    Random random = new Random();
 
     boolean processing;
     public boolean isPublic;
@@ -530,7 +528,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 		}
 		else
 		{
-			dial = diallingDevices.get(random.nextInt(diallingDevices.size()));
+			dial = diallingDevices.get(new Random().nextInt(diallingDevices.size()));
 		}
 		
 		TileEntity tile = WorldUtils.getTileEntity(worldObj, dial);
@@ -827,7 +825,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 if (CommonProxy.portalsDestroyBlocks)
                 {
-                    //worldObj.destroyBlock(c.posX, c.posY, c.posZ, true); // TODO
                 	worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
                 }
                 else

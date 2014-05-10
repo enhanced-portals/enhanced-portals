@@ -131,7 +131,6 @@ public class CommonProxy
     {
         config = new Configuration(c);
         craftingDir = new File(c.getParentFile(), "crafting");
-        craftingDir.mkdirs();
         forceShowFrameOverlays = config.get("Misc", "ForceShowFrameOverlays", false).getBoolean(false);
         disableSounds = config.get("Overrides", "DisableSounds", false).getBoolean(false);
         disableParticles = config.get("Overrides", "DisableParticles", false).getBoolean(false);

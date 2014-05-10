@@ -39,7 +39,7 @@ public class EnhancedPortals
     public static final String NAME = "EnhancedPortals", ID = "enhancedportals", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy";
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     public static final Logger logger = LogManager.getLogger("EnhancedPortals");
-    public static CreativeTabs creativeTab = new CreativeTabEP3();
+    public static final CreativeTabs creativeTab = new CreativeTabEP3();
     public static final String MODID_OPENCOMPUTERS = "OpenComputers", MODID_COMPUTERCRAFT = "ComputerCraft";
 
     @Instance(ID)
@@ -74,7 +74,6 @@ public class EnhancedPortals
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        proxy.setupCrafting();
         proxy.miscSetup();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
     }
@@ -84,6 +83,7 @@ public class EnhancedPortals
     {
         packetPipeline.postInitialise();
         initializeComputerCraft();
+        proxy.setupCrafting();
     }
 
     @EventHandler
@@ -119,7 +119,7 @@ public class EnhancedPortals
         {
             return;
         }
-        
+
         try
         {
             Class computerCraft = Class.forName("dan200.computercraft.ComputerCraft");
