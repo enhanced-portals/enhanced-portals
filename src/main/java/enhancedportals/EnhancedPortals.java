@@ -1,6 +1,7 @@
 package enhancedportals;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.EnumChatFormatting;
@@ -25,7 +26,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import dan200.computercraft.api.ComputerCraftAPI;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.common.CreativeTabEP3;
 import enhancedportals.network.CommonProxy;
@@ -40,6 +40,7 @@ public class EnhancedPortals
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     public static final Logger logger = LogManager.getLogger("EnhancedPortals");
     public static CreativeTabs creativeTab = new CreativeTabEP3();
+    public static final String MODID_OPENCOMPUTERS = "OpenComputers", MODID_COMPUTERCRAFT = "ComputerCraft";
 
     @Instance(ID)
     public static EnhancedPortals instance;
@@ -82,11 +83,7 @@ public class EnhancedPortals
     public void postInit(FMLPostInitializationEvent event)
     {
         packetPipeline.postInitialise();
-        
-        if (Loader.isModLoaded("ComputerCraft"))
-        {
-            ComputerCraftAPI.registerPeripheralProvider(BlockFrame.instance);
-        }
+        initializeComputerCraft();
     }
 
     @EventHandler
@@ -112,6 +109,26 @@ public class EnhancedPortals
         if (!event.world.isRemote)
         {
             proxy.networkManager.saveAllData();
+        }
+    }
+
+    /** Taken from the CC-API, allowing for use it if it's available, instead of shipping it/requiring it **/
+    void initializeComputerCraft()
+    {
+        if (!Loader.isModLoaded(MODID_COMPUTERCRAFT))
+        {
+            return;
+        }
+        
+        try
+        {
+            Class computerCraft = Class.forName("dan200.computercraft.ComputerCraft");
+            Method computerCraft_registerPeripheralProvider = computerCraft.getMethod("registerPeripheralProvider", new Class[] { Class.forName("dan200.computercraft.api.peripheral.IPeripheralProvider") });
+            computerCraft_registerPeripheralProvider.invoke(null, BlockFrame.instance);
+        }
+        catch (Exception e)
+        {
+            logger.error("Could not load the CC-API");
         }
     }
 }

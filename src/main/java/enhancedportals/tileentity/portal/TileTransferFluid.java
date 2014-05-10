@@ -2,8 +2,6 @@ package enhancedportals.tileentity.portal;
 
 import io.netty.buffer.ByteBuf;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 
 import li.cil.oc.api.network.Arguments;
@@ -23,14 +21,19 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.InterfaceList;
+import cpw.mods.fml.common.Optional.Method;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
 
+@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler, IPeripheral, SimpleComponent
 {
     public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
@@ -263,18 +266,21 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     }
     
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String getType()
     {
         return "fluid_transfer_module";
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String[] getMethodNames()
     {
         return new String[] { "getFluidStored", "getAmountStored", "isFull", "isEmpty", "isSending" };
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0)
@@ -302,54 +308,69 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
 	public boolean equals(IPeripheral other)
 	{
 		return other == this;
 	}
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void attach(IComputerAccess computer)
     {
         
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
         
     }
-    
-    // OpenComputers
-    
+        
 	@Override
-	public String getComponentName() {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public String getComponentName()
+	{
 		return "ep_transfer_fluid";
 	}
 	
 	@Callback(direct = true, limit = 1)
-	public Object[] getFluid(Context context, Arguments args) {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getFluid(Context context, Arguments args)
+	{
 		final HashMap<String, Object> map = new HashMap<String, Object>();
 		FluidTankInfo value = tank.getInfo();
 		
 		// Code taken from OpenComponents by Sangar
 		// https://github.com/MightyPirates/OpenComponents
+		
         map.put("capacity", value.capacity);
-        if (value.fluid != null) {
+        
+        if (value.fluid != null)
+        {
             map.put("amount", value.fluid.amount);
             map.put("id", value.fluid.fluidID);
             final Fluid fluid = value.fluid.getFluid();
-            if (fluid != null) {
+            
+            if (fluid != null)
+            {
                 map.put("name", fluid.getName());
                 map.put("label", fluid.getLocalizedName());
             }
-        } else {
+        }
+        else
+        {
             map.put("amount", 0);
         }
+        
 		return new Object[]{ map };
 	}
 	
 	@Callback(direct = true)
-	public Object[] isSending(Context context, Arguments args) {
-		return new Object[]{isSending};
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] isSending(Context context, Arguments args)
+	{
+		return new Object[]{ isSending };
 	}
 }

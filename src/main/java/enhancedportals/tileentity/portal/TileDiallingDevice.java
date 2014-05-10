@@ -2,11 +2,8 @@ package enhancedportals.tileentity.portal;
 
 import io.netty.buffer.ByteBuf;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -16,6 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.InterfaceList;
+import cpw.mods.fml.common.Optional.Method;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -26,6 +27,7 @@ import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.utility.ComputerUtils;
 
+@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileDiallingDevice extends TileFrame implements IPeripheral, SimpleComponent
 {
     public ArrayList<GlyphElement> glyphList = new ArrayList<GlyphElement>();
@@ -141,18 +143,21 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String getType()
     {
         return "dialling_device";
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String[] getMethodNames()
     {
         return new String[] { "dial", "terminate", "dialStored", "getStoredName", "getStoredGlyph", "getStoredCount" };
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0) // dial
@@ -251,12 +256,14 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void attach(IComputerAccess computer)
     {
 
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
 
@@ -274,15 +281,15 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
 
     }
 
-    // OpenComputers
-
     @Override
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public String getComponentName()
     {
         return "ep_dialling_device";
     }
 
     @Callback
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] dial(Context context, Arguments args) throws Exception
     {
         if(args.count() < 1)
@@ -294,6 +301,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Callback
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] terminate(Context context, Arguments args)
     {
         getPortalController().connectionTerminate();
@@ -301,30 +309,35 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Callback
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] dialStored(Context context, Arguments args) throws Exception
     {
         return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
     }
 
     @Callback(direct = true)
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStoredName(Context context, Arguments args) throws Exception
     {
         return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
     }
 
     @Callback(direct = true)
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStoredGlyph(Context context, Arguments args) throws Exception
     {
         return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
     }
 
     @Callback(direct = true)
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStoredCount(Context context, Arguments args)
     {
         return new Object[] { glyphList.size() };
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public boolean equals(IPeripheral other)
     {
         return other == this;

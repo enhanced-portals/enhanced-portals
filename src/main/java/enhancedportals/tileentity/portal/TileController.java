@@ -21,6 +21,9 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.InterfaceList;
+import cpw.mods.fml.common.Optional.Method;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -46,6 +49,7 @@ import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;
 import enhancedportals.utility.WorldUtils;
 
+@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileController extends TileFrame implements IPeripheral, SimpleComponent
 {
     enum ControlState
@@ -1174,18 +1178,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String getType()
     {
         return "portal_controller";
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String[] getMethodNames()
     {
         return new String[] { "isPortalActive", "getUniqueIdentifier", "setUniqueIdentifier", "getFrameColour", "setFrameColour", "getPortalColour", "setPortalColour", "getParticleColour", "setParticleColour" };
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0) // isPortalActive
@@ -1296,12 +1303,14 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void attach(IComputerAccess computer)
     {
         
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
         
@@ -1314,56 +1323,77 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
     
 	@Override
-	public String getComponentName() {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public String getComponentName()
+	{
 		return "ep_controller";
 	}
 	
 	@Callback(direct = true)
-	public Object[] isPortalActive(Context context, Arguments args) {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] isPortalActive(Context context, Arguments args)
+	{
 		return new Object[] { isPortalActive() };
 	}
 	
 	@Callback(direct = true)
-	public Object[] getUniqueIdentifier(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getUniqueIdentifier(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 1, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback
-	public Object[] setUniqueIdentifier(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] setUniqueIdentifier(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback(direct = true)
-	public Object[] getFrameColour(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getFrameColour(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback
-	public Object[] setFrameColour(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] setFrameColour(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback(direct = true)
-	public Object[] getPortalColour(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getPortalColour(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 5, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback
-	public Object[] setPortalColour(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] setPortalColour(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 6, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback(direct = true)
-	public Object[] getParticleColour(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getParticleColour(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 7, ComputerUtils.argsToArray(args));
     }
 	
 	@Callback
-	public Object[] setParticleColour(Context context, Arguments args) throws Exception {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] setParticleColour(Context context, Arguments args) throws Exception
+	{
         return callMethod(null, null, 8, ComputerUtils.argsToArray(args));
     }
 
 	@Override
+	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
 	public boolean equals(IPeripheral other)
 	{
 		return other == this;

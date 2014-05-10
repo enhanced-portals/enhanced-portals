@@ -17,15 +17,20 @@ import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.InterfaceList;
+import cpw.mods.fml.common.Optional.Method;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
 
+@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPowerReceptor, IPeripheral, SimpleComponent
 {
     public final EnergyStorage storage = new EnergyStorage(16000);
@@ -227,18 +232,21 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public String getType()
     {
         return "energy_transfer_module";
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public String[] getMethodNames()
     {
         return new String[] { "getEnergyStored", "isFull", "isEmpty", "isSending" };
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0)
@@ -262,12 +270,14 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public void attach(IComputerAccess computer)
     {
         
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
     public void detach(IComputerAccess computer)
     {
         
@@ -292,29 +302,36 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
         return this.worldObj;
     }
 
-    // OpenComputers
-    
 	@Override
-	public String getComponentName() {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public String getComponentName()
+	{
 		return "ep_transfer_energy";
 	}
 	
 	@Callback(direct = true)
-	public Object[] getEnergy(Context context, Arguments args) {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getEnergy(Context context, Arguments args)
+	{
 		return new Object[]{storage.getEnergyStored()};
 	}
 	
 	@Callback(direct = true)
-	public Object[] getMaxEnergy(Context context, Arguments args) {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] getMaxEnergy(Context context, Arguments args)
+	{
 		return new Object[]{storage.getMaxEnergyStored()};
 	}
 	
 	@Callback(direct = true)
-	public Object[] isSending(Context context, Arguments args) {
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+	public Object[] isSending(Context context, Arguments args)
+	{
 		return new Object[]{isSending};
 	}
 
 	@Override
+	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
 	public boolean equals(IPeripheral other)
 	{
 		return other == this;

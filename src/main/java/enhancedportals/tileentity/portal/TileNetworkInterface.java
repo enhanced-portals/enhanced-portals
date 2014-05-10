@@ -8,6 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.InterfaceList;
+import cpw.mods.fml.common.Optional.Method;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -16,6 +19,7 @@ import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 
+@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileNetworkInterface extends TileFrame implements IPeripheral, SimpleComponent
 {
 	@Override
@@ -61,18 +65,21 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
 	}
 
 	@Override
+	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String getType()
     {
         return "network_nterface";
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String[] getMethodNames()
     {
         return new String[] { "dial", "terminate" };
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0) // dial
@@ -88,12 +95,14 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
     }
     
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void attach(IComputerAccess computer)
     {
 
     }
 
     @Override
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
 
@@ -112,12 +121,14 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
     }
     
 	@Override
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public String getComponentName()
 	{
 		return "ep_interface_network";
 	}
 	
 	@Callback
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] dial(Context context, Arguments args)
 	{
 		getPortalController().connectionDial();
@@ -125,6 +136,7 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
 	}
 	
 	@Callback
+	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] terminate(Context context, Arguments args)
 	{
 		getPortalController().connectionTerminate();
@@ -132,6 +144,7 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
 	}
 
 	@Override
+	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
 	public boolean equals(IPeripheral other)
 	{
 		return other == this;
