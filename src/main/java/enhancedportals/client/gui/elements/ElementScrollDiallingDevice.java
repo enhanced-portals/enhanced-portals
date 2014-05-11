@@ -2,11 +2,13 @@ package enhancedportals.client.gui.elements;
 
 import java.util.List;
 
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.GuiDiallingDevice;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
@@ -17,6 +19,7 @@ public class ElementScrollDiallingDevice extends BaseElement
     float currentScroll = 0f;
     boolean isScrolling = false, wasClicking = false;
     int scrollAmount = 0;
+    int offsetX = 5, offsetY = 5, sizeMButton = 196, sizeSButton = 20, buttonSpacing = 2, entryHeight = 22;
 
     public ElementScrollDiallingDevice(GuiDiallingDevice gui, TileDiallingDevice d, int x, int y)
     {
@@ -28,7 +31,32 @@ public class ElementScrollDiallingDevice extends BaseElement
     @Override
     public void addTooltip(List<String> list)
     {
+        int x = parent.getMouseX() + parent.getGuiLeft(), y = parent.getMouseY() + parent.getGuiTop();
+        
+        for (int i = 0; i < 5; i++)
+        {
+            if (scrollAmount + i >= dial.glyphList.size())
+            {
+                break;
+            }
+            
+            int entryOffset = i * entryHeight;
+            boolean mouseOverEntry = y >= posY + offsetY + entryOffset && y <= posY + offsetY + entryOffset + 20, mouseOverSmall = mouseOverEntry && x >= posX + offsetX + sizeMButton + buttonSpacing && x < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton;
 
+            if (mouseOverSmall)
+            {
+                if (parent.isShiftKeyDown())
+                {
+                    list.add(EnhancedPortals.localize("gui.delete"));
+                    break;
+                }
+                else
+                {
+                    list.add(EnhancedPortals.localize("gui.edit"));
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -36,7 +64,6 @@ public class ElementScrollDiallingDevice extends BaseElement
     {
         x += parent.getGuiLeft();
         y += parent.getGuiTop();
-        int offsetX = 5, offsetY = 5, sizeMButton = 196, sizeSButton = 20, buttonSpacing = 2, entryHeight = 22;
         
         for (int i = 0; i < 5; i++)
         {
@@ -47,7 +74,7 @@ public class ElementScrollDiallingDevice extends BaseElement
 
             GlyphElement e = dial.glyphList.get(scrollAmount + i);
             int entryOffset = i * entryHeight;
-            boolean mouseOverEntry = y >= posY + offsetY + entryOffset && y <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && x >= posX + offsetX && x < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && x >= posX + offsetX + sizeMButton + buttonSpacing && x < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton, delete = parent.isShiftKeyDown();
+            boolean mouseOverEntry = y >= posY + offsetY + entryOffset && y <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && x >= posX + offsetX && x < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && x >= posX + offsetX + sizeMButton + buttonSpacing && x < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton;
 
             if (mouseOverMain)
             {
@@ -160,8 +187,6 @@ public class ElementScrollDiallingDevice extends BaseElement
         GL11.glColor3f(1f, 1f, 1f);
         parent.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(posX + sizeX - 13, posY + 1 + (int)((float)(k - l - 16) * this.currentScroll), 244, 226 + (canScroll ? 0 : 15), 12, 15);
-        
-        int offsetX = 5, offsetY = 5, sizeMButton = 196, sizeSButton = 20, buttonSpacing = 2, entryHeight = 22;
 
         for (int i = 0; i < 5; i++)
         {

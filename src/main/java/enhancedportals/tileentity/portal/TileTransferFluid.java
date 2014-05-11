@@ -371,6 +371,6 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
 	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] isSending(Context context, Arguments args)
 	{
-		return new Object[]{ isSending };
+		return new Object[] { isSending };
 	}
 }

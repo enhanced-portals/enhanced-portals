@@ -232,21 +232,21 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String getType()
     {
         return "energy_transfer_module";
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public String[] getMethodNames()
     {
         return new String[] { "getEnergyStored", "isFull", "isEmpty", "isSending" };
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0)
@@ -270,14 +270,14 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void attach(IComputerAccess computer)
     {
         
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
+    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
         
@@ -313,21 +313,21 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
 	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] getEnergy(Context context, Arguments args)
 	{
-		return new Object[]{storage.getEnergyStored()};
+		return new Object[] { storage.getEnergyStored() };
 	}
 	
 	@Callback(direct = true)
 	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] getMaxEnergy(Context context, Arguments args)
 	{
-		return new Object[]{storage.getMaxEnergyStored()};
+		return new Object[] { storage.getMaxEnergyStored() };
 	}
 	
 	@Callback(direct = true)
 	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] isSending(Context context, Arguments args)
 	{
-		return new Object[]{isSending};
+		return new Object[] { isSending };
 	}
 
 	@Override

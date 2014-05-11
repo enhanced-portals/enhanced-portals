@@ -21,6 +21,9 @@ import enhancedportals.tileentity.portal.TileNetworkInterface;
 import enhancedportals.tileentity.portal.TilePortalPart;
 import enhancedportals.tileentity.portal.TileProgrammableInterface;
 import enhancedportals.tileentity.portal.TileRedstoneInterface;
+import enhancedportals.tileentity.portal.TileTransferEnergy;
+import enhancedportals.tileentity.portal.TileTransferFluid;
+import enhancedportals.tileentity.portal.TileTransferItem;
 import enhancedportals.utility.WorldUtils;
 
 public class ItemUpgrade extends Item
@@ -107,22 +110,22 @@ public class ItemUpgrade extends Item
             {
                 if (controller.getProgrammableInterface() != null && blockMeta == BlockFrame.PROGRAMMABLE_INTERFACE)
                 {
-                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localize("chat.multipleProgramInterface")));
+                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("multipleProgram")));
                     return false;
                 }
                 else if (controller.getDiallingDevices().size() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
                 {
-                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localize("chat.dialDeviceAndNetworkInterface")));
+                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("dialAndNetwork")));
                     return false;
                 }
                 else if (controller.getNetworkInterfaces().size() > 0 && blockMeta == BlockFrame.DIALLING_DEVICE)
                 {
-                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localize("chat.dialDeviceAndNetworkInterface")));
+                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("dialAndNetwork")));
                     return false;
                 }
                 else if (controller.getModuleManipulator() != null && blockMeta == BlockFrame.MODULE_MANIPULATOR)
                 {
-                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localize("chat.multipleModuleManipulators")));
+                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("multipleMod")));
                     return false;
                 }
 
@@ -151,6 +154,18 @@ public class ItemUpgrade extends Item
                 else if (t instanceof TileModuleManipulator)
                 {
                     controller.setModuleManipulator(t.getChunkCoordinates());
+                }
+                else if (t instanceof TileTransferEnergy)
+                {
+                    controller.addTransferEnergy(t.getChunkCoordinates());
+                }
+                else if (t instanceof TileTransferFluid)
+                {
+                    controller.addTransferFluid(t.getChunkCoordinates());
+                }
+                else if (t instanceof TileTransferItem)
+                {
+                    controller.addTransferItem(t.getChunkCoordinates());
                 }
 
                 t.setPortalController(controller.getChunkCoordinates());

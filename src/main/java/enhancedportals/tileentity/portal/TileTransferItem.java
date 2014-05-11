@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import cpw.mods.fml.common.Optional.Interface;
@@ -30,6 +31,27 @@ import enhancedportals.utility.WorldUtils;
 public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral, SimpleComponent
 {
     ItemStack stack;
+    
+    @Override
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);        
+        NBTTagCompound st = new NBTTagCompound();
+        
+        if (stack != null)
+        {
+            stack.writeToNBT(st);
+        }
+        
+        tag.setTag("stack", st);
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
+    {
+        super.readFromNBT(tag);        
+        stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
+    }
 
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
@@ -313,21 +335,22 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
 		hstack.put("name", stack.getItem().getUnlocalizedNameInefficiently(stack));
 		hstack.put("meta", stack.getItemDamage());
 		hstack.put("amount", stack.stackSize);
-		return new Object[]{hstack};
+		
+		return new Object[] { hstack };
 	}
 	
 	@Callback(direct = true)
 	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] hasStack(Context context, Arguments args)
 	{
-		return new Object[]{ stack != null };
+		return new Object[] { stack != null };
 	}
 	
 	@Callback(direct = true)
 	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
 	public Object[] isSending(Context context, Arguments args)
 	{
-		return new Object[]{ isSending };
+		return new Object[] { isSending };
 	}
 
 	@Override

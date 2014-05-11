@@ -60,6 +60,10 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
                     {
                         controller.connectionTerminate();
                     }
+                    else
+                    {
+                        GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE_B);
+                    }
                 }
             }
 

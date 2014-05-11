@@ -163,6 +163,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 	{
 		diallingDevices.add(chunkCoordinates);
 	}
+    
+    public void addTransferEnergy(ChunkCoordinates chunkCoordinates)
+    {
+        transferEnergy.add(chunkCoordinates);
+    }
+    
+    public void addTransferFluid(ChunkCoordinates chunkCoordinates)
+    {
+        transferFluids.add(chunkCoordinates);
+    }
+    
+    public void addTransferItem(ChunkCoordinates chunkCoordinates)
+    {
+        transferItems.add(chunkCoordinates);
+    }
 
     public void addNetworkInterface(ChunkCoordinates chunkCoordinates)
 	{
@@ -718,6 +733,18 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         }
         
         onEntityTouchPortal(entity);
+        TileProgrammableInterface pi = getProgrammableInterface();
+        
+        if (pi != null && entity != null)
+        {
+            pi.entityEnter(entity);
+            
+            if (!pi.canEntityTeleport(entity))
+            {
+                return;
+            }
+        }
+        
         TileEntity tile = cachedDestinationLoc.getTileEntity();
 
         if (tile != null && tile instanceof TileController)
@@ -729,6 +756,13 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
+                
+                TileProgrammableInterface pi2 = control.getProgrammableInterface();
+                
+                if (pi2 != null && entity != null)
+                {
+                    pi2.entityExit(entity);
+                }
             }
             catch (PortalException e)
             {
@@ -847,6 +881,13 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
             ri.onPortalCreated();
         }
+        
+        TileProgrammableInterface pi = getProgrammableInterface();
+        
+        if (pi != null)
+        {
+            pi.portalCreated();
+        }
     }
 
     public void portalRemove()
@@ -867,6 +908,13 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
             ri.onPortalRemoved();
+        }
+        
+        TileProgrammableInterface pi = getProgrammableInterface();
+        
+        if (pi != null)
+        {
+            pi.portalCreated();
         }
         
         processing = false;

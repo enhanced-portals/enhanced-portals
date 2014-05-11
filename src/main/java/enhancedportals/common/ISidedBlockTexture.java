@@ -1,4 +1,4 @@
-package cofh.api.tileentity;
+package enhancedportals.common;
 
 import net.minecraft.util.IIcon;
 
@@ -7,10 +7,8 @@ import net.minecraft.util.IIcon;
  * Entity.
  * 
  * @author Zeldo Kavira
- * 
  */
-public interface ISidedBlockTexture {
-
+public interface ISidedBlockTexture
+{
 	public IIcon getBlockTexture(int side, int pass);
-
 }

@@ -1,7 +1,6 @@
 package enhancedportals.network;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -16,6 +15,7 @@ import enhancedportals.client.gui.GuiNetworkInterface;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.client.gui.GuiPortalControllerGlyphs;
+import enhancedportals.client.gui.GuiProgrammableInterface;
 import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.client.gui.GuiTextureDialFrame;
 import enhancedportals.client.gui.GuiTextureDialParticle;
@@ -36,6 +36,7 @@ import enhancedportals.inventory.ContainerNetworkInterface;
 import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
 import enhancedportals.inventory.ContainerPortalController;
 import enhancedportals.inventory.ContainerPortalControllerGlyphs;
+import enhancedportals.inventory.ContainerProgrammableInterface;
 import enhancedportals.inventory.ContainerRedstoneInterface;
 import enhancedportals.inventory.ContainerTextureDialFrame;
 import enhancedportals.inventory.ContainerTextureDialParticle;
@@ -46,12 +47,12 @@ import enhancedportals.inventory.ContainerTexturePortal;
 import enhancedportals.inventory.ContainerTransferEnergy;
 import enhancedportals.inventory.ContainerTransferFluid;
 import enhancedportals.inventory.ContainerTransferItem;
-import enhancedportals.network.packet.PacketGui;
 import enhancedportals.tileentity.TileEP;
 import enhancedportals.tileentity.TileStabilizerMain;
 import enhancedportals.tileentity.portal.TileController;
 import enhancedportals.tileentity.portal.TileDiallingDevice;
 import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.portal.TileProgrammableInterface;
 import enhancedportals.tileentity.portal.TileRedstoneInterface;
 import enhancedportals.tileentity.portal.TileTransferEnergy;
 import enhancedportals.tileentity.portal.TileTransferFluid;
@@ -182,10 +183,10 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiTextureDialParticle((TileDiallingDevice) tile, player, true);
         }
-        // else if (ID == BIOMETRIC_IDENTIFIER) // TODO
-        // {
-        // return new GuiBiometricIdentifier((TileBiometricIdentifier) tile, player);
-        // }
+        else if (ID == PROGRAMMABLE_INTERFACE)
+        {
+            return new GuiProgrammableInterface((TileProgrammableInterface) tile, player);
+        }
         //else if (ID == GUIDE) // TODO
         //{
         //     return new GuiGuide();
@@ -287,10 +288,10 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerTextureDialParticle((TileDiallingDevice) tile, player.inventory);
         }
-        // else if (ID == BIOMETRIC_IDENTIFIER) // TODO
-        // {
-        // return new ContainerBiometricIdentifier((TileBiometricIdentifier) tile, player);
-        // }
+        else if (ID == PROGRAMMABLE_INTERFACE)
+        {
+            return new ContainerProgrammableInterface((TileProgrammableInterface) tile, player.inventory);
+        }
         //else if (ID == GUIDE) // TODO
         //{
         //    return null;

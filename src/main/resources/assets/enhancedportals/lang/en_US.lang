@@ -104,6 +104,12 @@ ep3.gui.identifierCannotBeBlank=Identifier cannot be blank
 ep3.gui.name=Name
 ep3.gui.identifierName=Identifier Name
 ep3.gui.manualEntry=Manual Entry
+ep3.gui.delete=Delete
+ep3.gui.edit=Edit
+
+# GUI Dial Tab
+ep3.tab.dialling=Dialling Device
+ep3.tab.dialling.info=// TODO<NL>Can hold shift to swap the edit button to remove.
 
 # GUI Texture
 ep3.gui.customIcon=Custom Icon
@@ -139,6 +145,9 @@ ep3.gui.networkIdentifier=Network Identifier
 ep3.gui.networkInformation=Network Information
 ep3.gui.networkedPortals=Networked Portals
 ep3.gui.notSet=Not Set
+
+# GUI Programmable Interface
+ep3.gui.programmableInterface=Programmable Interface
 
 # GUI Redstone
 ep3.gui.redstoneInterface=Redstone Interface
@@ -215,9 +224,9 @@ ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with
 ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
 ep3.error.failedToTransfer=The receiving portal is too small
 ep3.error.multiplePortalControllers=You cannot have multiple Portal Controllers
-ep3.error.multipleProgramInterface=You cannot have multiple Programmable Interfaces
-ep3.error.multipleModuleManipulators=You cannot have multiple Module Manipulators
-ep3.error.dialDeviceAndNetworkInterface=You cannot have a Dialling Device and a Network Interface
+ep3.error.multipleProgram=You cannot have multiple Programmable Interfaces
+ep3.error.multipleMod=You cannot have multiple Module Manipulators
+ep3.error.dialAndNetwork=You cannot have a Dialling Device and a Network Interface in the same portal structure
 ep3.error.portalCouldNotBeCreatedHere=A portal could not be created at this location
 
 # Success
