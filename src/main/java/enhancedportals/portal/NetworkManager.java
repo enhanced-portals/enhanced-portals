@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.TileController;
 import enhancedportals.utility.WorldCoordinates;
 
 public class NetworkManager

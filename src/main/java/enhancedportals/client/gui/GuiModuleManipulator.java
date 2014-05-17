@@ -3,7 +3,7 @@ package enhancedportals.client.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.inventory.ContainerModuleManipulator;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.TileModuleManipulator;
 
 public class GuiModuleManipulator extends BaseGui
 {

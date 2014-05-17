@@ -1,4 +1,4 @@
-package enhancedportals.block.decoration;
+package enhancedportals.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

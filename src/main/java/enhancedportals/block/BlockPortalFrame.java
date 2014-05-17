@@ -1,9 +1,8 @@
-package enhancedportals.block.decoration;
+package enhancedportals.block;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import enhancedportals.block.BlockFrame;
 import enhancedportals.utility.ConnectedTextures;
 
 public class BlockPortalFrame extends BlockDecoration

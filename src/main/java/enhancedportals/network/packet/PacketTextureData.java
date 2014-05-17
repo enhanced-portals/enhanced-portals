@@ -14,7 +14,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
+import enhancedportals.tileentity.TileDiallingDevice;
 
 public class PacketTextureData extends PacketEP
 {

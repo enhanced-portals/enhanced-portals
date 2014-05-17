@@ -6,7 +6,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTransferEnergy;
-import enhancedportals.tileentity.portal.TileTransferEnergy;
+import enhancedportals.tileentity.TileTransferEnergy;
 
 public class ContainerTransferEnergy extends BaseContainer
 {

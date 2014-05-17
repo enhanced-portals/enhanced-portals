@@ -11,7 +11,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTransferItem;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.portal.TileTransferItem;
+import enhancedportals.tileentity.TileTransferItem;
 
 public class ContainerTransferItem extends BaseContainer
 {

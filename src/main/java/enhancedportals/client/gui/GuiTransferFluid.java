@@ -8,7 +8,7 @@ import enhancedportals.client.gui.elements.ElementFluid;
 import enhancedportals.client.gui.elements.ElementRedstoneFlux;
 import enhancedportals.inventory.ContainerTransferFluid;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.portal.TileTransferFluid;
+import enhancedportals.tileentity.TileTransferFluid;
 
 public class GuiTransferFluid extends BaseGui
 {

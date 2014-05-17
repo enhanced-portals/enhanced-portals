@@ -3,7 +3,7 @@ package enhancedportals.common;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.PortalParticleFX;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.TileModuleManipulator;
 
 public interface IPortalModule
 {

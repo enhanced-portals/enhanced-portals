@@ -1,7 +1,7 @@
 package enhancedportals.inventory;
 
 import enhancedportals.client.gui.GuiProgrammableInterface;
-import enhancedportals.tileentity.portal.TileProgrammableInterface;
+import enhancedportals.tileentity.TileProgrammableInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;

@@ -3,7 +3,7 @@ package enhancedportals.script;
 import org.luaj.vm3.LuaNumber;
 import org.luaj.vm3.LuaValue;
 
-import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.TileController;
 
 public class Portal
 {

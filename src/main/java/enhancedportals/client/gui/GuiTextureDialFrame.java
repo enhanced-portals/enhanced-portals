@@ -10,7 +10,7 @@ import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
+import enhancedportals.tileentity.TileDiallingDevice;
 
 public class GuiTextureDialFrame extends GuiTextureFrame
 {

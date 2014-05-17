@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTexturePortal;
-import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.TileController;
 
 public class ContainerTexturePortal extends BaseContainer
 {

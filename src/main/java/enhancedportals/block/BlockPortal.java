@@ -24,9 +24,9 @@ import enhancedportals.item.ItemPortalModule;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.portal.EntityManager;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
-import enhancedportals.tileentity.portal.TilePortal;
+import enhancedportals.tileentity.TileController;
+import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tileentity.TilePortal;
 
 public class BlockPortal extends BlockContainer
 {

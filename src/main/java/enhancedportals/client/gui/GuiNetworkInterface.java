@@ -8,7 +8,7 @@ import enhancedportals.client.gui.elements.ElementGlyphDisplay;
 import enhancedportals.inventory.ContainerNetworkInterface;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
-import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.TileController;
 
 public class GuiNetworkInterface extends BaseGui
 {

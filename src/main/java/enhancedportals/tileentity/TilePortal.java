@@ -1,4 +1,4 @@
-package enhancedportals.tileentity.portal;
+package enhancedportals.tileentity;
 
 import enhancedportals.block.BlockPortal;
 import enhancedportals.item.ItemPaintbrush;

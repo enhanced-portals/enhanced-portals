@@ -16,7 +16,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.client.PortalParticleFX;
 import enhancedportals.common.IPortalModule;
 import enhancedportals.network.ClientProxy;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.TileModuleManipulator;
 
 public class ItemPortalModule extends Item implements IPortalModule
 {

@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
+import enhancedportals.tileentity.TileDiallingDevice;
 
 public class ContainerDiallingDeviceManual extends BaseContainer
 {

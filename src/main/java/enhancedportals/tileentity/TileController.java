@@ -1,4 +1,4 @@
-package enhancedportals.tileentity.portal;
+package enhancedportals.tileentity;
 
 import io.netty.buffer.ByteBuf;
 
@@ -42,8 +42,6 @@ import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalException;
 import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.portal.PortalUtils;
-import enhancedportals.tileentity.TileStabilizer;
-import enhancedportals.tileentity.TileStabilizerMain;
 import enhancedportals.utility.ComputerUtils;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;

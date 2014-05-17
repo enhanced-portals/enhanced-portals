@@ -11,7 +11,7 @@ import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.portal.TileController;
+import enhancedportals.tileentity.TileController;
 
 public class ContainerPortalController extends BaseContainer
 {

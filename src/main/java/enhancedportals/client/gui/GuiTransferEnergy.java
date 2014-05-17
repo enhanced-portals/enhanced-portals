@@ -7,7 +7,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementRedstoneFlux;
 import enhancedportals.inventory.ContainerTransferEnergy;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.portal.TileTransferEnergy;
+import enhancedportals.tileentity.TileTransferEnergy;
 
 public class GuiTransferEnergy extends BaseGui
 {

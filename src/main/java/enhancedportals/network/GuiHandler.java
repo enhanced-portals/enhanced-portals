@@ -49,16 +49,16 @@ import enhancedportals.inventory.ContainerTexturePortal;
 import enhancedportals.inventory.ContainerTransferEnergy;
 import enhancedportals.inventory.ContainerTransferFluid;
 import enhancedportals.inventory.ContainerTransferItem;
+import enhancedportals.tileentity.TileController;
+import enhancedportals.tileentity.TileDiallingDevice;
 import enhancedportals.tileentity.TileEP;
+import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tileentity.TileProgrammableInterface;
+import enhancedportals.tileentity.TileRedstoneInterface;
 import enhancedportals.tileentity.TileStabilizerMain;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
-import enhancedportals.tileentity.portal.TileProgrammableInterface;
-import enhancedportals.tileentity.portal.TileRedstoneInterface;
-import enhancedportals.tileentity.portal.TileTransferEnergy;
-import enhancedportals.tileentity.portal.TileTransferFluid;
-import enhancedportals.tileentity.portal.TileTransferItem;
+import enhancedportals.tileentity.TileTransferEnergy;
+import enhancedportals.tileentity.TileTransferFluid;
+import enhancedportals.tileentity.TileTransferItem;
 
 public class GuiHandler implements IGuiHandler
 {

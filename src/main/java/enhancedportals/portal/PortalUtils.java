@@ -10,12 +10,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
-import enhancedportals.tileentity.portal.TileNetworkInterface;
-import enhancedportals.tileentity.portal.TilePortalPart;
-import enhancedportals.tileentity.portal.TileProgrammableInterface;
+import enhancedportals.tileentity.TileController;
+import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tileentity.TileNetworkInterface;
+import enhancedportals.tileentity.TilePortalPart;
+import enhancedportals.tileentity.TileProgrammableInterface;
 import enhancedportals.utility.WorldUtils;
 
 public class PortalUtils

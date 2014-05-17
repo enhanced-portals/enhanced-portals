@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.inventory.ContainerTransferItem;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.portal.TileTransferItem;
+import enhancedportals.tileentity.TileTransferItem;
 
 public class GuiTransferItem extends BaseGui
 {

@@ -1,9 +1,8 @@
-package enhancedportals.block.decoration;
+package enhancedportals.block;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import enhancedportals.block.BlockStabilizer;
 import enhancedportals.utility.ConnectedTextures;
 
 public class BlockDimensionalBridgeStabilizer extends BlockDecoration

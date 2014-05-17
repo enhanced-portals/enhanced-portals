@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTransferFluid;
-import enhancedportals.tileentity.portal.TileTransferFluid;
+import enhancedportals.tileentity.TileTransferFluid;
 
 public class ContainerTransferFluid extends BaseContainer
 {

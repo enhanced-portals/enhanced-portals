@@ -1,4 +1,4 @@
-package enhancedportals.tileentity.portal;
+package enhancedportals.tileentity;
 
 import io.netty.buffer.ByteBuf;
 

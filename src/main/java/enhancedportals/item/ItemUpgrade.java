@@ -13,17 +13,17 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockFrame;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
-import enhancedportals.tileentity.portal.TileFrame;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
-import enhancedportals.tileentity.portal.TileNetworkInterface;
-import enhancedportals.tileentity.portal.TilePortalPart;
-import enhancedportals.tileentity.portal.TileProgrammableInterface;
-import enhancedportals.tileentity.portal.TileRedstoneInterface;
-import enhancedportals.tileentity.portal.TileTransferEnergy;
-import enhancedportals.tileentity.portal.TileTransferFluid;
-import enhancedportals.tileentity.portal.TileTransferItem;
+import enhancedportals.tileentity.TileController;
+import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileFrame;
+import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tileentity.TileNetworkInterface;
+import enhancedportals.tileentity.TilePortalPart;
+import enhancedportals.tileentity.TileProgrammableInterface;
+import enhancedportals.tileentity.TileRedstoneInterface;
+import enhancedportals.tileentity.TileTransferEnergy;
+import enhancedportals.tileentity.TileTransferFluid;
+import enhancedportals.tileentity.TileTransferItem;
 import enhancedportals.utility.WorldUtils;
 
 public class ItemUpgrade extends Item

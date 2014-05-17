@@ -4,11 +4,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.gui.elements.ElementLargeTextBox;
 import enhancedportals.inventory.ContainerProgrammableInterfaceErrorLog;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
-import enhancedportals.tileentity.portal.TileProgrammableInterface;
+import enhancedportals.tileentity.TileProgrammableInterface;
 
 public class GuiProgrammableInterfaceErrorLog extends BaseGui
 {
@@ -29,7 +28,6 @@ public class GuiProgrammableInterfaceErrorLog extends BaseGui
     {
         super.initGui();
         buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + GuiProgrammableInterface.CONTAINER_SIZE - 27, xSize - 14, 20, "Return"));
-        addElement(new ElementLargeTextBox(this, 7, 17, xSize - 14, 155));
     }
     
     @Override

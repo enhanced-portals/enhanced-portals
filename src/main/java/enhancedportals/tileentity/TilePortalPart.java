@@ -1,6 +1,5 @@
-package enhancedportals.tileentity.portal;
+package enhancedportals.tileentity;
 
-import enhancedportals.tileentity.TileEP;
 import enhancedportals.utility.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

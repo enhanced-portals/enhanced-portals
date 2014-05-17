@@ -23,7 +23,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
+import enhancedportals.tileentity.TileDiallingDevice;
 
 public class GuiDiallingDeviceSave extends BaseGui
 {

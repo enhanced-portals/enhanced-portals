@@ -39,7 +39,6 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalException;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.portal.TileController;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
 

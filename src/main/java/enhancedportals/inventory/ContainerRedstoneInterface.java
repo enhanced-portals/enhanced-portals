@@ -10,7 +10,7 @@ import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.portal.TileRedstoneInterface;
+import enhancedportals.tileentity.TileRedstoneInterface;
 
 public class ContainerRedstoneInterface extends BaseContainer
 {

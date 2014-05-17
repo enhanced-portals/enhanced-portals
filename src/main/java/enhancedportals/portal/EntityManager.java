@@ -23,8 +23,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.BlockFluidBase;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.network.CommonProxy;
-import enhancedportals.tileentity.portal.TileController;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.TileController;
+import enhancedportals.tileentity.TileModuleManipulator;
 
 public class EntityManager
 {

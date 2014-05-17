@@ -1,4 +1,4 @@
-package enhancedportals.tileentity.portal;
+package enhancedportals.tileentity;
 
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;

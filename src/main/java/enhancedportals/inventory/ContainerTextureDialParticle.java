@@ -1,7 +1,7 @@
 package enhancedportals.inventory;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import enhancedportals.tileentity.portal.TileDiallingDevice;
+import enhancedportals.tileentity.TileDiallingDevice;
 
 public class ContainerTextureDialParticle extends ContainerTextureParticle
 {

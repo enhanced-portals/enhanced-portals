@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiModuleManipulator;
 import enhancedportals.inventory.slot.SlotPortalModule;
-import enhancedportals.tileentity.portal.TileModuleManipulator;
+import enhancedportals.tileentity.TileModuleManipulator;
 
 public class ContainerModuleManipulator extends BaseContainer
 {

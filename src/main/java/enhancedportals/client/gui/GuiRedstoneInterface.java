@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.inventory.ContainerRedstoneInterface;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.portal.TileRedstoneInterface;
+import enhancedportals.tileentity.TileRedstoneInterface;
 
 public class GuiRedstoneInterface extends BaseGui
 {
