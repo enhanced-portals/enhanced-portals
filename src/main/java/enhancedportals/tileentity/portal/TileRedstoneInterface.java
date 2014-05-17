@@ -28,7 +28,6 @@ public class TileRedstoneInterface extends TileFrame
 	byte timeUntilOff = 0;
 	static int TPS = 20;
 	public static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
-	long lastInteractTime = 0l;
 
 	@Override
 	public boolean canUpdate()
@@ -205,9 +204,8 @@ public class TileRedstoneInterface extends TileFrame
 
 	public void onNeighborBlockChange(Block b)
 	{
-		if (!isOutput && System.currentTimeMillis() - lastInteractTime > 250 && !worldObj.isRemote)
-        {
-            lastInteractTime = System.currentTimeMillis();            
+		if (!isOutput && !worldObj.isRemote)
+        {        
             TileController controller = getPortalController();
 
             if (controller == null)

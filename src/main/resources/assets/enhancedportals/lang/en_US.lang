@@ -148,6 +148,8 @@ ep3.gui.notSet=Not Set
 
 # GUI Programmable Interface
 ep3.gui.programmableInterface=Programmable Interface
+ep3.gui.errorLog=Error Log
+ep3.gui.compile=Compile
 
 # GUI Redstone
 ep3.gui.redstoneInterface=Redstone Interface

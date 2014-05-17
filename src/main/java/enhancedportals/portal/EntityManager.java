@@ -187,11 +187,11 @@ public class EntityManager
 
         if (CommonProxy.fasterPortalCooldown || entity instanceof EntityPlayer || entity instanceof EntityMinecart || entity instanceof EntityBoat || entity instanceof EntityHorse)
         {
-            entity.timeUntilPortal = PLAYER_COOLDOWN_RATE;
+            entity.timeUntilPortal = entity.timeUntilPortal == -1 ? 0 : PLAYER_COOLDOWN_RATE;
         }
         else
         {
-            entity.timeUntilPortal = 300; // Reduced to 300 ticks from 900.
+            entity.timeUntilPortal = entity.timeUntilPortal == -1 ? 0 : 300; // Reduced to 300 ticks from 900.
         }
     }
 

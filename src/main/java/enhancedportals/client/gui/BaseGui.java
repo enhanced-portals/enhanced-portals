@@ -56,6 +56,20 @@ public abstract class BaseGui extends GuiContainer
         return ySize;
     }
     
+    @Override
+    protected void keyTyped(char par1, int par2)
+    {
+        for (BaseElement e : elements)
+        {
+            if (e.keyPressed(par2, par1))
+            {
+                return;
+            }
+        }
+        
+        super.keyTyped(par1, par2);
+    }
+    
     public BaseGui(BaseContainer container, int cSize)
     {
         super(container);
@@ -231,8 +245,6 @@ public abstract class BaseGui extends GuiContainer
 
         for (BaseElement element : elements)
         {
-            element.update();
-
             if (element.isVisible())
             {
                 element.draw();
@@ -245,8 +257,6 @@ public abstract class BaseGui extends GuiContainer
 
         for (BaseTab tab : tabs)
         {
-            tab.update();
-
             if (tab.isVisible())
             {
                 if (tab.side == 0)
@@ -262,6 +272,22 @@ public abstract class BaseGui extends GuiContainer
             }
             
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+    }
+    
+    @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+        
+        for (BaseElement element : elements)
+        {
+            element.update();
+        }
+
+        for (BaseTab tab : tabs)
+        {
+            tab.update();
         }
     }
 

@@ -41,6 +41,11 @@ public abstract class BaseElement
     
     public abstract void addTooltip(List<String> list);
 
+    public boolean keyPressed(int keyCode, char key)
+    {
+        return false;
+    }
+    
     public void draw(int x, int y)
     {
         posX = x;

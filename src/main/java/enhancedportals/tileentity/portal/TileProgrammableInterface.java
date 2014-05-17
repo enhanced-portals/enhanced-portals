@@ -1,144 +1,196 @@
 package enhancedportals.tileentity.portal;
 
-import javax.script.Compilable;
+import java.util.HashMap;
+
+import javax.script.Bindings;
 import javax.script.CompiledScript;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+
+import org.luaj.vm3.LuaFunction;
+import org.luaj.vm3.LuaValue;
+import org.luaj.vm3.script.LuaScriptEngine;
+
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.GuiHandler;
-import enhancedportals.script.ScriptCommon;
+import enhancedportals.script.Portal;
+import enhancedportals.script.Common;
+import enhancedportals.script.World;
+import enhancedportals.utility.GeneralUtils;
 
 public class TileProgrammableInterface extends TileFrame
 {
-    ScriptEngineManager scriptManager = new ScriptEngineManager();
-    ScriptEngine scriptEngine = scriptManager.getEngineByName("JavaScript");
-    CompiledScript script;
+    //public LuaScriptEngine scriptEngine = new LuaScriptEngine();
+    //public Bindings scriptBindings = scriptEngine.createBindings();
+    public CompiledScript script;
+    public String scriptData;
+
+    @Override
+    public void validate()
+    {
+        super.validate();
+    }
 
     @Override
     public void addDataToPacket(NBTTagCompound tag)
     {
-
+        //tag.setString("script", scriptData == null ? " " : scriptData);
     }
 
     @Override
     public void onDataPacket(NBTTagCompound tag)
     {
+        //scriptData = tag.getString("script");
+    }
 
+    @Override
+    public void writeToNBT(NBTTagCompound compound)
+    {
+        super.writeToNBT(compound);
+        //compound.setString("script", scriptData == null ? " " : scriptData);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound)
+    {
+        super.readFromNBT(compound);
+        /*scriptData = compound.getString("script");
+
+        if (scriptData != null && scriptData.length() > 0)
+        {
+            try
+            {
+                updateScript(scriptData);
+            }
+            catch (ScriptException e)
+            {
+                EnhancedPortals.logger.warn("Unable to load saved script for Programmable Interface at " + xCoord + "," + yCoord + "," + zCoord);
+                EnhancedPortals.logger.catching(e);
+            }
+        }*/
     }
 
     public void updateScript(String s) throws ScriptException
     {
-        script = ((Compilable) scriptEngine).compile(s);
-        script.eval();
+        //script = scriptEngine.compile(ScriptCommon.getFullProgram(s));
+        //script.eval(scriptBindings);
+        //scriptData = s;
     }
 
-    public boolean canEntityTeleport(Entity entity)
+    /**
+     * 0 = No, 1 = Yes, -1 = Not yet, try again later
+     * @param entity
+     * @return
+     */
+    public byte canEntityTeleport(Entity entity)
     {
-        try
+        /*handleBindings(entity);
+        LuaFunction luaFunc = (LuaFunction) scriptBindings.get("canTeleport");
+
+        if (luaFunc == null)
         {
-            return Boolean.parseBoolean(((Invocable) scriptEngine).invokeFunction("canEntityTeleport", entity.getEntityId()).toString());
-        }
-        catch (NoSuchMethodException e)
-        {
-            return true;
-        }
-        catch (ScriptException e)
-        {
-            // TODO LOG
-            e.printStackTrace();
+            return 1;
         }
 
-        return false;
+        LuaValue result = luaFunc.call();
+        return (byte) (result.checkboolean() ? 1 : 0);*/
+        return 1;
     }
 
     public void entityEnter(Entity entity)
     {
-        try
+        /*handleBindings(entity);
+        LuaFunction luaFunc = (LuaFunction) scriptBindings.get("onEnter");
+
+        if (luaFunc == null)
         {
-            Boolean.parseBoolean(((Invocable) scriptEngine).invokeFunction("entityEnter", entity.getEntityId()).toString());
+            return;
         }
-        catch (NoSuchMethodException e)
-        {
-            // Do nothing
-        }
-        catch (ScriptException e)
-        {
-            // TODO LOG
-        }
+
+        luaFunc.call();*/
     }
 
     public void entityExit(Entity entity)
     {
-        try
+        /*handleBindings(entity);
+        LuaFunction luaFunc = (LuaFunction) scriptBindings.get("onExit");
+
+        if (luaFunc == null)
         {
-            Boolean.parseBoolean(((Invocable) scriptEngine).invokeFunction("entityExit", entity.getEntityId()).toString());
+            return;
         }
-        catch (NoSuchMethodException e)
-        {
-            // Do nothing
-        }
-        catch (ScriptException e)
-        {
-            // TODO LOG
-        }
+
+        luaFunc.call();*/
     }
 
     public void portalCreated()
     {
-        try
+        /*handleBindings(null);
+        LuaFunction luaFunc = (LuaFunction) scriptBindings.get("onPortalCreated");
+
+        if (luaFunc == null)
         {
-            Boolean.parseBoolean(((Invocable) scriptEngine).invokeFunction("portalCreated").toString());
+            return;
         }
-        catch (NoSuchMethodException e)
-        {
-            // Do nothing
-        }
-        catch (ScriptException e)
-        {
-            // TODO LOG
-        }
+
+        luaFunc.call();*/
     }
 
     public void portalRemoved()
     {
-        try
+        /*handleBindings(null);
+        LuaFunction luaFunc = (LuaFunction) scriptBindings.get("onPortalRemoved");
+
+        if (luaFunc == null)
         {
-            Boolean.parseBoolean(((Invocable) scriptEngine).invokeFunction("portalRemoved").toString());
+            return;
         }
-        catch (NoSuchMethodException e)
+
+        luaFunc.call();*/
+    }
+
+    void handleBindings(Entity e)
+    {
+        /*scriptBindings.remove("Entity");
+
+        if (e != null)
         {
-            // Do nothing
+            scriptBindings.put("Entity", new enhancedportals.script.Entity(e));
         }
-        catch (ScriptException e)
-        {
-            // TODO LOG
-        }
+
+        scriptBindings.put("World", new World(worldObj));
+        scriptBindings.put("Portal", new Portal(getPortalController()));*/
     }
 
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
-        TileController controller = getPortalController();
-
-        if (worldObj.isRemote)
+        if (GeneralUtils.isWrench(player.inventory.getCurrentItem()) && !player.isSneaking())
         {
-            return controller != null;
-        }
+            TileController controller = getPortalController();
 
-        if (controller != null && controller.isFinalized())
-        {
-            player.openGui(EnhancedPortals.instance, GuiHandler.PROGRAMMABLE_INTERFACE, worldObj, xCoord, yCoord, zCoord);
-            return true;
+            if (worldObj.isRemote)
+            {
+                return controller != null;
+            }
+
+            if (controller != null && controller.isFinalized())
+            {
+                player.openGui(EnhancedPortals.instance, GuiHandler.PROGRAMMABLE_INTERFACE, worldObj, xCoord, yCoord, zCoord);
+                return true;
+            }
         }
 
         return false;
+    }
+
+    public void scriptError(Exception e, String func)
+    {
+        EnhancedPortals.logger.warn("Error parsing function: " + func);
+        EnhancedPortals.logger.catching(e);
     }
 }

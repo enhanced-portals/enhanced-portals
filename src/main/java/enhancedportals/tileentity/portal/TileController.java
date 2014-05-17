@@ -738,9 +738,15 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         if (pi != null && entity != null)
         {
             pi.entityEnter(entity);
+            byte val = pi.canEntityTeleport(entity);
             
-            if (!pi.canEntityTeleport(entity))
+            if (val == 0) // No
             {
+                return;
+            }
+            else if (val == -1) // Try again, we're not done processing yet
+            {
+                entity.timeUntilPortal = -1;
                 return;
             }
         }

@@ -5,92 +5,89 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
+
+import org.luaj.vm3.LuaBoolean;
+import org.luaj.vm3.LuaInteger;
+import org.luaj.vm3.LuaString;
+import org.luaj.vm3.LuaValue;
 
 public class Entity
 {
-    private static net.minecraft.entity.Entity getEntity(int worldID, int id) throws ScriptException
+    net.minecraft.entity.Entity entity;
+
+    public Entity(net.minecraft.entity.Entity e)
     {
-        net.minecraft.entity.Entity e = ScriptCommon.getWorld(worldID).getEntityByID(id);
-        
-        if (e == null)
-        {
-            throw new ScriptException("Could not find an entity with that ID");
-        }
-        
-        return e;
+        entity = e;
     }
     
-    private static EntityLivingBase getEntityLivingBase(int worldID, int id) throws ScriptException
+    public LuaString getName()
     {
-        net.minecraft.entity.Entity entity = getEntity(worldID, id);
-        
+        return LuaValue.valueOf(entity.getCommandSenderName());
+    }
+
+    public LuaString getType()
+    {
+        return LuaValue.valueOf(entity.getClass().getSimpleName());
+    }
+
+    public LuaBoolean isRiding()
+    {
+        return LuaValue.valueOf(entity.isRiding());
+    }
+
+    public LuaBoolean isBeingRidden()
+    {
+        return LuaValue.valueOf(entity.riddenByEntity != null);
+    }
+
+    public LuaBoolean isPlayer()
+    {
+        return LuaValue.valueOf(entity instanceof EntityPlayer);
+    }
+
+    public LuaBoolean isMonster()
+    {
+        return LuaValue.valueOf(entity instanceof EntityMob);
+    }
+
+    public LuaBoolean isAnimal()
+    {
+        return LuaValue.valueOf(entity instanceof EntityLiving);
+    }
+
+    public LuaInteger getHealth()
+    {
         if (entity instanceof EntityLivingBase)
         {
-            return (EntityLivingBase) entity;
+            return LuaValue.valueOf((int) ((EntityLivingBase) entity).getHealth());
+        }
+
+        return null;
+    }
+
+    public LuaInteger getMaxHealth()
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            return LuaValue.valueOf((int) ((EntityLivingBase) entity).getMaxHealth());
         }
         
-        throw new ScriptException("Invalid entity");
+        return null;
     }
-    
-    public static String getEntityName(int worldID, int id) throws ScriptException
+
+    public void attack(int amount)
     {
-        return getEntity(worldID, id).getCommandSenderName();
-    }
-    
-    public static String getEntityType(int worldID, int id) throws ScriptException
-    {
-        return getEntity(worldID, id).getClass().getSimpleName();
-    }
-    
-    public static boolean isRiding(int worldID, int id) throws ScriptException
-    {
-        return getEntity(worldID, id).isRiding();
-    }
-    
-    public static boolean isBeingRidden(int worldID, int id) throws ScriptException
-    {
-        return getEntity(worldID, id).riddenByEntity != null;
-    }
-    
-    public static boolean isPlayer(int worldID, int id) throws ScriptException
-    {
-        return getEntity(worldID, id) instanceof EntityPlayer;
-    }
-    
-    public static boolean isMonster(int worldID, int id) throws ScriptException
-    {
-        return getEntity(worldID, id) instanceof EntityMob;
-    }
-    
-    public static boolean isAnimal(int worldID, int id) throws ScriptException
-    {
-        return getEntity(worldID, id) instanceof EntityLiving;
-    }
-    
-    public static int getHealth(int worldID, int id) throws ScriptException
-    {
-        return (int) getEntityLivingBase(worldID, id).getHealth();
-    }
-    
-    public static int getMaxHealth(int worldID, int id) throws ScriptException
-    {
-        return (int) getEntityLivingBase(worldID, id).getMaxHealth();
-    }
-    
-    public static void attack(int worldID, int id, int amount) throws ScriptException
-    {
-        getEntityLivingBase(worldID, id).attackEntityFrom(ScriptCommon.damageSource, amount);
-    }
-    
-    public static void sendMessage(int worldID, int id, String message) throws ScriptException
-    {
-        net.minecraft.entity.Entity e = getEntity(worldID, id);
-        
-        if (e instanceof EntityPlayer)
+        if (entity instanceof EntityLivingBase)
         {
-            ((EntityPlayer) e).addChatComponentMessage(new ChatComponentText(message));
+            ((EntityLivingBase) entity).attackEntityFrom(Common.damageSource, amount);
+        }
+    }
+
+    public void sendMessage(String message)
+    {
+        if (entity instanceof EntityPlayer)
+        {
+            ((EntityPlayer) entity).addChatComponentMessage(new ChatComponentText(message));
         }
     }
 }

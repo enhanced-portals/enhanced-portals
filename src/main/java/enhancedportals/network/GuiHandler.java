@@ -16,6 +16,7 @@ import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.client.gui.GuiPortalControllerGlyphs;
 import enhancedportals.client.gui.GuiProgrammableInterface;
+import enhancedportals.client.gui.GuiProgrammableInterfaceErrorLog;
 import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.client.gui.GuiTextureDialFrame;
 import enhancedportals.client.gui.GuiTextureDialParticle;
@@ -37,6 +38,7 @@ import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
 import enhancedportals.inventory.ContainerPortalController;
 import enhancedportals.inventory.ContainerPortalControllerGlyphs;
 import enhancedportals.inventory.ContainerProgrammableInterface;
+import enhancedportals.inventory.ContainerProgrammableInterfaceErrorLog;
 import enhancedportals.inventory.ContainerRedstoneInterface;
 import enhancedportals.inventory.ContainerTextureDialFrame;
 import enhancedportals.inventory.ContainerTextureDialParticle;
@@ -79,12 +81,13 @@ public class GuiHandler implements IGuiHandler
     public static final int TEXTURE_DIALLING_SAVE_C = 16;
     public static final int REDSTONE_INTERFACE = 17;
     public static final int PROGRAMMABLE_INTERFACE = 18;
-    public static final int MODULE_MANIPULATOR = 19;
-    public static final int TRANSFER_FLUID = 20;
-    public static final int TRANSFER_ENERGY = 21;
-    public static final int TRANSFER_ITEM = 22;
-    public static final int DIMENSIONAL_BRIDGE_STABILIZER = 23;
-    public static final int GUIDE = 24;
+    public static final int PROGRAMMABLE_INTERFACE_ERRORS = 19;
+    public static final int MODULE_MANIPULATOR = 20;
+    public static final int TRANSFER_FLUID = 21;
+    public static final int TRANSFER_ENERGY = 22;
+    public static final int TRANSFER_ITEM = 23;
+    public static final int DIMENSIONAL_BRIDGE_STABILIZER = 24;
+    public static final int GUIDE = 25;
 
     public static void openGui(EntityPlayer player, TileEntity tile, int gui)
     {
@@ -186,6 +189,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == PROGRAMMABLE_INTERFACE)
         {
             return new GuiProgrammableInterface((TileProgrammableInterface) tile, player);
+        }
+        else if (ID == PROGRAMMABLE_INTERFACE_ERRORS)
+        {
+            return new GuiProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player);
         }
         //else if (ID == GUIDE) // TODO
         //{
@@ -291,6 +298,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == PROGRAMMABLE_INTERFACE)
         {
             return new ContainerProgrammableInterface((TileProgrammableInterface) tile, player.inventory);
+        }
+        else if (ID == PROGRAMMABLE_INTERFACE_ERRORS)
+        {
+            return new ContainerProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player.inventory);
         }
         //else if (ID == GUIDE) // TODO
         //{

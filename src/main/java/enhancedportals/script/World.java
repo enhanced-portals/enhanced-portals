@@ -1,24 +1,35 @@
 package enhancedportals.script;
 
+import org.luaj.vm3.LuaBoolean;
+import org.luaj.vm3.LuaNumber;
+import org.luaj.vm3.LuaValue;
+
 public class World
 {
-    public static boolean isDaytime(int worldID) throws ScriptException
+    net.minecraft.world.World world;
+    
+    public World(net.minecraft.world.World w)
     {
-        return ScriptCommon.getWorld(worldID).isDaytime();
+        world = w;
     }
     
-    public static boolean isRaining(int worldID) throws ScriptException
+    public LuaBoolean isDaytime()
     {
-        return ScriptCommon.getWorld(worldID).isRaining();
+        return LuaValue.valueOf(world.isDaytime());
     }
     
-    public static boolean isThundering(int worldID) throws ScriptException
+    public LuaBoolean isRaining()
     {
-        return ScriptCommon.getWorld(worldID).isThundering();
+        return LuaValue.valueOf(world.isRaining());
     }
     
-    public static long getTime(int worldID) throws ScriptException
+    public LuaBoolean isThundering()
     {
-        return ScriptCommon.getWorld(worldID).getWorldTime();
+        return LuaValue.valueOf(world.isThundering());
+    }
+    
+    public LuaNumber getTime()
+    {
+        return LuaValue.valueOf(world.getWorldTime());
     }
 }
