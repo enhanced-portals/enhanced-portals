@@ -20,6 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidBase;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.network.CommonProxy;
@@ -63,7 +64,7 @@ public class EntityManager
     {
         if (controller.portalType == 1)
         {
-            if (controller.getWorldObj().isBlockNormalCubeDefault(loc.posX, loc.posY, loc.posZ + 1, true))
+            if (controller.getWorldObj().isSideSolid(loc.posX, loc.posY, loc.posZ + 1, ForgeDirection.NORTH))
             {
                 return 180f;
             }
@@ -72,7 +73,7 @@ public class EntityManager
         }
         else if (controller.portalType == 2)
         {
-            if (controller.getWorldObj().isBlockNormalCubeDefault(loc.posX - 1, loc.posY, loc.posZ, true))
+            if (controller.getWorldObj().isSideSolid(loc.posX - 1, loc.posY, loc.posZ, ForgeDirection.EAST))
             {
                 return -90f;
             }
