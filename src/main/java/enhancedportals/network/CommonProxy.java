@@ -146,7 +146,7 @@ public class CommonProxy
         {
             requirePower = false;
         }
-        
+
         if (powerStorageMultiplier < 0.01)
         {
             powerStorageMultiplier = 0.01;

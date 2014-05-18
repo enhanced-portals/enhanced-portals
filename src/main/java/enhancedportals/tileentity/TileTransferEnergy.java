@@ -30,16 +30,24 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
 
-@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPowerReceptor, IPeripheral, SimpleComponent
 {
     public final EnergyStorage storage = new EnergyStorage(16000);
     public final PowerHandler mjHandler;
-    
+
+    int tickTimer = 20, time = 0;
+
+    IEnergyHandler[] handlers = new IEnergyHandler[6];
+
+    boolean cached = false;
+
+    byte outputTracker = 0;
+
     public TileTransferEnergy()
     {
         mjHandler = new PowerHandler(this, Type.MACHINE);
-        mjHandler.configure(2.0f, 32.0f, 2.0f, (float)(storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ));
+        mjHandler.configure(2.0f, 32.0f, 2.0f, storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ);
         mjHandler.configurePowerPerdition(0, 0);
     }
 
@@ -71,182 +79,14 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void attach(IComputerAccess computer)
     {
-        super.readFromNBT(nbt);
-        storage.readFromNBT(nbt);
+
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        storage.writeToNBT(nbt);
-    }
-
-    @Override
-    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
-    {
-        return storage.receiveEnergy(maxReceive, simulate);
-    }
-
-    @Override
-    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
-    {
-        return storage.extractEnergy(maxExtract, simulate);
-    }
-
-    @Override
-    public boolean canInterface(ForgeDirection from)
-    {
-        return true;
-    }
-
-    @Override
-    public int getEnergyStored(ForgeDirection from)
-    {
-        return storage.getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored(ForgeDirection from)
-    {
-        return storage.getMaxEnergyStored();
-    }
-    
-    int tickTimer = 20, time = 0;
-    
-    @Override
-    public void updateEntity()
-    {
-        super.updateEntity();
-        
-        if (!worldObj.isRemote)
-        {
-            if (isSending)
-            {
-                if (time >= tickTimer)
-                {
-                    time = 0;
-                    
-                    TileController controller = getPortalController();
-                    
-                    if (controller != null && controller.isPortalActive() && storage.getEnergyStored() > 0)
-                    {
-                        TileController exitController =  (TileController) controller.getDestinationLocation().getTileEntity();
-                        
-                        if (exitController != null)
-                        {
-                            for (ChunkCoordinates c : exitController.getTransferEnergy())
-                            {
-                                TileEntity tile = WorldUtils.getTileEntity(exitController.getWorldObj(), c);
-                                
-                                if (tile != null && tile instanceof TileTransferEnergy)
-                                {
-                                    TileTransferEnergy energy = (TileTransferEnergy) tile;
-                                    
-                                    if (!energy.isSending)
-                                    {
-                                        if (energy.receiveEnergy(null, storage.getEnergyStored(), true) > 0)
-                                        {
-                                            storage.extractEnergy(energy.receiveEnergy(null, storage.getEnergyStored(), false), false);
-                                        }
-                                    }
-                                }
-                                
-                                if (storage.getEnergyStored() == 0)
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                time++;
-            }
-            else
-            {
-                if (!cached)
-                {
-                    updateEnergyHandlers();
-                }
-                
-                for (int i = outputTracker; (i < 6) && (storage.getEnergyStored() > 0); i++)
-                {
-                    transferEnergy(i);
-                }
-                
-                outputTracker++;
-                outputTracker = (byte) (outputTracker % 6);
-            }
-        }
-    }
-    
-    IEnergyHandler[] handlers = new IEnergyHandler[6];
-    boolean cached = false;
-    byte outputTracker = 0;
-    
-    @Override
-    public void onNeighborChanged()
-    {
-        updateEnergyHandlers();
-    }
-    
-    void transferEnergy(int side)
-    {
-        if (handlers[side] == null)
-        {
-            return;
-        }
-        
-        storage.extractEnergy(handlers[side].receiveEnergy(ForgeDirection.getOrientation(side).getOpposite(), storage.getEnergyStored(), false), false);
-    }
-    
-    void updateEnergyHandlers()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            TileEntity tile = WorldUtils.getTileEntity(this, ForgeDirection.getOrientation(i));
-            
-            if (tile != null && tile instanceof IEnergyHandler)
-            {
-                IEnergyHandler energy = (IEnergyHandler) tile;
-                
-                if (energy.canInterface(ForgeDirection.getOrientation(i).getOpposite()))
-                {
-                    handlers[i] = energy;
-                }
-                else
-                {
-                    handlers[i] = null;
-                }
-            }
-            else
-            {
-                handlers[i] = null;
-            }
-        }
-        
-        cached = true;
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String getType()
-    {
-        return "energy_transfer_module";
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String[] getMethodNames()
-    {
-        return new String[] { "getEnergyStored", "isFull", "isEmpty", "isSending" };
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0)
@@ -265,22 +105,79 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
         {
             return new Object[] { isSending };
         }
-        
+
         return null;
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void attach(IComputerAccess computer)
+    public boolean canInterface(ForgeDirection from)
     {
-        
+        return true;
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
-        
+
+    }
+
+    @Override
+    public void doWork(PowerHandler workProvider)
+    {
+        int acceptedEnergy = storage.receiveEnergy((int) (mjHandler.useEnergy(1.0F, storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
+        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
+    @Override
+    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
+    {
+        return storage.extractEnergy(maxExtract, simulate);
+    }
+    @Override
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public String getComponentName()
+    {
+        return "ep_transfer_energy";
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getEnergy(Context context, Arguments args)
+    {
+        return new Object[] { storage.getEnergyStored() };
+    }
+
+    @Override
+    public int getEnergyStored(ForgeDirection from)
+    {
+        return storage.getEnergyStored();
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getMaxEnergy(Context context, Arguments args)
+    {
+        return new Object[] { storage.getMaxEnergyStored() };
+    }
+
+    @Override
+    public int getMaxEnergyStored(ForgeDirection from)
+    {
+        return storage.getMaxEnergyStored();
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String[] getMethodNames()
+    {
+        return new String[] { "getEnergyStored", "isFull", "isEmpty", "isSending" };
     }
 
     @Override
@@ -290,50 +187,153 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
-    public void doWork(PowerHandler workProvider)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String getType()
     {
-        int acceptedEnergy = storage.receiveEnergy((int)(mjHandler.useEnergy(1.0F, storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
-        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
+        return "ep_transfer_energy";
     }
 
     @Override
     public World getWorld()
     {
-        return this.worldObj;
+        return worldObj;
     }
 
-	@Override
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public String getComponentName()
-	{
-		return "ep_transfer_energy";
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getEnergy(Context context, Arguments args)
-	{
-		return new Object[] { storage.getEnergyStored() };
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getMaxEnergy(Context context, Arguments args)
-	{
-		return new Object[] { storage.getMaxEnergyStored() };
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] isSending(Context context, Arguments args)
-	{
-		return new Object[] { isSending };
-	}
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] isSending(Context context, Arguments args)
+    {
+        return new Object[] { isSending };
+    }
 
-	@Override
-	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-	public boolean equals(IPeripheral other)
-	{
-		return other == this;
-	}
+    @Override
+    public void onNeighborChanged()
+    {
+        updateEnergyHandlers();
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        storage.readFromNBT(nbt);
+    }
+
+    @Override
+    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
+    {
+        return storage.receiveEnergy(maxReceive, simulate);
+    }
+
+    void transferEnergy(int side)
+    {
+        if (handlers[side] == null)
+        {
+            return;
+        }
+
+        storage.extractEnergy(handlers[side].receiveEnergy(ForgeDirection.getOrientation(side).getOpposite(), storage.getEnergyStored(), false), false);
+    }
+
+    void updateEnergyHandlers()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            TileEntity tile = WorldUtils.getTileEntity(this, ForgeDirection.getOrientation(i));
+
+            if (tile != null && tile instanceof IEnergyHandler)
+            {
+                IEnergyHandler energy = (IEnergyHandler) tile;
+
+                if (energy.canInterface(ForgeDirection.getOrientation(i).getOpposite()))
+                {
+                    handlers[i] = energy;
+                }
+                else
+                {
+                    handlers[i] = null;
+                }
+            }
+            else
+            {
+                handlers[i] = null;
+            }
+        }
+
+        cached = true;
+    }
+
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
+
+        if (!worldObj.isRemote)
+        {
+            if (isSending)
+            {
+                if (time >= tickTimer)
+                {
+                    time = 0;
+
+                    TileController controller = getPortalController();
+
+                    if (controller != null && controller.isPortalActive() && storage.getEnergyStored() > 0)
+                    {
+                        TileController exitController = (TileController) controller.getDestinationLocation().getTileEntity();
+
+                        if (exitController != null)
+                        {
+                            for (ChunkCoordinates c : exitController.getTransferEnergy())
+                            {
+                                TileEntity tile = WorldUtils.getTileEntity(exitController.getWorldObj(), c);
+
+                                if (tile != null && tile instanceof TileTransferEnergy)
+                                {
+                                    TileTransferEnergy energy = (TileTransferEnergy) tile;
+
+                                    if (!energy.isSending)
+                                    {
+                                        if (energy.receiveEnergy(null, storage.getEnergyStored(), true) > 0)
+                                        {
+                                            storage.extractEnergy(energy.receiveEnergy(null, storage.getEnergyStored(), false), false);
+                                        }
+                                    }
+                                }
+
+                                if (storage.getEnergyStored() == 0)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                time++;
+            }
+            else
+            {
+                if (!cached)
+                {
+                    updateEnergyHandlers();
+                }
+
+                for (int i = outputTracker; i < 6 && storage.getEnergyStored() > 0; i++)
+                {
+                    transferEnergy(i);
+                }
+
+                outputTracker++;
+                outputTracker = (byte) (outputTracker % 6);
+            }
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        storage.writeToNBT(nbt);
+    }
 }

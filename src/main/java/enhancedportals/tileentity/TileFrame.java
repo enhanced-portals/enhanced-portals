@@ -16,11 +16,6 @@ public abstract class TileFrame extends TilePortalPart implements ISidedBlockTex
 {
     protected boolean wearingGoggles = GeneralUtils.isWearingGoggles();
 
-    protected boolean shouldShowOverlay()
-    {
-        return wearingGoggles || CommonProxy.forceShowFrameOverlays;
-    }
-    
     @Override
     public void breakBlock(Block b, int oldMetadata)
     {
@@ -64,14 +59,14 @@ public abstract class TileFrame extends TilePortalPart implements ISidedBlockTex
         }
         else
         {
-        	int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        	
-        	if (meta == BlockFrame.DIALLING_DEVICE)
-        	{
-        		return BlockFrame.overlayIcons[meta];
-        	}
-        	
-        	return shouldShowOverlay() ? BlockFrame.overlayIcons[meta] : BlockFrame.overlayIcons[0];
+            int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+
+            if (meta == BlockFrame.DIALLING_DEVICE)
+            {
+                return BlockFrame.overlayIcons[meta];
+            }
+
+            return shouldShowOverlay() ? BlockFrame.overlayIcons[meta] : BlockFrame.overlayIcons[0];
         }
     }
 
@@ -95,6 +90,11 @@ public abstract class TileFrame extends TilePortalPart implements ISidedBlockTex
         {
             controller.deconstruct();
         }
+    }
+
+    protected boolean shouldShowOverlay()
+    {
+        return wearingGoggles || CommonProxy.forceShowFrameOverlays;
     }
 
     @Override

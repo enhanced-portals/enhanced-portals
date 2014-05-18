@@ -194,21 +194,21 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player);
         }
-        //else if (ID == GUIDE) // TODO
-        //{
-        //     return new GuiGuide();
-        //}
+        // else if (ID == GUIDE) // TODO
+        // {
+        // return new GuiGuide();
+        // }
         else if (ID == TRANSFER_FLUID)
         {
-             return new GuiTransferFluid((TileTransferFluid) tile, player);
+            return new GuiTransferFluid((TileTransferFluid) tile, player);
         }
         else if (ID == TRANSFER_ENERGY)
         {
-             return new GuiTransferEnergy((TileTransferEnergy) tile, player);
+            return new GuiTransferEnergy((TileTransferEnergy) tile, player);
         }
         else if (ID == TRANSFER_ITEM)
         {
-             return new GuiTransferItem((TileTransferItem) tile, player);
+            return new GuiTransferItem((TileTransferItem) tile, player);
         }
 
         return null;
@@ -225,7 +225,6 @@ public class GuiHandler implements IGuiHandler
         }
 
         TileEP tile = (TileEP) t;
-
 
         if (ID == PORTAL_CONTROLLER_A)
         {
@@ -303,10 +302,10 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player.inventory);
         }
-        //else if (ID == GUIDE) // TODO
-        //{
-        //    return null;
-        //}
+        // else if (ID == GUIDE) // TODO
+        // {
+        // return null;
+        // }
         else if (ID == TRANSFER_FLUID)
         {
             return new ContainerTransferFluid((TileTransferFluid) tile, player.inventory);

@@ -18,15 +18,15 @@ import enhancedportals.utility.WorldUtils;
 public class TileModuleManipulator extends TileFrame implements IInventory
 {
     ItemStack[] inventory = new ItemStack[9];
-    
+
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
-    	if (player.isSneaking())
-		{
-			return false;
-		}
-    	
+        if (player.isSneaking())
+        {
+            return false;
+        }
+
         TileController controller = getPortalController();
 
         if (stack != null && controller != null && controller.isFinalized())
@@ -47,9 +47,36 @@ public class TileModuleManipulator extends TileFrame implements IInventory
     }
 
     @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+        NBTTagList items = new NBTTagList();
+
+        for (int i = 0; i < getSizeInventory(); i++)
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            ItemStack s = getStackInSlot(i);
+
+            if (s != null)
+            {
+                s.writeToNBT(t);
+            }
+
+            items.appendTag(t);
+        }
+
+        tag.setTag("Items", items);
+    }
+
+    @Override
     public boolean canUpdate()
     {
         return true;
+    }
+
+    @Override
+    public void closeInventory()
+    {
+
     }
 
     @Override
@@ -76,38 +103,6 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
         return stack;
     }
-    
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
-    {
-        NBTTagList items = new NBTTagList();
-        
-        for (int i = 0; i < getSizeInventory(); i++)
-        {
-            NBTTagCompound t = new NBTTagCompound();
-            ItemStack s = getStackInSlot(i);
-            
-            if (s != null)
-            {
-                s.writeToNBT(t);
-            }
-            
-            items.appendTag(t);
-        }
-        
-        tag.setTag("Items", items);
-    }
-
-    @Override
-    public void onDataPacket(NBTTagCompound tag)
-    {
-    	NBTTagList items = tag.getTagList("Items", 10);
-        
-        for (int i = 0; i < items.tagCount(); i++)
-        {
-            setInventorySlotContents(i, ItemStack.loadItemStackFromNBT(items.getCompoundTagAt(i)));
-        }
-    }
 
     public IPortalModule[] getInstalledUpgrades()
     {
@@ -127,15 +122,35 @@ public class TileModuleManipulator extends TileFrame implements IInventory
     }
 
     @Override
+    public String getInventoryName()
+    {
+        return "tile.ep3.portalFrame.upgrade.name";
+    }
+
+    @Override
     public int getInventoryStackLimit()
     {
         return 1;
     }
 
-    @Override
-    public String getInventoryName()
+    public ItemStack getModifierItem()
     {
-        return "tile.ep3.portalFrame.upgrade.name";
+        return inventory[9];
+    }
+
+    public ArrayList<ItemStack> getModules()
+    {
+        ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+
+        for (ItemStack i : inventory)
+        {
+            if (i != null && i.getItem() instanceof IPortalModule)
+            {
+                list.add(i);
+            }
+        }
+
+        return list;
     }
 
     @Override
@@ -156,24 +171,10 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         return inventory[i];
     }
 
-    public ArrayList<ItemStack> getModules()
+    @Override
+    public boolean hasCustomInventoryName()
     {
-        ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-
-        for (ItemStack i : inventory)
-        {
-            if (i != null && i.getItem() instanceof IPortalModule)
-            {
-                list.add(i);
-            }
-        }
-
-        return list;
-    }
-
-    public ItemStack getModifierItem()
-    {
-        return inventory[9];
+        return false;
     }
 
     public boolean hasModule(String ID)
@@ -218,16 +219,9 @@ public class TileModuleManipulator extends TileFrame implements IInventory
     }
 
     @Override
-    public void markDirty()
-    {
-        super.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-
-    @Override
     public boolean isItemValidForSlot(int i, ItemStack stack)
     {
-        return stack != null && (stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack)));
+        return stack != null && stack.getItem() instanceof IPortalModule && !hasModule(((IPortalModule) stack.getItem()).getID(stack));
     }
 
     public boolean isPortalInvisible()
@@ -243,12 +237,42 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         return false;
     }
 
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void markDirty()
+    {
+        super.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        NBTTagList items = tag.getTagList("Items", 10);
+
+        for (int i = 0; i < items.tagCount(); i++)
+        {
+            setInventorySlotContents(i, ItemStack.loadItemStackFromNBT(items.getCompoundTagAt(i)));
+        }
+    }
+
     public void onEntityTeleported(Entity entity)
     {
         for (ItemStack i : getModules())
         {
             ((IPortalModule) i.getItem()).onEntityTeleportEnd(entity, this, i);
         }
+    }
+
+    @Override
+    public void openInventory()
+    {
+
     }
 
     public void particleCreated(PortalParticleFX portalFX)
@@ -288,7 +312,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
         return false;
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
@@ -307,28 +331,4 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
         tagCompound.setTag("Inventory", list);
     }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-	@Override
-	public boolean hasCustomInventoryName()
-	{
-		return false;
-	}
-
-	@Override
-	public void openInventory()
-	{
-		
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		
-	}
 }

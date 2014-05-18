@@ -19,40 +19,13 @@ public class Entity
     {
         entity = e;
     }
-    
-    public LuaString getName()
-    {
-        return LuaValue.valueOf(entity.getCommandSenderName());
-    }
 
-    public LuaString getType()
+    public void attack(int amount)
     {
-        return LuaValue.valueOf(entity.getClass().getSimpleName());
-    }
-
-    public LuaBoolean isRiding()
-    {
-        return LuaValue.valueOf(entity.isRiding());
-    }
-
-    public LuaBoolean isBeingRidden()
-    {
-        return LuaValue.valueOf(entity.riddenByEntity != null);
-    }
-
-    public LuaBoolean isPlayer()
-    {
-        return LuaValue.valueOf(entity instanceof EntityPlayer);
-    }
-
-    public LuaBoolean isMonster()
-    {
-        return LuaValue.valueOf(entity instanceof EntityMob);
-    }
-
-    public LuaBoolean isAnimal()
-    {
-        return LuaValue.valueOf(entity instanceof EntityLiving);
+        if (entity instanceof EntityLivingBase)
+        {
+            ((EntityLivingBase) entity).attackEntityFrom(Common.damageSource, amount);
+        }
     }
 
     public LuaInteger getHealth()
@@ -71,16 +44,43 @@ public class Entity
         {
             return LuaValue.valueOf((int) ((EntityLivingBase) entity).getMaxHealth());
         }
-        
+
         return null;
     }
 
-    public void attack(int amount)
+    public LuaString getName()
     {
-        if (entity instanceof EntityLivingBase)
-        {
-            ((EntityLivingBase) entity).attackEntityFrom(Common.damageSource, amount);
-        }
+        return LuaValue.valueOf(entity.getCommandSenderName());
+    }
+
+    public LuaString getType()
+    {
+        return LuaValue.valueOf(entity.getClass().getSimpleName());
+    }
+
+    public LuaBoolean isAnimal()
+    {
+        return LuaValue.valueOf(entity instanceof EntityLiving);
+    }
+
+    public LuaBoolean isBeingRidden()
+    {
+        return LuaValue.valueOf(entity.riddenByEntity != null);
+    }
+
+    public LuaBoolean isMonster()
+    {
+        return LuaValue.valueOf(entity instanceof EntityMob);
+    }
+
+    public LuaBoolean isPlayer()
+    {
+        return LuaValue.valueOf(entity instanceof EntityPlayer);
+    }
+
+    public LuaBoolean isRiding()
+    {
+        return LuaValue.valueOf(entity.isRiding());
     }
 
     public void sendMessage(String message)

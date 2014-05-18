@@ -2,8 +2,6 @@ package enhancedportals.tileentity;
 
 import io.netty.buffer.ByteBuf;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -23,189 +21,95 @@ import enhancedportals.utility.WorldUtils;
 
 public class TileRedstoneInterface extends TileFrame
 {
-	public boolean isOutput = false;
-	public byte state = 0, previousRedstoneState = 0;
-	byte timeUntilOff = 0;
-	static int TPS = 20;
-	public static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
+    public boolean isOutput = false;
+    public byte state = 0, previousRedstoneState = 0;
+    byte timeUntilOff = 0;
+    static int TPS = 20;
+    public static byte MAX_INPUT_STATE = 8, MAX_OUTPUT_STATE = 8;
 
-	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
+    @Override
+    public boolean activate(EntityPlayer player, ItemStack stack)
+    {
+        if (player.isSneaking())
+        {
+            return false;
+        }
 
-	@Override
-	public boolean activate(EntityPlayer player, ItemStack stack)
-	{
-		if (player.isSneaking())
-		{
-			return false;
-		}
-		
-		TileController controller = getPortalController();
+        TileController controller = getPortalController();
 
-		if (stack != null && controller != null && controller.isFinalized())
-		{
-			if (GeneralUtils.isWrench(stack) && !player.isSneaking())
-			{
-				GuiHandler.openGui(player, this, GuiHandler.REDSTONE_INTERFACE);
-				return true;
-			}
-			else if (stack.getItem() == ItemPaintbrush.instance)
-			{
-				GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
-				return true;
-			}
-		}
+        if (stack != null && controller != null && controller.isFinalized())
+        {
+            if (GeneralUtils.isWrench(stack) && !player.isSneaking())
+            {
+                GuiHandler.openGui(player, this, GuiHandler.REDSTONE_INTERFACE);
+                return true;
+            }
+            else if (stack.getItem() == ItemPaintbrush.instance)
+            {
+                GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public void onEntityTeleport(Entity entity)
-	{
-		if (isOutput)
-		{
-			if (state == 4 || state == 5 && entity instanceof EntityPlayer || state == 6 && entity instanceof EntityAnimal || state == 7 && entity instanceof EntityMob)
-			{
-				timeUntilOff = (byte) TPS;
-			}
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
 
-			notifyNeighbors();
-		}
-	}
+    }
 
-	@Override
-	public void packetGuiFill(ByteBuf buffer)
-	{
-	    buffer.writeBoolean(isOutput);
-	    buffer.writeByte(state);
-	}
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
 
-	public int isProvidingPower(int side)
-	{
-		if (timeUntilOff != 0)
-		{
-			return 15;
-		}
+    public int isProvidingPower(int side)
+    {
+        if (timeUntilOff != 0)
+        {
+            return 15;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	private void notifyNeighbors()
-	{
-		worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, BlockFrame.instance);
+    private void notifyNeighbors()
+    {
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, BlockFrame.instance);
 
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection d = ForgeDirection.getOrientation(i);
-			worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, BlockFrame.instance);
-		}
-	}
+        for (int i = 0; i < 6; i++)
+        {
+            ForgeDirection d = ForgeDirection.getOrientation(i);
+            worldObj.notifyBlocksOfNeighborChange(xCoord + d.offsetX, yCoord + d.offsetY, zCoord + d.offsetZ, BlockFrame.instance);
+        }
+    }
 
-	public void onPortalCreated()
-	{
-		if (isOutput)
-		{
-			if (state == 0)
-			{
-				timeUntilOff = (byte) TPS;
-			}
-			else if (state == 2)
-			{
-				timeUntilOff = -1;
-			}
-			else if (state == 3)
-			{
-				timeUntilOff = 0;
-			}
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
 
-			notifyNeighbors();
-		}
-	}
+    }
 
-	public void onPortalRemoved()
-	{
-		if (isOutput)
-		{
-			if (state == 1)
-			{
-				timeUntilOff = (byte) TPS;
-			}
-			else if (state == 2)
-			{
-				timeUntilOff = 0;
-			}
-			else if (state == 3)
-			{
-				timeUntilOff = -1;
-			}
+    public void onEntityTeleport(Entity entity)
+    {
+        if (isOutput)
+        {
+            if (state == 4 || state == 5 && entity instanceof EntityPlayer || state == 6 && entity instanceof EntityAnimal || state == 7 && entity instanceof EntityMob)
+            {
+                timeUntilOff = (byte) TPS;
+            }
 
-			notifyNeighbors();
-		}
-	}
+            notifyNeighbors();
+        }
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound)
-	{
-		super.readFromNBT(tagCompound);
-		isOutput = tagCompound.getBoolean("output");
-		state = tagCompound.getByte("state");
-		previousRedstoneState = tagCompound.getByte("previousRedstoneState");
-		timeUntilOff = tagCompound.getByte("timeUntilOff");
-	}
-
-	public void setState(byte newState)
-	{
-		state = newState;
-
-		if (timeUntilOff != 0)
-		{
-			timeUntilOff = 0;
-			notifyNeighbors();
-		}
-	}
-
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		if (isOutput)
-		{
-			if (timeUntilOff > 1)
-			{
-				timeUntilOff--;
-			}
-			else if (timeUntilOff == 1)
-			{
-				timeUntilOff--;
-				notifyNeighbors(); // Make sure we update our neighbors
-			}
-		}
-	}
-
-	@Override
-	public void packetGuiUse(ByteBuf buffer)
-	{
-		isOutput = buffer.readBoolean();
-		setState(buffer.readByte());
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
-	{
-		super.writeToNBT(tagCompound);
-		tagCompound.setBoolean("output", isOutput);
-		tagCompound.setByte("state", state);
-		tagCompound.setByte("previousRedstoneState", previousRedstoneState);
-		tagCompound.setByte("timeUntilOff", timeUntilOff);
-	}
-
-	public void onNeighborBlockChange(Block b)
-	{
-		if (!isOutput && !worldObj.isRemote)
-        {        
+    public void onNeighborBlockChange(Block b)
+    {
+        if (!isOutput && !worldObj.isRemote)
+        {
             TileController controller = getPortalController();
 
             if (controller == null)
@@ -307,17 +211,111 @@ public class TileRedstoneInterface extends TileFrame
                 }
             }
         }
-	}
+    }
 
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
+    public void onPortalCreated()
     {
-        
+        if (isOutput)
+        {
+            if (state == 0)
+            {
+                timeUntilOff = (byte) TPS;
+            }
+            else if (state == 2)
+            {
+                timeUntilOff = -1;
+            }
+            else if (state == 3)
+            {
+                timeUntilOff = 0;
+            }
+
+            notifyNeighbors();
+        }
+    }
+
+    public void onPortalRemoved()
+    {
+        if (isOutput)
+        {
+            if (state == 1)
+            {
+                timeUntilOff = (byte) TPS;
+            }
+            else if (state == 2)
+            {
+                timeUntilOff = 0;
+            }
+            else if (state == 3)
+            {
+                timeUntilOff = -1;
+            }
+
+            notifyNeighbors();
+        }
     }
 
     @Override
-    public void onDataPacket(NBTTagCompound tag)
+    public void packetGuiFill(ByteBuf buffer)
     {
-        
+        buffer.writeBoolean(isOutput);
+        buffer.writeByte(state);
+    }
+
+    @Override
+    public void packetGuiUse(ByteBuf buffer)
+    {
+        isOutput = buffer.readBoolean();
+        setState(buffer.readByte());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+        super.readFromNBT(tagCompound);
+        isOutput = tagCompound.getBoolean("output");
+        state = tagCompound.getByte("state");
+        previousRedstoneState = tagCompound.getByte("previousRedstoneState");
+        timeUntilOff = tagCompound.getByte("timeUntilOff");
+    }
+
+    public void setState(byte newState)
+    {
+        state = newState;
+
+        if (timeUntilOff != 0)
+        {
+            timeUntilOff = 0;
+            notifyNeighbors();
+        }
+    }
+
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
+
+        if (isOutput)
+        {
+            if (timeUntilOff > 1)
+            {
+                timeUntilOff--;
+            }
+            else if (timeUntilOff == 1)
+            {
+                timeUntilOff--;
+                notifyNeighbors(); // Make sure we update our neighbors
+            }
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+        super.writeToNBT(tagCompound);
+        tagCompound.setBoolean("output", isOutput);
+        tagCompound.setByte("state", state);
+        tagCompound.setByte("previousRedstoneState", previousRedstoneState);
+        tagCompound.setByte("timeUntilOff", timeUntilOff);
     }
 }

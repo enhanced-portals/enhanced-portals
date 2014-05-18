@@ -1,7 +1,5 @@
 package enhancedportals.tileentity;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,7 +10,6 @@ import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +21,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.Optional.InterfaceList;
 import cpw.mods.fml.common.Optional.Method;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -47,7 +43,7 @@ import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;
 import enhancedportals.utility.WorldUtils;
 
-@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileController extends TileFrame implements IPeripheral, SimpleComponent
 {
     enum ControlState
@@ -77,37 +73,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
     boolean processing;
     public boolean isPublic;
-    
+
     GlyphIdentifier cachedDestinationUID;
     WorldCoordinates cachedDestinationLoc;
 
     @SideOnly(Side.CLIENT)
     GlyphIdentifier uID, nID;
 
-    public void setUID(GlyphIdentifier i)
-    {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
-        {
-            uID = i;
-        }
-    }
-    
-    public void setNID(GlyphIdentifier i)
-    {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
-        {
-            nID = i;
-        }
-    }
-    
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
     {
-    	if (player.isSneaking())
-		{
-			return false;
-		}
-    	
+        if (player.isSneaking())
+        {
+            return false;
+        }
+
         try
         {
             if (stack != null)
@@ -157,49 +137,82 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return false;
     }
 
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+        tag.setByte("PortalState", (byte) portalState.ordinal());
+        tag.setBoolean("PortalActive", isPortalActive());
+        tag.setInteger("Instability", instability);
+
+        if (isPortalActive())
+        {
+            tag.setString("DestUID", cachedDestinationUID.getGlyphString());
+            tag.setInteger("destX", cachedDestinationLoc.posX);
+            tag.setInteger("destY", cachedDestinationLoc.posY);
+            tag.setInteger("destZ", cachedDestinationLoc.posZ);
+            tag.setInteger("destD", cachedDestinationLoc.dimension);
+        }
+
+        activeTextureData.writeToNBT(tag, "Texture");
+
+        if (moduleManipulator != null)
+        {
+            tag.setInteger("ModX", moduleManipulator.posX);
+            tag.setInteger("ModY", moduleManipulator.posY);
+            tag.setInteger("ModZ", moduleManipulator.posZ);
+        }
+    }
+
     public void addDialDevice(ChunkCoordinates chunkCoordinates)
-	{
-		diallingDevices.add(chunkCoordinates);
-	}
-    
+    {
+        diallingDevices.add(chunkCoordinates);
+    }
+
+    public void addNetworkInterface(ChunkCoordinates chunkCoordinates)
+    {
+        networkInterfaces.add(chunkCoordinates);
+    }
+
+    public void addRedstoneInterface(ChunkCoordinates chunkCoordinates)
+    {
+        redstoneInterfaces.add(chunkCoordinates);
+    }
+
     public void addTransferEnergy(ChunkCoordinates chunkCoordinates)
     {
         transferEnergy.add(chunkCoordinates);
     }
-    
+
     public void addTransferFluid(ChunkCoordinates chunkCoordinates)
     {
         transferFluids.add(chunkCoordinates);
     }
-    
+
     public void addTransferItem(ChunkCoordinates chunkCoordinates)
     {
         transferItems.add(chunkCoordinates);
     }
 
-    public void addNetworkInterface(ChunkCoordinates chunkCoordinates)
-	{
-		networkInterfaces.add(chunkCoordinates);
-	}
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void attach(IComputerAccess computer)
+    {
 
-    public void addRedstoneInterface(ChunkCoordinates chunkCoordinates)
-	{
-		redstoneInterfaces.add(chunkCoordinates);
-	}
-    
+    }
+
     @Override
     public void breakBlock(Block b, int oldMetadata)
     {
-    	try
-    	{
-    		deconstruct();
-    		setIdentifierNetwork(new GlyphIdentifier());
-			setIdentifierUnique(new GlyphIdentifier());
-		}
-    	catch (PortalException e)
-		{
-			e.printStackTrace();
-		}
+        try
+        {
+            deconstruct();
+            setIdentifierNetwork(new GlyphIdentifier());
+            setIdentifierUnique(new GlyphIdentifier());
+        }
+        catch (PortalException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -217,9 +230,154 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
 
     @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0) // isPortalActive
+        {
+            return new Object[] { isPortalActive() };
+        }
+        else if (method == 1) // getUniqueIdentifier
+        {
+            return comp_GetUniqueIdentifier();
+        }
+        else if (method == 2) // setUniqueIdentifier
+        {
+            return comp_SetUniqueIdentifier(arguments);
+        }
+        else if (method == 3) // getFrameColour
+        {
+            return new Object[] { activeTextureData.getFrameColour() };
+        }
+        else if (method == 4) // setFrameColour
+        {
+            return comp_SetFrameColour(arguments);
+        }
+        else if (method == 5) // getPortalColour
+        {
+            return new Object[] { activeTextureData.getPortalColour() };
+        }
+        else if (method == 6) // setPortalColour
+        {
+            return comp_SetPortalColour(arguments);
+        }
+        else if (method == 7) // getParticleColour
+        {
+            return new Object[] { activeTextureData.getParticleColour() };
+        }
+        else if (method == 8) // setParticleColour
+        {
+            return comp_SetParticleColour(arguments);
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean canUpdate()
     {
         return true;
+    }
+
+    Object[] comp_GetUniqueIdentifier()
+    {
+        GlyphIdentifier identifier = getIdentifierUnique();
+
+        if (identifier == null || identifier.isEmpty())
+        {
+            return new Object[] { "" };
+        }
+        else
+        {
+            return new Object[] { identifier.getGlyphString() };
+        }
+    }
+
+    Object[] comp_SetFrameColour(Object[] arguments) throws Exception
+    {
+        if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
+        {
+            throw new Exception("Invalid arguments");
+        }
+
+        try
+        {
+            int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16);
+            setFrameColour(hex);
+        }
+        catch (NumberFormatException ex)
+        {
+            throw new Exception("Couldn't parse input as hexidecimal");
+        }
+
+        return new Object[] { true };
+    }
+
+    Object[] comp_SetParticleColour(Object[] arguments) throws Exception
+    {
+        if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
+        {
+            throw new Exception("Invalid arguments");
+        }
+
+        try
+        {
+            setParticleColour(new PortalTextureManager().getParticleColour());
+        }
+        catch (NumberFormatException ex)
+        {
+            throw new Exception("Couldn't parse input as hexidecimal");
+        }
+
+        return new Object[] { true };
+    }
+
+    Object[] comp_SetPortalColour(Object[] arguments) throws Exception
+    {
+        if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
+        {
+            throw new Exception("Invalid arguments");
+        }
+
+        try
+        {
+            int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16);
+            setPortalColour(hex);
+        }
+        catch (NumberFormatException ex)
+        {
+            throw new Exception("Couldn't parse input as hexidecimal");
+        }
+
+        return new Object[] { true };
+    }
+
+    Object[] comp_SetUniqueIdentifier(Object[] arguments) throws Exception
+    {
+        if (arguments.length == 0)
+        {
+            setIdentifierUnique(new GlyphIdentifier());
+            return comp_GetUniqueIdentifier();
+        }
+        else if (arguments.length == 1)
+        {
+            String s = arguments[0].toString();
+            s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
+
+            String error = ComputerUtils.verifyGlyphArguments(s);
+            if (error != null)
+            {
+                throw new Exception(error);
+            }
+
+            setIdentifierUnique(new GlyphIdentifier(s));
+        }
+        else
+        {
+            throw new Exception("Invalid arguments");
+        }
+
+        return comp_GetUniqueIdentifier();
     }
 
     void configurePortal() throws PortalException
@@ -286,12 +444,12 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
     public void connectionDial()
     {
-    	if (worldObj.isRemote || getIdentifierNetwork() == null)
+        if (worldObj.isRemote || getIdentifierNetwork() == null)
         {
             return;
         }
-    	
-    	try
+
+        try
         {
             TileStabilizerMain dbs = getDimensionalBridgeStabilizer();
 
@@ -299,21 +457,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 throw new PortalException("stabilizerNotFound");
             }
-            
-            dbs.setupNewConnection(getIdentifierUnique(), EnhancedPortals.proxy.networkManager.getDestination(getIdentifierUnique(),  getIdentifierNetwork()), null);
+
+            dbs.setupNewConnection(getIdentifierUnique(), EnhancedPortals.proxy.networkManager.getDestination(getIdentifierUnique(), getIdentifierNetwork()), null);
         }
         catch (PortalException e)
         {
-        	EntityPlayer player = worldObj.getClosestPlayer(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128);
-            
+            EntityPlayer player = worldObj.getClosestPlayer(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, 128);
+
             if (player != null)
             {
                 player.addChatComponentMessage(new ChatComponentText(e.getMessage()));
             }
         }
-    	
-    	markDirty();
-	}
+
+        markDirty();
+    }
 
     public void connectionDial(GlyphIdentifier id, PortalTextureManager m, EntityPlayer player)
     {
@@ -345,7 +503,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 player.addChatComponentMessage(new ChatComponentText(e.getMessage()));
             }
         }
-        
+
         markDirty();
     }
 
@@ -355,7 +513,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             return;
         }
-        
+
         try
         {
             TileStabilizerMain dbs = getDimensionalBridgeStabilizer();
@@ -369,9 +527,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         }
         catch (PortalException e)
         {
-            System.out.println(e.getMessage());
+            EnhancedPortals.logger.catching(e);
         }
-        
+
         temporaryDBS = null;
         markDirty();
     }
@@ -385,12 +543,12 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             return;
         }
-        
+
         if (isPortalActive())
         {
-        	connectionTerminate();
+            connectionTerminate();
         }
-        
+
         for (ChunkCoordinates c : portalFrames)
         {
             TileEntity t = WorldUtils.getTileEntity(worldObj, c);
@@ -496,19 +654,25 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         WorldUtils.markForUpdate(this);
     }
 
-    public TileProgrammableInterface getProgrammableInterface()
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void detach(IComputerAccess computer)
     {
-        if (programmableInterface != null)
-        {
-            TileEntity tile = worldObj.getTileEntity(programmableInterface.posX, programmableInterface.posY, programmableInterface.posZ);
 
-            if (tile instanceof TileProgrammableInterface)
-            {
-                return (TileProgrammableInterface) tile;
-            }
-        }
+    }
 
-        return null;
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public String getComponentName()
+    {
+        return "ep_controller";
     }
 
     /**
@@ -528,31 +692,31 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
 
     public TileDiallingDevice getDialDeviceRandom()
-	{
-		ChunkCoordinates dial = null;
-		 
-		if (diallingDevices.isEmpty())
-		{
-			return null;
-		}
-		else if (diallingDevices.size() == 1)
-		{
-			dial = diallingDevices.get(0);
-		}
-		else
-		{
-			dial = diallingDevices.get(new Random().nextInt(diallingDevices.size()));
-		}
-		
-		TileEntity tile = WorldUtils.getTileEntity(worldObj, dial);
-		
-		if (tile != null && tile instanceof TileDiallingDevice)
-		{
-			return (TileDiallingDevice) tile;
-		}
-		
-		return null;
-	}
+    {
+        ChunkCoordinates dial = null;
+
+        if (diallingDevices.isEmpty())
+        {
+            return null;
+        }
+        else if (diallingDevices.size() == 1)
+        {
+            dial = diallingDevices.get(0);
+        }
+        else
+        {
+            dial = diallingDevices.get(new Random().nextInt(diallingDevices.size()));
+        }
+
+        TileEntity tile = WorldUtils.getTileEntity(worldObj, dial);
+
+        if (tile != null && tile instanceof TileDiallingDevice)
+        {
+            return (TileDiallingDevice) tile;
+        }
+
+        return null;
+    }
 
     public ArrayList<ChunkCoordinates> getDiallingDevices()
     {
@@ -584,7 +748,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
             temporaryDBS = null;
         }
-        
+
         if (dimensionalBridgeStabilizer != null)
         {
             World w = dimensionalBridgeStabilizer.getWorld();
@@ -610,6 +774,13 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         }
 
         return null;
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getFrameColour(Context context, Arguments args) throws Exception
+    {
+        return new Object[] { activeTextureData.getFrameColour() };
     }
 
     public ArrayList<ChunkCoordinates> getFrames()
@@ -642,7 +813,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             return nID;
         }
-        
+
         return EnhancedPortals.proxy.networkManager.getPortalNetwork(getIdentifierUnique());
     }
 
@@ -655,8 +826,15 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             return uID;
         }
-        
+
         return EnhancedPortals.proxy.networkManager.getPortalIdentifier(getWorldCoordinates());
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String[] getMethodNames()
+    {
+        return new String[] { "isPortalActive", "getUniqueIdentifier", "setUniqueIdentifier", "getFrameColour", "setFrameColour", "getPortalColour", "setPortalColour", "getParticleColour", "setParticleColour" };
     }
 
     public TileModuleManipulator getModuleManipulator()
@@ -679,6 +857,20 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return networkInterfaces;
     }
 
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getParticleColour(Context context, Arguments args) throws Exception
+    {
+        return new Object[] { activeTextureData.getParticleColour() };
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getPortalColour(Context context, Arguments args) throws Exception
+    {
+        return new Object[] { activeTextureData.getPortalColour() };
+    }
+
     @Override
     public TileController getPortalController()
     {
@@ -690,6 +882,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return portalBlocks;
     }
 
+    public TileProgrammableInterface getProgrammableInterface()
+    {
+        if (programmableInterface != null)
+        {
+            TileEntity tile = worldObj.getTileEntity(programmableInterface.posX, programmableInterface.posY, programmableInterface.posZ);
+
+            if (tile instanceof TileProgrammableInterface)
+            {
+                return (TileProgrammableInterface) tile;
+            }
+        }
+
+        return null;
+    }
+
     public ArrayList<ChunkCoordinates> getRedstoneInterfaces()
     {
         return redstoneInterfaces;
@@ -699,7 +906,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         return transferEnergy;
     }
-    
+
     public ArrayList<ChunkCoordinates> getTransferFluids()
     {
         return transferFluids;
@@ -710,11 +917,25 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return transferItems;
     }
 
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String getType()
+    {
+        return "ep_controller";
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getUniqueIdentifier(Context context, Arguments args) throws Exception
+    {
+        return comp_GetUniqueIdentifier();
+    }
+
     public boolean isFinalized()
     {
         return portalState == ControlState.FINALIZED;
     }
-    
+
     /**
      * @return Portal active state.
      */
@@ -723,21 +944,53 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return cachedDestinationUID != null;
     }
 
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] isPortalActive(Context context, Arguments args)
+    {
+        return new Object[] { isPortalActive() };
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+        portalState = ControlState.values()[tag.getByte("PortalState")];
+
+        if (tag.hasKey("DestUID"))
+        {
+            cachedDestinationUID = new GlyphIdentifier(tag.getString("DestUID"));
+            cachedDestinationLoc = new WorldCoordinates(tag.getInteger("destX"), tag.getInteger("destY"), tag.getInteger("destZ"), tag.getInteger("destD"));
+        }
+        else
+        {
+            cachedDestinationUID = null;
+            cachedDestinationLoc = null;
+        }
+
+        activeTextureData.readFromNBT(tag, "Texture");
+        instability = tag.getInteger("Instability");
+
+        if (tag.hasKey("ModX"))
+        {
+            moduleManipulator = new ChunkCoordinates(tag.getInteger("ModX"), tag.getInteger("ModY"), tag.getInteger("ModZ"));
+        }
+    }
+
     public void onEntityEnterPortal(Entity entity, TilePortal tilePortal)
     {
         if (cachedDestinationLoc == null)
         {
             return;
         }
-        
+
         onEntityTouchPortal(entity);
         TileProgrammableInterface pi = getProgrammableInterface();
-        
+
         if (pi != null && entity != null)
         {
             pi.entityEnter(entity);
             byte val = pi.canEntityTeleport(entity);
-            
+
             if (val == 0) // No
             {
                 return;
@@ -748,21 +1001,21 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 return;
             }
         }
-        
+
         TileEntity tile = cachedDestinationLoc.getTileEntity();
 
         if (tile != null && tile instanceof TileController)
         {
             TileController control = (TileController) tile;
-            
+
             try
             {
                 EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
-                
+
                 TileProgrammableInterface pi2 = control.getProgrammableInterface();
-                
+
                 if (pi2 != null && entity != null)
                 {
                     pi2.entityExit(entity);
@@ -772,7 +1025,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 if (entity instanceof EntityPlayer)
                 {
-                	((EntityPlayer) entity).addChatComponentMessage(new ChatComponentText(e.getMessage()));
+                    ((EntityPlayer) entity).addChatComponentMessage(new ChatComponentText(e.getMessage()));
                 }
             }
         }
@@ -801,57 +1054,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         deconstruct();
     }
 
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
-    {
-        tag.setByte("PortalState", (byte) portalState.ordinal());
-        tag.setBoolean("PortalActive", isPortalActive());
-        tag.setInteger("Instability", instability);
-        
-        if (isPortalActive())
-        {
-            tag.setString("DestUID", cachedDestinationUID.getGlyphString());
-            tag.setInteger("destX", cachedDestinationLoc.posX);
-            tag.setInteger("destY", cachedDestinationLoc.posY);
-            tag.setInteger("destZ", cachedDestinationLoc.posZ);
-            tag.setInteger("destD", cachedDestinationLoc.dimension);
-        }
-        
-        activeTextureData.writeToNBT(tag, "Texture");
-        
-        if (moduleManipulator != null)
-        {
-            tag.setInteger("ModX", moduleManipulator.posX);
-            tag.setInteger("ModY", moduleManipulator.posY);
-            tag.setInteger("ModZ", moduleManipulator.posZ);
-        }
-    }
-    
-    @Override
-    public void onDataPacket(NBTTagCompound tag)
-    {
-        portalState = ControlState.values()[tag.getByte("PortalState")];
-
-        if (tag.hasKey("DestUID"))
-        {
-            cachedDestinationUID = new GlyphIdentifier(tag.getString("DestUID"));
-            cachedDestinationLoc = new WorldCoordinates(tag.getInteger("destX"), tag.getInteger("destY"), tag.getInteger("destZ"), tag.getInteger("destD"));
-        }
-        else
-        {
-            cachedDestinationUID = null;
-            cachedDestinationLoc = null;
-        }
-
-        activeTextureData.readFromNBT(tag, "Texture");
-        instability = tag.getInteger("Instability");
-
-        if (tag.hasKey("ModX"))
-        {
-            moduleManipulator = new ChunkCoordinates(tag.getInteger("ModX"), tag.getInteger("ModY"), tag.getInteger("ModZ"));
-        }
-    }
-    
     /**
      * Creates the portal block. Throws an {@link PortalException} if an error occurs.
      */
@@ -863,7 +1065,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 if (CommonProxy.portalsDestroyBlocks)
                 {
-                	worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
+                    worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
                 }
                 else
                 {
@@ -875,19 +1077,19 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         for (ChunkCoordinates c : portalBlocks)
         {
             worldObj.setBlock(c.posX, c.posY, c.posZ, BlockPortal.instance, portalType, 2);
-            
+
             TilePortal portal = (TilePortal) WorldUtils.getTileEntity(worldObj, c);
             portal.portalController = getChunkCoordinates();
         }
-        
+
         for (ChunkCoordinates c : getRedstoneInterfaces())
         {
             TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
             ri.onPortalCreated();
         }
-        
+
         TileProgrammableInterface pi = getProgrammableInterface();
-        
+
         if (pi != null)
         {
             pi.portalCreated();
@@ -900,27 +1102,27 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             return;
         }
-        
+
         processing = true;
-        
+
         for (ChunkCoordinates c : portalBlocks)
         {
             worldObj.setBlockToAir(c.posX, c.posY, c.posZ);
         }
-        
+
         for (ChunkCoordinates c : getRedstoneInterfaces())
         {
             TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
             ri.onPortalRemoved();
         }
-        
+
         TileProgrammableInterface pi = getProgrammableInterface();
-        
+
         if (pi != null)
         {
             pi.portalCreated();
         }
-        
+
         processing = false;
     }
 
@@ -954,7 +1156,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             inactiveTextureData = new PortalTextureManager();
             inactiveTextureData.readFromNBT(tagCompound, "InactiveTextureData");
         }
-        
+
         if (tagCompound.hasKey("CachedDestinationUID"))
         {
             cachedDestinationLoc = GeneralUtils.loadWorldCoord(tagCompound, "CachedDestinationLoc");
@@ -963,9 +1165,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     }
 
     public void removeFrame(ChunkCoordinates chunkCoordinates)
-	{
-		portalFrames.remove(chunkCoordinates);
-	}
+    {
+        portalFrames.remove(chunkCoordinates);
+    }
 
     public void revertTextureData()
     {
@@ -997,17 +1199,12 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 if (!chunks.contains(new ChunkCoordIntPair(c.posX >> 4, c.posZ >> 4)))
                 {
-                	EnhancedPortals.packetPipeline.sendToAllAround(new PacketRerender(c.posX, c.posY, c.posZ), this);
+                    EnhancedPortals.packetPipeline.sendToAllAround(new PacketRerender(c.posX, c.posY, c.posZ), this);
                     chunks.add(new ChunkCoordIntPair(c.posX >> 4, c.posZ >> 4));
                 }
             }
         }
     }
-
-    public void setProgrammableInterface(ChunkCoordinates chunkCoordinates)
-	{
-        programmableInterface = chunkCoordinates;
-	}
 
     public void setCustomFrameTexture(int tex)
     {
@@ -1047,8 +1244,15 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 dimensionalBridgeStabilizer = stabilizer;
             }
         }
-        
+
         markDirty();
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] setFrameColour(Context context, Arguments args) throws Exception
+    {
+        return comp_SetFrameColour(ComputerUtils.argsToArray(args));
     }
 
     public void setFrameColour(int colour)
@@ -1060,7 +1264,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
     public void setFrameItem(ItemStack s)
     {
-        activeTextureData.setFrameItem(s);    
+        activeTextureData.setFrameItem(s);
         markDirty();
         sendUpdatePacket(true);
     }
@@ -1076,9 +1280,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             connectionTerminate();
         }
-        
+
         GlyphIdentifier uID = getIdentifierUnique();
-        
+
         if (getHasIdentifierNetwork())
         {
             EnhancedPortals.proxy.networkManager.removePortalFromNetwork(uID, getIdentifierNetwork());
@@ -1089,12 +1293,12 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             EnhancedPortals.proxy.networkManager.addPortalToNetwork(uID, id);
         }
     }
-    
+
     public void setIdentifierUnique(GlyphIdentifier id) throws PortalException
     {
         if (EnhancedPortals.proxy.networkManager.getPortalLocation(id) != null) // Check to see if we already have a portal with this ID
         {
-            if (getHasIdentifierUnique() && getIdentifierUnique().equals(id)) // Make sure  it's  not  already  us
+            if (getHasIdentifierUnique() && getIdentifierUnique().equals(id)) // Make sure it's not already us
             {
                 return;
             }
@@ -1106,7 +1310,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             connectionTerminate();
         }
-        
+
         if (getHasIdentifierUnique()) // If already have an identifier
         {
             GlyphIdentifier networkIdentifier = null;
@@ -1114,7 +1318,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             if (getHasIdentifierNetwork()) // Check to see if it's in a network
             {
                 networkIdentifier = getIdentifierNetwork();
-                EnhancedPortals.proxy.networkManager.removePortalFromNetwork(getIdentifierUnique(), networkIdentifier); // Remove it if it  is
+                EnhancedPortals.proxy.networkManager.removePortalFromNetwork(getIdentifierUnique(), networkIdentifier); // Remove it if it is
             }
 
             EnhancedPortals.proxy.networkManager.removePortal(getWorldCoordinates()); // Remove the old identifier
@@ -1125,13 +1329,13 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
                 if (networkIdentifier != null)
                 {
-                    EnhancedPortals.proxy.networkManager.addPortalToNetwork(id, networkIdentifier); // Re-add it to the network, if it was in  one
+                    EnhancedPortals.proxy.networkManager.addPortalToNetwork(id, networkIdentifier); // Re-add it to the network, if it was in one
                 }
             }
         }
         else if (id.size() > 0) // Otherwise if the new identifier isn't blank
         {
-            EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add  the  portal
+            EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add the portal
         }
     }
 
@@ -1148,48 +1352,96 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         sendUpdatePacket(true);
     }
 
-	public void setModuleManipulator(ChunkCoordinates chunkCoordinates)
-	{
-		moduleManipulator = chunkCoordinates;
-		markDirty();
-	}
+    public void setModuleManipulator(ChunkCoordinates chunkCoordinates)
+    {
+        moduleManipulator = chunkCoordinates;
+        markDirty();
+    }
 
-	public void setParticleColour(int colour)
+    public void setNID(GlyphIdentifier i)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        {
+            nID = i;
+        }
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] setParticleColour(Context context, Arguments args) throws Exception
+    {
+        return comp_SetParticleColour(ComputerUtils.argsToArray(args));
+    }
+
+    public void setParticleColour(int colour)
     {
         activeTextureData.setParticleColour(colour);
         markDirty();
         sendUpdatePacket(false); // Particles are generated by querying this
     }
 
-	public void setParticleType(int type)
+    public void setParticleType(int type)
     {
         activeTextureData.setParticleType(type);
         markDirty();
         sendUpdatePacket(false); // Particles are generated by querying this
     }
 
-	public void setPortalColour(int colour)
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] setPortalColour(Context context, Arguments args) throws Exception
+    {
+        return comp_SetPortalColour(ComputerUtils.argsToArray(args));
+    }
+
+    public void setPortalColour(int colour)
     {
         activeTextureData.setPortalColour(colour);
         markDirty();
         sendUpdatePacket(true);
     }
 
-	public void setPortalItem(ItemStack s)
+    public void setPortalItem(ItemStack s)
     {
         activeTextureData.setPortalItem(s);
         markDirty();
         sendUpdatePacket(true);
     }
 
-	public void swapTextureData(PortalTextureManager textureManager)
+    public void setProgrammableInterface(ChunkCoordinates chunkCoordinates)
+    {
+        programmableInterface = chunkCoordinates;
+    }
+
+    public void setUID(GlyphIdentifier i)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        {
+            uID = i;
+        }
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] setUniqueIdentifier(Context context, Arguments args) throws Exception
+    {
+        return comp_SetUniqueIdentifier(ComputerUtils.argsToArray(args));
+    }
+
+    public void setupTemporaryDBS(TileStabilizerMain sA)
+    {
+        temporaryDBS = sA.getWorldCoordinates();
+        markDirty();
+    }
+
+    public void swapTextureData(PortalTextureManager textureManager)
     {
         inactiveTextureData = new PortalTextureManager(activeTextureData);
         activeTextureData = textureManager;
         markDirty();
     }
 
-	@Override
+    @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
@@ -1218,233 +1470,11 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             inactiveTextureData.writeToNBT(tagCompound, "InactiveTextureData");
         }
-        
+
         if (cachedDestinationLoc != null)
         {
             GeneralUtils.saveWorldCoord(tagCompound, cachedDestinationLoc, "CachedDestinationLoc");
             tagCompound.setString("CachedDestinationUID", cachedDestinationUID.getGlyphString());
         }
     }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String getType()
-    {
-        return "portal_controller";
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String[] getMethodNames()
-    {
-        return new String[] { "isPortalActive", "getUniqueIdentifier", "setUniqueIdentifier", "getFrameColour", "setFrameColour", "getPortalColour", "setPortalColour", "getParticleColour", "setParticleColour" };
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
-    {
-        if (method == 0) // isPortalActive
-        {
-            return new Object[] { isPortalActive() };
-        }
-        else if (method == 1) // getUniqueIdentifier
-        {
-            GlyphIdentifier identifier = getIdentifierUnique();
-
-            if (identifier == null || identifier.isEmpty())
-            {
-                return new Object[] { "" };
-            }
-            else
-            {
-                return new Object[] { identifier.getGlyphString() };
-            }
-        }
-        else if (method == 2) // setUniqueIdentifier
-        {
-            if (arguments.length == 0)
-            {
-                setIdentifierUnique(new GlyphIdentifier());
-                return callMethod(computer, context, 1, null);
-            }
-            else if (arguments.length == 1)
-            {
-                String s = arguments[0].toString();
-                s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
-
-                String error = ComputerUtils.verifyGlyphArguments(s);
-                if(error != null) throw new Exception(error);
-
-                setIdentifierUnique(new GlyphIdentifier(s));
-            }
-            else
-            {
-                throw new Exception("Invalid arguments");
-            }
-
-            return callMethod(computer, context, 1, null);
-        }
-        else if (method == 3) // getFrameColour
-        {
-            return new Object[] { activeTextureData.getFrameColour() };
-        }
-        else if (method == 4) // setFrameColour
-        {
-            if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
-            {
-                throw new Exception("Invalid arguments");
-            }
-            
-            try
-            {
-                int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16);
-                setFrameColour(hex);
-            }
-            catch (NumberFormatException ex)
-            {
-                throw new Exception("Couldn't parse input as hexidecimal");
-            }
-        }
-        else if (method == 5) // getPortalColour
-        {
-            return new Object[] { activeTextureData.getPortalColour() };
-        }
-        else if (method == 6) // setPortalColour
-        {
-            if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
-            {
-                throw new Exception("Invalid arguments");
-            }
-            
-            try
-            {
-                int hex = Integer.parseInt(arguments.length == 1 ? arguments[0].toString() : "FFFFFF", 16);
-                setPortalColour(hex);
-            }
-            catch (NumberFormatException ex)
-            {
-                throw new Exception("Couldn't parse input as hexidecimal");
-            }
-        }
-        else if (method == 7) // getParticleColour
-        {
-            return new Object[] { activeTextureData.getParticleColour() };
-        }
-        else if (method == 8) // setParticleColour
-        {
-            if (arguments.length > 1 || arguments.length == 1 && arguments[0].toString().length() == 0)
-            {
-                throw new Exception("Invalid arguments");
-            }
-            
-            try
-            {
-                setParticleColour(new PortalTextureManager().getParticleColour());
-            }
-            catch (NumberFormatException ex)
-            {
-                throw new Exception("Couldn't parse input as hexidecimal");
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void attach(IComputerAccess computer)
-    {
-        
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void detach(IComputerAccess computer)
-    {
-        
-    }
-    
-    public void setupTemporaryDBS(TileStabilizerMain sA)
-    {
-        temporaryDBS = sA.getWorldCoordinates();
-        markDirty();
-    }
-    
-	@Override
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public String getComponentName()
-	{
-		return "ep_controller";
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] isPortalActive(Context context, Arguments args)
-	{
-		return new Object[] { isPortalActive() };
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getUniqueIdentifier(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 1, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] setUniqueIdentifier(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getFrameColour(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] setFrameColour(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getPortalColour(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 5, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] setPortalColour(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 6, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getParticleColour(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 7, ComputerUtils.argsToArray(args));
-    }
-	
-	@Callback
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] setParticleColour(Context context, Arguments args) throws Exception
-	{
-        return callMethod(null, null, 8, ComputerUtils.argsToArray(args));
-    }
-
-	@Override
-	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-	public boolean equals(IPeripheral other)
-	{
-		return other == this;
-	}
 }

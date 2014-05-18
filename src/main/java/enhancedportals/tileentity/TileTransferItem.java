@@ -27,31 +27,12 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
 
-@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral, SimpleComponent
 {
     ItemStack stack;
-    
-    @Override
-    public void writeToNBT(NBTTagCompound tag)
-    {
-        super.writeToNBT(tag);        
-        NBTTagCompound st = new NBTTagCompound();
-        
-        if (stack != null)
-        {
-            stack.writeToNBT(st);
-        }
-        
-        tag.setTag("stack", st);
-    }
-    
-    @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
-        super.readFromNBT(tag);        
-        stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
-    }
+
+    int tickTimer = 20, time = 0;
 
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
@@ -70,6 +51,183 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
         }
 
         return false;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void attach(IComputerAccess computer)
+    {
+
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0)
+        {
+            return new Object[] { stack != null ? Item.getIdFromItem(stack.getItem()) : 0 };
+        }
+        else if (method == 1)
+        {
+            return new Object[] { stack != null ? stack.stackSize : 0 };
+        }
+        else if (method == 2)
+        {
+            return new Object[] { stack != null };
+        }
+        else if (method == 3)
+        {
+            return new Object[] { isSending };
+        }
+
+        return null;
+    }
+
+    @Override
+    public void closeInventory()
+    {
+
+    }
+
+    @Override
+    public ItemStack decrStackSize(int i, int j)
+    {
+        ItemStack stack = getStackInSlot(i);
+
+        if (stack != null)
+        {
+            if (stack.stackSize <= j)
+            {
+                setInventorySlotContents(i, null);
+            }
+            else
+            {
+                stack = stack.splitStack(j);
+
+                if (stack.stackSize == 0)
+                {
+                    setInventorySlotContents(i, null);
+                }
+            }
+        }
+
+        return stack;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void detach(IComputerAccess computer)
+    {
+
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public String getComponentName()
+    {
+        return "ep_transfer_item";
+    }
+
+    @Override
+    public String getInventoryName()
+    {
+        return "tile.frame.item.name";
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 64;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String[] getMethodNames()
+    {
+        return new String[] { "getItemStored", "getAmountStored", "hasStack", "isSending" };
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return 1;
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getStack(Context context, Arguments args)
+    {
+        HashMap<String, Object> hstack = new HashMap<String, Object>();
+        hstack.put("name", stack.getItem().getUnlocalizedNameInefficiently(stack));
+        hstack.put("meta", stack.getItemDamage());
+        hstack.put("amount", stack.stackSize);
+
+        return new Object[] { hstack };
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int i)
+    {
+        return stack;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int i)
+    {
+        return stack;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String getType()
+    {
+        return "ep_transfer_item";
+    }
+
+    @Override
+    public boolean hasCustomInventoryName()
+    {
+        return false;
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] hasStack(Context context, Arguments args)
+    {
+        return new Object[] { stack != null };
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    {
+        return true;
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] isSending(Context context, Arguments args)
+    {
+        return new Object[] { isSending };
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        return true;
+    }
+
+    @Override
+    public void openInventory()
+    {
+
     }
 
     @Override
@@ -100,46 +258,10 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     }
 
     @Override
-    public int getSizeInventory()
+    public void readFromNBT(NBTTagCompound tag)
     {
-        return 1;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return stack;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j)
-    {
-        ItemStack stack = getStackInSlot(i);
-
-        if (stack != null)
-        {
-            if (stack.stackSize <= j)
-            {
-                setInventorySlotContents(i, null);
-            }
-            else
-            {
-                stack = stack.splitStack(j);
-
-                if (stack.stackSize == 0)
-                {
-                    setInventorySlotContents(i, null);
-                }
-            }
-        }
-
-        return stack;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int i)
-    {
-        return stack;
+        super.readFromNBT(tag);
+        stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
     }
 
     @Override
@@ -147,32 +269,6 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
     {
         stack = itemstack;
     }
-
-    @Override
-    public String getInventoryName()
-    {
-        return "tile.frame.item.name";
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 64;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
-        return true;
-    }
-
-    int tickTimer = 20, time = 0;
 
     @Override
     public void updateEntity()
@@ -191,7 +287,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
 
                     if (controller != null && controller.isPortalActive() && stack != null)
                     {
-                        TileController exitController =  (TileController) controller.getDestinationLocation().getTileEntity();
+                        TileController exitController = (TileController) controller.getDestinationLocation().getTileEntity();
 
                         if (exitController != null)
                         {
@@ -222,7 +318,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
                                             }
                                             else
                                             {
-                                                amount = stack.stackSize - ((item.getStackInSlot(0).stackSize + stack.stackSize) - 64);
+                                                amount = stack.stackSize - (item.getStackInSlot(0).stackSize + stack.stackSize - 64);
                                             }
 
                                             if (amount <= 0)
@@ -241,7 +337,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
                                             {
                                                 stack.stackSize -= amount;
                                             }
-                                            
+
                                             markDirty();
                                         }
                                     }
@@ -260,114 +356,18 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
             }
         }
     }
-    
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String getType()
-    {
-        return "item_transfer_module";
-    }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String[] getMethodNames()
+    public void writeToNBT(NBTTagCompound tag)
     {
-        return new String[] { "getItemStored", "getAmountStored", "hasStack", "isSending" };
-    }
+        super.writeToNBT(tag);
+        NBTTagCompound st = new NBTTagCompound();
 
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
-    {
-        if (method == 0)
+        if (stack != null)
         {
-            return new Object[] { stack != null ? Item.getIdFromItem(stack.getItem()) : 0 };
-        }
-        else if (method == 1)
-        {
-            return new Object[] { stack != null ? stack.stackSize : 0 };
-        }
-        else if (method == 2)
-        {
-            return new Object[] { stack != null };
-        }
-        else if (method == 3)
-        {
-            return new Object[] { isSending };
+            stack.writeToNBT(st);
         }
 
-        return null;
+        tag.setTag("stack", st);
     }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-	public boolean equals(IPeripheral other)
-	{
-		return other == this;
-	}
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void attach(IComputerAccess computer)
-    {
-
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void detach(IComputerAccess computer)
-    {
-
-    }
-    
-	@Override
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public String getComponentName()
-	{
-		return "ep_transfer_item";
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getStack(Context context, Arguments args)
-	{
-		HashMap<String, Object> hstack = new HashMap<String, Object>();
-		hstack.put("name", stack.getItem().getUnlocalizedNameInefficiently(stack));
-		hstack.put("meta", stack.getItemDamage());
-		hstack.put("amount", stack.stackSize);
-		
-		return new Object[] { hstack };
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] hasStack(Context context, Arguments args)
-	{
-		return new Object[] { stack != null };
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] isSending(Context context, Arguments args)
-	{
-		return new Object[] { isSending };
-	}
-
-	@Override
-	public boolean hasCustomInventoryName()
-	{
-		return false;
-	}
-
-	@Override
-	public void openInventory()
-	{
-		
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		
-	}
 }

@@ -6,13 +6,30 @@ public class TileFrameTransfer extends TileFrame
 {
     public boolean isSending = true;
 
-	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
-	
-	@Override
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+
+    }
+
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
+    }
+
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+
+    }
+
+    public void onNeighborChanged()
+    {
+
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
@@ -24,22 +41,5 @@ public class TileFrameTransfer extends TileFrame
     {
         super.writeToNBT(tag);
         tag.setBoolean("Sending", isSending);
-    }
-
-    public void onNeighborChanged()
-    {
-        
-    }
-
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
-    {
-        
-    }
-
-    @Override
-    public void onDataPacket(NBTTagCompound tag)
-    {
-        
     }
 }

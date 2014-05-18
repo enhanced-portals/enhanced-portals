@@ -96,7 +96,6 @@ public class NetworkManager
     {
         if (portal == null || network == null || getPortalNetwork(portal) != null)
         {
-            System.out.println("VOID");
             return;
         }
 

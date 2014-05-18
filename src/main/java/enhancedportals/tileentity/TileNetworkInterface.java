@@ -19,67 +19,60 @@ import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 
-@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileNetworkInterface extends TileFrame implements IPeripheral, SimpleComponent
 {
-	@Override
-	public boolean activate(EntityPlayer player, ItemStack stack)
-	{
-		if (player.isSneaking())
-		{
-			return false;
-		}
-
-		TileController controller = getPortalController();
-
-		if (stack != null && controller != null && controller.isFinalized())
-		{
-			if (GeneralUtils.isWrench(stack) && !player.isSneaking())
-			{
-				if (controller.getIdentifierUnique() == null)
-				{
-					if (!worldObj.isRemote)
-					{
-						player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("noUidSet")));
-					}
-				}
-				else
-				{
-					GuiHandler.openGui(player, controller, GuiHandler.NETWORK_INTERFACE_A);
-				}
-			}
-			else if (stack.getItem() == ItemPaintbrush.instance)
-			{
-				GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
-
-	@Override
-	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String getType()
+    @Override
+    public boolean activate(EntityPlayer player, ItemStack stack)
     {
-        return "network_nterface";
+        if (player.isSneaking())
+        {
+            return false;
+        }
+
+        TileController controller = getPortalController();
+
+        if (stack != null && controller != null && controller.isFinalized())
+        {
+            if (GeneralUtils.isWrench(stack) && !player.isSneaking())
+            {
+                if (controller.getIdentifierUnique() == null)
+                {
+                    if (!worldObj.isRemote)
+                    {
+                        player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("noUidSet")));
+                    }
+                }
+                else
+                {
+                    GuiHandler.openGui(player, controller, GuiHandler.NETWORK_INTERFACE_A);
+                }
+            }
+            else if (stack.getItem() == ItemPaintbrush.instance)
+            {
+                GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String[] getMethodNames()
+    public void addDataToPacket(NBTTagCompound tag)
     {
-        return new String[] { "dial", "terminate" };
+
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void attach(IComputerAccess computer)
+    {
+
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0) // dial
@@ -93,60 +86,67 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
 
         return null;
     }
-    
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void attach(IComputerAccess computer)
-    {
 
+    @Override
+    public boolean canUpdate()
+    {
+        return true;
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public void detach(IComputerAccess computer)
     {
 
     }
 
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] dial(Context context, Arguments args)
     {
-        
+        getPortalController().connectionDial();
+        return new Object[] { true };
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public String getComponentName()
+    {
+        return "ep_interface_network";
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String[] getMethodNames()
+    {
+        return new String[] { "dial", "terminate" };
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String getType()
+    {
+        return "ep_interface_network";
     }
 
     @Override
     public void onDataPacket(NBTTagCompound tag)
     {
-        
-    }
-    
-	@Override
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public String getComponentName()
-	{
-		return "ep_interface_network";
-	}
-	
-	@Callback
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] dial(Context context, Arguments args)
-	{
-		getPortalController().connectionDial();
-		return new Object[]{true};
-	}
-	
-	@Callback
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] terminate(Context context, Arguments args)
-	{
-		getPortalController().connectionTerminate();
-		return new Object[]{true};
-	}
 
-	@Override
-	@Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-	public boolean equals(IPeripheral other)
-	{
-		return other == this;
-	}
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] terminate(Context context, Arguments args)
+    {
+        getPortalController().connectionTerminate();
+        return new Object[] { true };
+    }
 }

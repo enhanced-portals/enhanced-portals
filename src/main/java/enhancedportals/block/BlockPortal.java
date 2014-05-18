@@ -135,12 +135,12 @@ public class BlockPortal extends BlockContainer
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
         TileEntity tile = world.getTileEntity(x, y, z);
-        
+
         if (tile instanceof TilePortal)
         {
             return ((TilePortal) tile).activate(player, player.inventory.getCurrentItem());
         }
-        
+
         return false;
     }
 
@@ -182,9 +182,9 @@ public class BlockPortal extends BlockContainer
         {
             return;
         }
-        
+
         TileEntity tile = world.getTileEntity(x, y, z);
-        
+
         if (!(tile instanceof TilePortal))
         {
             return;
@@ -287,21 +287,21 @@ public class BlockPortal extends BlockContainer
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
         TileEntity tile = blockAccess.getTileEntity(x, y, z);
-        
+
         if (tile instanceof TilePortal)
         {
             TilePortal portal = (TilePortal) tile;
             TileController controller = portal.getPortalController();
             TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
-    
+
             if (controller != null && manip != null && manip.isPortalInvisible())
             {
                 setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
                 return;
             }
-    
+
             int meta = blockAccess.getBlockMetadata(x, y, z);
-    
+
             if (meta == 1) // X
             {
                 setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);

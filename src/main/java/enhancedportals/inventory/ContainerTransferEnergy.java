@@ -21,11 +21,37 @@ public class ContainerTransferEnergy extends BaseContainer
     }
 
     @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        byte isSending = (byte) (energy.isSending ? 1 : 0);
+        int en = energy.storage.getEnergyStored();
+
+        for (int i = 0; i < crafters.size(); i++)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+
+            if (wasSending != isSending)
+            {
+                icrafting.sendProgressBarUpdate(this, 0, isSending);
+            }
+
+            if (lastEnergy != en)
+            {
+                icrafting.sendProgressBarUpdate(this, 1, en);
+            }
+
+            wasSending = isSending;
+            lastEnergy = en;
+        }
+    }
+
+    @Override
     public void handleGuiPacket(NBTTagCompound tag, EntityPlayer player)
     {
         energy.isSending = !energy.isSending;
     }
-    
+
     @Override
     public void updateProgressBar(int id, int val)
     {
@@ -36,32 +62,6 @@ public class ContainerTransferEnergy extends BaseContainer
         else if (id == 1)
         {
             energy.storage.setEnergyStored(val);
-        }
-    }
-    
-    @Override
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-        byte isSending = (byte) (energy.isSending ? 1 : 0);
-        int en = energy.storage.getEnergyStored();
-        
-        for (int i = 0; i < crafters.size(); i++)
-        {
-            ICrafting icrafting = (ICrafting) crafters.get(i);
-
-            if (wasSending != isSending)
-            {
-                icrafting.sendProgressBarUpdate(this, 0, isSending);
-            }
-            
-            if (lastEnergy != en)
-            {
-                icrafting.sendProgressBarUpdate(this, 1, en);
-            }
-            
-            wasSending = isSending;
-            lastEnergy = en;
         }
     }
 }

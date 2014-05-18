@@ -1,9 +1,6 @@
 package enhancedportals.tileentity;
 
 import io.netty.buffer.ByteBuf;
-
-import java.io.IOException;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import enhancedportals.utility.WorldCoordinates;

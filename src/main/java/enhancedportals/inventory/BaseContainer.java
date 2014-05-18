@@ -3,7 +3,6 @@ package enhancedportals.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -71,57 +70,6 @@ public abstract class BaseContainer extends Container
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int s)
-    {
-        if (inventory == null)
-        {
-            return null;
-        }
-        
-        ItemStack itemstack = null;
-        Slot slot = (Slot) inventorySlots.get(s);
-
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            int playerInventory = 35, inventorySize = playerInventory + inventory.getSizeInventory() + 1;
-            
-            if (s > playerInventory && s < inventorySize)
-            {
-                if (!this.mergeItemStack(itemstack1, 0, 36, true))
-                {
-                    return null;
-                }
-
-                slot.onSlotChange(itemstack1, itemstack);
-            }
-            else if (!mergeItemStack(itemstack1, 36, inventorySize, false))
-            {
-                return null;
-            }
-            
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack(null);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
-
-            if (itemstack1.stackSize == itemstack.stackSize)
-            {
-                return null;
-            }
-
-            slot.onPickupFromSlot(player, itemstack1);
-        }
-
-        return itemstack;
-    }
-    
-    @Override
     protected boolean mergeItemStack(ItemStack par1ItemStack, int par2, int par3, boolean par4)
     {
         boolean flag1 = false;
@@ -139,8 +87,8 @@ public abstract class BaseContainer extends Container
         {
             while (par1ItemStack.stackSize > 0 && (!par4 && k < par3 || par4 && k >= par2))
             {
-                slot = (Slot)this.inventorySlots.get(k);
-                
+                slot = (Slot) inventorySlots.get(k);
+
                 if (!slot.isItemValid(par1ItemStack))
                 {
                     if (par4)
@@ -151,10 +99,10 @@ public abstract class BaseContainer extends Container
                     {
                         ++k;
                     }
-                    
+
                     continue;
                 }
-                
+
                 itemstack1 = slot.getStack();
 
                 if (itemstack1 != null && itemstack1.getItem() == par1ItemStack.getItem() && (!par1ItemStack.getHasSubtypes() || par1ItemStack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(par1ItemStack, itemstack1))
@@ -201,8 +149,8 @@ public abstract class BaseContainer extends Container
 
             while (!par4 && k < par3 || par4 && k >= par2)
             {
-                slot = (Slot)this.inventorySlots.get(k);
-                
+                slot = (Slot) inventorySlots.get(k);
+
                 if (!slot.isItemValid(par1ItemStack))
                 {
                     if (par4)
@@ -213,10 +161,10 @@ public abstract class BaseContainer extends Container
                     {
                         ++k;
                     }
-                    
+
                     continue;
                 }
-                
+
                 itemstack1 = slot.getStack();
 
                 if (itemstack1 == null)
@@ -240,5 +188,56 @@ public abstract class BaseContainer extends Container
         }
 
         return flag1;
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int s)
+    {
+        if (inventory == null)
+        {
+            return null;
+        }
+
+        ItemStack itemstack = null;
+        Slot slot = (Slot) inventorySlots.get(s);
+
+        if (slot != null && slot.getHasStack())
+        {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            int playerInventory = 35, inventorySize = playerInventory + inventory.getSizeInventory() + 1;
+
+            if (s > playerInventory && s < inventorySize)
+            {
+                if (!mergeItemStack(itemstack1, 0, 36, true))
+                {
+                    return null;
+                }
+
+                slot.onSlotChange(itemstack1, itemstack);
+            }
+            else if (!mergeItemStack(itemstack1, 36, inventorySize, false))
+            {
+                return null;
+            }
+
+            if (itemstack1.stackSize == 0)
+            {
+                slot.putStack(null);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
+
+            if (itemstack1.stackSize == itemstack.stackSize)
+            {
+                return null;
+            }
+
+            slot.onPickupFromSlot(player, itemstack1);
+        }
+
+        return itemstack;
     }
 }

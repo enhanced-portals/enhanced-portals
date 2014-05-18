@@ -1,11 +1,10 @@
 package enhancedportals.inventory;
 
-import enhancedportals.client.gui.GuiProgrammableInterface;
-import enhancedportals.tileentity.TileProgrammableInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import enhancedportals.client.gui.GuiProgrammableInterface;
+import enhancedportals.tileentity.TileProgrammableInterface;
 
 public class ContainerProgrammableInterface extends BaseContainer
 {

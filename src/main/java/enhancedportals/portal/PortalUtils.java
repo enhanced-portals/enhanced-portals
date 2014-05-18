@@ -78,8 +78,6 @@ public class PortalUtils
             throw new PortalException("couldNotCreatePortalHere");
         }
 
-        System.out.println("Parsing portal components with " + portalBlocks.size() + " portal blocks.");
-
         boolean program = false, mod = false, dialler = false, network = false;
 
         while (!toProcess.isEmpty())
@@ -150,8 +148,6 @@ public class PortalUtils
             throw new PortalException("unknown");
         }
 
-        System.out.println("Done. Returning " + portalComponents.size() + " portal components.");
-
         return portalComponents;
     }
 
@@ -187,7 +183,7 @@ public class PortalUtils
 
             if (!portalBlocks.contains(c))
             {
-                if (WorldUtils.isAirBlock(world, c))
+                if (world.isAirBlock(c.posX, c.posY, c.posZ))
                 {
                     int sides = getGhostedSides(world, c, portalBlocks, portalType);
 

@@ -33,10 +33,18 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
 
-@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler, IPeripheral, SimpleComponent
 {
     public FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
+
+    int tickTimer = 20, time = 0;
+
+    IFluidHandler[] handlers = new IFluidHandler[6];
+
+    boolean cached = false;
+
+    byte outputTracker = 0;
 
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
@@ -63,6 +71,160 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
         }
 
         return false;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void attach(IComputerAccess computer)
+    {
+
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+    {
+        if (method == 0)
+        {
+            return new Object[] { tank.getFluid() != null ? tank.getFluid().getFluid().getName() : "" };
+        }
+        else if (method == 1)
+        {
+            return new Object[] { tank.getFluidAmount() };
+        }
+        else if (method == 2)
+        {
+            return new Object[] { tank.getFluidAmount() == tank.getCapacity() };
+        }
+        else if (method == 3)
+        {
+            return new Object[] { tank.getFluidAmount() == 0 };
+        }
+        else if (method == 4)
+        {
+            return new Object[] { isSending };
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void detach(IComputerAccess computer)
+    {
+
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+    {
+        if (resource == null || !resource.isFluidEqual(tank.getFluid()))
+        {
+            return null;
+        }
+
+        return tank.drain(resource.amount, doDrain);
+    }
+
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+    {
+        return tank.drain(maxDrain, doDrain);
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
+
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+    {
+        return tank.fill(resource, doFill);
+    }
+    @Override
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public String getComponentName()
+    {
+        return "ep_transfer_fluid";
+    }
+    @Callback(direct = true, limit = 1)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getFluid(Context context, Arguments args)
+    {
+        final HashMap<String, Object> map = new HashMap<String, Object>();
+        FluidTankInfo value = tank.getInfo();
+
+        // Code taken from OpenComponents by Sangar
+        // https://github.com/MightyPirates/OpenComponents
+
+        map.put("capacity", value.capacity);
+
+        if (value.fluid != null)
+        {
+            map.put("amount", value.fluid.amount);
+            map.put("id", value.fluid.fluidID);
+            final Fluid fluid = value.fluid.getFluid();
+
+            if (fluid != null)
+            {
+                map.put("name", fluid.getName());
+                map.put("label", fluid.getLocalizedName());
+            }
+        }
+        else
+        {
+            map.put("amount", 0);
+        }
+
+        return new Object[] { map };
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String[] getMethodNames()
+    {
+        return new String[] { "getFluidStored", "getAmountStored", "isFull", "isEmpty", "isSending" };
+    }
+
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from)
+    {
+        return new FluidTankInfo[] { tank.getInfo() };
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String getType()
+    {
+        return "ep_transfer_fluid";
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] isSending(Context context, Arguments args)
+    {
+        return new Object[] { isSending };
+    }
+
+    @Override
+    public void onNeighborChanged()
+    {
+        updateFluidHandlers();
     }
 
     @Override
@@ -100,55 +262,15 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
         tank.writeToNBT(tag);
     }
 
-    @Override
-    public void writeToNBT(NBTTagCompound tag)
+    void transferFluid(int side)
     {
-        super.writeToNBT(tag);
-        tank.readFromNBT(tag);
-    }
-
-    @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-    {
-        return tank.fill(resource, doFill);
-    }
-
-    @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-    {
-        if (resource == null || !resource.isFluidEqual(tank.getFluid()))
+        if (handlers[side] == null)
         {
-            return null;
+            return;
         }
 
-        return tank.drain(resource.amount, doDrain);
+        tank.drain(handlers[side].fill(ForgeDirection.getOrientation(side).getOpposite(), tank.getFluid(), true), true);
     }
-
-    @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-    {
-        return tank.drain(maxDrain, doDrain);
-    }
-
-    @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid)
-    {
-        return true;
-    }
-
-    @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid)
-    {
-        return true;
-    }
-
-    @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from)
-    {
-        return new FluidTankInfo[] { tank.getInfo() };
-    }
-
-    int tickTimer = 20, time = 0;
 
     @Override
     public void updateEntity()
@@ -167,7 +289,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
 
                     if (controller != null && controller.isPortalActive() && tank.getFluidAmount() > 0)
                     {
-                        TileController exitController =  (TileController) controller.getDestinationLocation().getTileEntity();
+                        TileController exitController = (TileController) controller.getDestinationLocation().getTileEntity();
 
                         if (exitController != null)
                         {
@@ -205,36 +327,16 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
                 {
                     updateFluidHandlers();
                 }
-                
-                for (int i = outputTracker; (i < 6) && (tank.getFluidAmount() > 0); i++)
+
+                for (int i = outputTracker; i < 6 && tank.getFluidAmount() > 0; i++)
                 {
                     transferFluid(i);
                 }
-                
+
                 outputTracker++;
                 outputTracker = (byte) (outputTracker % 6);
             }
         }
-    }
-
-    IFluidHandler[] handlers = new IFluidHandler[6];
-    boolean cached = false;
-    byte outputTracker = 0;
-
-    @Override
-    public void onNeighborChanged()
-    {
-        updateFluidHandlers();
-    }
-
-    void transferFluid(int side)
-    {
-        if (handlers[side] == null)
-        {
-            return;
-        }
-
-        tank.drain(handlers[side].fill(ForgeDirection.getOrientation(side).getOpposite(), tank.getFluid(), true), true);
     }
 
     void updateFluidHandlers()
@@ -264,113 +366,11 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
 
         cached = true;
     }
-    
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String getType()
-    {
-        return "fluid_transfer_module";
-    }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String[] getMethodNames()
+    public void writeToNBT(NBTTagCompound tag)
     {
-        return new String[] { "getFluidStored", "getAmountStored", "isFull", "isEmpty", "isSending" };
+        super.writeToNBT(tag);
+        tank.readFromNBT(tag);
     }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
-    {
-        if (method == 0)
-        {
-            return new Object[] { tank.getFluid() != null ? tank.getFluid().getFluid().getName() : "" };
-        }
-        else if (method == 1)
-        {
-            return new Object[] { tank.getFluidAmount() };
-        }
-        else if (method == 2)
-        {
-            return new Object[] { tank.getFluidAmount() == tank.getCapacity() };
-        }
-        else if (method == 3)
-        {
-            return new Object[] { tank.getFluidAmount() == 0 };
-        }
-        else if (method == 4)
-        {
-            return new Object[] { isSending };
-        }
-        
-        return null;
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-	public boolean equals(IPeripheral other)
-	{
-		return other == this;
-	}
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void attach(IComputerAccess computer)
-    {
-        
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void detach(IComputerAccess computer)
-    {
-        
-    }
-        
-	@Override
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public String getComponentName()
-	{
-		return "ep_transfer_fluid";
-	}
-	
-	@Callback(direct = true, limit = 1)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] getFluid(Context context, Arguments args)
-	{
-		final HashMap<String, Object> map = new HashMap<String, Object>();
-		FluidTankInfo value = tank.getInfo();
-		
-		// Code taken from OpenComponents by Sangar
-		// https://github.com/MightyPirates/OpenComponents
-		
-        map.put("capacity", value.capacity);
-        
-        if (value.fluid != null)
-        {
-            map.put("amount", value.fluid.amount);
-            map.put("id", value.fluid.fluidID);
-            final Fluid fluid = value.fluid.getFluid();
-            
-            if (fluid != null)
-            {
-                map.put("name", fluid.getName());
-                map.put("label", fluid.getLocalizedName());
-            }
-        }
-        else
-        {
-            map.put("amount", 0);
-        }
-        
-		return new Object[]{ map };
-	}
-	
-	@Callback(direct = true)
-	@Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-	public Object[] isSending(Context context, Arguments args)
-	{
-		return new Object[] { isSending };
-	}
 }

@@ -27,7 +27,7 @@ import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.utility.ComputerUtils;
 
-@InterfaceList(value = { @Interface(iface="dan200.computercraft.api.peripheral.IPeripheral", modid=EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface="li.cil.oc.api.network.SimpleComponent", modid=EnhancedPortals.MODID_OPENCOMPUTERS) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileDiallingDevice extends TileFrame implements IPeripheral, SimpleComponent
 {
     public ArrayList<GlyphElement> glyphList = new ArrayList<GlyphElement>();
@@ -74,112 +74,25 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Override
-    public void packetGuiFill(ByteBuf buffer)
+    public void addDataToPacket(NBTTagCompound tag)
     {
-        buffer.writeInt(glyphList.size());
 
-        for (int i = 0; i < glyphList.size(); i++)
-        {
-            ByteBufUtils.writeUTF8String(buffer, glyphList.get(i).name);
-            ByteBufUtils.writeUTF8String(buffer, glyphList.get(i).identifier.getGlyphString());
-        }
     }
 
     @Override
-    public void packetGuiUse(ByteBuf buffer)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void attach(IComputerAccess computer)
     {
-        int max = buffer.readInt();
-        glyphList.clear();
 
-        for (int i = 0; i < max; i++)
-        {
-            glyphList.add(new GlyphElement(ByteBufUtils.readUTF8String(buffer), new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer))));
-        }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
-        super.readFromNBT(tag);
-        NBTTagList list = tag.getTagList("glyphList", 10);
-
-        for (int i = 0; i < list.tagCount(); i++)
-        {
-            NBTTagCompound t = (NBTTagCompound) list.getCompoundTagAt(i);
-            String name = t.getString("Name"), glyph = t.getString("Identifier");
-
-            if (t.hasKey("texture"))
-            {
-                PortalTextureManager tex = new PortalTextureManager();
-                tex.readFromNBT(t, "texture");
-
-                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph), tex));
-            }
-            else
-            {
-                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph)));
-            }
-        }
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tag)
-    {
-        super.writeToNBT(tag);
-        NBTTagList list = new NBTTagList();
-
-        for (int i = 0; i < glyphList.size(); i++)
-        {
-            NBTTagCompound t = new NBTTagCompound();
-            GlyphElement e = glyphList.get(i);
-            t.setString("Name", e.name);
-            t.setString("Identifier", e.identifier.getGlyphString());
-
-            if (e.hasSpecificTexture())
-            {
-                e.texture.writeToNBT(t, "texture");
-            }
-
-            list.appendTag(t);
-        }
-
-        tag.setTag("glyphList", list);
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String getType()
-    {
-        return "dialling_device";
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public String[] getMethodNames()
-    {
-        return new String[] { "dial", "terminate", "dialStored", "getStoredName", "getStoredGlyph", "getStoredCount" };
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
         if (method == 0) // dial
         {
-            if (arguments.length == 1)
-            {
-                String s = arguments[0].toString();
-                s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
-
-                String error = ComputerUtils.verifyGlyphArguments(s);
-                if(error != null) throw new Exception(error);
-
-                getPortalController().connectionDial(new GlyphIdentifier(s), null, null);
-            }
-            else
-            {
-                throw new Exception("Invalid arguments");
-            }
+            return comp_Dial(arguments);
         }
         else if (method == 1) // terminate
         {
@@ -187,40 +100,15 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         }
         else if (method == 2) // dialStored
         {
-            int num = getSelectedEntry(arguments);
-
-            if (num >= 0 && num < glyphList.size())
-            {
-                getPortalController().connectionDial(glyphList.get(num).identifier, null, null);
-            }
+            return comp_DialStored(arguments);
         }
         else if (method == 3) // getStoredName
         {
-            int num = getSelectedEntry(arguments);
-            GlyphElement entry = glyphList.get(num);
-
-            if (entry != null)
-            {
-                return new Object[] { entry.name };
-            }
-            else
-            {
-                throw new Exception("Entry not found");
-            }
+            return comp_GetStoredName(arguments);
         }
         else if (method == 4) // getStoredGlyph
         {
-            int num = getSelectedEntry(arguments);
-            GlyphElement entry = glyphList.get(num);
-
-            if (entry != null)
-            {
-                return new Object[] { entry.identifier.getGlyphString() };
-            }
-            else
-            {
-                throw new Exception("Entry not found");
-            }
+            return comp_GetStoredGlyph(arguments);
         }
         else if (method == 5) // getStoredCount
         {
@@ -228,6 +116,118 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         }
 
         return null;
+    }
+
+    Object[] comp_Dial(Object[] arguments) throws Exception
+    {
+        if (arguments.length == 1)
+        {
+            String s = arguments[0].toString();
+            s = s.replace(" ", GlyphIdentifier.GLYPH_SEPERATOR);
+
+            String error = ComputerUtils.verifyGlyphArguments(s);
+            if (error != null)
+            {
+                throw new Exception(error);
+            }
+
+            getPortalController().connectionDial(new GlyphIdentifier(s), null, null);
+        }
+        else
+        {
+            throw new Exception("Invalid arguments");
+        }
+
+        return new Object[] { true };
+    }
+
+    Object[] comp_DialStored(Object[] arguments) throws Exception
+    {
+        int num = getSelectedEntry(arguments);
+
+        if (num >= 0 && num < glyphList.size())
+        {
+            getPortalController().connectionDial(glyphList.get(num).identifier, null, null);
+        }
+
+        return new Object[] { true };
+    }
+
+    Object[] comp_GetStoredGlyph(Object[] arguments) throws Exception
+    {
+        int num = getSelectedEntry(arguments);
+        GlyphElement entry = glyphList.get(num);
+
+        if (entry != null)
+        {
+            return new Object[] { entry.identifier.getGlyphString() };
+        }
+        else
+        {
+            throw new Exception("Entry not found");
+        }
+    }
+
+    Object[] comp_GetStoredName(Object[] arguments) throws Exception
+    {
+        int num = getSelectedEntry(arguments);
+        GlyphElement entry = glyphList.get(num);
+
+        if (entry != null)
+        {
+            return new Object[] { entry.name };
+        }
+        else
+        {
+            throw new Exception("Entry not found");
+        }
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public void detach(IComputerAccess computer)
+    {
+
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] dial(Context context, Arguments args) throws Exception
+    {
+        if (args.count() < 1)
+        {
+            return null;
+        }
+
+        return comp_Dial(ComputerUtils.argsToArray(args));
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] dialStored(Context context, Arguments args) throws Exception
+    {
+        return comp_DialStored(ComputerUtils.argsToArray(args));
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public boolean equals(IPeripheral other)
+    {
+        return other == this;
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public String getComponentName()
+    {
+        return "ep_dialling_device";
+    }
+
+    @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String[] getMethodNames()
+    {
+        return new String[] { "dial", "terminate", "dialStored", "getStoredName", "getStoredGlyph", "getStoredCount" };
     }
 
     int getSelectedEntry(Object[] arguments) throws Exception
@@ -259,24 +259,32 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         throw new Exception("Invalid number of arguments.");
     }
 
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void attach(IComputerAccess computer)
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getStoredCount(Context context, Arguments args)
     {
+        return new Object[] { glyphList.size() };
+    }
 
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getStoredGlyph(Context context, Arguments args) throws Exception
+    {
+        return comp_GetStoredGlyph(ComputerUtils.argsToArray(args));
+    }
+
+    @Callback(direct = true)
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] getStoredName(Context context, Arguments args) throws Exception
+    {
+        return comp_GetStoredName(ComputerUtils.argsToArray(args));
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public void detach(IComputerAccess computer)
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public String getType()
     {
-
-    }
-
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
-    {
-
+        return "ep_dialling_device";
     }
 
     @Override
@@ -286,64 +294,83 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public String getComponentName()
+    public void packetGuiFill(ByteBuf buffer)
     {
-        return "ep_dialling_device";
-    }
+        buffer.writeInt(glyphList.size());
 
-    @Callback
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public Object[] dial(Context context, Arguments args) throws Exception
-    {
-        if(args.count() < 1)
+        for (int i = 0; i < glyphList.size(); i++)
         {
-            return null;
+            ByteBufUtils.writeUTF8String(buffer, glyphList.get(i).name);
+            ByteBufUtils.writeUTF8String(buffer, glyphList.get(i).identifier.getGlyphString());
         }
-        
-        return callMethod(null, null, 0, ComputerUtils.argsToArray(args));
-    }
-
-    @Callback
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public Object[] terminate(Context context, Arguments args)
-    {
-        getPortalController().connectionTerminate();
-        return new Object[]{ true };
-    }
-
-    @Callback
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public Object[] dialStored(Context context, Arguments args) throws Exception
-    {
-        return callMethod(null, null, 2, ComputerUtils.argsToArray(args));
-    }
-
-    @Callback(direct = true)
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public Object[] getStoredName(Context context, Arguments args) throws Exception
-    {
-        return callMethod(null, null, 3, ComputerUtils.argsToArray(args));
-    }
-
-    @Callback(direct = true)
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public Object[] getStoredGlyph(Context context, Arguments args) throws Exception
-    {
-        return callMethod(null, null, 4, ComputerUtils.argsToArray(args));
-    }
-
-    @Callback(direct = true)
-    @Method(modid=EnhancedPortals.MODID_OPENCOMPUTERS)
-    public Object[] getStoredCount(Context context, Arguments args)
-    {
-        return new Object[] { glyphList.size() };
     }
 
     @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public boolean equals(IPeripheral other)
+    public void packetGuiUse(ByteBuf buffer)
     {
-        return other == this;
+        int max = buffer.readInt();
+        glyphList.clear();
+
+        for (int i = 0; i < max; i++)
+        {
+            glyphList.add(new GlyphElement(ByteBufUtils.readUTF8String(buffer), new GlyphIdentifier(ByteBufUtils.readUTF8String(buffer))));
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
+    {
+        super.readFromNBT(tag);
+        NBTTagList list = tag.getTagList("glyphList", 10);
+
+        for (int i = 0; i < list.tagCount(); i++)
+        {
+            NBTTagCompound t = list.getCompoundTagAt(i);
+            String name = t.getString("Name"), glyph = t.getString("Identifier");
+
+            if (t.hasKey("texture"))
+            {
+                PortalTextureManager tex = new PortalTextureManager();
+                tex.readFromNBT(t, "texture");
+
+                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph), tex));
+            }
+            else
+            {
+                glyphList.add(new GlyphElement(name, new GlyphIdentifier(glyph)));
+            }
+        }
+    }
+
+    @Callback
+    @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
+    public Object[] terminate(Context context, Arguments args)
+    {
+        getPortalController().connectionTerminate();
+        return new Object[] { true };
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);
+        NBTTagList list = new NBTTagList();
+
+        for (int i = 0; i < glyphList.size(); i++)
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            GlyphElement e = glyphList.get(i);
+            t.setString("Name", e.name);
+            t.setString("Identifier", e.identifier.getGlyphString());
+
+            if (e.hasSpecificTexture())
+            {
+                e.texture.writeToNBT(t, "texture");
+            }
+
+            list.appendTag(t);
+        }
+
+        tag.setTag("glyphList", list);
     }
 }

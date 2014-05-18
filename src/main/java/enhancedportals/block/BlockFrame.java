@@ -28,7 +28,6 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.common.ISidedBlockTexture;
 import enhancedportals.network.ClientProxy;
-import enhancedportals.network.CommonProxy;
 import enhancedportals.tileentity.TileController;
 import enhancedportals.tileentity.TileDiallingDevice;
 import enhancedportals.tileentity.TileFrame;
@@ -45,7 +44,7 @@ import enhancedportals.tileentity.TileTransferItem;
 import enhancedportals.utility.ConnectedTextures;
 import enhancedportals.utility.ConnectedTexturesDetailed;
 
-@InterfaceList(value={ @Interface(iface="dan200.computercraft.api.peripheral.IPeripheralProvider", modid=EnhancedPortals.MODID_COMPUTERCRAFT) })
+@InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = EnhancedPortals.MODID_COMPUTERCRAFT) })
 public class BlockFrame extends BlockContainer implements IDismantleable, IPeripheralProvider
 {
     public static BlockFrame instance;
@@ -71,7 +70,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     public void breakBlock(World world, int x, int y, int z, Block block, int unknown)
     {
         TileEntity t = world.getTileEntity(x, y, z);
-        
+
         if (t != null && t instanceof TileFrame)
         {
             ((TileFrame) t).breakBlock(block, unknown);
@@ -213,6 +212,20 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     }
 
     @Override
+    @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
+    public IPeripheral getPeripheral(World world, int x, int y, int z, int side)
+    {
+        TileEntity t = world.getTileEntity(x, y, z);
+
+        if (t != null && (t instanceof TileController || t instanceof TileNetworkInterface || t instanceof TileDiallingDevice || t instanceof TileTransferEnergy || t instanceof TileTransferFluid || t instanceof TileTransferItem))
+        {
+            return (IPeripheral) t;
+        }
+
+        return null;
+    }
+
+    @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
         return new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
@@ -239,21 +252,15 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     {
         return true;
     }
-    
+
     @Override
     public boolean isNormalCube()
     {
         return true;
     }
-    
+
     @Override
     public boolean isNormalCube(IBlockAccess world, int x, int y, int z)
-    {
-        return true;
-    }
-    
-    @Override
-    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
     {
         return true;
     }
@@ -285,6 +292,12 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     }
 
     @Override
+    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+    {
+        return true;
+    }
+
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
     {
         TileEntity tile = world.getTileEntity(x, y, z);
@@ -301,7 +314,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
     {
         TileEntity tile = world.getTileEntity(x, y, z);
-        
+
         if (tile instanceof TilePortalPart)
         {
             ((TilePortalPart) tile).onBlockPlaced(entity, stack);
@@ -338,26 +351,12 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
         connectedTextures.registerIcons(register);
         int counter = 0;
         ClientProxy.customFrameTextures.clear();
-        
+
         while (ClientProxy.resourceExists("textures/blocks/customFrame/" + String.format("%02d", counter) + ".png"))
         {
             EnhancedPortals.logger.info("Registered custom frame Icon: " + String.format("%02d", counter) + ".png");
             ClientProxy.customFrameTextures.add(register.registerIcon("enhancedportals:customFrame/" + String.format("%02d", counter)));
             counter++;
         }
-    }
-
-    @Override
-    @Method(modid=EnhancedPortals.MODID_COMPUTERCRAFT)
-    public IPeripheral getPeripheral(World world, int x, int y, int z, int side)
-    {
-        TileEntity t = world.getTileEntity(x, y, z);
-        
-        if (t != null && (t instanceof TileController || t instanceof TileNetworkInterface || t instanceof TileDiallingDevice || t instanceof TileTransferEnergy || t instanceof TileTransferFluid || t instanceof TileTransferItem))
-        {
-            return (IPeripheral) t;
-        }
-        
-        return null;
     }
 }

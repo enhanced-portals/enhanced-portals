@@ -78,6 +78,26 @@ public class EnhancedPortals
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
     }
 
+    /** Taken from the CC-API, allowing for use it if it's available, instead of shipping it/requiring it **/
+    void initializeComputerCraft()
+    {
+        if (!Loader.isModLoaded(MODID_COMPUTERCRAFT))
+        {
+            return;
+        }
+
+        try
+        {
+            Class computerCraft = Class.forName("dan200.computercraft.ComputerCraft");
+            Method computerCraft_registerPeripheralProvider = computerCraft.getMethod("registerPeripheralProvider", new Class[] { Class.forName("dan200.computercraft.api.peripheral.IPeripheralProvider") });
+            computerCraft_registerPeripheralProvider.invoke(null, BlockFrame.instance);
+        }
+        catch (Exception e)
+        {
+            logger.error("Could not load the CC-API");
+        }
+    }
+
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
@@ -109,26 +129,6 @@ public class EnhancedPortals
         if (!event.world.isRemote)
         {
             proxy.networkManager.saveAllData();
-        }
-    }
-
-    /** Taken from the CC-API, allowing for use it if it's available, instead of shipping it/requiring it **/
-    void initializeComputerCraft()
-    {
-        if (!Loader.isModLoaded(MODID_COMPUTERCRAFT))
-        {
-            return;
-        }
-
-        try
-        {
-            Class computerCraft = Class.forName("dan200.computercraft.ComputerCraft");
-            Method computerCraft_registerPeripheralProvider = computerCraft.getMethod("registerPeripheralProvider", new Class[] { Class.forName("dan200.computercraft.api.peripheral.IPeripheralProvider") });
-            computerCraft_registerPeripheralProvider.invoke(null, BlockFrame.instance);
-        }
-        catch (Exception e)
-        {
-            logger.error("Could not load the CC-API");
         }
     }
 }

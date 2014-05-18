@@ -66,21 +66,6 @@ public class WorldUtils
         return world.getTileEntity(c.posX + d.offsetX, c.posY + d.offsetY, c.posZ + d.offsetZ);
     }
 
-    public static boolean isAirBlock(TileEP tile, ForgeDirection orientation)
-    {
-        return isAirBlock(tile.getWorldObj(), tile.getChunkCoordinates(), orientation);
-    }
-
-    public static boolean isAirBlock(World world, ChunkCoordinates c)
-    {
-        return world.isAirBlock(c.posX, c.posY, c.posZ);
-    }
-
-    public static boolean isAirBlock(World world, ChunkCoordinates c, ForgeDirection d)
-    {
-        return isAirBlock(world, getChunkCoordinatesOffset(c, d));
-    }
-
     public static void markForUpdate(TileEntity tile)
     {
         markForUpdate(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);

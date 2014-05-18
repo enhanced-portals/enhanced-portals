@@ -13,7 +13,8 @@ public class ComputerUtils
         {
             // The explicit check for strings is required because OC returns
             // them as byte arrays otherwise (because that's what they are in
-            // Lua). Which is usually not what we wan when auto-converting.
+            // Lua). Which is usually not what we want when auto-converting.
+
             if (args.isString(i))
             {
                 data[i] = args.checkString(i);

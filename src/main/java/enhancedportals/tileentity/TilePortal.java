@@ -1,10 +1,5 @@
 package enhancedportals.tileentity;
 
-import enhancedportals.block.BlockPortal;
-import enhancedportals.item.ItemPaintbrush;
-import enhancedportals.network.ClientProxy;
-import enhancedportals.network.GuiHandler;
-import enhancedportals.utility.GeneralUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +7,11 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import enhancedportals.block.BlockPortal;
+import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.network.GuiHandler;
+import enhancedportals.utility.GeneralUtils;
 
 public class TilePortal extends TilePortalPart
 {
@@ -33,8 +33,14 @@ public class TilePortal extends TilePortalPart
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    @Override
+    public void addDataToPacket(NBTTagCompound tag)
+    {
+
     }
 
     public IIcon getBlockTexture(int side)
@@ -68,6 +74,12 @@ public class TilePortal extends TilePortalPart
         return 0xFFFFFF;
     }
 
+    @Override
+    public void onDataPacket(NBTTagCompound tag)
+    {
+
+    }
+
     public void onEntityCollidedWithBlock(Entity entity)
     {
         TileController controller = getPortalController();
@@ -76,17 +88,5 @@ public class TilePortal extends TilePortalPart
         {
             controller.onEntityEnterPortal(entity, this);
         }
-    }
-
-    @Override
-    public void addDataToPacket(NBTTagCompound tag)
-    {
-        
-    }
-
-    @Override
-    public void onDataPacket(NBTTagCompound tag)
-    {
-        
     }
 }

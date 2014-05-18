@@ -1,7 +1,5 @@
 package enhancedportals.client;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -139,7 +137,7 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
                 tessellator.addVertexWithUV(1, 1, 0, U, v);
                 tessellator.addVertexWithUV(0, 1, 1, u, v);
                 tessellator.addVertexWithUV(0, 0, 1, u, V);
-                
+
                 tessellator.addVertexWithUV(0, 1, 1, U, V);
                 tessellator.addVertexWithUV(1, 1, 0, U, v);
                 tessellator.addVertexWithUV(1, 0, 0, u, v);
@@ -151,7 +149,7 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
                 tessellator.addVertexWithUV(1, 1, 1, U, v);
                 tessellator.addVertexWithUV(0, 1, 0, u, v);
                 tessellator.addVertexWithUV(0, 0, 0, u, V);
-                
+
                 tessellator.addVertexWithUV(0, 1, 0, U, V);
                 tessellator.addVertexWithUV(1, 1, 1, U, v);
                 tessellator.addVertexWithUV(1, 0, 1, u, v);
@@ -160,7 +158,7 @@ public class PortalRenderer implements ISimpleBlockRenderingHandler
 
             tessellator.addTranslation(-x, -y, -z);
         }
-        
+
         renderer.clearOverrideBlockTexture();
         return true;
     }

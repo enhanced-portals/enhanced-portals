@@ -9,7 +9,6 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiRedstoneInterface;
 import enhancedportals.network.packet.PacketGui;
-import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.tileentity.TileRedstoneInterface;
 
 public class ContainerRedstoneInterface extends BaseContainer
@@ -22,6 +21,26 @@ public class ContainerRedstoneInterface extends BaseContainer
         super(null, p, GuiRedstoneInterface.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);
         ri = i;
         hideInventorySlots();
+    }
+
+    @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        int fs = ri.isOutput ? 1 : 0, ss = ri.state;
+
+        for (int i = 0; i < crafters.size(); i++)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+
+            if (firstState != fs || secondState != ss)
+            {
+                EnhancedPortals.packetPipeline.sendTo(new PacketGui(ri), (EntityPlayerMP) icrafting);
+            }
+        }
+
+        firstState = fs;
+        secondState = ss;
     }
 
     @Override
@@ -58,30 +77,10 @@ public class ContainerRedstoneInterface extends BaseContainer
 
         ri.markDirty();
     }
-    
+
     @Override
     public void updateProgressBar(int id, int val)
     {
-        
-    }
-    
-    @Override
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-        int fs = ri.isOutput ? 1 : 0, ss = ri.state;
-        
-        for (int i = 0; i < crafters.size(); i++)
-        {
-            ICrafting icrafting = (ICrafting) crafters.get(i);
-            
-            if (firstState != fs || secondState != ss)
-            {
-                EnhancedPortals.packetPipeline.sendTo(new PacketGui(ri), (EntityPlayerMP) icrafting);
-            }
-        }
-        
-        firstState = fs;
-        secondState = ss;
+
     }
 }

@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGui;
-import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.tileentity.TileDiallingDevice;
@@ -49,19 +48,10 @@ public class ContainerDiallingDevice extends BaseContainer
         }
 
         list.clear();
-        
+
         for (GlyphElement e : dial.glyphList)
         {
             list.add(e.name);
-        }
-    }
-    
-    void updateAll()
-    {
-        for (int i = 0; i < crafters.size(); i++)
-        {
-            ICrafting icrafting = (ICrafting) crafters.get(i);
-            EnhancedPortals.packetPipeline.sendTo(new PacketGui(dial), (EntityPlayerMP) icrafting);
         }
     }
 
@@ -103,6 +93,15 @@ public class ContainerDiallingDevice extends BaseContainer
             }
 
             EnhancedPortals.packetPipeline.sendTo(new PacketGui(dial), (EntityPlayerMP) player);
+        }
+    }
+
+    void updateAll()
+    {
+        for (int i = 0; i < crafters.size(); i++)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+            EnhancedPortals.packetPipeline.sendTo(new PacketGui(dial), (EntityPlayerMP) icrafting);
         }
     }
 }

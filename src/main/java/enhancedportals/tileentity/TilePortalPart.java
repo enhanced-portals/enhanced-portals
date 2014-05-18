@@ -1,6 +1,5 @@
 package enhancedportals.tileentity;
 
-import enhancedportals.utility.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +11,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
+import enhancedportals.utility.WorldUtils;
 
 public abstract class TilePortalPart extends TileEP
 {
@@ -23,6 +23,8 @@ public abstract class TilePortalPart extends TileEP
         return false;
     }
 
+    public abstract void addDataToPacket(NBTTagCompound tag);
+
     public void breakBlock(Block b, int oldMeta)
     {
         TileController controller = getPortalController();
@@ -33,13 +35,29 @@ public abstract class TilePortalPart extends TileEP
         }
     }
 
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        if (portalController != null)
+        {
+            tag.setInteger("PortalControllerX", portalController.posX);
+            tag.setInteger("PortalControllerY", portalController.posY);
+            tag.setInteger("PortalControllerZ", portalController.posZ);
+        }
+
+        addDataToPacket(tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
+    }
+
     public TileController getPortalController()
     {
         if (cachedController != null)
         {
             return cachedController;
         }
-        
+
         TileEntity tile = WorldUtils.getTileEntity(worldObj, portalController);
 
         if (tile != null && tile instanceof TileController)
@@ -70,9 +88,27 @@ public abstract class TilePortalPart extends TileEP
         }
     }
 
+    public abstract void onDataPacket(NBTTagCompound tag);
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    {
+        NBTTagCompound tag = pkt.func_148857_g();
+
+        portalController = null;
+        cachedController = null;
+
+        if (tag.hasKey("PortalControllerX"))
+        {
+            portalController = new ChunkCoordinates(tag.getInteger("PortalControllerX"), tag.getInteger("PortalControllerY"), tag.getInteger("PortalControllerZ"));
+        }
+
+        onDataPacket(tag);
+        WorldUtils.markForUpdate(this);
+    }
+
     /**
-     * Called when a portal part gets placed next to this one. Is used to notify
-     * the Portal Controller to dismantle the structure.
+     * Called when a portal part gets placed next to this one. Is used to notify the Portal Controller to dismantle the structure.
      * 
      * @param x
      * @param y
@@ -89,42 +125,6 @@ public abstract class TilePortalPart extends TileEP
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-        NBTTagCompound tag = pkt.func_148857_g();
-        
-        portalController = null;
-        cachedController = null;
-        
-        if (tag.hasKey("PortalControllerX"))
-        {
-            portalController = new ChunkCoordinates(tag.getInteger("PortalControllerX"), tag.getInteger("PortalControllerY"), tag.getInteger("PortalControllerZ"));
-        }
-        
-        onDataPacket(tag);        
-        WorldUtils.markForUpdate(this);
-    }
-    
-    public abstract void addDataToPacket(NBTTagCompound tag);
-    public abstract void onDataPacket(NBTTagCompound tag);
-    
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        
-        if (portalController != null)
-        {
-            tag.setInteger("PortalControllerX", portalController.posX);
-            tag.setInteger("PortalControllerY", portalController.posY);
-            tag.setInteger("PortalControllerZ", portalController.posZ);
-        }
-        
-        addDataToPacket(tag);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
@@ -138,6 +138,7 @@ public abstract class TilePortalPart extends TileEP
 
     /**
      * Sets the Portal Controller to the specified coordinates, and sends an update packet.
+     * 
      * @param c
      */
     public void setPortalController(ChunkCoordinates c)

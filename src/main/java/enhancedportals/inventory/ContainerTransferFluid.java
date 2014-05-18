@@ -22,11 +22,43 @@ public class ContainerTransferFluid extends BaseContainer
     }
 
     @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        byte isSending = (byte) (fluid.isSending ? 1 : 0);
+        int fID = fluid.tank.getFluid() != null ? fluid.tank.getFluid().fluidID : -1, fAmt = fluid.tank.getFluidAmount();
+
+        for (int i = 0; i < crafters.size(); i++)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+
+            if (wasSending != isSending)
+            {
+                icrafting.sendProgressBarUpdate(this, 0, isSending);
+            }
+
+            if (fluidID != fID)
+            {
+                icrafting.sendProgressBarUpdate(this, 1, fID);
+            }
+
+            if (fluidAmt != fAmt)
+            {
+                icrafting.sendProgressBarUpdate(this, 2, fAmt);
+            }
+
+            wasSending = isSending;
+            fluidID = fID;
+            fluidAmt = fAmt;
+        }
+    }
+
+    @Override
     public void handleGuiPacket(NBTTagCompound tag, EntityPlayer player)
     {
         fluid.isSending = !fluid.isSending;
     }
-    
+
     @Override
     public void updateProgressBar(int id, int val)
     {
@@ -48,44 +80,12 @@ public class ContainerTransferFluid extends BaseContainer
         else if (id == 2)
         {
             FluidStack f = fluid.tank.getFluid();
-            
+
             if (f != null)
             {
                 f.amount = val;
                 fluid.tank.setFluid(f);
             }
-        }
-    }
-    
-    @Override
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-        byte isSending = (byte) (fluid.isSending ? 1 : 0);
-        int fID = fluid.tank.getFluid() != null ? fluid.tank.getFluid().fluidID : -1, fAmt = fluid.tank.getFluidAmount();
-        
-        for (int i = 0; i < crafters.size(); i++)
-        {
-            ICrafting icrafting = (ICrafting) crafters.get(i);
-
-            if (wasSending != isSending)
-            {
-                icrafting.sendProgressBarUpdate(this, 0, isSending);
-            }
-            
-            if (fluidID != fID)
-            {
-                icrafting.sendProgressBarUpdate(this, 1, fID);
-            }
-            
-            if (fluidAmt != fAmt)
-            {
-                icrafting.sendProgressBarUpdate(this, 2, fAmt);
-            }
-            
-            wasSending = isSending;
-            fluidID = fID;
-            fluidAmt = fAmt;
         }
     }
 }
