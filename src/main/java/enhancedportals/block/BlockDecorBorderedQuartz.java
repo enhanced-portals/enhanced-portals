@@ -5,12 +5,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import enhancedportals.utility.ConnectedTextures;
 
-public class BlockPortalFrame extends BlockDecoration
+public class BlockDecorBorderedQuartz extends BlockDecoration
 {
-    public static BlockPortalFrame instance;
+    public static BlockDecorBorderedQuartz instance;
     static ConnectedTextures connectedTextures;
 
-    public BlockPortalFrame(String n)
+    public BlockDecorBorderedQuartz(String n)
     {
         super(n);
         instance = this;

@@ -5,12 +5,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import enhancedportals.utility.ConnectedTextures;
 
-public class BlockDimensionalBridgeStabilizer extends BlockDecoration
+public class BlockDecorStabilizer extends BlockDecoration
 {
-    public static BlockDimensionalBridgeStabilizer instance;
+    public static BlockDecorStabilizer instance;
     static ConnectedTextures connectedTextures;
 
-    public BlockDimensionalBridgeStabilizer(String n)
+    public BlockDecorStabilizer(String n)
     {
         super(n);
         instance = this;

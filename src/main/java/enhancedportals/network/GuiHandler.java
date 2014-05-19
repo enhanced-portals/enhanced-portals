@@ -10,6 +10,7 @@ import enhancedportals.client.gui.GuiDiallingDeviceEdit;
 import enhancedportals.client.gui.GuiDiallingDeviceManual;
 import enhancedportals.client.gui.GuiDiallingDeviceSave;
 import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
+import enhancedportals.client.gui.GuiManual;
 import enhancedportals.client.gui.GuiModuleManipulator;
 import enhancedportals.client.gui.GuiNetworkInterface;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
@@ -32,6 +33,7 @@ import enhancedportals.inventory.ContainerDiallingDeviceEdit;
 import enhancedportals.inventory.ContainerDiallingDeviceManual;
 import enhancedportals.inventory.ContainerDiallingDeviceSave;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
+import enhancedportals.inventory.ContainerManual;
 import enhancedportals.inventory.ContainerModuleManipulator;
 import enhancedportals.inventory.ContainerNetworkInterface;
 import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
@@ -87,7 +89,7 @@ public class GuiHandler implements IGuiHandler
     public static final int TRANSFER_ENERGY = 22;
     public static final int TRANSFER_ITEM = 23;
     public static final int DIMENSIONAL_BRIDGE_STABILIZER = 24;
-    public static final int GUIDE = 25;
+    public static final int MANUAL = 25;
 
     public static void openGui(EntityPlayer player, TileEntity tile, int gui)
     {
@@ -97,6 +99,11 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
+        if (ID == MANUAL)
+        {
+            return new GuiManual(player);
+        }
+        
         TileEntity t = world.getTileEntity(x, y, z);
 
         if (!(t instanceof TileEP))
@@ -194,10 +201,6 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player);
         }
-        // else if (ID == GUIDE) // TODO
-        // {
-        // return new GuiGuide();
-        // }
         else if (ID == TRANSFER_FLUID)
         {
             return new GuiTransferFluid((TileTransferFluid) tile, player);
@@ -217,6 +220,11 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
+        if (ID == MANUAL)
+        {
+            return new ContainerManual(player.inventory);
+        }
+        
         TileEntity t = world.getTileEntity(x, y, z);
 
         if (!(t instanceof TileEP))
@@ -302,10 +310,6 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player.inventory);
         }
-        // else if (ID == GUIDE) // TODO
-        // {
-        // return null;
-        // }
         else if (ID == TRANSFER_FLUID)
         {
             return new ContainerTransferFluid((TileTransferFluid) tile, player.inventory);

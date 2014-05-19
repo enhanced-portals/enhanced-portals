@@ -10,17 +10,17 @@ import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.block.BlockDimensionalBridgeStabilizer;
+import enhancedportals.block.BlockDecorStabilizer;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
-import enhancedportals.block.BlockPortalFrame;
+import enhancedportals.block.BlockDecorBorderedQuartz;
 import enhancedportals.block.BlockStabilizer;
 import enhancedportals.block.BlockStabilizerEmpty;
 import enhancedportals.item.ItemBlankPortalModule;
 import enhancedportals.item.ItemBlankUpgrade;
 import enhancedportals.item.ItemFrame;
 import enhancedportals.item.ItemGlasses;
-import enhancedportals.item.ItemGuide;
+import enhancedportals.item.ItemManual;
 import enhancedportals.item.ItemLocationCard;
 import enhancedportals.item.ItemPaintbrush;
 import enhancedportals.item.ItemPortalModule;
@@ -83,8 +83,8 @@ public class CommonProxy
         GameRegistry.registerBlock(new BlockFrame("frame"), ItemFrame.class, "frame");
         GameRegistry.registerBlock(new BlockPortal("portal"), "portal");
         GameRegistry.registerBlock(new BlockStabilizer("dbs"), ItemStabilizer.class, "dbs");
-        GameRegistry.registerBlock(new BlockPortalFrame("decor_frame"), "decor_frame");
-        GameRegistry.registerBlock(new BlockDimensionalBridgeStabilizer("decor_dbs"), "decor_dbs");
+        GameRegistry.registerBlock(new BlockDecorBorderedQuartz("decor_frame"), "decor_frame");
+        GameRegistry.registerBlock(new BlockDecorStabilizer("decor_dbs"), "decor_dbs");
         GameRegistry.registerBlock(new BlockStabilizerEmpty("dbs_empty"), "dbs_empty");
     }
 
@@ -98,7 +98,7 @@ public class CommonProxy
         GameRegistry.registerItem(new ItemUpgrade("upgrade"), "upgrade");
         GameRegistry.registerItem(new ItemBlankPortalModule("blank_portal_module"), "blank_portal_module");
         GameRegistry.registerItem(new ItemBlankUpgrade("blank_upgrade"), "blank_upgrade");
-        GameRegistry.registerItem(new ItemGuide("guide"), "guide");
+        GameRegistry.registerItem(new ItemManual("manual"), "manual");
     }
 
     public void registerPackets()

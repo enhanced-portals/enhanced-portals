@@ -4,12 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import enhancedportals.block.BlockDecorBorderedQuartz;
+import enhancedportals.block.BlockDecorStabilizer;
+import enhancedportals.block.BlockFrame;
+import enhancedportals.block.BlockPortal;
+import enhancedportals.block.BlockStabilizer;
+import enhancedportals.block.BlockStabilizerEmpty;
 import enhancedportals.client.PortalRenderer;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
@@ -43,6 +50,42 @@ public class ClientProxy extends CommonProxy
     public static ArrayList<IIcon> customPortalTextures = new ArrayList<IIcon>();
     public static ArrayList<ParticleSet> particleSets = new ArrayList<ParticleSet>();
     public static Random random = new Random();
+
+    public static boolean setManualPageFromBlock(Block b, int meta) // TODO
+    {
+        if (b == BlockFrame.instance)
+        {
+            manualPage = "frame" + meta;
+            return true;
+        }
+        else if (b == BlockPortal.instance)
+        {
+            manualPage = "portal";
+            return true;
+        }
+        else if (b == BlockDecorStabilizer.instance)
+        {
+            manualPage = "decorStabilizer";
+            return true;
+        }
+        else if (b == BlockStabilizer.instance)
+        {
+            manualPage = "dbs";
+            return true;
+        }
+        else if (b == BlockStabilizerEmpty.instance)
+        {
+            manualPage = "dbsEmpty";
+            return true;
+        }
+        else if (b == BlockDecorBorderedQuartz.instance)
+        {
+            manualPage = "decorBorderedQuartz";
+            return true;
+        }
+
+        return false;
+    }
 
     public static boolean resourceExists(String file)
     {

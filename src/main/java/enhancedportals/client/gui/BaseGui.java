@@ -205,9 +205,8 @@ public abstract class BaseGui extends GuiContainer
 
         return tab;
     }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    
+    protected void drawBackgroundTexture()
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -239,6 +238,13 @@ public abstract class BaseGui extends GuiContainer
                 drawTexturedModalRect(guiLeft + xSize - 4, guiTop, 252, 0, 4, containerSize + 4 + bufferSpace);
             }
         }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    {
+        drawBackgroundTexture();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX = i - guiLeft;
         mouseY = j - guiTop;
