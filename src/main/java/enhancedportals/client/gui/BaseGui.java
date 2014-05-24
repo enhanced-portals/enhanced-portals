@@ -17,11 +17,14 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import truetyper.FontHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.BaseElement;
 import enhancedportals.client.gui.tabs.BaseTab;
 import enhancedportals.client.gui.tabs.TabTracker;
 import enhancedportals.inventory.BaseContainer;
+import enhancedportals.network.ClientProxy;
+import enhancedportals.utility.GeneralUtils;
 
 public abstract class BaseGui extends GuiContainer
 {
@@ -331,10 +334,17 @@ public abstract class BaseGui extends GuiContainer
         {
             List<String> list = new ArrayList<String>();
             element.addTooltip(list);
-
+            
             if (!list.isEmpty())
             {
-                drawHoveringText(list, mouseX, mouseY, getFontRenderer());
+                boolean needsOffset = list.get(0).equals("offset");
+                
+                if (needsOffset)
+                {
+                    list.remove(0);
+                }
+                
+                drawHoveringText(list, mouseX + (needsOffset ? getGuiLeft() : 0), mouseY + (needsOffset ? getGuiTop() : 0), getFontRenderer());
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glDisable(GL11.GL_LIGHTING);
                 return;
@@ -421,6 +431,28 @@ public abstract class BaseGui extends GuiContainer
             getItemRenderer().renderItemAndEffectIntoGUI(getFontRenderer(), getTextureManager(), stack, x, y);
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.disableStandardItemLighting();
+        }
+    }
+    
+    public void drawSplitTrueType(int x, int y, int w, String s, int offset, float... rgba)
+    {
+        if (offset == 1)
+        {
+            x += getGuiLeft();
+            y += getGuiTop();
+        }
+        
+        List strs = GeneralUtils.listFormattedStringToWidth(s, w);
+        int fontHeight = 8;
+        for (int i = 0; i < strs.size(); i++)
+        {
+            if (i == 1 && offset == 0)
+            {
+                x += getGuiLeft();
+                y += getGuiTop();
+            }
+            
+            FontHelper.drawString((String) strs.get(i), x, y + (i * fontHeight), ClientProxy.bookFont, 1f, 1f, rgba);
         }
     }
 }

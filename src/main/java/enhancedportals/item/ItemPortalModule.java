@@ -9,9 +9,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.PortalParticleFX;
 import enhancedportals.common.IPortalModule;
@@ -22,7 +24,7 @@ public class ItemPortalModule extends Item implements IPortalModule
 {
     public static enum PortalModules
     {
-        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, WALL, FEATHERFALL;
+        REMOVE_PARTICLES, RAINBOW_PARTICLES, REMOVE_SOUNDS, KEEP_MOMENTUM, INVISIBLE_PORTAL, TINTSHADE_PARTICLES, FACING, FEATHERFALL;
 
         public String getUniqueID()
         {
@@ -46,12 +48,56 @@ public class ItemPortalModule extends Item implements IPortalModule
         setMaxStackSize(64);
         setHasSubtypes(true);
     }
+    
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    {
+        if (player.isSneaking() && stack.getItemDamage() == PortalModules.FACING.ordinal())
+        {
+            NBTTagCompound tag = stack.getTagCompound();
+            
+            if (tag == null)
+            {
+                tag = new NBTTagCompound();
+                tag.setInteger("facing", 1);
+            }
+            else
+            {
+                int face = tag.getInteger("facing") + 1;
+                
+                if (face >= 4)
+                {
+                    face = 0;
+                }
+                
+                tag.setInteger("facing", face);
+            }
+            
+            stack.setTagCompound(tag);
+        }
+        
+        return stack;
+    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
         list.add("Portal Module");
+        
+        if (stack.getItemDamage() == PortalModules.FACING.ordinal())
+        {
+            NBTTagCompound t = stack.getTagCompound();
+            int i = 0;
+            
+            if (t != null)
+            {
+                i = t.getInteger("facing");
+            }
+            
+            list.add(EnumChatFormatting.GRAY + EnhancedPortals.localize("gui.facing." + i));
+        }
+        
         list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
     }
 

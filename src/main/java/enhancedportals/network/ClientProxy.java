@@ -2,15 +2,21 @@ package enhancedportals.network;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
+import truetyper.FontLoader;
+import truetyper.TrueTypeFont;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockDecorBorderedQuartz;
 import enhancedportals.block.BlockDecorStabilizer;
 import enhancedportals.block.BlockFrame;
@@ -35,6 +41,9 @@ public class ClientProxy extends CommonProxy
         }
     }
 
+    public static TrueTypeFont bookTitleFont = FontLoader.loadSystemFont("Arial", 20f, true);
+    public static TrueTypeFont bookFont = FontLoader.loadSystemFont("Arial", 16f, true);
+    
     public static int renderPass = 0;
 
     public static GlyphIdentifier saveGlyph;
@@ -42,7 +51,9 @@ public class ClientProxy extends CommonProxy
     public static String saveName;
     public static int editingID = -1;
 
-    public static String manualPage = "mainMain";
+    public static String manualEntry = "main";
+    public static int manualPage = 0;
+    
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
 
@@ -50,43 +61,25 @@ public class ClientProxy extends CommonProxy
     public static ArrayList<IIcon> customPortalTextures = new ArrayList<IIcon>();
     public static ArrayList<ParticleSet> particleSets = new ArrayList<ParticleSet>();
     public static Random random = new Random();
+    
+    static HashMap<String, ItemStack[]> craftingRecipes = new HashMap<String, ItemStack[]>();
 
-    public static boolean setManualPageFromBlock(Block b, int meta) // TODO
+    public static void manualChangeEntry(String entry)
     {
-        if (b == BlockFrame.instance)
-        {
-            manualPage = "frame" + meta;
-            return true;
-        }
-        else if (b == BlockPortal.instance)
-        {
-            manualPage = "portal";
-            return true;
-        }
-        else if (b == BlockDecorStabilizer.instance)
-        {
-            manualPage = "decorStabilizer";
-            return true;
-        }
-        else if (b == BlockStabilizer.instance)
-        {
-            manualPage = "dbs";
-            return true;
-        }
-        else if (b == BlockStabilizerEmpty.instance)
-        {
-            manualPage = "dbsEmpty";
-            return true;
-        }
-        else if (b == BlockDecorBorderedQuartz.instance)
-        {
-            manualPage = "decorBorderedQuartz";
-            return true;
-        }
-
-        return false;
+        manualEntry = entry;
+        manualPage = 0;
     }
-
+    
+    public static boolean manualEntryHasPage(int page)
+    {
+        return !EnhancedPortals.localize("manual." + manualEntry + ".page." + page).contains(".page.");
+    }
+    
+    public static ItemStack[] getCraftingRecipeForManualEntry()
+    {
+        return craftingRecipes.get(manualEntry);
+    }
+    
     public static boolean resourceExists(String file)
     {
         IReloadableResourceManager resourceManager = (IReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
@@ -100,6 +93,42 @@ public class ClientProxy extends CommonProxy
         {
             return false;
         }
+    }
+
+    public static boolean setManualPageFromBlock(Block b, int meta)
+    {
+        if (b == BlockFrame.instance)
+        {
+            manualChangeEntry("frame" + meta);
+            return true;
+        }
+        else if (b == BlockPortal.instance)
+        {
+            manualChangeEntry("portal");
+            return true;
+        }
+        else if (b == BlockDecorStabilizer.instance)
+        {
+            manualChangeEntry("decorStabilizer");
+            return true;
+        }
+        else if (b == BlockStabilizer.instance)
+        {
+            manualChangeEntry("dbs");
+            return true;
+        }
+        else if (b == BlockStabilizerEmpty.instance)
+        {
+            manualChangeEntry("dbsEmpty");
+            return true;
+        }
+        else if (b == BlockDecorBorderedQuartz.instance)
+        {
+            manualChangeEntry("decorBorderedQuartz");
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -155,5 +184,13 @@ public class ClientProxy extends CommonProxy
         gogglesRenderIndex = RenderingRegistry.addNewArmourRendererPrefix("epGoggles");
 
         super.registerItems();
+    }
+    
+    @Override
+    public void setupCrafting()
+    {
+        super.setupCrafting();
+        
+        craftingRecipes.put("frame1", new ItemStack[] { new ItemStack(BlockFrame.instance), new ItemStack(Items.diamond) });
     }
 }

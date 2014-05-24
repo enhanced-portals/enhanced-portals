@@ -177,17 +177,22 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         return false;
     }
 
-    public boolean hasModule(String ID)
+    public ItemStack getModule(String ID)
     {
         for (ItemStack i : getModules())
         {
             if (((IPortalModule) i.getItem()).getID(i).equals(ID))
             {
-                return true;
+                return i;
             }
         }
 
-        return false;
+        return null;
+    }
+    
+    public boolean hasModule(String ID)
+    {
+        return getModule(ID) != null;
     }
 
     public boolean installUpgrade(ItemStack stack)

@@ -11,6 +11,7 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
@@ -19,10 +20,13 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidBase;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockPortal;
+import enhancedportals.item.ItemPortalModule;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.tileentity.TileController;
 import enhancedportals.tileentity.TileModuleManipulator;
@@ -33,6 +37,7 @@ public class EntityManager
 
     static ChunkCoordinates getActualExitLocation(Entity entity, TileController controller)
     {
+        World world = controller.getWorldObj();
         int entityHeight = Math.round(entity.height);
         boolean horizontal = controller.portalType == 3;
 
@@ -41,13 +46,13 @@ public class EntityManager
         {
             for (int i = 0; i < entityHeight; i++)
             {
-                if (controller.getWorldObj().getBlock(c.posX, c.posY + i, c.posZ) != BlockPortal.instance && !controller.getWorldObj().isAirBlock(c.posX, c.posY + i, c.posZ))
+                if (world.getBlock(c.posX, c.posY + i, c.posZ) != BlockPortal.instance && !world.isAirBlock(c.posX, c.posY + i, c.posZ))
                 {
                     continue forloop;
                 }
             }
 
-            if (horizontal && !controller.getWorldObj().isAirBlock(c.posX, c.posY + 1, c.posZ))
+            if (horizontal && !world.isAirBlock(c.posX, c.posY + 1, c.posZ))
             {
                 return new ChunkCoordinates(c.posX, c.posY - 1, c.posZ);
             }
@@ -62,9 +67,29 @@ public class EntityManager
 
     static float getRotation(Entity entity, TileController controller, ChunkCoordinates loc)
     {
-        if (controller.portalType == 1)
+        World world = controller.getWorldObj();
+        TileModuleManipulator module = controller.getModuleManipulator();
+        
+        if (module != null)
         {
-            if (controller.getWorldObj().isSideSolid(loc.posX, loc.posY, loc.posZ + 1, ForgeDirection.NORTH))
+            ItemStack s = module.getModule(EnhancedPortals.SHORT_ID + "." + ItemPortalModule.PortalModules.FACING.ordinal());
+
+            if (s != null)
+            {
+                NBTTagCompound tag = s.getTagCompound();
+                int facing = 0;
+                
+                if (tag != null)
+                {
+                    facing = tag.getInteger("facing");
+                }
+
+                return facing * 90F - 180F;
+            }
+        }
+        else if (controller.portalType == 1)
+        {
+            if (world.isSideSolid(loc.posX, loc.posY, loc.posZ + 1, ForgeDirection.NORTH))
             {
                 return 180f;
             }
@@ -73,7 +98,7 @@ public class EntityManager
         }
         else if (controller.portalType == 2)
         {
-            if (controller.getWorldObj().isSideSolid(loc.posX - 1, loc.posY, loc.posZ, ForgeDirection.EAST))
+            if (world.isSideSolid(loc.posX - 1, loc.posY, loc.posZ, ForgeDirection.EAST))
             {
                 return -90f;
             }
@@ -82,7 +107,7 @@ public class EntityManager
         }
         else if (controller.portalType == 4)
         {
-            if (controller.getWorldObj().isBlockNormalCubeDefault(loc.posX + 1, loc.posY, loc.posZ + 1, true))
+            if (world.isBlockNormalCubeDefault(loc.posX + 1, loc.posY, loc.posZ + 1, true))
             {
                 return 135f;
             }
@@ -91,7 +116,7 @@ public class EntityManager
         }
         else if (controller.portalType == 5)
         {
-            if (controller.getWorldObj().isBlockNormalCubeDefault(loc.posX - 1, loc.posY, loc.posZ + 1, true))
+            if (world.isBlockNormalCubeDefault(loc.posX - 1, loc.posY, loc.posZ + 1, true))
             {
                 return -135f;
             }
