@@ -434,7 +434,7 @@ public abstract class BaseGui extends GuiContainer
         }
     }
     
-    public void drawSplitTrueType(int x, int y, int w, String s, int offset, float... rgba)
+    public int drawSplitTrueType(int x, int y, int w, String s, int offset, float... rgba)
     {
         if (offset == 1)
         {
@@ -454,5 +454,7 @@ public abstract class BaseGui extends GuiContainer
             
             FontHelper.drawString((String) strs.get(i), x, y + (i * fontHeight), ClientProxy.bookFont, 1f, 1f, rgba);
         }
+        
+        return strs.size() * fontHeight;
     }
 }

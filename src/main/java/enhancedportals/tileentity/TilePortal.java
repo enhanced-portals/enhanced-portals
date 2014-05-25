@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import enhancedportals.block.BlockPortal;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
@@ -27,7 +27,7 @@ public class TilePortal extends TilePortalPart
                 GuiHandler.openGui(player, controller, GuiHandler.PORTAL_CONTROLLER_A);
                 return true;
             }
-            else if (stack.getItem() == ItemPaintbrush.instance)
+            else if (stack.getItem() == ItemNanobrush.instance)
             {
                 GuiHandler.openGui(player, controller, player.isSneaking() ? GuiHandler.TEXTURE_C : GuiHandler.TEXTURE_B);
                 return true;

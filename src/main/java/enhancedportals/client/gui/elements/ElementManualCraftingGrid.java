@@ -2,24 +2,54 @@ package enhancedportals.client.gui.elements;
 
 import java.util.List;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import enhancedportals.block.BlockFrame;
-import enhancedportals.client.gui.BaseGui;
+import enhancedportals.client.gui.GuiManual;
+import enhancedportals.network.ClientProxy;
 
-public class ElementCraftingGrid extends BaseElement
+public class ElementManualCraftingGrid extends BaseElement
 {
     int offset = 7;
     ItemStack[] items;
     
-    public ElementCraftingGrid(BaseGui gui, int x, int y, ItemStack[] i)
+    public ElementManualCraftingGrid(GuiManual gui, int x, int y, ItemStack[] i)
     {
         super(gui, x, y, 66, 66);
         texture = new ResourceLocation("enhancedportals", "textures/gui/crafting.png");
         items = i;
     }
 
+    @Override
+    public boolean handleMouseClicked(int x, int y, int mouseButton)
+    {
+        if (items == null)
+        {
+            return false;
+        }
+        
+        x = x - posX + parent.getGuiLeft();
+        y = y - posY + parent.getGuiTop();
+        
+        for (int i = 0; i < 9; i++)
+        {
+            if (i >= items.length || items[i] == null)
+            {
+                break;
+            }
+            
+            int X = i % 3 * 18, Y = i / 3 * 18;
+            
+            if (x >= offset + X && x < offset + X + 16 && y >= offset + Y && y < offset + Y + 16)
+            {
+                ClientProxy.setManualPageFromItem(items[i]);
+                ((GuiManual) parent).pageChanged();
+                break;
+            }
+        }
+        
+        return false;
+    }
+    
     @Override
     public void addTooltip(List<String> list)
     {

@@ -2,9 +2,9 @@
 tile.frame.frame.name=Portal Frame
 tile.frame.controller.name=Portal Controller
 tile.frame.redstone.name=Redstone Interface
-tile.frame.networkInterface.name=Network Interface
-tile.frame.dialDevice.name=Dialling Device
-tile.frame.programInterface.name=Programmable Interface
+tile.frame.network_interface.name=Network Interface
+tile.frame.dial_device.name=Dialling Device
+tile.frame.program_interface.name=Programmable Interface
 tile.frame.upgrade.name=Module Manipulator
 tile.frame.fluid.name=Fluid Transportation Module
 tile.frame.item.name=Item Transportation Module
@@ -32,9 +32,9 @@ item.manual.name=Portal Discoveries
 
 # In-place upgrades
 item.upgrade.redstone.name=Redstone Interface Upgrade
-item.upgrade.networkInterface.name=Network Interface Upgrade
-item.upgrade.dialDevice.name=Dialling Device Upgrade
-item.upgrade.programInterface.name=Programmable Interface Upgrade
+item.upgrade.network_interface.name=Network Interface Upgrade
+item.upgrade.dial_device.name=Dialling Device Upgrade
+item.upgrade.program_interface.name=Programmable Interface Upgrade
 item.upgrade.upgrade.name=Module Manipulator Upgrade
 item.upgrade.fluid.name=Fluid Transportation Upgrade
 item.upgrade.item.name=Item Transportation Upgrade
@@ -45,11 +45,11 @@ item.portal_module.0.name=Particle Destroyer
 item.portal_module.0.desc=Stops particles from getting created
 item.portal_module.1.name=Rainbow Particles
 item.portal_module.1.desc=Every particle will have a random colour
-item.portal_module.2.name=Portal Silencer
+item.portal_module.2.name=Silencer
 item.portal_module.2.desc=Silences the portal
 item.portal_module.3.name=Momentum
 item.portal_module.3.desc=Entities keep their momentum
-item.portal_module.4.name=Portal Cloaking
+item.portal_module.4.name=Cloaking
 item.portal_module.4.desc=Makes the portal completely invisible
 item.portal_module.5.name=Particle Shader
 item.portal_module.5.desc=Particles randomly spawn lighter or darker
@@ -94,7 +94,7 @@ ep3.tab.privatePublic.info=<6>Public:<0> Allow all connections<NL><6>Private:<0>
 
 # Glyphs Tab
 ep3.tab.glyphs=Glyphs
-ep3.tab.glyphs.info=Glyph informations!
+ep3.tab.glyphs.info=// TODO
 
 # GUI Dialler
 ep3.gui.dialDevice=Dialling Device
@@ -110,7 +110,7 @@ ep3.gui.edit=Edit
 
 # GUI Dial Tab
 ep3.tab.dialling=Dialling Device
-ep3.tab.dialling.info=// TODO<NL>Can hold shift to swap the edit button to remove.
+ep3.tab.dialling.info=// TODO
 
 # GUI Texture
 ep3.gui.customIcon=Custom Icon
@@ -237,73 +237,82 @@ ep3.success=[Success]
 ep3.success.create=Portal initialized
 ep3.success.reconfigure=Portal reconfigured
 
-######## Manual
-### ITEMS
-# WRENCH
-ep3.manual.wrench.title=Wrench
+############
+## Manual ##
+####################################################################################################################################################################################################
+## Run out of space when translating a page? Simply create a new page by adding a new line and incrementing the number at the end. The manual will automatically update and add a new page ingame ##
+####################################################################################################################################################################################################
 
-# NANOBRUSH
-ep3.manual.nanobrush.title=Nanobrush
+ep3.manual.decorBorderedQuartz.subtitle=Decorative
+ep3.manual.dbsEmpty.title=Dimensional Bridge Stabilizer (Empty)
+ep3.manual.upgrade0.subtitle=Portal Upgrade
+ep3.manual.module0.subtitle=Portal Module
+ep3.manual.frame0.subtitle=Portal Component
 
-# GLASSES
-ep3.manual.glasses.title=Glasses
+ep3.manual.frame1.page.0=The Portal Controller seems to be the heart of the portal structure. It is responsible for keeping the connection active and managing all teleportation requests.<P>They can be created by combining a basic frame with a diamond.
 
-# LOCATION CARD
-ep3.manual.locationCard.title=Location Card
-
-# PORTAL MODULE
-ep3.manual.module.title=Portal Modules
-
-# UPGRADE
-ep3.manual.upgrade.title=Portal Upgrades
-
-### BLOCKS
-# DBS
-ep3.manual.dbs.title=Dimensional Bridge Stabilizer
-
-# BORDERED QUARTZ
-ep3.manual.decorBorderedQuartz.title=Bordered Quartz
-
-# ENDER-INFUSED METAL
-ep3.manual.decorStabilizer.title=Ender-Infused Metal
-
-# EMPTY DBS
-ep3.manual.dbsEmpty.title=Dimensional Bridge Stabilizer
-ep3.manual.dbsEmpty.subtitle=(Empty)
-
-# PORTAL
-ep3.manual.portal.title=Portal
-
-# FRAME
-ep3.manual.frame0.title=Portal Frame
-ep3.manual.frame0.page.0=The portal frame is magic.
-ep3.manual.frame0.page.1=No, I'm serious, it's actually magical.
-ep3.manual.frame0.page.2=Yep, magic.
-ep3.manual.frame0.page.3=No, you're right, it's not magical.
-
-# CONTROLLER
-ep3.manual.frame1.title=Portal Controller
-
-# REDSTONE INTERFACE
-ep3.manual.frame2.title=Redstone Interface
-
-# NETWORK INTERFACE
-ep3.manual.frame3.title=Network Interface
-
-# DIALLING DEVICE
-ep3.manual.frame4.title=Dialling Device
-
-# PROGRAMMABLE INTERFACE
-ep3.manual.frame5.title=Programmable Interface
-
-# MODULE MANIPULATOR
-ep3.manual.frame6.title=Module Manipulator
-
-# FLUID TRANSPORTATION MODULE
-ep3.manual.frame7.title=Fluid Transportation Module
-
-# ITEM TRANSPORTATION MODULE
-ep3.manual.frame8.title=Item Transportation Module
-
-# ENERGY TRANSPORTATION MODULE
-ep3.manual.frame9.title=Energy Transportation Module
+###################################################################################
+## The rest are resolved automatically, though you can override them if required ##
+###################################################################################
+ep3.manual.wrench.title=item.wrench.name
+ep3.manual.nanobrush.title=item.nanobrush.name
+ep3.manual.glasses.title=item.glasses.name
+ep3.manual.location_card.title=item.location_card.name
+ep3.manual.blank_module.title=item.blank_portal_module.name
+ep3.manual.module0.title=item.portal_module.0.name
+ep3.manual.module1.title=item.portal_module.1.name
+ep3.manual.module2.title=item.portal_module.2.name
+ep3.manual.module3.title=item.portal_module.3.name
+ep3.manual.module4.title=item.portal_module.4.name
+ep3.manual.module5.title=item.portal_module.5.name
+ep3.manual.module6.title=item.portal_module.6.name
+ep3.manual.module7.title=item.portal_module.7.name
+ep3.manual.module1.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module2.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module3.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module4.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module5.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module6.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module7.subtitle=ep3.manual.module0.subtitle
+ep3.manual.blank_upgrade.title=item.blank_upgrade.name
+ep3.manual.upgrade0.title=tile.frame.redstone.name
+ep3.manual.upgrade1.title=tile.frame.network_interface.name
+ep3.manual.upgrade2.title=tile.frame.dial_device.name
+ep3.manual.upgrade3.title=tile.frame.program_interface.name
+ep3.manual.upgrade4.title=tile.frame.upgrade.name
+ep3.manual.upgrade5.title=tile.frame.fluid.name
+ep3.manual.upgrade6.title=tile.frame.item.name
+ep3.manual.upgrade7.title=tile.frame.energy.name
+ep3.manual.upgrade1.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade2.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade3.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade4.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade5.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade6.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade7.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.dbs.title=tile.dbs.name
+ep3.manual.decorBorderedQuartz.title=tile.decor_frame.name
+ep3.manual.decorStabilizer.title=tile.decor_dbs.name
+ep3.manual.decorStabilizer.subtitle=ep3.manual.decorBorderedQuartz.subtitle
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.portal.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame0.title=tile.frame.frame.name
+ep3.manual.frame1.title=tile.frame.controller.name
+ep3.manual.frame2.title=tile.frame.redstone.name
+ep3.manual.frame3.title=tile.frame.network_interface.name
+ep3.manual.frame4.title=tile.frame.dial_device.name
+ep3.manual.frame5.title=tile.frame.program_interface.name
+ep3.manual.frame6.title=tile.frame.upgrade.name
+ep3.manual.frame7.title=tile.frame.fluid.name
+ep3.manual.frame8.title=tile.frame.item.name
+ep3.manual.frame9.title=tile.frame.energy.name
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.frame1.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame2.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame3.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame4.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame5.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame6.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame7.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame8.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame9.subtitle=ep3.manual.frame0.subtitle

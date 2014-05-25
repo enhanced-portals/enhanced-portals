@@ -29,7 +29,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.item.ItemLocationCard;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRerender;
@@ -121,7 +121,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                         GuiHandler.openGui(player, this, GuiHandler.PORTAL_CONTROLLER_A);
                         return true;
                     }
-                    else if (stack.getItem() == ItemPaintbrush.instance)
+                    else if (stack.getItem() == ItemNanobrush.instance)
                     {
                         GuiHandler.openGui(player, this, GuiHandler.TEXTURE_A);
                         return true;

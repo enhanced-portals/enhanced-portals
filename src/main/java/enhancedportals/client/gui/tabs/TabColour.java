@@ -3,7 +3,7 @@ package enhancedportals.client.gui.tabs;
 import net.minecraft.client.gui.GuiButton;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.button.GuiRGBSlider;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 
 public class TabColour extends BaseTab
 {
@@ -17,7 +17,7 @@ public class TabColour extends BaseTab
         maxHeight += 89;
         maxWidth = 116;
         name = "gui.colour";
-        icon = ItemPaintbrush.texture;
+        icon = ItemNanobrush.texture;
         sliderR = r;
         sliderG = g;
         sliderB = b;

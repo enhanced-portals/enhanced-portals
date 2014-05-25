@@ -15,7 +15,7 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 
@@ -48,7 +48,7 @@ public class TileNetworkInterface extends TileFrame implements IPeripheral, Simp
                     GuiHandler.openGui(player, controller, GuiHandler.NETWORK_INTERFACE_A);
                 }
             }
-            else if (stack.getItem() == ItemPaintbrush.instance)
+            else if (stack.getItem() == ItemNanobrush.instance)
             {
                 GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
                 return true;

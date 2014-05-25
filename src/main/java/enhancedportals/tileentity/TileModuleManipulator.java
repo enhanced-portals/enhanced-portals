@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import enhancedportals.client.PortalParticleFX;
 import enhancedportals.common.IPortalModule;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldUtils;
@@ -36,7 +36,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
                 GuiHandler.openGui(player, this, GuiHandler.MODULE_MANIPULATOR);
                 return true;
             }
-            else if (stack.getItem() == ItemPaintbrush.instance)
+            else if (stack.getItem() == ItemNanobrush.instance)
             {
                 GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
                 return true;

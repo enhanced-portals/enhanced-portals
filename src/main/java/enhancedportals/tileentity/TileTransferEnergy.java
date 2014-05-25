@@ -24,7 +24,7 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
@@ -68,7 +68,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
                 GuiHandler.openGui(player, this, GuiHandler.TRANSFER_ENERGY);
                 return true;
             }
-            else if (stack.getItem() == ItemPaintbrush.instance)
+            else if (stack.getItem() == ItemNanobrush.instance)
             {
                 GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
                 return true;

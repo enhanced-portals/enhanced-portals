@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import enhancedportals.block.BlockFrame;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.utility.GeneralUtils;
@@ -44,7 +44,7 @@ public class TileRedstoneInterface extends TileFrame
                 GuiHandler.openGui(player, this, GuiHandler.REDSTONE_INTERFACE);
                 return true;
             }
-            else if (stack.getItem() == ItemPaintbrush.instance)
+            else if (stack.getItem() == ItemNanobrush.instance)
             {
                 GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
                 return true;

@@ -3,7 +3,7 @@ package enhancedportals.tileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 
@@ -26,7 +26,7 @@ public class TileFrameBasic extends TileFrame
                 GuiHandler.openGui(player, controller, GuiHandler.PORTAL_CONTROLLER_A);
                 return true;
             }
-            else if (stack.getItem() == ItemPaintbrush.instance)
+            else if (stack.getItem() == ItemNanobrush.instance)
             {
                 GuiHandler.openGui(player, controller, GuiHandler.TEXTURE_A);
                 return true;

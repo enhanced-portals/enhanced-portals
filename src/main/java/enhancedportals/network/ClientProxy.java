@@ -8,6 +8,8 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +26,14 @@ import enhancedportals.block.BlockPortal;
 import enhancedportals.block.BlockStabilizer;
 import enhancedportals.block.BlockStabilizerEmpty;
 import enhancedportals.client.PortalRenderer;
+import enhancedportals.item.ItemBlankPortalModule;
+import enhancedportals.item.ItemBlankUpgrade;
+import enhancedportals.item.ItemGlasses;
+import enhancedportals.item.ItemLocationCard;
+import enhancedportals.item.ItemNanobrush;
+import enhancedportals.item.ItemPortalModule;
+import enhancedportals.item.ItemUpgrade;
+import enhancedportals.item.ItemWrench;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
 
@@ -41,9 +51,8 @@ public class ClientProxy extends CommonProxy
         }
     }
 
-    public static TrueTypeFont bookTitleFont = FontLoader.loadSystemFont("Arial", 20f, true);
-    public static TrueTypeFont bookFont = FontLoader.loadSystemFont("Arial", 16f, true);
-    
+    public static TrueTypeFont bookFont;
+
     public static int renderPass = 0;
 
     public static GlyphIdentifier saveGlyph;
@@ -53,7 +62,7 @@ public class ClientProxy extends CommonProxy
 
     public static String manualEntry = "main";
     public static int manualPage = 0;
-    
+
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
 
@@ -61,7 +70,7 @@ public class ClientProxy extends CommonProxy
     public static ArrayList<IIcon> customPortalTextures = new ArrayList<IIcon>();
     public static ArrayList<ParticleSet> particleSets = new ArrayList<ParticleSet>();
     public static Random random = new Random();
-    
+
     static HashMap<String, ItemStack[]> craftingRecipes = new HashMap<String, ItemStack[]>();
 
     public static void manualChangeEntry(String entry)
@@ -69,17 +78,17 @@ public class ClientProxy extends CommonProxy
         manualEntry = entry;
         manualPage = 0;
     }
-    
+
     public static boolean manualEntryHasPage(int page)
     {
         return !EnhancedPortals.localize("manual." + manualEntry + ".page." + page).contains(".page.");
     }
-    
+
     public static ItemStack[] getCraftingRecipeForManualEntry()
     {
         return craftingRecipes.get(manualEntry);
     }
-    
+
     public static boolean resourceExists(String file)
     {
         IReloadableResourceManager resourceManager = (IReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
@@ -93,6 +102,61 @@ public class ClientProxy extends CommonProxy
         {
             return false;
         }
+    }
+    
+    public static boolean setManualPageFromItem(ItemStack s)
+    {
+        Item i = s.getItem();
+        
+        if (i instanceof ItemBlock)
+        {
+            return setManualPageFromBlock(Block.getBlockFromItem(i), s.getItemDamage());
+        }
+        else
+        {
+            if (i == ItemBlankPortalModule.instance)
+            {
+                manualChangeEntry("blank_module");
+                return true;
+            }
+            else if (i == ItemBlankUpgrade.instance)
+            {
+                manualChangeEntry("blank_upgrade");
+                return true;
+            }
+            else if (i == ItemGlasses.instance)
+            {
+                manualChangeEntry("glasses");
+                return true;
+            }
+            else if (i == ItemLocationCard.instance)
+            {
+                manualChangeEntry("location_card");
+                return true;
+            }
+            else if (i == ItemNanobrush.instance)
+            {
+                manualChangeEntry("nanobrush");
+                return true;
+            }
+            else if (i == ItemWrench.instance)
+            {
+                manualChangeEntry("wrench");
+                return true;
+            }
+            else if (i == ItemPortalModule.instance)
+            {
+                manualChangeEntry("module" + s.getItemDamage());
+                return true;
+            }
+            else if (i == ItemUpgrade.instance)
+            {
+                manualChangeEntry("upgrade" + s.getItemDamage());
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public static boolean setManualPageFromBlock(Block b, int meta)
@@ -176,6 +240,8 @@ public class ClientProxy extends CommonProxy
         // Rendering
         PortalRenderer.ID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(PortalRenderer.ID, new PortalRenderer());
+
+        bookFont = FontLoader.createFont(new ResourceLocation("enhancedportals", "fonts/Minecraftia.ttf"), 16f, false);
     }
 
     @Override
@@ -185,12 +251,12 @@ public class ClientProxy extends CommonProxy
 
         super.registerItems();
     }
-    
+
     @Override
     public void setupCrafting()
     {
         super.setupCrafting();
-        
+
         craftingRecipes.put("frame1", new ItemStack[] { new ItemStack(BlockFrame.instance), new ItemStack(Items.diamond) });
     }
 }

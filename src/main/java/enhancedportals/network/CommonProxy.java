@@ -22,7 +22,7 @@ import enhancedportals.item.ItemFrame;
 import enhancedportals.item.ItemGlasses;
 import enhancedportals.item.ItemManual;
 import enhancedportals.item.ItemLocationCard;
-import enhancedportals.item.ItemPaintbrush;
+import enhancedportals.item.ItemNanobrush;
 import enhancedportals.item.ItemPortalModule;
 import enhancedportals.item.ItemStabilizer;
 import enhancedportals.item.ItemUpgrade;
@@ -91,7 +91,7 @@ public class CommonProxy
     public void registerItems()
     {
         GameRegistry.registerItem(new ItemWrench("wrench"), "wrench");
-        GameRegistry.registerItem(new ItemPaintbrush("nanobrush"), "nanobrush");
+        GameRegistry.registerItem(new ItemNanobrush("nanobrush"), "nanobrush");
         GameRegistry.registerItem(new ItemGlasses("glasses"), "glasses");
         GameRegistry.registerItem(new ItemLocationCard("location_card"), "location_card");
         GameRegistry.registerItem(new ItemPortalModule("portal_module"), "portal_module");

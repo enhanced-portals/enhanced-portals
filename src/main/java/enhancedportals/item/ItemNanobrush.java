@@ -7,13 +7,13 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 
-public class ItemPaintbrush extends Item
+public class ItemNanobrush extends Item
 {
-    public static ItemPaintbrush instance;
+    public static ItemNanobrush instance;
 
     public static IIcon texture;
 
-    public ItemPaintbrush(String n)
+    public ItemNanobrush(String n)
     {
         super();
         instance = this;

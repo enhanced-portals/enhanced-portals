@@ -4,8 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import truetyper.FontHelper;
+import truetyper.FontLoader;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.gui.elements.ElementCraftingGrid;
+import enhancedportals.client.gui.elements.ElementManualCraftingGrid;
 import enhancedportals.inventory.ContainerManual;
 import enhancedportals.network.ClientProxy;
 
@@ -13,7 +14,7 @@ public class GuiManual extends BaseGui
 {
     public static final int CONTAINER_SIZE = 180, CONTAINER_WIDTH = 279;
     static ResourceLocation textureB = new ResourceLocation("enhancedportals", "textures/gui/manualB.png");
-    ElementCraftingGrid craftingGrid;
+    ElementManualCraftingGrid craftingGrid;
 
     public GuiManual(EntityPlayer p)
     {
@@ -49,15 +50,15 @@ public class GuiManual extends BaseGui
     {
         if (ClientProxy.manualPage == 0)
         {
-            FontHelper.drawString(EnhancedPortals.localize("manual." + ClientProxy.manualEntry + ".title"), 15, 12, ClientProxy.bookTitleFont, 1f, 1f, new float[] { 0f, 0f, 0f, 1f });
-
-            String sub = EnhancedPortals.localize("manual." + ClientProxy.manualEntry + ".subtitle");            
+            int offset = drawSplitTrueType(17, 12, 255, EnhancedPortals.localize("manual." + ClientProxy.manualEntry + ".title"), 0,  0f, 0f, 0f, 1f);
+            String sub = EnhancedPortals.localize("manual." + ClientProxy.manualEntry + ".subtitle");
+            
             if (!sub.contains(".subtitle"))
             {
-                FontHelper.drawString(sub, guiLeft + 15, guiTop + 22, ClientProxy.bookTitleFont, 1f, 1f, new float[] { 0f, 0f, 0f, 1f });
+                drawSplitTrueType(17, offset + 12, 255, sub, 1, 0f, 0f, 0f, 0.4f);
             }
 
-            drawSplitTrueType(148, 12, 255, EnhancedPortals.localize("manual." + ClientProxy.manualEntry + ".page.0"), 1, 0f, 0f, 0f, 1f);
+            drawSplitTrueType(147, 12, 255, EnhancedPortals.localize("manual." + ClientProxy.manualEntry + ".page.0"), 1, 0f, 0f, 0f, 1f);
         }
         else
         {
@@ -136,10 +137,15 @@ public class GuiManual extends BaseGui
     public void initGui()
     {
         super.initGui();
-        craftingGrid = new ElementCraftingGrid(this, 70 - 33, 90 - 33, null);
+        craftingGrid = new ElementManualCraftingGrid(this, 70 - 33, 90 - 33, null);
+        pageChanged();
+        addElement(craftingGrid);
+    }
+
+    public void pageChanged()
+    {
         ItemStack[] stacks = ClientProxy.getCraftingRecipeForManualEntry();
         craftingGrid.setVisible(stacks != null);
         craftingGrid.setItems(stacks);
-        addElement(craftingGrid);
     }
 }
