@@ -57,7 +57,7 @@ public abstract class TilePortalPart extends TileEP
             return cachedController;
         }
 
-        TileEntity tile = worldObj.getTileEntity(portalController.posX, portalController.posY, portalController.posZ);
+        TileEntity tile = portalController == null ? null : worldObj.getTileEntity(portalController.posX, portalController.posY, portalController.posZ);
 
         if (tile != null && tile instanceof TileController)
         {
