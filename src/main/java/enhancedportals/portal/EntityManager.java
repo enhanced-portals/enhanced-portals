@@ -69,7 +69,7 @@ public class EntityManager
     {
         World world = controller.getWorldObj();
         TileModuleManipulator module = controller.getModuleManipulator();
-        
+
         if (module != null)
         {
             ItemStack s = module.getModule(EnhancedPortals.SHORT_ID + "." + ItemPortalModule.PortalModules.FACING.ordinal());
@@ -78,7 +78,7 @@ public class EntityManager
             {
                 NBTTagCompound tag = s.getTagCompound();
                 int facing = 0;
-                
+
                 if (tag != null)
                 {
                     facing = tag.getInteger("facing");

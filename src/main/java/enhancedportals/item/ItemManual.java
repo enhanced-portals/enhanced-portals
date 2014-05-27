@@ -1,6 +1,5 @@
 package enhancedportals.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,6 +31,13 @@ public class ItemManual extends Item
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    {
+        player.openGui(EnhancedPortals.instance, GuiHandler.MANUAL, world, 0, 0, 0);
+        return super.onItemRightClick(stack, world, player);
+    }
+
+    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
     {
         if (world.isRemote && player.isSneaking() && ClientProxy.setManualPageFromBlock(world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)))
@@ -41,13 +47,6 @@ public class ItemManual extends Item
         }
 
         return false;
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {
-        player.openGui(EnhancedPortals.instance, GuiHandler.MANUAL, world, 0, 0, 0);
-        return super.onItemRightClick(stack, world, player);
     }
 
     @Override

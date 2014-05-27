@@ -18,6 +18,18 @@ public class ConnectedTextures
 
     }
 
+    public ConnectedTextures(ConnectedTextures ct, Block block, int meta)
+    {
+        this(ct.textureLoc, block, meta, -1);
+        textures = ct.textures;
+    }
+
+    public ConnectedTextures(ConnectedTextures ct, Block block, int meta, int meta2)
+    {
+        this(ct.textureLoc, block, meta, meta2);
+        textures = ct.textures;
+    }
+
     public ConnectedTextures(String textureLocation, Block b, int meta)
     {
         this(textureLocation, b, meta, -1);
@@ -48,34 +60,12 @@ public class ConnectedTextures
                 return true;
             }
             else
-            // check if subMeta is valid, if not return false
             {
                 return subMeta == -1 ? false : meta == subMeta;
             }
         }
 
         return false;
-    }
-
-    public ConnectedTextures copy(Block b, int meta)
-    {
-        ConnectedTextures ct = new ConnectedTextures();
-        ct.textures = textures;
-        ct.block = b;
-        ct.blockMeta = meta;
-
-        return ct;
-    }
-
-    public ConnectedTextures copy(Block b, int meta, int meta2)
-    {
-        ConnectedTextures ct = new ConnectedTextures();
-        ct.textures = textures;
-        ct.block = b;
-        ct.blockMeta = meta;
-        ct.subMeta = meta2;
-
-        return ct;
     }
 
     public IIcon getBaseIcon()

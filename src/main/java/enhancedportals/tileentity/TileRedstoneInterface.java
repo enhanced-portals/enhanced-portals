@@ -11,13 +11,13 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.utility.GeneralUtils;
-import enhancedportals.utility.WorldUtils;
 
 public class TileRedstoneInterface extends TileFrame
 {
@@ -64,6 +64,24 @@ public class TileRedstoneInterface extends TileFrame
     public boolean canUpdate()
     {
         return true;
+    }
+
+    int getHighestPowerState()
+    {
+        byte highest = 0;
+
+        for (int i = 0; i < 6; i++)
+        {
+            ChunkCoordinates c = getWorldCoordinates().offset(ForgeDirection.getOrientation(i));
+            byte power = (byte) getWorldObj().getIndirectPowerLevelTo(c.posX, c.posY, c.posZ, i);
+
+            if (power > highest)
+            {
+                highest = power;
+            }
+        }
+
+        return highest;
     }
 
     public int isProvidingPower(int side)
@@ -118,7 +136,7 @@ public class TileRedstoneInterface extends TileFrame
             }
 
             boolean hasDialler = controller.getDiallingDevices().size() > 0;
-            int redstoneInputState = WorldUtils.getHighestPowerState(this);
+            int redstoneInputState = getHighestPowerState();
 
             if (state == 1) // Remove portal on signal
             {

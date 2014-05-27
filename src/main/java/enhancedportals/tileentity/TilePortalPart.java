@@ -11,7 +11,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
-import enhancedportals.utility.WorldUtils;
 
 public abstract class TilePortalPart extends TileEP
 {
@@ -58,7 +57,7 @@ public abstract class TilePortalPart extends TileEP
             return cachedController;
         }
 
-        TileEntity tile = WorldUtils.getTileEntity(worldObj, portalController);
+        TileEntity tile = worldObj.getTileEntity(portalController.posX, portalController.posY, portalController.posZ);
 
         if (tile != null && tile instanceof TileController)
         {
@@ -79,7 +78,7 @@ public abstract class TilePortalPart extends TileEP
     {
         for (int i = 0; i < 6; i++)
         {
-            TileEntity tile = WorldUtils.getTileEntity(this, ForgeDirection.getOrientation(i));
+            TileEntity tile = getWorldCoordinates().offset(ForgeDirection.getOrientation(i)).getTileEntity();
 
             if (tile != null && tile instanceof TilePortalPart)
             {
@@ -104,7 +103,7 @@ public abstract class TilePortalPart extends TileEP
         }
 
         onDataPacket(tag);
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     /**
@@ -146,7 +145,7 @@ public abstract class TilePortalPart extends TileEP
         portalController = c;
         cachedController = null;
         markDirty();
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override

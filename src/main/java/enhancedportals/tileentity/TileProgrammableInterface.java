@@ -1,8 +1,5 @@
 package enhancedportals.tileentity;
 
-import javax.script.CompiledScript;
-import javax.script.ScriptException;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,8 +12,8 @@ public class TileProgrammableInterface extends TileFrame
 {
     // public LuaScriptEngine scriptEngine = new LuaScriptEngine();
     // public Bindings scriptBindings = scriptEngine.createBindings();
-    public CompiledScript script;
-    public String scriptData;
+    //public CompiledScript script;
+    //public String scriptData;
 
     @Override
     public boolean activate(EntityPlayer player, ItemStack stack)
@@ -142,7 +139,7 @@ public class TileProgrammableInterface extends TileFrame
         EnhancedPortals.logger.catching(e);
     }
 
-    public void updateScript(String s) throws ScriptException
+    public void updateScript(String s) //throws ScriptException
     {
         // script = scriptEngine.compile(ScriptCommon.getFullProgram(s));
         // script.eval(scriptBindings);

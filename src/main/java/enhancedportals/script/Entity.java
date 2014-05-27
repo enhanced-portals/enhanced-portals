@@ -1,19 +1,8 @@
 package enhancedportals.script;
 
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-
-import org.luaj.vm3.LuaBoolean;
-import org.luaj.vm3.LuaInteger;
-import org.luaj.vm3.LuaString;
-import org.luaj.vm3.LuaValue;
-
 public class Entity
 {
-    net.minecraft.entity.Entity entity;
+    /*net.minecraft.entity.Entity entity;
 
     public Entity(net.minecraft.entity.Entity e)
     {
@@ -89,5 +78,5 @@ public class Entity
         {
             ((EntityPlayer) entity).addChatComponentMessage(new ChatComponentText(message));
         }
-    }
+    }*/
 }

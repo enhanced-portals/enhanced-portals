@@ -44,7 +44,6 @@ processResources
             'mod_version': version,
             'mc_version': project.config.minecraft_version,
             'mod_id': project.config.mod_id
-            
         ])
     }
 

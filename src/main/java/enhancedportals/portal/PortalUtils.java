@@ -16,7 +16,6 @@ import enhancedportals.tileentity.TileModuleManipulator;
 import enhancedportals.tileentity.TileNetworkInterface;
 import enhancedportals.tileentity.TilePortalPart;
 import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.utility.WorldUtils;
 
 public class PortalUtils
 {
@@ -86,7 +85,7 @@ public class PortalUtils
 
             if (!portalComponents.contains(c))
             {
-                TileEntity t = WorldUtils.getTileEntity(controller.getWorldObj(), c);
+                TileEntity t = controller.getWorldObj().getTileEntity(c.posX, c.posY, c.posZ);
 
                 if (portalBlocks.contains(c) || t instanceof TilePortalPart)
                 {
@@ -157,7 +156,7 @@ public class PortalUtils
         {
             for (int i = 1; i < 6; i++)
             {
-                Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller.getWorldObj(), WorldUtils.getChunkCoordinatesOffset(controller.getChunkCoordinates(), ForgeDirection.getOrientation(j)), i);
+                Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller.getWorldObj(), controller.getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
 
                 if (!portalBlocks.isEmpty())
                 {
@@ -235,7 +234,7 @@ public class PortalUtils
 
     static boolean isPortalPart(World world, ChunkCoordinates c)
     {
-        TileEntity tile = WorldUtils.getTileEntity(world, c);
+        TileEntity tile = world.getTileEntity(c.posX, c.posY, c.posZ);
         return tile != null && tile instanceof TilePortalPart;
     }
 

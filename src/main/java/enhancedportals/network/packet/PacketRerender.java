@@ -3,7 +3,6 @@ package enhancedportals.network.packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
-import enhancedportals.utility.WorldUtils;
 
 public class PacketRerender extends PacketEP
 {
@@ -40,7 +39,7 @@ public class PacketRerender extends PacketEP
     @Override
     public void handleClientSide(EntityPlayer player)
     {
-        WorldUtils.markForUpdate(player.worldObj, posX, posY, posZ);
+        player.worldObj.markBlockForUpdate(posX, posY, posZ);
     }
 
     @Override

@@ -31,7 +31,6 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
-import enhancedportals.utility.WorldUtils;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferFluid extends TileFrameTransfer implements IFluidHandler, IPeripheral, SimpleComponent
@@ -156,12 +155,14 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     {
         return tank.fill(resource, doFill);
     }
+
     @Override
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public String getComponentName()
     {
         return "ep_transfer_fluid";
     }
+
     @Callback(direct = true, limit = 1)
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getFluid(Context context, Arguments args)
@@ -295,7 +296,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
                         {
                             for (ChunkCoordinates c : exitController.getTransferFluids())
                             {
-                                TileEntity tile = WorldUtils.getTileEntity(exitController.getWorldObj(), c);
+                                TileEntity tile = exitController.getWorldObj().getTileEntity(c.posX, c.posY, c.posZ);
 
                                 if (tile != null && tile instanceof TileTransferFluid)
                                 {
@@ -343,7 +344,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     {
         for (int i = 0; i < 6; i++)
         {
-            TileEntity tile = WorldUtils.getTileEntity(this, ForgeDirection.getOrientation(i));
+            TileEntity tile = getWorldCoordinates().offset(ForgeDirection.getOrientation(i)).getTileEntity();
 
             if (tile != null && tile instanceof IFluidHandler)
             {

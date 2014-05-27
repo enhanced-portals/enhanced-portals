@@ -3,18 +3,18 @@ package enhancedportals.block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import enhancedportals.utility.ConnectedTextures;
+import enhancedportals.utility.ConnectedTexturesDetailed;
 
 public class BlockDecorEnderInfusedMetal extends BlockDecoration
 {
     public static BlockDecorEnderInfusedMetal instance;
-    static ConnectedTextures connectedTextures;
+    static ConnectedTexturesDetailed connectedTextures;
 
     public BlockDecorEnderInfusedMetal(String n)
     {
         super(n);
         instance = this;
-        connectedTextures = BlockStabilizer.connectedTextures.copy(this, -1);
+        connectedTextures = new ConnectedTexturesDetailed(BlockStabilizer.connectedTextures, this, -1);
     }
 
     @Override

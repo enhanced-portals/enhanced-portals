@@ -48,56 +48,26 @@ public class ItemPortalModule extends Item implements IPortalModule
         setMaxStackSize(64);
         setHasSubtypes(true);
     }
-    
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {
-        if (player.isSneaking() && stack.getItemDamage() == PortalModules.FACING.ordinal())
-        {
-            NBTTagCompound tag = stack.getTagCompound();
-            
-            if (tag == null)
-            {
-                tag = new NBTTagCompound();
-                tag.setInteger("facing", 1);
-            }
-            else
-            {
-                int face = tag.getInteger("facing") + 1;
-                
-                if (face >= 4)
-                {
-                    face = 0;
-                }
-                
-                tag.setInteger("facing", face);
-            }
-            
-            stack.setTagCompound(tag);
-        }
-        
-        return stack;
-    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
         list.add("Portal Module");
-        
+
         if (stack.getItemDamage() == PortalModules.FACING.ordinal())
         {
             NBTTagCompound t = stack.getTagCompound();
             int i = 0;
-            
+
             if (t != null)
             {
                 i = t.getInteger("facing");
             }
-            
+
             list.add(EnumChatFormatting.GRAY + EnhancedPortals.localize("gui.facing." + i));
         }
-        
+
         list.add(EnumChatFormatting.DARK_GRAY + StatCollector.translateToLocal(getUnlocalizedNameInefficiently(stack) + ".desc"));
     }
 
@@ -197,6 +167,36 @@ public class ItemPortalModule extends Item implements IPortalModule
         }
 
         return false;
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    {
+        if (player.isSneaking() && stack.getItemDamage() == PortalModules.FACING.ordinal())
+        {
+            NBTTagCompound tag = stack.getTagCompound();
+
+            if (tag == null)
+            {
+                tag = new NBTTagCompound();
+                tag.setInteger("facing", 1);
+            }
+            else
+            {
+                int face = tag.getInteger("facing") + 1;
+
+                if (face >= 4)
+                {
+                    face = 0;
+                }
+
+                tag.setInteger("facing", face);
+            }
+
+            stack.setTagCompound(tag);
+        }
+
+        return stack;
     }
 
     @Override

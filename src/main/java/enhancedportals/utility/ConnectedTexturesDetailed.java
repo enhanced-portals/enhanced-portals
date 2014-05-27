@@ -13,6 +13,18 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
         super();
     }
 
+    public ConnectedTexturesDetailed(ConnectedTexturesDetailed ct, Block block, int meta)
+    {
+        this(ct.textureLoc, block, meta, -1);
+        textures = ct.textures;
+    }
+
+    public ConnectedTexturesDetailed(ConnectedTexturesDetailed ct, Block block, int meta, int meta2)
+    {
+        this(ct.textureLoc, block, meta, meta2);
+        textures = ct.textures;
+    }
+
     public ConnectedTexturesDetailed(String textureLocation, Block block, int meta)
     {
         this(textureLocation, block, meta, -1);
@@ -22,29 +34,6 @@ public class ConnectedTexturesDetailed extends ConnectedTextures
     {
         super(textureLocation, block, meta, meta2);
         textures = new IIcon[47];
-    }
-
-    @Override
-    public ConnectedTexturesDetailed copy(Block b, int meta)
-    {
-        ConnectedTexturesDetailed ct = new ConnectedTexturesDetailed();
-        ct.textures = textures;
-        ct.block = b;
-        ct.blockMeta = meta;
-
-        return ct;
-    }
-
-    @Override
-    public ConnectedTexturesDetailed copy(Block b, int meta, int meta2)
-    {
-        ConnectedTexturesDetailed ct = new ConnectedTexturesDetailed();
-        ct.textures = textures;
-        ct.block = b;
-        ct.blockMeta = meta;
-        ct.subMeta = meta2;
-
-        return ct;
     }
 
     @Override

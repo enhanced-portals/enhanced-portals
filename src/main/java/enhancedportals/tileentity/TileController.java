@@ -41,7 +41,6 @@ import enhancedportals.portal.PortalUtils;
 import enhancedportals.utility.ComputerUtils;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;
-import enhancedportals.utility.WorldUtils;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileController extends TileFrame implements IPeripheral, SimpleComponent
@@ -226,7 +225,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         cachedDestinationUID = id;
         cachedDestinationLoc = wc;
         markDirty();
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -439,7 +438,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         portalState = ControlState.FINALIZED;
         markDirty();
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     public void connectionDial()
@@ -551,7 +550,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : portalFrames)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -561,7 +560,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : redstoneInterfaces)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -571,7 +570,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : networkInterfaces)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -581,7 +580,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : diallingDevices)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -591,7 +590,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : transferFluids)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -601,7 +600,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : transferItems)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -611,7 +610,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : transferEnergy)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, c);
+            TileEntity t = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -621,7 +620,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         if (programmableInterface != null)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, programmableInterface);
+            TileEntity t = worldObj.getTileEntity(programmableInterface.posX, programmableInterface.posY, programmableInterface.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -631,7 +630,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         if (moduleManipulator != null)
         {
-            TileEntity t = WorldUtils.getTileEntity(worldObj, moduleManipulator);
+            TileEntity t = worldObj.getTileEntity(moduleManipulator.posX, moduleManipulator.posY, moduleManipulator.posZ);
 
             if (t != null && t instanceof TilePortalPart)
             {
@@ -651,7 +650,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         moduleManipulator = null;
         portalState = ControlState.REQUIRES_WRENCH;
         markDirty();
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -708,7 +707,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             dial = diallingDevices.get(new Random().nextInt(diallingDevices.size()));
         }
 
-        TileEntity tile = WorldUtils.getTileEntity(worldObj, dial);
+        TileEntity tile = worldObj.getTileEntity(dial.posX, dial.posY, dial.posZ);
 
         if (tile != null && tile instanceof TileDiallingDevice)
         {
@@ -1078,13 +1077,13 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             worldObj.setBlock(c.posX, c.posY, c.posZ, BlockPortal.instance, portalType, 2);
 
-            TilePortal portal = (TilePortal) WorldUtils.getTileEntity(worldObj, c);
+            TilePortal portal = (TilePortal) worldObj.getTileEntity(c.posX, c.posY, c.posZ);
             portal.portalController = getChunkCoordinates();
         }
 
         for (ChunkCoordinates c : getRedstoneInterfaces())
         {
-            TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
+            TileRedstoneInterface ri = (TileRedstoneInterface) worldObj.getTileEntity(c.posX, c.posY, c.posZ);
             ri.onPortalCreated();
         }
 
@@ -1112,7 +1111,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         for (ChunkCoordinates c : getRedstoneInterfaces())
         {
-            TileRedstoneInterface ri = (TileRedstoneInterface) WorldUtils.getTileEntity(worldObj, c);
+            TileRedstoneInterface ri = (TileRedstoneInterface) worldObj.getTileEntity(c.posX, c.posY, c.posZ);
             ri.onPortalRemoved();
         }
 
@@ -1188,7 +1187,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
      */
     void sendUpdatePacket(boolean updateChunks)
     {
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
         if (updateChunks)
         {
@@ -1292,6 +1291,8 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             EnhancedPortals.proxy.networkManager.addPortalToNetwork(uID, id);
         }
+
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     public void setIdentifierUnique(GlyphIdentifier id) throws PortalException
@@ -1337,6 +1338,8 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add the portal
         }
+
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     /***
@@ -1362,6 +1365,11 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
+            if (i != null && i.size() == 0)
+            {
+                i = null;
+            }
+
             nID = i;
         }
     }
@@ -1417,6 +1425,11 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
     {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
+            if (i != null && i.size() == 0)
+            {
+                i = null;
+            }
+
             uID = i;
         }
     }

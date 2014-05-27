@@ -1,13 +1,8 @@
 package enhancedportals.script;
 
-import org.luaj.vm3.LuaNumber;
-import org.luaj.vm3.LuaValue;
-
-import enhancedportals.tileentity.TileController;
-
 public class Portal
 {
-    TileController controller;
+    /*TileController controller;
 
     public Portal(TileController c)
     {
@@ -22,5 +17,5 @@ public class Portal
     public void terminate()
     {
         controller.connectionTerminate();
-    }
+    }*/
 }

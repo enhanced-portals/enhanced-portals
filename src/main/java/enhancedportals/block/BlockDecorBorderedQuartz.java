@@ -3,18 +3,18 @@ package enhancedportals.block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import enhancedportals.utility.ConnectedTextures;
+import enhancedportals.utility.ConnectedTexturesDetailed;
 
 public class BlockDecorBorderedQuartz extends BlockDecoration
 {
     public static BlockDecorBorderedQuartz instance;
-    static ConnectedTextures connectedTextures;
+    static ConnectedTexturesDetailed connectedTextures;
 
     public BlockDecorBorderedQuartz(String n)
     {
         super(n);
         instance = this;
-        connectedTextures = BlockFrame.connectedTextures.copy(this, -1);
+        connectedTextures = new ConnectedTexturesDetailed(BlockFrame.connectedTextures, this, -1);
     }
 
     @Override

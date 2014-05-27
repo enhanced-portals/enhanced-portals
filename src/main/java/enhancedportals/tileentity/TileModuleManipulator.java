@@ -13,7 +13,6 @@ import enhancedportals.common.IPortalModule;
 import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
-import enhancedportals.utility.WorldUtils;
 
 public class TileModuleManipulator extends TileFrame implements IInventory
 {
@@ -138,6 +137,19 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         return inventory[9];
     }
 
+    public ItemStack getModule(String ID)
+    {
+        for (ItemStack i : getModules())
+        {
+            if (((IPortalModule) i.getItem()).getID(i).equals(ID))
+            {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
     public ArrayList<ItemStack> getModules()
     {
         ArrayList<ItemStack> list = new ArrayList<ItemStack>();
@@ -177,19 +189,6 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         return false;
     }
 
-    public ItemStack getModule(String ID)
-    {
-        for (ItemStack i : getModules())
-        {
-            if (((IPortalModule) i.getItem()).getID(i).equals(ID))
-            {
-                return i;
-            }
-        }
-
-        return null;
-    }
-    
     public boolean hasModule(String ID)
     {
         return getModule(ID) != null;
@@ -214,7 +213,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
                     s.stackSize = 1;
 
                     setInventorySlotContents(i, s);
-                    WorldUtils.markForUpdate(this);
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                     return true;
                 }
             }

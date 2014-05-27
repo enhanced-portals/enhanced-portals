@@ -40,7 +40,6 @@ import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalException;
 import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.utility.GeneralUtils;
-import enhancedportals.utility.WorldUtils;
 
 public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler, IPowerReceptor
 {
@@ -177,7 +176,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
             {
                 TileStabilizer t = (TileStabilizer) tile;
                 t.mainBlock = null;
-                WorldUtils.markForUpdate(t);
+                worldObj.markBlockForUpdate(t.xCoord, t.yCoord, t.zCoord);
             }
         }
     }
@@ -457,7 +456,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         rows = rows2;
         blockList = blocks;
         energyStorage = new EnergyStorage(rows * getEnergyStoragePerRow());
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     void setInstability(int newInstability)

@@ -70,6 +70,11 @@ public class ClientProxy extends CommonProxy
 
     static HashMap<String, ItemStack[]> craftingRecipes = new HashMap<String, ItemStack[]>();
 
+    public static ItemStack[] getCraftingRecipeForManualEntry()
+    {
+        return craftingRecipes.get(manualEntry);
+    }
+
     public static void manualChangeEntry(String entry)
     {
         manualEntry = entry;
@@ -79,11 +84,6 @@ public class ClientProxy extends CommonProxy
     public static boolean manualEntryHasPage(int page)
     {
         return !EnhancedPortals.localize("manual." + manualEntry + ".page." + page).contains(".page.");
-    }
-
-    public static ItemStack[] getCraftingRecipeForManualEntry()
-    {
-        return craftingRecipes.get(manualEntry);
     }
 
     public static boolean resourceExists(String file)
@@ -100,11 +100,47 @@ public class ClientProxy extends CommonProxy
             return false;
         }
     }
-    
+
+    public static boolean setManualPageFromBlock(Block b, int meta)
+    {
+        if (b == BlockFrame.instance)
+        {
+            manualChangeEntry("frame" + meta);
+            return true;
+        }
+        else if (b == BlockPortal.instance)
+        {
+            manualChangeEntry("portal");
+            return true;
+        }
+        else if (b == BlockDecorEnderInfusedMetal.instance)
+        {
+            manualChangeEntry("decorStabilizer");
+            return true;
+        }
+        else if (b == BlockStabilizer.instance)
+        {
+            manualChangeEntry("dbs");
+            return true;
+        }
+        else if (b == BlockStabilizerEmpty.instance)
+        {
+            manualChangeEntry("dbsEmpty");
+            return true;
+        }
+        else if (b == BlockDecorBorderedQuartz.instance)
+        {
+            manualChangeEntry("decorBorderedQuartz");
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean setManualPageFromItem(ItemStack s)
     {
         Item i = s.getItem();
-        
+
         if (i instanceof ItemBlock)
         {
             return setManualPageFromBlock(Block.getBlockFromItem(i), s.getItemDamage());
@@ -151,42 +187,6 @@ public class ClientProxy extends CommonProxy
                 manualChangeEntry("upgrade" + s.getItemDamage());
                 return true;
             }
-        }
-        
-        return false;
-    }
-
-    public static boolean setManualPageFromBlock(Block b, int meta)
-    {
-        if (b == BlockFrame.instance)
-        {
-            manualChangeEntry("frame" + meta);
-            return true;
-        }
-        else if (b == BlockPortal.instance)
-        {
-            manualChangeEntry("portal");
-            return true;
-        }
-        else if (b == BlockDecorEnderInfusedMetal.instance)
-        {
-            manualChangeEntry("decorStabilizer");
-            return true;
-        }
-        else if (b == BlockStabilizer.instance)
-        {
-            manualChangeEntry("dbs");
-            return true;
-        }
-        else if (b == BlockStabilizerEmpty.instance)
-        {
-            manualChangeEntry("dbsEmpty");
-            return true;
-        }
-        else if (b == BlockDecorBorderedQuartz.instance)
-        {
-            manualChangeEntry("decorBorderedQuartz");
-            return true;
         }
 
         return false;
@@ -256,14 +256,14 @@ public class ClientProxy extends CommonProxy
         craftingRecipes.put("frame" + BlockFrame.REDSTONE_INTERFACE, new ItemStack[] { null, new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), null, new ItemStack(BlockFrame.instance, 1, BlockFrame.REDSTONE_INTERFACE) });
         craftingRecipes.put("frame" + BlockFrame.NETWORK_INTERFACE, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.NETWORK_INTERFACE) });
         craftingRecipes.put("frame" + BlockFrame.DIALLING_DEVICE, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, BlockFrame.NETWORK_INTERFACE), new ItemStack(Items.diamond), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.DIALLING_DEVICE) });
-        craftingRecipes.put("frame" + BlockFrame.PROGRAMMABLE_INTERFACE, new ItemStack[] { }); // TODO
+        craftingRecipes.put("frame" + BlockFrame.PROGRAMMABLE_INTERFACE, new ItemStack[] {}); // TODO
         craftingRecipes.put("frame" + BlockFrame.MODULE_MANIPULATOR, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.diamond), new ItemStack(Items.emerald), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.MODULE_MANIPULATOR) });
         craftingRecipes.put("frame" + BlockFrame.TRANSFER_ENERGY, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.redstone_block), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ENERGY) });
         craftingRecipes.put("frame" + BlockFrame.TRANSFER_FLUID, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.bucket), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_FLUID) });
         craftingRecipes.put("frame" + BlockFrame.TRANSFER_ITEM, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.chest), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ITEM) });
         craftingRecipes.put("decorStabilizer", new ItemStack[] { new ItemStack(Blocks.iron_block), new ItemStack(Items.iron_ingot), new ItemStack(Items.iron_ingot), new ItemStack(Items.iron_ingot), new ItemStack(Items.ender_pearl), null, null, null, null, new ItemStack(BlockDecorEnderInfusedMetal.instance, 9) });
-        craftingRecipes.put("dbs", new ItemStack[] { new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl) , new ItemStack(Blocks.iron_block), new ItemStack(BlockStabilizer.instance, 6) });
-        craftingRecipes.put("dbsEmpty", new ItemStack[] {  });
+        craftingRecipes.put("dbs", new ItemStack[] { new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(BlockStabilizer.instance, 6) });
+        craftingRecipes.put("dbsEmpty", new ItemStack[] {});
         craftingRecipes.put("decorBorderedQuartz", new ItemStack[] { new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(BlockDecorBorderedQuartz.instance, 9) });
         craftingRecipes.put("blank_module", new ItemStack[] { new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.iron_ingot), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(ItemBlankPortalModule.instance) });
         craftingRecipes.put("blank_upgrade", new ItemStack[] { new ItemStack(Items.diamond), null, null, new ItemStack(Items.paper), null, null, new ItemStack(Items.dye, 1, 1), null, null, new ItemStack(ItemBlankUpgrade.instance, 8) });
@@ -275,14 +275,14 @@ public class ClientProxy extends CommonProxy
         craftingRecipes.put("module1", new ItemStack[] { new ItemStack(Items.dye, 1, 1), new ItemStack(Items.dye, 1, 2), new ItemStack(Items.dye, 1, 4), null, new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 1) });
         craftingRecipes.put("module2", new ItemStack[] { new ItemStack(Items.redstone), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Blocks.noteblock), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 2) });
         craftingRecipes.put("module3", new ItemStack[] { new ItemStack(Blocks.anvil), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.feather), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 3) });
-        //craftingRecipes.put("module4", new ItemStack[] {  });
+        // craftingRecipes.put("module4", new ItemStack[] { });
         craftingRecipes.put("module5", new ItemStack[] { new ItemStack(Items.dye, 1, 15), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.dye, 1, 0), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 5) });
         craftingRecipes.put("module6", new ItemStack[] { new ItemStack(Items.compass), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 6) });
         craftingRecipes.put("module7", new ItemStack[] { new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(ItemPortalModule.instance, 1, 7) });
         craftingRecipes.put("upgrade0", new ItemStack[] { null, new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), null, new ItemStack(ItemUpgrade.instance, 1, 0) });
         craftingRecipes.put("upgrade1", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), null, null, null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 1) });
         craftingRecipes.put("upgrade2", new ItemStack[] { new ItemStack(ItemUpgrade.instance, 1, 1), new ItemStack(Items.diamond), null, null, null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 2) });
-        craftingRecipes.put("upgrade3", new ItemStack[] {  });
+        craftingRecipes.put("upgrade3", new ItemStack[] {});
         craftingRecipes.put("upgrade4", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.diamond), new ItemStack(Items.emerald), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 4) });
         craftingRecipes.put("upgrade5", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.bucket), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 5) });
         craftingRecipes.put("upgrade6", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.chest), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 6) });

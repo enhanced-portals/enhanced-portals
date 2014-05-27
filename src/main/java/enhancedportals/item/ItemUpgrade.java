@@ -24,7 +24,6 @@ import enhancedportals.tileentity.TileRedstoneInterface;
 import enhancedportals.tileentity.TileTransferEnergy;
 import enhancedportals.tileentity.TileTransferFluid;
 import enhancedportals.tileentity.TileTransferItem;
-import enhancedportals.utility.WorldUtils;
 
 public class ItemUpgrade extends Item
 {
@@ -169,7 +168,7 @@ public class ItemUpgrade extends Item
                 }
 
                 t.setPortalController(controller.getChunkCoordinates());
-                WorldUtils.markForUpdate(controller);
+                world.markBlockForUpdate(controller.xCoord, controller.yCoord, controller.zCoord);
                 return true;
             }
         }

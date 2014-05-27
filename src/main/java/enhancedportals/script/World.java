@@ -1,12 +1,8 @@
 package enhancedportals.script;
 
-import org.luaj.vm3.LuaBoolean;
-import org.luaj.vm3.LuaNumber;
-import org.luaj.vm3.LuaValue;
-
 public class World
 {
-    net.minecraft.world.World world;
+    /*net.minecraft.world.World world;
 
     public World(net.minecraft.world.World w)
     {
@@ -31,5 +27,5 @@ public class World
     public LuaBoolean isThundering()
     {
         return LuaValue.valueOf(world.isThundering());
-    }
+    }*/
 }

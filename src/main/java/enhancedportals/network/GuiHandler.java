@@ -103,7 +103,7 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiManual(player);
         }
-        
+
         TileEntity t = world.getTileEntity(x, y, z);
 
         if (!(t instanceof TileEP))
@@ -224,7 +224,7 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerManual(player.inventory);
         }
-        
+
         TileEntity t = world.getTileEntity(x, y, z);
 
         if (!(t instanceof TileEP))

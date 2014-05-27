@@ -22,7 +22,6 @@ import enhancedportals.block.BlockStabilizer;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;
-import enhancedportals.utility.WorldUtils;
 
 public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerReceptor
 {
@@ -119,7 +118,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                         {
                             TileStabilizer t = (TileStabilizer) tile;
                             t.mainBlock = topLeft;
-                            WorldUtils.markForUpdate(t);
+                            worldObj.markBlockForUpdate(t.xCoord, t.yCoord, t.zCoord);
                         }
                     }
 
@@ -149,6 +148,12 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
         }
 
         main.deconstruct();
+    }
+
+    @Override
+    public boolean canConnectEnergy(ForgeDirection from)
+    {
+        return true;
     }
 
     ArrayList<ChunkCoordinates> checkShapeThreeWide(WorldCoordinates topLeft)
@@ -317,7 +322,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     {
         NBTTagCompound tag = pkt.func_148857_g();
         isFormed = tag.getBoolean("formed");
-        WorldUtils.markForUpdate(this);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -345,11 +350,5 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     {
         super.writeToNBT(tag);
         GeneralUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
-    }
-
-    @Override
-    public boolean canConnectEnergy(ForgeDirection from)
-    {
-        return true;
     }
 }

@@ -12,13 +12,12 @@ import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.tileentity.TileStabilizer;
 import enhancedportals.tileentity.TileStabilizerMain;
-import enhancedportals.utility.ConnectedTextures;
 import enhancedportals.utility.ConnectedTexturesDetailed;
 
 public class BlockStabilizer extends BlockContainer
 {
     public static BlockStabilizer instance;
-    public static ConnectedTextures connectedTextures;
+    public static ConnectedTexturesDetailed connectedTextures;
 
     public BlockStabilizer(String n)
     {

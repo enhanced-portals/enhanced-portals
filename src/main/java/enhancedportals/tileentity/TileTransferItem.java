@@ -25,7 +25,6 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
-import enhancedportals.utility.WorldUtils;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
 public class TileTransferItem extends TileFrameTransfer implements IInventory, IPeripheral, SimpleComponent
@@ -293,7 +292,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
                         {
                             for (ChunkCoordinates c : exitController.getTransferItems())
                             {
-                                TileEntity tile = WorldUtils.getTileEntity(exitController.getWorldObj(), c);
+                                TileEntity tile = exitController.getWorldObj().getTileEntity(c.posX, c.posY, c.posZ);
 
                                 if (tile != null && tile instanceof TileTransferItem)
                                 {

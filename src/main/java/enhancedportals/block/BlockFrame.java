@@ -41,14 +41,13 @@ import enhancedportals.tileentity.TileRedstoneInterface;
 import enhancedportals.tileentity.TileTransferEnergy;
 import enhancedportals.tileentity.TileTransferFluid;
 import enhancedportals.tileentity.TileTransferItem;
-import enhancedportals.utility.ConnectedTextures;
 import enhancedportals.utility.ConnectedTexturesDetailed;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = EnhancedPortals.MODID_COMPUTERCRAFT) })
 public class BlockFrame extends BlockContainer implements IDismantleable, IPeripheralProvider
 {
     public static BlockFrame instance;
-    public static ConnectedTextures connectedTextures;
+    public static ConnectedTexturesDetailed connectedTextures;
     public static IIcon[] overlayIcons;
     public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, PROGRAMMABLE_INTERFACE = 5, MODULE_MANIPULATOR = 6, TRANSFER_FLUID = 7, TRANSFER_ITEM = 8, TRANSFER_ENERGY = 9;
     public static int FRAME_TYPES = 10;
