@@ -51,7 +51,7 @@ public class EnhancedPortals
     public static String localize(String s)
     {
         String s2 = StatCollector.translateToLocal(SHORT_ID + "." + s).replace("<N>", "\n").replace("<P>", "\n\n");
-        return s2.contains(".") ? StatCollector.translateToLocal(s2) : s2;
+        return s2.contains(SHORT_ID + ".") || s2.contains("item.") || s2.contains("tile.") ? StatCollector.translateToLocal(s2) : s2;
     }
 
     public static String localizeError(String s)

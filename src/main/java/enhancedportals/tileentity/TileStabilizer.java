@@ -151,12 +151,6 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
         main.deconstruct();
     }
 
-    @Override
-    public boolean canInterface(ForgeDirection from)
-    {
-        return getMainBlock() != null;
-    }
-
     ArrayList<ChunkCoordinates> checkShapeThreeWide(WorldCoordinates topLeft)
     {
         ArrayList<ChunkCoordinates> blocks = new ArrayList<ChunkCoordinates>();
@@ -351,5 +345,11 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     {
         super.writeToNBT(tag);
         GeneralUtils.saveChunkCoord(tag, mainBlock, "mainBlock");
+    }
+
+    @Override
+    public boolean canConnectEnergy(ForgeDirection from)
+    {
+        return true;
     }
 }

@@ -17,14 +17,11 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import truetyper.FontHelper;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.BaseElement;
 import enhancedportals.client.gui.tabs.BaseTab;
 import enhancedportals.client.gui.tabs.TabTracker;
 import enhancedportals.inventory.BaseContainer;
-import enhancedportals.network.ClientProxy;
-import enhancedportals.utility.GeneralUtils;
 
 public abstract class BaseGui extends GuiContainer
 {
@@ -434,27 +431,17 @@ public abstract class BaseGui extends GuiContainer
         }
     }
     
-    public int drawSplitTrueType(int x, int y, int w, String s, int offset, float... rgba)
+    public void drawItemStackOverlay(ItemStack stack, int x, int y)
     {
-        if (offset == 1)
+        if (stack != null)
         {
-            x += getGuiLeft();
-            y += getGuiTop();
+            getItemRenderer().renderItemOverlayIntoGUI(getFontRenderer(), getTextureManager(), stack, x, y);
         }
-        
-        List strs = GeneralUtils.listFormattedStringToWidth(s, w);
-        int fontHeight = 8;
-        for (int i = 0; i < strs.size(); i++)
-        {
-            if (i == 1 && offset == 0)
-            {
-                x += getGuiLeft();
-                y += getGuiTop();
-            }
-            
-            FontHelper.drawString((String) strs.get(i), x, y + (i * fontHeight), ClientProxy.bookFont, 1f, 1f, rgba);
-        }
-        
-        return strs.size() * fontHeight;
+    }
+    
+    int drawSplitString(int x, int y, int w, String s, int colour)
+    {
+        getFontRenderer().drawSplitString(s, x, y, w, colour);
+        return getFontRenderer().FONT_HEIGHT * getFontRenderer().listFormattedStringToWidth(s, w).size();
     }
 }

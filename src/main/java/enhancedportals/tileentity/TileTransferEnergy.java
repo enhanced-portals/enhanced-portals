@@ -110,7 +110,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     }
 
     @Override
-    public boolean canInterface(ForgeDirection from)
+    public boolean canConnectEnergy(ForgeDirection from)
     {
         return true;
     }
@@ -245,7 +245,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
             {
                 IEnergyHandler energy = (IEnergyHandler) tile;
 
-                if (energy.canInterface(ForgeDirection.getOrientation(i).getOpposite()))
+                if (energy.canConnectEnergy(ForgeDirection.getOrientation(i).getOpposite()))
                 {
                     handlers[i] = energy;
                 }

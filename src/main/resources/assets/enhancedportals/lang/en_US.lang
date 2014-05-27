@@ -28,7 +28,7 @@ item.glasses.name=Glasses
 item.location_card.name=Location Card
 item.blank_portal_module.name=Blank Portal Module
 item.blank_upgrade.name=Blank Upgrade
-item.manual.name=Portal Discoveries
+item.manual.name=An Adventurer's Guide to EnhancedPortals
 
 # In-place upgrades
 item.upgrade.redstone.name=Redstone Interface Upgrade
@@ -249,7 +249,48 @@ ep3.manual.upgrade0.subtitle=Portal Upgrade
 ep3.manual.module0.subtitle=Portal Module
 ep3.manual.frame0.subtitle=Portal Component
 
-ep3.manual.frame1.page.0=The Portal Controller seems to be the heart of the portal structure. It is responsible for keeping the connection active and managing all teleportation requests.<P>They can be created by combining a basic frame with a diamond.
+ep3.manual.main.title=An Adventurer's Guide to EnhancedPortals
+
+## Temporary
+ep3.manual.portal.page.0=To be completed
+ep3.manual.main.page.0=ep3.manual.portal.page.0
+ep3.manual.frame0.page.0=ep3.manual.portal.page.0
+ep3.manual.frame1.page.0=ep3.manual.portal.page.0
+ep3.manual.frame2.page.0=ep3.manual.portal.page.0
+ep3.manual.frame3.page.0=ep3.manual.portal.page.0
+ep3.manual.frame4.page.0=ep3.manual.portal.page.0
+ep3.manual.frame5.page.0=ep3.manual.portal.page.0
+ep3.manual.frame6.page.0=ep3.manual.portal.page.0
+ep3.manual.frame7.page.0=ep3.manual.portal.page.0
+ep3.manual.frame8.page.0=ep3.manual.portal.page.0
+ep3.manual.frame9.page.0=ep3.manual.portal.page.0
+ep3.manual.wrench.page.0=ep3.manual.portal.page.0
+ep3.manual.nanobrush.page.0=ep3.manual.portal.page.0
+ep3.manual.glasses.page.0=ep3.manual.portal.page.0
+ep3.manual.location_card.page.0=ep3.manual.portal.page.0
+ep3.manual.blank_module.page.0=ep3.manual.portal.page.0
+ep3.manual.blank_upgrade.page.0=ep3.manual.portal.page.0
+ep3.manual.module0.page.0=ep3.manual.portal.page.0
+ep3.manual.module1.page.0=ep3.manual.portal.page.0
+ep3.manual.module2.page.0=ep3.manual.portal.page.0
+ep3.manual.module3.page.0=ep3.manual.portal.page.0
+ep3.manual.module4.page.0=ep3.manual.portal.page.0
+ep3.manual.module5.page.0=ep3.manual.portal.page.0
+ep3.manual.module6.page.0=ep3.manual.portal.page.0
+ep3.manual.module7.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade0.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade1.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade2.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade3.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade4.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade5.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade6.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade7.page.0=ep3.manual.portal.page.0
+ep3.manual.dbs.page.0=ep3.manual.portal.page.0
+ep3.manual.decorStabilizer.page.0=ep3.manual.portal.page.0
+ep3.manual.decorBorderedQuartz.page.0=ep3.manual.portal.page.0
+ep3.manual.dbsEmpty.page.0=Not yet implemented
+ep3.manual.frame5.page.0=ep3.manual.dbsEmpty.page.0
 
 ###################################################################################
 ## The rest are resolved automatically, though you can override them if required ##
@@ -275,14 +316,14 @@ ep3.manual.module5.subtitle=ep3.manual.module0.subtitle
 ep3.manual.module6.subtitle=ep3.manual.module0.subtitle
 ep3.manual.module7.subtitle=ep3.manual.module0.subtitle
 ep3.manual.blank_upgrade.title=item.blank_upgrade.name
-ep3.manual.upgrade0.title=tile.frame.redstone.name
-ep3.manual.upgrade1.title=tile.frame.network_interface.name
-ep3.manual.upgrade2.title=tile.frame.dial_device.name
-ep3.manual.upgrade3.title=tile.frame.program_interface.name
-ep3.manual.upgrade4.title=tile.frame.upgrade.name
-ep3.manual.upgrade5.title=tile.frame.fluid.name
-ep3.manual.upgrade6.title=tile.frame.item.name
-ep3.manual.upgrade7.title=tile.frame.energy.name
+ep3.manual.upgrade0.title=item.upgrade.redstone.name
+ep3.manual.upgrade1.title=item.upgrade.network_interface.name
+ep3.manual.upgrade2.title=item.upgrade.dial_device.name
+ep3.manual.upgrade3.title=item.upgrade.program_interface.name
+ep3.manual.upgrade4.title=item.upgrade.upgrade.name
+ep3.manual.upgrade5.title=item.upgrade.fluid.name
+ep3.manual.upgrade6.title=item.upgrade.item.name
+ep3.manual.upgrade7.title=item.upgrade.energy.name
 ep3.manual.upgrade1.subtitle=ep3.manual.upgrade0.subtitle
 ep3.manual.upgrade2.subtitle=ep3.manual.upgrade0.subtitle
 ep3.manual.upgrade3.subtitle=ep3.manual.upgrade0.subtitle
@@ -316,3 +357,7 @@ ep3.manual.frame6.subtitle=ep3.manual.frame0.subtitle
 ep3.manual.frame7.subtitle=ep3.manual.frame0.subtitle
 ep3.manual.frame8.subtitle=ep3.manual.frame0.subtitle
 ep3.manual.frame9.subtitle=ep3.manual.frame0.subtitle
+
+# These must be left as they are
+ep3.manual.main.page.1= 
+ep3.manual.main.page.2= 

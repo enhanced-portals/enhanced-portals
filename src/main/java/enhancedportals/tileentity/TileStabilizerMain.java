@@ -191,7 +191,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     }
 
     @Override
-    public boolean canInterface(ForgeDirection from)
+    public boolean canConnectEnergy(ForgeDirection from)
     {
         return true;
     }

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -14,13 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
-import truetyper.FontLoader;
-import truetyper.TrueTypeFont;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockDecorBorderedQuartz;
-import enhancedportals.block.BlockDecorStabilizer;
+import enhancedportals.block.BlockDecorEnderInfusedMetal;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.block.BlockStabilizer;
@@ -50,8 +49,6 @@ public class ClientProxy extends CommonProxy
             type = t;
         }
     }
-
-    public static TrueTypeFont bookFont;
 
     public static int renderPass = 0;
 
@@ -171,7 +168,7 @@ public class ClientProxy extends CommonProxy
             manualChangeEntry("portal");
             return true;
         }
-        else if (b == BlockDecorStabilizer.instance)
+        else if (b == BlockDecorEnderInfusedMetal.instance)
         {
             manualChangeEntry("decorStabilizer");
             return true;
@@ -240,15 +237,12 @@ public class ClientProxy extends CommonProxy
         // Rendering
         PortalRenderer.ID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(PortalRenderer.ID, new PortalRenderer());
-
-        bookFont = FontLoader.createFont(new ResourceLocation("enhancedportals", "fonts/Minecraftia.ttf"), 16f, false);
     }
 
     @Override
     public void registerItems()
     {
         gogglesRenderIndex = RenderingRegistry.addNewArmourRendererPrefix("epGoggles");
-
         super.registerItems();
     }
 
@@ -257,6 +251,41 @@ public class ClientProxy extends CommonProxy
     {
         super.setupCrafting();
 
-        craftingRecipes.put("frame1", new ItemStack[] { new ItemStack(BlockFrame.instance), new ItemStack(Items.diamond) });
+        craftingRecipes.put("frame0", new ItemStack[] { new ItemStack(Blocks.stone), new ItemStack(Items.iron_ingot), new ItemStack(Blocks.stone), new ItemStack(Items.iron_ingot), new ItemStack(Blocks.quartz_block), new ItemStack(Items.iron_ingot), new ItemStack(Blocks.stone), new ItemStack(Items.iron_ingot), new ItemStack(Blocks.stone), new ItemStack(BlockFrame.instance, 4, 0) });
+        craftingRecipes.put("frame" + BlockFrame.PORTAL_CONTROLLER, new ItemStack[] { new ItemStack(BlockFrame.instance), new ItemStack(Items.diamond), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.PORTAL_CONTROLLER) });
+        craftingRecipes.put("frame" + BlockFrame.REDSTONE_INTERFACE, new ItemStack[] { null, new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), null, new ItemStack(BlockFrame.instance, 1, BlockFrame.REDSTONE_INTERFACE) });
+        craftingRecipes.put("frame" + BlockFrame.NETWORK_INTERFACE, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.NETWORK_INTERFACE) });
+        craftingRecipes.put("frame" + BlockFrame.DIALLING_DEVICE, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, BlockFrame.NETWORK_INTERFACE), new ItemStack(Items.diamond), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.DIALLING_DEVICE) });
+        craftingRecipes.put("frame" + BlockFrame.PROGRAMMABLE_INTERFACE, new ItemStack[] { }); // TODO
+        craftingRecipes.put("frame" + BlockFrame.MODULE_MANIPULATOR, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.diamond), new ItemStack(Items.emerald), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.MODULE_MANIPULATOR) });
+        craftingRecipes.put("frame" + BlockFrame.TRANSFER_ENERGY, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.redstone_block), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ENERGY) });
+        craftingRecipes.put("frame" + BlockFrame.TRANSFER_FLUID, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.bucket), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_FLUID) });
+        craftingRecipes.put("frame" + BlockFrame.TRANSFER_ITEM, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.chest), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ITEM) });
+        craftingRecipes.put("decorStabilizer", new ItemStack[] { new ItemStack(Blocks.iron_block), new ItemStack(Items.iron_ingot), new ItemStack(Items.iron_ingot), new ItemStack(Items.iron_ingot), new ItemStack(Items.ender_pearl), null, null, null, null, new ItemStack(BlockDecorEnderInfusedMetal.instance, 9) });
+        craftingRecipes.put("dbs", new ItemStack[] { new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.ender_pearl), new ItemStack(Blocks.iron_block), new ItemStack(Items.ender_pearl) , new ItemStack(Blocks.iron_block), new ItemStack(BlockStabilizer.instance, 6) });
+        craftingRecipes.put("dbsEmpty", new ItemStack[] {  });
+        craftingRecipes.put("decorBorderedQuartz", new ItemStack[] { new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(BlockDecorBorderedQuartz.instance, 9) });
+        craftingRecipes.put("blank_module", new ItemStack[] { new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.iron_ingot), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(ItemBlankPortalModule.instance) });
+        craftingRecipes.put("blank_upgrade", new ItemStack[] { new ItemStack(Items.diamond), null, null, new ItemStack(Items.paper), null, null, new ItemStack(Items.dye, 1, 1), null, null, new ItemStack(ItemBlankUpgrade.instance, 8) });
+        craftingRecipes.put("glasses", new ItemStack[] { new ItemStack(Items.dye, 1, 1), null, new ItemStack(Items.dye, 1, 6), new ItemStack(Blocks.glass_pane), new ItemStack(Items.leather), new ItemStack(Blocks.glass_pane), new ItemStack(Items.leather), null, new ItemStack(Items.leather), new ItemStack(ItemGlasses.instance) });
+        craftingRecipes.put("location_card", new ItemStack[] { new ItemStack(Items.iron_ingot), new ItemStack(Items.paper), new ItemStack(Items.iron_ingot), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.iron_ingot), new ItemStack(Items.dye, 1, 4), new ItemStack(Items.iron_ingot), new ItemStack(ItemLocationCard.instance, 16) });
+        craftingRecipes.put("wrench", new ItemStack[] { new ItemStack(Items.iron_ingot), null, new ItemStack(Items.iron_ingot), null, new ItemStack(Items.quartz), null, null, new ItemStack(Items.iron_ingot), null, new ItemStack(ItemWrench.instance) });
+        craftingRecipes.put("nanobrush", new ItemStack[] { new ItemStack(Blocks.wool), new ItemStack(Items.string), null, new ItemStack(Items.string), new ItemStack(Items.stick), null, null, null, new ItemStack(Items.stick), new ItemStack(ItemNanobrush.instance) });
+        craftingRecipes.put("module0", new ItemStack[] { new ItemStack(Items.redstone), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.gunpowder), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 0) });
+        craftingRecipes.put("module1", new ItemStack[] { new ItemStack(Items.dye, 1, 1), new ItemStack(Items.dye, 1, 2), new ItemStack(Items.dye, 1, 4), null, new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 1) });
+        craftingRecipes.put("module2", new ItemStack[] { new ItemStack(Items.redstone), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Blocks.noteblock), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 2) });
+        craftingRecipes.put("module3", new ItemStack[] { new ItemStack(Blocks.anvil), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.feather), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 3) });
+        //craftingRecipes.put("module4", new ItemStack[] {  });
+        craftingRecipes.put("module5", new ItemStack[] { new ItemStack(Items.dye, 1, 15), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.dye, 1, 0), null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 5) });
+        craftingRecipes.put("module6", new ItemStack[] { new ItemStack(Items.compass), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, null, null, new ItemStack(ItemPortalModule.instance, 1, 6) });
+        craftingRecipes.put("module7", new ItemStack[] { new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(ItemBlankPortalModule.instance), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(Items.feather), new ItemStack(ItemPortalModule.instance, 1, 7) });
+        craftingRecipes.put("upgrade0", new ItemStack[] { null, new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), null, new ItemStack(ItemUpgrade.instance, 1, 0) });
+        craftingRecipes.put("upgrade1", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), null, null, null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 1) });
+        craftingRecipes.put("upgrade2", new ItemStack[] { new ItemStack(ItemUpgrade.instance, 1, 1), new ItemStack(Items.diamond), null, null, null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 2) });
+        craftingRecipes.put("upgrade3", new ItemStack[] {  });
+        craftingRecipes.put("upgrade4", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.diamond), new ItemStack(Items.emerald), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 4) });
+        craftingRecipes.put("upgrade5", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.bucket), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 5) });
+        craftingRecipes.put("upgrade6", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.chest), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 6) });
+        craftingRecipes.put("upgrade7", new ItemStack[] { new ItemStack(ItemBlankUpgrade.instance), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.redstone_block), null, null, null, null, null, new ItemStack(ItemUpgrade.instance, 1, 7) });
     }
 }
