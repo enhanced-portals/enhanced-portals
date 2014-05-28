@@ -72,7 +72,7 @@ public class TileRedstoneInterface extends TileFrame
 
         for (int i = 0; i < 6; i++)
         {
-            ChunkCoordinates c = getWorldCoordinates().offset(ForgeDirection.getOrientation(i));
+            ChunkCoordinates c = GeneralUtils.offset(getChunkCoordinates(), ForgeDirection.getOrientation(i));
             byte power = (byte) getWorldObj().getIndirectPowerLevelTo(c.posX, c.posY, c.posZ, i);
 
             if (power > highest)

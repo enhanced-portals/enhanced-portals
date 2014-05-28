@@ -454,6 +454,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
             if (dbs == null)
             {
+                portalState = ControlState.REQUIRES_LOCATION;
                 throw new PortalException("stabilizerNotFound");
             }
 
@@ -485,6 +486,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
             if (dbs == null)
             {
+                portalState = ControlState.REQUIRES_LOCATION;
                 throw new PortalException("stabilizerNotFound");
             }
 
@@ -519,6 +521,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
             if (dbs == null)
             {
+                portalState = ControlState.REQUIRES_LOCATION;
                 throw new PortalException("stabilizerNotFound");
             }
 

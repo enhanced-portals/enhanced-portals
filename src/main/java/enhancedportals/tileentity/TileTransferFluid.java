@@ -344,7 +344,8 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
     {
         for (int i = 0; i < 6; i++)
         {
-            TileEntity tile = getWorldCoordinates().offset(ForgeDirection.getOrientation(i)).getTileEntity();
+            ChunkCoordinates c = GeneralUtils.offset(getChunkCoordinates(), ForgeDirection.getOrientation(i));
+            TileEntity tile = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
             if (tile != null && tile instanceof IFluidHandler)
             {

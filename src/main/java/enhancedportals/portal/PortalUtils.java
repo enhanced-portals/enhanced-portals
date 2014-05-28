@@ -16,6 +16,7 @@ import enhancedportals.tileentity.TileModuleManipulator;
 import enhancedportals.tileentity.TileNetworkInterface;
 import enhancedportals.tileentity.TilePortalPart;
 import enhancedportals.tileentity.TileProgrammableInterface;
+import enhancedportals.utility.GeneralUtils;
 
 public class PortalUtils
 {
@@ -156,7 +157,8 @@ public class PortalUtils
         {
             for (int i = 1; i < 6; i++)
             {
-                Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller.getWorldObj(), controller.getWorldCoordinates().offset(ForgeDirection.getOrientation(j)), i);
+                ChunkCoordinates c = GeneralUtils.offset(controller.getChunkCoordinates(), ForgeDirection.getOrientation(j));
+                Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller.getWorldObj(), c, i);
 
                 if (!portalBlocks.isEmpty())
                 {

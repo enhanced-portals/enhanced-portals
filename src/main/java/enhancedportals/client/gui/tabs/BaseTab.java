@@ -127,6 +127,47 @@ public abstract class BaseTab
         {
             drawFullyClosed();
         }
+        
+        if (open && currentWidth < maxWidth)
+        {
+            currentWidth += tabExpandSpeed;
+        }
+        else if (!open && currentWidth > minWidth)
+        {
+            currentWidth -= tabExpandSpeed;
+        }
+
+        if (currentWidth > maxWidth)
+        {
+            currentWidth = maxWidth;
+        }
+        else if (currentWidth < minWidth)
+        {
+            currentWidth = minWidth;
+        }
+
+        if (open && currentHeight < maxHeight)
+        {
+            currentHeight += tabExpandSpeed;
+        }
+        else if (!open && currentHeight > minHeight)
+        {
+            currentHeight -= tabExpandSpeed;
+        }
+
+        if (currentHeight > maxHeight)
+        {
+            currentHeight = maxHeight;
+        }
+        else if (currentHeight < minHeight)
+        {
+            currentHeight = minHeight;
+        }
+
+        if (open && currentWidth == maxWidth && currentHeight == maxHeight)
+        {
+            setFullyOpen();
+        }
     }
     
     public abstract void drawFullyOpened();
@@ -298,46 +339,7 @@ public abstract class BaseTab
 
     public void update()
     {
-        if (open && currentWidth < maxWidth)
-        {
-            currentWidth += tabExpandSpeed;
-        }
-        else if (!open && currentWidth > minWidth)
-        {
-            currentWidth -= tabExpandSpeed;
-        }
-
-        if (currentWidth > maxWidth)
-        {
-            currentWidth = maxWidth;
-        }
-        else if (currentWidth < minWidth)
-        {
-            currentWidth = minWidth;
-        }
-
-        if (open && currentHeight < maxHeight)
-        {
-            currentHeight += tabExpandSpeed;
-        }
-        else if (!open && currentHeight > minHeight)
-        {
-            currentHeight -= tabExpandSpeed;
-        }
-
-        if (currentHeight > maxHeight)
-        {
-            currentHeight = maxHeight;
-        }
-        else if (currentHeight < minHeight)
-        {
-            currentHeight = minHeight;
-        }
-
-        if (open && currentWidth == maxWidth && currentHeight == maxHeight)
-        {
-            setFullyOpen();
-        }
+        
     }
     
     void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6)

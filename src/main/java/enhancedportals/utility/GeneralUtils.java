@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -139,5 +140,10 @@ public class GeneralUtils
         t.setInteger("D", c.dimension);
 
         tagCompound.setTag(string, t);
+    }
+
+    public static ChunkCoordinates offset(ChunkCoordinates c, ForgeDirection f)
+    {
+        return new ChunkCoordinates(c.posX + f.offsetX, c.posY + f.offsetY, c.posZ + f.offsetZ);
     }
 }
