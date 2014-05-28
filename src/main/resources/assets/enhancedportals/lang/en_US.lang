@@ -231,6 +231,8 @@ ep3.error.multipleProgram=You cannot have multiple Programmable Interfaces
 ep3.error.multipleMod=You cannot have multiple Module Manipulators
 ep3.error.dialAndNetwork=You cannot have a Dialling Device and a Network Interface in the same portal structure
 ep3.error.portalCouldNotBeCreatedHere=A portal could not be created at this location
+ep3.error.failedToCreatePortal=A portal could not be created at this location
+ep3.error.couldNotCreatePortalHere=A portal could not be created at this location
 
 # Success
 ep3.success=[Success] 
