@@ -1,0 +1,365 @@
+# Blocks
+tile.frame.frame.name=Каркас портала
+tile.frame.controller.name=Контроллер портала
+tile.frame.redstone.name=Красный интерфейс
+tile.frame.network_interface.name=Сетевой интерфейс
+tile.frame.dial_device.name=Устройство набора
+tile.frame.program_interface.name=Программируемый интерфейс
+tile.frame.upgrade.name=Модуль «Манипулятор»
+tile.frame.fluid.name=Модуль «Транспортировка жидкости»
+tile.frame.item.name=Модуль «Транспортировка предметов»
+tile.frame.energy.name=Модуль «Транспортировка энергии»
+tile.portal.name=Портал
+tile.dbs.name=Стабилизатор пространственного моста
+tile.dbs_empty.name=Стабилизатор пространственного моста (Пустой)
+tile.decor_dbs.name=Стабилизатор
+tile.decor_frame.name=Окаймленный кварц
+
+# Block Misc
+ep3.block.portalFramePart=Часть каркаса портала
+ep3.block.multiblockStructure=Мульти-блочная структура
+ep3.block.dbsSize=2x3x2 на 2x3x256
+ep3.block.decorativeBlock=Декоративный блок
+
+# Items
+item.wrench.name=Гаечный ключ
+item.nanobrush.name=Нано-кисть
+item.glasses.name=Очки
+item.location_card.name=Карта расположения
+item.blank_portal_module.name=Пустой модуль портала
+item.blank_upgrade.name=Пустое улучшение
+item.guide.name=Руководство искателя приключений по EnhancedPortals
+
+# In-place upgrades
+item.upgrade.redstone.name=Улучшение «Красный интерфейс»
+item.upgrade.network_interface.name=Улучшение «Сетевой интерфейс»
+item.upgrade.program_interface.name=Улучшение «Устройство набора»
+item.upgrade.programInterface.name=Улучшение «Программируемый интерфейс»
+item.upgrade.upgrade.name=Улучшение «Манипулятор»
+item.upgrade.fluid.name=Улучшение «Транспортировка жидкости»
+item.upgrade.item.name=Улучшение «Транспортировка предметов»
+item.upgrade.energy.name=Улучшение «Транспортировка энергии»
+
+# Upgrades
+item.portal_module.0.name=Уничтожитель частиц
+item.portal_module.0.desc=Убирает частицы
+item.portal_module.1.name=Радужные частицы
+item.portal_module.1.desc=Каждая частица будет иметь случайный цвет
+item.portal_module.2.name=Глушитель
+item.portal_module.2.desc=Заглушает портал
+item.portal_module.3.name=Импульс
+item.portal_module.3.desc=Сущности сохраняют свой импульс
+item.portal_module.4.name=Маскировка
+item.portal_module.4.desc=Делает портал полностью невидимым
+item.portal_module.5.name=Затемнитель частиц
+item.portal_module.5.desc=Частицы случайно появляются светлее или темнее
+item.portal_module.6.name=[Устаревшее]
+item.portal_module.6.desc=Я больше ничего не делаю.
+item.portal_module.7.name=Лёгкое падение
+item.portal_module.7.desc=Убирает урон от падения
+ep3.gui.facing.0=Север
+ep3.gui.facing.1=Восток
+ep3.gui.facing.2=Юг
+ep3.gui.facing.3=Запад
+
+# Creative Tab
+itemGroup.enhancedportals=EnhancedPortals 3
+
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=Стабилизатор пространственного моста
+ep3.gui.information=Информация
+ep3.gui.activePortals=Активные порталы
+ep3.gui.instability=Невидимость
+ep3.gui.powerModeNormal=Режим: Обычный
+ep3.gui.powerModeRisky=Режим: Рискованный
+ep3.gui.powerModeUnstable=Режим: Нестабильный
+ep3.gui.powerModeUnpredictable=Режим: Непредсказуемый
+
+# RF Tab
+ep3.tab.redstoneFlux=Энергия
+ep3.tab.redstoneFlux.maxPower=Макс. энергия:
+ep3.tab.redstoneFlux.storedPower=Накопленная энергия:
+ep3.tab.redstoneFlux.powerUsage=Потребляемая энергия:
+
+# GUI Portal Controller
+ep3.gui.portalController=Контроллер портала
+ep3.gui.uniqueIdentifier=Уникальный идентификатор
+ep3.gui.public=Публичный
+ep3.gui.private=Личный
+ep3.gui.noUidSet=UID не установлен
+
+# Private/Public Tip Tab
+ep3.tab.privatePublic=Личный или публичный?
+ep3.tab.privatePublic.info=<6>Публичный:<0> Разрешает все соединения<NL><6>Личный:<0> Разрешает подключения только с тем же СПМ
+
+# Glyphs Tab
+ep3.tab.glyphs=Символы
+ep3.tab.glyphs.info=// TODO
+
+# GUI Dialler
+ep3.gui.dialDevice=Устройство набора
+ep3.gui.storedIdentifiers=Сохранённые идентификаторы
+ep3.gui.terminate=Завершить
+ep3.gui.dial=Набрать
+ep3.gui.identifierCannotBeBlank=Идентификатор не может быть пустым
+ep3.gui.name=Имя
+ep3.gui.identifierName=Имя идентификатора
+ep3.gui.manualEntry=Ручной ввод
+ep3.gui.delete=Удалить
+ep3.gui.edit=Выход
+
+# GUI Dial Tab
+ep3.tab.dialling=Устройство набора
+ep3.tab.dialling.info=// TODO
+
+# GUI Texture
+ep3.gui.customIcon=Нестандартная иконка
+ep3.gui.facade=Фасад
+ep3.gui.frame=Каркас
+ep3.gui.portal=Портал
+ep3.gui.particle=Частицы
+ep3.gui.colour=Цвет
+ep3.gui.red=Красный
+ep3.gui.green=Зелёный
+ep3.gui.blue=Синий
+ep3.gui.textures=Текстуры
+
+# Colour Tip Tab
+ep3.tab.colourTip=Неверные цвета?
+ep3.tab.colourTip.info=Цвета добавляются смешиванием цветов, не по волшебству. Если Вы начинаете с жёлтой текстуры и добавляете бирюзу, Вы получите зелёную. Чтобы исправить это, используйте чаще белую/серую гамму, основанную на текстуре, которую Вы нашли. 
+
+# Custom Frame Textures
+ep3.tab.frameCustomTexture=Нестандартная текстура
+ep3.tab.frameCustomTexture.info=Вы можете разместить нестандартные текстуры каркаса в пакет ресурсов, которые будут использоваться здесь.
+
+# Custom Frame Textures
+ep3.tab.portalCustomTexture=Нестандартная текстура
+ep3.tab.portalCustomTexture.info=Вы можете разместить нестандартные текстуры портала в пакет ресурсов, которые будут использоваться здесь.
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=Модуль «Манипулятор»
+ep3.gui.modules=Модули портала
+
+# GUI Network Interface
+ep3.gui.networkInterface=Сетевой интерфейс
+ep3.gui.networkIdentifier=Сетевой идентификатор
+ep3.gui.networkInformation=Сетевая информация
+ep3.gui.networkedPortals=Сетевые порталы
+ep3.gui.notSet=Не указан
+
+# GUI Programmable Interface
+ep3.gui.programmableInterface=Программируемый интерфейс
+ep3.gui.errorLog=Лог ошибки
+ep3.gui.compile=Скомпилировать
+
+# GUI Redstone
+ep3.gui.redstoneInterface=Красный интерфейс
+
+ep3.gui.input=Ввод
+ep3.gui.createPortalOnSignal=Создавать портал по сигналу
+ep3.gui.removePortalOnSignal=Убирать портал по сигналу
+ep3.gui.createPortalOnPulse=Создавать портал по импульсу
+ep3.gui.removePortalOnPulse=Убирать портал по импульсу
+ep3.gui.dialStoredIdentifier=Набрать конкретный идентификатор
+ep3.gui.dialRandomIdentifier=Набрать случайный идентификатор
+ep3.gui.dialStoredIdentifier2=Набрать конкретный идентификатор (2)
+ep3.gui.dialRandomIdentifier2=Набрать случайный идентификатор (2)
+
+ep3.gui.output=Вывод
+ep3.gui.portalCreated=Портал создан
+ep3.gui.portalRemoved=Портал убран
+ep3.gui.portalActive=Портал активен
+ep3.gui.portalInactive=Портал неактивен
+ep3.gui.entityTeleport=Сущность дотрагивается до портала
+ep3.gui.playerTeleport=Игрок дотрагивается до портала
+ep3.gui.animalTeleport=Животное дотрагивается до портала
+ep3.gui.monsterTeleport=Монстр дотрагивается до портала
+
+# GUI General
+ep3.gui.initialized=Инициализировано
+ep3.gui.glyphs=Символы
+ep3.gui.cancel=Отмена
+ep3.gui.save=Сохранить
+ep3.gui.reset=Сбросить
+ep3.gui.clear=Очистить
+ep3.gui.random=Случайный
+ep3.gui.add=Добавить
+ep3.gui.accept=Принять
+ep3.gui.clickToModify=Нажмите, чтобы изменить
+ep3.gui.uidInUse=Этот UID уже используется
+
+# GUI ITM
+ep3.gui.transferItem=Модуль «Транспортировка предметов»
+
+# GUI FTM
+ep3.gui.transferFluid=Модуль «Транспортировка жидкости»
+
+# GUI ETM
+ep3.gui.transferEnergy=Модуль «Транспортировка энергии»
+
+# GUI Transfer
+ep3.gui.sending=Отправка
+ep3.gui.receiving=Получение
+
+# Errors
+ep3.error=[Ошибка] 
+ep3.error.noUidSet=Вы должны установить уникальный идентификатор, прежде чем сделать это
+ep3.error.voidLinkCard=Эта карта больше не соединена с действительным стабилизатором пространственного моста
+ep3.error.receivingPortalNotInitialized=Принимающий портал не был инициализирован
+ep3.error.sendingPortalNotInitialized=Отправляющий портал не был инициализирован
+ep3.error.stabilizerNotFound=СПМ не может быть найден. Вставьте новую, действующую карту расположения, чтобы продолжить
+ep3.error.receivingPortalNoDialler=Вы не можете набрать портал, который не имеет устройство набора
+ep3.error.sendingPortalNoDialler=Вы не можете набирать из портала, который не имеет устройство набора
+ep3.error.uniqueIdentifierNotSet=Вы не можете набирать без установки уникального идентификатора
+ep3.error.networkIdentifierNotSet=Вы не можете набирать без установки сетевого идентификатора
+ep3.error.dialDeviceNotFound=Вы не можете набирать без устройства набора
+ep3.error.diallingPortalAlreadyActive=Вы не можете набирать из портала, который уже имеет активное соединение
+ep3.error.receivingPortalAlreadyActive=Вы не можете набрать портал, который уже активен
+ep3.error.notEnoughPowerToStart=Не хватает энергии в СПМ, для создания соединения
+ep3.error.maxedConnectionLimit=СПМ имеет слишком много активных соединений
+ep3.error.cannotDialDiallingPortal=Вы не можете набрать портал, из которого Вы уже набираете
+ep3.error.diallingPortalNotFound=Не удалось найти портал, из которого Вы набираете
+ep3.error.receivingPortalNotFound=Не удалось найти принимающий портал
+ep3.error.notOnSameStabilizer=Порталы не подключены к тому же СПМ
+ep3.error.sendingPortalFailedToCreatePortal=Отправляющему контроллеру портала не удалось создать портал
+ep3.error.receivingPortalFailedToCreatePortal=Принимающему контроллеру портала не удалось создать портал
+ep3.error.noPortalWithThatIdentifierReceiving=Не удалось найти портал с этим UID
+ep3.error.noPortalWithThatIdentifierSending=Не удалось найти отправляющий портал с этим UID (Как Вы набрали...? o_O)
+ep3.error.failedToTransfer=Принимающий портал слишком мал
+ep3.error.multiplePortalControllers=Вы не можете иметь несколько контроллеров портала
+ep3.error.multipleProgram=Вы не можете иметь несколько программируемых интерфейсов
+ep3.error.multipleMod=Вы не можете иметь несколько модулей «Манипулятор»
+ep3.error.dialAndNetwork=Вы не можете иметь устройство набора и сетевой интерфейс в одной и той же структуре портала
+ep3.error.portalCouldNotBeCreatedHere=Портал не может быть создан в этом месте
+ep3.error.failedToCreatePortal=Портал не может быть создан в этом месте
+ep3.error.couldNotCreatePortalHere=Портал не может быть создан в этом месте
+
+# Success
+ep3.success=[Успех] 
+ep3.success.create=Портал инициализирован
+ep3.success.reconfigure=Портал изменён
+
+############
+## Manual ##
+####################################################################################################################################################################################################
+## Run out of space when translating a page? Simply create a new page by adding a new line and incrementing the number at the end. The manual will automatically update and add a new page ingame ##
+####################################################################################################################################################################################################
+
+ep3.manual.decorBorderedQuartz.subtitle=Декорация
+ep3.manual.dbsEmpty.title=Стабилизатор пространственного моста (Пустой)
+ep3.manual.upgrade0.subtitle=Улучшение портала
+ep3.manual.module0.subtitle=Модуль портала
+ep3.manual.frame0.subtitle=Компонент портала
+
+ep3.manual.main.title=Руководство искателя приключений по EnhancedPortals
+
+## Temporary
+ep3.manual.portal.page.0=To be completed
+ep3.manual.main.page.0=ep3.manual.portal.page.0
+ep3.manual.frame0.page.0=ep3.manual.portal.page.0
+ep3.manual.frame1.page.0=ep3.manual.portal.page.0
+ep3.manual.frame2.page.0=ep3.manual.portal.page.0
+ep3.manual.frame3.page.0=ep3.manual.portal.page.0
+ep3.manual.frame4.page.0=ep3.manual.portal.page.0
+ep3.manual.frame5.page.0=ep3.manual.portal.page.0
+ep3.manual.frame6.page.0=ep3.manual.portal.page.0
+ep3.manual.frame7.page.0=ep3.manual.portal.page.0
+ep3.manual.frame8.page.0=ep3.manual.portal.page.0
+ep3.manual.frame9.page.0=ep3.manual.portal.page.0
+ep3.manual.wrench.page.0=ep3.manual.portal.page.0
+ep3.manual.nanobrush.page.0=ep3.manual.portal.page.0
+ep3.manual.glasses.page.0=ep3.manual.portal.page.0
+ep3.manual.location_card.page.0=ep3.manual.portal.page.0
+ep3.manual.blank_module.page.0=ep3.manual.portal.page.0
+ep3.manual.blank_upgrade.page.0=ep3.manual.portal.page.0
+ep3.manual.module0.page.0=ep3.manual.portal.page.0
+ep3.manual.module1.page.0=ep3.manual.portal.page.0
+ep3.manual.module2.page.0=ep3.manual.portal.page.0
+ep3.manual.module3.page.0=ep3.manual.portal.page.0
+ep3.manual.module4.page.0=ep3.manual.portal.page.0
+ep3.manual.module5.page.0=ep3.manual.portal.page.0
+ep3.manual.module6.page.0=ep3.manual.portal.page.0
+ep3.manual.module7.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade0.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade1.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade2.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade3.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade4.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade5.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade6.page.0=ep3.manual.portal.page.0
+ep3.manual.upgrade7.page.0=ep3.manual.portal.page.0
+ep3.manual.dbs.page.0=ep3.manual.portal.page.0
+ep3.manual.decorStabilizer.page.0=ep3.manual.portal.page.0
+ep3.manual.decorBorderedQuartz.page.0=ep3.manual.portal.page.0
+ep3.manual.dbsEmpty.page.0=Not yet implemented
+ep3.manual.frame5.page.0=ep3.manual.dbsEmpty.page.0
+
+###################################################################################
+## The rest are resolved automatically, though you can override them if required ##
+###################################################################################
+ep3.manual.wrench.title=item.wrench.name
+ep3.manual.nanobrush.title=item.nanobrush.name
+ep3.manual.glasses.title=item.glasses.name
+ep3.manual.location_card.title=item.location_card.name
+ep3.manual.blank_module.title=item.blank_portal_module.name
+ep3.manual.module0.title=item.portal_module.0.name
+ep3.manual.module1.title=item.portal_module.1.name
+ep3.manual.module2.title=item.portal_module.2.name
+ep3.manual.module3.title=item.portal_module.3.name
+ep3.manual.module4.title=item.portal_module.4.name
+ep3.manual.module5.title=item.portal_module.5.name
+ep3.manual.module6.title=item.portal_module.6.name
+ep3.manual.module7.title=item.portal_module.7.name
+ep3.manual.module1.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module2.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module3.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module4.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module5.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module6.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module7.subtitle=ep3.manual.module0.subtitle
+ep3.manual.blank_upgrade.title=item.blank_upgrade.name
+ep3.manual.upgrade0.title=item.upgrade.redstone.name
+ep3.manual.upgrade1.title=item.upgrade.network_interface.name
+ep3.manual.upgrade2.title=item.upgrade.dial_device.name
+ep3.manual.upgrade3.title=item.upgrade.program_interface.name
+ep3.manual.upgrade4.title=item.upgrade.upgrade.name
+ep3.manual.upgrade5.title=item.upgrade.fluid.name
+ep3.manual.upgrade6.title=item.upgrade.item.name
+ep3.manual.upgrade7.title=item.upgrade.energy.name
+ep3.manual.upgrade1.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade2.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade3.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade4.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade5.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade6.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade7.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.dbs.title=tile.dbs.name
+ep3.manual.decorBorderedQuartz.title=tile.decor_frame.name
+ep3.manual.decorStabilizer.title=tile.decor_dbs.name
+ep3.manual.decorStabilizer.subtitle=ep3.manual.decorBorderedQuartz.subtitle
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.portal.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame0.title=tile.frame.frame.name
+ep3.manual.frame1.title=tile.frame.controller.name
+ep3.manual.frame2.title=tile.frame.redstone.name
+ep3.manual.frame3.title=tile.frame.network_interface.name
+ep3.manual.frame4.title=tile.frame.dial_device.name
+ep3.manual.frame5.title=tile.frame.program_interface.name
+ep3.manual.frame6.title=tile.frame.upgrade.name
+ep3.manual.frame7.title=tile.frame.fluid.name
+ep3.manual.frame8.title=tile.frame.item.name
+ep3.manual.frame9.title=tile.frame.energy.name
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.frame1.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame2.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame3.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame4.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame5.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame6.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame7.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame8.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame9.subtitle=ep3.manual.frame0.subtitle
+
+# These must be left as they are
+ep3.manual.main.page.1= 
+ep3.manual.main.page.2= 
