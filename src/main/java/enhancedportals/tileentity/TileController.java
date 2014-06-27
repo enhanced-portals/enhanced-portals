@@ -986,7 +986,8 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         }
 
         onEntityTouchPortal(entity);
-        TileProgrammableInterface pi = getProgrammableInterface();
+        
+        /*TileProgrammableInterface pi = getProgrammableInterface();
 
         if (pi != null && entity != null)
         {
@@ -1003,25 +1004,27 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 return;
             }
         }
-
+        */
+        
         TileEntity tile = cachedDestinationLoc.getTileEntity();
-
+        
         if (tile != null && tile instanceof TileController)
         {
             TileController control = (TileController) tile;
 
-            try
-            {
+            try{
                 EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
 
+                /*
                 TileProgrammableInterface pi2 = control.getProgrammableInterface();
 
                 if (pi2 != null && entity != null)
                 {
                     pi2.entityExit(entity);
                 }
+                */
             }
             catch (PortalException e)
             {
@@ -1031,6 +1034,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 }
             }
         }
+        
     }
 
     public void onEntityTeleported(Entity entity)
