@@ -3,6 +3,8 @@ package enhancedportals.portal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.logging.log4j.LogManager;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityBoat;
@@ -236,10 +238,12 @@ public class EntityManager
 
     static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
+    	// If entity is going to the same dimension...
         if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
         {
             return transferEntityWithinDimension(entity, x, y, z, yaw, touchedPortalType, exitPortalType, keepMomentum);
         }
+        // Otherwise send it to another dimension...
         else
         {
             return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum);
@@ -408,12 +412,17 @@ public class EntityManager
             int chunkX = entity.chunkCoordX;
             int chunkZ = entity.chunkCoordZ;
 
+            LogManager.getLogger("EnhancedPortals").error("chunkX: "+chunkX+" | chunkZ: "+chunkZ+" | addedToChunk: "+entity.addedToChunk+" | chunkExists: "+world.getChunkProvider().chunkExists(chunkX, chunkZ));
+            
+            // Checking that entity is in it's chunk, and that the chunk exists.
             if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
             {
+            	// Remove the entity.
                 world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
             }
-
-            world.loadedEntityList.remove(entity);
+            
+            // Caused a server crash.
+            //world.loadedEntityList.remove(entity);
             world.onEntityRemoved(entity);
 
             Entity newEntity = EntityList.createEntityFromNBT(tag, world);
@@ -429,6 +438,7 @@ public class EntityManager
             }
 
             world.resetUpdateEntityTick();
+
             return newEntity;
         }
     }
@@ -437,14 +447,19 @@ public class EntityManager
     {
         Entity rider = entity.riddenByEntity;
 
+        // If Entity has a rider...
         if (rider != null)
         {
+        	// Unmount rider
             rider.mountEntity(null);
+            // Send it back through as it's own entity
             rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
         }
-
+        
+        // Transfer the entity.
         entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
 
+        // Remount entity with rider.
         if (rider != null)
         {
             rider.mountEntity(entity);
