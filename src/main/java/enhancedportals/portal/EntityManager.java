@@ -406,40 +406,47 @@ public class EntityManager
         else
         {
             WorldServer world = (WorldServer) entity.worldObj;
-            NBTTagCompound tag = new NBTTagCompound();
-            entity.writeToNBTOptional(tag);
-
+            //NBTTagCompound tag = new NBTTagCompound();
+            //entity.writeToNBTOptional(tag);
+            
             int chunkX = entity.chunkCoordX;
             int chunkZ = entity.chunkCoordZ;
-
-            LogManager.getLogger("EnhancedPortals").error("chunkX: "+chunkX+" | chunkZ: "+chunkZ+" | addedToChunk: "+entity.addedToChunk+" | chunkExists: "+world.getChunkProvider().chunkExists(chunkX, chunkZ));
             
             // Checking that entity is in it's chunk, and that the chunk exists.
             if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
             {
             	// Remove the entity.
-                world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
+            	//world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
+
+            	handleMomentum(entity, touchedPortalType, exitPortalType, yaw, keepMomentum);
+            	entity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
+            	setEntityPortalCooldown(entity);
+                world.resetUpdateEntityTick();
+            	
+                return entity;
             }
             
+            return null;
+            /*
             // Caused a server crash.
-            //world.loadedEntityList.remove(entity);
-            world.onEntityRemoved(entity);
+            world.loadedEntityList.remove(entity);
+        	world.onEntityRemoved(entity);
 
             Entity newEntity = EntityList.createEntityFromNBT(tag, world);
 
             if (newEntity != null)
             {
-                handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
-                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
-                newEntity.forceSpawn = true;
-                world.spawnEntityInWorld(newEntity);
-                newEntity.setWorld(world);
-                setEntityPortalCooldown(newEntity);
+            	handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
+            	newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
+            	newEntity.forceSpawn = true;
+            	world.spawnEntityInWorld(newEntity);
+            	newEntity.setWorld(world);
+            	setEntityPortalCooldown(newEntity);
             }
 
             world.resetUpdateEntityTick();
 
-            return newEntity;
+            return newEntity;*/
         }
     }
 

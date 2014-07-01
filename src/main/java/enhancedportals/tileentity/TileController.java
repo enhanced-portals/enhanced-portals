@@ -3,6 +3,8 @@ package enhancedportals.tileentity;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
@@ -1013,7 +1015,10 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             TileController control = (TileController) tile;
 
             try{
-                EntityManager.transferEntity(entity, this, control);
+                LogManager.getLogger("EnhancedPortals").error("isRemote: "+entity.worldObj.isRemote);
+            	if(!entity.worldObj.isRemote){
+            		EntityManager.transferEntity(entity, this, control);
+            	}
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
 
