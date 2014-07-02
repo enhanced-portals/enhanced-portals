@@ -1015,10 +1015,8 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             TileController control = (TileController) tile;
 
             try{
-                LogManager.getLogger("EnhancedPortals").error("isRemote: "+entity.worldObj.isRemote);
-            	if(!entity.worldObj.isRemote){
-            		EntityManager.transferEntity(entity, this, control);
-            	}
+                //LogManager.getLogger("EnhancedPortals").error("isRemote: "+entity.worldObj.isRemote);
+            	EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
 

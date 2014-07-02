@@ -406,8 +406,8 @@ public class EntityManager
         else
         {
             WorldServer world = (WorldServer) entity.worldObj;
-            //NBTTagCompound tag = new NBTTagCompound();
-            //entity.writeToNBTOptional(tag);
+            NBTTagCompound tag = new NBTTagCompound();
+            entity.writeToNBTOptional(tag);
             
             int chunkX = entity.chunkCoordX;
             int chunkZ = entity.chunkCoordZ;
@@ -416,26 +416,24 @@ public class EntityManager
             if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
             {
             	// Remove the entity.
-            	//world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
+            	world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
 
-            	handleMomentum(entity, touchedPortalType, exitPortalType, yaw, keepMomentum);
+            	/*handleMomentum(entity, touchedPortalType, exitPortalType, yaw, keepMomentum);
             	entity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
             	setEntityPortalCooldown(entity);
                 world.resetUpdateEntityTick();
             	
-                return entity;
+                return entity;*/
             }
-            
-            return null;
-            /*
+
             // Caused a server crash.
-            world.loadedEntityList.remove(entity);
+            //world.loadedEntityList.remove(entity);
         	world.onEntityRemoved(entity);
 
             Entity newEntity = EntityList.createEntityFromNBT(tag, world);
 
             if (newEntity != null)
-            {
+            { 
             	handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
             	newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
             	newEntity.forceSpawn = true;
@@ -446,7 +444,7 @@ public class EntityManager
 
             world.resetUpdateEntityTick();
 
-            return newEntity;*/
+            return newEntity;
         }
     }
 
