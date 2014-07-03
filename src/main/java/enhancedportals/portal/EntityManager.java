@@ -289,6 +289,7 @@ public class EntityManager
     {
         if (touchedPortalType == -1 && exitPortalType == -1)
         {
+        	// Look for an open airblock to teleport entity to in other dimension.
             while (!enteringWorld.isAirBlock((int) x, (int) y, (int) z) || !enteringWorld.isAirBlock((int) x, (int) y + 1, (int) z))
             {
                 y++;
@@ -310,6 +311,7 @@ public class EntityManager
         {
             return entity;
         }
+        // If the entity teleporting is a player:
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
@@ -334,7 +336,8 @@ public class EntityManager
 
             config.updateTimeAndWeatherForPlayer(player, enteringWorld);
             config.syncPlayerInventory(player);
-
+            
+            // Instate any potion effects the player had when teleported.
             Iterator potion = player.getActivePotionEffects().iterator();
             while (potion.hasNext())
             {
@@ -347,24 +350,19 @@ public class EntityManager
             setEntityPortalCooldown(player);
             return player;
         }
+        // If the entity teleporting is something other than a player:
         else
         {
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
 
-            int chunkX = entity.chunkCoordX;
-            int chunkZ = entity.chunkCoordZ;
+            // Delete the entity. Will be taken care of next tick.
+            entity.setDead();
 
-            if (entity.addedToChunk && exitingWorld.getChunkProvider().chunkExists(chunkX, chunkZ))
-            {
-                exitingWorld.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
-            }
-
-            exitingWorld.loadedEntityList.remove(entity);
-            exitingWorld.onEntityRemoved(entity);
-
+            // Create new entity.
             Entity newEntity = EntityList.createEntityFromNBT(tag, enteringWorld);
 
+            // Set position, momentum of new entity at the other portal.
             if (newEntity != null)
             {
                 handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
@@ -392,6 +390,7 @@ public class EntityManager
         {
             return entity;
         }
+        // If the entity teleporting is a player:
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
@@ -403,35 +402,20 @@ public class EntityManager
             setEntityPortalCooldown(player);
             return player;
         }
+        // If the entity teleporting is something other than a player:
         else
         {
             WorldServer world = (WorldServer) entity.worldObj;
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
             
-            int chunkX = entity.chunkCoordX;
-            int chunkZ = entity.chunkCoordZ;
-            
-            // Checking that entity is in it's chunk, and that the chunk exists.
-            if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
-            {
-            	// Remove the entity.
-            	world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
+            // Delete the entity. Will be taken care of next tick.
+            entity.setDead();
 
-            	/*handleMomentum(entity, touchedPortalType, exitPortalType, yaw, keepMomentum);
-            	entity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
-            	setEntityPortalCooldown(entity);
-                world.resetUpdateEntityTick();
-            	
-                return entity;*/
-            }
-
-            // Caused a server crash.
-            //world.loadedEntityList.remove(entity);
-        	world.onEntityRemoved(entity);
-
+            // Create new entity.
             Entity newEntity = EntityList.createEntityFromNBT(tag, world);
 
+            // Set position, momentum of new entity at the other portal.
             if (newEntity != null)
             { 
             	handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
