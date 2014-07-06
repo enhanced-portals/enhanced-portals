@@ -1,7 +1,6 @@
 package enhancedportals.tileentity;
 
 import java.util.ArrayList;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -45,9 +44,12 @@ public class TileModuleManipulator extends TileFrame implements IInventory
         return false;
     }
 
+    // Called when adding a Module to the Module manipulator block in-game.
     @Override
     public void addDataToPacket(NBTTagCompound tag)
     {
+    	writeToNBT(tag);
+    	/* -- Take this code out if no problems persist.
         NBTTagList items = new NBTTagList();
 
         for (int i = 0; i < getSizeInventory(); i++)
@@ -62,8 +64,8 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
             items.appendTag(t);
         }
-
-        tag.setTag("Items", items);
+        
+        tag.setTag("Modules", items);*/
     }
 
     @Override
@@ -257,7 +259,7 @@ public class TileModuleManipulator extends TileFrame implements IInventory
     @Override
     public void onDataPacket(NBTTagCompound tag)
     {
-        NBTTagList items = tag.getTagList("Items", 10);
+        NBTTagList items = tag.getTagList("Modules", 9);
 
         for (int i = 0; i < items.tagCount(); i++)
         {
@@ -286,17 +288,21 @@ public class TileModuleManipulator extends TileFrame implements IInventory
             ((IPortalModule) i.getItem()).onParticleCreated(this, i, portalFX);
         }
     }
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
 
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        super.readFromNBT(tagCompound);
-        NBTTagList list = tagCompound.getTagList("Inventory", 9);
-        for (int i = 0; i < list.tagCount(); i++)
-        {
-            inventory[i] = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i));
-        }
-    }
+		NBTTagList items = compound.getTagList("Modules", compound.getId());
+		
+		for (int i = 0; i < items.tagCount(); ++i) {
+			NBTTagCompound item = items.getCompoundTagAt(i);
+			byte slot = item.getByte("Slot");
+			if (slot >= 0 && slot < getSizeInventory()) {
+				setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+			}
+		}
+	}
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
@@ -316,23 +322,25 @@ public class TileModuleManipulator extends TileFrame implements IInventory
 
         return false;
     }
-
+    
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
-        super.writeToNBT(tagCompound);
-
-        NBTTagList list = new NBTTagList();
-        for (ItemStack s : inventory)
-        {
-            if (s != null)
-            {
-                NBTTagCompound compound = new NBTTagCompound();
-                s.writeToNBT(compound);
-                list.appendTag(compound);
-            }
-        }
-
-        tagCompound.setTag("Inventory", list);
-    }
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		
+		NBTTagList items = new NBTTagList();
+		
+		// Goes through all of the module inventory.
+		for(int i=0;i<getSizeInventory();i++) {
+			ItemStack stack = getStackInSlot(i);
+			if(stack != null) {
+				NBTTagCompound item = new NBTTagCompound();
+				item.setByte("Slot", (byte)i);
+				stack.writeToNBT(item);
+				items.appendTag(item);
+			}
+		}
+		
+		// Saves the inventory under "Modules" in NBT
+		compound.setTag("Modules", items);
+	}
 }

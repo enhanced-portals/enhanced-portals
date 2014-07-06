@@ -3,8 +3,6 @@ package enhancedportals.tileentity;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.apache.logging.log4j.LogManager;
-
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;

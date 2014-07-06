@@ -67,7 +67,7 @@ public class WorldCoordinates extends ChunkCoordinates
     public TileEntity getTileEntity()
     {
         WorldServer world = getWorld();
-
+        
         if (world == null)
         {
             DimensionManager.initDimension(dimension);
