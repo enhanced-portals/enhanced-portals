@@ -987,7 +987,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             return;
         }
 
-        onEntityTouchPortal(entity);
         
         /*TileProgrammableInterface pi = getProgrammableInterface();
 
@@ -1007,15 +1006,17 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             }
         }
         */
-        
+
+        // Set tile to the joined portal's controller.
         TileEntity tile = cachedDestinationLoc.getTileEntity();
-        
+        // Trigger redstone interfaces.
+        onEntityTouchPortal(entity);
+
         if (tile != null && tile instanceof TileController)
         {
             TileController control = (TileController) tile;
 
             try{
-                //LogManager.getLogger("EnhancedPortals").error("isRemote: "+entity.worldObj.isRemote);
             	EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
