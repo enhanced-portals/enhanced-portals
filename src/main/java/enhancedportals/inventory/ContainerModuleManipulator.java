@@ -12,6 +12,7 @@ public class ContainerModuleManipulator extends BaseContainer
 {
     TileModuleManipulator module;
 
+    // Called when accessing the Module Manipulator in-game.
     public ContainerModuleManipulator(TileModuleManipulator m, InventoryPlayer p)
     {
         super(m, p, GuiModuleManipulator.CONTAINER_SIZE + BaseGui.bufferSpace + BaseGui.playerInventorySize);

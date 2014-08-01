@@ -236,10 +236,12 @@ public class EntityManager
 
     static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
     {
+    	// If entity is going to the same dimension...
         if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
         {
             return transferEntityWithinDimension(entity, x, y, z, yaw, touchedPortalType, exitPortalType, keepMomentum);
         }
+        // Otherwise send it to another dimension...
         else
         {
             return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum);
@@ -285,6 +287,7 @@ public class EntityManager
     {
         if (touchedPortalType == -1 && exitPortalType == -1)
         {
+        	// Look for an open airblock to teleport entity to in other dimension.
             while (!enteringWorld.isAirBlock((int) x, (int) y, (int) z) || !enteringWorld.isAirBlock((int) x, (int) y + 1, (int) z))
             {
                 y++;
@@ -306,6 +309,7 @@ public class EntityManager
         {
             return entity;
         }
+        // If the entity teleporting is a player:
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
@@ -330,11 +334,15 @@ public class EntityManager
 
             config.updateTimeAndWeatherForPlayer(player, enteringWorld);
             config.syncPlayerInventory(player);
-
-            Iterator potion = player.getActivePotionEffects().iterator();
+            
+            // Instate any potion effects the player had when teleported.
+            /*Iterator potion = player.getActivePotionEffects().iterator();
             while (potion.hasNext())
             {
                 player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
+            }*/
+            for (Iterator<PotionEffect> potion = player.getActivePotionEffects().iterator(); potion.hasNext();) {
+            	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
             }
 
             player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
@@ -343,24 +351,19 @@ public class EntityManager
             setEntityPortalCooldown(player);
             return player;
         }
+        // If the entity teleporting is something other than a player:
         else
         {
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
 
-            int chunkX = entity.chunkCoordX;
-            int chunkZ = entity.chunkCoordZ;
+            // Delete the entity. Will be taken care of next tick.
+            entity.setDead();
 
-            if (entity.addedToChunk && exitingWorld.getChunkProvider().chunkExists(chunkX, chunkZ))
-            {
-                exitingWorld.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
-            }
-
-            exitingWorld.loadedEntityList.remove(entity);
-            exitingWorld.onEntityRemoved(entity);
-
+            // Create new entity.
             Entity newEntity = EntityList.createEntityFromNBT(tag, enteringWorld);
 
+            // Set position, momentum of new entity at the other portal.
             if (newEntity != null)
             {
                 handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
@@ -388,6 +391,7 @@ public class EntityManager
         {
             return entity;
         }
+        // If the entity teleporting is a player:
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
@@ -399,36 +403,32 @@ public class EntityManager
             setEntityPortalCooldown(player);
             return player;
         }
+        // If the entity teleporting is something other than a player:
         else
         {
             WorldServer world = (WorldServer) entity.worldObj;
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
+            
+            // Delete the entity. Will be taken care of next tick.
+            entity.setDead();
 
-            int chunkX = entity.chunkCoordX;
-            int chunkZ = entity.chunkCoordZ;
-
-            if (entity.addedToChunk && world.getChunkProvider().chunkExists(chunkX, chunkZ))
-            {
-                world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
-            }
-
-            world.loadedEntityList.remove(entity);
-            world.onEntityRemoved(entity);
-
+            // Create new entity.
             Entity newEntity = EntityList.createEntityFromNBT(tag, world);
 
+            // Set position, momentum of new entity at the other portal.
             if (newEntity != null)
-            {
-                handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
-                newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
-                newEntity.forceSpawn = true;
-                world.spawnEntityInWorld(newEntity);
-                newEntity.setWorld(world);
-                setEntityPortalCooldown(newEntity);
+            { 
+            	handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
+            	newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
+            	newEntity.forceSpawn = true;
+            	world.spawnEntityInWorld(newEntity);
+            	newEntity.setWorld(world);
+            	setEntityPortalCooldown(newEntity);
             }
 
             world.resetUpdateEntityTick();
+
             return newEntity;
         }
     }
@@ -437,14 +437,19 @@ public class EntityManager
     {
         Entity rider = entity.riddenByEntity;
 
+        // If Entity has a rider...
         if (rider != null)
         {
+        	// Unmount rider
             rider.mountEntity(null);
+            // Send it back through as it's own entity
             rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
         }
-
+        
+        // Transfer the entity.
         entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
 
+        // Remount entity with rider.
         if (rider != null)
         {
             rider.mountEntity(entity);
