@@ -189,7 +189,11 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
             world.spawnEntityInWorld(item);
         }
         
-        return dropBlock;
+        //ArrayList<ItemStack> list=new ArrayList<ItemStack>();
+        //list.add(dropBlock);
+        
+        //return dropBlock;
+        return null;
     }
 
     @Override
