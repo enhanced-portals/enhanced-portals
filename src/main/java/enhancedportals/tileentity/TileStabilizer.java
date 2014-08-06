@@ -18,6 +18,7 @@ import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockStabilizer;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.utility.GeneralUtils;
@@ -77,6 +78,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                 }
 
                 ArrayList<ChunkCoordinates> blocks = checkShapeThreeWide(topLeft); // 3x3
+            	EnhancedPortals.logger.error(blocks.toString());
 
                 if (blocks.isEmpty())
                 {
@@ -98,6 +100,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                         {
                             if (((TileStabilizer) tile).getMainBlock() != null)
                             {
+                            	EnhancedPortals.logger.error("tile!=null");
                                 TileStabilizerMain m = ((TileStabilizer) tile).getMainBlock();
                                 m.deconstruct();
                             }
@@ -108,6 +111,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                         }
                     }
 
+                	EnhancedPortals.logger.error("topLeft: "+topLeft.toString());
                     for (ChunkCoordinates c : blocks)
                     {
                         worldObj.setBlock(c.posX, c.posY, c.posZ, BlockStabilizer.instance, 0, 2);
@@ -128,6 +132,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
 
                     if (tile instanceof TileStabilizerMain)
                     {
+                    	EnhancedPortals.logger.error("activate tile");
                         ((TileStabilizerMain) tile).setData(blocks, rows, is3x3);
                         return true;
                     }
@@ -135,6 +140,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
             }
         }
 
+    	EnhancedPortals.logger.error("activate false");
         return false;
     }
 

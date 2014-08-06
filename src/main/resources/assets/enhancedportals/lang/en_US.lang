@@ -251,11 +251,42 @@ ep3.manual.upgrade0.subtitle=Portal Upgrade
 ep3.manual.module0.subtitle=Portal Module
 ep3.manual.frame0.subtitle=Portal Component
 
-ep3.manual.main.title=An Adventurer's Guide to EnhancedPortals
+## "Title" Page
+ep3.manual.subject.title=ENHANCED PORTALS
+ep3.manual.subject.sub=wormhole tunneling
 
-## Temporary
-ep3.manual.portal.page.0=To be completed
-ep3.manual.main.page.0=ep3.manual.portal.page.0
+## Table of Contents
+ep3.manual.table_of_contents.title=TABLE OF CONTENTS
+
+## Chapter 1:
+ep3.manual.chapter.0.title=The Prelude
+ep3.manual.chapter.0.page.0=The subatomic particles of life and space are now easily manipulated. We have learned to weave them like fine silk for us to reap the benefits. With these concepts at the helm, we can now create harnesses, for micro wormholes to tunnel between space and dimensions.
+
+## Chapter 2:
+ep3.manual.chapter.1.title=The Basics
+ep3.manual.chapter.1.page.0=
+
+## Chapter 3:
+ep3.manual.chapter.2.title=Stabilizing Dimensions
+ep3.manual.chapter.2.page.0=
+
+## Chapter 4:
+ep3.manual.chapter.3.title=Building the Harness
+ep3.manual.chapter.3.page.0=
+
+## Chapter 5:
+ep3.manual.chapter.4.title=Igniting a Blackhole
+ep3.manual.chapter.4.page.0=
+
+## Chapter 6:
+ep3.manual.chapter.5.title=Phone Home
+ep3.manual.chapter.5.page.0=
+
+## Chapter 7:
+ep3.manual.chapter.6.title=Accessorizing
+ep3.manual.chapter.6.page.0=
+
+##ep3.manual.main.page.0=ep3.manual.portal.page.0
 ep3.manual.frame0.page.0=ep3.manual.portal.page.0
 ep3.manual.frame1.page.0=ep3.manual.portal.page.0
 ep3.manual.frame2.page.0=ep3.manual.portal.page.0

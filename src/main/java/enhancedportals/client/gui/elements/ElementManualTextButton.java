@@ -36,7 +36,6 @@ public class ElementManualTextButton extends BaseElement
             }
         }
     }
-
     public void updateEntry(String s)
     {
         entry = s;

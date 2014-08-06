@@ -57,8 +57,11 @@ public class ClientProxy extends CommonProxy
     public static String saveName;
     public static int editingID = -1;
 
-    public static String manualEntry = "main";
+    public static String manualEntry = "subject";
     public static int manualPage = 0;
+    public static int chapterNum = 0;
+    public static int chapterPage = 0;
+    public static int chapterPageTotal = 0;
 
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
@@ -75,6 +78,29 @@ public class ClientProxy extends CommonProxy
         return craftingRecipes.get(manualEntry);
     }
 
+    public static boolean manualChapterExists(int chapter_num){
+    	return locExists("manual.chapter."+chapter_num+".title");
+    }
+    public static boolean manualChapterPageExists(int chapter_num,int chapter_page){
+    	return locExists("manual.chapter."+chapter_num+".page."+chapter_page);
+    }
+    public static boolean locExists(String loc_string){
+    	// Check if there is such a localized string as loc_string.
+    	if(EnhancedPortals.localize(loc_string).equals(loc_string)){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
+    public static int manualChapterLastPage(int chapter_num){
+    	int max_pages=10;
+    	for(int i=max_pages;i>0;i--){
+    		if(locExists("manual.chapter."+chapter_num+".page."+i)){
+    			return i;
+    		}
+    	}
+    	return -1;
+    }
     public static void manualChangeEntry(String entry)
     {
         manualEntry = entry;
