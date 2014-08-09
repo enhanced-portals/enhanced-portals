@@ -163,7 +163,7 @@ public class CommonProxy
         
         try 
         {
-            URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/DaBells/master/vers");
+            URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
     		BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
     		String newVers = in.readLine();
     		

@@ -260,31 +260,39 @@ ep3.manual.table_of_contents.title=TABLE OF CONTENTS
 
 ## Chapter 1:
 ep3.manual.chapter.0.title=The Prelude
-ep3.manual.chapter.0.page.0=The subatomic particles of life and space are now easily manipulated. We have learned to weave them like fine silk for us to reap the benefits. With these concepts at the helm, we can now create harnesses, for micro wormholes to tunnel between space and dimensions.
+ep3.manual.chapter.0.p.0=The subatomic particles of life and space are now easily manipulated. We have learned to weave them like fine silk for us to reap the benefits. With these concepts at the helm, we can now create harnesses, for micro wormholes to tunnel between space and dimensions.
 
 ## Chapter 2:
 ep3.manual.chapter.1.title=The Basics
-ep3.manual.chapter.1.page.0=
+ep3.manual.chapter.1.p.0=The principals behind channeling a wormhole starts with constructing a Dimensional Bridge Stabilizer. This device will allow you to maintain and transport Bio Information across great distances.
+ep3.manual.chapter.1.p.1=To sustain a wormhole you will need to create a frame which can withstand and encapsulate a wormhole formation. These are known as portal frames.
+ep3.manual.chapter.1.p.2=Finally you will need a method that will being the portal. This can be anything from a simple button to a Dialling Device.
 
 ## Chapter 3:
 ep3.manual.chapter.2.title=Stabilizing Dimensions
-ep3.manual.chapter.2.page.0=
+ep3.manual.chapter.2.p.0=The Dimensional Bridge Stabilizer allows several simultaneous wormholes to be created depending on it's volume.
+ep3.manual.chapter.2.p.1=To create a DBS, place 12 Dimensional Bridge Stabilizer blocks in a configuration of 2 high, 3 wide, 2 long (2x3x2), or 2 high, 3 wide, 3 long, and right click on any block with a wrench. If configured correctly, a functional DBS will form.
+ep3.manual.chapter.2.p.2=Each tier of a DBS will allow you to maintain 2 more portals and you may create up to 256 tiers from a single DBS. You cannot add on extra tiers once a DBS is formed, so plan accordingly or you may have to relink any pre-existing portals if you break the DBS. A DBS can hold a charge of about 15,000 RF per tier, and will expend it's storage as portals are being used. If you chose to minimize the power level that the DBS feeds the wormholes, the result will be instability. Instability within a wormhole brings with it unclear side effects, and molecular rearrangement has not been unheard of.
 
 ## Chapter 4:
 ep3.manual.chapter.3.title=Building the Harness
-ep3.manual.chapter.3.page.0=
+ep3.manual.chapter.3.p.0=The struggle to keep a wormhole harnessed in a dimesion can be overcome with the use of Portal Frames. A Portal Frame is configured in much of the same manner as the ancient prototype for interdimensional travel, the obsidian nether portal. A portal can only be formed if there are blocks forming a closed shape along a flat area going horizontally or vertically.
+ep3.manual.chapter.3.p.1=For the portal frame to interact with the DBS, a Portal Stabilizer must be used. This Stabilizer may be placed along any part of the portal as long as the block is against the threshold of where you intend to open the wormhole. Once you place your Stabilizer down, you will need to manually link the portal with a DBS by creating a Location Card, placing it into a DBS, and once it is set you may right-click with it against a Portal Stabilizer to initialize the portal frame. If you've configured the portal correctly, the portal will link and you may access the Stabilizer with a wrench to configure it's Unique Identifier. The UID is an address that must be unique to that portal.
+ep3.manual.chapter.3.p.2=There are two ways for portals to send and receive data from eachother. The first is to be connected to a network, and to do that, you must include another type of frame block called the Network Interface. This block allows you to access a linking dialer. Simply dial in a specific Network ID (NID) and those portals on the specified network will link their wormholes to eachother.
+ep3.manual.chapter.3.p.3=After reconfiguring a portal you will need to reinitialize it by right-clicking on any connected portal block with a wrench.
 
 ## Chapter 5:
 ep3.manual.chapter.4.title=Igniting a Blackhole
-ep3.manual.chapter.4.page.0=
+ep3.manual.chapter.4.p.0=To finally initiate a wormhole link, you will need a Redstone Interface. The Redstone Interface is a portal frame block that will allow you to interact with your portal frame. After integrating the block into your structure, right-click with a wrench to access the different ways redstone may interact with a portal.
+ep3.manual.chapter.4.p.1=The simplest way to intiate a portal is to craft a button, place it directly on the Redstone Interface, and to change the RI options to "Input" & "Create portal on pulse". By utilizing the Redstone Interface, you have at your disposal a plethora of ways to control the portals remotely, and you can place as many Redstone Interfaces in to a portal frame as you like, so explore and, most importantly, experiment.
 
 ## Chapter 6:
 ep3.manual.chapter.5.title=Phone Home
-ep3.manual.chapter.5.page.0=
+ep3.manual.chapter.5.p.0=Portals have a second way to communicate with eachother, and that's through a Dialing Device. A Dialing Device is a portal frame block that allows you to input the UID of another portal and establish a wormhole with it. By means of this, you can also dial portals outside of your DBS network if the portal that you are trying to connect to is set to "Public" in it's Stabilizer. Otherwise only portals networked through the same DBS may access them. Keep in mind that you can only link 2 portals this way, and unless you terminate the connection other portals cannot dial that portal, not to mention the drain on the DBS, but I'm sure you can think of a Redstone circuit that could automatically terminate them for you.
 
 ## Chapter 7:
 ep3.manual.chapter.6.title=Accessorizing
-ep3.manual.chapter.6.page.0=
+ep3.manual.chapter.6.page.0=Placeholder
 
 ##ep3.manual.main.page.0=ep3.manual.portal.page.0
 ep3.manual.frame0.page.0=ep3.manual.portal.page.0

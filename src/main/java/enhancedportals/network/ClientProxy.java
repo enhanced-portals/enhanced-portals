@@ -86,7 +86,7 @@ public class ClientProxy extends CommonProxy
     }
     public static boolean locExists(String loc_string){
     	// Check if there is such a localized string as loc_string.
-    	if(EnhancedPortals.localize(loc_string).equals(loc_string)){
+    	if(EnhancedPortals.localize(loc_string).equals("ep3."+loc_string)){
     		return false;
     	}else{
     		return true;
