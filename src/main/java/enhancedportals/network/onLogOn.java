@@ -20,7 +20,7 @@ public class onLogOn
 		{
 			try
 			{
-				URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/DaBells/master/vers");
+				URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
 				BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
 				String newVers = in.readLine();
 				
@@ -32,7 +32,7 @@ public class onLogOn
 				}
 				else
 				{
-	    			System.out.println("DaBells is up-to-date :: v" + newVers);
+	    			System.out.println("Enhanced Portals is up-to-date :: v" + newVers);
 				}
 			}
 			catch (Exception e) 
@@ -44,7 +44,7 @@ public class onLogOn
 		}
 		else
 		{
-			System.out.println("Something is wrong::Player is NULL");
+			System.out.println("Something is wrong :: Player is NULL");
 		}
 	}
 }

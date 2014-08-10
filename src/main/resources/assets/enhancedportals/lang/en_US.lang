@@ -28,7 +28,7 @@ item.glasses.name=Glasses
 item.location_card.name=Location Card
 item.blank_portal_module.name=Blank Portal Module
 item.blank_upgrade.name=Blank Upgrade
-item.manual.name=An Adventurer's Guide to EnhancedPortals
+item.manual.name=ENHANCED PORTALS: wormhole tunneling.
 
 # In-place upgrades
 item.upgrade.redstone.name=Redstone Interface Upgrade
@@ -170,10 +170,10 @@ ep3.gui.portalCreated=Portal Created
 ep3.gui.portalRemoved=Portal Removed
 ep3.gui.portalActive=Portal Active
 ep3.gui.portalInactive=Portal Inactive
-ep3.gui.entityTeleport=Entity Touch Portal
-ep3.gui.playerTeleport=Player Touch Portal
-ep3.gui.animalTeleport=Animal Touch Portal
-ep3.gui.monsterTeleport=Monster Touch Portal
+ep3.gui.entityTeleport=Entity Touches Portal
+ep3.gui.playerTeleport=Player Touches Portal
+ep3.gui.animalTeleport=Animal Touches Portal
+ep3.gui.monsterTeleport=Monster Touches Portal
 
 # GUI General
 ep3.gui.initialized=Initialized
@@ -239,11 +239,10 @@ ep3.success=[Success]
 ep3.success.create=Portal initialized
 ep3.success.reconfigure=Portal reconfigured
 
+
 ############
 ## Manual ##
-####################################################################################################################################################################################################
-## Run out of space when translating a page? Simply create a new page by adding a new line and incrementing the number at the end. The manual will automatically update and add a new page ingame ##
-####################################################################################################################################################################################################
+############
 
 ep3.manual.decorBorderedQuartz.subtitle=Decorative
 ep3.manual.dbsEmpty.title=Dimensional Bridge Stabilizer (Empty)
@@ -252,11 +251,14 @@ ep3.manual.module0.subtitle=Portal Module
 ep3.manual.frame0.subtitle=Portal Component
 
 ## "Title" Page
-ep3.manual.subject.title=ENHANCED PORTALS
+ep3.manual.subject.title=Enhanced Portals
 ep3.manual.subject.sub=wormhole tunneling
 
 ## Table of Contents
-ep3.manual.table_of_contents.title=TABLE OF CONTENTS
+ep3.manual.table_of_contents.title=Table of Contents
+
+## Chapter Item Gallery Title
+ep3.manual.gallery.title=Item Gallery
 
 ## Chapter 1:
 ep3.manual.chapter.0.title=The Prelude
@@ -277,7 +279,7 @@ ep3.manual.chapter.2.p.2=Each tier of a DBS will allow you to maintain 2 more po
 ## Chapter 4:
 ep3.manual.chapter.3.title=Building the Harness
 ep3.manual.chapter.3.p.0=The struggle to keep a wormhole harnessed in a dimesion can be overcome with the use of Portal Frames. A Portal Frame is configured in much of the same manner as the ancient prototype for interdimensional travel, the obsidian nether portal. A portal can only be formed if there are blocks forming a closed shape along a flat area going horizontally or vertically.
-ep3.manual.chapter.3.p.1=For the portal frame to interact with the DBS, a Portal Stabilizer must be used. This Stabilizer may be placed along any part of the portal as long as the block is against the threshold of where you intend to open the wormhole. Once you place your Stabilizer down, you will need to manually link the portal with a DBS by creating a Location Card, placing it into a DBS, and once it is set you may right-click with it against a Portal Stabilizer to initialize the portal frame. If you've configured the portal correctly, the portal will link and you may access the Stabilizer with a wrench to configure it's Unique Identifier. The UID is an address that must be unique to that portal.
+ep3.manual.chapter.3.p.1=For the portal frame to interact with the DBS, a Portal Controller must be used. This Controller may be placed along any part of the portal as long as the block is against the threshold of where you intend to open the wormhole. Once you place your Controller down, you will need to manually link the portal with a DBS by creating a Location Card, placing it into a DBS, and once it is set you may right-click with it against a Portal Controller to initialize the portal frame. If you've configured the portal correctly, the portal will link and you may access the Controller with a wrench to configure it's Unique Identifier. The UID is an address that must be unique to that portal. If you deconstruct the portal's Controller, the link with the DBS will be lost and you will have to re-establish the link with one before it can activate again.
 ep3.manual.chapter.3.p.2=There are two ways for portals to send and receive data from eachother. The first is to be connected to a network, and to do that, you must include another type of frame block called the Network Interface. This block allows you to access a linking dialer. Simply dial in a specific Network ID (NID) and those portals on the specified network will link their wormholes to eachother.
 ep3.manual.chapter.3.p.3=After reconfiguring a portal you will need to reinitialize it by right-clicking on any connected portal block with a wrench.
 
@@ -288,54 +290,41 @@ ep3.manual.chapter.4.p.1=The simplest way to intiate a portal is to craft a butt
 
 ## Chapter 6:
 ep3.manual.chapter.5.title=Phone Home
-ep3.manual.chapter.5.p.0=Portals have a second way to communicate with eachother, and that's through a Dialing Device. A Dialing Device is a portal frame block that allows you to input the UID of another portal and establish a wormhole with it. By means of this, you can also dial portals outside of your DBS network if the portal that you are trying to connect to is set to "Public" in it's Stabilizer. Otherwise only portals networked through the same DBS may access them. Keep in mind that you can only link 2 portals this way, and unless you terminate the connection other portals cannot dial that portal, not to mention the drain on the DBS, but I'm sure you can think of a Redstone circuit that could automatically terminate them for you.
+ep3.manual.chapter.5.p.0=Portals have a second way to communicate with eachother, and that's through a Dialing Device. A Dialing Device is a portal frame block that allows you to input the UID of another portal and establish a wormhole with it. By means of this, you can also dial portals outside of your DBS network if the portal that you are trying to connect to is set to "Public" in it's Portal Controller. Otherwise only portals networked through the same DBS may access them. Keep in mind that you can only link 2 portals this way, and unless you terminate the connection, other portals cannot dial that portal, not to mention the drain on the DBS. I'm sure you can think of a Redstone circuit that could automatically terminate them for you.
 
 ## Chapter 7:
 ep3.manual.chapter.6.title=Accessorizing
-ep3.manual.chapter.6.page.0=Placeholder
+ep3.manual.chapter.6.p.0=Integration is a key factor when setting up your evil lair, complete with a multiportal black hole room, and so there are a few ways to customize your Portals, and what you can transport with them.
+ep3.manual.chapter.6.p.1=Right-clicking on a portal with a Nanobrush will allow you to access the Frame and Portal's customization screen. Here you can adjust the portal color, change the look of the portal blocks, and choose what particle your portal displays.
+ep3.manual.chapter.6.p.2=Further advancing on customization, a Module Manipulator block is craftable. Integrated with a Portal Frame, the portal is now ready to accept special modules that are crafted out of Blank Modules. These special modules do things ranging from making your portals invisible to managing what direction you face once exiting a wormhole.
+ep3.manual.chapter.6.p.3=Integration with other forms of technology was required, so we've allowed some special blocks to be crafted, the Energy, Fluid, and Item Transportation Module portal frame blocks. These allow the portals to be much more flexible with transportating things other than players, mobs, and animals.
 
-##ep3.manual.main.page.0=ep3.manual.portal.page.0
-ep3.manual.frame0.page.0=ep3.manual.portal.page.0
-ep3.manual.frame1.page.0=ep3.manual.portal.page.0
-ep3.manual.frame2.page.0=ep3.manual.portal.page.0
-ep3.manual.frame3.page.0=ep3.manual.portal.page.0
-ep3.manual.frame4.page.0=ep3.manual.portal.page.0
-ep3.manual.frame5.page.0=ep3.manual.portal.page.0
-ep3.manual.frame6.page.0=ep3.manual.portal.page.0
-ep3.manual.frame7.page.0=ep3.manual.portal.page.0
-ep3.manual.frame8.page.0=ep3.manual.portal.page.0
-ep3.manual.frame9.page.0=ep3.manual.portal.page.0
-ep3.manual.wrench.page.0=ep3.manual.portal.page.0
-ep3.manual.nanobrush.page.0=ep3.manual.portal.page.0
-ep3.manual.glasses.page.0=ep3.manual.portal.page.0
-ep3.manual.location_card.page.0=ep3.manual.portal.page.0
-ep3.manual.blank_module.page.0=ep3.manual.portal.page.0
-ep3.manual.blank_upgrade.page.0=ep3.manual.portal.page.0
-ep3.manual.module0.page.0=ep3.manual.portal.page.0
-ep3.manual.module1.page.0=ep3.manual.portal.page.0
-ep3.manual.module2.page.0=ep3.manual.portal.page.0
-ep3.manual.module3.page.0=ep3.manual.portal.page.0
-ep3.manual.module4.page.0=ep3.manual.portal.page.0
-ep3.manual.module5.page.0=ep3.manual.portal.page.0
-ep3.manual.module6.page.0=ep3.manual.portal.page.0
-ep3.manual.module7.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade0.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade1.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade2.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade3.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade4.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade5.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade6.page.0=ep3.manual.portal.page.0
-ep3.manual.upgrade7.page.0=ep3.manual.portal.page.0
-ep3.manual.dbs.page.0=ep3.manual.portal.page.0
-ep3.manual.decorStabilizer.page.0=ep3.manual.portal.page.0
-ep3.manual.decorBorderedQuartz.page.0=ep3.manual.portal.page.0
-ep3.manual.dbsEmpty.page.0=Not yet implemented
-ep3.manual.frame5.page.0=ep3.manual.dbsEmpty.page.0
+
+######################
+## ITEM INFORMATION ##
+######################
+
+ep3.manual.wrench.info=Right-click on a DBS array to turn into a DBS. Can also disassemble blocks when sneak-right-clicking portal objects. Use on portal module blocks to access their GUI. A Buildcraft or TE wrench may also be substituted.
+ep3.manual.nanobrush.info=A very dangerous object. Use on a portal frame to activate the customization GUI. Don't get any in your hair.
+ep3.manual.glasses.info=When worn, reveals portal frame modules for easier configuring.
+ep3.manual.location_card.info=Used to link a portal's Controller with a DBS. Simply place a card into a DBS and right-click on a portal Controller. Can be saved and reused to link many portals to the same DBS.
+ep3.manual.dbs.info=Stabilizes a fixed point in a dimension so that wormhole creation and data transfer can happen. Uses RF to stabilize. Create a DBS by placing the DBS blocks in arrays of 2x3x2 or 3x3x2 and right-clicking with a wrench.
+ep3.manual.frame0.info=The fundamental frame block, capable of forming and capsulating a wormhole.
+ep3.manual.frame1.info=The Frame Controller is used to establish a link to the DBS. Once linked via a Location Card, the Controller should not be moved. If it's disassembled, you will need to relink. You can choose to keep a portal private, where only those on the same DBS can access it, or public.
+ep3.manual.frame2.info=A Redstone Interface will allow access to automate certain tasks via redstone. Simply craft and place somewhere along the frame. Several can be placed in a frame to give more options.
+ep3.manual.frame3.info=Network interfaces allow 2 or more portals to connect through a network to eachother. Simply enter a Network ID on one portal and the same NID in another, and they will link. Portals set to private will not be able to access portals not on their DBS.
+ep3.manual.frame4.info=The Dialing Device module allows you to establish a link to another portal without the need of a Network. You can also save UIDs from other Portals as a Dialing pad (hold shift to delete). Portals set to private will not be able to access portals not on their DBS.
+ep3.manual.frame6.info=A Module Manipulator is a frame that will allow a portal to interact with Module chips. These chips can be crafted and placed in the Module Manipulator to do a range of things from silencing a portal to making the portal itself invisible.
+ep3.manual.frame7.info=This module allows you to teleport Fluid to a destination with another Fluid Transportation module.
+ep3.manual.frame8.info=This module allows you to teleport Items to a destination with another Item Transportation module.
+ep3.manual.frame9.info=This module allows you to teleport Energy to a destination with another Energy Transportation module.
+ep3.manual.blank_module.info=The foundation circuit module. This item is required to craft the other modules and the Module Manipulator.
+
 
 ###################################################################################
 ## The rest are resolved automatically, though you can override them if required ##
 ###################################################################################
+
 ep3.manual.wrench.title=item.wrench.name
 ep3.manual.nanobrush.title=item.nanobrush.name
 ep3.manual.glasses.title=item.glasses.name
