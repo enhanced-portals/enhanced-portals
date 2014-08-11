@@ -15,6 +15,7 @@ public class onLogOn
 	public void onLogIn(PlayerEvent.PlayerLoggedInEvent login)
 	{
 		String curVers = EnhancedPortals.VERS;
+		String newVers = null;
 		
 		if (login.player != null)
 		{
@@ -22,7 +23,7 @@ public class onLogOn
 			{
 				URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
 				BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
-				String newVers = in.readLine();
+				newVers = in.readLine();
 				
 				if (!newVers.equals(curVers))
 				{
@@ -38,7 +39,7 @@ public class onLogOn
 			catch (Exception e) 
 	        {
 	        	System.out.println("Unable to find latest version of EP");
-	            throw new RuntimeException(e);
+	            newVers = curVers;
 	        } 
 	        finally {}
 		}
