@@ -1,7 +1,7 @@
-EnhancedPortals 3 - for Minecraft 1.7.10
+EnhancedPortals 3 - for Minecraft 1.7.2
 ---
 Useful Links:
-* [Downloads](http://mods.atomicbase.com/enhancedportals/1.7.10/downloads/)
+* [Downloads](http://mods.atomicbase.com/enhancedportals/1.7.2/downloads/)
 * [Minecraft Forums Thread](http://www.minecraftforum.net/topic/2143651-164-enhancedportals-3/)
 
 
