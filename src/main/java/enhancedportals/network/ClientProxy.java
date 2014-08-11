@@ -57,8 +57,11 @@ public class ClientProxy extends CommonProxy
     public static String saveName;
     public static int editingID = -1;
 
-    public static String manualEntry = "main";
+    public static String manualEntry = "subject";
     public static int manualPage = 0;
+    public static int chapterNum = 0;
+    public static int chapterPage = 0;
+    public static int chapterPageTotal = 0;
 
     public static int editingDialEntry = -1;
     public static PortalTextureManager dialEntryTexture = new PortalTextureManager();
@@ -75,6 +78,29 @@ public class ClientProxy extends CommonProxy
         return craftingRecipes.get(manualEntry);
     }
 
+    public static boolean manualChapterExists(int chapter_num){
+    	return locExists("manual.chapter."+chapter_num+".title");
+    }
+    public static boolean manualChapterPageExists(int chapter_num,int chapter_page){
+    	return locExists("manual.chapter."+chapter_num+".page."+chapter_page);
+    }
+    public static boolean locExists(String loc_string){
+    	// Check if there is such a localized string as loc_string.
+    	if(EnhancedPortals.localize(loc_string).equals("ep3."+loc_string)){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
+    public static int manualChapterLastPage(int chapter_num){
+    	int max_pages=10;
+    	for(int i=max_pages;i>0;i--){
+    		if(locExists("manual.chapter."+chapter_num+".page."+i)){
+    			return i;
+    		}
+    	}
+    	return -1;
+    }
     public static void manualChangeEntry(String entry)
     {
         manualEntry = entry;
@@ -256,7 +282,7 @@ public class ClientProxy extends CommonProxy
         craftingRecipes.put("frame" + BlockFrame.REDSTONE_INTERFACE, new ItemStack[] { null, new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.redstone), null, new ItemStack(Items.redstone), null, new ItemStack(BlockFrame.instance, 1, BlockFrame.REDSTONE_INTERFACE) });
         craftingRecipes.put("frame" + BlockFrame.NETWORK_INTERFACE, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.NETWORK_INTERFACE) });
         craftingRecipes.put("frame" + BlockFrame.DIALLING_DEVICE, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, BlockFrame.NETWORK_INTERFACE), new ItemStack(Items.diamond), null, null, null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.DIALLING_DEVICE) });
-        craftingRecipes.put("frame" + BlockFrame.PROGRAMMABLE_INTERFACE, new ItemStack[] {}); // TODO
+        // craftingRecipes.put("frame" + BlockFrame.PROGRAMMABLE_INTERFACE, new ItemStack[] {}); // TODO
         craftingRecipes.put("frame" + BlockFrame.MODULE_MANIPULATOR, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.diamond), new ItemStack(Items.emerald), new ItemStack(ItemBlankPortalModule.instance), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.MODULE_MANIPULATOR) });
         craftingRecipes.put("frame" + BlockFrame.TRANSFER_ENERGY, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Blocks.redstone_block), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_ENERGY) });
         craftingRecipes.put("frame" + BlockFrame.TRANSFER_FLUID, new ItemStack[] { new ItemStack(BlockFrame.instance, 1, 0), new ItemStack(Items.ender_pearl), new ItemStack(Items.diamond), new ItemStack(Items.bucket), null, null, null, null, null, new ItemStack(BlockFrame.instance, 1, BlockFrame.TRANSFER_FLUID) });
@@ -266,7 +292,7 @@ public class ClientProxy extends CommonProxy
         craftingRecipes.put("dbsEmpty", new ItemStack[] {});
         craftingRecipes.put("decorBorderedQuartz", new ItemStack[] { new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(Blocks.quartz_block), new ItemStack(Blocks.stone), new ItemStack(BlockDecorBorderedQuartz.instance, 9) });
         craftingRecipes.put("blank_module", new ItemStack[] { new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.iron_ingot), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(Items.gold_nugget), new ItemStack(ItemBlankPortalModule.instance) });
-        craftingRecipes.put("blank_upgrade", new ItemStack[] { new ItemStack(Items.diamond), null, null, new ItemStack(Items.paper), null, null, new ItemStack(Items.dye, 1, 1), null, null, new ItemStack(ItemBlankUpgrade.instance, 8) });
+        craftingRecipes.put("blank_upgrade", new ItemStack[] { new ItemStack(Items.diamond), null, null, new ItemStack(Items.paper), null, null, new ItemStack(Items.dye, 1, 1), null, null, new ItemStack(ItemBlankUpgrade.instance) });
         craftingRecipes.put("glasses", new ItemStack[] { new ItemStack(Items.dye, 1, 1), null, new ItemStack(Items.dye, 1, 6), new ItemStack(Blocks.glass_pane), new ItemStack(Items.leather), new ItemStack(Blocks.glass_pane), new ItemStack(Items.leather), null, new ItemStack(Items.leather), new ItemStack(ItemGlasses.instance) });
         craftingRecipes.put("location_card", new ItemStack[] { new ItemStack(Items.iron_ingot), new ItemStack(Items.paper), new ItemStack(Items.iron_ingot), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.paper), new ItemStack(Items.iron_ingot), new ItemStack(Items.dye, 1, 4), new ItemStack(Items.iron_ingot), new ItemStack(ItemLocationCard.instance, 16) });
         craftingRecipes.put("wrench", new ItemStack[] { new ItemStack(Items.iron_ingot), null, new ItemStack(Items.iron_ingot), null, new ItemStack(Items.quartz), null, null, new ItemStack(Items.iron_ingot), null, new ItemStack(ItemWrench.instance) });

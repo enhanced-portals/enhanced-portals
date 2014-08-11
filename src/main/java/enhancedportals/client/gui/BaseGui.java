@@ -318,10 +318,8 @@ public abstract class BaseGui extends GuiContainer
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
-        if (name != null)
-        {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2){
+        if (name != null){
             getFontRenderer().drawString(EnhancedPortals.localize(name), (xSize - mc.fontRenderer.getStringWidth(EnhancedPortals.localize(name))) / 2, 6, 0x404040);
         }
 

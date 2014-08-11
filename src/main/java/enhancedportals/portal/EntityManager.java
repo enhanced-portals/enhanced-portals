@@ -3,8 +3,6 @@ package enhancedportals.portal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.logging.log4j.LogManager;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityBoat;
@@ -338,10 +336,13 @@ public class EntityManager
             config.syncPlayerInventory(player);
             
             // Instate any potion effects the player had when teleported.
-            Iterator potion = player.getActivePotionEffects().iterator();
+            /*Iterator potion = player.getActivePotionEffects().iterator();
             while (potion.hasNext())
             {
                 player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
+            }*/
+            for (Iterator<PotionEffect> potion = player.getActivePotionEffects().iterator(); potion.hasNext();) {
+            	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
             }
 
             player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));

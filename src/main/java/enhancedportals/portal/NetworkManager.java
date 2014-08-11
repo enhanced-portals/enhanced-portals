@@ -229,7 +229,7 @@ public class NetworkManager
         String portalData = FileUtils.readFileToString(portalFile), networkData = FileUtils.readFileToString(networkFile);
 
         portalCoordinates = gson.fromJson(portalData, type);
-        portalNetworks = gson.fromJson(networkData, portalNetworks.getClass());
+        portalNetworks = gson.fromJson(networkData,portalNetworks.getClass());
 
         if (portalCoordinates == null) // because for some reason fromJson can return null
         {

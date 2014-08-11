@@ -184,7 +184,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
             if (fluid != null)
             {
                 map.put("name", fluid.getName());
-                map.put("label", fluid.getLocalizedName());
+                map.put("label", fluid.getLocalizedName(tank.getFluid()));
             }
         }
         else
