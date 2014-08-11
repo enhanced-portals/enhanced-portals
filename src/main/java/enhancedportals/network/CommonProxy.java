@@ -1,8 +1,13 @@
 package enhancedportals.network;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
@@ -53,11 +58,12 @@ public class CommonProxy
     public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20, RF_PER_MJ = 10;
     public int gogglesRenderIndex = 0;
     public NetworkManager networkManager;
-    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower;
+    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, updateNotifier;
     public static double powerMultiplier, powerStorageMultiplier;
     public static int activePortalsPerRow = 2;
     static Configuration config;
     static File craftingDir;
+    static String curVers = EnhancedPortals.VERS, lateVers;
 
     public File getBaseDir()
     {
@@ -141,6 +147,8 @@ public class CommonProxy
         powerMultiplier = config.get("Power", "PowerMultiplier", 1.0).getDouble(1.0);
         powerStorageMultiplier = config.get("Power", "DBSPowerStorageMultiplier", 1.0).getDouble(1.0);
         activePortalsPerRow = config.get("Portal", "ActivePortalsPerRow", 2).getInt(2);
+        updateNotifier = config.get("Misc", "NotifyOfUpdates", true).getBoolean(true);
+        
         config.save();
 
         if (powerMultiplier < 0)
@@ -152,8 +160,52 @@ public class CommonProxy
         {
             powerStorageMultiplier = 0.01;
         }
-    }
+        
+        try 
+        {
+            URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
+    		BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
+    		String newVers = in.readLine();
+    		
+    		if (!newVers.equals(curVers))
+    		{
+    			System.out.println("You are running EP v" + curVers);
+    			System.out.println("EP has been updated to v" + newVers);
+    			System.out.println("Get the latest version of EP from - mods.atomicbase.com");
+   				lateVers = newVers;
+    		}
+    		else
+    		{
+    			lateVers = newVers;
+    		}
+        }
+        catch (Exception e) 
+        {
+        	System.out.println("Unable to find latest version for EP");
+            throw new RuntimeException(e);
+        } 
+        finally {}	
+	}
 
+    public static boolean Notify(EntityPlayer player, String lateVers)
+	{
+		if (updateNotifier == true)
+		{
+			String msg = "EP has been updated to v" + lateVers + " :: You are running v" + curVers;
+			String msg2 = "Get the latest version of EP from - mods.atomicbase.com";
+			System.out.println("Trying to notify you via Chat");
+			player.addChatMessage(new ChatComponentText(msg));
+			player.addChatMessage(new ChatComponentText(msg2));
+			return true;
+		}
+		else
+		{
+			System.out.println("You are running EP v" + curVers);
+			System.out.println("EP has been updated to v" + lateVers);
+			System.out.println("Get the latest version of EP from - mods.atomicbase.com");
+			return false;
+		}
+	}
     public void setupCrafting()
     {
         Vanilla.registerRecipes();

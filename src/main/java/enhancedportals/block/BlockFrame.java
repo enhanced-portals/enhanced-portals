@@ -1,5 +1,6 @@
 package enhancedportals.block;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -164,7 +165,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     }
 
     @Override
-    public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
     {
         ItemStack dropBlock = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
 
@@ -187,8 +188,12 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
             item.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(item);
         }
-
-        return dropBlock;
+        
+        //ArrayList<ItemStack> list=new ArrayList<ItemStack>();
+        //list.add(dropBlock);
+        
+        //return dropBlock;
+        return null;
     }
 
     @Override
