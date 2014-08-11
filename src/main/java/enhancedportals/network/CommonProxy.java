@@ -182,7 +182,7 @@ public class CommonProxy
         catch (Exception e) 
         {
         	System.out.println("Unable to find latest version for EP");
-            newVers = curVers;
+            lateVers = curVers;
         } 
         finally {}	
 	}
