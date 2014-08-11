@@ -567,7 +567,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         }
 
         TileStabilizerMain sA = cA.getDimensionalBridgeStabilizer(), sB = cB.getDimensionalBridgeStabilizer();
-
+        
         if (!sA.getWorldCoordinates().equals(sB.getWorldCoordinates()))
         {
             if (cB.isPublic)
@@ -639,7 +639,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         {
             portalB = new GlyphIdentifier(activeConnectionsReverse.get(identifier.getGlyphString()));
         }
-
+        
         terminateExistingConnection(portalA, portalB);
     }
 

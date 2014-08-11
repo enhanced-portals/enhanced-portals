@@ -60,7 +60,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
             if (GeneralUtils.isWrench(player.inventory.getCurrentItem()))
             {
                 WorldCoordinates topLeft = getWorldCoordinates();
-
+                // Get the Top-Northwest-most block in the DBS block group.
                 while (topLeft.offset(ForgeDirection.WEST).getBlock() == BlockStabilizer.instance) // Get the westernmost block
                 {
                     topLeft = topLeft.offset(ForgeDirection.WEST);
@@ -76,21 +76,19 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                     topLeft = topLeft.offset(ForgeDirection.UP);
                 }
 
+                // Check for valid DBS configurations (3x3, 2x3, 3x2):
                 ArrayList<ChunkCoordinates> blocks = checkShapeThreeWide(topLeft); // 3x3
-
-                if (blocks.isEmpty())
-                {
+                if (blocks.isEmpty()){
                     blocks = checkShapeTwoWide(topLeft, true); // Try the 3x2 X axis
-
-                    if (blocks.isEmpty())
-                    {
+                    if (blocks.isEmpty()){
                         blocks = checkShapeTwoWide(topLeft, false); // Try the 3x2 Z axis before failing
                     }
                 }
-
-                if (!blocks.isEmpty()) // success
+                // blocks wont be empty if we gathered information about the array in the last functions.
+                if (!blocks.isEmpty())
                 {
-                    for (ChunkCoordinates c : blocks) // make sure we're not interrupting something
+                	// Need to check if there's already a DBS here.
+                    for (ChunkCoordinates c : blocks)
                     {
                         TileEntity tile = worldObj.getTileEntity(c.posX, c.posY, c.posZ);
 
@@ -108,6 +106,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                         }
                     }
 
+                    // Otherwise start marking the blocks for the DBS block.
                     for (ChunkCoordinates c : blocks)
                     {
                         worldObj.setBlock(c.posX, c.posY, c.posZ, BlockStabilizer.instance, 0, 2);
@@ -122,10 +121,12 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                         }
                     }
 
+                    // Create a BlockStabilizer.
                     worldObj.setBlock(topLeft.posX, topLeft.posY, topLeft.posZ, BlockStabilizer.instance, 1, 3);
 
                     TileEntity tile = topLeft.getTileEntity();
 
+                    // Check if everything went successful and set up.
                     if (tile instanceof TileStabilizerMain)
                     {
                         ((TileStabilizerMain) tile).setData(blocks, rows, is3x3);
@@ -134,7 +135,6 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
                 }
             }
         }
-
         return false;
     }
 

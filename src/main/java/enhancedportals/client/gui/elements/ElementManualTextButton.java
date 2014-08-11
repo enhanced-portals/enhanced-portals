@@ -11,7 +11,7 @@ public class ElementManualTextButton extends BaseElement
     String entry;
     String displayStr;
     boolean tooLong = false;
-    int length = 19;
+    int length = 21;
 
     public ElementManualTextButton(GuiManual gui, int x, int y, String mEntry)
     {
@@ -36,7 +36,6 @@ public class ElementManualTextButton extends BaseElement
             }
         }
     }
-
     public void updateEntry(String s)
     {
         entry = s;
@@ -95,8 +94,7 @@ public class ElementManualTextButton extends BaseElement
         if (entry != null)
         {
             boolean isHovering = intersectsWith(parent.getMouseX(), parent.getMouseY());
-            //parent.drawTrueType(posX, posY - 2, (isHovering ? ">" : "") + displayStr, false, isHovering ? 0.2f : 0f, isHovering ? 0.2f : 0f, isHovering ? 0.7f : 0f, 1f);
-            parent.getFontRenderer().drawString((isHovering ? ">" : "") + displayStr, posX, posY, isHovering ? 0x3333FF : 0x000000);
+            parent.getFontRenderer().drawString(displayStr,posX,posY,(isHovering?0xFF0000:0x991100));
         }
     }
 
