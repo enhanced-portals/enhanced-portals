@@ -3,7 +3,7 @@ tile.frame.frame.name=Portal Frame
 tile.frame.controller.name=Portal Controller
 tile.frame.redstone.name=Redstone Interface
 tile.frame.network_interface.name=Network Interface
-tile.frame.dial_device.name=Dialling Device
+tile.frame.dial_device.name=Dialing Device
 tile.frame.program_interface.name=Programmable Interface
 tile.frame.upgrade.name=Module Manipulator
 tile.frame.fluid.name=Fluid Transportation Module
@@ -33,7 +33,7 @@ item.manual.name=ENHANCED PORTALS: wormhole tunneling.
 # In-place upgrades
 item.upgrade.redstone.name=Redstone Interface Upgrade
 item.upgrade.network_interface.name=Network Interface Upgrade
-item.upgrade.dial_device.name=Dialling Device Upgrade
+item.upgrade.dial_device.name=Dialing Device Upgrade
 item.upgrade.program_interface.name=Programmable Interface Upgrade
 item.upgrade.upgrade.name=Module Manipulator Upgrade
 item.upgrade.fluid.name=Fluid Transportation Upgrade
@@ -97,7 +97,7 @@ ep3.tab.glyphs=Glyphs
 ep3.tab.glyphs.info=// TODO
 
 # GUI Dialler
-ep3.gui.dialDevice=Dialling Device
+ep3.gui.dialDevice=Dialing Device
 ep3.gui.storedIdentifiers=Stored Identifiers
 ep3.gui.terminate=Terminate
 ep3.gui.dial=Dial
@@ -109,7 +109,7 @@ ep3.gui.delete=Delete
 ep3.gui.edit=Edit
 
 # GUI Dial Tab
-ep3.tab.dialling=Dialling Device
+ep3.tab.dialling=Dialing Device
 ep3.tab.dialling.info=// TODO
 
 # GUI Texture
@@ -208,17 +208,17 @@ ep3.error.voidLinkCard=This card no longer links to a valid Dimensional Bridge S
 ep3.error.receivingPortalNotInitialized=The receiving portal has not been initialized
 ep3.error.sendingPortalNotInitialized=The sending portal has not been initialized
 ep3.error.stabilizerNotFound=The DBS could not be found. Insert a new valid Location Card to continue
-ep3.error.receivingPortalNoDialler=You cannot dial a portal that does not have a Dialling Device
-ep3.error.sendingPortalNoDialler=You cannot dial from a portal that does not have a Dialling Device
+ep3.error.receivingPortalNoDialler=You cannot dial a portal that does not have a Dialing Device
+ep3.error.sendingPortalNoDialler=You cannot dial from a portal that does not have a Dialing Device
 ep3.error.uniqueIdentifierNotSet=You cannot dial without setting a unique identifier
 ep3.error.networkIdentifierNotSet=You cannot dial without setting a network identifier
-ep3.error.dialDeviceNotFound=You cannot dial without a Dialling Device
+ep3.error.dialDeviceNotFound=You cannot dial without a Dialing Device
 ep3.error.diallingPortalAlreadyActive=You cannot dial from a portal that already has an active connection
 ep3.error.receivingPortalAlreadyActive=You cannot dial to a portal that is already active
 ep3.error.notEnoughPowerToStart=There is not enough power in the DBS to create a connection
 ep3.error.maxedConnectionLimit=The DBS has too many active connections
-ep3.error.cannotDialDiallingPortal=You cannot dial the same portal you're dialling from
-ep3.error.diallingPortalNotFound=Failed to locate the portal that you are dialling from
+ep3.error.cannotDialDiallingPortal=You cannot dial the same portal you're dialing from
+ep3.error.diallingPortalNotFound=Failed to locate the portal that you are dialing from
 ep3.error.receivingPortalNotFound=Failed to locate the receiving portal
 ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
 ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
@@ -229,7 +229,7 @@ ep3.error.failedToTransfer=The receiving portal is too small
 ep3.error.multiplePortalControllers=You cannot have multiple Portal Controllers
 ep3.error.multipleProgram=You cannot have multiple Programmable Interfaces
 ep3.error.multipleMod=You cannot have multiple Module Manipulators
-ep3.error.dialAndNetwork=You cannot have a Dialling Device and a Network Interface in the same portal structure
+ep3.error.dialAndNetwork=You cannot have a Dialing Device and a Network Interface in the same portal structure
 ep3.error.portalCouldNotBeCreatedHere=A portal could not be created at this location
 ep3.error.failedToCreatePortal=A portal could not be created at this location
 ep3.error.couldNotCreatePortalHere=A portal could not be created at this location
@@ -268,7 +268,7 @@ ep3.manual.chapter.0.p.0=The subatomic particles of life and space are now easil
 ep3.manual.chapter.1.title=The Basics
 ep3.manual.chapter.1.p.0=The principals behind channeling a wormhole starts with constructing a Dimensional Bridge Stabilizer. This device will allow you to maintain and transport Bio Information across great distances.
 ep3.manual.chapter.1.p.1=To sustain a wormhole you will need to create a frame which can withstand and encapsulate a wormhole formation. These are known as portal frames.
-ep3.manual.chapter.1.p.2=Finally you will need a method that will being the portal. This can be anything from a simple button to a Dialling Device.
+ep3.manual.chapter.1.p.2=Finally you will need a method that will being the portal. This can be anything from a simple button to a Dialing Device.
 
 ## Chapter 3:
 ep3.manual.chapter.2.title=Stabilizing Dimensions
