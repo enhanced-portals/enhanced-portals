@@ -2,9 +2,11 @@ package enhancedportals.portal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.passive.EntityHorse;
@@ -16,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
@@ -33,6 +36,7 @@ import enhancedportals.tileentity.TileModuleManipulator;
 
 public class EntityManager
 {
+    static Random rand = new Random();
     static final int PLAYER_COOLDOWN_RATE = 10;
 
     static ChunkCoordinates getActualExitLocation(Entity entity, TileController controller)
@@ -231,33 +235,25 @@ public class EntityManager
             par1Entity.worldObj.setBlock(spawn.posX, spawn.posY, spawn.posZ, Blocks.stone);
         }
 
-        transferEntityWithinDimension(par1Entity, spawn.posX, spawn.posY + 1, spawn.posZ, 0f, -1, -1, false);
+        //transferEntityWithinDimension(par1Entity, spawn.posX, spawn.posY + 1, spawn.posZ, 0f, -1, -1, false);
     }
 
-    static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntity(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum, int instability)
     {
     	// If entity is going to the same dimension...
         if (entity.worldObj.provider.dimensionId == world.provider.dimensionId)
         {
-            return transferEntityWithinDimension(entity, x, y, z, yaw, touchedPortalType, exitPortalType, keepMomentum);
+            return transferEntityWithinDimension(entity, x, y, z, yaw, touchedPortalType, exitPortalType, keepMomentum, instability);
         }
         // Otherwise send it to another dimension...
         else
         {
-            return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum);
+            return transferEntityToDimension(entity, x, y, z, yaw, (WorldServer) entity.worldObj, world, touchedPortalType, exitPortalType, keepMomentum, instability);
         }
     }
 
     public static void transferEntity(Entity entity, TileController entry, TileController exit) throws PortalException
     {
-        /*
-         * TileBiometricIdentifier bio1 = entry.getBiometricIdentifier(), bio2 = exit.getBiometricIdentifier();
-         * 
-         * if (bio1 != null && !bio1.canEntityTravel(entity)) { throw new PortalException("noValidEntitySignatureSend"); }
-         * 
-         * if (bio2 != null && !bio2.canEntityTravel(entity)) { throw new PortalException("noValidEntitySignatureReceive"); }
-         */// TODO
-
         ChunkCoordinates exitLoc = getActualExitLocation(entity, exit);
 
         if (exitLoc == null)
@@ -278,12 +274,14 @@ public class EntityManager
             {
                 entity = entity.ridingEntity;
             }
+            
+            int instability=exit.getDimensionalBridgeStabilizer().instability;
 
-            transferEntityWithRider(entity, exitLoc.posX + 0.5, exitLoc.posY, exitLoc.posZ + 0.5, getRotation(entity, exit, exitLoc), (WorldServer) exit.getWorldObj(), entry.portalType, exit.portalType, keepMomentum);
+            transferEntityWithRider(entity, exitLoc.posX + 0.5, exitLoc.posY, exitLoc.posZ + 0.5, getRotation(entity, exit, exitLoc), (WorldServer) exit.getWorldObj(), entry.portalType, exit.portalType, keepMomentum, instability);
         }
     }
 
-    static Entity transferEntityToDimension(Entity entity, double x, double y, double z, float yaw, WorldServer exitingWorld, WorldServer enteringWorld, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntityToDimension(Entity entity, double x, double y, double z, float yaw, WorldServer exitingWorld, WorldServer enteringWorld, int touchedPortalType, int exitPortalType, boolean keepMomentum, int instability)
     {
         if (touchedPortalType == -1 && exitPortalType == -1)
         {
@@ -344,6 +342,9 @@ public class EntityManager
             for (Iterator<PotionEffect> potion = player.getActivePotionEffects().iterator(); potion.hasNext();) {
             	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
             }
+            
+            // If there is instability, give effects.
+            checkInstabilityEffects(entity,instability);
 
             player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
             // GameRegistry.onPlayerChangedDimension(player); // TODO
@@ -381,7 +382,7 @@ public class EntityManager
         }
     }
 
-    static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntityWithinDimension(Entity entity, double x, double y, double z, float yaw, int touchedPortalType, int exitPortalType, boolean keepMomentum, int instability)
     {
         if (entity == null)
         {
@@ -401,6 +402,9 @@ public class EntityManager
             player.worldObj.updateEntityWithOptionalForce(player, false);
 
             setEntityPortalCooldown(player);
+            
+            // If there is instability, give effects.
+            checkInstabilityEffects(entity,instability);
             return player;
         }
         // If the entity teleporting is something other than a player:
@@ -433,7 +437,7 @@ public class EntityManager
         }
     }
 
-    static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum)
+    static Entity transferEntityWithRider(Entity entity, double x, double y, double z, float yaw, WorldServer world, int touchedPortalType, int exitPortalType, boolean keepMomentum, int instability)
     {
         Entity rider = entity.riddenByEntity;
 
@@ -443,11 +447,11 @@ public class EntityManager
         	// Unmount rider
             rider.mountEntity(null);
             // Send it back through as it's own entity
-            rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
+            rider = transferEntityWithRider(rider, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum, instability);
         }
         
         // Transfer the entity.
-        entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum);
+        entity = transferEntity(entity, x, y, z, yaw, world, touchedPortalType, exitPortalType, keepMomentum, instability);
 
         // Remount entity with rider.
         if (rider != null)
@@ -456,5 +460,85 @@ public class EntityManager
         }
 
         return entity;
+    }
+    
+    protected static void checkInstabilityEffects(Entity entity, int instability){
+    	int chance_of_effect=rand.nextInt(100);
+    	if(chance_of_effect<instability){
+	    	if(instability>=70){
+	    		addHighInstabilityEffects(entity);
+	    	}else if(instability>=50){
+	    		addMediumInstabilityEffects(entity);
+	    	}else if(instability>=20){
+	    		addLowInstabilityEffects(entity);
+	    	}
+    	}
+    }
+
+    static void addHighInstabilityEffects(Entity entity)
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 600, 1);
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 600, 1);
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 600, 1);
+
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+
+            ((EntityLivingBase) entity).addPotionEffect(blindness);
+            ((EntityLivingBase) entity).addPotionEffect(hunger);
+            ((EntityLivingBase) entity).addPotionEffect(poison);
+        }
+    }
+
+    static void addLowInstabilityEffects(Entity entity)
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 200, 1);
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 200, 1);
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 200, 1);
+
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+
+            int effect = rand.nextInt(3);
+            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
+        }
+    }
+
+    static void addMediumInstabilityEffects(Entity entity)
+    {
+        if (entity instanceof EntityLivingBase)
+        {
+            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
+            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
+            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
+
+            blindness.setCurativeItems(new ArrayList<ItemStack>());
+            hunger.setCurativeItems(new ArrayList<ItemStack>());
+            poison.setCurativeItems(new ArrayList<ItemStack>());
+
+            int effect = rand.nextInt(3);
+
+            if (effect == 0)
+            {
+                ((EntityLivingBase) entity).addPotionEffect(blindness);
+                ((EntityLivingBase) entity).addPotionEffect(hunger);
+            }
+            else if (effect == 1)
+            {
+                ((EntityLivingBase) entity).addPotionEffect(blindness);
+                ((EntityLivingBase) entity).addPotionEffect(poison);
+            }
+            else
+            {
+                ((EntityLivingBase) entity).addPotionEffect(poison);
+                ((EntityLivingBase) entity).addPotionEffect(hunger);
+            }
+        }
     }
 }

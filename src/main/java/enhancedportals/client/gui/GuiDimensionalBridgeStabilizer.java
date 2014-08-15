@@ -42,7 +42,8 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         
         if (GeneralUtils.hasEnergyCost())
         {
-            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + containerSize - 27, 140, 20, stabilizer.powerState == 0 ? EnhancedPortals.localize("gui.powerModeNormal") : stabilizer.powerState == 1 ? EnhancedPortals.localize("gui.powerModeRisky") : stabilizer.powerState == 2 ? EnhancedPortals.localize("gui.powerModeUnstable") : EnhancedPortals.localize("gui.powerModeUnpredictable")));
+        	GuiButton button=new GuiButton(0,guiLeft+7,guiTop+containerSize-27,140,20,getPowerStateLocString());
+            buttonList.add(button);
             addElement(new ElementRedstoneFlux(this, xSize - 23, 18, stabilizer.getEnergyStorage()));
             addTab(new TabRedstoneFlux(this, stabilizer));
         }
@@ -66,7 +67,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         getFontRenderer().drawString(EnhancedPortals.localize("gui.information"), 8, 18, 0x404040);
         getFontRenderer().drawString(EnhancedPortals.localize("gui.activePortals"), 12, 28, 0x777777);
         getFontRenderer().drawString(s1, xSize - 27 - getFontRenderer().getStringWidth(s1), 28, 0x404040);
-        
+
         if (GeneralUtils.hasEnergyCost())
         {
             int instability = stabilizer.powerState == 0 ? stabilizer.instability : stabilizer.powerState == 1 ? 20 : stabilizer.powerState == 2 ? 50 : 70;
@@ -82,9 +83,20 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
     {
         super.updateScreen();
         
-        if (GeneralUtils.hasEnergyCost())
-        {
-            ((GuiButton) buttonList.get(0)).displayString = stabilizer.powerState == 0 ? EnhancedPortals.localize("gui.powerModeNormal") : stabilizer.powerState == 1 ? EnhancedPortals.localize("gui.powerModeRisky") : stabilizer.powerState == 2 ? EnhancedPortals.localize("gui.powerModeUnstable") : EnhancedPortals.localize("gui.powerModeUnpredictable");
+        if (GeneralUtils.hasEnergyCost()){
+        	((GuiButton) buttonList.get(0)).displayString=getPowerStateLocString();
         }
+    }
+    protected String getPowerStateLocString(){
+    	switch(stabilizer.powerState){
+        	case 0:
+    			return EnhancedPortals.localize("gui.powerModeNormal");
+    		case 1:
+    			return EnhancedPortals.localize("gui.powerModeRisky");
+    		case 2:
+    			return EnhancedPortals.localize("gui.powerModeUnstable");
+    		default:
+    			return EnhancedPortals.localize("gui.powerModeUnpredictable");
+    	}
     }
 }

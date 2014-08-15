@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -54,7 +53,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     int rows, tickTimer;
     EnergyStorage energyStorage;
     public int powerState, instability = 0;
-    Random rand = new Random();
     public boolean is3x3 = false;
     private final PowerHandler mjHandler;
 
@@ -85,73 +83,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
         GuiHandler.openGui(player, this, GuiHandler.DIMENSIONAL_BRIDGE_STABILIZER);
         return true;
-    }
-
-    void addHighInstabilityEffects(Entity entity)
-    {
-        if (entity instanceof EntityLivingBase)
-        {
-            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 600, 1);
-            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 600, 1);
-            PotionEffect poison = new PotionEffect(Potion.poison.id, 600, 1);
-
-            blindness.setCurativeItems(new ArrayList<ItemStack>());
-            hunger.setCurativeItems(new ArrayList<ItemStack>());
-            poison.setCurativeItems(new ArrayList<ItemStack>());
-
-            ((EntityLivingBase) entity).addPotionEffect(blindness);
-            ((EntityLivingBase) entity).addPotionEffect(hunger);
-            ((EntityLivingBase) entity).addPotionEffect(poison);
-        }
-    }
-
-    void addLowInstabilityEffects(Entity entity)
-    {
-        if (entity instanceof EntityLivingBase)
-        {
-            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 200, 1);
-            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 200, 1);
-            PotionEffect poison = new PotionEffect(Potion.poison.id, 200, 1);
-
-            blindness.setCurativeItems(new ArrayList<ItemStack>());
-            hunger.setCurativeItems(new ArrayList<ItemStack>());
-            poison.setCurativeItems(new ArrayList<ItemStack>());
-
-            int effect = rand.nextInt(3);
-            ((EntityLivingBase) entity).addPotionEffect(effect == 0 ? blindness : effect == 1 ? hunger : poison);
-        }
-    }
-
-    void addMediumInstabilityEffects(Entity entity)
-    {
-        if (entity instanceof EntityLivingBase)
-        {
-            PotionEffect blindness = new PotionEffect(Potion.blindness.id, 400, 1);
-            PotionEffect hunger = new PotionEffect(Potion.hunger.id, 400, 1);
-            PotionEffect poison = new PotionEffect(Potion.poison.id, 400, 1);
-
-            blindness.setCurativeItems(new ArrayList<ItemStack>());
-            hunger.setCurativeItems(new ArrayList<ItemStack>());
-            poison.setCurativeItems(new ArrayList<ItemStack>());
-
-            int effect = rand.nextInt(3);
-
-            if (effect == 0)
-            {
-                ((EntityLivingBase) entity).addPotionEffect(blindness);
-                ((EntityLivingBase) entity).addPotionEffect(hunger);
-            }
-            else if (effect == 1)
-            {
-                ((EntityLivingBase) entity).addPotionEffect(blindness);
-                ((EntityLivingBase) entity).addPotionEffect(poison);
-            }
-            else
-            {
-                ((EntityLivingBase) entity).addPotionEffect(poison);
-                ((EntityLivingBase) entity).addPotionEffect(hunger);
-            }
-        }
     }
 
     public void breakBlock(Block b, int oldMetadata)

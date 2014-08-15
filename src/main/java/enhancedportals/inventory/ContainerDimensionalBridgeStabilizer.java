@@ -31,7 +31,11 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
-        int currentPower = stabilizer.getEnergyStorage().getEnergyStored(), currentMaxPower = stabilizer.getEnergyStorage().getMaxEnergyStored(), currentPortals = stabilizer.getActiveConnections(), currentInstability = stabilizer.instability, currentPowerState = stabilizer.powerState;
+        int currentPower = stabilizer.getEnergyStorage().getEnergyStored();
+        int currentMaxPower = stabilizer.getEnergyStorage().getMaxEnergyStored();
+        int currentPortals = stabilizer.getActiveConnections();
+        int currentInstability = stabilizer.instability;
+        int currentPowerState = stabilizer.powerState;
 
         for (int i = 0; i < crafters.size(); i++)
         {
