@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -334,11 +336,6 @@ public class EntityManager
             config.syncPlayerInventory(player);
             
             // Instate any potion effects the player had when teleported.
-            /*Iterator potion = player.getActivePotionEffects().iterator();
-            while (potion.hasNext())
-            {
-                player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
-            }*/
             for (Iterator<PotionEffect> potion = player.getActivePotionEffects().iterator(); potion.hasNext();) {
             	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
             }
@@ -396,10 +393,16 @@ public class EntityManager
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
+        	int food_level=player.getFoodStats().getFoodLevel();
+        	// The actual transporting.
             player.rotationYaw = yaw;
             player.setPositionAndUpdate(x, y, z);
+            // For the momentum module.
             handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
             player.worldObj.updateEntityWithOptionalForce(player, false);
+            if (player.worldObj.isRemote){
+            	player.getFoodStats().setFoodLevel(food_level);
+            }
 
             setEntityPortalCooldown(player);
             
