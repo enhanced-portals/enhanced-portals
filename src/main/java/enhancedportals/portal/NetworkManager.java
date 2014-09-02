@@ -253,12 +253,9 @@ public class NetworkManager
         {
             for (Entry<String, String> entry : portalNetworks.entrySet())
             {
-                if (networkedPortals.containsKey(entry.getValue()))
-                {
+                if (networkedPortals.containsKey(entry.getValue())){
                     networkedPortals.get(entry.getValue()).add(entry.getKey());
-                }
-                else
-                {
+                }else{
                     ArrayList<String> list = new ArrayList<String>();
                     list.add(entry.getKey());
                     networkedPortals.put(entry.getValue(), list);

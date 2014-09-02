@@ -1,0 +1,393 @@
+# Blocks
+tile.frame.frame.name=Рамка портала
+tile.frame.controller.name=Контроллер портала
+tile.frame.redstone.name=Редстоун-интерфейс
+tile.frame.network_interface.name=Сетевой интерфейс
+tile.frame.dial_device.name=Модем
+tile.frame.program_interface.name=Программируемый интерфейс
+tile.frame.upgrade.name=Модуль-манипулятор
+tile.frame.fluid.name=Модуль переноса жидкостей
+tile.frame.item.name=Модуль переноса предметов
+tile.frame.energy.name=Модуль переноса энергии
+tile.portal.name=Портал
+tile.dbs.name=Стабилизатор межпространственного моста
+tile.dbs_empty.name=Стабилизатор межпространственного моста (Пустой)
+tile.decor_dbs.name=Эндер-металлический сплав
+tile.decor_frame.name=Окаймлённый кварц
+
+# Block Misc
+ep3.block.portalFramePart=Часть рамки портала
+ep3.block.multiblockStructure=Мультиблоковая структура
+ep3.block.dbsSize=от 2x3x2 до 2x3x256
+ep3.block.decorativeBlock=Декоративный блок
+
+# Items
+item.wrench.name=Портальный ключ
+item.nanobrush.name=Нано-кисть
+item.glasses.name=Очки
+item.location_card.name=Карта направления
+item.blank_portal_module.name=Пустой портальный модуль
+item.blank_upgrade.name=Пустое усовершенствование
+item.manual.name=РАСШИРЕННОЕ ПОРТАЛОВЕДЕНИЕ: туннели и червоточины.
+
+# In-place upgrades
+item.upgrade.redstone.name=Улучшение редстоун-интерфейса
+item.upgrade.network_interface.name=Улучшение сетевого интерфейса
+item.upgrade.dial_device.name=Улучшение модема
+item.upgrade.program_interface.name=Улучшение программируемого интерфейса
+item.upgrade.upgrade.name=Улучшение модуля-манипулятора
+item.upgrade.fluid.name=Улучшение модуля переноса жидкостей
+item.upgrade.item.name=Улучшение модуля переноса предметов
+item.upgrade.energy.name=Улучшение модуля переноса энергии
+
+# Upgrades
+item.portal_module.0.name=Уничтожитель частиц
+item.portal_module.0.desc=Отключает создание частиц
+item.portal_module.1.name=Радужные частицы
+item.portal_module.1.desc=У каждой частицы свой случайный цвет
+item.portal_module.2.name=Молчание
+item.portal_module.2.desc="Тихий" портал
+item.portal_module.3.name=Импульс
+item.portal_module.3.desc=Сущности сохраняют приобретённый импульс
+item.portal_module.4.name=Шапка-невидимка
+item.portal_module.4.desc=Портал становится полностью невидим
+item.portal_module.5.name=Пульсация
+item.portal_module.5.desc=Частицы случайно становятся светлее или темнее
+item.portal_module.6.name=Точный взгляд
+item.portal_module.6.desc=Направление взгляда сохраняется при телепорте
+item.portal_module.7.name=Лёгкость
+item.portal_module.7.desc=Отменяет урон от падения
+ep3.gui.facing.0=Север
+ep3.gui.facing.1=Восток
+ep3.gui.facing.2=Юг
+ep3.gui.facing.3=Запад
+
+# Creative Tab
+itemGroup.enhancedportals=EnhancedPortals 3
+
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=Стабилизатор межпространственного моста
+ep3.gui.information=Информация
+ep3.gui.activePortals=Активные порталы
+ep3.gui.instability=Нестабильность
+ep3.gui.powerModeNormal=Режим: Обычный
+ep3.gui.powerModeRisky=Режим: Рискованный
+ep3.gui.powerModeUnstable=Режим: Нестабильный
+ep3.gui.powerModeUnpredictable=Режим: Непредсказуемый
+
+# RF Tab
+ep3.tab.redstoneFlux=Энергия
+ep3.tab.redstoneFlux.maxPower=Максимальный запас:
+ep3.tab.redstoneFlux.storedPower=В хранилище:
+ep3.tab.redstoneFlux.powerUsage=Расход энергии:
+
+# GUI Portal Controller
+ep3.gui.portalController=Контроллер портала
+ep3.gui.uniqueIdentifier=(UID) Уникальный идентификатор
+ep3.gui.public=Публичный
+ep3.gui.private=Частный
+ep3.gui.noUidSet=UID не назначен
+
+# Private/Public Tip Tab
+ep3.tab.privatePublic=Частный или публичный?
+ep3.tab.privatePublic.info=<6>Публичный:<0> Разрешает все подключения<NL><6>Частный:<0> Подключения только с одинаковым СММ
+
+# Glyphs Tab
+ep3.tab.glyphs=Глифы
+ep3.tab.glyphs.info=// TODO
+
+# GUI Dialler
+ep3.gui.dialDevice=Модем
+ep3.gui.storedIdentifiers=Сохранённые идентификаторы
+ep3.gui.terminate=Прервать
+ep3.gui.dial=Соединиться
+ep3.gui.identifierCannotBeBlank=Идентификатор не может быть пустым
+ep3.gui.name=Имя
+ep3.gui.identifierName=Имя идентификатора
+ep3.gui.manualEntry=Ввести вручную
+ep3.gui.delete=Удалить
+ep3.gui.edit=Изменить
+
+# GUI Dial Tab
+ep3.tab.dialling=Модем
+ep3.tab.dialling.info=// TODO
+
+# GUI Texture
+ep3.gui.customIcon=Своя иконка
+ep3.gui.facade=Фасад
+ep3.gui.frame=Рамка
+ep3.gui.portal=Портал
+ep3.gui.particle=Частицы
+ep3.gui.colour=Цвет
+ep3.gui.red=Красный
+ep3.gui.green=Зелёный
+ep3.gui.blue=Синий
+ep3.gui.textures=Текстура
+
+# Colour Tip Tab
+ep3.tab.colourTip=Плохие цвета?
+ep3.tab.colourTip.info=Цвета получаются при смешивании других цветов, а не магическим путём. Если взять за основу жёлтый цвет и добавить голубой, вы получите зелёный. Чтобы получить желаемый оттенок, лучше всего использовать в качестве основы белый или серый цвета. 
+
+# Custom Frame Textures
+ep3.tab.frameCustomTexture=Свои текстуры
+ep3.tab.frameCustomTexture.info=Вы можете поместить в ресурспак собственную подходящую текстуру, чтобы использовать её здесь.
+
+# Custom Frame Textures
+ep3.tab.portalCustomTexture=Свои текстуры
+ep3.tab.portalCustomTexture.info=Вы можете поместить в ресурспак собственную подходящую текстуру, чтобы использовать её здесь.
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=Модуль-манипулятор
+ep3.gui.modules=Портальные модули
+
+# GUI Network Interface
+ep3.gui.networkInterface=Сетевой интерфейс
+ep3.gui.networkIdentifier=Идентификатор сети
+ep3.gui.networkInformation=Информация о сети
+ep3.gui.networkedPortals=Портал в сети
+ep3.gui.notSet=Не настроено
+
+# GUI Programmable Interface
+ep3.gui.programmableInterface=Программируемый интерфейс
+ep3.gui.errorLog=Журнал ошибок
+ep3.gui.compile=Компиляция
+
+# GUI Redstone
+ep3.gui.redstoneInterface=Редстоун-интерфейс
+
+ep3.gui.input=Вход
+ep3.gui.createPortalOnSignal=Создать портал по сигналу
+ep3.gui.removePortalOnSignal=Удалить портал по сигналу
+ep3.gui.createPortalOnPulse=Создать портал по пульсации
+ep3.gui.removePortalOnPulse=Удалить портал по пульсации
+ep3.gui.dialStoredIdentifier=Соединить с конкретным идентификатором
+ep3.gui.dialRandomIdentifier=Соединить со случайным идентификатором
+ep3.gui.dialStoredIdentifier2=Соединить с конкретным идентификатором (2)
+ep3.gui.dialRandomIdentifier2=Соединить со случайным идентификатором (2)
+
+ep3.gui.output=Выход
+ep3.gui.portalCreated=Портал создан
+ep3.gui.portalRemoved=Портал удалён
+ep3.gui.portalActive=Портал активен
+ep3.gui.portalInactive=Портал отключён
+ep3.gui.entityTeleport=Сущность входит в портал
+ep3.gui.playerTeleport=Игрок входит с портал
+ep3.gui.animalTeleport=Животное входит в портал
+ep3.gui.monsterTeleport=Монстр входит в портал
+
+# GUI General
+ep3.gui.initialized=Инициализировано
+ep3.gui.glyphs=Глифы
+ep3.gui.cancel=Отменить
+ep3.gui.save=Сохранить
+ep3.gui.reset=Сброс
+ep3.gui.clear=Очистить
+ep3.gui.random=Случайно
+ep3.gui.add=Добавить
+ep3.gui.accept=Принять
+ep3.gui.clickToModify=Нажать для изменения
+ep3.gui.uidInUse=Этот UID уже используется
+
+# GUI ITM
+ep3.gui.transferItem=Модуль переноса предметов
+
+# GUI FTM
+ep3.gui.transferFluid=Модуль переноса жидкостей
+
+# GUI ETM
+ep3.gui.transferEnergy=Модуль переноса энергии
+
+# GUI Transfer
+ep3.gui.sending=Отправка
+ep3.gui.receiving=Получение
+
+# Errors
+ep3.error=[Ошибка] 
+ep3.error.noUidSet=Необходимо присвоить уникальный идентификатор перед этой операцией
+ep3.error.voidLinkCard=Эта карта не связана с действующим стабилизатором межпространственного моста
+ep3.error.receivingPortalNotInitialized=Принимающий портал не инициализирован
+ep3.error.sendingPortalNotInitialized=Отправляющий портал не инициализирован
+ep3.error.stabilizerNotFound=СММ не найден. Вставьте новую Карту направлений, чтобы продолжить
+ep3.error.receivingPortalNoDialler=Вы не можете соединяться с порталом, не имеющим модема
+ep3.error.sendingPortalNoDialler=Вы не можете отправлять из портала, не имеющего модема
+ep3.error.uniqueIdentifierNotSet=Невозможно соединиться без корректного UID
+ep3.error.networkIdentifierNotSet=Невозможно соединиться без корректного идентификатора сети
+ep3.error.dialDeviceNotFound=Невозможно соединиться без модема
+ep3.error.diallingPortalAlreadyActive=Невозможно соединиться с порталом, уже имеющим активное подключение
+ep3.error.receivingPortalAlreadyActive=Невозможно соединиться с активным порталом
+ep3.error.notEnoughPowerToStart=У СММ недостаточно энергии для соединения
+ep3.error.maxedConnectionLimit=У СММ слишком много активных соединений
+ep3.error.cannotDialDiallingPortal=Невозможно соединиться с порталом, который является источником соединения
+ep3.error.diallingPortalNotFound=Невозможно установить положение портала-источника соединения
+ep3.error.receivingPortalNotFound=Невозможно установить положение принимающего портала
+ep3.error.notOnSameStabilizer=Порталы не подключены к одному СММ
+ep3.error.sendingPortalFailedToCreatePortal=Отправляющий контроллер портала не смог создать портал
+ep3.error.receivingPortalFailedToCreatePortal=Принимающий контроллер портала не смог создать портал
+ep3.error.noPortalWithThatIdentifierReceiving=Невозможно найти портал выхода с таким UID
+ep3.error.noPortalWithThatIdentifierSending=Невозможно найти отправляющий портал с таким UID (Вы звоните из Матрицы? o_O)
+ep3.error.failedToTransfer=Принимающий портал слишком мал
+ep3.error.multiplePortalControllers=Невозможно использовать несколько контроллеров портала
+ep3.error.multipleProgram=Невозможно использовать несколько программируемых интерфейсов
+ep3.error.multipleMod=Невозможно использовать несколько модулей-манипуляторов
+ep3.error.dialAndNetwork=Нельзя совмещать модем и сетевой интерфейс в одной структуре портала
+ep3.error.portalCouldNotBeCreatedHere=Здесь портал создать невозможно
+ep3.error.failedToCreatePortal=Попытка создания портала провалена
+ep3.error.couldNotCreatePortalHere=Здесь портал создать невозможно
+
+# Success
+ep3.success=[Успешно] 
+ep3.success.create=Портал инициализирован
+ep3.success.reconfigure=Портал перенастроен
+
+
+############
+## Manual ##
+############
+
+ep3.manual.decorBorderedQuartz.subtitle=Внешний вид
+ep3.manual.dbsEmpty.title=Стабилизатор межпространственного моста (Пустой)
+ep3.manual.upgrade0.subtitle=Улучшения
+ep3.manual.module0.subtitle=Модули
+ep3.manual.frame0.subtitle=Компоненты
+
+## "Title" Page
+ep3.manual.subject.title=РАСШИРЕННОЕ ПОРТАЛОВЕДЕНИЕ
+ep3.manual.subject.sub=туннели и червоточины
+
+## Table of Contents
+ep3.manual.table_of_contents.title=Содержание
+
+## Chapter Item Gallery Title
+ep3.manual.gallery.title=Галерея
+
+## Chapter 1:
+ep3.manual.chapter.0.title=Введение
+ep3.manual.chapter.0.p.0=Теперь можно легко управлять субатомными частицами, составляющими основу Вселенной. Мы научились выделывать их так же, как ткачи создают тончайший шёлк, и получать выгоду из результата. Давайте же научимся работать с микро-червоточинами и связывать пространства и измерения.
+
+## Chapter 2:
+ep3.manual.chapter.1.title=Основы
+ep3.manual.chapter.1.p.0=Для создания червоточины прежде всего необходимо сконструировать Стабилизатор межпространственного моста (СММ). Это устройство позволяет сохранять и переносить биологическую информацию через огромные расстояния.
+ep3.manual.chapter.1.p.1=Для поддержания червоточины необходимо создать рамку портала, которая будет удерживать её.
+ep3.manual.chapter.1.p.2=И, наконец, вам необходим способ, с помощью которого вы будете управлять порталом. Этим способом могут быть самые разные инструменты - от простой кнопки до модема.
+
+## Chapter 3:
+ep3.manual.chapter.2.title=Пространственная стабилизация
+ep3.manual.chapter.2.p.0=Стабилизатор межпространственного моста (СММ) позволяет создавать несколько червоточин в зависимости от его размера.
+ep3.manual.chapter.2.p.1=Чтобы создать СММ, разместите 12 блоков стабилизатора межпространственного моста следующим образом: рамка в 2 блока в высоту, 3 в ширину и 2 в длину (2x3x2), или 2 в высоту, 3 в ширину, 3 в длину (2х3х3), и нажмите ПКМ по любому из них с помощью портального ключа. Если рамка построена правильно, сформируется работающий СММ.
+ep3.manual.chapter.2.p.2=Каждый дополнительный ряд блоков СММ позволяет управлять ещё двумя порталами. Вы можете создать до 256 уровней на одном СММ. Вы не сможете добавлять новые уровни, когда СММ будет сформирован, поэтому рекомендуется  планировать карту порталов заранее. Также вы можете разрушить СММ и пересоединить порталы. СММ хранит около 15 000 RF за ряд и расширяет это хранилище в зависимости от количества используемых порталов. Если вы уменьшите потребление порталом энергии, это создаст нестабильность, которая приведёт к некорректной телепортации или потерям при переносе.
+
+## Chapter 4:
+ep3.manual.chapter.3.title=Постройка портала
+ep3.manual.chapter.3.p.0=Для использования созданных червоточин необходимо построить рамку портала. Она строится точно так же, как и старинный прототип межпространственных перемещений - обсидиановый портал в Нижний мир. Портал сформируется только если блоки, его составляющие, образуют плоскую замкнутую структуру, расположенную горизонтально или вертикально.
+ep3.manual.chapter.3.p.1=Чтобы созданный портал мог соединяться с СММ, необходимо использовать Контроллер портала. Контроллер размещается в любой части портала как блок напротив места, где вы намерены открыть червоточину. После размещения контроллера, вам необходимо вручную связать портал с СММ, создав Карту направления, поместив её в СММ, а затем, взяв в руку, кликнуть ПКМ по Контроллеру портала, чтобы инициализировать рамку. Если портал создан верно, связь будет установлена и вы теперь с помощью портального ключа можете присвоить порталу UID (уникальный идентификатор). UID - это адрес портала и он должен быть уникальным. Если вы разрушите контроллер, связь с СММ будет утеряна и будет необходимо восстановить её, прежде чем вы сможете активировать портал вновь.
+ep3.manual.chapter.3.p.2=Есть две возможности переносить информацию между порталами. Первая - это соединение в сеть, для чего потребуется включить в рамку блок сетевого интерфейса. Затем просто подключитесь к сети с помощью её ID и все порталы в выбранной сети будут способны взаимодействовать друг с другом.
+ep3.manual.chapter.3.p.3=После перенастройки портала необходимо провести повторную инициализацию, кликнув ПКМ ключом по любой части подключённого портала.
+
+## Chapter 5:
+ep3.manual.chapter.4.title=Зажигаем червоточину
+ep3.manual.chapter.4.p.0=Для окончательной настройки портала, вам необходим Редстоун-интерфейс. Он представляет собой блок рамки портала, позволяющий взаимодействовать с вашим порталом. После интеграции этого блока в структуру, нажмите ПКМ по нему с ключом в руке, чтобы получить доступ к различным возможностям по управлению вашим порталом.
+ep3.manual.chapter.4.p.1=Наиболее простой путь включить портал - это скрафтить кнопку, поместить её на редстоун-интерфейс и установить настройки на "Вход" и "Создать портал по сигналу". Используя этот интерфейс у вас есть множество способов управлять вашими порталами удалённо, и вы можете поместить столько редстоун-интерфейсов в портал, сколько захотите, чтобы исследовать и экспериментировать.
+
+## Chapter 6:
+ep3.manual.chapter.5.title=Звонок домой
+ep3.manual.chapter.5.p.0=У порталов также есть и вторая возможность взаимодействовать друг с другом и это - модем. Модем - это блок, встраиваемый в рамку портала и позволяющий вводить сетевой UID другого портала и устанавливать между ними связь. Исходя из этого, вы сможете связываться со всеми публичными порталами мира, не подключёнными к СММ вашего портала. Частные же порталы принимают соединения только от подключённых к тому же СММ, что и они. Помните, что модем позволяет соединить лишь 2 портала друг с другом и пока вы не прервёте подключение, другие порталы с ними соединяться не смогут. Модем не может выступать в роли СММ. Также можно создать схему на основе красного камня, которая будет автоматически закрывать соединение.
+
+## Chapter 7:
+ep3.manual.chapter.6.title=Аксессуары
+ep3.manual.chapter.6.p.0=Интеграция - ключевой момент для создания вашего собственного тайного логова властителя пространства, которое почти завершено созданием портальной сети, и вот несколько дополнительных возможностей для настройки и расширения возможностей ваших порталов.
+ep3.manual.chapter.6.p.1=ПКМ по рамке портала со взятой нанокистью позволит вам открыть окно пользовательских настроек. Здесь вы можете указать цвет портала, изменить внешний вид блоков рамки и выбрать, какие частицы должен генерировать портал.
+ep3.manual.chapter.6.p.2=Для более продвинутых настроек, потребуется Модуль-манипулятор. Будучи встроенным в рамку портала, он может управлять различными модулями, создаваемыми на основе пустого портального модуля. Эти модули могут, например, сделать портал невидимым или определить, в какую сторону вы будете направлены при выходе из червоточины.
+ep3.manual.chapter.6.p.3=Поскольку интеграция с другими технологиями жизненно необходима, возможности портала могут быть расширены для переноса жидкостей, предметов и энергии с помощью встраивания специальных модулей. Это позволяет порталам переносить, в том числе, игроков, монстров и животных.
+
+
+######################
+## ITEM INFORMATION ##
+######################
+
+ep3.manual.wrench.info=Нажмите ПКМ на структуру СММ, чтобы превратить её в рабочий СММ. Также можно разобрать структуру портала, нажав по ней SHIFT+ПКМ. Используйте на модулях, чтобы открыть их панель управления. Ключи из Buildcraft или TE также могут быть использованы.
+ep3.manual.nanobrush.info=Весьма опасный объект. Используйте на рамке портала для активации пользовательских настроек. Не пытайтесь расчёсывать волосы!
+ep3.manual.glasses.info=Когда одеты, показывает модули, установленные в портале, для упрощения настройки.
+ep3.manual.location_card.info=Используется для соединения Контроллера портала с СММ. Просто поместите карту в СММ и затем кликните ПКМ с ней в руке по контроллеру. Может быть использована для соединения множества порталов с одним СММ.
+ep3.manual.dbs.info=Стабилизирует фиксированные точки в пространстве, благодаря чему создание червоточин и перенос сквозь них становится возможен. Требует энергию RF для стабилизации. Создайте СММ, разместив блоки СММ в структуру 2x3x2 или 3x3x2 блока и затем кликнув ПКМ по ней ключом.
+ep3.manual.frame0.info=Основной блок рамки портала, способный сформировать и удержать червоточину.
+ep3.manual.frame1.info=Контроллер портала устанавливает связь с СММ. Однажды настроенный с помощью Карты направлений, перенастроенным быть уже не может. Если он будет разобран, потребуется установление новой связи. Вы можете сделать портал частным, чтобы доступ к нему был возможен только с помощью его же СММ или же публичным.
+ep3.manual.frame2.info=Редстоун-интерфейс позволяет автоматизировать некоторые задачи с помощью сигнала красного камня. После создания просто установите рядом с порталом. Для некоторых возможностей потребуется встраивание внутрь рамки.
+ep3.manual.frame3.info=Сетевой интерфейс позволяет 2 и более порталам соединяться друг с другом с помощью сети. Просто укажите ID Сети на одном портале и точно такой же ID на другом - и они соединятся. Частные порталы не разрешат доступ вне своего СММ.
+ep3.manual.frame4.info=Модем позволяет установить связь с другим порталом без использования сети. Вы также можете сохранить UID других порталов как панель быстрого вызова (удерживайте SHIFT для удаления). Если портал частный, доступ к нему вне его СММ невозможен.
+ep3.manual.frame6.info=Модуль-манипулятор - это интерфейс, позволяющий портал взаимодействовать с чипами-улучшениями. Эти чипы могут быть помещены в Модуль-манипулятор для придания порталу различных свойств - от тишины до невидимости.
+ep3.manual.frame7.info=Этот модуль позволяет переносить жидкости сквозь расстояния к другому Модулю переноса жидкостей.
+ep3.manual.frame8.info=Этот модуль позволяет переносить предметы сквозь расстояния к другому Модулю переноса предметов.
+ep3.manual.frame9.info=Этот модуль позволяет переносить энергию сквозь расстояния к другому Модулю переноса энергии
+ep3.manual.blank_module.info=Базовый модуль. Необходим для создания других модулей и Модуля-манипулятора.
+
+
+###################################################################################
+## The rest are resolved automatically, though you can override them if required ##
+###################################################################################
+
+ep3.manual.wrench.title=item.wrench.name
+ep3.manual.nanobrush.title=item.nanobrush.name
+ep3.manual.glasses.title=item.glasses.name
+ep3.manual.location_card.title=item.location_card.name
+ep3.manual.blank_module.title=item.blank_portal_module.name
+ep3.manual.module0.title=item.portal_module.0.name
+ep3.manual.module1.title=item.portal_module.1.name
+ep3.manual.module2.title=item.portal_module.2.name
+ep3.manual.module3.title=item.portal_module.3.name
+ep3.manual.module4.title=item.portal_module.4.name
+ep3.manual.module5.title=item.portal_module.5.name
+ep3.manual.module6.title=item.portal_module.6.name
+ep3.manual.module7.title=item.portal_module.7.name
+ep3.manual.module1.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module2.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module3.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module4.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module5.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module6.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module7.subtitle=ep3.manual.module0.subtitle
+ep3.manual.blank_upgrade.title=item.blank_upgrade.name
+ep3.manual.upgrade0.title=item.upgrade.redstone.name
+ep3.manual.upgrade1.title=item.upgrade.network_interface.name
+ep3.manual.upgrade2.title=item.upgrade.dial_device.name
+ep3.manual.upgrade3.title=item.upgrade.program_interface.name
+ep3.manual.upgrade4.title=item.upgrade.upgrade.name
+ep3.manual.upgrade5.title=item.upgrade.fluid.name
+ep3.manual.upgrade6.title=item.upgrade.item.name
+ep3.manual.upgrade7.title=item.upgrade.energy.name
+ep3.manual.upgrade1.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade2.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade3.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade4.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade5.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade6.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade7.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.dbs.title=tile.dbs.name
+ep3.manual.decorBorderedQuartz.title=tile.decor_frame.name
+ep3.manual.decorStabilizer.title=tile.decor_dbs.name
+ep3.manual.decorStabilizer.subtitle=ep3.manual.decorBorderedQuartz.subtitle
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.portal.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame0.title=tile.frame.frame.name
+ep3.manual.frame1.title=tile.frame.controller.name
+ep3.manual.frame2.title=tile.frame.redstone.name
+ep3.manual.frame3.title=tile.frame.network_interface.name
+ep3.manual.frame4.title=tile.frame.dial_device.name
+ep3.manual.frame5.title=tile.frame.program_interface.name
+ep3.manual.frame6.title=tile.frame.upgrade.name
+ep3.manual.frame7.title=tile.frame.fluid.name
+ep3.manual.frame8.title=tile.frame.item.name
+ep3.manual.frame9.title=tile.frame.energy.name
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.frame1.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame2.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame3.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame4.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame5.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame6.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame7.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame8.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame9.subtitle=ep3.manual.frame0.subtitle
+
+# These must be left as they are
+ep3.manual.main.page.1= 
+ep3.manual.main.page.2=

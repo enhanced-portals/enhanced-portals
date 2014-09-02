@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -393,16 +391,12 @@ public class EntityManager
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
-        	int food_level=player.getFoodStats().getFoodLevel();
         	// The actual transporting.
             player.rotationYaw = yaw;
             player.setPositionAndUpdate(x, y, z);
             // For the momentum module.
             handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
             player.worldObj.updateEntityWithOptionalForce(player, false);
-            if (player.worldObj.isRemote){
-            	player.getFoodStats().setFoodLevel(food_level);
-            }
 
             setEntityPortalCooldown(player);
             
@@ -425,7 +419,7 @@ public class EntityManager
 
             // Set position, momentum of new entity at the other portal.
             if (newEntity != null)
-            { 
+            {
             	handleMomentum(newEntity, touchedPortalType, exitPortalType, yaw, keepMomentum);
             	newEntity.setLocationAndAngles(x, y, z, yaw, entity.rotationPitch);
             	newEntity.forceSpawn = true;

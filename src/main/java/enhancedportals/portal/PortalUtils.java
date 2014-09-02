@@ -20,46 +20,46 @@ import enhancedportals.utility.GeneralUtils;
 
 public class PortalUtils
 {
-    static final int MAXIMUM_CHANCES = 10;
+    static final int MAXIMUM_CHANCES = 40;
 
     /***
      * Adds all the touching blocks to the processing queue.
      */
     static void addNearbyBlocks(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> q)
     {
-        if (portalDirection == 4)
-        {
+    // (world controller is in, the offset block from controller, 1-5, blank linkedList neighbors)
+	// if portalDirection = 1, then add up, down, west, east
+	// if portalDirection = 2, then add up, down, north, south
+	// if portalDirection = 3, then add north, south, west, east
+	// if portalDirection = 4, then add up, down, north-east, south-west
+	// if portalDirection = 5, then add up, down, north-west, south-east
+    	//
+        if (portalDirection == 4){
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
-            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North East
-            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South West
-        }
-        else if (portalDirection == 5)
-        {
+            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North-East
+            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South-West
+        //
+        }else if (portalDirection == 5){
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
-            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North West
-            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South East
-        }
-        else
-        {
-            for (int i = 0; i < 6; i++)
-            {
-                if (portalDirection == 1 && (i == 2 || i == 3))
-                {
+            q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North-West
+            q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South-East
+        }else{
+        	// Loop through the different directions for portalDirection 1-3.
+            for (int i = 0; i < 6; i++){
+            	// Skip North (2) and South (3)
+                if (portalDirection == 1 && (i == 2 || i == 3)){
+                    continue;
+                // Skip West (4) and East (5)
+                }else if (portalDirection == 2 && (i == 4 || i == 5)){
+                    continue;
+                // Skip Up (0) and Down (1)
+                }else if (portalDirection == 3 && (i == 0 || i == 1)){
                     continue;
                 }
-                else if (portalDirection == 2 && (i == 4 || i == 5))
-                {
-                    continue;
-                }
-                else if (portalDirection == 3 && (i == 0 || i == 1))
-                {
-                    continue;
-                }
-
                 ForgeDirection d = ForgeDirection.getOrientation(i);
                 q.add(new ChunkCoordinates(w.posX + d.offsetX, w.posY + d.offsetY, w.posZ + d.offsetZ));
             }
@@ -157,7 +157,10 @@ public class PortalUtils
         {
             for (int i = 1; i < 6; i++)
             {
+            	// Forge directions: Down, Up, North, South, West, East
+            	// Get Controller and cycle through forge directions from the coord.
                 ChunkCoordinates c = GeneralUtils.offset(controller.getChunkCoordinates(), ForgeDirection.getOrientation(j));
+                // portalBlocks = (the world controller is in, the offset from the controller we're exploring, 1-5)
                 Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller.getWorldObj(), c, i);
 
                 if (!portalBlocks.isEmpty())
@@ -176,16 +179,21 @@ public class PortalUtils
         Queue<ChunkCoordinates> portalBlocks = new LinkedList<ChunkCoordinates>();
         Queue<ChunkCoordinates> toProcess = new LinkedList<ChunkCoordinates>();
         int chances = 0;
+        // Start is the offset block from the controller.
         toProcess.add(start);
 
         while (!toProcess.isEmpty())
         {
+        	// c is now the offset block (start).
             ChunkCoordinates c = toProcess.remove();
-
+            // Pass as long as portalBlocks does not already contain the offset block from the controller.
             if (!portalBlocks.contains(c))
             {
+            	// Check if the coords of the offset block happens to be an air block.
                 if (world.isAirBlock(c.posX, c.posY, c.posZ))
                 {
+                	// sides = (world that the controller is in, current list of portalBlocks, 1-5)
+                	// Returns the number of portal frame blocks and items already in portalBlocks.
                     int sides = getGhostedSides(world, c, portalBlocks, portalType);
 
                     if (sides < 2)
@@ -221,8 +229,15 @@ public class PortalUtils
     {
         int sides = 0;
         Queue<ChunkCoordinates> neighbors = new LinkedList<ChunkCoordinates>();
+        // (world controller is in, the offset block from controller, 1-5, blank linkedList neighbors)
+    	// if portalDirection = 1, then add up, down, west, east
+    	// if portalDirection = 2, then add up, down, north, south
+    	// if portalDirection = 3, then add north, south, west, east
+    	// if portalDirection = 4, then add up, down, north-east, south-west
+    	// if portalDirection = 5, then add up, down, north-west, south-east
         addNearbyBlocks(world, block, portalType, neighbors);
 
+        // Go through all neighbor blocks.
         for (ChunkCoordinates c : neighbors)
         {
             if (portalBlocks.contains(c) || isPortalPart(world, c))
