@@ -1,6 +1,9 @@
 package enhancedportals.tileentity;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Random;
 
 import li.cil.oc.api.network.Arguments;
@@ -980,31 +983,25 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
     public void onEntityEnterPortal(Entity entity, TilePortal tilePortal)
     {
+        scheduleTeleportEntity(entity);
+    }
+    
+    private void scheduleTeleportEntity(Entity entity)
+    {
+    	if (entity == null || worldObj.isRemote)
+    		return;
+    	
+    	if (entity.ridingEntity != null)
+    		scheduleTeleportEntity(entity.ridingEntity);
+    	else
+    		teleportQueue.add(entity);
+    }
+    
+    private void teleportEntity(Entity entity)
+    {
         if (cachedDestinationLoc == null)
-        {
             return;
-        }
-
         
-        /*TileProgrammableInterface pi = getProgrammableInterface();
-
-        if (pi != null && entity != null)
-        {
-            pi.entityEnter(entity);
-            byte val = pi.canEntityTeleport(entity);
-
-            if (val == 0) // No
-            {
-                return;
-            }
-            else if (val == -1) // Try again, we're not done processing yet
-            {
-                entity.timeUntilPortal = -1;
-                return;
-            }
-        }
-        */
-
         // Set tile to the joined portal's controller.
         TileEntity tile = cachedDestinationLoc.getTileEntity();
         // Trigger redstone interfaces.
@@ -1018,15 +1015,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             	EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
-
-                /*
-                TileProgrammableInterface pi2 = control.getProgrammableInterface();
-
-                if (pi2 != null && entity != null)
-                {
-                    pi2.entityExit(entity);
-                }
-                */
             }
             catch (PortalException e)
             {
@@ -1036,7 +1024,19 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 }
             }
         }
-        
+    }
+    
+    private Collection<Entity> teleportQueue = new HashSet<Entity>();
+    
+    @Override
+    public void updateEntity()
+    {
+    	if (worldObj.isRemote)
+    		return;
+    	
+    	for (Entity e: teleportQueue)
+    		teleportEntity(e);
+    	teleportQueue.clear();
     }
 
     public void onEntityTeleported(Entity entity)
