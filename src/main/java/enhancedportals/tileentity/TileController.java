@@ -1,6 +1,5 @@
 package enhancedportals.tileentity;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
