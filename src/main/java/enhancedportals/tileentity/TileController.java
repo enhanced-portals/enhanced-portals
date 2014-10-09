@@ -985,26 +985,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             return;
         }
 
-        
-        /*TileProgrammableInterface pi = getProgrammableInterface();
-
-        if (pi != null && entity != null)
-        {
-            pi.entityEnter(entity);
-            byte val = pi.canEntityTeleport(entity);
-
-            if (val == 0) // No
-            {
-                return;
-            }
-            else if (val == -1) // Try again, we're not done processing yet
-            {
-                entity.timeUntilPortal = -1;
-                return;
-            }
-        }
-        */
-
         // Set tile to the joined portal's controller.
         TileEntity tile = cachedDestinationLoc.getTileEntity();
         // Trigger redstone interfaces.
@@ -1018,15 +998,6 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             	EntityManager.transferEntity(entity, this, control);
                 control.onEntityTeleported(entity);
                 control.onEntityTouchPortal(entity);
-
-                /*
-                TileProgrammableInterface pi2 = control.getProgrammableInterface();
-
-                if (pi2 != null && entity != null)
-                {
-                    pi2.entityExit(entity);
-                }
-                */
             }
             catch (PortalException e)
             {

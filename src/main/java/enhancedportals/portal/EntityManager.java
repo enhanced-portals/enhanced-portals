@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S06PacketUpdateHealth;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
@@ -23,6 +25,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -311,41 +314,52 @@ public class EntityManager
         else if (entity instanceof EntityPlayer)
         {
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            MinecraftServer server = player.mcServer;
-            ServerConfigurationManager config = server.getConfigurationManager();
+        	player.worldObj.theProfiler.startSection("portal");
+        	
+            if(!player.worldObj.isRemote){
+            	player.worldObj.theProfiler.startSection("changeDimension");
+	            ServerConfigurationManager config = player.mcServer.getConfigurationManager();
+	            
+	            player.closeScreen();
+	            player.dimension = enteringWorld.provider.dimensionId;
+	            player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, enteringWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+	
+	            exitingWorld.removeEntity(player);
+	            player.isDead = false;
+	            player.setLocationAndAngles(x, y, z, yaw, player.rotationPitch);
+	            handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
+	
+	            enteringWorld.spawnEntityInWorld(player);
+	            player.setWorld(enteringWorld);
+	
+	            config.func_72375_a(player, exitingWorld);
+	            player.playerNetServerHandler.setPlayerLocation(x,y,z,yaw,entity.rotationPitch);
+	            player.theItemInWorldManager.setWorld(enteringWorld);
 
-            player.closeScreen();
-            player.dimension = enteringWorld.provider.dimensionId;
-            player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, enteringWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+	            config.updateTimeAndWeatherForPlayer(player, enteringWorld);
+	            config.syncPlayerInventory(player);
 
-            exitingWorld.removePlayerEntityDangerously(player);
-            player.isDead = false;
-            player.setLocationAndAngles(x, y, z, yaw, player.rotationPitch);
-            handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
-
-            enteringWorld.spawnEntityInWorld(player);
-            player.setWorld(enteringWorld);
-
-            config.func_72375_a(player, exitingWorld);
-            player.playerNetServerHandler.setPlayerLocation(x, y, z, yaw, entity.rotationPitch);
-            player.theItemInWorldManager.setWorld(enteringWorld);
-
-            config.updateTimeAndWeatherForPlayer(player, enteringWorld);
-            config.syncPlayerInventory(player);
-            
-            // Instate any potion effects the player had when teleported.
-            for (Iterator<PotionEffect> potion = player.getActivePotionEffects().iterator(); potion.hasNext();) {
-            	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
+	            player.worldObj.theProfiler.endSection();
+	            exitingWorld.resetUpdateEntityTick();
+	            enteringWorld.resetUpdateEntityTick();
+	            player.worldObj.theProfiler.endSection();
+	
+	            // Instate any potion effects the player had when teleported.
+	            for (Iterator<PotionEffect> potion = player.getActivePotionEffects().iterator(); potion.hasNext();) {
+	            	player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) potion.next()));
+	            }
+	            
+	            // If there is instability, give effects.
+	            checkInstabilityEffects(entity,instability);
+	
+	            player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
+	            
+	            FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, exitingWorld.provider.dimensionId, player.dimension);
+	
+	            setEntityPortalCooldown(player);
             }
-            
-            // If there is instability, give effects.
-            checkInstabilityEffects(entity,instability);
-
-            player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
-            // GameRegistry.onPlayerChangedDimension(player); // TODO
-
-            setEntityPortalCooldown(player);
-            return player;
+            player.worldObj.theProfiler.endSection();
+	        return player;
         }
         // If the entity teleporting is something other than a player:
         else
@@ -398,6 +412,7 @@ public class EntityManager
             handleMomentum(player, touchedPortalType, exitPortalType, yaw, keepMomentum);
             player.worldObj.updateEntityWithOptionalForce(player, false);
 
+        	player.playerNetServerHandler.sendPacket(new S06PacketUpdateHealth(player.getHealth(), player.getFoodStats().getFoodLevel(), player.getFoodStats().getSaturationLevel()));
             setEntityPortalCooldown(player);
             
             // If there is instability, give effects.
