@@ -1,0 +1,394 @@
+# Blocks
+tile.frame.frame.name=Châssis de portail
+tile.frame.controller.name=Contrôleur de portail
+tile.frame.redstone.name=interface Redstone
+tile.frame.network_interface.name=Interface réseau
+tile.frame.dial_device.name=Dispositif de numérotation
+tile.frame.program_interface.name=Interface programmable
+tile.frame.upgrade.name=Manipulateur de module
+tile.frame.fluid.name=Module de transport de fluide
+tile.frame.item.name=Module de transport d'élément
+tile.frame.energy.name=Module de transport d'énergie
+tile.portal.name=Portail
+tile.dbs.name=Stabilisateur de pont dimensionnel
+tile.dbs_empty.name=Stabilisateur de pont dimensionnel (Vide)
+tile.decor_dbs.name=Métal infusé d'ender
+tile.decor_frame.name=Quartz bordé
+
+# Block Misc
+ep3.block.portalFramePart=Partie de châssis de portail
+ep3.block.multiblockStructure=Structure multibloc
+ep3.block.dbsSize=2x3x2 à 2x3x256
+ep3.block.decorativeBlock=Bloc décoratif
+
+# Items
+item.wrench.name=Clef
+item.nanobrush.name=Nanobrosse
+item.glasses.name=Lunettes
+item.location_card.name=Carte d'emplacement
+item.blank_portal_module.name=Module de portail vierge
+item.blank_upgrade.name=Ammélioration vierge
+item.manual.name=PORTAILS AVANCES : Tunnelage de trou de ver.
+
+# In-place upgrades
+item.upgrade.redstone.name=Amélioration d'interface Redstone
+item.upgrade.network_interface.name=Amélioration d'interface réseau
+item.upgrade.dial_device.name=Amélioration du dispositif de numérotation
+item.upgrade.program_interface.name=Amélioration de l'interface programmable
+item.upgrade.upgrade.name=Amélioration du manipulateur de module
+item.upgrade.fluid.name=Amélioration du transport de fluide
+item.upgrade.item.name=Amélioration du transport d'élément
+item.upgrade.energy.name=Amélioration du transport d'énergie
+
+# Upgrades
+item.portal_module.0.name=Destructeur de particules
+item.portal_module.0.desc=Arrête les particules d'arriver crées
+item.portal_module.1.name=Particules arc-en-ciel
+item.portal_module.1.desc=Chaque particule aura une couleur aléatoire
+item.portal_module.2.name=Silencieux
+item.portal_module.2.desc=Un portail sans bruit
+item.portal_module.3.name=Elan
+item.portal_module.3.desc=Les entités conservent leur élan
+item.portal_module.4.name=Dissimulation
+item.portal_module.4.desc=Rend le portail complètement invisible
+item.portal_module.5.name=Nuanceur de particule
+item.portal_module.5.desc=Les particules apparaissent plus claire ou plus sombre aléatoirement
+item.portal_module.6.name=Orientation
+item.portal_module.6.desc=La direction pour s'orienter sur le téléport
+item.portal_module.7.name=Chute de plume
+item.portal_module.7.desc=Retire les dommages de chute
+ep3.gui.facing.0=Nord
+ep3.gui.facing.1=Est
+ep3.gui.facing.2=Sud
+ep3.gui.facing.3=Ouest
+
+# Creative Tab
+itemGroup.enhancedportals=EnhancedPortals 3
+
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=Stabilisateur de pont dimensionnel
+ep3.gui.DBS.abb=SPD ### for futher use
+ep3.gui.information=Information
+ep3.gui.activePortals=Portails actifs
+ep3.gui.instability=Instabilité
+ep3.gui.powerModeNormal=Mode: Normal
+ep3.gui.powerModeRisky=Mode: Risqué
+ep3.gui.powerModeUnstable=Mode: Instable
+ep3.gui.powerModeUnpredictable=Mode: Imprévisible
+
+# RF Tab
+ep3.tab.redstoneFlux=Energie
+ep3.tab.redstoneFlux.maxPower=Energie Maxi :
+ep3.tab.redstoneFlux.storedPower=Energie Stockée :
+ep3.tab.redstoneFlux.powerUsage=Puissance d'usage :
+
+# GUI Portal Controller
+ep3.gui.portalController=Contrôleur de portail
+ep3.gui.uniqueIdentifier=Identificateur unique
+ep3.gui.public=Public
+ep3.gui.private=Privé
+ep3.gui.noUidSet=Pas d'UID
+
+# Private/Public Tip Tab
+ep3.tab.privatePublic=Privé ou public ?
+ep3.tab.privatePublic.info=<6>Public :<0> Autorise toutes les connections<NL><6>Privé :<0> Autorise seulement les connections de même SPD
+
+# Glyphs Tab
+ep3.tab.glyphs=Glyphes
+ep3.tab.glyphs.info=// TODO
+
+# GUI Dialler
+ep3.gui.dialDevice=Dispositif de numérotation
+ep3.gui.storedIdentifiers=Identifiants stockés
+ep3.gui.terminate=Interrompre
+ep3.gui.dial=Appeler
+ep3.gui.identifierCannotBeBlank=l'identifiant ne peut-être vide
+ep3.gui.name=Nom
+ep3.gui.identifierName=Nom d'identifiant
+ep3.gui.manualEntry=Entrée manuelle
+ep3.gui.delete=Effacer
+ep3.gui.edit=Modifier
+
+# GUI Dial Tab
+ep3.tab.dialling=Dispositif de numérotation
+ep3.tab.dialling.info=// TODO
+
+# GUI Texture
+ep3.gui.customIcon=Icône personnalisée
+ep3.gui.facade=Façade
+ep3.gui.frame=Cadre
+ep3.gui.portal=Portail
+ep3.gui.particle=Particules
+ep3.gui.colour=Couleur
+ep3.gui.red=Rouge
+ep3.gui.green=Vert
+ep3.gui.blue=Bleu
+ep3.gui.textures=Textures
+
+# Colour Tip Tab
+ep3.tab.colourTip=Mauvaises Couleurs ?
+ep3.tab.colourTip.info=Les couleurs sont ajoutées par multiplication de couleur, non pas par magie. Si vous commencez avec une texture jaune et ajoutez du cyan, vous obtenez du vert. Pour résoudre ceci, utilisez la texture la plus noir et blanc que puissiez trouver. 
+
+# Custom Frame Textures
+ep3.tab.frameCustomTexture=Texture personalisée
+ep3.tab.frameCustomTexture.info=Vous pouvez placer des textures personalisées dans un paquet de ressource afin de l'utiliser ici.
+
+# Custom Frame Textures
+ep3.tab.portalCustomTexture=Texture personalisée
+ep3.tab.portalCustomTexture.info=Vous pouvez placer des textures personalisées dans un paquet de ressource afin de l'utiliser ici.
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=Manipulateur de module
+ep3.gui.modules=Modules de portail
+
+# GUI Network Interface
+ep3.gui.networkInterface=Interface réseau
+ep3.gui.networkIdentifier=Identifiant réseau
+ep3.gui.networkInformation=Information réseau
+ep3.gui.networkedPortals=Portails en réseau
+ep3.gui.notSet=Non appliqué
+
+# GUI Programmable Interface
+ep3.gui.programmableInterface=interface programmable
+ep3.gui.errorLog=Fichier d'erreur
+ep3.gui.compile=Compile
+
+# GUI Redstone
+ep3.gui.redstoneInterface=Interface de Redstone
+
+ep3.gui.input=Entrée
+ep3.gui.createPortalOnSignal=Crée le portail au signal
+ep3.gui.removePortalOnSignal=Supprime le portail au signal
+ep3.gui.createPortalOnPulse=Crée le portail sur une pulsation
+ep3.gui.removePortalOnPulse=Supprime le portail sur une pulsation
+ep3.gui.dialStoredIdentifier=Numérote un identifiant spécifique
+ep3.gui.dialRandomIdentifier=Numérote un identifiant aléatoire
+ep3.gui.dialStoredIdentifier2=Numérote un identifiant spécifique (2)
+ep3.gui.dialRandomIdentifier2=Numérote un identifiant aléatoire (2)
+
+ep3.gui.output=Sortie
+ep3.gui.portalCreated=Le portail est créé
+ep3.gui.portalRemoved=Le portail est supprimé
+ep3.gui.portalActive=Le portail est actif
+ep3.gui.portalInactive=Le portail est inactif
+ep3.gui.entityTeleport=Une entité touche le portail
+ep3.gui.playerTeleport=Un joueur touche le portail
+ep3.gui.animalTeleport=Un animal touche le portail
+ep3.gui.monsterTeleport=Un monstre touche le portail
+
+# GUI General
+ep3.gui.initialized=Initialisé
+ep3.gui.glyphs=Glyphes
+ep3.gui.cancel=Annuler
+ep3.gui.save=Sauver
+ep3.gui.reset=Remettre
+ep3.gui.clear=Effacer
+ep3.gui.random=Aléatoire
+ep3.gui.add=Ajouter
+ep3.gui.accept=Accepter
+ep3.gui.clickToModify=Cliquer pour modifier
+ep3.gui.uidInUse=Cette UID est déjà utilisée
+
+# GUI ITM
+ep3.gui.transferItem=Module de transport d'élément
+
+# GUI FTM
+ep3.gui.transferFluid=Module de transport de fluide
+
+# GUI ETM
+ep3.gui.transferEnergy=Module de transport d'énergie
+
+# GUI Transfer
+ep3.gui.sending=Envoi
+ep3.gui.receiving=Réception
+
+# Errors
+ep3.error=[Erreur] ###
+ep3.error.noUidSet=Vous devez mettre un identifiant unique avant de faire celà
+ep3.error.voidLinkCard=Cette carte n'est plus liée à un stabilisateur de pont dimensionnel valide
+ep3.error.receivingPortalNotInitialized=Le portail de réception n'a pas été initialisé
+ep3.error.sendingPortalNotInitialized=Le portail d'envoi n'a pas été initialisé
+ep3.error.stabilizerNotFound=The SPD could not be found. Insert a new valid Location Card to continue
+ep3.error.receivingPortalNoDialler=You cannot dial a portal that does not have a Dialing Device
+ep3.error.sendingPortalNoDialler=You cannot dial from a portal that does not have a Dialing Device
+ep3.error.uniqueIdentifierNotSet=You cannot dial without setting a unique identifier
+ep3.error.networkIdentifierNotSet=You cannot dial without setting a network identifier
+ep3.error.dialDeviceNotFound=You cannot dial without a Dialing Device
+ep3.error.diallingPortalAlreadyActive=You cannot dial from a portal that already has an active connection
+ep3.error.receivingPortalAlreadyActive=You cannot dial to a portal that is already active
+ep3.error.notEnoughPowerToStart=There is not enough power in the DBS to create a connection
+ep3.error.maxedConnectionLimit=The DBS has too many active connections
+ep3.error.cannotDialDiallingPortal=You cannot dial the same portal you're dialing from
+ep3.error.diallingPortalNotFound=Failed to locate the portal that you are dialing from
+ep3.error.receivingPortalNotFound=Failed to locate the receiving portal
+ep3.error.notOnSameStabilizer=The portals are not connected to the same DBS
+ep3.error.sendingPortalFailedToCreatePortal=The sending Portal Controller failed to create a portal
+ep3.error.receivingPortalFailedToCreatePortal=The receiving Portal Controller failed to create a portal
+ep3.error.noPortalWithThatIdentifierReceiving=Could not find an exit portal with that UID
+ep3.error.noPortalWithThatIdentifierSending=Could not find a sending portal with that UID (How did you dial...? o_O)
+ep3.error.failedToTransfer=The receiving portal is too small
+ep3.error.multiplePortalControllers=You cannot have multiple Portal Controllers
+ep3.error.multipleProgram=You cannot have multiple Programmable Interfaces
+ep3.error.multipleMod=You cannot have multiple Module Manipulators
+ep3.error.dialAndNetwork=You cannot have a Dialing Device and a Network Interface in the same portal structure
+ep3.error.portalCouldNotBeCreatedHere=A portal could not be created at this location
+ep3.error.failedToCreatePortal=A portal could not be created at this location
+ep3.error.couldNotCreatePortalHere=A portal could not be created at this location
+
+# Success
+ep3.success=[Succès] 
+ep3.success.create=Portail initialisé
+ep3.success.reconfigure=Portail reconfiguré
+
+
+############
+## Manual ##
+############
+
+ep3.manual.decorBorderedQuartz.subtitle=Décoratif
+ep3.manual.dbsEmpty.title=Stabilisateur de pont dimensionnel (Vide)
+ep3.manual.upgrade0.subtitle=Amélioration de portail
+ep3.manual.module0.subtitle=Module de portail
+ep3.manual.frame0.subtitle=Composant de portail
+
+## "Title" Page
+ep3.manual.subject.title=Portails avancés
+ep3.manual.subject.sub=Tunnelage de trou de ver
+
+## Table of Contents
+ep3.manual.table_of_contents.title=Table des matières
+
+## Chapter Item Gallery Title
+ep3.manual.gallery.title=Galerie des éléments
+
+## Chapter 1:
+ep3.manual.chapter.0.title=Le prélude
+ep3.manual.chapter.0.p.0=The subatomic particles of life and space are now easily manipulated. We have learned to weave them like fine silk for us to reap the benefits. With these concepts at the helm, we can now create harnesses, for micro wormholes to tunnel between space and dimensions.
+
+## Chapter 2:
+ep3.manual.chapter.1.title=Les bases
+ep3.manual.chapter.1.p.0=The principals behind channeling a wormhole starts with constructing a Dimensional Bridge Stabilizer. This device will allow you to maintain and transport Bio Information across great distances.
+ep3.manual.chapter.1.p.1=To sustain a wormhole you will need to create a frame which can withstand and encapsulate a wormhole formation. These are known as portal frames.
+ep3.manual.chapter.1.p.2=Finally you will need a method that will being the portal. This can be anything from a simple button to a Dialing Device.
+
+## Chapter 3:
+ep3.manual.chapter.2.title=Stabiliser les dimensions
+ep3.manual.chapter.2.p.0=The Dimensional Bridge Stabilizer allows several simultaneous wormholes to be created depending on it's volume.
+ep3.manual.chapter.2.p.1=To create a SPD, place 12 Dimensional Bridge Stabilizer blocks in a configuration of 2 high, 3 wide, 2 long (2x3x2), or 2 high, 3 wide, 3 long, and right click on any block with a wrench. If configured correctly, a functional SPD will form.
+ep3.manual.chapter.2.p.2=Each tier of a SPD will allow you to maintain 2 more portals and you may create up to 256 tiers from a single DBS. You cannot add on extra tiers once a DBS is formed, so plan accordingly or you may have to relink any pre-existing portals if you break the DBS. A DBS can hold a charge of about 15,000 RF per tier, and will expend it's storage as portals are being used. If you chose to minimize the power level that the DBS feeds the wormholes, the result will be instability. Instability within a wormhole brings with it unclear side effects, and molecular rearrangement has not been unheard of.
+
+## Chapter 4:
+ep3.manual.chapter.3.title=Construction du harnais
+ep3.manual.chapter.3.p.0=The struggle to keep a wormhole harnessed in a dimesion can be overcome with the use of Portal Frames. A Portal Frame is configured in much of the same manner as the ancient prototype for interdimensional travel, the obsidian nether portal. A portal can only be formed if there are blocks forming a closed shape along a flat area going horizontally or vertically.
+ep3.manual.chapter.3.p.1=For the portal frame to interact with the DBS, a Portal Controller must be used. This Controller may be placed along any part of the portal as long as the block is against the threshold of where you intend to open the wormhole. Once you place your Controller down, you will need to manually link the portal with a SPD by creating a Location Card, placing it into a SPD, and once it is set you may right-click with it against a Portal Controller to initialize the portal frame. If you've configured the portal correctly, the portal will link and you may access the Controller with a wrench to configure it's Unique Identifier. The UID is an address that must be unique to that portal. If you deconstruct the portal's Controller, the link with the DBS will be lost and you will have to re-establish the link with one before it can activate again.
+ep3.manual.chapter.3.p.2=There are two ways for portals to send and receive data from eachother. The first is to be connected to a network, and to do that, you must include another type of frame block called the Network Interface. This block allows you to access a linking dialer. Simply dial in a specific Network ID (NID) and those portals on the specified network will link their wormholes to eachother.
+ep3.manual.chapter.3.p.3=After reconfiguring a portal you will need to reinitialize it by right-clicking on any connected portal block with a wrench.
+
+## Chapter 5:
+ep3.manual.chapter.4.title=Ignition d'un trou noir
+ep3.manual.chapter.4.p.0=To finally initiate a wormhole link, you will need a Redstone Interface. The Redstone Interface is a portal frame block that will allow you to interact with your portal frame. After integrating the block into your structure, right-click with a wrench to access the different ways redstone may interact with a portal.
+ep3.manual.chapter.4.p.1=The simplest way to intiate a portal is to craft a button, place it directly on the Redstone Interface, and to change the RI options to "Input" & "Create portal on pulse". By utilizing the Redstone Interface, you have at your disposal a plethora of ways to control the portals remotely, and you can place as many Redstone Interfaces in to a portal frame as you like, so explore and, most importantly, experiment.
+
+## Chapter 6:
+ep3.manual.chapter.5.title=Appeler maison
+ep3.manual.chapter.5.p.0=Portals have a second way to communicate with eachother, and that's through a Dialing Device. A Dialing Device is a portal frame block that allows you to input the UID of another portal and establish a wormhole with it. By means of this, you can also dial portals outside of your DBS network if the portal that you are trying to connect to is set to "Public" in it's Portal Controller. Otherwise only portals networked through the same DBS may access them. Keep in mind that you can only link 2 portals this way, and unless you terminate the connection, other portals cannot dial that portal, not to mention the drain on the SPD. I'm sure you can think of a Redstone circuit that could automatically terminate them for you.
+
+## Chapter 7:
+ep3.manual.chapter.6.title=Accessoirisation
+ep3.manual.chapter.6.p.0=Integration is a key factor when setting up your evil lair, complete with a multiportal black hole room, and so there are a few ways to customize your Portals, and what you can transport with them.
+ep3.manual.chapter.6.p.1=Right-clicking on a portal with a Nanobrush will allow you to access the Frame and Portal's customization screen. Here you can adjust the portal color, change the look of the portal blocks, and choose what particle your portal displays.
+ep3.manual.chapter.6.p.2=Further advancing on customization, a Module Manipulator block is craftable. Integrated with a Portal Frame, the portal is now ready to accept special modules that are crafted out of Blank Modules. These special modules do things ranging from making your portals invisible to managing what direction you face once exiting a wormhole.
+ep3.manual.chapter.6.p.3=Integration with other forms of technology was required, so we've allowed some special blocks to be crafted, the Energy, Fluid, and Item Transportation Module portal frame blocks. These allow the portals to be much more flexible with transportating things other than players, mobs, and animals.
+
+
+######################
+## ITEM INFORMATION ##
+######################
+
+ep3.manual.wrench.info=Right-click on a SPD array to turn into a SPD. Can also disassemble blocks when sneak-right-clicking portal objects. Use on portal module blocks to access their GUI. A Buildcraft or TE wrench may also be substituted.
+ep3.manual.nanobrush.info=A very dangerous object. Use on a portal frame to activate the customization GUI. Don't get any in your hair.
+ep3.manual.glasses.info=When worn, reveals portal frame modules for easier configuring.
+ep3.manual.location_card.info=Used to link a portal's Controller with a SPD. Simply place a card into a SPD and right-click on a portal Controller. Can be saved and reused to link many portals to the same DBS.
+ep3.manual.dbs.info=Stabilizes a fixed point in a dimension so that wormhole creation and data transfer can happen. Uses RF to stabilize. Create a DBS by placing the DBS blocks in arrays of 2x3x2 or 3x3x2 and right-clicking with a wrench.
+ep3.manual.frame0.info=The fundamental frame block, capable of forming and capsulating a wormhole.
+ep3.manual.frame1.info=The Frame Controller is used to establish a link to the SPD. Once linked via a Location Card, the Controller should not be moved. If it's disassembled, you will need to relink. You can choose to keep a portal private, where only those on the same SPD can access it, or public.
+ep3.manual.frame2.info=A Redstone Interface will allow access to automate certain tasks via redstone. Simply craft and place somewhere along the frame. Several can be placed in a frame to give more options.
+ep3.manual.frame3.info=Network interfaces allow 2 or more portals to connect through a network to eachother. Simply enter a Network ID on one portal and the same NID in another, and they will link. Portals set to private will not be able to access portals not on their SPD.
+ep3.manual.frame4.info=The Dialing Device module allows you to establish a link to another portal without the need of a Network. You can also save UIDs from other Portals as a Dialing pad (hold shift to delete). Portals set to private will not be able to access portals not on their SPD.
+ep3.manual.frame6.info=A Module Manipulator is a frame that will allow a portal to interact with Module chips. These chips can be crafted and placed in the Module Manipulator to do a range of things from silencing a portal to making the portal itself invisible.
+ep3.manual.frame7.info=This module allows you to teleport Fluid to a destination with another Fluid Transportation module.
+ep3.manual.frame8.info=This module allows you to teleport Items to a destination with another Item Transportation module.
+ep3.manual.frame9.info=This module allows you to teleport Energy to a destination with another Energy Transportation module.
+ep3.manual.blank_module.info=The foundation circuit module. This item is required to craft the other modules and the Module Manipulator.
+
+
+###################################################################################
+## The rest are resolved automatically, though you can override them if required ##
+###################################################################################
+
+ep3.manual.wrench.title=item.wrench.name
+ep3.manual.nanobrush.title=item.nanobrush.name
+ep3.manual.glasses.title=item.glasses.name
+ep3.manual.location_card.title=item.location_card.name
+ep3.manual.blank_module.title=item.blank_portal_module.name
+ep3.manual.module0.title=item.portal_module.0.name
+ep3.manual.module1.title=item.portal_module.1.name
+ep3.manual.module2.title=item.portal_module.2.name
+ep3.manual.module3.title=item.portal_module.3.name
+ep3.manual.module4.title=item.portal_module.4.name
+ep3.manual.module5.title=item.portal_module.5.name
+ep3.manual.module6.title=item.portal_module.6.name
+ep3.manual.module7.title=item.portal_module.7.name
+ep3.manual.module1.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module2.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module3.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module4.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module5.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module6.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module7.subtitle=ep3.manual.module0.subtitle
+ep3.manual.blank_upgrade.title=item.blank_upgrade.name
+ep3.manual.upgrade0.title=item.upgrade.redstone.name
+ep3.manual.upgrade1.title=item.upgrade.network_interface.name
+ep3.manual.upgrade2.title=item.upgrade.dial_device.name
+ep3.manual.upgrade3.title=item.upgrade.program_interface.name
+ep3.manual.upgrade4.title=item.upgrade.upgrade.name
+ep3.manual.upgrade5.title=item.upgrade.fluid.name
+ep3.manual.upgrade6.title=item.upgrade.item.name
+ep3.manual.upgrade7.title=item.upgrade.energy.name
+ep3.manual.upgrade1.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade2.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade3.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade4.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade5.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade6.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade7.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.dbs.title=tile.dbs.name
+ep3.manual.decorBorderedQuartz.title=tile.decor_frame.name
+ep3.manual.decorStabilizer.title=tile.decor_dbs.name
+ep3.manual.decorStabilizer.subtitle=ep3.manual.decorBorderedQuartz.subtitle
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.portal.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame0.title=tile.frame.frame.name
+ep3.manual.frame1.title=tile.frame.controller.name
+ep3.manual.frame2.title=tile.frame.redstone.name
+ep3.manual.frame3.title=tile.frame.network_interface.name
+ep3.manual.frame4.title=tile.frame.dial_device.name
+ep3.manual.frame5.title=tile.frame.program_interface.name
+ep3.manual.frame6.title=tile.frame.upgrade.name
+ep3.manual.frame7.title=tile.frame.fluid.name
+ep3.manual.frame8.title=tile.frame.item.name
+ep3.manual.frame9.title=tile.frame.energy.name
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.frame1.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame2.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame3.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame4.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame5.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame6.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame7.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame8.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame9.subtitle=ep3.manual.frame0.subtitle
+
+# These must be left as they are
+ep3.manual.main.page.1= 
+ep3.manual.main.page.2= 
