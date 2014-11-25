@@ -1,8 +1,8 @@
 package enhancedportals.tileentity;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -148,7 +148,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
         return "ep_transfer_energy";
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():number -- Returns the amount of energy stored inside the module.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getEnergy(Context context, Arguments args)
     {
@@ -161,7 +161,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
         return storage.getEnergyStored();
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():number -- Get the maximum amount of energy stored inside the module.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getMaxEnergy(Context context, Arguments args)
     {
@@ -200,7 +200,7 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
         return worldObj;
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():boolean -- Returns true if the module is set to send energy.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] isSending(Context context, Arguments args)
     {

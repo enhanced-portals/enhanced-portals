@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -160,16 +160,11 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
         return 1;
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():table -- Returns a description of the item stored in this module.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStack(Context context, Arguments args)
     {
-        HashMap<String, Object> hstack = new HashMap<String, Object>();
-        hstack.put("name", stack.getItem().getUnlocalizedNameInefficiently(stack));
-        hstack.put("meta", stack.getItemDamage());
-        hstack.put("amount", stack.stackSize);
-
-        return new Object[] { hstack };
+        return new Object[] { stack.copy() };
     }
 
     @Override
@@ -197,7 +192,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
         return false;
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():boolean -- Return whether there is an item stored in this module.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] hasStack(Context context, Arguments args)
     {
@@ -210,7 +205,7 @@ public class TileTransferItem extends TileFrameTransfer implements IInventory, I
         return true;
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():boolean -- Returns true if the module is set to send items.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] isSending(Context context, Arguments args)
     {

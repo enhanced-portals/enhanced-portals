@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -190,7 +190,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
 
     }
 
-    @Callback
+    @Callback(doc = "function(uid:string):boolean -- Attempts to create a connection to the specified portal. UID must be given as a single string in the format of numbers separated by spaces.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] dial(Context context, Arguments args) throws Exception
     {
@@ -202,7 +202,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         return comp_Dial(ComputerUtils.argsToArray(args));
     }
 
-    @Callback
+    @Callback(doc = "function(entry:number):boolean -- Dials the specified entry in the Dialing Device's list.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] dialStored(Context context, Arguments args) throws Exception
     {
@@ -259,21 +259,21 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         throw new Exception("Invalid number of arguments.");
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():number -- Returns the amount of entries in the Dialing Device's list.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStoredCount(Context context, Arguments args)
     {
         return new Object[] { glyphList.size() };
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function(entry:number):string -- Returns the UID as a string of the specified entry in the Dialing Device's list.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStoredGlyph(Context context, Arguments args) throws Exception
     {
         return comp_GetStoredGlyph(ComputerUtils.argsToArray(args));
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function(entry:number):string -- Returns the name of the specified entry in the Dialing Device's list.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getStoredName(Context context, Arguments args) throws Exception
     {
@@ -342,7 +342,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
         }
     }
 
-    @Callback
+    @Callback(doc = "function():boolean -- Terminates any active connection.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] terminate(Context context, Arguments args)
     {
