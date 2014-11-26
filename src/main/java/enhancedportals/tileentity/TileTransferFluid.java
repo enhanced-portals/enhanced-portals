@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -163,36 +163,11 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
         return "ep_transfer_fluid";
     }
 
-    @Callback(direct = true, limit = 1)
+    @Callback(direct = true, limit = 1, doc = "function():table -- Get a description of the fluid stored inside the module.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] getFluid(Context context, Arguments args)
     {
-        final HashMap<String, Object> map = new HashMap<String, Object>();
-        FluidTankInfo value = tank.getInfo();
-
-        // Code taken from OpenComponents by Sangar
-        // https://github.com/MightyPirates/OpenComponents
-
-        map.put("capacity", value.capacity);
-
-        if (value.fluid != null)
-        {
-            map.put("amount", value.fluid.amount);
-            map.put("id", value.fluid.fluidID);
-            final Fluid fluid = value.fluid.getFluid();
-
-            if (fluid != null)
-            {
-                map.put("name", fluid.getName());
-                map.put("label", fluid.getLocalizedName(tank.getFluid()));
-            }
-        }
-        else
-        {
-            map.put("amount", 0);
-        }
-
-        return new Object[] { map };
+        return new Object[] { tank.getInfo() };
     }
 
     @Override
@@ -215,7 +190,7 @@ public class TileTransferFluid extends TileFrameTransfer implements IFluidHandle
         return "ep_transfer_fluid";
     }
 
-    @Callback(direct = true)
+    @Callback(direct = true, doc = "function():boolean -- Returns true if the module is set to send fluids.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] isSending(Context context, Arguments args)
     {
