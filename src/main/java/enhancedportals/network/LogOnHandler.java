@@ -9,7 +9,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import enhancedportals.EnhancedPortals;
 
-public class onLogOn
+public class LogOnHandler
 {
 	@SubscribeEvent
 	public void onLogIn(PlayerEvent.PlayerLoggedInEvent login)
@@ -21,7 +21,7 @@ public class onLogOn
 		{
 			try
 			{
-				URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
+				URL versionIn = new URL(EnhancedPortals.UPDATE_URL);
 				BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
 				newVers = in.readLine();
 				
@@ -33,19 +33,19 @@ public class onLogOn
 				}
 				else
 				{
-	    			System.out.println("Enhanced Portals is up-to-date :: v" + newVers);
+	    			EnhancedPortals.logger.info("You're using the latest version :: v" + newVers);
 				}
 			}
 			catch (Exception e) 
 	        {
-	        	System.out.println("Unable to find latest version of EP");
+	        	EnhancedPortals.logger.warn("Unable to get the latest version information");
 	            newVers = curVers;
 	        } 
 	        finally {}
 		}
 		else
 		{
-			System.out.println("Something is wrong :: Player is NULL");
+			EnhancedPortals.logger.warn("Something is wrong :: Player is NULL");
 		}
 	}
 }

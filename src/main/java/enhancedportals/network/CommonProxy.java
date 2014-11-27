@@ -163,15 +163,14 @@ public class CommonProxy
         
         try 
         {
-            URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
+            URL versionIn = new URL(EnhancedPortals.UPDATE_URL);
     		BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
     		String newVers = in.readLine();
     		
     		if (!newVers.equals(curVers))
     		{
-    			System.out.println("You are running EP v" + curVers);
-    			System.out.println("EP has been updated to v" + newVers);
-    			System.out.println("Get the latest version of EP from - mods.atomicbase.com");
+    			EnhancedPortals.logger.info("You're using an outdated version (v" + curVers + ")");
+    			EnhancedPortals.logger.info("Get the latest version (v" + lateVers + ") from mods.atomicbase.com");
    				lateVers = newVers;
     		}
     		else
@@ -181,7 +180,7 @@ public class CommonProxy
         }
         catch (Exception e) 
         {
-        	System.out.println("Unable to find latest version for EP");
+        	EnhancedPortals.logger.warn("Unable to get the latest version information");
             lateVers = curVers;
         } 
         finally {}	
@@ -192,17 +191,15 @@ public class CommonProxy
 		if (updateNotifier == true)
 		{
 			String msg = "EP has been updated to v" + lateVers + " :: You are running v" + curVers;
-			String msg2 = "Get the latest version of EP from - mods.atomicbase.com";
-			System.out.println("Trying to notify you via Chat");
+			String msg2 = "Get the latest version of EP from mods.atomicbase.com";
 			player.addChatMessage(new ChatComponentText(msg));
 			player.addChatMessage(new ChatComponentText(msg2));
 			return true;
 		}
 		else
 		{
-			System.out.println("You are running EP v" + curVers);
-			System.out.println("EP has been updated to v" + lateVers);
-			System.out.println("Get the latest version of EP from - mods.atomicbase.com");
+			EnhancedPortals.logger.info("You're using an outdated version (v" + curVers + ")");
+			EnhancedPortals.logger.info("Get the latest version (v" + lateVers + ") from mods.atomicbase.com");
 			return false;
 		}
 	}
