@@ -9,19 +9,19 @@ import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class GuiTextureDialParticle extends GuiTextureParticle
+public class GuiDialingEditParticle extends GuiTextureParticle
 {
-    TileDiallingDevice dial;
+    TileDialingDevice dial;
     boolean didSave, returnToEdit;
     
-    public GuiTextureDialParticle(TileDiallingDevice d, EntityPlayer p)
+    public GuiDialingEditParticle(TileDialingDevice d, EntityPlayer p)
     {
         this(d, p, false);
     }
     
-    public GuiTextureDialParticle(TileDiallingDevice d, EntityPlayer p, boolean r)
+    public GuiDialingEditParticle(TileDialingDevice d, EntityPlayer p, boolean r)
     {
         super(d.getPortalController(), p);
         dial = d;
@@ -61,17 +61,17 @@ public class GuiTextureDialParticle extends GuiTextureParticle
         else if (button.id == 1000)
         {
             didSave = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALLING_DEVICE_D : GuiHandler.DIALLING_DEVICE_C));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.DIALING_DEVICE_D : GuiHandler.DIALING_DEVICE_C));
         }
         else if (button.id == 500)
         {
             didSave = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALLING_EDIT_A : GuiHandler.TEXTURE_DIALLING_SAVE_A));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALING_EDIT_A : GuiHandler.TEXTURE_DIALING_SAVE_A));
         }
         else if (button.id == 501)
         {
             didSave = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALLING_EDIT_B : GuiHandler.TEXTURE_DIALLING_SAVE_B));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, returnToEdit ? GuiHandler.TEXTURE_DIALING_EDIT_B : GuiHandler.TEXTURE_DIALING_SAVE_B));
         }
     }
     

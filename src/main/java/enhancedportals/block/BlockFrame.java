@@ -30,7 +30,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.common.ISidedBlockTexture;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 import enhancedportals.tileentity.TileFrame;
 import enhancedportals.tileentity.TileFrameBasic;
 import enhancedportals.tileentity.TileFrameTransfer;
@@ -132,7 +132,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
         }
         else if (metadata == DIALLING_DEVICE)
         {
-            return new TileDiallingDevice();
+            return new TileDialingDevice();
         }
         else if (metadata == PROGRAMMABLE_INTERFACE)
         {
@@ -221,7 +221,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     {
         TileEntity t = world.getTileEntity(x, y, z);
 
-        if (t != null && (t instanceof TileController || t instanceof TileNetworkInterface || t instanceof TileDiallingDevice || t instanceof TileTransferEnergy || t instanceof TileTransferFluid || t instanceof TileTransferItem))
+        if (t != null && (t instanceof TileController || t instanceof TileNetworkInterface || t instanceof TileDialingDevice || t instanceof TileTransferEnergy || t instanceof TileTransferFluid || t instanceof TileTransferItem))
         {
             return (IPeripheral) t;
         }

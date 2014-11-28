@@ -9,19 +9,19 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.gui.GuiDiallingDevice;
+import enhancedportals.client.gui.GuiDialingDevice;
 import enhancedportals.portal.GlyphElement;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
 public class ElementScrollDiallingDevice extends BaseElement
 {
-    TileDiallingDevice dial;
+    TileDialingDevice dial;
     float currentScroll = 0f;
     boolean isScrolling = false, wasClicking = false;
     int scrollAmount = 0;
     int offsetX = 5, offsetY = 5, sizeMButton = 196, sizeSButton = 20, buttonSpacing = 2, entryHeight = 22;
 
-    public ElementScrollDiallingDevice(GuiDiallingDevice gui, TileDiallingDevice d, int x, int y)
+    public ElementScrollDiallingDevice(GuiDialingDevice gui, TileDialingDevice d, int x, int y)
     {
         super(gui, x, y, gui.getSizeX() - 14, gui.getSizeY() - 57);
         dial = d;
@@ -78,19 +78,19 @@ public class ElementScrollDiallingDevice extends BaseElement
 
             if (mouseOverMain)
             {
-                ((GuiDiallingDevice) parent).onEntrySelected(scrollAmount + i);
+                ((GuiDialingDevice) parent).onEntrySelected(scrollAmount + i);
                 break;
             }
             else if (mouseOverSmall)
             {
                 if (parent.isShiftKeyDown())
                 {
-                    ((GuiDiallingDevice) parent).onEntryDeleted(scrollAmount + i);
+                    ((GuiDialingDevice) parent).onEntryDeleted(scrollAmount + i);
                     break;
                 }
                 else
                 {
-                    ((GuiDiallingDevice) parent).onEntryEdited(scrollAmount + i);
+                    ((GuiDialingDevice) parent).onEntryEdited(scrollAmount + i);
                     break;
                 }
             }

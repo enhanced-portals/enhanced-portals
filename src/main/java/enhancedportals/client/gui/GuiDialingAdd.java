@@ -17,27 +17,27 @@ import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.client.gui.elements.ElementGlyphDisplay;
 import enhancedportals.inventory.BaseContainer;
-import enhancedportals.inventory.ContainerDiallingDeviceSave;
+import enhancedportals.inventory.ContainerDialingAdd;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class GuiDiallingDeviceSave extends BaseGui
+public class GuiDialingAdd extends BaseGui
 {
     public static final int CONTAINER_SIZE = 131;
-    protected TileDiallingDevice dial;
+    protected TileDialingDevice dial;
     protected GuiTextField text;
     protected boolean isEditing = false;
     protected int particleFrameType = -1, particleFrame, particleFrameCycle;
     protected int[] particleFrames = new int[] { 0 };
     protected ElementGlyphDisplay display;
 
-    public GuiDiallingDeviceSave(TileDiallingDevice d, EntityPlayer p)
+    public GuiDialingAdd(TileDialingDevice d, EntityPlayer p)
     {
-        super(new ContainerDiallingDeviceSave(d, p.inventory), CONTAINER_SIZE);
+        super(new ContainerDialingAdd(d, p.inventory), CONTAINER_SIZE);
         dial = d;
         name = "gui.dialDevice";
         setHidePlayerInventory();
@@ -50,7 +50,7 @@ public class GuiDiallingDeviceSave extends BaseGui
         }
     }
     
-    protected GuiDiallingDeviceSave(BaseContainer container, int cSize)
+    protected GuiDialingAdd(BaseContainer container, int cSize)
     {
         super(container, cSize);
     }
@@ -210,7 +210,7 @@ public class GuiDiallingDeviceSave extends BaseGui
     {
         if (button.id == 0) // cancel
         {
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_B));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALING_DEVICE_B));
         }
         else if (button.id == 1) // save
         {
@@ -223,17 +223,17 @@ public class GuiDiallingDeviceSave extends BaseGui
         else if (button.id == 100)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_SAVE_A));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALING_SAVE_A));
         }
         else if (button.id == 101)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_SAVE_B));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALING_SAVE_B));
         }
         else if (button.id == 102)
         {
             isEditing = true;
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALLING_SAVE_C));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.TEXTURE_DIALING_SAVE_C));
         }
     }
 }

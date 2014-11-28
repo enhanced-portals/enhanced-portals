@@ -8,24 +8,24 @@ import net.minecraft.util.ResourceLocation;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementScrollDiallingDevice;
 import enhancedportals.client.gui.tabs.TabTip;
-import enhancedportals.inventory.ContainerDiallingDevice;
+import enhancedportals.inventory.ContainerDialingDevice;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class GuiDiallingDevice extends BaseGui
+public class GuiDialingDevice extends BaseGui
 {
     public static final int CONTAINER_SIZE = 175, CONTAINER_WIDTH = 256;
-    TileDiallingDevice dial;
+    TileDialingDevice dial;
     TileController controller;
     GuiButton buttonDial;
 
-    public GuiDiallingDevice(TileDiallingDevice d, EntityPlayer p)
+    public GuiDialingDevice(TileDialingDevice d, EntityPlayer p)
     {
-        super(new ContainerDiallingDevice(d, p.inventory), CONTAINER_SIZE);
+        super(new ContainerDialingDevice(d, p.inventory), CONTAINER_SIZE);
         texture = new ResourceLocation("enhancedportals", "textures/gui/dialling_device.png");
         xSize = CONTAINER_WIDTH;
         dial = d;
@@ -67,7 +67,7 @@ public class GuiDiallingDevice extends BaseGui
     {
         if (button.id == 0)
         {
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_B));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALING_DEVICE_B));
         }
         else if (button.id == 1)
         {

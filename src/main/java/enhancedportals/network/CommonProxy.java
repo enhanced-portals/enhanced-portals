@@ -40,7 +40,7 @@ import enhancedportals.network.packet.PacketRerender;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.NetworkManager;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 import enhancedportals.tileentity.TileFrameBasic;
 import enhancedportals.tileentity.TileModuleManipulator;
 import enhancedportals.tileentity.TileNetworkInterface;
@@ -124,7 +124,7 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileController.class, "epPC");
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRI");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNI");
-        GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDD");
+        GameRegistry.registerTileEntity(TileDialingDevice.class, "epDD");
         GameRegistry.registerTileEntity(TileProgrammableInterface.class, "epPI");
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epMM");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epDBS");

@@ -12,14 +12,14 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.GlyphElement;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class ContainerDiallingDevice extends BaseContainer
+public class ContainerDialingDevice extends BaseContainer
 {
-    TileDiallingDevice dial;
+    TileDialingDevice dial;
     ArrayList<String> list = new ArrayList<String>();
 
-    public ContainerDiallingDevice(TileDiallingDevice d, InventoryPlayer p)
+    public ContainerDialingDevice(TileDialingDevice d, InventoryPlayer p)
     {
         super(null, p);
         dial = d;
@@ -79,7 +79,7 @@ public class ContainerDiallingDevice extends BaseContainer
             if (dial.glyphList.size() > id)
             {
                 GlyphElement e = dial.glyphList.get(id);
-                player.openGui(EnhancedPortals.instance, GuiHandler.DIALLING_DEVICE_D, dial.getWorldObj(), dial.xCoord, dial.yCoord, dial.zCoord);
+                player.openGui(EnhancedPortals.instance, GuiHandler.DIALING_DEVICE_D, dial.getWorldObj(), dial.xCoord, dial.yCoord, dial.zCoord);
                 EnhancedPortals.packetPipeline.sendTo(new PacketTextureData(e.name, e.identifier.getGlyphString(), e.texture), (EntityPlayerMP) player);
             }
         }

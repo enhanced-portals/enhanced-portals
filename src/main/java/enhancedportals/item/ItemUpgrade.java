@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 import enhancedportals.tileentity.TileFrame;
 import enhancedportals.tileentity.TileModuleManipulator;
 import enhancedportals.tileentity.TileNetworkInterface;
@@ -138,7 +138,7 @@ public class ItemUpgrade extends Item
                 {
                     controller.addRedstoneInterface(t.getChunkCoordinates());
                 }
-                else if (t instanceof TileDiallingDevice)
+                else if (t instanceof TileDialingDevice)
                 {
                     controller.addDialDevice(t.getChunkCoordinates());
                 }

@@ -7,26 +7,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementGlyphSelector;
 import enhancedportals.client.gui.elements.ElementGlyphViewer;
-import enhancedportals.inventory.ContainerDiallingDeviceManual;
+import enhancedportals.inventory.ContainerDialingManual;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class GuiDiallingDeviceManual extends BaseGui
+public class GuiDialingManual extends BaseGui
 {
     public static final int CONTAINER_SIZE = 163;
-    TileDiallingDevice dial;
+    TileDialingDevice dial;
     TileController controller;
     ElementGlyphSelector selector;
     int warningTimer;
     GuiButton buttonDial;
 
-    public GuiDiallingDeviceManual(TileDiallingDevice d, EntityPlayer p)
+    public GuiDialingManual(TileDialingDevice d, EntityPlayer p)
     {
-        super(new ContainerDiallingDeviceManual(d, p.inventory), CONTAINER_SIZE);
+        super(new ContainerDialingManual(d, p.inventory), CONTAINER_SIZE);
         dial = d;
         name = "gui.dialDevice";
         controller = dial.getPortalController();
@@ -93,7 +93,7 @@ public class GuiDiallingDeviceManual extends BaseGui
             {
                 ClientProxy.saveGlyph = selector.getGlyphIdentifier();
                 ClientProxy.saveName = "Unnamed Portal";
-                EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_C));
+                EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALING_DEVICE_C));
             }
             else
             {
@@ -102,7 +102,7 @@ public class GuiDiallingDeviceManual extends BaseGui
         }
         else if (button.id == 2) // cancel
         {
-            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALLING_DEVICE_A));
+            EnhancedPortals.packetPipeline.sendToServer(new PacketRequestGui(dial, GuiHandler.DIALING_DEVICE_A));
         }
         else if (button.id == 3) // dial
         {

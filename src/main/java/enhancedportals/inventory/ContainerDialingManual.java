@@ -4,13 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class ContainerDiallingDeviceManual extends BaseContainer
+public class ContainerDialingManual extends BaseContainer
 {
-    TileDiallingDevice dial;
+    TileDialingDevice dial;
 
-    public ContainerDiallingDeviceManual(TileDiallingDevice d, InventoryPlayer p)
+    public ContainerDialingManual(TileDialingDevice d, InventoryPlayer p)
     {
         super(null, p);
         dial = d;
