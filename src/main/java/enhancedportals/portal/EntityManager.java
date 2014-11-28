@@ -94,7 +94,8 @@ public class EntityManager
                 return facing * 90F - 180F;
             }
         }
-        else if (controller.portalType == 1)
+        
+        if (controller.portalType == 1)
         {
             if (world.isSideSolid(loc.posX, loc.posY, loc.posZ + 1, ForgeDirection.NORTH))
             {
