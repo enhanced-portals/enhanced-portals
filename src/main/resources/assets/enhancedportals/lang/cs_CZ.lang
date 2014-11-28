@@ -1,0 +1,393 @@
+# Blocks
+tile.frame.frame.name=Rám portálu
+tile.frame.controller.name=Ovladač portálu
+tile.frame.redstone.name=Ruditové rozhraní
+tile.frame.network_interface.name=Síťové rozhraní
+tile.frame.dial_device.name=Vytáčecí zařízení
+tile.frame.program_interface.name=Programovatelné rozhraní
+tile.frame.upgrade.name=Modulový manipulátor
+tile.frame.fluid.name=Tekutinový transportní modul
+tile.frame.item.name=Předmětový transportní modul
+tile.frame.energy.name=Energický transportní modul
+tile.portal.name=Portál
+tile.dbs.name=Stabilizátor dimenzních mostů
+tile.dbs_empty.name=Stabilizátor dimenzních mostů (Prázdný)
+tile.decor_dbs.name=Vyluhovaný kov z Endu
+tile.decor_frame.name=Ohraničený křemen
+
+# Block Misc
+ep3.block.portalFramePart=Část portálového rámu
+ep3.block.multiblockStructure=Multibloková struktura
+ep3.block.dbsSize=2x3x2 do 2x3x256
+ep3.block.decorativeBlock=Dekorativní blok
+
+# Items
+item.wrench.name=Klíč
+item.nanobrush.name=Nanoštětec
+item.glasses.name=Brýle
+item.location_card.name=Lokační karta
+item.blank_portal_module.name=Prázdný portálový modul
+item.blank_upgrade.name=Prázdné vylepšení
+item.manual.name=VYLEPŠENÉ PORTÁLY: tunelování červí díry.
+
+# In-place upgrades
+item.upgrade.redstone.name=Vylepšení ruditového rozhraní
+item.upgrade.network_interface.name=Vylepšení síťového rozhraní
+item.upgrade.dial_device.name=Vylepšení vytáčecího rozhraní
+item.upgrade.program_interface.name=Vylepšení programovatelného rozhraní
+item.upgrade.upgrade.name=Vylepšení modulového manipulátoru
+item.upgrade.fluid.name=Vylepšení tekutinové transportace
+item.upgrade.item.name=Vylepšení předmětové transportace
+item.upgrade.energy.name=Vylepšení energetické transportace
+
+# Upgrades
+item.portal_module.0.name=Ničitel částic
+item.portal_module.0.desc=Zastavuje částice aby nebyli vytvořené
+item.portal_module.1.name=Duhové částice
+item.portal_module.1.desc=Každá částice bude mít náhodnou barvu
+item.portal_module.2.name=Tlumič
+item.portal_module.2.desc=Ztlumí portál
+item.portal_module.3.name=Kinetická energie
+item.portal_module.3.desc=Entity si zachovají svou kinetickou energii
+item.portal_module.4.name=Maskování
+item.portal_module.4.desc=Udělá portál naprosto neviditelný
+item.portal_module.5.name=Stínovač částic
+item.portal_module.5.desc=Částice se náhodně naspawnují světlejší nebo tmavší
+item.portal_module.6.name=Otočení
+item.portal_module.6.desc=Strana otočení pro teleport
+item.portal_module.7.name=Lehkost pírka
+item.portal_module.7.desc=Vynuluje poškození pádem
+ep3.gui.facing.0=Sever
+ep3.gui.facing.1=Východ
+ep3.gui.facing.2=Jih
+ep3.gui.facing.3=Západ
+
+# Creative Tab
+itemGroup.enhancedportals=EnhancedPortals 3
+
+# GUI DBS
+ep3.gui.dimensionalBridgeStabilizer=Stabilizátor dimenzních mostů
+ep3.gui.information=Informace
+ep3.gui.activePortals=Aktivní portály
+ep3.gui.instability=Nestabilita
+ep3.gui.powerModeNormal=Mód: Normální
+ep3.gui.powerModeRisky=Mód: Riskantní
+ep3.gui.powerModeUnstable=Mód: Nestabilní
+ep3.gui.powerModeUnpredictable=Mód: Nepředvídatelný
+
+# RF Tab
+ep3.tab.redstoneFlux=Energie
+ep3.tab.redstoneFlux.maxPower=Maximální energie:
+ep3.tab.redstoneFlux.storedPower=Uložená energie:
+ep3.tab.redstoneFlux.powerUsage=Využívaná energie:
+
+# GUI Portal Controller
+ep3.gui.portalController=Ovladač portálů
+ep3.gui.uniqueIdentifier=Unikátní identifikátor
+ep3.gui.public=Veřejné
+ep3.gui.private=Soukromé
+ep3.gui.noUidSet=Žádné UID nenastaveno
+
+# Private/Public Tip Tab
+ep3.tab.privatePublic=Soukromé nebo veřejné?
+ep3.tab.privatePublic.info=<6>Veřejné:<0> Povoluje všechny připojení<NL><6>Soukromé:<0> Povoluje pouze připojení ze stejného DBS
+
+# Glyphs Tab
+ep3.tab.glyphs=Piktogramy
+ep3.tab.glyphs.info=// TODO
+
+# GUI Dialler
+ep3.gui.dialDevice=Vytáčecí zařízení
+ep3.gui.storedIdentifiers=Uložené identifikátory
+ep3.gui.terminate=Ukončit
+ep3.gui.dial=Vytočit
+ep3.gui.identifierCannotBeBlank=Identifikátor nesmí být prázdný
+ep3.gui.name=Jméno
+ep3.gui.identifierName=Jméno identifikátoru
+ep3.gui.manualEntry=Manuální vkládání
+ep3.gui.delete=Smazat
+ep3.gui.edit=Upravit
+
+# GUI Dial Tab
+ep3.tab.dialling=Vytáčecí zařízení
+ep3.tab.dialling.info=// TODO
+
+# GUI Texture
+ep3.gui.customIcon=Volitelná ikona
+ep3.gui.facade=Fasáda
+ep3.gui.frame=Rám
+ep3.gui.portal=Portál
+ep3.gui.particle=Částice
+ep3.gui.colour=Barva
+ep3.gui.red=Červená
+ep3.gui.green=Zelená
+ep3.gui.blue=Modrá
+ep3.gui.textures=Textury
+
+# Colour Tip Tab
+ep3.tab.colourTip=Špatné barvy?
+ep3.tab.colourTip.info=Barva jsou přidávány barevným násobením, né kouzlama. Pokud začneš se žlutou texturou a přidáš azurovou, dostaneš zelenou. Pro vyřešení se snaž používat nejvíce bílé/našedlé textury, které můžeš najít. 
+
+# Custom Frame Textures
+ep3.tab.frameCustomTexture=Volitelná textura
+ep3.tab.frameCustomTexture.info=Můžeš umístit volitelné textury rámů do balíčku textur, abys je zde mohl použít.
+
+# Custom Frame Textures
+ep3.tab.portalCustomTexture=Volitelné textury
+ep3.tab.portalCustomTexture.info=Můžeš umístit volitelné textury portálů do balíčku textur, abys je zde mohl použít.
+
+# GUI Module Manipulator
+ep3.gui.moduleManipulator=Modulový manipulátor
+ep3.gui.modules=Portálové moduly
+
+# GUI Network Interface
+ep3.gui.networkInterface=Síťové rozhraní
+ep3.gui.networkIdentifier=Síťový identifikátor
+ep3.gui.networkInformation=Síťové informace
+ep3.gui.networkedPortals=Síťové portály
+ep3.gui.notSet=Nenastaveno
+
+# GUI Programmable Interface
+ep3.gui.programmableInterface=Programovatelné rozhraní
+ep3.gui.errorLog=Chybový výpis
+ep3.gui.compile=Sestavení
+
+# GUI Redstone
+ep3.gui.redstoneInterface=Ruditové rozhraní
+
+ep3.gui.input=Vstup
+ep3.gui.createPortalOnSignal=Vytvoří portál při obdržení signálu
+ep3.gui.removePortalOnSignal=Odstraní portál při obdržení signálu
+ep3.gui.createPortalOnPulse=Vytvoří portál při pulzu
+ep3.gui.removePortalOnPulse=Odstraní portál při pulzu
+ep3.gui.dialStoredIdentifier=Vytočí specifický identifikátor
+ep3.gui.dialRandomIdentifier=Vytočí náhodný identifikátor
+ep3.gui.dialStoredIdentifier2=Vytočí specifický identifikátor (2)
+ep3.gui.dialRandomIdentifier2=Vytočí náhodný identifikátor (2)
+
+ep3.gui.output=Výstup
+ep3.gui.portalCreated=Portál vytvořen
+ep3.gui.portalRemoved=Portál odstraněn
+ep3.gui.portalActive=Portál aktivní
+ep3.gui.portalInactive=Portál neaktivni
+ep3.gui.entityTeleport=Entita se dotkla portálu
+ep3.gui.playerTeleport=Hráč se dotkl portálu
+ep3.gui.animalTeleport=Zvíře se dotklo portálu
+ep3.gui.monsterTeleport=Monstrum se dotklo portálu
+
+# GUI General
+ep3.gui.initialized=Inicializované
+ep3.gui.glyphs=Piktogramy
+ep3.gui.cancel=Zrušit
+ep3.gui.save=Uložit
+ep3.gui.reset=Vyresetovat
+ep3.gui.clear=Promazat
+ep3.gui.random=Náhodný
+ep3.gui.add=Přidat
+ep3.gui.accept=Přijmout
+ep3.gui.clickToModify=Klikni pro úpravu
+ep3.gui.uidInUse=Toto UID se již používá
+
+# GUI ITM
+ep3.gui.transferItem=Předmětový přenosový modul
+
+# GUI FTM
+ep3.gui.transferFluid=Tekutinový přenosový modul
+
+# GUI ETM
+ep3.gui.transferEnergy=Energetický přenosový modul
+
+# GUI Transfer
+ep3.gui.sending=Odesílám
+ep3.gui.receiving=Přijímám
+
+# Errors
+ep3.error=[Chyba] 
+ep3.error.noUidSet=Musíš nejdřív nastavit unikátní identifikátor
+ep3.error.voidLinkCard=Tato karta již neodkazuje na platný stabilizátor dimenzních mostů
+ep3.error.receivingPortalNotInitialized=Přijímací portál nebyl inicializován
+ep3.error.sendingPortalNotInitialized=Odesílací portál nebyl inicializován
+ep3.error.stabilizerNotFound=Nepodařilo se najít DBS. Vložte novou platnou lokační kartu pro pokračování
+ep3.error.receivingPortalNoDialler=Nemůžeš vytáčet portál, který nemá vytáčecí zařízení
+ep3.error.sendingPortalNoDialler=Nemůžeš vytáčet z portálu, který nemá vytáčecí zařízení
+ep3.error.uniqueIdentifierNotSet=Nemůžeš vytáčet bez nastavení unikátního identifikátoru
+ep3.error.networkIdentifierNotSet=Nemůžeš vytáčet bez nastavení síťového identifikátoru
+ep3.error.dialDeviceNotFound=Nemůžeš vytáčet bez vytáčecího zařízení
+ep3.error.diallingPortalAlreadyActive=Nemůžeš vytáčet z portálu, který má jíž aktivní připojení
+ep3.error.receivingPortalAlreadyActive=Nemůžeš vytáčet portál, který je již aktivní
+ep3.error.notEnoughPowerToStart=V DBS není dostatek energie pro vytvoření připojení
+ep3.error.maxedConnectionLimit=DBS má již mnoho aktivních připojení
+ep3.error.cannotDialDiallingPortal=Nemůžeš vytáčet stejný portál, ze kterého vytáčíš
+ep3.error.diallingPortalNotFound=Nepovedlo se lokalizovat portál, ze kterého vytáčíš
+ep3.error.receivingPortalNotFound=Nepodařilo se najít portál, který vytáčíš
+ep3.error.notOnSameStabilizer=Portály nejsou připojeny do stejné DBS
+ep3.error.sendingPortalFailedToCreatePortal=Odesílajícímu ovladači portálu se nepodařilo vytvořit portál
+ep3.error.receivingPortalFailedToCreatePortal=Přijímacímu ovladači portálu se nepodařilo vytvořit portál
+ep3.error.noPortalWithThatIdentifierReceiving=Nemohu najít konečný portál s tímto UID
+ep3.error.noPortalWithThatIdentifierSending=Nemohu najít odesílací portál s tímto UID (Jak jsi vytáčel...? o_O)
+ep3.error.failedToTransfer=Přijímací portál je příliš malý
+ep3.error.multiplePortalControllers=Nemůžeš mít více ovladačů portálů
+ep3.error.multipleProgram=Nemůžeš mít více programovatelných rozhraní
+ep3.error.multipleMod=Nemůžeš mít více modulových manipulátorů
+ep3.error.dialAndNetwork=Nemůžeš mít vytáčecí zařízení a síťové rozhraní ve stejné struktuře portálu
+ep3.error.portalCouldNotBeCreatedHere=Portál nemůže být na tomto místě vytvořen
+ep3.error.failedToCreatePortal=Portál nemůže být vytvořen na tomto místě
+ep3.error.couldNotCreatePortalHere=Portál nemůže být vytvořen na tomto místě
+
+# Success
+ep3.success=[Úspěšné] 
+ep3.success.create=Portál inicializován
+ep3.success.reconfigure=Portál překonfigurován
+
+
+############
+## Manual ##
+############
+
+ep3.manual.decorBorderedQuartz.subtitle=Dekorativní
+ep3.manual.dbsEmpty.title=Stabilizátor dimenzních mostů (Prázdný)
+ep3.manual.upgrade0.subtitle=Vylepšení portálu
+ep3.manual.module0.subtitle=Portálový modul
+ep3.manual.frame0.subtitle=Součástka portálu
+
+## "Title" Page
+ep3.manual.subject.title=Rozšířené portály
+ep3.manual.subject.sub=tunelování červí díry
+
+## Table of Contents
+ep3.manual.table_of_contents.title=Obsah
+
+## Chapter Item Gallery Title
+ep3.manual.gallery.title=Galerie předmětů
+
+## Chapter 1:
+ep3.manual.chapter.0.title=Úvod
+ep3.manual.chapter.0.p.0=Subatomární částice života a vesmíru jsou nyní lehce ovládány. Naučili jsme se je jednoduše vázat pro získání jejich výhod. S těmito znalostmi pod čepicí můžeme nyní vytvořit nástroje pro mikro-červí díry a pro tunel mezi vesmírem a dimenzemi.
+
+## Chapter 2:
+ep3.manual.chapter.1.title=Základy
+ep3.manual.chapter.1.p.0=Principy mezi usměrňováním začínají konstrukcí stabilizátoru dimenzního mostu. Toto zařízení ti umožní spravovat a přesouvat biologické informace přes veliké vzdálenosti.
+ep3.manual.chapter.1.p.1=K udržení červí díry budeš potřebovat vytvořit rámy, které odolají a zapouzdří formaci červí díry. Říká se jim rámy portálů.
+ep3.manual.chapter.1.p.2=Nakonec budeš potřebovat způsob jak z této červí díry vytvořit portál. To může být jednoduše zajištěto vytáčecím zařízením.
+
+## Chapter 3:
+ep3.manual.chapter.2.title=Stabilizace dimenzí
+ep3.manual.chapter.2.p.0=Stabilizátor dimenzního mostu umožňuje založení několika červích dír najednou v závislosti na jeho objemu.
+ep3.manual.chapter.2.p.1=Pro vytvoření DBS umísti 12 bloků stabilizátoru dimenzního mostu v rozmístění 2 na výšku, 3 na šířku a 2 na délku (2x3x2), nebo 2 na výšku, 3 na šířku a 3 na délku a klikni pravým tlačítkem na jakýkoliv blok klíčem. Pokud je vše správně postavené, sestaví se funkční DBS.
+ep3.manual.chapter.2.p.2=Každý stupeň DBS ti umožní spravovat alespoň 2 portály a můžeš vytvořit až 256 stupňů z jednoho DBS. Jakmile sestavíš DBS, již nemůžeš přidávat žádné další stupňě, proto si to velmi dobře naplánuj, nebo si také můžeš přemostit jakékoliv před-existenční portály, pokud zničíš DBS. DBS může pojmout až 15,000 RF za tik a bude spotřebovávat svou energii v závislosti na používání portálů. Pokud se rozhodneš minimalizovat energii, kterou DBS spotřebovává pro červí díry, můžeš způsobit jeho nestabilitu. Nestabilita červí díry přináší nestabilní efekty a o molekulárním přeskupení není ještě tolik informací.
+
+## Chapter 4:
+ep3.manual.chapter.3.title=Budování nástrojů
+ep3.manual.chapter.3.p.0=Boj o udržení spoutané dimenze může být překonán s použitím portálových rámů. Portálový rám je nakonfirugován stejným způsobem jako pradávný prototyp mezidimenzního cestování - obsidianový netherový portál. Portál může být sestaven pokud jsou zde bloky tvořící uzavřený tvar podél ploché oblasti ve vodorovném nebo svislém tvaru.
+ep3.manual.chapter.3.p.1=Pro interakci portálového rámu s DBS musí být použit ovladač portálu. Tento ovladač může být použit jako jakákoliv část portálu, stejně jako blok práhu, proti kterému jsi zamýšlel otevřít červí díru. Jakmile umístíš ovladač, budeš potřebovat ručně svázat portál s DBS vytvořením lokační karty, umístěním jí do DBS a jakmile bude nastavená, můžeš s ní kliknout pravým tlačítkem na ovladač portálu pro inicializaci portálového rámu. Pokud jsi správně nakonfiguroval portál, portál se sváže a budeš moci otevřít ovladač s klíčem pro nastavení jeho unikátního identifikátoru. UID adresa musí být unikátní pro tento portál. Pokud rozložíš ovladač portálu, svázání s DBS bude ztraceno a budeš muset znovu svázat přopojení, než ho budeš moci znovu aktivovat.
+ep3.manual.chapter.3.p.2=Jsou zve dva způsoby jak posílat a přijímat data mezi portály. První je být připojený k síti a pro připojení musíš zahrnout další typ rámového bloku jménem síťové rozhraní. Tento blok ti umožní přístup k spojovacímu vytáčeči. Jednoduše vytoč specifické ID sítě(NID) a tyto portály ve specifikované síti budou mezi sebou spojeny jejich červými děrami.
+ep3.manual.chapter.3.p.3=Po překonfigurování portálu ho budeš muset přeinicializovat kliknutím pravého tlačítka na jakýkoliv připojený portál s klíčem v ruce.
+
+## Chapter 5:
+ep3.manual.chapter.4.title=Zažehávání červí díry
+ep3.manual.chapter.4.p.0=Pro finální spojení červí díry budeš potřebovat ruditové rozhraní. Ruditové rozhraní je portálový rám, který ti umožní interakci s tvým rámem portálu. Po spojení bloku s tvojí strukturou klikni pravým tlačítkem s klíčem pro zpřístupnění možnosti, jak ovládat portál ruditem.
+ep3.manual.chapter.4.p.1=Nejjednodužší způsob, jak aktivovat portál je vyrobit tlačítko, umístit ho na ruditové rozhraní a změnit RI volby na "Vstup" a "Vytvořit portál při pulzu". Při využívání ruditového rozhraní máš mnoho možností, jak ovládat portál bezdrátově a můžeš umístit ruditových rozhraní do portálu kolik chceš, takže objevuj a experimentuj.
+
+## Chapter 6:
+ep3.manual.chapter.5.title=Volání domů
+ep3.manual.chapter.5.p.0=Portály mají i druhou možnost, jak komunikovat vezi sebou a to přes vytáčecí zařízení. Vytáčecí zařízení je blok portálového rámu, které umožní zadat UID dalšího portálu a navázat s ním červí díru. Také můžeš vytočit portály mimo tvou DBS síť, pokud portál, ke kterému se snažíš připojit je nastavený jako "Veřejný" v jeho ovladači. Nicméně pouze portály, které jsou ve stejné DBS síti k nim mají přístup. Pamatuj si, že takto můžeš spojit pouze 2 portály a ostatní portály nebudou moci vytočit tento portál, dokud nezrušíš připojení, nemluvě o spotřebě na DBS. Jsem si jistý, že by jsi mohl vymyslet ruditový obvod, který by je automaticky za tebe odpojil.
+
+## Chapter 7:
+ep3.manual.chapter.6.title=Příslušenství
+ep3.manual.chapter.6.p.0=Integrace je klíčový faktor při nastavování ďábelského doupěte. Hlavně když máš víceportálový pokoj, takže je zde pár způsobů jak upravit své portály a co všechno s nimi můžeš přesouvat.
+ep3.manual.chapter.6.p.1=Kliknutí pravým tlačítkem na portál s nanoštětcem ti umožní přístup k rámu a obrazovce úprav portálu. Zde můžeš nastavit barvu portálu, změnit vzhled portálových bloků a vybrat, které částice bude portál zobrazovat.
+ep3.manual.chapter.6.p.2=Další postupy pro přizpůsobení ti umožní modulový manipulátor. Při integraci do portálového rámu ti umožní vkládat speciální moduly, které se vyrábějí z prázdných modulů. Tyto speciální moduly umožňují nastavit portály neviditelnými, nastavit směr při východu z portálu na druhé straně a jiné věci.
+ep3.manual.chapter.6.p.3=Integrace s jinými formami technologií byla potřebná, takže jsme umožnili existenci nových speciálních bloků. Energetické, tekutinové a předmětové transportní modulové portálové rámové bloky. Ty umožňí portálům být ještě více flexibilní s transportem věcí jiných, než jsou hráči, monstra a zvířata.
+
+
+######################
+## ITEM INFORMATION ##
+######################
+
+ep3.manual.wrench.info=Klikni pravým tlačítkem na uskupení DBS pro utvoření celku. Můžeš také rozložit celek při kliknutí na objekty portálu pravým tlačitkem se Shiftem. Použij na portálové modulové bloky pro otevření jejich GUI. Může být použit i Buildcraftí, nebo TE klíč.
+ep3.manual.nanobrush.info=Velmi nebezpečný objekt. Použij na portálový rám pro aktivování GUI úprav. Ale pozor, ať se ti nezaplete do vlasů.
+ep3.manual.glasses.info=Když je nosíš, odhaluje moduly portálového rámu pro jednodužší nastavení.
+ep3.manual.location_card.info=K použití na spojení portálového ovladače s DBS. Jednoduše vlož kartu do DBS a klikni pravým tlačítkem na ovladač portálu. Může být uschována a použita znovu pro spojení několika portálu do stejného DBS.
+ep3.manual.dbs.info=Stabilizuje pevný bod v dimenzi, aby mohla být vytvořena červí díra a zahájen přenos dat. Využívá RF ke stabilizaci. Vytvoř DBS umístením DBS bloků ve formaci 2x3x2 nebo 3x3x2 a klikni na ně pravým tlačítkem s klíčem.
+ep3.manual.frame0.info=Základní rámový blok schopný zformovat a zapouzdřit červí díru.
+ep3.manual.frame1.info=Rámový ovladač je k vytvoření spojení s DBS. Po spojení s lokační kartou by se již s ovladačem nemělo hýbat. Po rozložení ho budeš muset znovu spojit. Můžeš si vybrat, jestli chceš nastavit portál jako soukromý, kde k němu budou mít přístup pouze hráči se stejným DBS, nebo veřejný.
+ep3.manual.frame2.info=Ruditové rozhraní ti umožní přístup k automatiazaci určitých úloh skrz rudit. Jednoduše vyrob a umísti kamkoliv do rámu. Můžeš jich umístit i více pro získání více možností.
+ep3.manual.frame3.info=Síťové rozhraní umožňuje 2 nebo více portálům vytvořit v sítí propojení mezi sebou. Jednoduše vlož síťové ID do jednoho portálu a stejné ID do druhého a oni se propojí. Portály nastavené jako soukromé nebudou mít přístup k portálům mimo jejich DBS.
+ep3.manual.frame4.info=Modul vytáčecího zařízení ti umožní vytvořit spojení s dalším portálem bez potřeby sítě. Můžeš si také uložit UIDčka z jiných portálů jako vytáčecí záložku (podrž Shift pro smazání). Portály nastavené jako privátní nebudou mít přístup k portálům v jejich DBS.
+ep3.manual.frame6.info=Modulový manipulátor je blok rámu, který umožní portálu komunikovat s modulovými čipy. Tyto čipy mohou být vyrobeny a umístěny do modulového manipulátoru pro věci od ztišení portálu do nastavení portálu neviditelným.
+ep3.manual.frame7.infoTento modul ti umožní teleportovat tekutiny na místo s dalším tekutinovým transportačním modulem.
+ep3.manual.frame8.info=Tento modul ti umožní teleportovat předměty na místo s dalším předmětovým transportačním modulem.
+ep3.manual.frame9.info=Tento modul ti umožní teleportovat energii na místo s dalším energetickým transportačním modulem.
+ep3.manual.blank_module.info=Modul se základním okruhem. Tento předmět je potřebný pro výrobu dalších modulů a modulového manipulátoru.
+
+
+###################################################################################
+## The rest are resolved automatically, though you can override them if required ##
+###################################################################################
+
+ep3.manual.wrench.title=item.wrench.name
+ep3.manual.nanobrush.title=item.nanobrush.name
+ep3.manual.glasses.title=item.glasses.name
+ep3.manual.location_card.title=item.location_card.name
+ep3.manual.blank_module.title=item.blank_portal_module.name
+ep3.manual.module0.title=item.portal_module.0.name
+ep3.manual.module1.title=item.portal_module.1.name
+ep3.manual.module2.title=item.portal_module.2.name
+ep3.manual.module3.title=item.portal_module.3.name
+ep3.manual.module4.title=item.portal_module.4.name
+ep3.manual.module5.title=item.portal_module.5.name
+ep3.manual.module6.title=item.portal_module.6.name
+ep3.manual.module7.title=item.portal_module.7.name
+ep3.manual.module1.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module2.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module3.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module4.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module5.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module6.subtitle=ep3.manual.module0.subtitle
+ep3.manual.module7.subtitle=ep3.manual.module0.subtitle
+ep3.manual.blank_upgrade.title=item.blank_upgrade.name
+ep3.manual.upgrade0.title=item.upgrade.redstone.name
+ep3.manual.upgrade1.title=item.upgrade.network_interface.name
+ep3.manual.upgrade2.title=item.upgrade.dial_device.name
+ep3.manual.upgrade3.title=item.upgrade.program_interface.name
+ep3.manual.upgrade4.title=item.upgrade.upgrade.name
+ep3.manual.upgrade5.title=item.upgrade.fluid.name
+ep3.manual.upgrade6.title=item.upgrade.item.name
+ep3.manual.upgrade7.title=item.upgrade.energy.name
+ep3.manual.upgrade1.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade2.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade3.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade4.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade5.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade6.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.upgrade7.subtitle=ep3.manual.upgrade0.subtitle
+ep3.manual.dbs.title=tile.dbs.name
+ep3.manual.decorBorderedQuartz.title=tile.decor_frame.name
+ep3.manual.decorStabilizer.title=tile.decor_dbs.name
+ep3.manual.decorStabilizer.subtitle=ep3.manual.decorBorderedQuartz.subtitle
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.portal.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame0.title=tile.frame.frame.name
+ep3.manual.frame1.title=tile.frame.controller.name
+ep3.manual.frame2.title=tile.frame.redstone.name
+ep3.manual.frame3.title=tile.frame.network_interface.name
+ep3.manual.frame4.title=tile.frame.dial_device.name
+ep3.manual.frame5.title=tile.frame.program_interface.name
+ep3.manual.frame6.title=tile.frame.upgrade.name
+ep3.manual.frame7.title=tile.frame.fluid.name
+ep3.manual.frame8.title=tile.frame.item.name
+ep3.manual.frame9.title=tile.frame.energy.name
+ep3.manual.portal.title=tile.portal.name
+ep3.manual.frame1.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame2.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame3.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame4.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame5.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame6.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame7.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame8.subtitle=ep3.manual.frame0.subtitle
+ep3.manual.frame9.subtitle=ep3.manual.frame0.subtitle
+
+# These must be left as they are
+ep3.manual.main.page.1= 
+ep3.manual.main.page.2= 
