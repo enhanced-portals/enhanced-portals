@@ -976,6 +976,16 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         {
             moduleManipulator = new ChunkCoordinates(tag.getInteger("ModX"), tag.getInteger("ModY"), tag.getInteger("ModZ"));
         }
+        
+        ArrayList<ChunkCoordinates> f = EnhancedPortals.proxy.getControllerList(getChunkCoordinates());
+        
+        if (f != null) {
+	        for (ChunkCoordinates frames : f) {
+	        	worldObj.markBlockForUpdate(frames.posX, frames.posY, frames.posZ);
+	        }
+	        
+	        EnhancedPortals.proxy.clearControllerList(getChunkCoordinates());
+        }
     }
 
     public void onEntityEnterPortal(Entity entity, TilePortal tilePortal)

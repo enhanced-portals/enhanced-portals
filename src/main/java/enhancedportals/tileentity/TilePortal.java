@@ -6,7 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.item.ItemNanobrush;
 import enhancedportals.network.ClientProxy;
@@ -58,6 +60,9 @@ public class TilePortal extends TilePortalPart
                 return Block.getBlockFromItem(controller.activeTextureData.getPortalItem().getItem()).getIcon(side, controller.activeTextureData.getPortalItem().getItemDamage());
             }
         }
+        else if (portalController != null) {
+        	EnhancedPortals.proxy.waitForController(new ChunkCoordinates(portalController.posX, portalController.posY, portalController.posZ), getChunkCoordinates());
+        }
 
         return BlockPortal.instance.getIcon(side, 0);
     }
@@ -66,9 +71,10 @@ public class TilePortal extends TilePortalPart
     {
         TileController controller = getPortalController();
 
-        if (controller != null)
-        {
+        if (controller != null) {
             return controller.activeTextureData.getPortalColour();
+        } else if (portalController != null) {
+        	EnhancedPortals.proxy.waitForController(new ChunkCoordinates(portalController.posX, portalController.posY, portalController.posZ), getChunkCoordinates());
         }
 
         return 0xFFFFFF;

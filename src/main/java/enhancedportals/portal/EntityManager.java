@@ -379,7 +379,7 @@ public class EntityManager
             }
             
             // Delete the entity. Will be taken care of next tick.
-            entity.setDead(); // TODO
+            entity.setDead();
 
             // Create new entity.
             Entity newEntity = EntityList.createEntityFromNBT(tag, enteringWorld);
@@ -448,7 +448,7 @@ public class EntityManager
             }
             
             // Delete the entity. Will be taken care of next tick.
-            entity.setDead(); // TODO
+            entity.setDead();
 
             // Create new entity.
             Entity newEntity = EntityList.createEntityFromNBT(tag, world);

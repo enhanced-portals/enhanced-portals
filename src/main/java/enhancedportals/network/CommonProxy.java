@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
@@ -65,6 +67,18 @@ public class CommonProxy
     static File craftingDir;
     static String curVers = EnhancedPortals.VERS, lateVers;
 
+    public void waitForController(ChunkCoordinates controller, ChunkCoordinates frame) {
+    	
+    }
+    
+    public ArrayList<ChunkCoordinates> getControllerList(ChunkCoordinates controller) {
+    	return null;
+    }
+    
+    public void clearControllerList(ChunkCoordinates controller) {
+    	
+    }
+    
     public File getBaseDir()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
