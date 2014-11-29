@@ -84,8 +84,6 @@ public class ClientProxy extends CommonProxy
     		waitingForController.put(controller, new ArrayList<ChunkCoordinates>());
     		waitingForController.get(controller).add(frame);
     	}
-    	
-    	System.out.println("Added block to queue");
     }
     
     @Override
