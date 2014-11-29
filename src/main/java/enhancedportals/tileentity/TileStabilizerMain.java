@@ -511,7 +511,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
             }
         }
 
-        if (textureManager != null)
+        if (textureManager != null && !textureManager.isDefault())
         {
             cA.swapTextureData(textureManager);
             cB.swapTextureData(textureManager);
