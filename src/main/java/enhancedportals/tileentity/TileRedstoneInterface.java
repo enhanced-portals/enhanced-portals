@@ -179,7 +179,7 @@ public class TileRedstoneInterface extends TileFrame
             }
             else
             {
-                TileDiallingDevice dialler = controller.getDialDeviceRandom();
+                TileDialingDevice dialler = controller.getDialDeviceRandom();
 
                 if (dialler == null)
                 {

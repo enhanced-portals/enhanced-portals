@@ -3,9 +3,11 @@ package enhancedportals.tileentity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockFrame;
 import enhancedportals.common.ISidedBlockTexture;
 import enhancedportals.network.ClientProxy;
@@ -49,9 +51,9 @@ public abstract class TileFrame extends TilePortalPart implements ISidedBlockTex
                 {
                     return Block.getBlockFromItem(controller.activeTextureData.getFrameItem().getItem()).getIcon(side, controller.activeTextureData.getFrameItem().getItemDamage());
                 }
-            }
-            else
-            {
+            } else if (portalController != null) {
+            	EnhancedPortals.proxy.waitForController(new ChunkCoordinates(portalController.posX, portalController.posY, portalController.posZ), getChunkCoordinates());
+            } else {
                 return BlockFrame.connectedTextures.getBaseIcon();
             }
 
@@ -73,10 +75,11 @@ public abstract class TileFrame extends TilePortalPart implements ISidedBlockTex
     public int getColour()
     {
         TileController controller = getPortalController();
-
-        if (controller != null)
-        {
+        
+        if (controller != null) {
             return controller.activeTextureData.getFrameColour();
+        } else if (portalController != null) {
+        	EnhancedPortals.proxy.waitForController(new ChunkCoordinates(portalController.posX, portalController.posY, portalController.posZ), getChunkCoordinates());
         }
 
         return 0xFFFFFF;

@@ -11,7 +11,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 import enhancedportals.tileentity.TileModuleManipulator;
 import enhancedportals.tileentity.TileNetworkInterface;
 import enhancedportals.tileentity.TilePortalPart;
@@ -99,7 +99,7 @@ public class PortalUtils
 
                         network = true;
                     }
-                    else if (t instanceof TileDiallingDevice)
+                    else if (t instanceof TileDialingDevice)
                     {
                         if (network)
                         {

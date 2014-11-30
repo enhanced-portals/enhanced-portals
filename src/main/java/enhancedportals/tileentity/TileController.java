@@ -403,7 +403,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             {
                 networkInterfaces.add(c);
             }
-            else if (tile instanceof TileDiallingDevice)
+            else if (tile instanceof TileDialingDevice)
             {
                 diallingDevices.add(c);
             }
@@ -693,7 +693,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         return cachedDestinationLoc;
     }
 
-    public TileDiallingDevice getDialDeviceRandom()
+    public TileDialingDevice getDialDeviceRandom()
     {
         ChunkCoordinates dial = null;
 
@@ -712,9 +712,9 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
         TileEntity tile = worldObj.getTileEntity(dial.posX, dial.posY, dial.posZ);
 
-        if (tile != null && tile instanceof TileDiallingDevice)
+        if (tile != null && tile instanceof TileDialingDevice)
         {
-            return (TileDiallingDevice) tile;
+            return (TileDialingDevice) tile;
         }
 
         return null;
@@ -975,6 +975,16 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         if (tag.hasKey("ModX"))
         {
             moduleManipulator = new ChunkCoordinates(tag.getInteger("ModX"), tag.getInteger("ModY"), tag.getInteger("ModZ"));
+        }
+        
+        ArrayList<ChunkCoordinates> f = EnhancedPortals.proxy.getControllerList(getChunkCoordinates());
+        
+        if (f != null) {
+	        for (ChunkCoordinates frames : f) {
+	        	worldObj.markBlockForUpdate(frames.posX, frames.posY, frames.posZ);
+	        }
+	        
+	        EnhancedPortals.proxy.clearControllerList(getChunkCoordinates());
         }
     }
 

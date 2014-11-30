@@ -8,11 +8,11 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
-public class ContainerDiallingDeviceEdit extends ContainerDiallingDeviceSave
+public class ContainerDialingEdit extends ContainerDialingAdd
 {
-    public ContainerDiallingDeviceEdit(TileDiallingDevice d, InventoryPlayer p)
+    public ContainerDialingEdit(TileDialingDevice d, InventoryPlayer p)
     {
         super(d, p);
     }
@@ -25,7 +25,7 @@ public class ContainerDiallingDeviceEdit extends ContainerDiallingDeviceSave
             PortalTextureManager ptm = new PortalTextureManager();
             ptm.readFromNBT(tag, "texture");
             dial.glyphList.set(tag.getInteger("id"), new GlyphElement(tag.getString("name"), new GlyphIdentifier(tag.getString("uid")), ptm));
-            player.openGui(EnhancedPortals.instance, GuiHandler.DIALLING_DEVICE_A, dial.getWorldObj(), dial.xCoord, dial.yCoord, dial.zCoord);
+            player.openGui(EnhancedPortals.instance, GuiHandler.DIALING_DEVICE_A, dial.getWorldObj(), dial.xCoord, dial.yCoord, dial.zCoord);
         }
     }
 }

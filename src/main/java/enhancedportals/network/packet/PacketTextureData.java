@@ -8,13 +8,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.gui.GuiDiallingDeviceEdit;
+import enhancedportals.client.gui.GuiDialingEdit;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 
 public class PacketTextureData extends PacketEP
 {
@@ -72,7 +72,7 @@ public class PacketTextureData extends PacketEP
         ClientProxy.saveName = name;
         ClientProxy.saveGlyph = new GlyphIdentifier(glyphs);
         ClientProxy.saveTexture = ptm;
-        ((GuiDiallingDeviceEdit) FMLClientHandler.instance().getClient().currentScreen).receivedData();
+        ((GuiDialingEdit) FMLClientHandler.instance().getClient().currentScreen).receivedData();
     }
 
     @Override

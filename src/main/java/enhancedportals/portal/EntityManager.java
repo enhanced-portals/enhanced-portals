@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +13,7 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S06PacketUpdateHealth;
@@ -22,14 +22,13 @@ import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidBase;
+import cpw.mods.fml.common.FMLCommonHandler;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.item.ItemPortalModule;
@@ -94,7 +93,8 @@ public class EntityManager
                 return facing * 90F - 180F;
             }
         }
-        else if (controller.portalType == 1)
+        
+        if (controller.portalType == 1)
         {
             if (world.isSideSolid(loc.posX, loc.posY, loc.posZ + 1, ForgeDirection.NORTH))
             {
@@ -367,6 +367,17 @@ public class EntityManager
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
 
+            // Clear their inventory
+            if (entity instanceof IInventory)
+            {
+            	IInventory entityInventory = (IInventory) entity;
+
+            	for (int i = 0; i < entityInventory.getSizeInventory(); i++)
+            	{
+            		entityInventory.setInventorySlotContents(i, null);
+            	}
+            }
+            
             // Delete the entity. Will be taken care of next tick.
             entity.setDead();
 
@@ -425,6 +436,16 @@ public class EntityManager
             WorldServer world = (WorldServer) entity.worldObj;
             NBTTagCompound tag = new NBTTagCompound();
             entity.writeToNBTOptional(tag);
+            
+            if (entity instanceof IInventory)
+            {
+            	IInventory entityInventory = (IInventory) entity;
+
+            	for (int i = 0; i < entityInventory.getSizeInventory(); i++)
+            	{
+            		entityInventory.setInventorySlotContents(i, null);
+            	}
+            }
             
             // Delete the entity. Will be taken care of next tick.
             entity.setDead();

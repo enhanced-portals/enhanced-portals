@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
@@ -40,7 +42,7 @@ import enhancedportals.network.packet.PacketRerender;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.NetworkManager;
 import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
+import enhancedportals.tileentity.TileDialingDevice;
 import enhancedportals.tileentity.TileFrameBasic;
 import enhancedportals.tileentity.TileModuleManipulator;
 import enhancedportals.tileentity.TileNetworkInterface;
@@ -65,6 +67,18 @@ public class CommonProxy
     static File craftingDir;
     static String curVers = EnhancedPortals.VERS, lateVers;
 
+    public void waitForController(ChunkCoordinates controller, ChunkCoordinates frame) {
+    	
+    }
+    
+    public ArrayList<ChunkCoordinates> getControllerList(ChunkCoordinates controller) {
+    	return null;
+    }
+    
+    public void clearControllerList(ChunkCoordinates controller) {
+    	
+    }
+    
     public File getBaseDir()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
@@ -124,7 +138,7 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileController.class, "epPC");
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRI");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNI");
-        GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDD");
+        GameRegistry.registerTileEntity(TileDialingDevice.class, "epDD");
         GameRegistry.registerTileEntity(TileProgrammableInterface.class, "epPI");
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epMM");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epDBS");
@@ -163,15 +177,14 @@ public class CommonProxy
         
         try 
         {
-            URL versionIn = new URL("https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers");
+            URL versionIn = new URL(EnhancedPortals.UPDATE_URL);
     		BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
     		String newVers = in.readLine();
     		
     		if (!newVers.equals(curVers))
     		{
-    			System.out.println("You are running EP v" + curVers);
-    			System.out.println("EP has been updated to v" + newVers);
-    			System.out.println("Get the latest version of EP from - mods.atomicbase.com");
+    			EnhancedPortals.logger.info("You're using an outdated version (v" + curVers + ")");
+    			EnhancedPortals.logger.info("Get the latest version (v" + lateVers + ") from mods.atomicbase.com");
    				lateVers = newVers;
     		}
     		else
@@ -181,7 +194,7 @@ public class CommonProxy
         }
         catch (Exception e) 
         {
-        	System.out.println("Unable to find latest version for EP");
+        	EnhancedPortals.logger.warn("Unable to get the latest version information");
             lateVers = curVers;
         } 
         finally {}	
@@ -192,17 +205,15 @@ public class CommonProxy
 		if (updateNotifier == true)
 		{
 			String msg = "EP has been updated to v" + lateVers + " :: You are running v" + curVers;
-			String msg2 = "Get the latest version of EP from - mods.atomicbase.com";
-			System.out.println("Trying to notify you via Chat");
+			String msg2 = "Get the latest version of EP from mods.atomicbase.com";
 			player.addChatMessage(new ChatComponentText(msg));
 			player.addChatMessage(new ChatComponentText(msg2));
 			return true;
 		}
 		else
 		{
-			System.out.println("You are running EP v" + curVers);
-			System.out.println("EP has been updated to v" + lateVers);
-			System.out.println("Get the latest version of EP from - mods.atomicbase.com");
+			EnhancedPortals.logger.info("You're using an outdated version (v" + curVers + ")");
+			EnhancedPortals.logger.info("Get the latest version (v" + lateVers + ") from mods.atomicbase.com");
 			return false;
 		}
 	}

@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
@@ -72,7 +73,29 @@ public class ClientProxy extends CommonProxy
     public static Random random = new Random();
 
     static HashMap<String, ItemStack[]> craftingRecipes = new HashMap<String, ItemStack[]>();
+    public static HashMap<ChunkCoordinates, ArrayList<ChunkCoordinates>> waitingForController = new HashMap<ChunkCoordinates, ArrayList<ChunkCoordinates>>();
 
+    @Override
+    public void waitForController(ChunkCoordinates controller, ChunkCoordinates frame)
+    {
+    	if (waitingForController.containsKey(controller)) {
+    		waitingForController.get(controller).add(frame);
+    	} else {
+    		waitingForController.put(controller, new ArrayList<ChunkCoordinates>());
+    		waitingForController.get(controller).add(frame);
+    	}
+    }
+    
+    @Override
+    public ArrayList<ChunkCoordinates> getControllerList(ChunkCoordinates controller) {
+    	return waitingForController.get(controller);
+    }
+    
+    @Override
+    public void clearControllerList(ChunkCoordinates controller) {
+    	waitingForController.remove(controller);
+    }
+    
     public static ItemStack[] getCraftingRecipeForManualEntry()
     {
         return craftingRecipes.get(manualEntry);

@@ -28,7 +28,7 @@ import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.utility.ComputerUtils;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
-public class TileDiallingDevice extends TileFrame implements IPeripheral, SimpleComponent
+public class TileDialingDevice extends TileFrame implements IPeripheral, SimpleComponent
 {
     public ArrayList<GlyphElement> glyphList = new ArrayList<GlyphElement>();
 
@@ -52,7 +52,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
             {
                 if (!player.isSneaking())
                 {
-                    GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE_A);
+                    GuiHandler.openGui(player, this, GuiHandler.DIALING_DEVICE_A);
                 }
                 else
                 {
@@ -62,7 +62,7 @@ public class TileDiallingDevice extends TileFrame implements IPeripheral, Simple
                     }
                     else
                     {
-                        GuiHandler.openGui(player, this, GuiHandler.DIALLING_DEVICE_B);
+                        GuiHandler.openGui(player, this, GuiHandler.DIALING_DEVICE_B);
                     }
                 }
             }

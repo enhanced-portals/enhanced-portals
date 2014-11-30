@@ -41,6 +41,10 @@ public class PortalTextureManager
         this();
         this.controller = controller;
     }
+    
+    public boolean isDefault() {
+    	return frameColour == 0xffffff && portalColour == 0xffffff && particleColour == 0x0077D8 && particleType == 0 && customFrameTexture == -1 && customPortalTexture == -1 && inventory[0] == null && inventory[1] == null;
+    }
 
     public int getCustomFrameTexture()
     {
