@@ -32,13 +32,13 @@ import enhancedportals.portal.PortalException;
 import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.utility.GeneralUtils;
 
-public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler//, IPowerReceptor
+public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler
 {
     static final int ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
     ArrayList<ChunkCoordinates> blockList;
 
-    //ArrayList<TileController> connectedPortals;
+    ArrayList<TileController> connectedPortals;
     
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
@@ -48,7 +48,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     EnergyStorage energyStorage;
     public int powerState, instability = 0;
     public boolean is3x3 = false;
-    //private final PowerHandler mjHandler;
 
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
@@ -56,19 +55,11 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     public TileStabilizerMain()
     {
         blockList = new ArrayList<ChunkCoordinates>();
-        //connectedPortals = new ArrayList<TileController>();
+        connectedPortals = new ArrayList<TileController>();
         activeConnections = new HashMap<String, String>();
         activeConnectionsReverse = new HashMap<String, String>();
         energyStorage = new EnergyStorage(0);
-
-        float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
-        /*
-        mjHandler = new PowerHandler(this, Type.MACHINE);
-        mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, 1500);
-        mjHandler.configurePowerPerdition(0, 0);
-        */
     }
-
     /*
      * Adds the given TileController to the connectedPortals HashMap
      */
@@ -173,14 +164,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
         return stack;
     }
-/*
-    @Override
-    public void doWork(PowerHandler workProvider)
-    {
-        int acceptedEnergy = receiveEnergy(null, (int) (mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
-        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
-    }
-*/
 
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
@@ -240,12 +223,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     {
         return energyStorage.getMaxEnergyStored();
     }
-/*
-    @Override
-    public PowerReceiver getPowerReceiver(ForgeDirection side)
-    {
-        return mjHandler.getPowerReceiver();
-    }*/
 
     @Override
     public int getSizeInventory()
@@ -264,13 +241,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     {
         return inventory;
     }
-/*
-    @Override
-    public World getWorld()
-    {
-        return worldObj;
-    }
-*/
+
     @Override
     public boolean hasCustomInventoryName()
     {
@@ -490,10 +461,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         {
             throw new PortalException("receivingPortalNotInitialized");
         }
-        // else if (!cA.getDimensionalBridgeStabilizer().getWorldCoordinates().equals(cB.getDimensionalBridgeStabilizer().getWorldCoordinates())) // And make sure they're on the same DBS. We're getting the tile instead of the worldcoordinates to make sure the DBS hasn't expanded
-        // {
-        // throw new PortalException("notOnSameStabilizer");
-        // }
         else if (cA.getDiallingDevices().size() > 0 && cB.getNetworkInterfaces().size() > 0)
         {
             throw new PortalException("receivingPortalNoDialler");

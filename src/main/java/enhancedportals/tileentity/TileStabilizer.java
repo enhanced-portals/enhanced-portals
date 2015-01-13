@@ -19,12 +19,11 @@ import enhancedportals.network.CommonProxy;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;
 
-public class TileStabilizer extends TileEP implements IEnergyHandler//, IPowerReceptor
+public class TileStabilizer extends TileEP implements IEnergyHandler
 {
     ChunkCoordinates mainBlock;
     int rows;
     boolean is3x3 = false;
-    //private final PowerHandler mjHandler;
 
     @SideOnly(Side.CLIENT)
     public boolean isFormed;
@@ -32,12 +31,6 @@ public class TileStabilizer extends TileEP implements IEnergyHandler//, IPowerRe
     public TileStabilizer()
     {
         mainBlock = null;
-        /*
-        float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
-        mjHandler = new PowerHandler(this, Type.MACHINE);
-        mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, 1500);
-        mjHandler.configurePowerPerdition(0, 0);
-        */
     }
 
     public boolean activate(EntityPlayer player)
@@ -229,14 +222,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler//, IPowerRe
         is3x3 = false;
         return blocks;
     }
-/*
-    @Override
-    public void doWork(PowerHandler workProvider)
-    {
-        int acceptedEnergy = receiveEnergy(null, (int) (mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
-        mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
-    }
-*/
+
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
     {
@@ -302,19 +288,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler//, IPowerRe
 
         return main.getMaxEnergyStored(from);
     }
-/*
-    @Override
-    public PowerReceiver getPowerReceiver(ForgeDirection side)
-    {
-        return mjHandler.getPowerReceiver();
-    }
 
-    @Override
-    public World getWorld()
-    {
-        return worldObj;
-    }
-*/
     @Override
     public void onDataPacket(net.minecraft.network.NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
