@@ -75,17 +75,15 @@ public class ContainerDimensionalBridgeStabilizer extends BaseContainer
     @Override
     public void handleGuiPacket(NBTTagCompound tag, EntityPlayer player)
     {
-        if (tag.hasKey("button"))
-        {
-            stabilizer.powerState++;
-
-            if (stabilizer.powerState >= 4)
-            {
-                stabilizer.powerState = 0;
+        if(tag.hasKey("increase_powerState")){
+            if(stabilizer.powerState<3){
+            	stabilizer.powerState++;
             }
-        }
-        else if (tag.hasKey("energy") && tag.hasKey("max"))
-        {
+        }else if(tag.hasKey("decrease_powerState")){
+            if(stabilizer.powerState>0){
+            	stabilizer.powerState--;
+            }
+        }else if(tag.hasKey("energy")&&tag.hasKey("max")){
             stabilizer.getEnergyStorage().setCapacity(tag.getInteger("max"));
             stabilizer.getEnergyStorage().setEnergyStored(tag.getInteger("energy"));
         }

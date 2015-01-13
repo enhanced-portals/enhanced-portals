@@ -7,24 +7,16 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 import cofh.api.energy.IEnergyHandler;
@@ -40,12 +32,14 @@ import enhancedportals.portal.PortalException;
 import enhancedportals.portal.PortalTextureManager;
 import enhancedportals.utility.GeneralUtils;
 
-public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler, IPowerReceptor
+public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHandler//, IPowerReceptor
 {
     static final int ENERGY_STORAGE_PER_ROW = CommonProxy.REDSTONE_FLUX_COST + CommonProxy.REDSTONE_FLUX_COST / 2;
 
     ArrayList<ChunkCoordinates> blockList;
 
+    //ArrayList<TileController> connectedPortals;
+    
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
 
@@ -54,7 +48,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     EnergyStorage energyStorage;
     public int powerState, instability = 0;
     public boolean is3x3 = false;
-    private final PowerHandler mjHandler;
+    //private final PowerHandler mjHandler;
 
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
@@ -62,14 +56,25 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     public TileStabilizerMain()
     {
         blockList = new ArrayList<ChunkCoordinates>();
+        //connectedPortals = new ArrayList<TileController>();
         activeConnections = new HashMap<String, String>();
         activeConnectionsReverse = new HashMap<String, String>();
         energyStorage = new EnergyStorage(0);
 
         float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
+        /*
         mjHandler = new PowerHandler(this, Type.MACHINE);
         mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, 1500);
         mjHandler.configurePowerPerdition(0, 0);
+        */
+    }
+
+    /*
+     * Adds the given TileController to the connectedPortals HashMap
+     */
+    public void addPortal(TileController portal)
+    {
+    	//connectedPortals.add(portal);
     }
 
     public boolean activate(EntityPlayer player)
@@ -168,13 +173,14 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
         return stack;
     }
-
+/*
     @Override
     public void doWork(PowerHandler workProvider)
     {
         int acceptedEnergy = receiveEnergy(null, (int) (mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
         mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
     }
+*/
 
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
@@ -234,12 +240,12 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     {
         return energyStorage.getMaxEnergyStored();
     }
-
+/*
     @Override
     public PowerReceiver getPowerReceiver(ForgeDirection side)
     {
         return mjHandler.getPowerReceiver();
-    }
+    }*/
 
     @Override
     public int getSizeInventory()
@@ -258,13 +264,13 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     {
         return inventory;
     }
-
+/*
     @Override
     public World getWorld()
     {
         return worldObj;
     }
-
+*/
     @Override
     public boolean hasCustomInventoryName()
     {

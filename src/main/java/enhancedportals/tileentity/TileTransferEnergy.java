@@ -11,10 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional.Interface;
@@ -30,10 +26,10 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.utility.GeneralUtils;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = EnhancedPortals.MODID_COMPUTERCRAFT), @Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = EnhancedPortals.MODID_OPENCOMPUTERS) })
-public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPowerReceptor, IPeripheral, SimpleComponent
+public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHandler, IPeripheral, SimpleComponent//, IPowerReceptor
 {
     public final EnergyStorage storage = new EnergyStorage(16000);
-    public final PowerHandler mjHandler;
+    //public final PowerHandler mjHandler;
 
     int tickTimer = 20, time = 0;
 
@@ -45,9 +41,10 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
 
     public TileTransferEnergy()
     {
-        mjHandler = new PowerHandler(this, Type.MACHINE);
+        /*mjHandler = new PowerHandler(this, Type.MACHINE);
         mjHandler.configure(2.0f, 32.0f, 2.0f, storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ);
         mjHandler.configurePowerPerdition(0, 0);
+        */
     }
 
     @Override
@@ -120,14 +117,14 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     {
 
     }
-
+/*
     @Override
     public void doWork(PowerHandler workProvider)
     {
         int acceptedEnergy = storage.receiveEnergy((int) (mjHandler.useEnergy(1.0F, storage.getMaxEnergyStored() / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
         mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
     }
-
+*/
     @Override
     @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public boolean equals(IPeripheral other)
@@ -180,26 +177,26 @@ public class TileTransferEnergy extends TileFrameTransfer implements IEnergyHand
     {
         return new String[] { "getEnergyStored", "isFull", "isEmpty", "isSending" };
     }
-
+/*
     @Override
     public PowerReceiver getPowerReceiver(ForgeDirection side)
     {
         return mjHandler.getPowerReceiver();
     }
-
+*/
     @Override
     @Method(modid = EnhancedPortals.MODID_COMPUTERCRAFT)
     public String getType()
     {
         return "ep_transfer_energy";
     }
-
+/*
     @Override
     public World getWorld()
     {
         return worldObj;
     }
-
+*/
     @Callback(direct = true, doc = "function():boolean -- Returns true if the module is set to send energy.")
     @Method(modid = EnhancedPortals.MODID_OPENCOMPUTERS)
     public Object[] isSending(Context context, Arguments args)

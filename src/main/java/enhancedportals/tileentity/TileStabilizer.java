@@ -11,10 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.PowerHandler.Type;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,12 +19,12 @@ import enhancedportals.network.CommonProxy;
 import enhancedportals.utility.GeneralUtils;
 import enhancedportals.utility.WorldCoordinates;
 
-public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerReceptor
+public class TileStabilizer extends TileEP implements IEnergyHandler//, IPowerReceptor
 {
     ChunkCoordinates mainBlock;
     int rows;
     boolean is3x3 = false;
-    private final PowerHandler mjHandler;
+    //private final PowerHandler mjHandler;
 
     @SideOnly(Side.CLIENT)
     public boolean isFormed;
@@ -36,10 +32,12 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     public TileStabilizer()
     {
         mainBlock = null;
+        /*
         float energyUsage = CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ;
         mjHandler = new PowerHandler(this, Type.MACHINE);
         mjHandler.configure(2.0f, energyUsage, energyUsage * 0.2f, 1500);
         mjHandler.configurePowerPerdition(0, 0);
+        */
     }
 
     public boolean activate(EntityPlayer player)
@@ -231,14 +229,14 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
         is3x3 = false;
         return blocks;
     }
-
+/*
     @Override
     public void doWork(PowerHandler workProvider)
     {
         int acceptedEnergy = receiveEnergy(null, (int) (mjHandler.useEnergy(1.0F, CommonProxy.REDSTONE_FLUX_COST / CommonProxy.RF_PER_MJ, false) * CommonProxy.RF_PER_MJ), false);
         mjHandler.useEnergy(1.0F, acceptedEnergy / CommonProxy.RF_PER_MJ, true);
     }
-
+*/
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
     {
@@ -304,7 +302,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
 
         return main.getMaxEnergyStored(from);
     }
-
+/*
     @Override
     public PowerReceiver getPowerReceiver(ForgeDirection side)
     {
@@ -316,7 +314,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler, IPowerRece
     {
         return worldObj;
     }
-
+*/
     @Override
     public void onDataPacket(net.minecraft.network.NetworkManager net, S35PacketUpdateTileEntity pkt)
     {

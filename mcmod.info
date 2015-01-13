@@ -1,0 +1,19 @@
+[
+{
+  "modid": "Enhanced Portals 3",
+  "name": "enhanced-portals",
+  "version": "3.0.10",
+  "mcversion": "1.7.10",
+  "description": "Extending Minecraft with pipes, auto-crafting, quarries, engines and much more!",
+  "credits": "Created by ShadedDimensions",
+  "logoFile": "assets/buildcraft/logo.png",
+  "url": "http://skynet.atomicbase.com",
+  "updateUrl": "",
+  "authorList": [ "KzariusRex", "Skynet Team" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+}
+]

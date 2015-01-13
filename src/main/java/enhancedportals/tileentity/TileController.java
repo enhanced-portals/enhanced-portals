@@ -1231,6 +1231,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 }
 
                 dimensionalBridgeStabilizer = stabilizer;
+                getDimensionalBridgeStabilizer().addPortal(this);
             }
         }
 

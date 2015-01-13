@@ -6,12 +6,13 @@
  * License 1.0, or MMPL. Please check the contents of the license located in
  * http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
-package buildcraft.api.mj;
+package buildcraft.api.core;
 
-public interface IBatteryIOObject extends IBatteryObject {
-	IOMode mode();
+import net.minecraft.world.World;
 
-	boolean canSend();
+public interface IWorldProperty {
 
-	boolean canReceive();
+	boolean get(World world, int x, int y, int z);
+
+	void clear();
 }
