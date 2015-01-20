@@ -57,7 +57,7 @@ import enhancedportals.tileentity.TileTransferItem;
 
 public class CommonProxy
 {
-    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20, RF_PER_MJ = 10;
+    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20;
     public int gogglesRenderIndex = 0;
     public NetworkManager networkManager;
     public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, updateNotifier;
@@ -139,7 +139,6 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRI");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNI");
         GameRegistry.registerTileEntity(TileDialingDevice.class, "epDD");
-        GameRegistry.registerTileEntity(TileProgrammableInterface.class, "epPI");
         GameRegistry.registerTileEntity(TileModuleManipulator.class, "epMM");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epDBS");
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epDBSM");
@@ -204,8 +203,8 @@ public class CommonProxy
 	{
 		if (updateNotifier == true)
 		{
-			String msg = "EP has been updated to v" + lateVers + " :: You are running v" + curVers;
-			String msg2 = "Get the latest version of EP from mods.atomicbase.com";
+			String msg = "Enhanced Portals has been updated to v" + lateVers + " :: You are running v" + curVers;
+			String msg2 = "Get the latest version of Enhanced Portals from mods.atomicbase.com";
 			player.addChatMessage(new ChatComponentText(msg));
 			player.addChatMessage(new ChatComponentText(msg2));
 			return true;

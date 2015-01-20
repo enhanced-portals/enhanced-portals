@@ -38,7 +38,6 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
     ArrayList<ChunkCoordinates> blockList;
 
-    ArrayList<TileController> connectedPortals;
     
     HashMap<String, String> activeConnections;
     HashMap<String, String> activeConnectionsReverse;
@@ -48,6 +47,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
     EnergyStorage energyStorage;
     public int powerState, instability = 0;
     public boolean is3x3 = false;
+    public ArrayList<TileController> connectedPortals;
 
     @SideOnly(Side.CLIENT)
     public int intActiveConnections;
@@ -65,7 +65,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
      */
     public void addPortal(TileController portal)
     {
-    	//connectedPortals.add(portal);
+    	connectedPortals.add(portal);
     }
 
     public boolean activate(EntityPlayer player)

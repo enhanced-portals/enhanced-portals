@@ -14,29 +14,6 @@ import enhancedportals.tileentity.TileStabilizerMain;
 public class ElementScrollStabilizer extends BaseElement
 {
 
-	public ElementScrollStabilizer(BaseGui gui, int x, int y, int w, int h) {
-		super(gui, x, y, w, h);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void addTooltip(List<String> list) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void drawContent() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
-	/*
 	TileStabilizerMain stabilizer;
     float currentScroll = 0f;
     boolean isScrolling = false, wasClicking = false;
@@ -57,7 +34,7 @@ public class ElementScrollStabilizer extends BaseElement
         
         for (int i = 0; i < 5; i++)
         {
-            if (scrollAmount + i >= stabilizer.activeConnections.size())
+            if (scrollAmount + i >= stabilizer.connectedPortals.size())
             {
                 break;
             }
@@ -67,16 +44,16 @@ public class ElementScrollStabilizer extends BaseElement
 
             if (mouseOverSmall)
             {
-                if (parent.isShiftKeyDown())
+                /*if (parent.isShiftKeyDown())
                 {
                     list.add(EnhancedPortals.localize("gui.delete"));
                     break;
                 }
                 else
-                {
+                {*/
                     list.add(EnhancedPortals.localize("gui.edit"));
                     break;
-                }
+                //}
             }
         }
     }
@@ -89,31 +66,26 @@ public class ElementScrollStabilizer extends BaseElement
         
         for (int i = 0; i < 5; i++)
         {
-            if (scrollAmount + i >= dial.glyphList.size())
+            if (scrollAmount + i >= stabilizer.connectedPortals.size())
             {
                 break;
             }
 
-            GlyphElement e = dial.glyphList.get(scrollAmount + i);
+            //GlyphElement e = dial.glyphList.get(scrollAmount + i);
             int entryOffset = i * entryHeight;
-            boolean mouseOverEntry = y >= posY + offsetY + entryOffset && y <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && x >= posX + offsetX && x < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && x >= posX + offsetX + sizeMButton + buttonSpacing && x < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton;
+            boolean mouseOverEntry = y >= posY + offsetY + entryOffset && y <= posY + offsetY + entryOffset + 20,
+            		mouseOverMain = mouseOverEntry && x >= posX + offsetX && x < posX + offsetX + sizeMButton,
+            		mouseOverSmall = mouseOverEntry && x >= posX + offsetX + sizeMButton + buttonSpacing && x < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton;
 
             if (mouseOverMain)
             {
-                ((GuiDialingDevice) parent).onEntrySelected(scrollAmount + i);
+                //((GuiDialingDevice) parent).onEntrySelected(scrollAmount + i);
                 break;
             }
             else if (mouseOverSmall)
             {
                 if (parent.isShiftKeyDown())
                 {
-                    ((GuiDialingDevice) parent).onEntryDeleted(scrollAmount + i);
-                    break;
-                }
-                else
-                {
-                    ((GuiDialingDevice) parent).onEntryEdited(scrollAmount + i);
-                    break;
                 }
             }
         }
@@ -171,7 +143,7 @@ public class ElementScrollStabilizer extends BaseElement
                 currentScroll = 1f;
             }
 
-            int items = dial.glyphList.size() - 5 + 1;
+            int items = stabilizer.connectedPortals.size() - 5 + 1;
             scrollAmount = (int)((currentScroll * items) + 0.5D);
 
             if (scrollAmount < 0)
@@ -179,7 +151,7 @@ public class ElementScrollStabilizer extends BaseElement
                 scrollAmount = 0;
             }
 
-            int max = dial.glyphList.size() - 5;
+            int max = stabilizer.connectedPortals.size() - 5;
 
             if (scrollAmount > max)
             {
@@ -199,7 +171,7 @@ public class ElementScrollStabilizer extends BaseElement
     {
         boolean canScroll = false;
         
-        if (dial.glyphList.size() >= 6)
+        if (stabilizer.connectedPortals.size() >= 6)
         {
             canScroll = true;
             handleMouse();
@@ -212,17 +184,24 @@ public class ElementScrollStabilizer extends BaseElement
 
         for (int i = 0; i < 5; i++)
         {
-            if (scrollAmount + i >= dial.glyphList.size())
+            if (scrollAmount + i >= stabilizer.connectedPortals.size())
             {
                 break;
             }
             
             GL11.glColor3f(1f, 1f, 1f);
-            GlyphElement e = dial.glyphList.get(scrollAmount + i);
-            int state = 1, entryOffset = i * entryHeight, mouseX = parent.getMouseX() + parent.getGuiLeft(), mouseY = parent.getMouseY() + parent.getGuiTop(), fontColour = 0xFFFFFF;
-            boolean mouseOverEntry = mouseY >= posY + offsetY + entryOffset && mouseY <= posY + offsetY + entryOffset + 20, mouseOverMain = mouseOverEntry && mouseX >= posX + offsetX && mouseX < posX + offsetX + sizeMButton, mouseOverSmall = mouseOverEntry && mouseX >= posX + offsetX + sizeMButton + buttonSpacing && mouseX < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton, delete = parent.isShiftKeyDown();
+            //GlyphElement e = dial.glyphList.get(scrollAmount + i);
+            int state = 1,
+            		entryOffset = i * entryHeight,
+            		mouseX = parent.getMouseX() + parent.getGuiLeft(),
+            		mouseY = parent.getMouseY() + parent.getGuiTop(),
+            		fontColour = 0xFFFFFF;
+            boolean mouseOverEntry = mouseY >= posY + offsetY + entryOffset && mouseY <= posY + offsetY + entryOffset + 20,
+            		mouseOverMain = mouseOverEntry && mouseX >= posX + offsetX && mouseX < posX + offsetX + sizeMButton,
+            		mouseOverSmall = mouseOverEntry && mouseX >= posX + offsetX + sizeMButton + buttonSpacing && mouseX < posX + offsetX + sizeMButton + buttonSpacing + sizeSButton,
+            		delete = parent.isShiftKeyDown();
 
-            if (dial.getPortalController().isPortalActive())
+            /*if (dial.getPortalController().isPortalActive())
             {
                 state = 0;
             }
@@ -236,7 +215,7 @@ public class ElementScrollStabilizer extends BaseElement
             parent.drawTexturedModalRect(posX + offsetX, posY + entryOffset + offsetY, 0, 196 + (state * 20), sizeMButton, 20);
             parent.drawTexturedModalRect(posX + offsetX + sizeMButton + buttonSpacing, posY + entryOffset + offsetY, 196 + (delete ? 20 : 0), 216 + (mouseOverSmall ? 20 : 0), sizeSButton, 20);
             
-            parent.getFontRenderer().drawStringWithShadow(e.name, posX + offsetX + 5, posY + offsetY + 6 + entryOffset, fontColour);
+            parent.getFontRenderer().drawStringWithShadow(e.name, posX + offsetX + 5, posY + offsetY + 6 + entryOffset, fontColour);*/
         }
     }
 
@@ -244,5 +223,5 @@ public class ElementScrollStabilizer extends BaseElement
     public void update()
     {
 
-    }*/
+    }
 }

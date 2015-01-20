@@ -36,7 +36,7 @@ import enhancedportals.portal.NetworkManager;
 @Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, version = EnhancedPortals.VERS, dependencies = EnhancedPortals.DEPENDENCIES)
 public class EnhancedPortals
 {
-    public static final String NAME = "EnhancedPortals", ID = "enhancedportals", VERS = "3.0.10", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy", UPDATE_URL = "https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers";
+    public static final String NAME = "EnhancedPortals", ID = "enhancedportals", VERS = "3.0.11", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy", UPDATE_URL = "https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers";
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     public static final Logger logger = LogManager.getLogger("EnhancedPortals");
     public static final CreativeTabs creativeTab = new CreativeTabEP3();
