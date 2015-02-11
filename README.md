@@ -1,6 +1,10 @@
 EnhancedPortals 3 - for Minecraft 1.7.10
 ---
+
+**This version is *extremely* experimental. Do not use it on any worlds you wish to keep.**
+
 Useful Links:
+* [License](https://github.com/ShadedDimension/enhanced-portals/blob/master/docs/LICENSE)
 * [Downloads](http://mods.atomicbase.com/enhancedportals/1.7.10/downloads/)
 * [Minecraft Forums Thread](http://www.minecraftforum.net/topic/2143651-164-enhancedportals-3/)
 
