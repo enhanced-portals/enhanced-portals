@@ -8,26 +8,26 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import enhancedportals.network.ProxyCommon;
-import enhancedportals.tile.TileFrame;
+import enhancedportals.EnhancedPortals;
+import enhancedportals.tile.TileDimensionalBridgeStabilizer;
 import enhancedportals.util.ConnectedTexturesDetailed;
 
-public class BlockFrame extends BlockContainer {
+public class BlockDimensionalBridgeStabilizer extends BlockContainer {
     ConnectedTexturesDetailed connectedTextures;
     
-    public BlockFrame(String n) {
+    protected BlockDimensionalBridgeStabilizer(String n) {
         super(Material.rock);
-        setCreativeTab(ProxyCommon.creativeTab);
+        setCreativeTab(EnhancedPortals.proxy.creativeTab);
         setHardness(5);
         setResistance(2000);
         setBlockName(n);
         setStepSound(soundTypeStone);
-        connectedTextures = new ConnectedTexturesDetailed("enhancedportals:frame/%s", this, -1);
+        connectedTextures = new ConnectedTexturesDetailed("enhancedportals:bridge/%s", this, -1);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new TileFrame();
+        return new TileDimensionalBridgeStabilizer();
     }
     
     @Override
@@ -49,8 +49,8 @@ public class BlockFrame extends BlockContainer {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
         TileEntity t = world.getTileEntity(x, y, z);
         
-        if (t instanceof TileFrame) {
-            return ((TileFrame) t).onBlockActivated(player);
+        if (t instanceof TileDimensionalBridgeStabilizer) {
+            return ((TileDimensionalBridgeStabilizer) t).onBlockActivated(player);
         }
         
         return super.onBlockActivated(world, x, y, z, player, p_149727_6_, p_149727_7_, p_149727_8_, p_149727_9_);
@@ -60,8 +60,8 @@ public class BlockFrame extends BlockContainer {
     public void onBlockPreDestroy(World world, int x, int y, int z, int p_149725_5_) {
         TileEntity t = world.getTileEntity(x, y, z);
         
-        if (t instanceof TileFrame) {
-            ((TileFrame) t).onPreDestroy();
+        if (t instanceof TileDimensionalBridgeStabilizer) {
+            ((TileDimensionalBridgeStabilizer) t).onPreDestroy();
         } 
     }
 }
