@@ -43,7 +43,7 @@ public class ItemLocationCard extends Item {
         texture = register.registerIcon("enhancedportals:location_card");
     }
     
-    public boolean isDataSet(ItemStack stack) {
+    public static boolean isDataSet(ItemStack stack) {
         if (stack != null && stack.getItem() != null && stack.getItem() instanceof ItemLocationCard) {
             return stack.getTagCompound() != null;
         }
@@ -51,19 +51,19 @@ public class ItemLocationCard extends Item {
         return false;
     }
     
-    public void setData(ItemStack stack, DimensionCoordinates d) {
+    public static void setData(ItemStack stack, DimensionCoordinates d) {
         if (stack != null && stack.getItem() != null && stack.getItem() instanceof ItemLocationCard && d != null) {
             stack.setTagCompound(d.save(new NBTTagCompound()));
         }
     }
     
-    public void clearData(ItemStack stack) {
+    public static void clearData(ItemStack stack) {
         if (stack != null && stack.getItem() != null && stack.getItem() instanceof ItemLocationCard) {
             stack.setTagCompound(null);
         }
     }
     
-    public DimensionCoordinates getData(ItemStack stack) {
+    public static DimensionCoordinates getData(ItemStack stack) {
         if (stack != null && stack.getItem() != null && stack.getItem() instanceof ItemLocationCard) {
             return new DimensionCoordinates(stack.getTagCompound());
         }
@@ -78,6 +78,7 @@ public class ItemLocationCard extends Item {
         if (t instanceof TileFrameController) {
             if (world.isRemote) return false;
             TileFrameController control = (TileFrameController) t;
+            if (!control.isFinalized()) return false;
             if (EnhancedPortals.proxy.portalMap.getPortalGlyphs(control.getDimensionCoordinates()) == null) { player.addChatMessage(new ChatComponentText("Set a UID first.")); return true; }
             EnhancedPortals.proxy.portalMap.setPortalDBS(control.getDimensionCoordinates(), getData(stack));
             player.addChatMessage(new ChatComponentText("Set."));

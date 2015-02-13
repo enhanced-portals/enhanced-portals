@@ -1,9 +1,7 @@
 package enhancedportals.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import enhancedportals.util.DimensionCoordinates;
+import enhancedportals.IPortalPart;
 
-public class TileFrame extends TileEP {
+public class TileFrame extends TileEP implements IPortalPart {
     
 }

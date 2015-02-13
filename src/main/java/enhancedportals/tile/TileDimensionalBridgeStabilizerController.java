@@ -8,16 +8,11 @@ public class TileDimensionalBridgeStabilizerController extends TileDimensionalBr
     @Override
     public boolean onBlockActivated(EntityPlayer player) {
         if (!worldObj.isRemote) {
-            if (player.isSneaking()) {
-                TileFrameController.test = getDimensionCoordinates();
-                System.out.println("Set DBS to " + getDimensionCoordinates());
-            } else {
                 GlyphSequence[] glyphs = EnhancedPortals.proxy.portalMap.getDBSPortals(getDimensionCoordinates());
                 if (glyphs == null ||glyphs.length == 0) return true;
                 for (GlyphSequence g : glyphs) {
                     System.out.println(g);
                 }
-            }
         } 
         
         return true;
