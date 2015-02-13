@@ -24,7 +24,7 @@ public class TileFrameController extends TileFrame {
                     boolean b = EnhancedPortals.proxy.portalMap.setPortalGlyphs(getDimensionCoordinates(), g);
                     player.addChatMessage(new ChatComponentText(b ? "Set UID to " + g.toString():"Couldn't set UID."));
                 } else {
-                    boolean b = EnhancedPortals.proxy.portalMap.clearPortalGlyphs(getDimensionCoordinates());
+                    boolean b = EnhancedPortals.proxy.portalMap.removePortalGlyphs(getDimensionCoordinates());
                     player.addChatMessage(new ChatComponentText(b ? "Removed UID":"Couldn't remove UID."));
                 }
             } else {
@@ -44,7 +44,7 @@ public class TileFrameController extends TileFrame {
     @Override
     public void onPreDestroy() {
         System.out.println("Has UID of " + EnhancedPortals.proxy.portalMap.getPortalGlyphs(getDimensionCoordinates()));
-        EnhancedPortals.proxy.portalMap.clearPortalGlyphs(getDimensionCoordinates());
+        EnhancedPortals.proxy.portalMap.removePortalGlyphs(getDimensionCoordinates());
         System.out.println("Has UID of " + EnhancedPortals.proxy.portalMap.getPortalGlyphs(getDimensionCoordinates()));
     }
 }

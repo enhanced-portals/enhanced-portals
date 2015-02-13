@@ -14,7 +14,7 @@ public class GlyphSequence {
             s = s + "-" + glyphs[i];
         }
         
-        if (s.startsWith("-"))
+        if (s.length() >= 1)
             s = s.substring(1);
         
         return s;

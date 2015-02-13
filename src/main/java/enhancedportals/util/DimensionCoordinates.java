@@ -1,10 +1,11 @@
 package enhancedportals.util;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class DimensionCoordinates extends ChunkCoordinates {
-    int posD;
+    public int posD;
     
     public DimensionCoordinates(int x, int y, int z, int d) {
         posX = x;
@@ -17,6 +18,10 @@ public class DimensionCoordinates extends ChunkCoordinates {
         this(c.posX, c.posY, c.posZ, d);
     }
     
+    public DimensionCoordinates(NBTTagCompound tagCompound) {
+        this(tagCompound.getInteger("X"), tagCompound.getInteger("Y"), tagCompound.getInteger("Z"), tagCompound.getInteger("D"));
+    }
+
     public boolean equals(Object obj)
     {
         if (!(obj instanceof DimensionCoordinates))
@@ -42,5 +47,13 @@ public class DimensionCoordinates extends ChunkCoordinates {
 
     public DimensionCoordinates offset(ForgeDirection dir) {
         return new DimensionCoordinates(posX + dir.offsetX, posY + dir.offsetY, posZ + dir.offsetZ, posD);
+    }
+
+    public NBTTagCompound save(NBTTagCompound tag) {
+        tag.setInteger("Dimension", posD);
+        tag.setInteger("X", posX);
+        tag.setInteger("Y", posY);
+        tag.setInteger("Z", posZ);
+        return tag;
     }
 }
