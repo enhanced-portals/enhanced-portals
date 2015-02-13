@@ -15,7 +15,8 @@ import enhancedportals.tile.TileFrameController;
 import enhancedportals.tile.TileFrameDialDevice;
 import enhancedportals.tile.TileFrameNetworkInterface;
 
-public class PortalUtils {
+public class PortalUtils
+{
     static final int MAXIMUM_CHANCES = 40;
 
     /***
@@ -23,37 +24,49 @@ public class PortalUtils {
      */
     static void addNearbyBlocks(World world, ChunkCoordinates w, int portalDirection, Queue<ChunkCoordinates> q)
     {
-    // (world controller is in, the offset block from controller, 1-5, blank linkedList neighbors)
-    // if portalDirection = 1, then add up, down, west, east
-    // if portalDirection = 2, then add up, down, north, south
-    // if portalDirection = 3, then add north, south, west, east
-    // if portalDirection = 4, then add up, down, north-east, south-west
-    // if portalDirection = 5, then add up, down, north-west, south-east
+        // (world controller is in, the offset block from controller, 1-5, blank
+        // linkedList neighbors)
+        // if portalDirection = 1, then add up, down, west, east
+        // if portalDirection = 2, then add up, down, north, south
+        // if portalDirection = 3, then add north, south, west, east
+        // if portalDirection = 4, then add up, down, north-east, south-west
+        // if portalDirection = 5, then add up, down, north-west, south-east
         //
-        if (portalDirection == 4){
+        if (portalDirection == 4)
+        {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
             q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ - 1)); // North-East
             q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ + 1)); // South-West
-        //
-        }else if (portalDirection == 5){
+            //
+        }
+        else if (portalDirection == 5)
+        {
             q.add(new ChunkCoordinates(w.posX, w.posY + 1, w.posZ)); // Up
             q.add(new ChunkCoordinates(w.posX, w.posY - 1, w.posZ)); // Down
 
             q.add(new ChunkCoordinates(w.posX - 1, w.posY, w.posZ - 1)); // North-West
             q.add(new ChunkCoordinates(w.posX + 1, w.posY, w.posZ + 1)); // South-East
-        }else{
+        }
+        else
+        {
             // Loop through the different directions for portalDirection 1-3.
-            for (int i = 0; i < 6; i++){
+            for (int i = 0; i < 6; i++)
+            {
                 // Skip North (2) and South (3)
-                if (portalDirection == 1 && (i == 2 || i == 3)){
+                if (portalDirection == 1 && (i == 2 || i == 3))
+                {
                     continue;
-                // Skip West (4) and East (5)
-                }else if (portalDirection == 2 && (i == 4 || i == 5)){
+                    // Skip West (4) and East (5)
+                }
+                else if (portalDirection == 2 && (i == 4 || i == 5))
+                {
                     continue;
-                // Skip Up (0) and Down (1)
-                }else if (portalDirection == 3 && (i == 0 || i == 1)){
+                    // Skip Up (0) and Down (1)
+                }
+                else if (portalDirection == 3 && (i == 0 || i == 1))
+                {
                     continue;
                 }
                 ForgeDirection d = ForgeDirection.getOrientation(i);
@@ -70,10 +83,7 @@ public class PortalUtils {
         Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller);
         toProcess.add(controller.getChunkCoordinates());
 
-        if (portalBlocks.isEmpty())
-        {
-            throw new Exception("couldNotCreatePortalHere");
-        }
+        if (portalBlocks.isEmpty()) { throw new Exception("couldNotCreatePortalHere"); }
 
         boolean dialler = false, network = false;
 
@@ -89,20 +99,12 @@ public class PortalUtils {
                 {
                     if (t instanceof TileFrameNetworkInterface)
                     {
-                        if (dialler)
-                        {
-                            throw new Exception("dialAndNetwork");
-                        }
-
+                        if (dialler) { throw new Exception("dialAndNetwork"); }
                         network = true;
                     }
                     else if (t instanceof TileFrameDialDevice)
                     {
-                        if (network)
-                        {
-                            throw new Exception("dialAndNetwork");
-                        }
-
+                        if (network) { throw new Exception("dialAndNetwork"); }
                         dialler = true;
                     }
 
@@ -113,10 +115,7 @@ public class PortalUtils {
             }
         }
 
-        if (portalComponents.isEmpty())
-        {
-            throw new Exception("unknown");
-        }
+        if (portalComponents.isEmpty()) { throw new Exception("unknown"); }
 
         return portalComponents;
     }
@@ -128,9 +127,11 @@ public class PortalUtils {
             for (int i = 1; i < 6; i++)
             {
                 // Forge directions: Down, Up, North, South, West, East
-                // Get Controller and cycle through forge directions from the coord.
+                // Get Controller and cycle through forge directions from the
+                // coord.
                 ChunkCoordinates c = GeneralUtils.offset(controller.getChunkCoordinates(), ForgeDirection.getOrientation(j));
-                // portalBlocks = (the world controller is in, the offset from the controller we're exploring, 1-5)
+                // portalBlocks = (the world controller is in, the offset from
+                // the controller we're exploring, 1-5)
                 Queue<ChunkCoordinates> portalBlocks = getGhostedPortalBlocks(controller.getWorldObj(), c, i);
 
                 if (!portalBlocks.isEmpty())
@@ -156,14 +157,18 @@ public class PortalUtils {
         {
             // c is now the offset block (start).
             ChunkCoordinates c = toProcess.remove();
-            // Pass as long as portalBlocks does not already contain the offset block from the controller.
+            // Pass as long as portalBlocks does not already contain the offset
+            // block from the controller.
             if (!portalBlocks.contains(c))
             {
-                // Check if the coords of the offset block happens to be an air block.
+                // Check if the coords of the offset block happens to be an air
+                // block.
                 if (world.isAirBlock(c.posX, c.posY, c.posZ))
                 {
-                    // sides = (world that the controller is in, current list of portalBlocks, 1-5)
-                    // Returns the number of portal frame blocks and items already in portalBlocks.
+                    // sides = (world that the controller is in, current list of
+                    // portalBlocks, 1-5)
+                    // Returns the number of portal frame blocks and items
+                    // already in portalBlocks.
                     int sides = getGhostedSides(world, c, portalBlocks, portalType);
 
                     if (sides < 2)
@@ -185,10 +190,7 @@ public class PortalUtils {
                         addNearbyBlocks(world, c, portalType, toProcess);
                     }
                 }
-                else if (!isPortalPart(world, c))
-                {
-                    return new LinkedList<ChunkCoordinates>();
-                }
+                else if (!isPortalPart(world, c)) { return new LinkedList<ChunkCoordinates>(); }
             }
         }
 
@@ -199,7 +201,8 @@ public class PortalUtils {
     {
         int sides = 0;
         Queue<ChunkCoordinates> neighbors = new LinkedList<ChunkCoordinates>();
-        // (world controller is in, the offset block from controller, 1-5, blank linkedList neighbors)
+        // (world controller is in, the offset block from controller, 1-5, blank
+        // linkedList neighbors)
         // if portalDirection = 1, then add up, down, west, east
         // if portalDirection = 2, then add up, down, north, south
         // if portalDirection = 3, then add north, south, west, east

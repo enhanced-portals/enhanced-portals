@@ -1,5 +1,6 @@
 package enhancedportals.tile;
 
-public class TileMachineModuleManipulator extends TileMachine {
+public class TileMachineModuleManipulator extends TileMachine
+{
 
 }

@@ -7,9 +7,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import enhancedportals.network.ProxyCommon;
 
-public class ItemWrench extends Item {
+public class ItemWrench extends Item
+{
     IIcon texture;
-    
+
     public ItemWrench(String n)
     {
         super();
@@ -17,7 +18,7 @@ public class ItemWrench extends Item {
         setUnlocalizedName(n);
         setMaxStackSize(1);
     }
-    
+
     @Override
     public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player)
     {
@@ -29,7 +30,7 @@ public class ItemWrench extends Item {
     {
         return texture;
     }
-    
+
     @Override
     public void registerIcons(IIconRegister register)
     {

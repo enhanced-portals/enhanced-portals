@@ -48,10 +48,7 @@ public class ConnectedTextures
     {
         if (block == blockAccess.getBlock(x, y, z))
         {
-            if (blockMeta == -1)
-            {
-                return true;
-            }
+            if (blockMeta == -1) { return true; }
 
             int meta = blockAccess.getBlockMetadata(x, y, z);
 

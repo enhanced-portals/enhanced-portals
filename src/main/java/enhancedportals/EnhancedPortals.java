@@ -26,12 +26,8 @@ import enhancedportals.util.CreativeTabEP;
 @Mod(name = EnhancedPortals.MOD_NAME, modid = EnhancedPortals.MOD_ID, version = EnhancedPortals.MOD_VERS, dependencies = EnhancedPortals.MOD_DEPENDENCIES)
 public class EnhancedPortals
 {
-    public static final String MOD_NAME = "EnhancedPortals",
-                               MOD_ID = "enhancedportals",
-                               MOD_VERS = "3.1.0",
-                               MOD_DEPENDENCIES = "",
-                               MOD_UPDATE_URL = "";
-    
+    public static final String MOD_NAME = "EnhancedPortals", MOD_ID = "enhancedportals", MOD_VERS = "3.1.0", MOD_DEPENDENCIES = "", MOD_UPDATE_URL = "";
+
     final PacketPipeline packetPipeline = new PacketPipeline();
     final Logger logger = LogManager.getLogger("EnhancedPortals");
 
@@ -55,21 +51,22 @@ public class EnhancedPortals
         proxy.pre(new File(event.getSuggestedConfigurationFile().getParentFile(), MOD_NAME + File.separator + "config.cfg"));
         packetPipeline.initalise();
     }
-    
+
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
         proxy.init();
     }
-    
+
     @EventHandler
     public void post(FMLPostInitializationEvent event)
     {
         packetPipeline.postInitialise();
         proxy.post();
     }
-    
-    public void log(Level l, String s) {
+
+    public void log(Level l, String s)
+    {
         logger.log(l, s);
     }
 }

@@ -1,6 +1,5 @@
 package enhancedportals.util;
 
-
 import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;

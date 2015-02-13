@@ -1,5 +1,6 @@
 package enhancedportals.tile;
 
-public class TileFrameNetworkInterface extends TileFrame {
+public class TileFrameNetworkInterface extends TileFrame
+{
 
 }

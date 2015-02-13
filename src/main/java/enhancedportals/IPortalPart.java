@@ -1,5 +1,6 @@
 package enhancedportals;
 
-public interface IPortalPart {
+public interface IPortalPart
+{
 
 }

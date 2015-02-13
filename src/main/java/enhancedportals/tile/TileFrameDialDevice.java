@@ -1,5 +1,6 @@
 package enhancedportals.tile;
 
-public class TileFrameDialDevice extends TileFrame {
+public class TileFrameDialDevice extends TileFrame
+{
 
 }

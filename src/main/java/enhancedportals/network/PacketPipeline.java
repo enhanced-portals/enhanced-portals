@@ -1,11 +1,14 @@
 package enhancedportals.network;
 
-public class PacketPipeline {
-    public void initalise() {
-        
+public class PacketPipeline
+{
+    public void initalise()
+    {
+
     }
-    
-    public void postInitialise() {
-        
+
+    public void postInitialise()
+    {
+
     }
 }

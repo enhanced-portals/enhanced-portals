@@ -12,10 +12,12 @@ import enhancedportals.network.ProxyCommon;
 import enhancedportals.tile.TileFrame;
 import enhancedportals.util.ConnectedTexturesDetailed;
 
-public class BlockFrame extends BlockContainer {
+public class BlockFrame extends BlockContainer
+{
     ConnectedTexturesDetailed connectedTextures;
-    
-    public BlockFrame(String n) {
+
+    public BlockFrame(String n)
+    {
         super(Material.rock);
         setCreativeTab(ProxyCommon.creativeTab);
         setHardness(5);
@@ -26,42 +28,47 @@ public class BlockFrame extends BlockContainer {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(World world, int meta)
+    {
         return new TileFrame();
     }
-    
+
     @Override
-    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int m) {
+    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int m)
+    {
         return connectedTextures.getBaseIcon();
     }
-    
+
     @Override
-    public IIcon getIcon(int side, int meta) {
+    public IIcon getIcon(int side, int meta)
+    {
         return connectedTextures.getBaseIcon();
     }
-    
+
     @Override
-    public void registerBlockIcons(IIconRegister register) {
+    public void registerBlockIcons(IIconRegister register)
+    {
         connectedTextures.registerIcons(register);
     }
-    
+
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_)
+    {
         TileEntity t = world.getTileEntity(x, y, z);
-        
-        if (t instanceof TileFrame) {
-            return ((TileFrame) t).onBlockActivated(player);
-        }
-        
+
+        if (t instanceof TileFrame) { return ((TileFrame) t).onBlockActivated(player); }
+
         return super.onBlockActivated(world, x, y, z, player, p_149727_6_, p_149727_7_, p_149727_8_, p_149727_9_);
     }
-    
+
     @Override
-    public void onBlockPreDestroy(World world, int x, int y, int z, int p_149725_5_) {
+    public void onBlockPreDestroy(World world, int x, int y, int z, int p_149725_5_)
+    {
         TileEntity t = world.getTileEntity(x, y, z);
-        
-        if (t instanceof TileFrame) {
+
+        if (t instanceof TileFrame)
+        {
             ((TileFrame) t).onPreDestroy();
-        } 
+        }
     }
 }

@@ -1,5 +1,6 @@
 package enhancedportals.tile;
 
-public class TileFrameTransferEnergy extends TileFrameTransfer {
+public class TileFrameTransferEnergy extends TileFrameTransfer
+{
 
 }

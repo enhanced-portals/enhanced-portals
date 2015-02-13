@@ -1,8 +1,10 @@
 package enhancedportals.block;
 
-public class BlockMachineModuleManipulator extends BlockMachine {
+public class BlockMachineModuleManipulator extends BlockMachine
+{
 
-    protected BlockMachineModuleManipulator(String n) {
+    protected BlockMachineModuleManipulator(String n)
+    {
         super(n);
     }
 

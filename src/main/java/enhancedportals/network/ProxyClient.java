@@ -1,5 +1,6 @@
 package enhancedportals.network;
 
-public class ProxyClient extends ProxyCommon {
+public class ProxyClient extends ProxyCommon
+{
 
 }

@@ -15,10 +15,12 @@ import enhancedportals.tile.TileFrameController;
 import enhancedportals.tile.TileFramePortalManipulator;
 import enhancedportals.tile.TilePortal;
 
-public class BlockPortal extends BlockContainer {
+public class BlockPortal extends BlockContainer
+{
     IIcon texture;
-    
-    public BlockPortal(String n) {
+
+    public BlockPortal(String n)
+    {
         super(Material.portal);
         setBlockUnbreakable();
         setResistance(2000);
@@ -28,66 +30,77 @@ public class BlockPortal extends BlockContainer {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(World world, int meta)
+    {
         return new TilePortal();
     }
-    
+
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    {
         return null;
     }
-    
+
     @Override
-    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int m) {
+    public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int m)
+    {
         return super.getIcon(blockAccess, x, y, z, m);
     }
-    
+
     @Override
-    public IIcon getIcon(int side, int meta) {
+    public IIcon getIcon(int side, int meta)
+    {
         return texture;
     }
-    
+
     @Override
-    public Item getItem(World world, int x, int y, int z) {
+    public Item getItem(World world, int x, int y, int z)
+    {
         return null;
     }
-    
+
     @Override
-    public int getLightValue() {
+    public int getLightValue()
+    {
         return 14;
     }
-    
+
     @Override
-    public int getRenderBlockPass() {
+    public int getRenderBlockPass()
+    {
         return 1;
     }
-    
+
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
+
     @Override
-    public boolean renderAsNormalBlock() {
+    public boolean renderAsNormalBlock()
+    {
         return false;
     }
-    
+
     @Override
-    public int quantityDropped(int meta, int fortune, Random random) {
+    public int quantityDropped(int meta, int fortune, Random random)
+    {
         return 0;
     }
-    
+
     @Override
-    public void registerBlockIcons(IIconRegister register) {
+    public void registerBlockIcons(IIconRegister register)
+    {
         texture = register.registerIcon("enhancedportals:portal");
     }
-    
+
     @Override
     public void setBlockBoundsForItemRender()
     {
         setBlockBounds(0f, 0f, 0f, 1f, 1f, 1f);
     }
-    
+
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z)
     {
@@ -95,15 +108,16 @@ public class BlockPortal extends BlockContainer {
 
         if (tile instanceof TilePortal)
         {
-            /*TilePortal portal = (TilePortal) tile;
-            TileFrameController controller = portal.getPortalController();
-            TileFramePortalManipulator manip = controller == null ? null : controller.getModuleManipulator();
-
-            if (controller != null && manip != null && manip.isPortalInvisible())
-            {
-                setBlockBounds(0f, 0f, 0f, 0f, 0f, 0f);
-                return;
-            }*/
+            /*
+             * TilePortal portal = (TilePortal) tile; TileFrameController
+             * controller = portal.getPortalController();
+             * TileFramePortalManipulator manip = controller == null ? null :
+             * controller.getModuleManipulator();
+             * 
+             * if (controller != null && manip != null &&
+             * manip.isPortalInvisible()) { setBlockBounds(0f, 0f, 0f, 0f, 0f,
+             * 0f); return; }
+             */
 
             int meta = blockAccess.getBlockMetadata(x, y, z);
 
@@ -125,14 +139,15 @@ public class BlockPortal extends BlockContainer {
             }
         }
     }
-    
+
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        if (blockAccess.getBlock(x, y, z) == this /*|| blockAccess.getBlock(x, y, z) == BlockFrame.instance*/)
-        {
-            return false;
-        }
+        if (blockAccess.getBlock(x, y, z) == this /*
+                                                   * || blockAccess.getBlock(x,
+                                                   * y, z) ==
+                                                   * BlockFrame.instance
+                                                   */) { return false; }
 
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
     }
