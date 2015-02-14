@@ -6,7 +6,7 @@ import enhancedportals.tile.TileFramePortalManipulator;
 
 public class BlockFramePortalManipulator extends BlockFrame
 {
-    protected BlockFramePortalManipulator(String n)
+    public BlockFramePortalManipulator(String n)
     {
         super(n);
     }

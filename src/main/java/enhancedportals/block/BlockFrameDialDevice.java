@@ -6,7 +6,7 @@ import enhancedportals.tile.TileFrameDialDevice;
 
 public class BlockFrameDialDevice extends BlockFrame
 {
-    protected BlockFrameDialDevice(String n)
+    public BlockFrameDialDevice(String n)
     {
         super(n);
     }

@@ -14,24 +14,14 @@ import enhancedportals.util.DimensionCoordinates;
  */
 public class PortalMap
 {
-    HashMap<GlyphSequence, DimensionCoordinates> portalMap = new HashMap<GlyphSequence, DimensionCoordinates>(); // UID
-                                                                                                                 // ->
-                                                                                                                 // Coord
-    HashMap<DimensionCoordinates, GlyphSequence> portalMapReverse = new HashMap<DimensionCoordinates, GlyphSequence>(); // Coord
-                                                                                                                        // ->
-                                                                                                                        // UID
-    HashMap<GlyphSequence, DimensionCoordinates> dbsMap = new HashMap<GlyphSequence, DimensionCoordinates>(); // UID
-                                                                                                              // ->
-                                                                                                              // DBS
-    HashMap<DimensionCoordinates, ArrayList<GlyphSequence>> dbsMapList = new HashMap<DimensionCoordinates, ArrayList<GlyphSequence>>(); // DBS
-                                                                                                                                        // ->
-                                                                                                                                        // UID[]
+    HashMap<GlyphSequence, DimensionCoordinates> portalMap = new HashMap<GlyphSequence, DimensionCoordinates>(); // UID -> Coord
+    HashMap<DimensionCoordinates, GlyphSequence> portalMapReverse = new HashMap<DimensionCoordinates, GlyphSequence>(); // Coord -> UID
+    HashMap<GlyphSequence, DimensionCoordinates> dbsMap = new HashMap<GlyphSequence, DimensionCoordinates>(); // UID -> DBS
+    HashMap<DimensionCoordinates, ArrayList<GlyphSequence>> dbsMapList = new HashMap<DimensionCoordinates, ArrayList<GlyphSequence>>(); // DBS -> UID[]
 
     /***
      * Looks up the specified portal's UID
-     * 
-     * @param c
-     *            DimensionCoordinates of the Portal Controller
+     * @param c DimensionCoordinates of the Portal Controller
      * @return GlyphSequence of the UID
      */
     public GlyphSequence getPortalGlyphs(DimensionCoordinates c)
@@ -41,9 +31,7 @@ public class PortalMap
 
     /***
      * Looks up the specified portal's location
-     * 
-     * @param g
-     *            GlyphSequence of the portal's UID
+     * @param g GlyphSequence of the portal's UID
      * @return DimensionCoordinates of the Portal Controller
      */
     public DimensionCoordinates getPortalLocation(GlyphSequence g)
@@ -53,9 +41,7 @@ public class PortalMap
 
     /***
      * Looks up the portal's linked Dimensional Bridge Stabilizer
-     * 
-     * @param g
-     *            GlyphSequence of the portal's UID
+     * @param g GlyphSequence of the portal's UID
      * @return DimensionCoordinates of the Dimensional Bridge Stabilizer
      */
     public DimensionCoordinates getPortalDBS(GlyphSequence g)
@@ -66,9 +52,7 @@ public class PortalMap
     /***
      * Gets all UIDs of every portal connected to the specified Dimensional
      * Bridge Stabilizer
-     * 
-     * @param c
-     *            DimensionCoordinates of the Dimensional Bridge Stabilizer
+     * @param c DimensionCoordinates of the Dimensional Bridge Stabilizer
      * @return GlyphSequence[] containing every connected portal UID
      */
     public GlyphSequence[] getDBSPortals(DimensionCoordinates c)
@@ -80,9 +64,7 @@ public class PortalMap
 
     /***
      * Checks to see if the UID is in use
-     * 
-     * @param g
-     *            GlyphSequence of the UID to check
+     * @param g GlyphSequence of the UID to check
      * @return true if in use
      */
     boolean isIdentifierInUse(GlyphSequence g)

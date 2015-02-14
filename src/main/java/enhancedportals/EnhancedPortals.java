@@ -29,7 +29,7 @@ public class EnhancedPortals
     public static final String MOD_NAME = "EnhancedPortals", MOD_ID = "enhancedportals", MOD_VERS = "3.1.0", MOD_DEPENDENCIES = "", MOD_UPDATE_URL = "";
 
     final PacketPipeline packetPipeline = new PacketPipeline();
-    final Logger logger = LogManager.getLogger("EnhancedPortals");
+    final Logger logger = LogManager.getLogger(MOD_NAME);
 
     @Instance(MOD_ID)
     public static EnhancedPortals instance;

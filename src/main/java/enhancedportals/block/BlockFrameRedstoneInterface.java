@@ -6,7 +6,7 @@ import enhancedportals.tile.TileFrameRedstoneInterface;
 
 public class BlockFrameRedstoneInterface extends BlockFrame
 {
-    protected BlockFrameRedstoneInterface(String n)
+    public BlockFrameRedstoneInterface(String n)
     {
         super(n);
     }

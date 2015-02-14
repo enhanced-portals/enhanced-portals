@@ -6,7 +6,7 @@ import enhancedportals.tile.TileFrameNetworkInterface;
 
 public class BlockFrameNetworkInterface extends BlockFrame
 {
-    protected BlockFrameNetworkInterface(String n)
+    public BlockFrameNetworkInterface(String n)
     {
         super(n);
     }

@@ -120,8 +120,12 @@ public class BlockPortal extends BlockContainer
              */
 
             int meta = blockAccess.getBlockMetadata(x, y, z);
-
-            if (meta == 1) // X
+            
+            if (meta == 0) // Not set for a reason
+            {
+                setBlockBounds(0f, 0f, 0f, 1f, 1, 1f);
+            }
+            else if (meta == 1) // X
             {
                 setBlockBounds(0f, 0f, 0.375f, 1f, 1f, 0.625f);
             }
@@ -133,9 +137,9 @@ public class BlockPortal extends BlockContainer
             {
                 setBlockBounds(0, 0.375f, 0f, 1f, 0.625f, 1f);
             }
-            else
+            else if (meta >= 4) // (X / Z / XZ) invis
             {
-                setBlockBounds(0f, 0f, 0f, 1f, 1, 1f);
+                setBlockBounds(0, 0, 0, 0, 0, 0);
             }
         }
     }
@@ -143,12 +147,7 @@ public class BlockPortal extends BlockContainer
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-        if (blockAccess.getBlock(x, y, z) == this /*
-                                                   * || blockAccess.getBlock(x,
-                                                   * y, z) ==
-                                                   * BlockFrame.instance
-                                                   */) { return false; }
-
+        if (blockAccess.getBlock(x, y, z) == this /* || blockAccess.getBlock(x, y, z) == BlockFrame.instance */ || blockAccess.getBlockMetadata(x, y, z) >= 4) { return false; }
         return super.shouldSideBeRendered(blockAccess, x, y, z, side);
     }
 }

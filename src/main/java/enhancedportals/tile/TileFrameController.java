@@ -1,27 +1,24 @@
 package enhancedportals.tile;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.item.ItemLocationCard;
 import enhancedportals.item.ItemWrench;
-import enhancedportals.util.PortalUtils;
+import enhancedportals.portal.PortalConstructor;
 
 public class TileFrameController extends TileFrame
 {
-    TilePortal[] sPortal;
-    TileFrame[] sFrame;
-    TileFrameDialDevice[] sDialDevice;
-    TileFrameNetworkInterface[] sNetwork;
-    TileFramePortalManipulator sPortalManip;
-    TileFrameRedstoneInterface[] sRedstone;
-    TileFrameTransferEnergy[] sTranEnergy;
-    TileFrameTransferFluid[] sTranFluid;
-    TileFrameTransferItem[] sTranItem;
+    TilePortal[] savedPortal;
+    TileFrame[] savedFrame;
+    TileFrameDialDevice[] savedDialDevice;
+    TileFrameNetworkInterface[] savedNetwork;
+    TileFramePortalManipulator savedPortalManip;
+    TileFrameRedstoneInterface[] savedRedstone;
+    TileFrameTransferEnergy[] savedTranEnergy;
+    TileFrameTransferFluid[] savedTranFluid;
+    TileFrameTransferItem[] savedTranItem;
 
     /***
      * 0 = Brand new portal. Needs to be hit with a wrench to form.<br>
@@ -29,7 +26,6 @@ public class TileFrameController extends TileFrame
      * 5 = Finalised
      */
     byte portalState = 0;
-    public byte portalType = 0;
 
     @Override
     public boolean onBlockActivated(EntityPlayer player)
@@ -37,8 +33,8 @@ public class TileFrameController extends TileFrame
         ItemStack stack = player.getCurrentEquippedItem();
         if (stack == null || player.isSneaking() || worldObj.isRemote) return true;
 
-        if (portalState == 0)
-        { // brand new portal
+        if (portalState == 0) // brand new portal
+        {
             if (stack.getItem() instanceof ItemWrench)
             {
                 form(player);
@@ -48,8 +44,8 @@ public class TileFrameController extends TileFrame
                 player.addChatMessage(new ChatComponentText("Use a wrench first."));
             }
         }
-        else if (portalState == 1)
-        { // missing dbs
+        else if (portalState == 1) // missing dbs
+        {
             if (stack.getItem() instanceof ItemWrench)
             {
                 openContainer(player);
@@ -61,6 +57,12 @@ public class TileFrameController extends TileFrame
                     player.addChatMessage(new ChatComponentText("Set a UID first."));
                     return true;
                 }
+                else if (!ItemLocationCard.isDataSet(stack))
+                {
+                    player.addChatMessage(new ChatComponentText("Location card not set."));
+                    return true;
+                }
+                
                 EnhancedPortals.proxy.portalMap.setPortalDBS(getDimensionCoordinates(), ItemLocationCard.getData(stack));
                 player.addChatMessage(new ChatComponentText("Set."));
             }
@@ -83,64 +85,30 @@ public class TileFrameController extends TileFrame
 
     private void form(EntityPlayer player)
     {
-        boolean wasSuccess = false, hasController = false, hasModule = false;
-
+        PortalConstructor constructor = new PortalConstructor();
+        
         try
         {
-            ArrayList<TileEntity> portalStructure = PortalUtils.getAllPortalComponents(this);
-
-            ArrayList<TilePortal> p = new ArrayList<TilePortal>();
-            ArrayList<TileFrame> f = new ArrayList<TileFrame>();
-
-            for (TileEntity t : portalStructure)
-            {
-                if (t instanceof TileFrameController)
-                {
-                    if (hasController)
-                    {
-                        throw new Exception("two controllers found");
-                    }
-                    else
-                    {
-                        hasController = true;
-                    }
-                }
-                else if (t instanceof TilePortal)
-                {
-                    p.add((TilePortal) t);
-                }
-                else if (t instanceof TileFrame)
-                {
-                    f.add((TileFrame) t);
-                }
-            }
-
-            sPortal = p.toArray(new TilePortal[p.size()]);
-            sFrame = f.toArray(new TileFrame[p.size()]);
-            wasSuccess = true;
+            constructor.perform(this);
+            
+            //savedPortal = constructor.getPortal();
+            //savedFrame = constructor.getFrame();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            wasSuccess = false;
+            player.addChatMessage(new ChatComponentText("something went wrong: " + e.getMessage()));
+            return;
         }
 
-        if (wasSuccess)
-        {
-            portalState = 1;
-            openContainer(player);
-        }
-        else
-        {
-            player.addChatMessage(new ChatComponentText("Something went wrong"));
-        }
+        portalState = 1;
+        openContainer(player);
     }
 
     private void openContainer(EntityPlayer player)
     {
         // TODO
         player.addChatMessage(new ChatComponentText("opening menu"));
-        player.addChatMessage(new ChatComponentText(sPortal.length + " portals, " + sFrame.length + " frames"));
+        //player.addChatMessage(new ChatComponentText(savedPortal.length + " portals, " + savedFrame.length + " frames"));
     }
 
     @Override
