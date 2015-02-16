@@ -2,8 +2,8 @@
 
 Useful Links:
 * [License](docs/LICENSE)
-* [Downloads](http://mods.atomicbase.com/enhancedportals/1.7.10/downloads/)
-* [Minecraft Forums Thread](http://www.minecraftforum.net/topic/2143651-164-enhancedportals-3/)
+* [Downloads](http://www.curse.com/mc-mods/minecraft/225921-enhanced-portals-3#t1:other-downloads)
+* [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292751)
 
 
 ###Compiling

@@ -727,7 +727,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
                 if (m != null)
                 {
-                    temporaryDBS = m.getWorldCoordinates();
+                    temporaryDBS = m.getDimensionCoordinates();
                     return m;
                 }
             }
@@ -751,7 +751,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
                 if (m != null)
                 {
-                    dimensionalBridgeStabilizer = m.getWorldCoordinates();
+                    dimensionalBridgeStabilizer = m.getDimensionCoordinates();
                     return m;
                 }
             }
@@ -813,7 +813,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
             return uID;
         }
 
-        return EnhancedPortals.proxy.networkManager.getPortalIdentifier(getWorldCoordinates());
+        return EnhancedPortals.proxy.networkManager.getPortalIdentifier(getDimensionCoordinates());
     }
 
     @Override
@@ -1267,11 +1267,11 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
                 EnhancedPortals.proxy.networkManager.removePortalFromNetwork(getIdentifierUnique(), networkIdentifier); // Remove it if it is
             }
 
-            EnhancedPortals.proxy.networkManager.removePortal(getWorldCoordinates()); // Remove the old identifier
+            EnhancedPortals.proxy.networkManager.removePortal(getDimensionCoordinates()); // Remove the old identifier
 
             if (id.size() > 0) // If the new identifier isn't blank
             {
-                EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add it
+                EnhancedPortals.proxy.networkManager.addPortal(id, getDimensionCoordinates()); // Add it
 
                 if (networkIdentifier != null)
                 {
@@ -1281,7 +1281,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
         }
         else if (id.size() > 0) // Otherwise if the new identifier isn't blank
         {
-            EnhancedPortals.proxy.networkManager.addPortal(id, getWorldCoordinates()); // Add the portal
+            EnhancedPortals.proxy.networkManager.addPortal(id, getDimensionCoordinates()); // Add the portal
         }
 
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -1383,7 +1383,7 @@ public class TileController extends TileFrame implements IPeripheral, SimpleComp
 
     public void setupTemporaryDBS(TileStabilizerMain sA)
     {
-        temporaryDBS = sA.getWorldCoordinates();
+        temporaryDBS = sA.getDimensionCoordinates();
         markDirty();
     }
 

@@ -472,7 +472,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
 
         TileStabilizerMain sA = cA.getDimensionalBridgeStabilizer(), sB = cB.getDimensionalBridgeStabilizer();
         
-        if (!sA.getWorldCoordinates().equals(sB.getWorldCoordinates()))
+        if (!sA.getDimensionCoordinates().equals(sB.getDimensionCoordinates()))
         {
             if (cB.isPublic)
             {
@@ -494,7 +494,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         {
             cA.setInstability(instability);
             cA.portalCreate();
-            cA.cacheDestination(portalB, cB.getWorldCoordinates());
+            cA.cacheDestination(portalB, cB.getDimensionCoordinates());
         }
         catch (PortalException e)
         {
@@ -507,7 +507,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
         {
             cB.setInstability(instability);
             cB.portalCreate();
-            cB.cacheDestination(portalA, cA.getWorldCoordinates());
+            cB.cacheDestination(portalA, cA.getDimensionCoordinates());
         }
         catch (PortalException e)
         {
@@ -670,7 +670,7 @@ public class TileStabilizerMain extends TileEP implements IInventory, IEnergyHan
             {
                 if (!ItemLocationCard.hasDBSLocation(inventory) && !worldObj.isRemote)
                 {
-                    ItemLocationCard.setDBSLocation(inventory, getWorldCoordinates());
+                    ItemLocationCard.setDBSLocation(inventory, getDimensionCoordinates());
                 }
             }
         }

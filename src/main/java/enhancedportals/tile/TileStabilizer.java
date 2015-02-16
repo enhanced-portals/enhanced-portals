@@ -50,7 +50,7 @@ public class TileStabilizer extends TileEP implements IEnergyHandler
         {
             if (GeneralUtils.isWrench(player.inventory.getCurrentItem()))
             {
-                DimensionCoordinates topLeft = getWorldCoordinates();
+                DimensionCoordinates topLeft = getDimensionCoordinates();
                 // Get the Top-Northwest-most block in the DBS block group.
                 while (topLeft.offset(ForgeDirection.WEST).getBlock() == BlockStabilizer.instance) // Get the westernmost block
                 {

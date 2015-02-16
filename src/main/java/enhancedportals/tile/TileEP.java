@@ -18,7 +18,7 @@ public class TileEP extends TileEntity
         return new ChunkCoordinates(xCoord, yCoord, zCoord);
     }
 
-    public DimensionCoordinates getWorldCoordinates()
+    public DimensionCoordinates getDimensionCoordinates()
     {
         return new DimensionCoordinates(getChunkCoordinates(), worldObj.provider.dimensionId);
     }

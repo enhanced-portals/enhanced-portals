@@ -43,7 +43,7 @@ public class Vanilla
         // TODO GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 3), new Object[] { "PBC", "ZFZ", 'F', new ItemStack(ItemBlankUpgrade.instance), 'Z', Items.blaze_powder, 'P', Items.cooked_porkchop, 'B', Items.cooked_beef, 'C', Items.cooked_chicken }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 4), new ItemStack(ItemBlankUpgrade.instance), Items.diamond, Items.emerald, new ItemStack(ItemBlankPortalModule.instance)));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 7), new ItemStack(ItemBlankUpgrade.instance), Items.ender_pearl, Items.diamond, Blocks.redstone_block));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 5), new ItemStack(ItemBlankUpgrade.instance), Items.ender_pearl, Items.diamond, Items.bucket));
+        //GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 5), new ItemStack(ItemBlankUpgrade.instance), Items.ender_pearl, Items.diamond, Items.bucket));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ItemUpgrade.instance, 1, 6), new ItemStack(ItemBlankUpgrade.instance), Items.ender_pearl, Items.diamond, Blocks.chest));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BlockDecorBorderedQuartz.instance, 9), new Object[] { "SQS", "QQQ", "SQS", 'S', Blocks.stone, 'Q', Blocks.quartz_block }));
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BlockDecorEnderInfusedMetal.instance, 9), Blocks.iron_block, Items.iron_ingot, Items.iron_ingot, Items.iron_ingot, Items.iron_ingot));

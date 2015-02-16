@@ -3,12 +3,12 @@
   "name": "EnhancedPortals",
   "version": "${mod_version}",
   "mcversion": "${mc_version}",
-  "url": "http://mods.atomicbase.com/enhancedportals/1.7.10/",
+  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292751",
   "credits": "",
   "authorList": [ "KzariusRex","SexyDexyDoo","SyiSeiko","Alz454" ],
   "description": "An advanced technological portal teleportation system",
   "logoFile": "",
-  "updateUrl": "http://mods.atomicbase.com/enhancedportals/1.7.10/",
+  "updateUrl": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292751",
   "parent": "",
   "screenshots": [ ]
 }]

@@ -10,7 +10,7 @@ public class CreativeTabEP3 extends CreativeTabs
 {
     public CreativeTabEP3()
     {
-        super(EnhancedPortals.ID);
+        super(EnhancedPortals.MOD_ID);
     }
 
     @Override

@@ -16,6 +16,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockDecorBorderedQuartz;
 import enhancedportals.block.BlockDecorEnderInfusedMetal;
@@ -64,20 +65,23 @@ public class CommonProxy
     public static int activePortalsPerRow = 2;
     static Configuration config;
     static File craftingDir;
-    static String curVers = EnhancedPortals.VERS, lateVers;
+    public static String lateVers;
 
-    public void waitForController(ChunkCoordinates controller, ChunkCoordinates frame) {
-    	
+    public void waitForController(ChunkCoordinates controller, ChunkCoordinates frame)
+    {
+
     }
-    
-    public ArrayList<ChunkCoordinates> getControllerList(ChunkCoordinates controller) {
-    	return null;
+
+    public ArrayList<ChunkCoordinates> getControllerList(ChunkCoordinates controller)
+    {
+        return null;
     }
-    
-    public void clearControllerList(ChunkCoordinates controller) {
-    	
+
+    public void clearControllerList(ChunkCoordinates controller)
+    {
+
     }
-    
+
     public File getBaseDir()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
@@ -160,7 +164,7 @@ public class CommonProxy
         powerStorageMultiplier = config.get("Power", "DBSPowerStorageMultiplier", 1.0).getDouble(1.0);
         activePortalsPerRow = config.get("Portal", "ActivePortalsPerRow", 2).getInt(2);
         updateNotifier = config.get("Misc", "NotifyOfUpdates", true).getBoolean(true);
-        
+
         config.save();
 
         if (powerMultiplier < 0)
@@ -172,49 +176,39 @@ public class CommonProxy
         {
             powerStorageMultiplier = 0.01;
         }
-        
-        try 
+
+        try
         {
             URL versionIn = new URL(EnhancedPortals.UPDATE_URL);
-    		BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
-    		String newVers = in.readLine();
-    		
-    		if (!newVers.equals(curVers))
-    		{
-    			EnhancedPortals.logger.info("You're using an outdated version (v" + curVers + ")");
-    			EnhancedPortals.logger.info("Get the latest version (v" + lateVers + ") from mods.atomicbase.com");
-   				lateVers = newVers;
-    		}
-    		else
-    		{
-    			lateVers = newVers;
-    		}
+            BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
+            lateVers = in.readLine();
+
+            if (FMLCommonHandler.instance().getSide() == Side.SERVER && !lateVers.equals(EnhancedPortals.VERSION))
+            {
+                EnhancedPortals.logger.info("You're using an outdated version (v" + EnhancedPortals.VERSION + "). The newest version is: " + lateVers);
+            }
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
-        	EnhancedPortals.logger.warn("Unable to get the latest version information");
-            lateVers = curVers;
-        } 
-        finally {}	
-	}
+            EnhancedPortals.logger.warn("Unable to get the latest version information");
+            lateVers = EnhancedPortals.VERSION;
+        }
+    }
 
     public static boolean Notify(EntityPlayer player, String lateVers)
-	{
-		if (updateNotifier == true)
-		{
-			String msg = "Enhanced Portals has been updated to v" + lateVers + " :: You are running v" + curVers;
-			String msg2 = "Get the latest version of Enhanced Portals from mods.atomicbase.com";
-			player.addChatMessage(new ChatComponentText(msg));
-			player.addChatMessage(new ChatComponentText(msg2));
-			return true;
-		}
-		else
-		{
-			EnhancedPortals.logger.info("You're using an outdated version (v" + curVers + ")");
-			EnhancedPortals.logger.info("Get the latest version (v" + lateVers + ") from mods.atomicbase.com");
-			return false;
-		}
-	}
+    {
+        if (updateNotifier == true)
+        {
+            player.addChatMessage(new ChatComponentText("Enhanced Portals has been updated to v" + lateVers + " :: You are running v" + EnhancedPortals.VERSION));
+            return true;
+        }
+        else
+        {
+            EnhancedPortals.logger.info("You're using an outdated version (v" + EnhancedPortals.VERSION + ")");
+            return false;
+        }
+    }
+
     public void setupCrafting()
     {
         Vanilla.registerRecipes();
