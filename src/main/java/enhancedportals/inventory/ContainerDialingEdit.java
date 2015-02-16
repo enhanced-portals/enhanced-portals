@@ -8,7 +8,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphElement;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class ContainerDialingEdit extends ContainerDialingAdd
 {

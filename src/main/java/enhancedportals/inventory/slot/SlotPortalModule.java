@@ -3,7 +3,7 @@ package enhancedportals.inventory.slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import enhancedportals.common.IPortalModule;
+import enhancedportals.utility.IPortalModule;
 
 public class SlotPortalModule extends Slot
 {

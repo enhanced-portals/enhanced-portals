@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import cpw.mods.fml.common.network.ByteBufUtils;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class PortalTextureManager
 {

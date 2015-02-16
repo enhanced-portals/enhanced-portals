@@ -13,7 +13,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalException;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class ContainerPortalControllerGlyphs extends BaseContainer
 {

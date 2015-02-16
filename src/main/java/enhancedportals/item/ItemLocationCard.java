@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.utility.WorldCoordinates;
+import enhancedportals.utility.DimensionCoordinates;
 
 public class ItemLocationCard extends Item
 {
@@ -21,12 +21,12 @@ public class ItemLocationCard extends Item
         s.setTagCompound(null);
     }
 
-    public static WorldCoordinates getDBSLocation(ItemStack s)
+    public static DimensionCoordinates getDBSLocation(ItemStack s)
     {
         if (hasDBSLocation(s))
         {
             NBTTagCompound t = s.getTagCompound();
-            return new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
+            return new DimensionCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
         }
 
         return null;
@@ -37,7 +37,7 @@ public class ItemLocationCard extends Item
         return s.hasTagCompound();
     }
 
-    public static void setDBSLocation(ItemStack s, WorldCoordinates w)
+    public static void setDBSLocation(ItemStack s, DimensionCoordinates w)
     {
         NBTTagCompound t = new NBTTagCompound();
         t.setInteger("X", w.posX);
@@ -64,7 +64,7 @@ public class ItemLocationCard extends Item
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
-        WorldCoordinates w = getDBSLocation(stack);
+        DimensionCoordinates w = getDBSLocation(stack);
 
         if (w != null)
         {

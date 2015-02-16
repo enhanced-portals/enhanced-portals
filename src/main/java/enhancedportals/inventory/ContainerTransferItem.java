@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTransferItem;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileTransferItem;
 
 public class ContainerTransferItem extends BaseContainer
 {

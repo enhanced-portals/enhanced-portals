@@ -24,9 +24,9 @@ import enhancedportals.item.ItemPortalModule;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.portal.EntityManager;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TilePortal;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TilePortal;
 
 public class BlockPortal extends BlockContainer
 {
@@ -192,7 +192,7 @@ public class BlockPortal extends BlockContainer
 
         int metadata = world.getBlockMetadata(x, y, z);
         TileController controller = ((TilePortal) tile).getPortalController();
-        TileModuleManipulator module = controller == null ? null : controller.getModuleManipulator();
+        TilePortalManipulator module = controller == null ? null : controller.getModuleManipulator();
         boolean doSounds = !CommonProxy.disableSounds && random.nextInt(100) == 0, doParticles = !CommonProxy.disableParticles;
 
         if (module != null)
@@ -292,7 +292,7 @@ public class BlockPortal extends BlockContainer
         {
             TilePortal portal = (TilePortal) tile;
             TileController controller = portal.getPortalController();
-            TileModuleManipulator manip = controller == null ? null : controller.getModuleManipulator();
+            TilePortalManipulator manip = controller == null ? null : controller.getModuleManipulator();
 
             if (controller != null && manip != null && manip.isPortalInvisible())
             {

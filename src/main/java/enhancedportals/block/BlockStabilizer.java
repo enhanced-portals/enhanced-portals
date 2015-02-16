@@ -10,8 +10,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.tileentity.TileStabilizer;
-import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.tile.TileStabilizer;
+import enhancedportals.tile.TileStabilizerMain;
 import enhancedportals.utility.ConnectedTexturesDetailed;
 
 public class BlockStabilizer extends BlockContainer

@@ -13,17 +13,16 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockFrame;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDialingDevice;
-import enhancedportals.tileentity.TileFrame;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileNetworkInterface;
-import enhancedportals.tileentity.TilePortalPart;
-import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.tileentity.TileRedstoneInterface;
-import enhancedportals.tileentity.TileTransferEnergy;
-import enhancedportals.tileentity.TileTransferFluid;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileFrame;
+import enhancedportals.tile.TileNetworkInterface;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TilePortalPart;
+import enhancedportals.tile.TileRedstoneInterface;
+import enhancedportals.tile.TileTransferEnergy;
+import enhancedportals.tile.TileTransferFluid;
+import enhancedportals.tile.TileTransferItem;
 
 public class ItemUpgrade extends Item
 {
@@ -107,12 +106,7 @@ public class ItemUpgrade extends Item
             }
             else
             {
-                if (controller.getProgrammableInterface() != null && blockMeta == BlockFrame.PROGRAMMABLE_INTERFACE)
-                {
-                    player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("multipleProgram")));
-                    return false;
-                }
-                else if (controller.getDiallingDevices().size() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
+                if (controller.getDiallingDevices().size() > 0 && blockMeta == BlockFrame.NETWORK_INTERFACE)
                 {
                     player.addChatComponentMessage(new ChatComponentText(EnhancedPortals.localizeError("dialAndNetwork")));
                     return false;
@@ -142,15 +136,11 @@ public class ItemUpgrade extends Item
                 {
                     controller.addDialDevice(t.getChunkCoordinates());
                 }
-                else if (t instanceof TileProgrammableInterface)
-                {
-                    controller.setProgrammableInterface(t.getChunkCoordinates());
-                }
                 else if (t instanceof TileNetworkInterface)
                 {
                     controller.addNetworkInterface(t.getChunkCoordinates());
                 }
-                else if (t instanceof TileModuleManipulator)
+                else if (t instanceof TilePortalManipulator)
                 {
                     controller.setModuleManipulator(t.getChunkCoordinates());
                 }

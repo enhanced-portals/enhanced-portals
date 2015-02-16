@@ -82,7 +82,7 @@ public class GeneralUtils
         return list;
     }
 
-    public static WorldCoordinates loadWorldCoord(NBTTagCompound tagCompound, String string)
+    public static DimensionCoordinates loadWorldCoord(NBTTagCompound tagCompound, String string)
     {
         if (tagCompound.getTag(string) == null)
         {
@@ -91,7 +91,7 @@ public class GeneralUtils
 
         NBTTagCompound t = (NBTTagCompound) tagCompound.getTag(string);
 
-        return t.getInteger("Y") == -1 ? null : new WorldCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
+        return t.getInteger("Y") == -1 ? null : new DimensionCoordinates(t.getInteger("X"), t.getInteger("Y"), t.getInteger("Z"), t.getInteger("D"));
     }
 
     public static void saveChunkCoord(NBTTagCompound tagCompound, ChunkCoordinates c, String string)
@@ -126,7 +126,7 @@ public class GeneralUtils
         tag.setTag(name, tagList);
     }
 
-    public static void saveWorldCoord(NBTTagCompound tagCompound, WorldCoordinates c, String string)
+    public static void saveWorldCoord(NBTTagCompound tagCompound, DimensionCoordinates c, String string)
     {
         if (c == null)
         {

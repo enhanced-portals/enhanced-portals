@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import enhancedportals.client.gui.BaseGui;
-import enhancedportals.common.IFakeSlotHandler;
+import enhancedportals.utility.IFakeSlotHandler;
 
 public class ElementFakeItemSlot extends BaseElement
 {

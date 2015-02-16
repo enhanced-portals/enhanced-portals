@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.tileentity.TileEP;
+import enhancedportals.tile.TileEP;
 
 public class PacketRequestGui extends PacketEP
 {

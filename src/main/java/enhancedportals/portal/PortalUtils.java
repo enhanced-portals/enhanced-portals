@@ -10,12 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDialingDevice;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileNetworkInterface;
-import enhancedportals.tileentity.TilePortalPart;
-import enhancedportals.tileentity.TileProgrammableInterface;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileNetworkInterface;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TilePortalPart;
 import enhancedportals.utility.GeneralUtils;
 
 public class PortalUtils
@@ -108,19 +107,7 @@ public class PortalUtils
 
                         dialler = true;
                     }
-
-                    else if (t instanceof TileProgrammableInterface)
-                    {
-                        if (!program)
-                        {
-                            program = true;
-                        }
-                        else
-                        {
-                            throw new PortalException("multipleProgram");
-                        }
-                    }
-                    else if (t instanceof TileModuleManipulator)
+                    else if (t instanceof TilePortalManipulator)
                     {
                         if (!mod)
                         {

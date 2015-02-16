@@ -3,14 +3,14 @@ package enhancedportals.client.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.inventory.ContainerModuleManipulator;
-import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tile.TilePortalManipulator;
 
 public class GuiModuleManipulator extends BaseGui
 {
     public static final int CONTAINER_SIZE = 53;
-    TileModuleManipulator module;
+    TilePortalManipulator module;
 
-    public GuiModuleManipulator(TileModuleManipulator m, EntityPlayer p)
+    public GuiModuleManipulator(TilePortalManipulator m, EntityPlayer p)
     {
         super(new ContainerModuleManipulator(m, p.inventory), CONTAINER_SIZE);
         module = m;

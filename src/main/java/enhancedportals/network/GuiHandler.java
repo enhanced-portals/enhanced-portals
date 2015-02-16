@@ -5,11 +5,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.client.gui.GuiDialingAdd;
 import enhancedportals.client.gui.GuiDialingDevice;
 import enhancedportals.client.gui.GuiDialingEdit;
+import enhancedportals.client.gui.GuiDialingEditFrame;
 import enhancedportals.client.gui.GuiDialingEditIdentifier;
+import enhancedportals.client.gui.GuiDialingEditParticle;
+import enhancedportals.client.gui.GuiDialingEditPortal;
 import enhancedportals.client.gui.GuiDialingManual;
-import enhancedportals.client.gui.GuiDialingAdd;
 import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
 import enhancedportals.client.gui.GuiManual;
 import enhancedportals.client.gui.GuiModuleManipulator;
@@ -17,23 +20,21 @@ import enhancedportals.client.gui.GuiNetworkInterface;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.client.gui.GuiPortalControllerGlyphs;
-import enhancedportals.client.gui.GuiProgrammableInterface;
-import enhancedportals.client.gui.GuiProgrammableInterfaceErrorLog;
 import enhancedportals.client.gui.GuiRedstoneInterface;
-import enhancedportals.client.gui.GuiDialingEditFrame;
-import enhancedportals.client.gui.GuiDialingEditParticle;
-import enhancedportals.client.gui.GuiDialingEditPortal;
 import enhancedportals.client.gui.GuiTextureFrame;
 import enhancedportals.client.gui.GuiTextureParticle;
 import enhancedportals.client.gui.GuiTexturePortal;
 import enhancedportals.client.gui.GuiTransferEnergy;
 import enhancedportals.client.gui.GuiTransferFluid;
 import enhancedportals.client.gui.GuiTransferItem;
+import enhancedportals.inventory.ContainerDialingAdd;
 import enhancedportals.inventory.ContainerDialingDevice;
 import enhancedportals.inventory.ContainerDialingEdit;
 import enhancedportals.inventory.ContainerDialingEditIdentifier;
+import enhancedportals.inventory.ContainerDialingEditParticle;
+import enhancedportals.inventory.ContainerDialingEditPortal;
+import enhancedportals.inventory.ContainerDialingEditTexture;
 import enhancedportals.inventory.ContainerDialingManual;
-import enhancedportals.inventory.ContainerDialingAdd;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
 import enhancedportals.inventory.ContainerManual;
 import enhancedportals.inventory.ContainerModuleManipulator;
@@ -41,28 +42,22 @@ import enhancedportals.inventory.ContainerNetworkInterface;
 import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
 import enhancedportals.inventory.ContainerPortalController;
 import enhancedportals.inventory.ContainerPortalControllerGlyphs;
-import enhancedportals.inventory.ContainerProgrammableInterface;
-import enhancedportals.inventory.ContainerProgrammableInterfaceErrorLog;
 import enhancedportals.inventory.ContainerRedstoneInterface;
-import enhancedportals.inventory.ContainerDialingEditTexture;
-import enhancedportals.inventory.ContainerDialingEditParticle;
-import enhancedportals.inventory.ContainerDialingEditPortal;
 import enhancedportals.inventory.ContainerTextureFrame;
 import enhancedportals.inventory.ContainerTextureParticle;
 import enhancedportals.inventory.ContainerTexturePortal;
 import enhancedportals.inventory.ContainerTransferEnergy;
 import enhancedportals.inventory.ContainerTransferFluid;
 import enhancedportals.inventory.ContainerTransferItem;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDialingDevice;
-import enhancedportals.tileentity.TileEP;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.tileentity.TileRedstoneInterface;
-import enhancedportals.tileentity.TileStabilizerMain;
-import enhancedportals.tileentity.TileTransferEnergy;
-import enhancedportals.tileentity.TileTransferFluid;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileEP;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TileRedstoneInterface;
+import enhancedportals.tile.TileStabilizerMain;
+import enhancedportals.tile.TileTransferEnergy;
+import enhancedportals.tile.TileTransferFluid;
+import enhancedportals.tile.TileTransferItem;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -85,8 +80,6 @@ public class GuiHandler implements IGuiHandler
     public static final int TEXTURE_DIALING_SAVE_B = 15;
     public static final int TEXTURE_DIALING_SAVE_C = 16;
     public static final int REDSTONE_INTERFACE = 17;
-    public static final int PROGRAMMABLE_INTERFACE = 18;
-    public static final int PROGRAMMABLE_INTERFACE_ERRORS = 19;
     public static final int MODULE_MANIPULATOR = 20;
     public static final int TRANSFER_FLUID = 21;
     public static final int TRANSFER_ENERGY = 22;
@@ -138,7 +131,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == MODULE_MANIPULATOR)
         {
-            return new GuiModuleManipulator((TileModuleManipulator) tile, player);
+            return new GuiModuleManipulator((TilePortalManipulator) tile, player);
         }
         else if (ID == DIMENSIONAL_BRIDGE_STABILIZER)
         {
@@ -200,14 +193,6 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiDialingEditParticle((TileDialingDevice) tile, player, true);
         }
-        else if (ID == PROGRAMMABLE_INTERFACE)
-        {
-            return new GuiProgrammableInterface((TileProgrammableInterface) tile, player);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE_ERRORS)
-        {
-            return new GuiProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player);
-        }
         else if (ID == TRANSFER_FLUID)
         {
             return new GuiTransferFluid((TileTransferFluid) tile, player);
@@ -263,7 +248,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == MODULE_MANIPULATOR)
         {
-            return new ContainerModuleManipulator((TileModuleManipulator) tile, player.inventory);
+            return new ContainerModuleManipulator((TilePortalManipulator) tile, player.inventory);
         }
         else if (ID == DIMENSIONAL_BRIDGE_STABILIZER)
         {
@@ -312,14 +297,6 @@ public class GuiHandler implements IGuiHandler
         else if (ID == TEXTURE_DIALING_EDIT_C || ID == TEXTURE_DIALING_SAVE_C)
         {
             return new ContainerDialingEditParticle((TileDialingDevice) tile, player.inventory);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE)
-        {
-            return new ContainerProgrammableInterface((TileProgrammableInterface) tile, player.inventory);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE_ERRORS)
-        {
-            return new ContainerProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player.inventory);
         }
         else if (ID == TRANSFER_FLUID)
         {

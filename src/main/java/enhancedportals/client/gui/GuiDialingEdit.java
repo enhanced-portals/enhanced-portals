@@ -16,7 +16,7 @@ import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.GlyphIdentifier;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class GuiDialingEdit extends GuiDialingAdd
 {

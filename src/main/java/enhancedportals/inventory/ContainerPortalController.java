@@ -10,7 +10,7 @@ import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class ContainerPortalController extends BaseContainer
 {

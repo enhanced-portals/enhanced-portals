@@ -19,16 +19,16 @@ import com.google.gson.reflect.TypeToken;
 
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.utility.WorldCoordinates;
+import enhancedportals.tile.TileController;
+import enhancedportals.utility.DimensionCoordinates;
 
 public class NetworkManager
 {
     /*** Stores locations of all portals ***/
-    HashMap<String, WorldCoordinates> portalCoordinates;
+    HashMap<String, DimensionCoordinates> portalCoordinates;
 
     /*** Reverse lookup for {@link portalCoordinates} ***/
-    HashMap<WorldCoordinates, String> portalCoordinatesReverse;
+    HashMap<DimensionCoordinates, String> portalCoordinatesReverse;
 
     /***
      * Portal Identifier, Network Identifier. Used for looking up which portal is in which network, quickly.
@@ -45,8 +45,8 @@ public class NetworkManager
 
     public NetworkManager(FMLServerStartingEvent event)
     {
-        portalCoordinates = new HashMap<String, WorldCoordinates>();
-        portalCoordinatesReverse = new HashMap<WorldCoordinates, String>();
+        portalCoordinates = new HashMap<String, DimensionCoordinates>();
+        portalCoordinatesReverse = new HashMap<DimensionCoordinates, String>();
         portalNetworks = new HashMap<String, String>();
         networkedPortals = new HashMap<String, ArrayList<String>>();
         server = event.getServer();
@@ -78,7 +78,7 @@ public class NetworkManager
     /***
      * Adds a new portal to the system
      */
-    public void addPortal(GlyphIdentifier g, WorldCoordinates w)
+    public void addPortal(GlyphIdentifier g, DimensionCoordinates w)
     {
         if (getPortalIdentifier(w) != null || getPortalLocation(g) != null)
         {
@@ -139,7 +139,7 @@ public class NetworkManager
      */
     public TileController getPortalController(GlyphIdentifier portal)
     {
-        WorldCoordinates w = getPortalLocation(portal);
+        DimensionCoordinates w = getPortalLocation(portal);
 
         if (w == null)
         {
@@ -161,7 +161,7 @@ public class NetworkManager
      * 
      * @return Null if one is not set
      */
-    public GlyphIdentifier getPortalIdentifier(WorldCoordinates w)
+    public GlyphIdentifier getPortalIdentifier(DimensionCoordinates w)
     {
         if (w == null)
         {
@@ -178,7 +178,7 @@ public class NetworkManager
      * 
      * @return Null if one is not found
      */
-    public WorldCoordinates getPortalLocation(GlyphIdentifier g)
+    public DimensionCoordinates getPortalLocation(GlyphIdentifier g)
     {
         return g == null ? null : portalCoordinates.get(g.getGlyphString());
     }
@@ -200,7 +200,7 @@ public class NetworkManager
         return ID == null ? null : new GlyphIdentifier(portalNetworks.get(g.getGlyphString()));
     }
 
-    public boolean hasIdentifier(WorldCoordinates w)
+    public boolean hasIdentifier(DimensionCoordinates w)
     {
         return w == null ? null : portalCoordinates.containsValue(w);
     }
@@ -210,7 +210,7 @@ public class NetworkManager
         return g == null ? null : portalNetworks.containsKey(g.getGlyphString());
     }
 
-    public boolean hasNetwork(WorldCoordinates w)
+    public boolean hasNetwork(DimensionCoordinates w)
     {
         return w == null ? null : hasNetwork(getPortalIdentifier(w));
     }
@@ -222,7 +222,7 @@ public class NetworkManager
             return;
         }
 
-        Type type = new TypeToken<HashMap<String, WorldCoordinates>>()
+        Type type = new TypeToken<HashMap<String, DimensionCoordinates>>()
         {
         }.getType();
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
@@ -233,7 +233,7 @@ public class NetworkManager
 
         if (portalCoordinates == null) // because for some reason fromJson can return null
         {
-            portalCoordinates = new HashMap<String, WorldCoordinates>();
+            portalCoordinates = new HashMap<String, DimensionCoordinates>();
         }
 
         if (portalNetworks == null) // because for some reason fromJson can return null
@@ -243,7 +243,7 @@ public class NetworkManager
 
         if (!portalCoordinates.isEmpty())
         {
-            for (Entry<String, WorldCoordinates> entry : portalCoordinates.entrySet())
+            for (Entry<String, DimensionCoordinates> entry : portalCoordinates.entrySet())
             {
                 portalCoordinatesReverse.put(entry.getValue(), entry.getKey());
             }
@@ -304,7 +304,7 @@ public class NetworkManager
     /***
      * Removes a portal
      */
-    public void removePortal(GlyphIdentifier g, WorldCoordinates w)
+    public void removePortal(GlyphIdentifier g, DimensionCoordinates w)
     {
         if (g == null || w == null)
         {
@@ -325,7 +325,7 @@ public class NetworkManager
     /***
      * Removes a portal
      */
-    public void removePortal(WorldCoordinates w)
+    public void removePortal(DimensionCoordinates w)
     {
         removePortal(getPortalIdentifier(w), w);
     }

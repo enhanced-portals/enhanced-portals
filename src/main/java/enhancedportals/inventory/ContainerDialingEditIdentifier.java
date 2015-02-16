@@ -3,7 +3,7 @@ package enhancedportals.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class ContainerDialingEditIdentifier extends BaseContainer
 {

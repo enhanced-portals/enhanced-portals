@@ -10,8 +10,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import enhancedportals.block.BlockPortal;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TilePortal;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TilePortal;
 
 public class PortalRenderer implements ISimpleBlockRenderingHandler
 {

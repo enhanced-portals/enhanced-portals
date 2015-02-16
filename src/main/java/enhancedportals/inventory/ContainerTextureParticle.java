@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiTextureParticle;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class ContainerTextureParticle extends BaseContainer
 {

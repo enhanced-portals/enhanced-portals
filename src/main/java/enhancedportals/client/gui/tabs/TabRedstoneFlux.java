@@ -3,7 +3,7 @@ package enhancedportals.client.gui.tabs;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.network.CommonProxy;
-import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.tile.TileStabilizerMain;
 import enhancedportals.utility.GeneralUtils;
 
 public class TabRedstoneFlux extends BaseTab

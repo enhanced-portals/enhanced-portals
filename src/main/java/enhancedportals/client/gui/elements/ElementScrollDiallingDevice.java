@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.GuiDialingDevice;
 import enhancedportals.portal.GlyphElement;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class ElementScrollDiallingDevice extends BaseElement
 {

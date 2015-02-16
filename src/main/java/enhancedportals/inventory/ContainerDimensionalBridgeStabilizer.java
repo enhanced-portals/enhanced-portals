@@ -10,7 +10,7 @@ import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
 import enhancedportals.inventory.slot.SlotDBS;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.tile.TileStabilizerMain;
 import enhancedportals.utility.GeneralUtils;
 
 public class ContainerDimensionalBridgeStabilizer extends BaseContainer

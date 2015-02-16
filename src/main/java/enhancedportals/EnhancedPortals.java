@@ -27,20 +27,27 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import enhancedportals.block.BlockFrame;
-import enhancedportals.common.CreativeTabEP3;
 import enhancedportals.network.CommonProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.PacketPipeline;
 import enhancedportals.portal.NetworkManager;
+import enhancedportals.utility.CreativeTabEP3;
 
 @Mod(name = EnhancedPortals.NAME, modid = EnhancedPortals.ID, version = EnhancedPortals.VERS, dependencies = EnhancedPortals.DEPENDENCIES)
 public class EnhancedPortals
 {
-    public static final String NAME = "EnhancedPortals", ID = "enhancedportals", VERS = "3.0.11", SHORT_ID = "ep3", DEPENDENCIES = "after:ThermalExpansion", CLIENT_PROXY = "enhancedportals.network.ClientProxy", COMMON_PROXY = "enhancedportals.network.CommonProxy", UPDATE_URL = "https://raw.githubusercontent.com/SkyNetAB/enhanced-portals/master/vers";
+    public static final String NAME = "EnhancedPortals",
+                               ID = "enhancedportals",
+                               VERS = "3.0.11",
+                               DEPENDENCIES = "after:ThermalExpansion",
+                               CLIENT_PROXY = "enhancedportals.network.ClientProxy",
+                               COMMON_PROXY = "enhancedportals.network.CommonProxy",
+                               UPDATE_URL = "https://raw.githubusercontent.com/enhanced-portals/enhanced-portals/master/docs/VERSION";
+    public static final String MODID_OPENCOMPUTERS = "OpenComputers",
+                               MODID_COMPUTERCRAFT = "ComputerCraft";
     public static final PacketPipeline packetPipeline = new PacketPipeline();
     public static final Logger logger = LogManager.getLogger("EnhancedPortals");
     public static final CreativeTabs creativeTab = new CreativeTabEP3();
-    public static final String MODID_OPENCOMPUTERS = "OpenComputers", MODID_COMPUTERCRAFT = "ComputerCraft";
 
     @Instance(ID)
     public static EnhancedPortals instance;
@@ -50,8 +57,8 @@ public class EnhancedPortals
 
     public static String localize(String s)
     {
-        String s2 = StatCollector.translateToLocal(SHORT_ID + "." + s).replace("<N>", "\n").replace("<P>", "\n\n");
-        return s2.contains(SHORT_ID + ".") || s2.contains("item.") || s2.contains("tile.") ? StatCollector.translateToLocal(s2) : s2;
+        String s2 = StatCollector.translateToLocal(ID + "." + s).replace("<N>", "\n").replace("<P>", "\n\n");
+        return s2.contains(ID + ".") || s2.contains("item.") || s2.contains("tile.") ? StatCollector.translateToLocal(s2) : s2;
     }
 
     public static String localizeError(String s)

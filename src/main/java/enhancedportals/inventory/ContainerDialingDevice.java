@@ -12,7 +12,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGui;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.GlyphElement;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class ContainerDialingDevice extends BaseContainer
 {

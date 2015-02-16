@@ -41,19 +41,18 @@ import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.network.packet.PacketRerender;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.NetworkManager;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDialingDevice;
-import enhancedportals.tileentity.TileFrameBasic;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileNetworkInterface;
-import enhancedportals.tileentity.TilePortal;
-import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.tileentity.TileRedstoneInterface;
-import enhancedportals.tileentity.TileStabilizer;
-import enhancedportals.tileentity.TileStabilizerMain;
-import enhancedportals.tileentity.TileTransferEnergy;
-import enhancedportals.tileentity.TileTransferFluid;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileFrameBasic;
+import enhancedportals.tile.TileNetworkInterface;
+import enhancedportals.tile.TilePortal;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TileRedstoneInterface;
+import enhancedportals.tile.TileStabilizer;
+import enhancedportals.tile.TileStabilizerMain;
+import enhancedportals.tile.TileTransferEnergy;
+import enhancedportals.tile.TileTransferFluid;
+import enhancedportals.tile.TileTransferItem;
 
 public class CommonProxy
 {
@@ -139,7 +138,7 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRI");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNI");
         GameRegistry.registerTileEntity(TileDialingDevice.class, "epDD");
-        GameRegistry.registerTileEntity(TileModuleManipulator.class, "epMM");
+        GameRegistry.registerTileEntity(TilePortalManipulator.class, "epMM");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epDBS");
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epDBSM");
         GameRegistry.registerTileEntity(TileTransferEnergy.class, "epTE");

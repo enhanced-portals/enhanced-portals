@@ -16,9 +16,9 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.PortalParticleFX;
-import enhancedportals.common.IPortalModule;
 import enhancedportals.network.ClientProxy;
-import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.utility.IPortalModule;
 
 public class ItemPortalModule extends Item implements IPortalModule
 {
@@ -72,25 +72,25 @@ public class ItemPortalModule extends Item implements IPortalModule
     }
 
     @Override
-    public boolean canInstallUpgrade(TileModuleManipulator moduleManipulator, IPortalModule[] installedUpgrades, ItemStack upgrade)
+    public boolean canInstallUpgrade(TilePortalManipulator moduleManipulator, IPortalModule[] installedUpgrades, ItemStack upgrade)
     {
         return true;
     }
 
     @Override
-    public boolean canRemoveUpgrade(TileModuleManipulator moduleManipulator, IPortalModule[] installedUpgrades, ItemStack upgrade)
+    public boolean canRemoveUpgrade(TilePortalManipulator moduleManipulator, IPortalModule[] installedUpgrades, ItemStack upgrade)
     {
         return true;
     }
 
     @Override
-    public boolean disableParticles(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public boolean disableParticles(TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
         return upgrade.getItemDamage() == PortalModules.REMOVE_PARTICLES.ordinal();
     }
 
     @Override
-    public boolean disablePortalRendering(TileModuleManipulator modulemanipulator, ItemStack upgrade)
+    public boolean disablePortalRendering(TilePortalManipulator modulemanipulator, ItemStack upgrade)
     {
         return upgrade.getItemDamage() == PortalModules.INVISIBLE_PORTAL.ordinal();
     }
@@ -109,7 +109,7 @@ public class ItemPortalModule extends Item implements IPortalModule
     @Override
     public String getID(ItemStack upgrade)
     {
-        return EnhancedPortals.SHORT_ID + "." + upgrade.getItemDamage();
+        return "ep3." + upgrade.getItemDamage();
     }
 
     @Override
@@ -144,13 +144,13 @@ public class ItemPortalModule extends Item implements IPortalModule
     }
 
     @Override
-    public boolean keepMomentumOnTeleport(TileModuleManipulator tileModuleManipulator, ItemStack i)
+    public boolean keepMomentumOnTeleport(TilePortalManipulator tileModuleManipulator, ItemStack i)
     {
         return i.getItemDamage() == PortalModules.KEEP_MOMENTUM.ordinal();
     }
 
     @Override
-    public void onEntityTeleportEnd(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public void onEntityTeleportEnd(Entity entity, TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
         if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
         {
@@ -159,7 +159,7 @@ public class ItemPortalModule extends Item implements IPortalModule
     }
 
     @Override
-    public boolean onEntityTeleportStart(Entity entity, TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public boolean onEntityTeleportStart(Entity entity, TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
         if (upgrade.getItemDamage() == PortalModules.FEATHERFALL.ordinal())
         {
@@ -200,7 +200,7 @@ public class ItemPortalModule extends Item implements IPortalModule
     }
 
     @Override
-    public void onParticleCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade, PortalParticleFX particle)
+    public void onParticleCreated(TilePortalManipulator moduleManipulator, ItemStack upgrade, PortalParticleFX particle)
     {
         if (upgrade.getItemDamage() == PortalModules.RAINBOW_PARTICLES.ordinal())
         {
@@ -229,25 +229,25 @@ public class ItemPortalModule extends Item implements IPortalModule
     }
 
     @Override
-    public void onPortalCreated(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public void onPortalCreated(TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
 
     }
 
     @Override
-    public void onPortalRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public void onPortalRemoved(TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
 
     }
 
     @Override
-    public void onUpgradeInstalled(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public void onUpgradeInstalled(TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
 
     }
 
     @Override
-    public void onUpgradeRemoved(TileModuleManipulator moduleManipulator, ItemStack upgrade)
+    public void onUpgradeRemoved(TilePortalManipulator moduleManipulator, ItemStack upgrade)
     {
 
     }

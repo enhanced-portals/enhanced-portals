@@ -15,7 +15,7 @@ import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class GuiNetworkInterfaceGlyphs extends BaseGui
 {

@@ -14,7 +14,7 @@ import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class GuiDialingEditIdentifier extends BaseGui {
 	public static final int CONTAINER_SIZE = 135;

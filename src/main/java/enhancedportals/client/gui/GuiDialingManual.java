@@ -12,8 +12,8 @@ import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
 
 public class GuiDialingManual extends BaseGui
 {

@@ -9,7 +9,7 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
 import enhancedportals.portal.GlyphElement;
-import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.tile.TileStabilizerMain;
 
 public class ElementScrollStabilizer extends BaseElement
 {

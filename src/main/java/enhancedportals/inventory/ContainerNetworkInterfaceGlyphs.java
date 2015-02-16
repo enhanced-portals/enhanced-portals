@@ -8,7 +8,7 @@ import enhancedportals.client.gui.BaseGui;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.portal.GlyphIdentifier;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class ContainerNetworkInterfaceGlyphs extends BaseContainer
 {

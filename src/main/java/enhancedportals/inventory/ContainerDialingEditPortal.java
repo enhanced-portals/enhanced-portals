@@ -1,7 +1,7 @@
 package enhancedportals.inventory;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import enhancedportals.tileentity.TileDialingDevice;
+import enhancedportals.tile.TileDialingDevice;
 
 public class ContainerDialingEditPortal extends ContainerTexturePortal
 {

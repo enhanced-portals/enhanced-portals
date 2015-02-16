@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.ClientProxy.ParticleSet;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class PortalParticleFX extends EntityFX
 {

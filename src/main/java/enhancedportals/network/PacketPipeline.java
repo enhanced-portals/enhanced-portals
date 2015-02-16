@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.network.packet.PacketEP;
-import enhancedportals.tileentity.TileEP;
+import enhancedportals.tile.TileEP;
 
 @ChannelHandler.Sharable
 public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, PacketEP>

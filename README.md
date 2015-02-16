@@ -1,6 +1,7 @@
-EnhancedPortals 3 - for Minecraft 1.7.10
----
+![logo](http://media-curse.cursecdn.com/attachments/133/259/6f29ad907748ceb667c287e29d57c0a3.png)
+
 Useful Links:
+* [License](docs/LICENSE)
 * [Downloads](http://mods.atomicbase.com/enhancedportals/1.7.10/downloads/)
 * [Minecraft Forums Thread](http://www.minecraftforum.net/topic/2143651-164-enhancedportals-3/)
 

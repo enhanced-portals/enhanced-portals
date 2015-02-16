@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import buildcraft.api.tools.IToolWrench;
-import cofh.api.block.IDismantleable;
 import enhancedportals.EnhancedPortals;
+import enhancedportals.utility.IDismantleable;
 
 public class ItemWrench extends Item implements IToolWrench
 {
@@ -53,11 +53,8 @@ public class ItemWrench extends Item implements IToolWrench
 
             if (block instanceof IDismantleable)
             {
-                if (((IDismantleable) block).canDismantle(player, world, x, y, z))
-                {
-                    ((IDismantleable) block).dismantleBlock(player, world, x, y, z, false);
-                    return true;
-                }
+                ((IDismantleable) block).dismantleBlock(player, world, x, y, z);
+                return true;
             }
         }
 

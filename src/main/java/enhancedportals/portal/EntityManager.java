@@ -33,8 +33,8 @@ import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.item.ItemPortalModule;
 import enhancedportals.network.CommonProxy;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileModuleManipulator;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TilePortalManipulator;
 
 public class EntityManager
 {
@@ -74,11 +74,11 @@ public class EntityManager
     static float getRotation(Entity entity, TileController controller, ChunkCoordinates loc)
     {
         World world = controller.getWorldObj();
-        TileModuleManipulator module = controller.getModuleManipulator();
+        TilePortalManipulator module = controller.getModuleManipulator();
 
         if (module != null)
         {
-            ItemStack s = module.getModule(EnhancedPortals.SHORT_ID + "." + ItemPortalModule.PortalModules.FACING.ordinal());
+            ItemStack s = module.getModule("ep3." + ItemPortalModule.PortalModules.FACING.ordinal());
 
             if (s != null)
             {
@@ -266,7 +266,7 @@ public class EntityManager
         else
         {
             boolean keepMomentum = false;
-            TileModuleManipulator manip = exit.getModuleManipulator();
+            TilePortalManipulator manip = exit.getModuleManipulator();
 
             if (manip != null)
             {

@@ -3,9 +3,9 @@ package enhancedportals.inventory.slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import enhancedportals.common.IPortalModule;
 import enhancedportals.item.ItemLocationCard;
 import enhancedportals.utility.GeneralUtils;
+import enhancedportals.utility.IPortalModule;
 
 public class SlotDBS extends Slot
 {

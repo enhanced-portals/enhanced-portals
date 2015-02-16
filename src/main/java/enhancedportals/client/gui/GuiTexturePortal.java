@@ -22,14 +22,14 @@ import enhancedportals.client.gui.elements.ElementScrollPortalIcons;
 import enhancedportals.client.gui.tabs.TabColour;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.client.gui.tabs.TabTipSecondary;
-import enhancedportals.common.IFakeSlotHandler;
 import enhancedportals.inventory.ContainerTexturePortal;
 import enhancedportals.network.ClientProxy;
 import enhancedportals.network.GuiHandler;
 import enhancedportals.network.packet.PacketGuiData;
 import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.portal.PortalTextureManager;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
+import enhancedportals.utility.IFakeSlotHandler;
 
 public class GuiTexturePortal extends BaseGui implements IFakeSlotHandler
 {

@@ -1,6 +1,5 @@
 package enhancedportals.block;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -20,29 +19,28 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.block.IDismantleable;
 import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.Optional.InterfaceList;
 import cpw.mods.fml.common.Optional.Method;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.common.ISidedBlockTexture;
 import enhancedportals.network.ClientProxy;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDialingDevice;
-import enhancedportals.tileentity.TileFrame;
-import enhancedportals.tileentity.TileFrameBasic;
-import enhancedportals.tileentity.TileFrameTransfer;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileNetworkInterface;
-import enhancedportals.tileentity.TilePortalPart;
-import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.tileentity.TileRedstoneInterface;
-import enhancedportals.tileentity.TileTransferEnergy;
-import enhancedportals.tileentity.TileTransferFluid;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileFrame;
+import enhancedportals.tile.TileFrameBasic;
+import enhancedportals.tile.TileFrameTransfer;
+import enhancedportals.tile.TileNetworkInterface;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TilePortalPart;
+import enhancedportals.tile.TileRedstoneInterface;
+import enhancedportals.tile.TileTransferEnergy;
+import enhancedportals.tile.TileTransferFluid;
+import enhancedportals.tile.TileTransferItem;
 import enhancedportals.utility.ConnectedTexturesDetailed;
+import enhancedportals.utility.IDismantleable;
+import enhancedportals.utility.ISidedBlockTexture;
 
 @InterfaceList(value = { @Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = EnhancedPortals.MODID_COMPUTERCRAFT) })
 public class BlockFrame extends BlockContainer implements IDismantleable, IPeripheralProvider
@@ -50,7 +48,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     public static BlockFrame instance;
     public static ConnectedTexturesDetailed connectedTextures;
     public static IIcon[] overlayIcons;
-    public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, PROGRAMMABLE_INTERFACE = 5, MODULE_MANIPULATOR = 6, TRANSFER_FLUID = 7, TRANSFER_ITEM = 8, TRANSFER_ENERGY = 9;
+    public static int PORTAL_CONTROLLER = 1, REDSTONE_INTERFACE = 2, NETWORK_INTERFACE = 3, DIALLING_DEVICE = 4, UNUSED = 5, MODULE_MANIPULATOR = 6, TRANSFER_FLUID = 7, TRANSFER_ITEM = 8, TRANSFER_ENERGY = 9;
     public static int FRAME_TYPES = 10;
     static IIcon[] fullIcons;
 
@@ -77,12 +75,6 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
         }
 
         super.breakBlock(world, x, y, z, block, unknown);
-    }
-
-    @Override
-    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z)
-    {
-        return true;
     }
 
     @Override
@@ -134,13 +126,9 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
         {
             return new TileDialingDevice();
         }
-        else if (metadata == PROGRAMMABLE_INTERFACE)
-        {
-            return new TileProgrammableInterface();
-        }
         else if (metadata == MODULE_MANIPULATOR)
         {
-            return new TileModuleManipulator();
+            return new TilePortalManipulator();
         }
         else if (metadata == TRANSFER_FLUID)
         {
@@ -165,7 +153,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
     }
 
     @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock)
+    public void dismantleBlock(EntityPlayer player, World world, int x, int y, int z)
     {
         ItemStack dropBlock = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
 
@@ -178,7 +166,7 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
 
         world.setBlockToAir(x, y, z);
 
-        if (dropBlock != null && !returnBlock)
+        if (dropBlock != null)
         {
             float f = 0.3F;
             double x2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
@@ -188,12 +176,6 @@ public class BlockFrame extends BlockContainer implements IDismantleable, IPerip
             item.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(item);
         }
-        
-        //ArrayList<ItemStack> list=new ArrayList<ItemStack>();
-        //list.add(dropBlock);
-        
-        //return dropBlock;
-        return null;
     }
 
     @Override

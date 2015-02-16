@@ -10,7 +10,7 @@ import enhancedportals.client.gui.tabs.TabRedstoneFlux;
 import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.tile.TileStabilizerMain;
 import enhancedportals.utility.GeneralUtils;
 
 public class GuiDimensionalBridgeStabilizer extends BaseGui
