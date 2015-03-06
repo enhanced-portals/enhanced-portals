@@ -45,12 +45,9 @@ public class TilePortalManipulator extends TileFrame implements IInventory
         return false;
     }
 
-    // Called when adding a Module to the Module manipulator block in-game.
     @Override
     public void addDataToPacket(NBTTagCompound tag)
     {
-    	writeToNBT(tag);
-    	/* -- Take this code out if no problems persist.
         NBTTagList items = new NBTTagList();
 
         for (int i = 0; i < getSizeInventory(); i++)
@@ -66,7 +63,7 @@ public class TilePortalManipulator extends TileFrame implements IInventory
             items.appendTag(t);
         }
         
-        tag.setTag("Modules", items);*/
+        tag.setTag("Modules", items);
     }
 
     @Override
@@ -260,7 +257,7 @@ public class TilePortalManipulator extends TileFrame implements IInventory
     @Override
     public void onDataPacket(NBTTagCompound tag)
     {
-        NBTTagList items = tag.getTagList("Modules", 9);
+        NBTTagList items = tag.getTagList("Modules", 10);
 
         for (int i = 0; i < items.tagCount(); i++)
         {
