@@ -1,8 +1,9 @@
-![logo](http://media-curse.cursecdn.com/attachments/133/259/6f29ad907748ceb667c287e29d57c0a3.png)
+![logo](http://mods.atomicbase.com/enhancedportals/forum_files/ep_banner.png)
 
 Useful Links:
 * [License](docs/LICENSE)
 * [Downloads](http://www.curse.com/mc-mods/minecraft/225921-enhanced-portals-3#t1:other-downloads)
+* [Changelog](docs/changelog/)
 * [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292751)
 
 
