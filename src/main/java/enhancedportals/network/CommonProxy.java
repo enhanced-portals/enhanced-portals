@@ -15,6 +15,7 @@ import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import enhancedportals.EnhancedPortals;
@@ -24,6 +25,7 @@ import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.block.BlockStabilizer;
 import enhancedportals.block.BlockStabilizerEmpty;
+import enhancedportals.crafting.ThermalExpansion;
 import enhancedportals.crafting.Vanilla;
 import enhancedportals.item.ItemBlankPortalModule;
 import enhancedportals.item.ItemBlankUpgrade;
@@ -60,7 +62,7 @@ public class CommonProxy
     public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20;
     public int gogglesRenderIndex = 0;
     public NetworkManager networkManager;
-    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, updateNotifier;
+    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, updateNotifier, vanillaRecipes, teRecipes;
     public static double powerMultiplier, powerStorageMultiplier;
     public static int activePortalsPerRow = 2;
     static Configuration config;
@@ -164,6 +166,8 @@ public class CommonProxy
         powerStorageMultiplier = config.get("Power", "DBSPowerStorageMultiplier", 1.0).getDouble(1.0);
         activePortalsPerRow = config.get("Portal", "ActivePortalsPerRow", 2).getInt(2);
         updateNotifier = config.get("Misc", "NotifyOfUpdates", true).getBoolean(true);
+        vanillaRecipes = config.get("Crafting", "Vanilla", true).getBoolean(true);
+        teRecipes = config.get("Crafting", "ThermalExpansion", true).getBoolean(true);
 
         config.save();
 
@@ -211,6 +215,7 @@ public class CommonProxy
 
     public void setupCrafting()
     {
-        Vanilla.registerRecipes();
+        if (vanillaRecipes) Vanilla.registerRecipes();
+        if (teRecipes && Loader.isModLoaded(EnhancedPortals.MODID_THERMALEXPANSION)) ThermalExpansion.registerRecipes();
     }
 }
