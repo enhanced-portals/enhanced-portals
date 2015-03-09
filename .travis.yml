@@ -7,7 +7,8 @@ deploy:
   provider: releases
   api_key:
     secure: bukf6XorhAfK/4OzQBsheQGEcMg0+bqTsgz55elN9CUDFa5T8pkDRfYfH/b7xnnmLkVEIEmNJ/D/Ps3cCgaQSW8Do470IHZZjkyy3bd3H+f27dlz5apa5uNV+gAD2yQtxPqCnS9261WD45nvhTves623z0oeVoDevCGdHIWilRg=
-  file: build/libs/EnhancedPortals_*.jar
+  file_glob: true
+  file: ${HOME}/build/${TRAVIS_REPO_SLUG}/build/libs/EnhancedPortals_*.jar
   skip_cleanup: true
   on:
     tags: true
