@@ -1,18 +1,15 @@
 buildscript {
     repositories {
         mavenCentral()
-        
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
-    
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
 	}
@@ -37,7 +34,8 @@ minecraft {
     assetDir = "eclipse/assets"
 }
 
-processResources {
+processResources
+{
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.info'
         include '**/*.properties'
@@ -58,7 +56,6 @@ processResources {
 repositories {
     maven { url = "http://maven.cil.li/" }
 }
-
 dependencies {
     compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.11:api"
 }
@@ -67,11 +64,17 @@ jar {
     appendix = 'universal'
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    appendix = 'src'
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     appendix = 'deobf'
 }
 
 artifacts {
+    archives sourceJar
     archives deobfJar
 }
